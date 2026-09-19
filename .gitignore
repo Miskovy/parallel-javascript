@@ -1,0 +1,33 @@
+# Dependencies and generated builds (all workspace packages)
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Test, profiling, and local benchmark scratch output
+coverage/
+.nyc_output/
+*.log
+*.cpuprofile
+*.heapprofile
+*.heapsnapshot
+benchmarks/results/local/
+
+# Local environment files; sanitized templates may be committed
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# Editor, OS, and temporary files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*.tmp
+*.tgz
+
+# Reviewed JSON baselines in benchmarks/results/ are intentionally tracked.
+# Keep package-lock.json, source, tests, docs, and shared AGENTS.md instructions.

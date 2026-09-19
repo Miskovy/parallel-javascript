@@ -1,0 +1,32 @@
+{
+  "name": "pjs-workspace",
+  "private": true,
+  "version": "0.1.0",
+  "license": "MIT",
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "engines": {
+    "node": "^22.13.0 || >=24.0.0"
+  },
+  "scripts": {
+    "build": "tsc -p packages/runtime/tsconfig.json",
+    "test": "npm run build && node --test --test-timeout=20000 packages/runtime/test/*.test.mjs",
+    "test:stress": "npm run build && node scripts/stress.mjs",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "benchmark:cpu": "npm run build && node benchmarks/cpu-baseline/run.mjs",
+    "benchmark:matrix": "npm run build && node benchmarks/matrix-multiplication/run.mjs",
+    "example": "npm run build && node examples/prime-search.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^22.19.0",
+    "eslint": "^10.11.0",
+    "prettier": "^3.7.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.48.0"
+  }
+}

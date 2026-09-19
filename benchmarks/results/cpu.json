@@ -1,0 +1,2064 @@
+{
+  "timestamp": "2026-09-19T17:41:49.964Z",
+  "suite": "cpu",
+  "environment": {
+    "node": "v24.21.0",
+    "platform": "win32",
+    "release": "10.0.19045",
+    "cpuModel": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz",
+    "logicalCpus": 8,
+    "availableParallelism": 8,
+    "memoryBytes": 17037594624
+  },
+  "methodology": {
+    "trials": 5,
+    "warmups": 2,
+    "sizes": [
+      100000,
+      1000000,
+      5000000
+    ],
+    "order": [
+      0,
+      8,
+      4,
+      2,
+      1
+    ],
+    "isolation": "fresh process per worker count; fixed pool reused across sizes",
+    "timing": "input partitioning, dispatch, execution, result cloning and assembly included; input generation and validation excluded",
+    "memory": "process-wide RSS sampled every 5ms plus endpoints; may miss brief peaks",
+    "cpu": "process.cpuUsage delta divided by wall time; 100% is one logical CPU, normalized percentage divides by availableParallelism",
+    "cold": "startup measured once per configuration; first execution recorded separately for every size; only the first size follows a fresh startup",
+    "repetitions": "every raw sample retained; medians used for speedup; no GC forcing or outlier removal"
+  },
+  "results": [
+    {
+      "workers": 0,
+      "startupMs": 0,
+      "shutdownMs": 0.1423000000013417,
+      "workloads": [
+        {
+          "size": 100000,
+          "chunks": 1,
+          "correctness": {
+            "count": 9592
+          },
+          "firstRun": {
+            "wallMs": 4.724799999999995,
+            "cpuMs": 16,
+            "cpuPercent": 338.63867253640404,
+            "machineCpuPercent": 42.329834067050506,
+            "rssBeforeBytes": 42930176,
+            "rssAfterBytes": 42946560,
+            "sampledPeakRssBytes": 42946560
+          },
+          "samples": [
+            {
+              "wallMs": 4.3673,
+              "cpuMs": 0,
+              "cpuPercent": 0,
+              "machineCpuPercent": 0,
+              "rssBeforeBytes": 42946560,
+              "rssAfterBytes": 42946560,
+              "sampledPeakRssBytes": 42946560
+            },
+            {
+              "wallMs": 4.372500000000002,
+              "cpuMs": 16,
+              "cpuPercent": 365.9233847913091,
+              "machineCpuPercent": 45.74042309891364,
+              "rssBeforeBytes": 42946560,
+              "rssAfterBytes": 42946560,
+              "sampledPeakRssBytes": 42946560
+            },
+            {
+              "wallMs": 4.404600000000002,
+              "cpuMs": 0,
+              "cpuPercent": 0,
+              "machineCpuPercent": 0,
+              "rssBeforeBytes": 42946560,
+              "rssAfterBytes": 42946560,
+              "sampledPeakRssBytes": 42946560
+            },
+            {
+              "wallMs": 4.367999999999995,
+              "cpuMs": 0,
+              "cpuPercent": 0,
+              "machineCpuPercent": 0,
+              "rssBeforeBytes": 42946560,
+              "rssAfterBytes": 42946560,
+              "sampledPeakRssBytes": 42946560
+            },
+            {
+              "wallMs": 4.424599999999998,
+              "cpuMs": 15,
+              "cpuPercent": 339.0136961533247,
+              "machineCpuPercent": 42.37671201916559,
+              "rssBeforeBytes": 42946560,
+              "rssAfterBytes": 42946560,
+              "sampledPeakRssBytes": 42946560
+            }
+          ],
+          "serialChunkedSamples": [
+            {
+              "wallMs": 4.518000000000001,
+              "cpuMs": 0,
+              "cpuPercent": 0,
+              "machineCpuPercent": 0,
+              "rssBeforeBytes": 42950656,
+              "rssAfterBytes": 42950656,
+              "sampledPeakRssBytes": 42950656
+            },
+            {
+              "wallMs": 4.537900000000008,
+              "cpuMs": 16,
+              "cpuPercent": 352.5859979285567,
+              "machineCpuPercent": 44.07324974106959,
+              "rssBeforeBytes": 42950656,
+              "rssAfterBytes": 43016192,
+              "sampledPeakRssBytes": 43016192
+            },
+            {
+              "wallMs": 4.5700999999999965,
+              "cpuMs": 0,
+              "cpuPercent": 0,
+              "machineCpuPercent": 0,
+              "rssBeforeBytes": 43016192,
+              "rssAfterBytes": 43024384,
+              "sampledPeakRssBytes": 43024384
+            },
+            {
+              "wallMs": 4.549700000000001,
+              "cpuMs": 0,
+              "cpuPercent": 0,
+              "machineCpuPercent": 0,
+              "rssBeforeBytes": 43024384,
+              "rssAfterBytes": 43036672,
+              "sampledPeakRssBytes": 43036672
+            },
+            {
+              "wallMs": 5.103500000000011,
+              "cpuMs": 16,
+              "cpuPercent": 313.51033604389073,
+              "machineCpuPercent": 39.18879200548634,
+              "rssBeforeBytes": 43036672,
+              "rssAfterBytes": 43036672,
+              "sampledPeakRssBytes": 43036672
+            }
+          ],
+          "threadIds": [
+            0
+          ],
+          "clonedInputBytesPerRun": null,
+          "summary": {
+            "medianWallMs": 4.372500000000002,
+            "speedup": 1,
+            "parallelEfficiency": null
+          }
+        },
+        {
+          "size": 1000000,
+          "chunks": 1,
+          "correctness": {
+            "count": 78498
+          },
+          "firstRun": {
+            "wallMs": 103.61680000000001,
+            "cpuMs": 109,
+            "cpuPercent": 105.19529651562294,
+            "machineCpuPercent": 13.149412064452868,
+            "rssBeforeBytes": 44044288,
+            "rssAfterBytes": 44044288,
+            "sampledPeakRssBytes": 44044288
+          },
+          "samples": [
+            {
+              "wallMs": 120.52780000000001,
+              "cpuMs": 125,
+              "cpuPercent": 103.71051325918168,
+              "machineCpuPercent": 12.96381415739771,
+              "rssBeforeBytes": 44044288,
+              "rssAfterBytes": 44044288,
+              "sampledPeakRssBytes": 44044288
+            },
+            {
+              "wallMs": 109.87559999999996,
+              "cpuMs": 109,
+              "cpuPercent": 99.20309877716257,
+              "machineCpuPercent": 12.40038734714532,
+              "rssBeforeBytes": 44044288,
+              "rssAfterBytes": 44044288,
+              "sampledPeakRssBytes": 44044288
+            },
+            {
+              "wallMs": 113.93970000000002,
+              "cpuMs": 110,
+              "cpuPercent": 96.5422938624553,
+              "machineCpuPercent": 12.067786732806912,
+              "rssBeforeBytes": 44044288,
+              "rssAfterBytes": 44044288,
+              "sampledPeakRssBytes": 44044288
+            },
+            {
+              "wallMs": 104.70170000000007,
+              "cpuMs": 109,
+              "cpuPercent": 104.10528195817253,
+              "machineCpuPercent": 13.013160244771566,
+              "rssBeforeBytes": 44044288,
+              "rssAfterBytes": 44044288,
+              "sampledPeakRssBytes": 44044288
+            },
+            {
+              "wallMs": 103.58219999999994,
+              "cpuMs": 94,
+              "cpuPercent": 90.74918277464667,
+              "machineCpuPercent": 11.343647846830834,
+              "rssBeforeBytes": 44044288,
+              "rssAfterBytes": 44044288,
+              "sampledPeakRssBytes": 44044288
+            }
+          ],
+          "serialChunkedSamples": [
+            {
+              "wallMs": 88.36400000000003,
+              "cpuMs": 94,
+              "cpuPercent": 106.3781630528269,
+              "machineCpuPercent": 13.297270381603363,
+              "rssBeforeBytes": 44072960,
+              "rssAfterBytes": 44072960,
+              "sampledPeakRssBytes": 44072960
+            },
+            {
+              "wallMs": 93.01689999999985,
+              "cpuMs": 94,
+              "cpuPercent": 101.05690471301467,
+              "machineCpuPercent": 12.632113089126834,
+              "rssBeforeBytes": 44072960,
+              "rssAfterBytes": 44072960,
+              "sampledPeakRssBytes": 44072960
+            },
+            {
+              "wallMs": 95.17709999999988,
+              "cpuMs": 94,
+              "cpuPercent": 98.76325292533615,
+              "machineCpuPercent": 12.345406615667018,
+              "rssBeforeBytes": 44138496,
+              "rssAfterBytes": 44138496,
+              "sampledPeakRssBytes": 44138496
+            },
+            {
+              "wallMs": 90.3569,
+              "cpuMs": 78,
+              "cpuPercent": 86.32434268993292,
+              "machineCpuPercent": 10.790542836241615,
+              "rssBeforeBytes": 44138496,
+              "rssAfterBytes": 44138496,
+              "sampledPeakRssBytes": 44138496
+            },
+            {
+              "wallMs": 86.97160000000008,
+              "cpuMs": 93,
+              "cpuPercent": 106.93145808516793,
+              "machineCpuPercent": 13.366432260645992,
+              "rssBeforeBytes": 44138496,
+              "rssAfterBytes": 44138496,
+              "sampledPeakRssBytes": 44138496
+            }
+          ],
+          "threadIds": [
+            0
+          ],
+          "clonedInputBytesPerRun": null,
+          "summary": {
+            "medianWallMs": 109.87559999999996,
+            "speedup": 1,
+            "parallelEfficiency": null
+          }
+        },
+        {
+          "size": 5000000,
+          "chunks": 1,
+          "correctness": {
+            "count": 348513
+          },
+          "firstRun": {
+            "wallMs": 866.1067000000003,
+            "cpuMs": 875,
+            "cpuPercent": 101.02681343996065,
+            "machineCpuPercent": 12.628351679995081,
+            "rssBeforeBytes": 49139712,
+            "rssAfterBytes": 49139712,
+            "sampledPeakRssBytes": 49139712
+          },
+          "samples": [
+            {
+              "wallMs": 858.6979999999994,
+              "cpuMs": 859,
+              "cpuPercent": 100.03516952409353,
+              "machineCpuPercent": 12.504396190511692,
+              "rssBeforeBytes": 49139712,
+              "rssAfterBytes": 49139712,
+              "sampledPeakRssBytes": 49139712
+            },
+            {
+              "wallMs": 899.3247999999994,
+              "cpuMs": 891,
+              "cpuPercent": 99.0743277623391,
+              "machineCpuPercent": 12.384290970292387,
+              "rssBeforeBytes": 49139712,
+              "rssAfterBytes": 49139712,
+              "sampledPeakRssBytes": 49139712
+            },
+            {
+              "wallMs": 863.1102000000001,
+              "cpuMs": 875,
+              "cpuPercent": 101.37755294746836,
+              "machineCpuPercent": 12.672194118433545,
+              "rssBeforeBytes": 49139712,
+              "rssAfterBytes": 49139712,
+              "sampledPeakRssBytes": 49139712
+            },
+            {
+              "wallMs": 859.7812000000004,
+              "cpuMs": 859,
+              "cpuPercent": 99.9091396741403,
+              "machineCpuPercent": 12.488642459267538,
+              "rssBeforeBytes": 49139712,
+              "rssAfterBytes": 49139712,
+              "sampledPeakRssBytes": 49139712
+            },
+            {
+              "wallMs": 877.1618999999992,
+              "cpuMs": 875,
+              "cpuPercent": 99.75353466674748,
+              "machineCpuPercent": 12.469191833343436,
+              "rssBeforeBytes": 49139712,
+              "rssAfterBytes": 49139712,
+              "sampledPeakRssBytes": 49139712
+            }
+          ],
+          "serialChunkedSamples": [
+            {
+              "wallMs": 867.7884999999987,
+              "cpuMs": 859,
+              "cpuPercent": 98.987253230482,
+              "machineCpuPercent": 12.37340665381025,
+              "rssBeforeBytes": 49139712,
+              "rssAfterBytes": 49139712,
+              "sampledPeakRssBytes": 49139712
+            },
+            {
+              "wallMs": 867.7903000000006,
+              "cpuMs": 875,
+              "cpuPercent": 100.83081131466894,
+              "machineCpuPercent": 12.603851414333617,
+              "rssBeforeBytes": 49139712,
+              "rssAfterBytes": 49139712,
+              "sampledPeakRssBytes": 49139712
+            },
+            {
+              "wallMs": 858.3726000000006,
+              "cpuMs": 860,
+              "cpuPercent": 100.1895913266569,
+              "machineCpuPercent": 12.523698915832112,
+              "rssBeforeBytes": 49139712,
+              "rssAfterBytes": 49139712,
+              "sampledPeakRssBytes": 49139712
+            },
+            {
+              "wallMs": 899.6440000000002,
+              "cpuMs": 890,
+              "cpuPercent": 98.92802041696491,
+              "machineCpuPercent": 12.366002552120614,
+              "rssBeforeBytes": 49139712,
+              "rssAfterBytes": 43548672,
+              "sampledPeakRssBytes": 49139712
+            },
+            {
+              "wallMs": 861.5199000000011,
+              "cpuMs": 875,
+              "cpuPercent": 101.5646881749335,
+              "machineCpuPercent": 12.695586021866687,
+              "rssBeforeBytes": 43548672,
+              "rssAfterBytes": 43548672,
+              "sampledPeakRssBytes": 43548672
+            }
+          ],
+          "threadIds": [
+            0
+          ],
+          "clonedInputBytesPerRun": null,
+          "summary": {
+            "medianWallMs": 863.1102000000001,
+            "speedup": 1,
+            "parallelEfficiency": null
+          }
+        }
+      ],
+      "probes": null,
+      "stats": null
+    },
+    {
+      "workers": 1,
+      "startupMs": 44.0012,
+      "shutdownMs": 4.974500000000262,
+      "workloads": [
+        {
+          "size": 100000,
+          "chunks": 32,
+          "correctness": {
+            "count": 9592
+          },
+          "firstRun": {
+            "wallMs": 12.224599999999995,
+            "cpuMs": 16,
+            "cpuPercent": 130.88362809417083,
+            "machineCpuPercent": 16.360453511771354,
+            "rssBeforeBytes": 59154432,
+            "rssAfterBytes": 59494400,
+            "sampledPeakRssBytes": 59719680
+          },
+          "samples": [
+            {
+              "wallMs": 5.962799999999987,
+              "cpuMs": 0,
+              "cpuPercent": 0,
+              "machineCpuPercent": 0,
+              "rssBeforeBytes": 59801600,
+              "rssAfterBytes": 59973632,
+              "sampledPeakRssBytes": 59973632
+            },
+            {
+              "wallMs": 7.014399999999995,
+              "cpuMs": 31,
+              "cpuPercent": 441.9479927007303,
+              "machineCpuPercent": 55.24349908759129,
+              "rssBeforeBytes": 59973632,
+              "rssAfterBytes": 60108800,
+              "sampledPeakRssBytes": 60108800
+            },
+            {
+              "wallMs": 6.684299999999979,
+              "cpuMs": 0,
+              "cpuPercent": 0,
+              "machineCpuPercent": 0,
+              "rssBeforeBytes": 60108800,
+              "rssAfterBytes": 60641280,
+              "sampledPeakRssBytes": 60641280
+            },
+            {
+              "wallMs": 6.279300000000006,
+              "cpuMs": 0,
+              "cpuPercent": 0,
+              "machineCpuPercent": 0,
+              "rssBeforeBytes": 60641280,
+              "rssAfterBytes": 60968960,
+              "sampledPeakRssBytes": 60968960
+            },
+            {
+              "wallMs": 6.308700000000016,
+              "cpuMs": 16,
+              "cpuPercent": 253.6180195602891,
+              "machineCpuPercent": 31.702252445036137,
+              "rssBeforeBytes": 60968960,
+              "rssAfterBytes": 61308928,
+              "sampledPeakRssBytes": 61308928
+            }
+          ],
+          "serialChunkedSamples": null,
+          "threadIds": [
+            1
+          ],
+          "clonedInputBytesPerRun": null,
+          "summary": {
+            "medianWallMs": 6.308700000000016,
+            "speedup": 0.693090494079603,
+            "parallelEfficiency": 0.693090494079603
+          }
+        },
+        {
+          "size": 1000000,
+          "chunks": 32,
+          "correctness": {
+            "count": 78498
+          },
+          "firstRun": {
+            "wallMs": 92.4118,
+            "cpuMs": 94,
+            "cpuPercent": 101.7186116924462,
+            "machineCpuPercent": 12.714826461555775,
+            "rssBeforeBytes": 62312448,
+            "rssAfterBytes": 61538304,
+            "sampledPeakRssBytes": 62410752
+          },
+          "samples": [
+            {
+              "wallMs": 106.5951,
+              "cpuMs": 78,
+              "cpuPercent": 73.17409524452813,
+              "machineCpuPercent": 9.146761905566017,
+              "rssBeforeBytes": 61599744,
+              "rssAfterBytes": 61734912,
+              "sampledPeakRssBytes": 61734912
+            },
+            {
+              "wallMs": 93.08719999999994,
+              "cpuMs": 94,
+              "cpuPercent": 100.98058594522132,
+              "machineCpuPercent": 12.622573243152665,
+              "rssBeforeBytes": 61734912,
+              "rssAfterBytes": 61939712,
+              "sampledPeakRssBytes": 61939712
+            },
+            {
+              "wallMs": 93.7940000000001,
+              "cpuMs": 94,
+              "cpuPercent": 100.21963025353425,
+              "machineCpuPercent": 12.527453781691781,
+              "rssBeforeBytes": 61939712,
+              "rssAfterBytes": 62193664,
+              "sampledPeakRssBytes": 62193664
+            },
+            {
+              "wallMs": 97.56290000000001,
+              "cpuMs": 93,
+              "cpuPercent": 95.3231197514629,
+              "machineCpuPercent": 11.915389968932862,
+              "rssBeforeBytes": 62193664,
+              "rssAfterBytes": 62488576,
+              "sampledPeakRssBytes": 62488576
+            },
+            {
+              "wallMs": 96.38599999999997,
+              "cpuMs": 94,
+              "cpuPercent": 97.52453675845044,
+              "machineCpuPercent": 12.190567094806305,
+              "rssBeforeBytes": 62488576,
+              "rssAfterBytes": 62783488,
+              "sampledPeakRssBytes": 62820352
+            }
+          ],
+          "serialChunkedSamples": null,
+          "threadIds": [
+            1
+          ],
+          "clonedInputBytesPerRun": null,
+          "summary": {
+            "medianWallMs": 96.38599999999997,
+            "speedup": 1.1399539352188077,
+            "parallelEfficiency": 1.1399539352188077
+          }
+        },
+        {
+          "size": 5000000,
+          "chunks": 32,
+          "correctness": {
+            "count": 348513
+          },
+          "firstRun": {
+            "wallMs": 886.4099000000001,
+            "cpuMs": 860,
+            "cpuPercent": 97.02057704906048,
+            "machineCpuPercent": 12.12757213113256,
+            "rssBeforeBytes": 67792896,
+            "rssAfterBytes": 67743744,
+            "sampledPeakRssBytes": 67891200
+          },
+          "samples": [
+            {
+              "wallMs": 842.5563000000002,
+              "cpuMs": 828,
+              "cpuPercent": 98.27236470726048,
+              "machineCpuPercent": 12.28404558840756,
+              "rssBeforeBytes": 67866624,
+              "rssAfterBytes": 63295488,
+              "sampledPeakRssBytes": 67936256
+            },
+            {
+              "wallMs": 932.2013000000006,
+              "cpuMs": 938,
+              "cpuPercent": 100.6220437581453,
+              "machineCpuPercent": 12.577755469768162,
+              "rssBeforeBytes": 63295488,
+              "rssAfterBytes": 63365120,
+              "sampledPeakRssBytes": 63365120
+            },
+            {
+              "wallMs": 834.3140999999996,
+              "cpuMs": 828,
+              "cpuPercent": 99.24319869459241,
+              "machineCpuPercent": 12.405399836824051,
+              "rssBeforeBytes": 63365120,
+              "rssAfterBytes": 63369216,
+              "sampledPeakRssBytes": 63369216
+            },
+            {
+              "wallMs": 839.3253999999997,
+              "cpuMs": 844,
+              "cpuPercent": 100.55694728170985,
+              "machineCpuPercent": 12.569618410213732,
+              "rssBeforeBytes": 63369216,
+              "rssAfterBytes": 63467520,
+              "sampledPeakRssBytes": 63467520
+            },
+            {
+              "wallMs": 1043.6083000000008,
+              "cpuMs": 1031,
+              "cpuPercent": 98.79185514335208,
+              "machineCpuPercent": 12.34898189291901,
+              "rssBeforeBytes": 63467520,
+              "rssAfterBytes": 59461632,
+              "sampledPeakRssBytes": 63770624
+            }
+          ],
+          "serialChunkedSamples": null,
+          "threadIds": [
+            1
+          ],
+          "clonedInputBytesPerRun": null,
+          "summary": {
+            "medianWallMs": 842.5563000000002,
+            "speedup": 1.0243946903014076,
+            "parallelEfficiency": 1.0243946903014076
+          }
+        }
+      ],
+      "probes": {
+        "scalarRoundTripMs": [
+          0.1224000000001979,
+          0.11009999999987485,
+          0.10649999999986903,
+          0.116199999998571,
+          0.1224000000001979,
+          0.10640000000057626,
+          0.12160000000039872,
+          0.1342000000004191,
+          0.13409999999930733,
+          0.21370000000024447,
+          0.37809999999990396,
+          0.221399999998539,
+          0.75,
+          0.12089999999989232,
+          0.09219999999913853,
+          0.0852999999988242,
+          0.08190000000104192,
+          0.08100000000013097,
+          0.09219999999913853,
+          0.08410000000003492,
+          0.08159999999952561,
+          0.10599999999976717,
+          0.13999999999941792,
+          0.09749999999985448,
+          0.1054999999996653,
+          0.13359999999920547,
+          0.08899999999994179,
+          0.08480000000054133,
+          0.08159999999952561,
+          0.08090000000083819,
+          0.08040000000073633,
+          0.0919000000012602,
+          0.11099999999896681,
+          0.1047999999991589,
+          0.08610000000044238,
+          0.11590000000069267,
+          0.16490000000158034,
+          0.15869999999995343,
+          0.15799999999944703,
+          0.15750000000116415,
+          0.15529999999853317,
+          0.08039999999891734,
+          0.1254000000008091,
+          0.15680000000065775,
+          0.1554999999989377,
+          0.1870999999991909,
+          0.1558999999997468,
+          0.15580000000045402,
+          0.16460000000006403,
+          0.15830000000096334,
+          0.1793999999990774,
+          0.14180000000123982,
+          0.15619999999944412,
+          0.13470000000052096,
+          0.15129999999953725,
+          0.15170000000034634,
+          0.0764999999992142,
+          0.06799999999930151,
+          0.06530000000020664,
+          0.06450000000040745,
+          0.0636000000013155,
+          0.06379999999990105,
+          0.06409999999959837,
+          0.06369999999878928,
+          0.06379999999990105,
+          0.06379999999990105,
+          0.06030000000100699,
+          0.06060000000070431,
+          0.06610000000000582,
+          0.06079999999928987,
+          0.06109999999898719,
+          0.059600000000500586,
+          0.06069999999999709,
+          0.06010000000060245,
+          0.05940000000009604,
+          0.05949999999938882,
+          0.06499999999869033,
+          0.4187000000001717,
+          0.09540000000015425,
+          0.12210000000050059,
+          0.07909999999901629,
+          0.06850000000122236,
+          0.06660000000010768,
+          0.06569999999919673,
+          0.06480000000010477,
+          0.06480000000010477,
+          0.07140000000072177,
+          0.06459999999970023,
+          0.06420000000071013,
+          0.064700000000812,
+          0.06079999999928987,
+          0.06069999999999709,
+          0.06240000000070722,
+          0.06199999999989814,
+          0.06300000000010186,
+          0.06329999999979918,
+          0.0632000000005064,
+          0.06409999999959837,
+          0.06319999999868742,
+          0.06329999999979918
+        ],
+        "eightMiBRoundTripMs": [
+          6.886000000000422,
+          8.420400000000882,
+          6.871600000000399,
+          7.796800000000076,
+          7.437399999998888,
+          12.046800000000076,
+          13.031800000000658,
+          9.874100000000908,
+          10.327900000000227,
+          9.093000000000757
+        ]
+      },
+      "stats": {
+        "state": "running",
+        "workers": {
+          "total": 1,
+          "busy": 0,
+          "idle": 1,
+          "starting": 0,
+          "failures": 0,
+          "restarts": 0,
+          "details": [
+            {
+              "id": 1,
+              "threadId": 1,
+              "status": "idle",
+              "completedTasks": 900,
+              "failedTasks": 0,
+              "totalExecutionTimeMs": 8061.290400000005
+            }
+          ]
+        },
+        "queue": {
+          "size": 0,
+          "capacity": 1024
+        },
+        "tasks": {
+          "accepted": 900,
+          "rejected": 0,
+          "pending": 0,
+          "completed": 900,
+          "failed": 0,
+          "cancelled": 0,
+          "timedOut": 0
+        },
+        "timing": {
+          "averageQueueMs": 118.21387588888885,
+          "averageExecutionMs": 8.95698933333334,
+          "averageTotalMs": 127.42471155555559,
+          "queueSamples": 900,
+          "executionSamples": 900,
+          "settledSamples": 900
+        },
+        "activeTasks": []
+      }
+    },
+    {
+      "workers": 2,
+      "startupMs": 54.26369999999999,
+      "shutdownMs": 5.4179000000003725,
+      "workloads": [
+        {
+          "size": 100000,
+          "chunks": 32,
+          "correctness": {
+            "count": 9592
+          },
+          "firstRun": {
+            "wallMs": 9.955499999999986,
+            "cpuMs": 16,
+            "cpuPercent": 160.7151825624029,
+            "machineCpuPercent": 20.089397820300363,
+            "rssBeforeBytes": 72929280,
+            "rssAfterBytes": 73875456,
+            "sampledPeakRssBytes": 73875456
+          },
+          "samples": [
+            {
+              "wallMs": 4.8603999999999985,
+              "cpuMs": 0,
+              "cpuPercent": 0,
+              "machineCpuPercent": 0,
+              "rssBeforeBytes": 73732096,
+              "rssAfterBytes": 73850880,
+              "sampledPeakRssBytes": 73850880
+            },
+            {
+              "wallMs": 4.903400000000005,
+              "cpuMs": 0,
+              "cpuPercent": 0,
+              "machineCpuPercent": 0,
+              "rssBeforeBytes": 73850880,
+              "rssAfterBytes": 74129408,
+              "sampledPeakRssBytes": 74129408
+            },
+            {
+              "wallMs": 4.3863999999999805,
+              "cpuMs": 31,
+              "cpuPercent": 706.7298923946776,
+              "machineCpuPercent": 88.3412365493347,
+              "rssBeforeBytes": 74129408,
+              "rssAfterBytes": 74395648,
+              "sampledPeakRssBytes": 74395648
+            },
+            {
+              "wallMs": 26.09020000000001,
+              "cpuMs": 0,
+              "cpuPercent": 0,
+              "machineCpuPercent": 0,
+              "rssBeforeBytes": 74399744,
+              "rssAfterBytes": 74362880,
+              "sampledPeakRssBytes": 74399744
+            },
+            {
+              "wallMs": 6.248199999999997,
+              "cpuMs": 15,
+              "cpuPercent": 240.06913991229487,
+              "machineCpuPercent": 30.00864248903686,
+              "rssBeforeBytes": 74362880,
+              "rssAfterBytes": 74969088,
+              "sampledPeakRssBytes": 74969088
+            }
+          ],
+          "serialChunkedSamples": null,
+          "threadIds": [
+            1,
+            2
+          ],
+          "clonedInputBytesPerRun": null,
+          "summary": {
+            "medianWallMs": 4.903400000000005,
+            "speedup": 0.8917281886038255,
+            "parallelEfficiency": 0.44586409430191276
+          }
+        },
+        {
+          "size": 1000000,
+          "chunks": 32,
+          "correctness": {
+            "count": 78498
+          },
+          "firstRun": {
+            "wallMs": 54.96930000000003,
+            "cpuMs": 125,
+            "cpuPercent": 227.39965762707533,
+            "machineCpuPercent": 28.424957203384416,
+            "rssBeforeBytes": 75976704,
+            "rssAfterBytes": 76029952,
+            "sampledPeakRssBytes": 76029952
+          },
+          "samples": [
+            {
+              "wallMs": 57.1703,
+              "cpuMs": 94,
+              "cpuPercent": 164.42103679707822,
+              "machineCpuPercent": 20.552629599634777,
+              "rssBeforeBytes": 76783616,
+              "rssAfterBytes": 77365248,
+              "sampledPeakRssBytes": 77365248
+            },
+            {
+              "wallMs": 57.32120000000003,
+              "cpuMs": 125,
+              "cpuPercent": 218.06940538579082,
+              "machineCpuPercent": 27.258675673223852,
+              "rssBeforeBytes": 77365248,
+              "rssAfterBytes": 76574720,
+              "sampledPeakRssBytes": 77586432
+            },
+            {
+              "wallMs": 53.78570000000002,
+              "cpuMs": 109,
+              "cpuPercent": 202.65609632300027,
+              "machineCpuPercent": 25.332012040375034,
+              "rssBeforeBytes": 76574720,
+              "rssAfterBytes": 76685312,
+              "sampledPeakRssBytes": 76685312
+            },
+            {
+              "wallMs": 53.78629999999998,
+              "cpuMs": 94,
+              "cpuPercent": 174.7656931225982,
+              "machineCpuPercent": 21.845711640324776,
+              "rssBeforeBytes": 76685312,
+              "rssAfterBytes": 76750848,
+              "sampledPeakRssBytes": 76750848
+            },
+            {
+              "wallMs": 55.702699999999936,
+              "cpuMs": 109,
+              "cpuPercent": 195.6817174032859,
+              "machineCpuPercent": 24.460214675410736,
+              "rssBeforeBytes": 76750848,
+              "rssAfterBytes": 77049856,
+              "sampledPeakRssBytes": 77049856
+            }
+          ],
+          "serialChunkedSamples": null,
+          "threadIds": [
+            1,
+            2
+          ],
+          "clonedInputBytesPerRun": null,
+          "summary": {
+            "medianWallMs": 55.702699999999936,
+            "speedup": 1.9725363402492175,
+            "parallelEfficiency": 0.9862681701246088
+          }
+        },
+        {
+          "size": 5000000,
+          "chunks": 32,
+          "correctness": {
+            "count": 348513
+          },
+          "firstRun": {
+            "wallMs": 516.1425,
+            "cpuMs": 984,
+            "cpuPercent": 190.64502535636962,
+            "machineCpuPercent": 23.830628169546202,
+            "rssBeforeBytes": 82096128,
+            "rssAfterBytes": 82022400,
+            "sampledPeakRssBytes": 82096128
+          },
+          "samples": [
+            {
+              "wallMs": 508.0038999999997,
+              "cpuMs": 953,
+              "cpuPercent": 187.59698498377682,
+              "machineCpuPercent": 23.449623122972103,
+              "rssBeforeBytes": 77279232,
+              "rssAfterBytes": 77279232,
+              "sampledPeakRssBytes": 77279232
+            },
+            {
+              "wallMs": 507.6675,
+              "cpuMs": 985,
+              "cpuPercent": 194.02463226422805,
+              "machineCpuPercent": 24.253079033028506,
+              "rssBeforeBytes": 77279232,
+              "rssAfterBytes": 77279232,
+              "sampledPeakRssBytes": 77279232
+            },
+            {
+              "wallMs": 525.0679999999998,
+              "cpuMs": 984,
+              "cpuPercent": 187.40429810995917,
+              "machineCpuPercent": 23.425537263744896,
+              "rssBeforeBytes": 77279232,
+              "rssAfterBytes": 77283328,
+              "sampledPeakRssBytes": 77283328
+            },
+            {
+              "wallMs": 541.6715000000004,
+              "cpuMs": 1063,
+              "cpuPercent": 196.24440274225233,
+              "machineCpuPercent": 24.53055034278154,
+              "rssBeforeBytes": 77283328,
+              "rssAfterBytes": 77430784,
+              "sampledPeakRssBytes": 77430784
+            },
+            {
+              "wallMs": 527.6117999999997,
+              "cpuMs": 1031,
+              "cpuPercent": 195.40882140998374,
+              "machineCpuPercent": 24.426102676247968,
+              "rssBeforeBytes": 77430784,
+              "rssAfterBytes": 77467648,
+              "sampledPeakRssBytes": 77467648
+            }
+          ],
+          "serialChunkedSamples": null,
+          "threadIds": [
+            1,
+            2
+          ],
+          "clonedInputBytesPerRun": null,
+          "summary": {
+            "medianWallMs": 525.0679999999998,
+            "speedup": 1.6438065164892937,
+            "parallelEfficiency": 0.8219032582446468
+          }
+        }
+      ],
+      "probes": {
+        "scalarRoundTripMs": [
+          0.15399999999954161,
+          0.1584999999995489,
+          0.1374999999998181,
+          0.1643000000003667,
+          0.15499999999974534,
+          0.15940000000045984,
+          0.15610000000015134,
+          0.15579999999954453,
+          0.1574000000000524,
+          0.14369999999962602,
+          0.15570000000025175,
+          0.15570000000025175,
+          0.09550000000035652,
+          0.13510000000042055,
+          0.13209999999980937,
+          0.13209999999980937,
+          0.12200000000029831,
+          0.09790000000066357,
+          0.11220000000048458,
+          0.10650000000077853,
+          0.08539999999993597,
+          0.08219999999982974,
+          0.09230000000025029,
+          0.08620000000064465,
+          0.17510000000038417,
+          0.1054999999996653,
+          0.15750000000025466,
+          0.15869999999995343,
+          0.2209000000002561,
+          0.16190000000005966,
+          0.15749999999934516,
+          0.16150000000016007,
+          0.1570000000001528,
+          0.15599999999994907,
+          0.12640000000010332,
+          0.11269999999967695,
+          0.10590000000047439,
+          0.10409999999956199,
+          0.10359999999946012,
+          0.1811999999999898,
+          0.13139999999930296,
+          0.06459999999970023,
+          0.0702000000001135,
+          0.06889999999930296,
+          0.06709999999930005,
+          0.06670000000030996,
+          0.06629999999950087,
+          0.07240000000001601,
+          0.11679999999978463,
+          0.0930000000007567,
+          0.08719999999993888,
+          0.0929999999998472,
+          0.08260000000063883,
+          0.28839999999945576,
+          0.10959999999977299,
+          0.11520000000018626,
+          0.10310000000026776,
+          0.10130000000026484,
+          0.10580000000027212,
+          0.10339999999996508,
+          0.10380000000077416,
+          0.10350000000016735,
+          0.10090000000036525,
+          0.10189999999965949,
+          0.10060000000066793,
+          0.10080000000016298,
+          0.06649999999990541,
+          0.10409999999956199,
+          0.1313000000000102,
+          0.13369999999940774,
+          0.07740000000012515,
+          0.0684000000001106,
+          0.06550000000061118,
+          0.06440000000020518,
+          0.06530000000020664,
+          0.10669999999936408,
+          0.10680000000047585,
+          0.07479999999941356,
+          0.08439999999973224,
+          0.06850000000031287,
+          0.07219999999961146,
+          0.06630000000041036,
+          0.06390000000010332,
+          0.06370000000060827,
+          0.06269999999949505,
+          0.06319999999959691,
+          0.06269999999949505,
+          0.06240000000070722,
+          0.0625,
+          0.06500000000050932,
+          0.06229999999959546,
+          0.05739999999968859,
+          0.06300000000010186,
+          0.0625,
+          0.06220000000030268,
+          0.0510999999996784,
+          0.061700000000200816,
+          0.0658000000003085,
+          0.06390000000010332,
+          0.06290000000080909
+        ],
+        "eightMiBRoundTripMs": [
+          7.169299999999566,
+          7.7664999999997235,
+          7.725099999999657,
+          9.204900000000634,
+          15.597499999999854,
+          11.232200000000375,
+          10.426100000000588,
+          9.332099999999627,
+          9.741699999999582,
+          10.893200000000434
+        ]
+      },
+      "stats": {
+        "state": "running",
+        "workers": {
+          "total": 2,
+          "busy": 0,
+          "idle": 2,
+          "starting": 0,
+          "failures": 0,
+          "restarts": 0,
+          "details": [
+            {
+              "id": 1,
+              "threadId": 1,
+              "status": "idle",
+              "completedTasks": 544,
+              "failedTasks": 0,
+              "totalExecutionTimeMs": 4407.279800000007
+            },
+            {
+              "id": 2,
+              "threadId": 2,
+              "status": "idle",
+              "completedTasks": 356,
+              "failedTasks": 0,
+              "totalExecutionTimeMs": 4521.1019
+            }
+          ]
+        },
+        "queue": {
+          "size": 0,
+          "capacity": 1024
+        },
+        "tasks": {
+          "accepted": 900,
+          "rejected": 0,
+          "pending": 0,
+          "completed": 900,
+          "failed": 0,
+          "cancelled": 0,
+          "timedOut": 0
+        },
+        "timing": {
+          "averageQueueMs": 62.64788455555558,
+          "averageExecutionMs": 9.92042411111112,
+          "averageTotalMs": 72.86653233333332,
+          "queueSamples": 900,
+          "executionSamples": 900,
+          "settledSamples": 900
+        },
+        "activeTasks": []
+      }
+    },
+    {
+      "workers": 4,
+      "startupMs": 57.7562,
+      "shutdownMs": 7.038900000000012,
+      "workloads": [
+        {
+          "size": 100000,
+          "chunks": 32,
+          "correctness": {
+            "count": 9592
+          },
+          "firstRun": {
+            "wallMs": 7.766600000000011,
+            "cpuMs": 15,
+            "cpuPercent": 193.13470501892692,
+            "machineCpuPercent": 24.141838127365865,
+            "rssBeforeBytes": 99426304,
+            "rssAfterBytes": 100438016,
+            "sampledPeakRssBytes": 100577280
+          },
+          "samples": [
+            {
+              "wallMs": 3.665900000000022,
+              "cpuMs": 63,
+              "cpuPercent": 1718.5411495130697,
+              "machineCpuPercent": 214.81764368913372,
+              "rssBeforeBytes": 101154816,
+              "rssAfterBytes": 101748736,
+              "sampledPeakRssBytes": 101748736
+            },
+            {
+              "wallMs": 3.088700000000017,
+              "cpuMs": 0,
+              "cpuPercent": 0,
+              "machineCpuPercent": 0,
+              "rssBeforeBytes": 101748736,
+              "rssAfterBytes": 101904384,
+              "sampledPeakRssBytes": 101904384
+            },
+            {
+              "wallMs": 2.8238000000000056,
+              "cpuMs": 0,
+              "cpuPercent": 0,
+              "machineCpuPercent": 0,
+              "rssBeforeBytes": 101904384,
+              "rssAfterBytes": 101920768,
+              "sampledPeakRssBytes": 101920768
+            },
+            {
+              "wallMs": 3.0121000000000038,
+              "cpuMs": 0,
+              "cpuPercent": 0,
+              "machineCpuPercent": 0,
+              "rssBeforeBytes": 101920768,
+              "rssAfterBytes": 102404096,
+              "sampledPeakRssBytes": 102404096
+            },
+            {
+              "wallMs": 3.57589999999999,
+              "cpuMs": 62,
+              "cpuPercent": 1733.8292457842829,
+              "machineCpuPercent": 216.72865572303536,
+              "rssBeforeBytes": 102404096,
+              "rssAfterBytes": 102895616,
+              "sampledPeakRssBytes": 102895616
+            }
+          ],
+          "serialChunkedSamples": null,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "clonedInputBytesPerRun": null,
+          "summary": {
+            "medianWallMs": 3.088700000000017,
+            "speedup": 1.4156441221225688,
+            "parallelEfficiency": 0.3539110305306422
+          }
+        },
+        {
+          "size": 1000000,
+          "chunks": 32,
+          "correctness": {
+            "count": 78498
+          },
+          "firstRun": {
+            "wallMs": 30.929399999999987,
+            "cpuMs": 141,
+            "cpuPercent": 455.87693262720927,
+            "machineCpuPercent": 56.98461657840116,
+            "rssBeforeBytes": 103940096,
+            "rssAfterBytes": 103948288,
+            "sampledPeakRssBytes": 103948288
+          },
+          "samples": [
+            {
+              "wallMs": 37.20860000000002,
+              "cpuMs": 125,
+              "cpuPercent": 335.9438409399976,
+              "machineCpuPercent": 41.9929801174997,
+              "rssBeforeBytes": 104022016,
+              "rssAfterBytes": 102916096,
+              "sampledPeakRssBytes": 104042496
+            },
+            {
+              "wallMs": 32.41300000000001,
+              "cpuMs": 94,
+              "cpuPercent": 290.0070959183043,
+              "machineCpuPercent": 36.250886989788036,
+              "rssBeforeBytes": 102916096,
+              "rssAfterBytes": 102957056,
+              "sampledPeakRssBytes": 102957056
+            },
+            {
+              "wallMs": 33.20179999999999,
+              "cpuMs": 94,
+              "cpuPercent": 283.11718039383413,
+              "machineCpuPercent": 35.38964754922927,
+              "rssBeforeBytes": 102957056,
+              "rssAfterBytes": 103002112,
+              "sampledPeakRssBytes": 103002112
+            },
+            {
+              "wallMs": 33.39889999999997,
+              "cpuMs": 109,
+              "cpuPercent": 326.35805370835595,
+              "machineCpuPercent": 40.794756713544494,
+              "rssBeforeBytes": 103002112,
+              "rssAfterBytes": 103067648,
+              "sampledPeakRssBytes": 103067648
+            },
+            {
+              "wallMs": 32.5249,
+              "cpuMs": 125,
+              "cpuPercent": 384.3209356523771,
+              "machineCpuPercent": 48.04011695654714,
+              "rssBeforeBytes": 103067648,
+              "rssAfterBytes": 103378944,
+              "sampledPeakRssBytes": 103464960
+            }
+          ],
+          "serialChunkedSamples": null,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "clonedInputBytesPerRun": null,
+          "summary": {
+            "medianWallMs": 33.20179999999999,
+            "speedup": 3.309326602774548,
+            "parallelEfficiency": 0.827331650693637
+          }
+        },
+        {
+          "size": 5000000,
+          "chunks": 32,
+          "correctness": {
+            "count": 348513
+          },
+          "firstRun": {
+            "wallMs": 330.4819,
+            "cpuMs": 1218,
+            "cpuPercent": 368.5527104510111,
+            "machineCpuPercent": 46.069088806376385,
+            "rssBeforeBytes": 108744704,
+            "rssAfterBytes": 108994560,
+            "sampledPeakRssBytes": 108994560
+          },
+          "samples": [
+            {
+              "wallMs": 333.6667,
+              "cpuMs": 1234,
+              "cpuPercent": 369.8301328841026,
+              "machineCpuPercent": 46.22876661051283,
+              "rssBeforeBytes": 109383680,
+              "rssAfterBytes": 105127936,
+              "sampledPeakRssBytes": 109387776
+            },
+            {
+              "wallMs": 320.9973000000002,
+              "cpuMs": 1203,
+              "cpuPercent": 374.7695074070714,
+              "machineCpuPercent": 46.84618842588392,
+              "rssBeforeBytes": 105127936,
+              "rssAfterBytes": 105136128,
+              "sampledPeakRssBytes": 105136128
+            },
+            {
+              "wallMs": 320.2919999999999,
+              "cpuMs": 1219,
+              "cpuPercent": 380.5902114320683,
+              "machineCpuPercent": 47.57377642900854,
+              "rssBeforeBytes": 105136128,
+              "rssAfterBytes": 105152512,
+              "sampledPeakRssBytes": 105152512
+            },
+            {
+              "wallMs": 324.77599999999984,
+              "cpuMs": 1203,
+              "cpuPercent": 370.4091435327735,
+              "machineCpuPercent": 46.30114294159669,
+              "rssBeforeBytes": 105152512,
+              "rssAfterBytes": 105160704,
+              "sampledPeakRssBytes": 105160704
+            },
+            {
+              "wallMs": 334.4881999999998,
+              "cpuMs": 1234,
+              "cpuPercent": 368.9218334159474,
+              "machineCpuPercent": 46.115229176993424,
+              "rssBeforeBytes": 105160704,
+              "rssAfterBytes": 105033728,
+              "sampledPeakRssBytes": 105160704
+            }
+          ],
+          "serialChunkedSamples": null,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "clonedInputBytesPerRun": null,
+          "summary": {
+            "medianWallMs": 324.77599999999984,
+            "speedup": 2.65755536123359,
+            "parallelEfficiency": 0.6643888403083975
+          }
+        }
+      ],
+      "probes": {
+        "scalarRoundTripMs": [
+          0.16360000000031505,
+          0.1592000000000553,
+          0.14600000000018554,
+          0.1329000000000633,
+          0.10800000000017462,
+          0.11440000000038708,
+          0.11319999999977881,
+          0.12370000000009895,
+          0.14679999999998472,
+          0.1281000000003587,
+          0.13459999999986394,
+          0.14880000000039217,
+          0.11319999999977881,
+          0.09659999999985303,
+          0.08890000000019427,
+          0.0864000000001397,
+          0.09639999999990323,
+          0.09969999999975698,
+          0.1273999999998523,
+          0.12370000000009895,
+          0.14000000000032742,
+          0.10500000000001819,
+          0.12490000000025248,
+          0.12440000000015061,
+          0.15619999999989886,
+          0.1849000000001979,
+          0.1376999999997679,
+          0.1610000000000582,
+          0.18089999999983775,
+          0.16340000000036525,
+          0.15499999999974534,
+          0.14629999999988286,
+          0.16350000000011278,
+          0.1596999999997024,
+          0.1596999999997024,
+          0.15929999999980282,
+          0.29129999999986467,
+          0.11889999999993961,
+          0.10759999999982028,
+          0.6993999999999687,
+          0.202900000000227,
+          0.15189999999984138,
+          0.09810000000015862,
+          0.11189999999987776,
+          0.08849999999983993,
+          0.08719999999993888,
+          0.09540000000015425,
+          0.1034999999997126,
+          0.08780000000024302,
+          0.08550000000013824,
+          0.08489999999983411,
+          0.08479999999963184,
+          0.08480000000008658,
+          0.08429999999998472,
+          0.08410000000003492,
+          0.12649999999985084,
+          0.08720000000039363,
+          0.08669999999983702,
+          0.09349999999994907,
+          0.08500000000003638,
+          0.08439999999973224,
+          0.08370000000013533,
+          0.08429999999998472,
+          0.13520000000016807,
+          0.10280000000011569,
+          0.08140000000003056,
+          0.06680000000005748,
+          0.17990000000008877,
+          0.14350000000013097,
+          0.12629999999990105,
+          0.13419999999996435,
+          0.18890000000010332,
+          0.1516999999998916,
+          0.1465000000002874,
+          0.1817999999998392,
+          0.09659999999985303,
+          0.08789999999999054,
+          0.08709999999973661,
+          0.10780000000022483,
+          0.08609999999998763,
+          0.10649999999986903,
+          0.14879999999993743,
+          0.09850000000005821,
+          0.08570000000008804,
+          0.08480000000008658,
+          0.08899999999994179,
+          0.12609999999995125,
+          0.08709999999973661,
+          0.08429999999998472,
+          0.08399999999983265,
+          0.08440000000018699,
+          0.08370000000013533,
+          0.08649999999988722,
+          0.08530000000018845,
+          0.09720000000015716,
+          0.08969999999999345,
+          0.08999999999969077,
+          0.08519999999998618,
+          0.0842000000002372,
+          0.08359999999993306
+        ],
+        "eightMiBRoundTripMs": [
+          9.684099999999944,
+          6.6884000000000015,
+          6.850800000000163,
+          8.27410000000009,
+          8.605599999999868,
+          11.500100000000202,
+          8.708200000000033,
+          9.008700000000317,
+          10.481199999999717,
+          8.597800000000007
+        ]
+      },
+      "stats": {
+        "state": "running",
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "idle": 4,
+          "starting": 0,
+          "failures": 0,
+          "restarts": 0,
+          "details": [
+            {
+              "id": 1,
+              "threadId": 1,
+              "status": "idle",
+              "completedTasks": 325,
+              "failedTasks": 0,
+              "totalExecutionTimeMs": 2744.4024000000004
+            },
+            {
+              "id": 2,
+              "threadId": 2,
+              "status": "idle",
+              "completedTasks": 183,
+              "failedTasks": 0,
+              "totalExecutionTimeMs": 2801.8876
+            },
+            {
+              "id": 3,
+              "threadId": 3,
+              "status": "idle",
+              "completedTasks": 198,
+              "failedTasks": 0,
+              "totalExecutionTimeMs": 2623.9493999999995
+            },
+            {
+              "id": 4,
+              "threadId": 4,
+              "status": "idle",
+              "completedTasks": 194,
+              "failedTasks": 0,
+              "totalExecutionTimeMs": 2556.779400000001
+            }
+          ]
+        },
+        "queue": {
+          "size": 0,
+          "capacity": 1024
+        },
+        "tasks": {
+          "accepted": 900,
+          "rejected": 0,
+          "pending": 0,
+          "completed": 900,
+          "failed": 0,
+          "cancelled": 0,
+          "timedOut": 0
+        },
+        "timing": {
+          "averageQueueMs": 34.38096622222218,
+          "averageExecutionMs": 11.91890977777778,
+          "averageTotalMs": 46.55898722222227,
+          "queueSamples": 900,
+          "executionSamples": 900,
+          "settledSamples": 900
+        },
+        "activeTasks": []
+      }
+    },
+    {
+      "workers": 8,
+      "startupMs": 99.9159,
+      "shutdownMs": 12.616699999999582,
+      "workloads": [
+        {
+          "size": 100000,
+          "chunks": 32,
+          "correctness": {
+            "count": 9592
+          },
+          "firstRun": {
+            "wallMs": 10.000499999999988,
+            "cpuMs": 15,
+            "cpuPercent": 149.99250037498143,
+            "machineCpuPercent": 18.74906254687268,
+            "rssBeforeBytes": 150011904,
+            "rssAfterBytes": 152096768,
+            "sampledPeakRssBytes": 152608768
+          },
+          "samples": [
+            {
+              "wallMs": 5.26909999999998,
+              "cpuMs": 0,
+              "cpuPercent": 0,
+              "machineCpuPercent": 0,
+              "rssBeforeBytes": 153579520,
+              "rssAfterBytes": 153665536,
+              "sampledPeakRssBytes": 153665536
+            },
+            {
+              "wallMs": 3.6114000000000033,
+              "cpuMs": 0,
+              "cpuPercent": 0,
+              "machineCpuPercent": 0,
+              "rssBeforeBytes": 153665536,
+              "rssAfterBytes": 154296320,
+              "sampledPeakRssBytes": 154296320
+            },
+            {
+              "wallMs": 4.101399999999984,
+              "cpuMs": 0,
+              "cpuPercent": 0,
+              "machineCpuPercent": 0,
+              "rssBeforeBytes": 154300416,
+              "rssAfterBytes": 155045888,
+              "sampledPeakRssBytes": 155045888
+            },
+            {
+              "wallMs": 3.019599999999997,
+              "cpuMs": 0,
+              "cpuPercent": 0,
+              "machineCpuPercent": 0,
+              "rssBeforeBytes": 155045888,
+              "rssAfterBytes": 155049984,
+              "sampledPeakRssBytes": 155049984
+            },
+            {
+              "wallMs": 3.039800000000014,
+              "cpuMs": 0,
+              "cpuPercent": 0,
+              "machineCpuPercent": 0,
+              "rssBeforeBytes": 155049984,
+              "rssAfterBytes": 155107328,
+              "sampledPeakRssBytes": 155107328
+            }
+          ],
+          "serialChunkedSamples": null,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "clonedInputBytesPerRun": null,
+          "summary": {
+            "medianWallMs": 3.6114000000000033,
+            "speedup": 1.2107492939026412,
+            "parallelEfficiency": 0.15134366173783015
+          }
+        },
+        {
+          "size": 1000000,
+          "chunks": 32,
+          "correctness": {
+            "count": 78498
+          },
+          "firstRun": {
+            "wallMs": 28.829800000000006,
+            "cpuMs": 188,
+            "cpuPercent": 652.1030322791,
+            "machineCpuPercent": 81.5128790348875,
+            "rssBeforeBytes": 155926528,
+            "rssAfterBytes": 155529216,
+            "sampledPeakRssBytes": 155926528
+          },
+          "samples": [
+            {
+              "wallMs": 24.678099999999972,
+              "cpuMs": 94,
+              "cpuPercent": 380.9045266856043,
+              "machineCpuPercent": 47.61306583570054,
+              "rssBeforeBytes": 155627520,
+              "rssAfterBytes": 155766784,
+              "sampledPeakRssBytes": 155766784
+            },
+            {
+              "wallMs": 25.169899999999984,
+              "cpuMs": 188,
+              "cpuPercent": 746.9239051406645,
+              "machineCpuPercent": 93.36548814258306,
+              "rssBeforeBytes": 155766784,
+              "rssAfterBytes": 155906048,
+              "sampledPeakRssBytes": 155906048
+            },
+            {
+              "wallMs": 25.476599999999962,
+              "cpuMs": 109,
+              "cpuPercent": 427.8435898039776,
+              "machineCpuPercent": 53.4804487254972,
+              "rssBeforeBytes": 155906048,
+              "rssAfterBytes": 155975680,
+              "sampledPeakRssBytes": 155975680
+            },
+            {
+              "wallMs": 23.7081,
+              "cpuMs": 172,
+              "cpuPercent": 725.4904441941784,
+              "machineCpuPercent": 90.6863055242723,
+              "rssBeforeBytes": 155975680,
+              "rssAfterBytes": 156053504,
+              "sampledPeakRssBytes": 156053504
+            },
+            {
+              "wallMs": 25.583699999999965,
+              "cpuMs": 109,
+              "cpuPercent": 426.05252563155506,
+              "machineCpuPercent": 53.25656570394438,
+              "rssBeforeBytes": 156053504,
+              "rssAfterBytes": 156221440,
+              "sampledPeakRssBytes": 156221440
+            }
+          ],
+          "serialChunkedSamples": null,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "clonedInputBytesPerRun": null,
+          "summary": {
+            "medianWallMs": 25.169899999999984,
+            "speedup": 4.365357033599658,
+            "parallelEfficiency": 0.5456696291999572
+          }
+        },
+        {
+          "size": 5000000,
+          "chunks": 32,
+          "correctness": {
+            "count": 348513
+          },
+          "firstRun": {
+            "wallMs": 238.7622,
+            "cpuMs": 1344,
+            "cpuPercent": 562.9031731153424,
+            "machineCpuPercent": 70.3628966394178,
+            "rssBeforeBytes": 161222656,
+            "rssAfterBytes": 161259520,
+            "sampledPeakRssBytes": 161259520
+          },
+          "samples": [
+            {
+              "wallMs": 232.25980000000004,
+              "cpuMs": 1281,
+              "cpuPercent": 551.537545455563,
+              "machineCpuPercent": 68.94219318194537,
+              "rssBeforeBytes": 156585984,
+              "rssAfterBytes": 156635136,
+              "sampledPeakRssBytes": 156635136
+            },
+            {
+              "wallMs": 224.12470000000008,
+              "cpuMs": 1344,
+              "cpuPercent": 599.6661679859469,
+              "machineCpuPercent": 74.95827099824336,
+              "rssBeforeBytes": 156635136,
+              "rssAfterBytes": 156749824,
+              "sampledPeakRssBytes": 156749824
+            },
+            {
+              "wallMs": 215.00569999999993,
+              "cpuMs": 1375,
+              "cpuPercent": 639.5179290595554,
+              "machineCpuPercent": 79.93974113244442,
+              "rssBeforeBytes": 156749824,
+              "rssAfterBytes": 156774400,
+              "sampledPeakRssBytes": 156774400
+            },
+            {
+              "wallMs": 234.80680000000007,
+              "cpuMs": 1328,
+              "cpuPercent": 565.5713548329944,
+              "machineCpuPercent": 70.6964193541243,
+              "rssBeforeBytes": 156774400,
+              "rssAfterBytes": 156803072,
+              "sampledPeakRssBytes": 156803072
+            },
+            {
+              "wallMs": 308.5028,
+              "cpuMs": 1266,
+              "cpuPercent": 410.36904689357766,
+              "machineCpuPercent": 51.29613086169721,
+              "rssBeforeBytes": 156803072,
+              "rssAfterBytes": 156889088,
+              "sampledPeakRssBytes": 156889088
+            }
+          ],
+          "serialChunkedSamples": null,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "clonedInputBytesPerRun": null,
+          "summary": {
+            "medianWallMs": 232.25980000000004,
+            "speedup": 3.716141148834193,
+            "parallelEfficiency": 0.4645176436042741
+          }
+        }
+      ],
+      "probes": {
+        "scalarRoundTripMs": [
+          0.11129999999957363,
+          0.11259999999992942,
+          0.11029999999982465,
+          0.1101000000003296,
+          0.11059999999997672,
+          0.11090000000012878,
+          0.11950000000024374,
+          0.11259999999992942,
+          0.11130000000002838,
+          0.10989999999992506,
+          0.13599999999996726,
+          0.12229999999999563,
+          0.11120000000028085,
+          0.11019999999962238,
+          0.11059999999997672,
+          0.12289999999984502,
+          0.11220000000002983,
+          0.11029999999982465,
+          0.1230000000000473,
+          0.13180000000011205,
+          0.11310000000003129,
+          0.5792000000001281,
+          0.1236999999996442,
+          0.11279999999987922,
+          0.10960000000022774,
+          0.11120000000028085,
+          0.10950000000002547,
+          0.1089999999999236,
+          0.11539999999968131,
+          0.10969999999997526,
+          0.5584000000003471,
+          0.12179999999989377,
+          0.11180000000013024,
+          0.11900000000014188,
+          0.11239999999997963,
+          0.1087999999999738,
+          0.10829999999987194,
+          0.1091999999998734,
+          0.10859999999956926,
+          0.10850000000027649,
+          0.10850000000027649,
+          0.10840000000007421,
+          0.11869999999998981,
+          0.10849999999982174,
+          0.10860000000002401,
+          0.10789999999997235,
+          0.10799999999971988,
+          0.10789999999997235,
+          0.10750000000007276,
+          0.10829999999987194,
+          0.10959999999977299,
+          0.11650000000008731,
+          0.10960000000022774,
+          0.10829999999987194,
+          0.1087999999999738,
+          0.1087999999999738,
+          0.10870000000022628,
+          0.10930000000007567,
+          0.10910000000012587,
+          0.10860000000002401,
+          0.11970000000019354,
+          0.10850000000027649,
+          0.10830000000032669,
+          0.1089999999999236,
+          0.10809999999992215,
+          0.10889999999972133,
+          0.10820000000012442,
+          0.10829999999987194,
+          0.11520000000018626,
+          0.13650000000006912,
+          0.14709999999968204,
+          0.15439999999989595,
+          0.1111999999998261,
+          0.12310000000024957,
+          0.13160000000016225,
+          0.17639999999983047,
+          0.16840000000001965,
+          0.14419999999972788,
+          0.12879999999995562,
+          0.11059999999997672,
+          0.12629999999990105,
+          0.12089999999989232,
+          0.1093999999998232,
+          0.12330000000019936,
+          0.1384000000002743,
+          0.1111999999998261,
+          0.1230000000000473,
+          0.11049999999977445,
+          0.12010000000009313,
+          0.1133999999997286,
+          0.12210000000004584,
+          0.12419999999974607,
+          0.12030000000004293,
+          0.11190000000033251,
+          0.11819999999988795,
+          0.1089999999999236,
+          0.12359999999989668,
+          0.1285000000002583,
+          0.1344000000003689,
+          0.1566000000002532
+        ],
+        "eightMiBRoundTripMs": [
+          7.436699999999746,
+          7.475800000000163,
+          7.6246000000001,
+          7.922800000000279,
+          9.01260000000002,
+          10.764999999999873,
+          10.472299999999905,
+          8.902399999999943,
+          8.537499999999909,
+          8.543500000000222
+        ]
+      },
+      "stats": {
+        "state": "running",
+        "workers": {
+          "total": 8,
+          "busy": 0,
+          "idle": 8,
+          "starting": 0,
+          "failures": 0,
+          "restarts": 0,
+          "details": [
+            {
+              "id": 1,
+              "threadId": 1,
+              "status": "idle",
+              "completedTasks": 242,
+              "failedTasks": 0,
+              "totalExecutionTimeMs": 1784.2192000000011
+            },
+            {
+              "id": 2,
+              "threadId": 2,
+              "status": "idle",
+              "completedTasks": 94,
+              "failedTasks": 0,
+              "totalExecutionTimeMs": 1792.7063999999991
+            },
+            {
+              "id": 3,
+              "threadId": 3,
+              "status": "idle",
+              "completedTasks": 96,
+              "failedTasks": 0,
+              "totalExecutionTimeMs": 1570.0076999999999
+            },
+            {
+              "id": 4,
+              "threadId": 4,
+              "status": "idle",
+              "completedTasks": 100,
+              "failedTasks": 0,
+              "totalExecutionTimeMs": 1712.0151999999996
+            },
+            {
+              "id": 5,
+              "threadId": 5,
+              "status": "idle",
+              "completedTasks": 95,
+              "failedTasks": 0,
+              "totalExecutionTimeMs": 1672.9834999999987
+            },
+            {
+              "id": 6,
+              "threadId": 6,
+              "status": "idle",
+              "completedTasks": 90,
+              "failedTasks": 0,
+              "totalExecutionTimeMs": 1694.2105000000006
+            },
+            {
+              "id": 7,
+              "threadId": 7,
+              "status": "idle",
+              "completedTasks": 91,
+              "failedTasks": 0,
+              "totalExecutionTimeMs": 1517.5493999999994
+            },
+            {
+              "id": 8,
+              "threadId": 8,
+              "status": "idle",
+              "completedTasks": 92,
+              "failedTasks": 0,
+              "totalExecutionTimeMs": 1780.7543999999994
+            }
+          ]
+        },
+        "queue": {
+          "size": 0,
+          "capacity": 1024
+        },
+        "tasks": {
+          "accepted": 900,
+          "rejected": 0,
+          "pending": 0,
+          "completed": 900,
+          "failed": 0,
+          "cancelled": 0,
+          "timedOut": 0
+        },
+        "timing": {
+          "averageQueueMs": 21.779323,
+          "averageExecutionMs": 15.027162555555556,
+          "averageTotalMs": 38.92378811111107,
+          "queueSamples": 900,
+          "executionSamples": 900,
+          "settledSamples": 900
+        },
+        "activeTasks": []
+      }
+    }
+  ]
+}
