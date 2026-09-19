@@ -1,7 +1,7 @@
 {
   "name": "pjs-workspace",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "MIT",
   "type": "module",
   "workspaces": [
@@ -12,21 +12,26 @@
   },
   "scripts": {
     "build": "tsc -p packages/runtime/tsconfig.json",
-    "test": "npm run build && node --test --test-timeout=20000 packages/runtime/test/*.test.mjs",
+    "typecheck:compat": "tsc6 --noEmit -p packages/runtime/tsconfig.json",
+    "test": "npm run build && npm run test:types && node --test --test-timeout=20000 packages/runtime/test/*.test.mjs",
+    "test:types": "tsc -p packages/runtime/test/tsconfig.json",
     "test:stress": "npm run build && node scripts/stress.mjs",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "benchmark:cpu": "npm run build && node benchmarks/cpu-baseline/run.mjs",
     "benchmark:matrix": "npm run build && node benchmarks/matrix-multiplication/run.mjs",
-    "example": "npm run build && node examples/prime-search.mjs"
+    "benchmark:transfer": "npm run build && node benchmarks/transfer/run.mjs",
+    "example": "npm run build && node examples/prime-search.mjs",
+    "example:transfer": "npm run build && node examples/transfer.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/node": "^22.19.0",
     "eslint": "^10.11.0",
     "prettier": "^3.7.0",
-    "typescript": "^5.9.3",
+    "@typescript/native": "npm:typescript@^7.0.2",
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
     "typescript-eslint": "^8.48.0"
   }
 }

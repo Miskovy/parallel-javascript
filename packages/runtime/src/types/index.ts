@@ -35,6 +35,8 @@ export interface TaskSnapshot {
 
 export interface RunOptions {
   signal?: AbortSignal;
+  /** Move these buffers at dispatch. All sender-side views detach on a successful post. */
+  transferList?: readonly ArrayBuffer[];
   /** End-to-end deadline in milliseconds, including startup and queue time. */
   timeout?: number;
 }

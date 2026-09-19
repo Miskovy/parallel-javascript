@@ -6,11 +6,7 @@ if (!Number.isSafeInteger(rounds) || rounds < 1)
 for (let round = 1; round <= rounds; round++) {
   const result = spawnSync(
     process.execPath,
-    [
-      '--test',
-      '--test-timeout=20000',
-      'packages/runtime/test/runtime.test.mjs',
-    ],
+    ['--test', '--test-timeout=20000', 'packages/runtime/test/*.test.mjs'],
     { encoding: 'utf8' },
   );
   if (result.status !== 0) {

@@ -1,10 +1,15 @@
 import { parentPort, workerData } from 'node:worker_threads';
+import { PjsSerializationError } from '../errors/index.js';
+import { transferOutput } from '../tasks/transfer.js';
 import { isHostMessage, serializeError } from './protocol.js';
 import type { BootstrapData, WorkerMessage } from './protocol.js';
 
 if (!parentPort) throw new Error('PJS bootstrap requires a worker thread');
 const port = parentPort;
-const send = (message: WorkerMessage): void => port.postMessage(message);
+const send = (
+  message: WorkerMessage,
+  transferList: readonly ArrayBuffer[] = [],
+): void => port.postMessage(message, transferList);
 type Execute = (input: unknown) => unknown;
 const tasks = new Map<string, Execute>();
 let state: 'starting' | 'idle' | 'busy' | 'stopped' = 'starting';
@@ -51,7 +56,16 @@ async function handle(value: unknown): Promise<void> {
     const output = await execute(value.input);
     const executionMs = performance.now() - started;
     try {
-      send({ type: 'success', taskId: value.taskId, output, executionMs });
+      const result = transferOutput(output);
+      send(
+        {
+          type: 'success',
+          taskId: value.taskId,
+          output: result.value,
+          executionMs,
+        },
+        result.transferList,
+      );
     } catch (cause) {
       send({
         type: 'failure',
@@ -65,7 +79,7 @@ async function handle(value: unknown): Promise<void> {
     send({
       type: 'failure',
       taskId: value.taskId,
-      kind: 'task',
+      kind: cause instanceof PjsSerializationError ? 'serialization' : 'task',
       error: serializeError(cause),
       executionMs: performance.now() - started,
     });

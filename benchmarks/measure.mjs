@@ -9,7 +9,14 @@ import {
   referenceMultiply,
 } from './matrix-multiplication/task.mjs';
 
-const { suite, workers, sizes, trials, warmups } = JSON.parse(process.argv[2]);
+const {
+  suite,
+  workers,
+  sizes,
+  trials,
+  warmups,
+  memory = 'clone',
+} = JSON.parse(process.argv[2]);
 const registry = new PjsTaskRegistry();
 const primeTask = registry.register(
   'primes',
@@ -18,8 +25,13 @@ const primeTask = registry.register(
 );
 const matrixTask = registry.register(
   'matrix',
-  new URL('./matrix-multiplication/task.mjs', import.meta.url),
-  'multiplyRows',
+  new URL(
+    memory === 'transfer'
+      ? './transfer/tasks.mjs'
+      : './matrix-multiplication/task.mjs',
+    import.meta.url,
+  ),
+  memory === 'transfer' ? 'multiplyRowsTransferred' : 'multiplyRows',
 );
 const probeTask = registry.register(
   'probe',
@@ -104,12 +116,14 @@ try {
           const from = Math.floor((size * i) / chunks);
           const to = Math.floor((size * (i + 1)) / chunks);
           // Compact left row blocks: a subarray would clone the entire backing store.
-          return runtime.run(matrixTask, {
-            a: input.a.slice(from * size, to * size),
-            b: input.b,
-            size,
-            rows: to - from,
-          });
+          const a = input.a.slice(from * size, to * size);
+          // The original B is reused across workers/trials; transferring requires dedicated copies.
+          const b = memory === 'transfer' ? input.b.slice() : input.b;
+          return runtime.run(
+            matrixTask,
+            { a, b, size, rows: to - from },
+            memory === 'transfer' ? { transferList: [a.buffer, b.buffer] } : {},
+          );
         }),
       );
       const output = new Float64Array(size * size);
@@ -174,9 +188,22 @@ try {
       serialChunkedSamples,
       threadIds: [...threadIds],
       clonedInputBytesPerRun:
-        suite === 'matrix' && runtime
+        suite === 'matrix' && runtime && memory === 'clone'
           ? input.a.byteLength + input.b.byteLength * chunks
-          : null,
+          : 0,
+      preparationCopyBytesPerRun:
+        suite === 'matrix' && runtime
+          ? input.a.byteLength +
+            (memory === 'transfer' ? input.b.byteLength * chunks : 0)
+          : 0,
+      transferredInputBytesPerRun:
+        suite === 'matrix' && runtime && memory === 'transfer'
+          ? input.a.byteLength + input.b.byteLength * chunks
+          : 0,
+      transferredOutputBytesPerRun:
+        suite === 'matrix' && runtime && memory === 'transfer'
+          ? size * size * 8
+          : 0,
     });
   }
   // Diagnostic probes occur after workload measurements, so they do not warm the cold workload.
@@ -206,6 +233,7 @@ try {
   process.stdout.write(
     JSON.stringify({
       workers,
+      memory,
       startupMs,
       shutdownMs: performance.now() - shutdownStart,
       workloads,

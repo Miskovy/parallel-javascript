@@ -7,6 +7,8 @@ export interface ScheduledTask {
 export interface PendingTask extends ScheduledTask {
   snapshot: TaskSnapshot;
   input: unknown;
+  transferList: ArrayBuffer[];
+  releaseTransfers: () => void;
   admittedAt: number;
   resolve: (output: unknown) => void;
   reject: (error: Error) => void;

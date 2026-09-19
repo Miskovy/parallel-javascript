@@ -1,6 +1,7 @@
 import { Worker } from 'node:worker_threads';
 import { PjsSerializationError, PjsWorkerError } from '../errors/index.js';
 import type { TaskDescriptor } from '../tasks/registry.js';
+import { validateTransferList } from '../tasks/transfer.js';
 import type { WorkerState } from '../types/index.js';
 import { isWorkerMessage } from './protocol.js';
 import type {
@@ -70,7 +71,12 @@ export class PjsWorker {
     return { ...this.state };
   }
 
-  execute(taskId: string, taskName: string, input: unknown): void {
+  execute(
+    taskId: string,
+    taskName: string,
+    input: unknown,
+    transferList: readonly ArrayBuffer[] = [],
+  ): void {
     if (this.state.status !== 'idle')
       throw new PjsWorkerError('Worker is not idle', {
         taskId,
@@ -80,21 +86,28 @@ export class PjsWorker {
     this.state.currentTaskId = taskId;
     this.executionPhase = 'scheduled';
     try {
-      this.thread.postMessage({
-        type: 'execute',
-        taskId,
-        taskName,
-        input,
-      } satisfies HostMessage);
+      validateTransferList(transferList);
+      this.thread.postMessage(
+        {
+          type: 'execute',
+          taskId,
+          taskName,
+          input,
+        } satisfies HostMessage,
+        transferList,
+      );
     } catch (cause) {
       this.state.status = 'idle';
       delete this.state.currentTaskId;
       this.executionPhase = 'none';
-      throw new PjsSerializationError('Task input could not be cloned', {
-        taskId,
-        workerId: this.id,
-        cause,
-      });
+      throw new PjsSerializationError(
+        `Task input could not be serialized: ${cause instanceof Error ? cause.message : 'unknown cause'}`,
+        {
+          taskId,
+          workerId: this.id,
+          cause,
+        },
+      );
     }
   }
 

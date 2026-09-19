@@ -1,40 +1,40 @@
 # Toolchain choices
 
-This records the foundation's actual setup, reviewed on 2026-09-19. The selected versions are a working baseline, not a claim that older versions are inherently better. No runtime behavior requires TypeScript 5.9 specifically, and no comparative compiler benchmark justified that initial choice.
+PJS v0.2 builds with **TypeScript 7.0.2**. ESLint continues to use the TypeScript 6 compiler API through a compatibility package. All compiler and lint dependencies are development-only; the runtime has no external runtime dependencies.
 
-## Declared ranges versus installed versions
+## Compiler commands and aliases
 
-`package.json` declares compatible update ranges; `package-lock.json` records exact resolutions. For example, `^5.9.3` allows compatible 5.x updates but excludes 6.x and 7.x. `npm ci` installs the locked dependency graph.
+| Dependency key       | Package specification                | Locked package                  | Purpose                                                               |
+| -------------------- | ------------------------------------ | ------------------------------- | --------------------------------------------------------------------- |
+| `@typescript/native` | `npm:typescript@^7.0.2`              | `typescript@7.0.2`              | Supplies `tsc` for builds, declarations, and public API type tests    |
+| `typescript`         | `npm:@typescript/typescript6@^6.0.2` | `@typescript/typescript6@6.0.2` | Supplies the API expected by typescript-eslint and the `tsc6` command |
 
-| Development package | Declared range | Locked version | Reason for this family                                                                                                                                         |
-| ------------------- | -------------- | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `typescript`        | `^5.9.3`       | `5.9.3`        | Conservative initial compiler with strict checking, NodeNext modules, and declaration emit; not a PJS requirement                                              |
-| `@types/node`       | `^22.19.0`     | `22.20.4`      | Align declarations with the oldest Node major the runtime targets; this helps avoid newer-major APIs but does not prove compatibility with every Node 22 minor |
-| `eslint`            | `^10.11.0`     | `10.11.0`      | Linter used by the current configuration; replaced the initially installed deprecated ESLint 9                                                                 |
-| `@eslint/js`        | `^10.0.1`      | `10.0.1`       | ESLint's recommended JavaScript rules, with a peer requirement for ESLint 10                                                                                   |
-| `typescript-eslint` | `^8.48.0`      | `8.70.0`       | TypeScript parser/rules compatible with ESLint 10 and the installed compiler                                                                                   |
-| `prettier`          | `^3.7.0`       | `3.9.8`        | Formatting only; the lockfile fixes the formatter used by `npm ci`                                                                                             |
+The compatibility package itself resolves `@typescript/old` to TypeScript **6.0.3**, so `tsc6 --version` and `require('typescript').version` report 6.0.3. This is expected; the wrapper version and underlying compiler version differ.
 
-The exact lower bounds on the initially chosen TypeScript, Node typings, typescript-eslint, and Prettier ranges were not individually established as minimum supported versions. They should not be presented as necessary compatibility thresholds. The tested dependency graph is the lockfile.
+Microsoft documents this alias arrangement because TypeScript 7.0 does not expose the previous compiler API. The installed typescript-eslint supports TypeScript `>=4.8.4 <6.1.0`. Using separate aliases gives the native compiler its own binary while preserving the linter's API dependency. See the [official migration notes](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/) and [typescript-eslint dependency policy](https://typescript-eslint.io/users/dependency-versions/).
 
-Prettier recommends exact version pinning because formatting can change between releases. The repository lockfile makes `npm ci` reproducible, but a deliberate formatter update still needs a formatting review. See [Prettier's installation guidance](https://prettier.io/docs/install).
+`npm run build` uses TypeScript 7. `npm run typecheck:compat` checks the same runtime source with TypeScript 6 without emitting files. `npm test` builds with 7, checks the public declarations against positive and negative type cases, and runs the runtime tests. The tsconfig explicitly includes Node globals using `types: ["node"]`, preserving its existing NodeNext modules, ES2022 target, strict checks, and output directory.
 
-## Why not TypeScript 7?
+For editor integration, use an editor/language-server configuration that supports TypeScript 7. Selecting this workspace's package named `typescript` alone selects the compatibility API. The compiler upgrade does not automatically change an editor's language service.
 
-TypeScript 7.0 was released on July 8, 2026. Keeping 5.9 cannot be justified by calling 7.0 unreleased or merely experimental. The original choice should have included this release check.
+## Other development packages
 
-There is a migration constraint: the installed `typescript-eslint` declares a TypeScript peer range of `>=4.8.4 <6.1.0`. TypeScript 7.0 lacks the earlier programmatic compiler API. Microsoft documents using TypeScript 7 for compilation alongside a TypeScript 6 compatibility package for tools such as typescript-eslint. See the [official release and migration notes](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/) and [typescript-eslint dependency policy](https://typescript-eslint.io/users/dependency-versions/).
+| Package             | Declared range | Locked version | Reason                                                 |
+| ------------------- | -------------- | -------------- | ------------------------------------------------------ |
+| `@types/node`       | `^22.19.0`     | `22.20.4`      | Align declarations with the oldest Node major targeted |
+| `eslint`            | `^10.11.0`     | `10.11.0`      | Linter used by the flat configuration                  |
+| `@eslint/js`        | `^10.0.1`      | `10.0.1`       | Recommended JavaScript rules compatible with ESLint 10 |
+| `typescript-eslint` | `^8.48.0`      | `8.70.0`       | TypeScript parsing/rules using the compatibility API   |
+| `prettier`          | `^3.7.0`       | `3.9.8`        | Formatting, fixed by the lockfile for `npm ci`         |
 
-That means a direct replacement of our `typescript` dependency with 7.x is not a validated upgrade of the whole toolchain. It does **not** mean PJS's source or runtime cannot use TypeScript 7.
-
-The recommended next compiler evaluation is TypeScript 7 for builds, with a supported compiler API dependency for linting as needed. Check explicit Node types, configuration changes, emitted JavaScript/declarations, build/lint/tests, and editor support. Measure build time separately from CPU runtime benchmarks: a faster compiler does not by itself demonstrate faster worker execution.
-
-The README badges show the current setup. This documentation change does not migrate the compiler or alter the lockfile.
+Declared ranges allow compatible updates; the lockfile records the tested resolutions. The older lower bounds were not individually proved to be minimum supported versions. Prettier recommends exact pinning; our lockfile fixes clean installs, while deliberate formatter updates still need formatting review. See [Prettier's guidance](https://prettier.io/docs/install).
 
 ## Node runtime versus development tools
 
-The runtime package targets Node `>=22.0.0`; the workspace declares `^22.13.0 || >=24.0.0` because ESLint 10 requires newer Node releases than the runtime implementation does. The installed ESLint engine range is `^20.19.0 || ^22.13.0 || >=24`; PJS intentionally does not target Node 20. See [ESLint's supported Node versions](https://eslint.org/docs/latest/use/getting-started).
+The runtime package targets Node `>=22.0.0`; the workspace declares `^22.13.0 || >=24.0.0` to match the supported development-tool range. ESLint 10 requires newer Node versions than the runtime implementation. See [ESLint's requirements](https://eslint.org/docs/latest/use/getting-started).
 
-The runtime has been tested locally on Node 24.21.0 on Windows. The package's broader engine range is a target, not evidence of completed cross-version/platform testing. Node typings and an engine declaration cannot replace that testing.
+Local validation used Node 24.21.0 on Windows. Broader engine declarations are targets, not evidence of completed cross-platform/version validation. Node typings cannot prove compatibility with every Node 22 minor.
 
-All six packages above are development dependencies. PJS's execution path uses Node built-ins and has no external runtime dependencies.
+## Scope of the migration
+
+The original TypeScript 5.9 choice was a conservative default, not an architectural requirement. v0.2 replaces that compiler after testing the build, lint integration, API declarations, and runtime behavior. It does not claim a measured compiler speedup, nor attribute worker benchmark changes to TypeScript 7. Runtime benchmarks measure separately introduced transfer behavior.

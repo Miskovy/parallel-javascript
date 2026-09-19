@@ -1,0 +1,1030 @@
+{
+  "timestamp": "2026-09-19T18:30:45.501Z",
+  "runtimeVersion": "0.2.0",
+  "environment": {
+    "node": "v24.21.0",
+    "platform": "win32",
+    "cpuModel": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz",
+    "availableParallelism": 8
+  },
+  "startupMs": 57.411500000000004,
+  "methodology": {
+    "workers": 1,
+    "trials": 20,
+    "warmups": 5,
+    "order": "alternating clone/transfer within each payload size",
+    "timing": "round trip using returned buffer; allocation and full-byte validation outside timing in both modes",
+    "memory": "process-wide RSS at sample endpoints; not a peak measurement",
+    "scalar": "zero bytes means numeric scalar and no transfer in either mode"
+  },
+  "results": [
+    {
+      "bytes": 0,
+      "mode": "clone",
+      "samples": [
+        {
+          "wallMs": 0.17320000000000846,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63049728,
+          "rssAfterBytes": 63049728
+        },
+        {
+          "wallMs": 0.17009999999999081,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63066112,
+          "rssAfterBytes": 63066112
+        },
+        {
+          "wallMs": 0.17599999999998772,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63066112,
+          "rssAfterBytes": 63066112
+        },
+        {
+          "wallMs": 0.16500000000000625,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63066112,
+          "rssAfterBytes": 63066112
+        },
+        {
+          "wallMs": 0.1629000000000076,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63066112,
+          "rssAfterBytes": 63066112
+        },
+        {
+          "wallMs": 0.17019999999999413,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63066112,
+          "rssAfterBytes": 63066112
+        },
+        {
+          "wallMs": 0.16790000000000305,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63066112,
+          "rssAfterBytes": 63066112
+        },
+        {
+          "wallMs": 0.1664999999999992,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63066112,
+          "rssAfterBytes": 63066112
+        },
+        {
+          "wallMs": 0.1623000000000019,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63066112,
+          "rssAfterBytes": 63066112
+        },
+        {
+          "wallMs": 0.18029999999998836,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63066112,
+          "rssAfterBytes": 63066112
+        },
+        {
+          "wallMs": 0.16559999999999775,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63066112,
+          "rssAfterBytes": 63066112
+        },
+        {
+          "wallMs": 0.11259999999998627,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63070208,
+          "rssAfterBytes": 63070208
+        },
+        {
+          "wallMs": 0.07350000000000989,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63070208,
+          "rssAfterBytes": 63070208
+        },
+        {
+          "wallMs": 0.0700999999999965,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63070208,
+          "rssAfterBytes": 63070208
+        },
+        {
+          "wallMs": 0.0718000000000103,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63070208,
+          "rssAfterBytes": 63070208
+        },
+        {
+          "wallMs": 0.07019999999999982,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63070208,
+          "rssAfterBytes": 63070208
+        },
+        {
+          "wallMs": 0.069500000000005,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63070208,
+          "rssAfterBytes": 63070208
+        },
+        {
+          "wallMs": 0.06980000000000075,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63070208,
+          "rssAfterBytes": 63070208
+        },
+        {
+          "wallMs": 0.06929999999999836,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63070208,
+          "rssAfterBytes": 63070208
+        },
+        {
+          "wallMs": 0.06990000000000407,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63070208,
+          "rssAfterBytes": 63070208
+        }
+      ]
+    },
+    {
+      "bytes": 0,
+      "mode": "transfer",
+      "samples": [
+        {
+          "wallMs": 0.1688999999999936,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63049728,
+          "rssAfterBytes": 63049728
+        },
+        {
+          "wallMs": 0.17399999999999238,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63053824,
+          "rssAfterBytes": 63066112
+        },
+        {
+          "wallMs": 0.16559999999999775,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63066112,
+          "rssAfterBytes": 63066112
+        },
+        {
+          "wallMs": 0.16400000000000148,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63066112,
+          "rssAfterBytes": 63066112
+        },
+        {
+          "wallMs": 0.14560000000000173,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63066112,
+          "rssAfterBytes": 63066112
+        },
+        {
+          "wallMs": 0.16810000000000969,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63066112,
+          "rssAfterBytes": 63066112
+        },
+        {
+          "wallMs": 0.16500000000000625,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63066112,
+          "rssAfterBytes": 63066112
+        },
+        {
+          "wallMs": 0.16509999999999536,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63066112,
+          "rssAfterBytes": 63066112
+        },
+        {
+          "wallMs": 0.1675999999999931,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63066112,
+          "rssAfterBytes": 63066112
+        },
+        {
+          "wallMs": 0.16519999999999868,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63066112,
+          "rssAfterBytes": 63066112
+        },
+        {
+          "wallMs": 0.12259999999999138,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63066112,
+          "rssAfterBytes": 63066112
+        },
+        {
+          "wallMs": 0.11590000000001055,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63066112,
+          "rssAfterBytes": 63070208
+        },
+        {
+          "wallMs": 0.07139999999999702,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63070208,
+          "rssAfterBytes": 63070208
+        },
+        {
+          "wallMs": 0.0700999999999965,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63070208,
+          "rssAfterBytes": 63070208
+        },
+        {
+          "wallMs": 0.06999999999999318,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63070208,
+          "rssAfterBytes": 63070208
+        },
+        {
+          "wallMs": 0.07050000000000978,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63070208,
+          "rssAfterBytes": 63070208
+        },
+        {
+          "wallMs": 0.06929999999999836,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63070208,
+          "rssAfterBytes": 63070208
+        },
+        {
+          "wallMs": 0.06969999999999743,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63070208,
+          "rssAfterBytes": 63070208
+        },
+        {
+          "wallMs": 0.06959999999999411,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63070208,
+          "rssAfterBytes": 63070208
+        },
+        {
+          "wallMs": 0.06940000000000168,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63070208,
+          "rssAfterBytes": 63070208
+        }
+      ]
+    },
+    {
+      "bytes": 1024,
+      "mode": "clone",
+      "samples": [
+        {
+          "wallMs": 0.4287000000000063,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63193088,
+          "rssAfterBytes": 63397888
+        },
+        {
+          "wallMs": 0.08140000000000214,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63397888,
+          "rssAfterBytes": 63397888
+        },
+        {
+          "wallMs": 0.10200000000000387,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63483904,
+          "rssAfterBytes": 63541248
+        },
+        {
+          "wallMs": 0.13929999999999154,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63561728,
+          "rssAfterBytes": 63582208
+        },
+        {
+          "wallMs": 0.13360000000000127,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63582208,
+          "rssAfterBytes": 63590400
+        },
+        {
+          "wallMs": 0.1413000000000011,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63590400,
+          "rssAfterBytes": 63590400
+        },
+        {
+          "wallMs": 0.10519999999999641,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63590400,
+          "rssAfterBytes": 63590400
+        },
+        {
+          "wallMs": 0.08440000000000225,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63590400,
+          "rssAfterBytes": 63590400
+        },
+        {
+          "wallMs": 0.07899999999999352,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63590400,
+          "rssAfterBytes": 63590400
+        },
+        {
+          "wallMs": 0.0799999999999983,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63590400,
+          "rssAfterBytes": 63590400
+        },
+        {
+          "wallMs": 0.08599999999999852,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63590400,
+          "rssAfterBytes": 63590400
+        },
+        {
+          "wallMs": 0.0870000000000033,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63631360,
+          "rssAfterBytes": 63631360
+        },
+        {
+          "wallMs": 0.06969999999999743,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63631360,
+          "rssAfterBytes": 63631360
+        },
+        {
+          "wallMs": 0.07629999999998915,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63631360,
+          "rssAfterBytes": 63631360
+        },
+        {
+          "wallMs": 0.07500000000000284,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63631360,
+          "rssAfterBytes": 63631360
+        },
+        {
+          "wallMs": 0.0929000000000002,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63631360,
+          "rssAfterBytes": 63631360
+        },
+        {
+          "wallMs": 0.11520000000000152,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63631360,
+          "rssAfterBytes": 63631360
+        },
+        {
+          "wallMs": 0.11730000000000018,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63631360,
+          "rssAfterBytes": 63631360
+        },
+        {
+          "wallMs": 0.11609999999998877,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63631360,
+          "rssAfterBytes": 63631360
+        },
+        {
+          "wallMs": 0.07519999999999527,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63631360,
+          "rssAfterBytes": 63635456
+        }
+      ]
+    },
+    {
+      "bytes": 1024,
+      "mode": "transfer",
+      "samples": [
+        {
+          "wallMs": 0.09720000000000084,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63397888,
+          "rssAfterBytes": 63397888
+        },
+        {
+          "wallMs": 0.08500000000000796,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63397888,
+          "rssAfterBytes": 63397888
+        },
+        {
+          "wallMs": 0.08409999999999229,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63541248,
+          "rssAfterBytes": 63541248
+        },
+        {
+          "wallMs": 0.09840000000001226,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63541248,
+          "rssAfterBytes": 63557632
+        },
+        {
+          "wallMs": 0.1646999999999963,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63590400,
+          "rssAfterBytes": 63590400
+        },
+        {
+          "wallMs": 0.1296999999999997,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63590400,
+          "rssAfterBytes": 63590400
+        },
+        {
+          "wallMs": 0.09940000000000282,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63590400,
+          "rssAfterBytes": 63590400
+        },
+        {
+          "wallMs": 0.08480000000000132,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63590400,
+          "rssAfterBytes": 63590400
+        },
+        {
+          "wallMs": 0.08799999999999386,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63590400,
+          "rssAfterBytes": 63590400
+        },
+        {
+          "wallMs": 0.0835000000000008,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63590400,
+          "rssAfterBytes": 63590400
+        },
+        {
+          "wallMs": 0.11780000000000257,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63590400,
+          "rssAfterBytes": 63594496
+        },
+        {
+          "wallMs": 0.16749999999998977,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63594496,
+          "rssAfterBytes": 63631360
+        },
+        {
+          "wallMs": 0.09039999999998827,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63631360,
+          "rssAfterBytes": 63631360
+        },
+        {
+          "wallMs": 0.07779999999999632,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63631360,
+          "rssAfterBytes": 63631360
+        },
+        {
+          "wallMs": 0.07730000000000814,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63631360,
+          "rssAfterBytes": 63631360
+        },
+        {
+          "wallMs": 0.07739999999999725,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63631360,
+          "rssAfterBytes": 63631360
+        },
+        {
+          "wallMs": 0.11930000000000973,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63631360,
+          "rssAfterBytes": 63631360
+        },
+        {
+          "wallMs": 0.08710000000000662,
+          "cpuMs": 16,
+          "rssBeforeBytes": 63631360,
+          "rssAfterBytes": 63631360
+        },
+        {
+          "wallMs": 0.07999999999998408,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63631360,
+          "rssAfterBytes": 63631360
+        },
+        {
+          "wallMs": 0.07869999999999777,
+          "cpuMs": 0,
+          "rssBeforeBytes": 63631360,
+          "rssAfterBytes": 63631360
+        }
+      ]
+    },
+    {
+      "bytes": 1048576,
+      "mode": "clone",
+      "samples": [
+        {
+          "wallMs": 1.2162000000000148,
+          "cpuMs": 0,
+          "rssBeforeBytes": 76288000,
+          "rssAfterBytes": 78393344
+        },
+        {
+          "wallMs": 1.4140000000000157,
+          "cpuMs": 0,
+          "rssBeforeBytes": 78401536,
+          "rssAfterBytes": 80506880
+        },
+        {
+          "wallMs": 1.03479999999999,
+          "cpuMs": 0,
+          "rssBeforeBytes": 80506880,
+          "rssAfterBytes": 82612224
+        },
+        {
+          "wallMs": 1.4518999999999664,
+          "cpuMs": 0,
+          "rssBeforeBytes": 82620416,
+          "rssAfterBytes": 84725760
+        },
+        {
+          "wallMs": 1.2357999999999834,
+          "cpuMs": 16,
+          "rssBeforeBytes": 84725760,
+          "rssAfterBytes": 86835200
+        },
+        {
+          "wallMs": 1.649000000000001,
+          "cpuMs": 0,
+          "rssBeforeBytes": 86839296,
+          "rssAfterBytes": 88944640
+        },
+        {
+          "wallMs": 1.1321000000000367,
+          "cpuMs": 0,
+          "rssBeforeBytes": 88944640,
+          "rssAfterBytes": 91054080
+        },
+        {
+          "wallMs": 1.5910000000000082,
+          "cpuMs": 0,
+          "rssBeforeBytes": 91058176,
+          "rssAfterBytes": 93163520
+        },
+        {
+          "wallMs": 1.251700000000028,
+          "cpuMs": 0,
+          "rssBeforeBytes": 93163520,
+          "rssAfterBytes": 95277056
+        },
+        {
+          "wallMs": 1.4884000000000128,
+          "cpuMs": 0,
+          "rssBeforeBytes": 95363072,
+          "rssAfterBytes": 97468416
+        },
+        {
+          "wallMs": 1.1802999999999884,
+          "cpuMs": 0,
+          "rssBeforeBytes": 97468416,
+          "rssAfterBytes": 99573760
+        },
+        {
+          "wallMs": 1.1637000000000057,
+          "cpuMs": 0,
+          "rssBeforeBytes": 99573760,
+          "rssAfterBytes": 101679104
+        },
+        {
+          "wallMs": 1.1567000000000007,
+          "cpuMs": 0,
+          "rssBeforeBytes": 101679104,
+          "rssAfterBytes": 103849984
+        },
+        {
+          "wallMs": 1.2239000000000146,
+          "cpuMs": 0,
+          "rssBeforeBytes": 103854080,
+          "rssAfterBytes": 105959424
+        },
+        {
+          "wallMs": 1.177500000000009,
+          "cpuMs": 0,
+          "rssBeforeBytes": 105959424,
+          "rssAfterBytes": 108064768
+        },
+        {
+          "wallMs": 1.1795000000000186,
+          "cpuMs": 0,
+          "rssBeforeBytes": 108220416,
+          "rssAfterBytes": 110333952
+        },
+        {
+          "wallMs": 1.1730999999999767,
+          "cpuMs": 0,
+          "rssBeforeBytes": 110338048,
+          "rssAfterBytes": 112451584
+        },
+        {
+          "wallMs": 1.1801000000000386,
+          "cpuMs": 0,
+          "rssBeforeBytes": 112476160,
+          "rssAfterBytes": 114651136
+        },
+        {
+          "wallMs": 1.1623999999999342,
+          "cpuMs": 0,
+          "rssBeforeBytes": 114651136,
+          "rssAfterBytes": 116756480
+        },
+        {
+          "wallMs": 1.0918000000000347,
+          "cpuMs": 0,
+          "rssBeforeBytes": 116756480,
+          "rssAfterBytes": 118861824
+        }
+      ]
+    },
+    {
+      "bytes": 1048576,
+      "mode": "transfer",
+      "samples": [
+        {
+          "wallMs": 0.23900000000000432,
+          "cpuMs": 0,
+          "rssBeforeBytes": 78393344,
+          "rssAfterBytes": 78397440
+        },
+        {
+          "wallMs": 0.2627999999999986,
+          "cpuMs": 0,
+          "rssBeforeBytes": 78397440,
+          "rssAfterBytes": 78401536
+        },
+        {
+          "wallMs": 0.27080000000000837,
+          "cpuMs": 0,
+          "rssBeforeBytes": 82612224,
+          "rssAfterBytes": 82616320
+        },
+        {
+          "wallMs": 0.24150000000003047,
+          "cpuMs": 0,
+          "rssBeforeBytes": 82616320,
+          "rssAfterBytes": 82620416
+        },
+        {
+          "wallMs": 0.28000000000002956,
+          "cpuMs": 0,
+          "rssBeforeBytes": 86835200,
+          "rssAfterBytes": 86835200
+        },
+        {
+          "wallMs": 0.25670000000002346,
+          "cpuMs": 0,
+          "rssBeforeBytes": 86835200,
+          "rssAfterBytes": 86839296
+        },
+        {
+          "wallMs": 0.3572000000000344,
+          "cpuMs": 0,
+          "rssBeforeBytes": 91054080,
+          "rssAfterBytes": 91054080
+        },
+        {
+          "wallMs": 0.20909999999997808,
+          "cpuMs": 0,
+          "rssBeforeBytes": 91054080,
+          "rssAfterBytes": 91058176
+        },
+        {
+          "wallMs": 0.27700000000004366,
+          "cpuMs": 0,
+          "rssBeforeBytes": 95297536,
+          "rssAfterBytes": 95297536
+        },
+        {
+          "wallMs": 0.2810999999999808,
+          "cpuMs": 0,
+          "rssBeforeBytes": 95297536,
+          "rssAfterBytes": 95363072
+        },
+        {
+          "wallMs": 0.28180000000003247,
+          "cpuMs": 0,
+          "rssBeforeBytes": 99573760,
+          "rssAfterBytes": 99573760
+        },
+        {
+          "wallMs": 0.22560000000004266,
+          "cpuMs": 0,
+          "rssBeforeBytes": 99573760,
+          "rssAfterBytes": 99573760
+        },
+        {
+          "wallMs": 0.25610000000000355,
+          "cpuMs": 0,
+          "rssBeforeBytes": 103849984,
+          "rssAfterBytes": 103849984
+        },
+        {
+          "wallMs": 0.2442999999999529,
+          "cpuMs": 0,
+          "rssBeforeBytes": 103849984,
+          "rssAfterBytes": 103849984
+        },
+        {
+          "wallMs": 0.25790000000000646,
+          "cpuMs": 0,
+          "rssBeforeBytes": 108064768,
+          "rssAfterBytes": 108064768
+        },
+        {
+          "wallMs": 0.26619999999996935,
+          "cpuMs": 0,
+          "rssBeforeBytes": 108064768,
+          "rssAfterBytes": 108072960
+        },
+        {
+          "wallMs": 0.26659999999998263,
+          "cpuMs": 0,
+          "rssBeforeBytes": 112451584,
+          "rssAfterBytes": 112463872
+        },
+        {
+          "wallMs": 0.2604999999999791,
+          "cpuMs": 0,
+          "rssBeforeBytes": 112463872,
+          "rssAfterBytes": 112476160
+        },
+        {
+          "wallMs": 0.21310000000005402,
+          "cpuMs": 0,
+          "rssBeforeBytes": 116756480,
+          "rssAfterBytes": 116756480
+        },
+        {
+          "wallMs": 0.24080000000003565,
+          "cpuMs": 0,
+          "rssBeforeBytes": 116756480,
+          "rssAfterBytes": 116756480
+        }
+      ]
+    },
+    {
+      "bytes": 8388608,
+      "mode": "clone",
+      "samples": [
+        {
+          "wallMs": 8.95959999999991,
+          "cpuMs": 0,
+          "rssBeforeBytes": 115068928,
+          "rssAfterBytes": 131854336
+        },
+        {
+          "wallMs": 6.890100000000075,
+          "cpuMs": 16,
+          "rssBeforeBytes": 131854336,
+          "rssAfterBytes": 148639744
+        },
+        {
+          "wallMs": 7.192099999999982,
+          "cpuMs": 15,
+          "rssBeforeBytes": 148639744,
+          "rssAfterBytes": 165425152
+        },
+        {
+          "wallMs": 7.206300000000056,
+          "cpuMs": 0,
+          "rssBeforeBytes": 165425152,
+          "rssAfterBytes": 182210560
+        },
+        {
+          "wallMs": 6.862599999999929,
+          "cpuMs": 16,
+          "rssBeforeBytes": 182210560,
+          "rssAfterBytes": 198995968
+        },
+        {
+          "wallMs": 7.332800000000134,
+          "cpuMs": 16,
+          "rssBeforeBytes": 198995968,
+          "rssAfterBytes": 215781376
+        },
+        {
+          "wallMs": 7.344700000000103,
+          "cpuMs": 0,
+          "rssBeforeBytes": 215781376,
+          "rssAfterBytes": 232714240
+        },
+        {
+          "wallMs": 6.966499999999996,
+          "cpuMs": 15,
+          "rssBeforeBytes": 90058752,
+          "rssAfterBytes": 106844160
+        },
+        {
+          "wallMs": 7.188599999999951,
+          "cpuMs": 16,
+          "rssBeforeBytes": 106844160,
+          "rssAfterBytes": 123629568
+        },
+        {
+          "wallMs": 7.301600000000235,
+          "cpuMs": 16,
+          "rssBeforeBytes": 123629568,
+          "rssAfterBytes": 140414976
+        },
+        {
+          "wallMs": 7.1358000000000175,
+          "cpuMs": 0,
+          "rssBeforeBytes": 140414976,
+          "rssAfterBytes": 157200384
+        },
+        {
+          "wallMs": 6.867600000000039,
+          "cpuMs": 0,
+          "rssBeforeBytes": 157200384,
+          "rssAfterBytes": 173985792
+        },
+        {
+          "wallMs": 7.2125999999998385,
+          "cpuMs": 0,
+          "rssBeforeBytes": 173985792,
+          "rssAfterBytes": 190771200
+        },
+        {
+          "wallMs": 8.182299999999941,
+          "cpuMs": 16,
+          "rssBeforeBytes": 190775296,
+          "rssAfterBytes": 207560704
+        },
+        {
+          "wallMs": 9.629500000000007,
+          "cpuMs": 0,
+          "rssBeforeBytes": 207560704,
+          "rssAfterBytes": 224370688
+        },
+        {
+          "wallMs": 7.501699999999801,
+          "cpuMs": 16,
+          "rssBeforeBytes": 90107904,
+          "rssAfterBytes": 106893312
+        },
+        {
+          "wallMs": 7.390899999999874,
+          "cpuMs": 0,
+          "rssBeforeBytes": 106893312,
+          "rssAfterBytes": 123678720
+        },
+        {
+          "wallMs": 7.310100000000148,
+          "cpuMs": 15,
+          "rssBeforeBytes": 123678720,
+          "rssAfterBytes": 140464128
+        },
+        {
+          "wallMs": 7.28690000000006,
+          "cpuMs": 0,
+          "rssBeforeBytes": 140464128,
+          "rssAfterBytes": 157249536
+        },
+        {
+          "wallMs": 7.43560000000025,
+          "cpuMs": 16,
+          "rssBeforeBytes": 157249536,
+          "rssAfterBytes": 174034944
+        }
+      ]
+    },
+    {
+      "bytes": 8388608,
+      "mode": "transfer",
+      "samples": [
+        {
+          "wallMs": 0.2621999999998934,
+          "cpuMs": 0,
+          "rssBeforeBytes": 131854336,
+          "rssAfterBytes": 131854336
+        },
+        {
+          "wallMs": 0.25890000000003965,
+          "cpuMs": 0,
+          "rssBeforeBytes": 131854336,
+          "rssAfterBytes": 131854336
+        },
+        {
+          "wallMs": 0.22010000000000218,
+          "cpuMs": 0,
+          "rssBeforeBytes": 165425152,
+          "rssAfterBytes": 165425152
+        },
+        {
+          "wallMs": 0.217600000000175,
+          "cpuMs": 0,
+          "rssBeforeBytes": 165425152,
+          "rssAfterBytes": 165425152
+        },
+        {
+          "wallMs": 0.27729999999996835,
+          "cpuMs": 0,
+          "rssBeforeBytes": 198995968,
+          "rssAfterBytes": 198995968
+        },
+        {
+          "wallMs": 0.2906000000000404,
+          "cpuMs": 0,
+          "rssBeforeBytes": 198995968,
+          "rssAfterBytes": 198995968
+        },
+        {
+          "wallMs": 1.133900000000267,
+          "cpuMs": 0,
+          "rssBeforeBytes": 232714240,
+          "rssAfterBytes": 232722432
+        },
+        {
+          "wallMs": 0.23420000000032815,
+          "cpuMs": 0,
+          "rssBeforeBytes": 90054656,
+          "rssAfterBytes": 90058752
+        },
+        {
+          "wallMs": 0.2539000000001579,
+          "cpuMs": 0,
+          "rssBeforeBytes": 123629568,
+          "rssAfterBytes": 123629568
+        },
+        {
+          "wallMs": 0.2616000000002714,
+          "cpuMs": 0,
+          "rssBeforeBytes": 123629568,
+          "rssAfterBytes": 123629568
+        },
+        {
+          "wallMs": 0.27349999999978536,
+          "cpuMs": 0,
+          "rssBeforeBytes": 157200384,
+          "rssAfterBytes": 157200384
+        },
+        {
+          "wallMs": 0.2885999999998603,
+          "cpuMs": 0,
+          "rssBeforeBytes": 157200384,
+          "rssAfterBytes": 157200384
+        },
+        {
+          "wallMs": 0.21450000000004366,
+          "cpuMs": 0,
+          "rssBeforeBytes": 190771200,
+          "rssAfterBytes": 190775296
+        },
+        {
+          "wallMs": 0.3240000000000691,
+          "cpuMs": 15,
+          "rssBeforeBytes": 190775296,
+          "rssAfterBytes": 190775296
+        },
+        {
+          "wallMs": 1.2199000000000524,
+          "cpuMs": 0,
+          "rssBeforeBytes": 224370688,
+          "rssAfterBytes": 224370688
+        },
+        {
+          "wallMs": 0.266399999999976,
+          "cpuMs": 0,
+          "rssBeforeBytes": 90107904,
+          "rssAfterBytes": 90107904
+        },
+        {
+          "wallMs": 0.23569999999972424,
+          "cpuMs": 0,
+          "rssBeforeBytes": 123678720,
+          "rssAfterBytes": 123678720
+        },
+        {
+          "wallMs": 0.2626000000000204,
+          "cpuMs": 0,
+          "rssBeforeBytes": 123678720,
+          "rssAfterBytes": 123678720
+        },
+        {
+          "wallMs": 0.2625999999995656,
+          "cpuMs": 0,
+          "rssBeforeBytes": 157249536,
+          "rssAfterBytes": 157249536
+        },
+        {
+          "wallMs": 0.22060000000010405,
+          "cpuMs": 0,
+          "rssBeforeBytes": 157249536,
+          "rssAfterBytes": 157249536
+        }
+      ]
+    }
+  ]
+}

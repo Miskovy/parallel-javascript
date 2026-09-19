@@ -8,8 +8,8 @@
 
 <p>
   <a href="packages/runtime/package.json"><img src="https://img.shields.io/badge/Node.js-%E2%89%A522-339933?style=flat-square&amp;logo=nodedotjs&amp;logoColor=white" alt="Runtime: Node.js 22 or newer"></a>
-  <a href="package.json"><img src="https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&amp;logo=typescript&amp;logoColor=white" alt="Current compiler: TypeScript 5.9"></a>
-  <a href="docs/architecture.md"><img src="https://img.shields.io/badge/status-v0.1%20foundation-0F766E?style=flat-square" alt="Status: v0.1 foundation"></a>
+  <a href="package.json"><img src="https://img.shields.io/badge/TypeScript-7.0-3178C6?style=flat-square&amp;logo=typescript&amp;logoColor=white" alt="Build compiler: TypeScript 7.0"></a>
+  <a href="docs/architecture.md"><img src="https://img.shields.io/badge/status-v0.2%20foundation-0F766E?style=flat-square" alt="Status: v0.2 foundation"></a>
   <a href="packages/runtime/package.json"><img src="https://img.shields.io/badge/runtime_dependencies-0-0F766E?style=flat-square" alt="Zero runtime dependencies"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-64748B?style=flat-square" alt="License: MIT"></a>
 </p>
@@ -18,7 +18,7 @@
   <a href="#quick-start">Quick start</a> ·
   <a href="#define-a-task">Task API</a> ·
   <a href="docs/architecture.md">Architecture</a> ·
-  <a href="docs/benchmarks-v0.1.md">Benchmarks</a> ·
+  <a href="docs/benchmarks-v0.2.md">Benchmarks</a> ·
   <a href="docs/toolchain.md">Toolchain choices</a>
 </p>
 
@@ -26,7 +26,7 @@
 
 ---
 
-PJS v0.1 is a small foundation for explicit CPU parallelism in Node.js: persistent workers, registered module tasks, bounded FIFO admission, task lifecycles, failure recovery, cancellation/deadlines, and real statistics. It has no runtime dependencies.
+PJS v0.2 is a small foundation for explicit CPU parallelism in Node.js: persistent workers, registered module tasks, bounded FIFO admission, explicit buffer transfers, task lifecycles, failure recovery, cancellation/deadlines, and real statistics. It builds with TypeScript 7 and has no runtime dependencies.
 
 > **The programmer declares parallelizable work. PJS decides how accepted tasks use the available workers.**
 
@@ -34,7 +34,7 @@ Higher-level partitioning and parallel algorithms are future work; benchmark exa
 
 ## What works today
 
-| Capability                     | v0.1 behavior                                                               |
+| Capability                     | v0.2 behavior                                                               |
 | ------------------------------ | --------------------------------------------------------------------------- |
 | **Persistent workers**         | A fixed, configurable population reused across tasks                        |
 | **Explicit task registration** | Typed handles for local module exports; no closure serialization or eval    |
@@ -110,9 +110,38 @@ The tiny square example illustrates the contract; it is too small to benefit fro
 
 `shutdown()` waits for these executions too, and can wait indefinitely for uncooperative code. Choose `shutdown({ drain: false })` initially when terminating active work is intended. The first shutdown call fixes the mode; subsequent calls return the same promise. See [ADR 0004](docs/adr/0004-cancellation-and-deadlines.md) for the reasoning.
 
+### Transfer buffers explicitly
+
+Move input backing buffers at dispatch:
+
+```ts
+const values = new Float64Array([1, 2, 3]);
+const result = await runtime.run(double, values, {
+  transferList: [values.buffer],
+});
+// values is detached after dispatch; use result for the returned data.
+```
+
+To move output buffers back, the registered task returns a transfer envelope. The caller receives the value inside it:
+
+```ts
+import { transfer } from '@pjs/runtime';
+
+export function double(values: Float64Array<ArrayBuffer>) {
+  for (let i = 0; i < values.length; i++) values[i] *= 2;
+  return transfer(values, [values.buffer]);
+}
+```
+
+Run the complete example with `npm run example:transfer`. Register its handle with the input/output payload types, not the envelope type.
+
+**Transfer detaches every sender-side view of the entire backing ArrayBuffer.** A queued task retains the caller's buffer until dispatch; rejection or queued cancellation leaves it attached. Once dispatched, cancellation, task failure, or a worker crash cannot restore ownership. Pending transfers reserve their buffers against another transfer through this library instance. See [the ownership ADR](docs/adr/0005-transfer-ownership.md).
+
 ### Memory and task ownership
 
-Payloads use structured clone at dispatch. Do not mutate queued inputs before settlement. `ArrayBuffer` and typed arrays are copied; `SharedArrayBuffer` retains Node's shared-memory semantics, with synchronization left to the caller. Transfer lists and shared-memory helpers are deferred. Task modules are trusted application code, must finish all their work before returning, and must not manipulate PJS's worker message port. Module globals persist independently in each worker. Generic task types are a caller assertion about the export; v0.1 does not generate or validate input/output schemas.
+Payloads use structured clone by default. Do not mutate, resize, or externally transfer queued inputs before settlement. Only explicitly listed ArrayBuffers are moved. Lists are snapshotted and validated; detached, duplicate, shared, or Node-marked untransferable buffers are rejected with `PjsSerializationError`. Put the listed buffers in the payload: a list alone does not make them reachable by the receiver. Use dedicated buffers; transferring a subview moves its entire backing buffer, including bytes outside the view.
+
+`SharedArrayBuffer` retains Node's shared-memory semantics, with synchronization left to the caller; it cannot be placed in a transfer list. Message-port transfers and shared-memory helpers are deferred. Task modules are trusted application code, must finish all their work before returning, and must not manipulate PJS's worker message port. Module globals persist independently in each worker. Generic task types are a caller assertion about the export; v0.2 does not generate or validate input/output schemas.
 
 ### Statistics
 
@@ -123,26 +152,29 @@ Payloads use structured clone at dispatch. Do not mutate queued inputs before se
 ```sh
 npm run benchmark:cpu
 npm run benchmark:matrix
+npm run benchmark:transfer
 ```
 
 The [benchmark methodology](benchmarks/README.md) separates startup from warm-pool execution and retains every sample. Small workloads can be slower under PJS, and more workers do not guarantee linear scaling.
 
-The [v0.1 measurement report](docs/benchmarks-v0.1.md) includes every raw timing, startup costs, memory/CPU observations, limitations, and the recommended next improvement.
+The [v0.2 measurement report](docs/benchmarks-v0.2.md) compares clone and transfer paths, including matrix input preparation. The [v0.1 baseline](docs/benchmarks-v0.1.md) and its raw JSON remain preserved. Neither compiler nor runtime speedups are assumed.
 
 PJS does not claim to outperform Piscina.
 
 ## Development
 
-| Command                | Purpose                                     |
-| ---------------------- | ------------------------------------------- |
-| `npm run build`        | Compile the runtime and emit declarations   |
-| `npm test`             | Build and run the correctness suite         |
-| `npm run test:stress`  | Repeat the runtime tests five times         |
-| `npm run lint`         | Check TypeScript and JavaScript with ESLint |
-| `npm run format:check` | Verify formatting with Prettier             |
-| `npm run format`       | Apply formatting                            |
+| Command                    | Purpose                                                 |
+| -------------------------- | ------------------------------------------------------- |
+| `npm run build`            | Compile the runtime and emit declarations               |
+| `npm test`                 | Build and run the correctness suite                     |
+| `npm run test:stress`      | Repeat all runtime and transfer tests five times        |
+| `npm run test:types`       | Check public API declarations with TypeScript 7         |
+| `npm run typecheck:compat` | Check runtime source with the TypeScript 6 API compiler |
+| `npm run lint`             | Check TypeScript and JavaScript with ESLint             |
+| `npm run format:check`     | Verify formatting with Prettier                         |
+| `npm run format`           | Apply formatting                                        |
 
-All dependencies are development tools. The runtime itself has **zero external dependencies**. See [toolchain choices](docs/toolchain.md) for the declared ranges, locked versions, and the TypeScript 7 migration considerations.
+All dependencies are development tools. The runtime itself has **zero external dependencies**. TypeScript 7 supplies the build compiler; a TypeScript 6 compatibility API keeps ESLint working. See [toolchain choices](docs/toolchain.md) for the aliases, commands, and exact locked versions.
 
 ## Design notes and roadmap
 
@@ -150,9 +182,9 @@ All dependencies are development tools. The runtime itself has **zero external d
 - [Architecture decisions](docs/adr/0001-task-registration.md): registration, pool model, scheduler, and cancellation.
 - [Runtime research](docs/research/runtime-landscape.md): existing systems and concepts worth investigating.
 
-The roadmap is measurement-driven: memory ownership, partitioning, structured parallel algorithms, cooperative cancellation, then evidence-backed scheduling improvements.
+The roadmap is measurement-driven: reusable read-only shared inputs, runtime-owned partitioning, structured parallel algorithms, cooperative cancellation, then evidence-backed scheduling improvements.
 
-Framework integrations, compiler transforms, custom syntax, browser support, and advanced schedulers are outside v0.1.
+Framework integrations, compiler transforms, custom syntax, browser support, and advanced schedulers are outside v0.2.
 
 ## License
 

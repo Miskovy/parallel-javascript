@@ -16,6 +16,7 @@ import type { Scheduler } from './scheduler/fifo.js';
 import { PjsTaskRegistry } from './tasks/registry.js';
 import type { PjsTask, TaskDescriptor } from './tasks/registry.js';
 import type { PendingTask } from './tasks/task.js';
+import { reserveTransfers, snapshotTransferList } from './tasks/transfer.js';
 import { Metrics } from './telemetry/metrics.js';
 import type {
   RunOptions,
@@ -173,6 +174,31 @@ export class PjsRuntime {
           cause: options.signal.reason,
         }),
       );
+    let transferList: ArrayBuffer[];
+    try {
+      transferList = snapshotTransferList(
+        options.transferList === undefined ? [] : options.transferList,
+      );
+    } catch (cause) {
+      return reject(
+        new PjsSerializationError(
+          cause instanceof Error ? cause.message : 'Invalid transfer list',
+          { taskId: id, cause },
+        ),
+      );
+    }
+    // Reading an application-provided list may invoke getters/iterators.
+    if (this.state !== 'starting' && this.state !== 'running')
+      return reject(
+        new PjsRuntimeStateError(`Runtime is ${this.state}`, { taskId: id }),
+      );
+    if (options.signal?.aborted)
+      return reject(
+        new PjsCancelledError('Task was aborted before admission', {
+          taskId: id,
+          cause: options.signal.reason,
+        }),
+      );
     const idle =
       this.state === 'running' && this.scheduler.size === 0
         ? this.pool.idle()[0]
@@ -185,6 +211,13 @@ export class PjsRuntime {
         ),
       );
 
+    let releaseTransfers: () => void;
+    try {
+      releaseTransfers = reserveTransfers(transferList, id);
+    } catch (error) {
+      return reject(error as Error);
+    }
+
     return new Promise<Output>((resolve, reject) => {
       const pending: PendingTask = {
         id,
@@ -195,6 +228,8 @@ export class PjsRuntime {
           createdAt: Date.now(),
         },
         input,
+        transferList,
+        releaseTransfers,
         admittedAt: performance.now(),
         resolve: (output) => resolve(output as Output),
         reject,
@@ -224,6 +259,12 @@ export class PjsRuntime {
       pending.cleanup = () => {
         if (timer) clearTimeout(timer);
         signal?.removeEventListener('abort', abort);
+        // A getter may abort during postMessage. Hold ownership until posting finishes.
+        if (
+          pending.snapshot.status === 'created' ||
+          pending.snapshot.status === 'queued'
+        )
+          this.releaseTransfers(pending);
       };
       signal?.addEventListener('abort', abort, { once: true });
       if (options.timeout !== undefined)
@@ -343,12 +384,24 @@ export class PjsRuntime {
     task.snapshot.workerId = worker.id;
     this.metrics.scheduled(performance.now() - task.admittedAt);
     try {
-      worker.execute(task.id, task.snapshot.taskName, task.input);
+      worker.execute(
+        task.id,
+        task.snapshot.taskName,
+        task.input,
+        task.transferList,
+      );
     } catch (error) {
       this.settle(task, 'failed', error as Error);
     } finally {
       task.input = undefined;
+      this.releaseTransfers(task);
     }
+  }
+
+  private releaseTransfers(task: PendingTask): void {
+    task.releaseTransfers();
+    task.releaseTransfers = () => {};
+    task.transferList = [];
   }
 
   private result(worker: PjsWorker, message: TaskResultMessage): void {
@@ -363,7 +416,7 @@ export class PjsRuntime {
         const error =
           message.kind === 'serialization'
             ? new PjsSerializationError(
-                `Task output could not be cloned: ${message.error.message}`,
+                `Task output could not be serialized: ${message.error.message}`,
                 { ...context, cause: message.error },
               )
             : new PjsTaskError(message.error, context);
