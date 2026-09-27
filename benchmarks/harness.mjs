@@ -34,7 +34,7 @@ function child(suite, workers, sizes, trials, warmups, memory) {
       output += data;
     });
     process.on('error', reject);
-    process.on('exit', (code) => {
+    process.on('close', (code) => {
       if (code !== 0) {
         reject(new Error(`Benchmark child failed (${code})`));
         return;
@@ -51,7 +51,10 @@ function child(suite, workers, sizes, trials, warmups, memory) {
 export async function runSuite(
   suite,
   defaults,
-  { memory = 'clone', outputName = `${suite}-v0.2` } = {},
+  {
+    memory = 'clone',
+    outputName = process.env.PJS_BENCH_OUTPUT ?? `${suite}-v0.3`,
+  } = {},
 ) {
   assert.ok(memory === 'clone' || memory === 'transfer');
   assert.match(outputName, /^[a-z0-9][a-z0-9.-]*$/);
@@ -66,7 +69,9 @@ export async function runSuite(
   );
   assert.ok(Number.isSafeInteger(trials) && trials >= 1);
   assert.ok(Number.isSafeInteger(warmups) && warmups >= 0);
-  const counts = [...new Set([0, 1, 2, 4, 8, availableParallelism()])];
+  const counts = [...new Set([0, 1, 2, 4, availableParallelism()])].filter(
+    (count) => count <= availableParallelism(),
+  );
   const results = [];
   // Serial first supplies the reference. Reverse parallel counts to avoid always testing the largest pool last.
   for (const workers of [0, ...counts.slice(1).reverse()]) {

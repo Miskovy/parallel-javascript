@@ -1,0 +1,5752 @@
+{
+  "timestamp": "2026-09-27T09:56:55.067Z",
+  "runtimeVersion": "0.3.0",
+  "piscinaVersion": "5.3.2",
+  "environment": {
+    "node": "v24.13.1",
+    "platform": "linux",
+    "release": "6.19.10-300.fc44.x86_64",
+    "cpuModel": "AMD Ryzen 3 PRO 3300U w/ Radeon Vega Mobile Gfx",
+    "logicalCpus": 4,
+    "availableParallelism": 4,
+    "memoryBytes": 7715659776
+  },
+  "methodology": {
+    "trials": 5,
+    "warmups": 2,
+    "counts": [
+      1,
+      2,
+      4
+    ],
+    "workloads": [
+      [
+        "cpu",
+        1000000
+      ],
+      [
+        "range",
+        2097152
+      ]
+    ],
+    "isolation": "Fresh process and fixed pool per configuration; configurations run sequentially in recorded order.",
+    "timing": "Warm pool; original input generation and independent validation excluded equally. One-shot includes shared allocation/copy, per-task transfer copies, left-row slicing, dispatch, computation, transport and matrix assembly. Reuse sessions include one preparation plus five executions. Raw preparation and execution-only times reported separately.",
+    "memory": "Process-wide RSS every 5ms plus endpoints; synchronous preparation can hide peaks. Known allocation bytes are logical budgets, not physical memory savings. No forced GC; retained outputs and allocator history affect RSS.",
+    "range": "Each task receives the entire common array and sums a disjoint range. Transfer deliberately needs a full copy to model common reference data. Sending only compact ranges is an alternative partitioning workload, not tested here.",
+    "piscina": "Pinned dev dependency; identical kernels and payloads, minThreads=maxThreads, concurrency 1, maxQueue 1024, default sync Atomics. Both pools import via small CPU probes. No cancellation comparison: semantics differ."
+  },
+  "results": [
+    {
+      "engine": "pjs",
+      "kind": "cpu",
+      "size": 1000000,
+      "workers": 1,
+      "memory": "clone",
+      "iterations": 1,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 178.05311799999998,
+      "firstRun": {
+        "wallMs": 319.69244,
+        "preparationMs": 0.002464999999972406,
+        "executionMsPerIteration": 319.689114,
+        "amortizedMsPerIteration": 319.69244,
+        "cpuMs": 336.972,
+        "cpuPercent": 105.40505743582801,
+        "machineCpuPercent": 26.351264358957003,
+        "rssBeforeBytes": 72286208,
+        "rssAfterBytes": 72327168,
+        "sampledPeakRssBytes": 72679424,
+        "threadIds": [
+          1
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 299.576139,
+          "preparationMs": 0.0010020000001986773,
+          "executionMsPerIteration": 299.574656,
+          "amortizedMsPerIteration": 299.576139,
+          "cpuMs": 315.081,
+          "cpuPercent": 105.1755994491938,
+          "machineCpuPercent": 26.29389986229845,
+          "rssBeforeBytes": 72327168,
+          "rssAfterBytes": 72327168,
+          "sampledPeakRssBytes": 72327168,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 302.658557,
+          "preparationMs": 0.0014529999998558196,
+          "executionMsPerIteration": 302.6563430000001,
+          "amortizedMsPerIteration": 302.658557,
+          "cpuMs": 325.307,
+          "cpuPercent": 107.48316625325087,
+          "machineCpuPercent": 26.870791563312718,
+          "rssBeforeBytes": 72327168,
+          "rssAfterBytes": 72851456,
+          "sampledPeakRssBytes": 72851456,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 301.0916950000001,
+          "preparationMs": 0.0013030000000071595,
+          "executionMsPerIteration": 301.0898110000003,
+          "amortizedMsPerIteration": 301.0916950000001,
+          "cpuMs": 316.618,
+          "cpuPercent": 105.15666996394569,
+          "machineCpuPercent": 26.289167490986422,
+          "rssBeforeBytes": 72851456,
+          "rssAfterBytes": 72982528,
+          "sampledPeakRssBytes": 72982528,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 300.80085999999983,
+          "preparationMs": 0.0009609999997337582,
+          "executionMsPerIteration": 300.7993369999999,
+          "amortizedMsPerIteration": 300.80085999999983,
+          "cpuMs": 319.887,
+          "cpuPercent": 106.34510818885299,
+          "machineCpuPercent": 26.586277047213247,
+          "rssBeforeBytes": 72982528,
+          "rssAfterBytes": 73375744,
+          "sampledPeakRssBytes": 73375744,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 306.2490749999997,
+          "preparationMs": 0.001111999999920954,
+          "executionMsPerIteration": 306.2474119999997,
+          "amortizedMsPerIteration": 306.2490749999997,
+          "cpuMs": 330.798,
+          "cpuPercent": 108.01599972179518,
+          "machineCpuPercent": 27.003999930448796,
+          "rssBeforeBytes": 73375744,
+          "rssAfterBytes": 74031104,
+          "sampledPeakRssBytes": 74031104,
+          "threadIds": [
+            1
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 0,
+        "commonInputBytes": 0,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 32,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 301.0916950000001,
+        "medianAmortizedMs": 301.0916950000001,
+        "medianExecutionMs": 301.0898110000003,
+        "peakSampledRssBytes": 74031104
+      }
+    },
+    {
+      "engine": "piscina",
+      "kind": "cpu",
+      "size": 1000000,
+      "workers": 1,
+      "memory": "clone",
+      "iterations": 1,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 139.487656,
+      "firstRun": {
+        "wallMs": 309.46484300000003,
+        "preparationMs": 0.0023949999999786087,
+        "executionMsPerIteration": 309.45782,
+        "amortizedMsPerIteration": 309.46484300000003,
+        "cpuMs": 340.961,
+        "cpuPercent": 110.17762040258641,
+        "machineCpuPercent": 27.544405100646603,
+        "rssBeforeBytes": 72044544,
+        "rssAfterBytes": 72622080,
+        "sampledPeakRssBytes": 72622080,
+        "threadIds": [
+          1
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 295.60912600000006,
+          "preparationMs": 0.0019730000001345616,
+          "executionMsPerIteration": 295.60592999999994,
+          "amortizedMsPerIteration": 295.60912600000006,
+          "cpuMs": 315.683,
+          "cpuPercent": 106.79068142165539,
+          "machineCpuPercent": 26.697670355413848,
+          "rssBeforeBytes": 73146368,
+          "rssAfterBytes": 74063872,
+          "sampledPeakRssBytes": 74063872,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 303.583488,
+          "preparationMs": 0.0012230000002091401,
+          "executionMsPerIteration": 303.5815739999998,
+          "amortizedMsPerIteration": 303.583488,
+          "cpuMs": 312.729,
+          "cpuPercent": 103.01251957418711,
+          "machineCpuPercent": 25.753129893546777,
+          "rssBeforeBytes": 74063872,
+          "rssAfterBytes": 74194944,
+          "sampledPeakRssBytes": 74194944,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 295.65139499999987,
+          "preparationMs": 0.0014029999999820575,
+          "executionMsPerIteration": 295.64933099999985,
+          "amortizedMsPerIteration": 295.65139499999987,
+          "cpuMs": 310.844,
+          "cpuPercent": 105.13868875876608,
+          "machineCpuPercent": 26.28467218969152,
+          "rssBeforeBytes": 74194944,
+          "rssAfterBytes": 74194944,
+          "sampledPeakRssBytes": 74194944,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 298.973301,
+          "preparationMs": 0.0010219999999208085,
+          "executionMsPerIteration": 298.9717380000002,
+          "amortizedMsPerIteration": 298.973301,
+          "cpuMs": 317.291,
+          "cpuPercent": 106.12686783024816,
+          "machineCpuPercent": 26.53171695756204,
+          "rssBeforeBytes": 74194944,
+          "rssAfterBytes": 74326016,
+          "sampledPeakRssBytes": 74326016,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 299.9533550000001,
+          "preparationMs": 0.0014330000003610621,
+          "executionMsPerIteration": 299.95128099999965,
+          "amortizedMsPerIteration": 299.9533550000001,
+          "cpuMs": 319.757,
+          "cpuPercent": 106.60224153852185,
+          "machineCpuPercent": 26.650560384630463,
+          "rssBeforeBytes": 74326016,
+          "rssAfterBytes": 75112448,
+          "sampledPeakRssBytes": 75112448,
+          "threadIds": [
+            1
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 0,
+        "commonInputBytes": 0,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 32,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 298.973301,
+        "medianAmortizedMs": 298.973301,
+        "medianExecutionMs": 298.9717380000002,
+        "peakSampledRssBytes": 75112448
+      }
+    },
+    {
+      "engine": "piscina",
+      "kind": "cpu",
+      "size": 1000000,
+      "workers": 2,
+      "memory": "clone",
+      "iterations": 1,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 141.76292299999997,
+      "firstRun": {
+        "wallMs": 165.58538900000002,
+        "preparationMs": 0.002143999999987045,
+        "executionMsPerIteration": 165.58224300000006,
+        "amortizedMsPerIteration": 165.58538900000002,
+        "cpuMs": 324.548,
+        "cpuPercent": 196.00038503397178,
+        "machineCpuPercent": 49.000096258492945,
+        "rssBeforeBytes": 83111936,
+        "rssAfterBytes": 83304448,
+        "sampledPeakRssBytes": 83374080,
+        "threadIds": [
+          1,
+          2
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 156.78369900000007,
+          "preparationMs": 0.001903000000083921,
+          "executionMsPerIteration": 156.78085399999998,
+          "amortizedMsPerIteration": 156.78369900000007,
+          "cpuMs": 301.274,
+          "cpuPercent": 192.1590075509061,
+          "machineCpuPercent": 48.039751887726524,
+          "rssBeforeBytes": 84484096,
+          "rssAfterBytes": 84484096,
+          "sampledPeakRssBytes": 84484096,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 163.88344499999994,
+          "preparationMs": 0.12366199999996752,
+          "executionMsPerIteration": 163.75858100000005,
+          "amortizedMsPerIteration": 163.88344499999994,
+          "cpuMs": 308.007,
+          "cpuPercent": 187.9427174599607,
+          "machineCpuPercent": 46.985679364990176,
+          "rssBeforeBytes": 84484096,
+          "rssAfterBytes": 84484096,
+          "sampledPeakRssBytes": 84484096,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 161.02964399999996,
+          "preparationMs": 0.0013320000000476284,
+          "executionMsPerIteration": 161.02792099999988,
+          "amortizedMsPerIteration": 161.02964399999996,
+          "cpuMs": 303.952,
+          "cpuPercent": 188.75530768732253,
+          "machineCpuPercent": 47.18882692183063,
+          "rssBeforeBytes": 84484096,
+          "rssAfterBytes": 85008384,
+          "sampledPeakRssBytes": 85008384,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 155.742792,
+          "preparationMs": 0.001343000000133543,
+          "executionMsPerIteration": 155.72975699999984,
+          "amortizedMsPerIteration": 155.742792,
+          "cpuMs": 302.318,
+          "cpuPercent": 194.11363833775368,
+          "machineCpuPercent": 48.52840958443842,
+          "rssBeforeBytes": 85008384,
+          "rssAfterBytes": 85663744,
+          "sampledPeakRssBytes": 85663744,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 164.7580109999999,
+          "preparationMs": 0.0009619999998449202,
+          "executionMsPerIteration": 164.756758,
+          "amortizedMsPerIteration": 164.7580109999999,
+          "cpuMs": 308.227,
+          "cpuPercent": 187.07861191647922,
+          "machineCpuPercent": 46.769652979119805,
+          "rssBeforeBytes": 85663744,
+          "rssAfterBytes": 86188032,
+          "sampledPeakRssBytes": 86188032,
+          "threadIds": [
+            1,
+            2
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 0,
+        "commonInputBytes": 0,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 32,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 161.02964399999996,
+        "medianAmortizedMs": 161.02964399999996,
+        "medianExecutionMs": 161.02792099999988,
+        "peakSampledRssBytes": 86188032
+      }
+    },
+    {
+      "engine": "pjs",
+      "kind": "cpu",
+      "size": 1000000,
+      "workers": 2,
+      "memory": "clone",
+      "iterations": 1,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 236.88309,
+      "firstRun": {
+        "wallMs": 220.79675899999995,
+        "preparationMs": 0.004418999999984408,
+        "executionMsPerIteration": 220.79102799999993,
+        "amortizedMsPerIteration": 220.79675899999995,
+        "cpuMs": 344.964,
+        "cpuPercent": 156.23598895308064,
+        "machineCpuPercent": 39.05899723827016,
+        "rssBeforeBytes": 83804160,
+        "rssAfterBytes": 84004864,
+        "sampledPeakRssBytes": 84983808,
+        "threadIds": [
+          1,
+          2
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 217.95664499999998,
+          "preparationMs": 0.0012719999999717402,
+          "executionMsPerIteration": 217.9544209999999,
+          "amortizedMsPerIteration": 217.95664499999998,
+          "cpuMs": 312.042,
+          "cpuPercent": 143.16700461231636,
+          "machineCpuPercent": 35.79175115307909,
+          "rssBeforeBytes": 84660224,
+          "rssAfterBytes": 84660224,
+          "sampledPeakRssBytes": 84660224,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 217.0087410000001,
+          "preparationMs": 0.0055400000001100125,
+          "executionMsPerIteration": 216.89039900000012,
+          "amortizedMsPerIteration": 217.0087410000001,
+          "cpuMs": 319.327,
+          "cpuPercent": 147.1493721997124,
+          "machineCpuPercent": 36.7873430499281,
+          "rssBeforeBytes": 84660224,
+          "rssAfterBytes": 85053440,
+          "sampledPeakRssBytes": 85053440,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 226.06239199999982,
+          "preparationMs": 0.0019029999998565472,
+          "executionMsPerIteration": 226.06018799999993,
+          "amortizedMsPerIteration": 226.06239199999982,
+          "cpuMs": 315.204,
+          "cpuPercent": 139.43230327316022,
+          "machineCpuPercent": 34.858075818290054,
+          "rssBeforeBytes": 85053440,
+          "rssAfterBytes": 85053440,
+          "sampledPeakRssBytes": 85053440,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 263.66177700000003,
+          "preparationMs": 0.0008009999999103457,
+          "executionMsPerIteration": 263.66065500000013,
+          "amortizedMsPerIteration": 263.66177700000003,
+          "cpuMs": 318.872,
+          "cpuPercent": 120.93979022222851,
+          "machineCpuPercent": 30.234947555557127,
+          "rssBeforeBytes": 85053440,
+          "rssAfterBytes": 85053440,
+          "sampledPeakRssBytes": 85053440,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 175.71002399999998,
+          "preparationMs": 0.0008609999999862339,
+          "executionMsPerIteration": 175.7088319999998,
+          "amortizedMsPerIteration": 175.71002399999998,
+          "cpuMs": 304.888,
+          "cpuPercent": 173.5177043741113,
+          "machineCpuPercent": 43.379426093527826,
+          "rssBeforeBytes": 85053440,
+          "rssAfterBytes": 85053440,
+          "sampledPeakRssBytes": 85053440,
+          "threadIds": [
+            1,
+            2
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 0,
+        "commonInputBytes": 0,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 32,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 217.95664499999998,
+        "medianAmortizedMs": 217.95664499999998,
+        "medianExecutionMs": 217.9544209999999,
+        "peakSampledRssBytes": 85053440
+      }
+    },
+    {
+      "engine": "pjs",
+      "kind": "cpu",
+      "size": 1000000,
+      "workers": 4,
+      "memory": "clone",
+      "iterations": 1,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 308.906297,
+      "firstRun": {
+        "wallMs": 164.12948500000005,
+        "preparationMs": 0.0014230000000452492,
+        "executionMsPerIteration": 164.12725,
+        "amortizedMsPerIteration": 164.12948500000005,
+        "cpuMs": 337.349,
+        "cpuPercent": 205.5383284727908,
+        "machineCpuPercent": 51.3845821181977,
+        "rssBeforeBytes": 106672128,
+        "rssAfterBytes": 106885120,
+        "sampledPeakRssBytes": 106885120,
+        "threadIds": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 140.64604299999996,
+          "preparationMs": 0.0014430000001084409,
+          "executionMsPerIteration": 140.64346799999998,
+          "amortizedMsPerIteration": 140.64604299999996,
+          "cpuMs": 307.431,
+          "cpuPercent": 218.58489115118584,
+          "machineCpuPercent": 54.64622278779646,
+          "rssBeforeBytes": 107278336,
+          "rssAfterBytes": 107671552,
+          "sampledPeakRssBytes": 107671552,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 162.34690999999998,
+          "preparationMs": 0.0008719999998447747,
+          "executionMsPerIteration": 162.34557700000005,
+          "amortizedMsPerIteration": 162.34690999999998,
+          "cpuMs": 309.783,
+          "cpuPercent": 190.81545808294106,
+          "machineCpuPercent": 47.703864520735266,
+          "rssBeforeBytes": 107671552,
+          "rssAfterBytes": 107933696,
+          "sampledPeakRssBytes": 107933696,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 132.034359,
+          "preparationMs": 0.0006909999999606953,
+          "executionMsPerIteration": 132.03337699999997,
+          "amortizedMsPerIteration": 132.034359,
+          "cpuMs": 303.832,
+          "cpuPercent": 230.11585946352042,
+          "machineCpuPercent": 57.528964865880106,
+          "rssBeforeBytes": 107933696,
+          "rssAfterBytes": 107933696,
+          "sampledPeakRssBytes": 107933696,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 127.69593099999997,
+          "preparationMs": 0.000630999999884807,
+          "executionMsPerIteration": 127.69502899999998,
+          "amortizedMsPerIteration": 127.69593099999997,
+          "cpuMs": 302.791,
+          "cpuPercent": 237.11875361165588,
+          "machineCpuPercent": 59.27968840291397,
+          "rssBeforeBytes": 107933696,
+          "rssAfterBytes": 107933696,
+          "sampledPeakRssBytes": 107933696,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 162.4145759999999,
+          "preparationMs": 0.0009509999999863794,
+          "executionMsPerIteration": 162.413184,
+          "amortizedMsPerIteration": 162.4145759999999,
+          "cpuMs": 313.558,
+          "cpuPercent": 193.06025833543424,
+          "machineCpuPercent": 48.26506458385856,
+          "rssBeforeBytes": 107933696,
+          "rssAfterBytes": 108195840,
+          "sampledPeakRssBytes": 108195840,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 0,
+        "commonInputBytes": 0,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 32,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 140.64604299999996,
+        "medianAmortizedMs": 140.64604299999996,
+        "medianExecutionMs": 140.64346799999998,
+        "peakSampledRssBytes": 108195840
+      }
+    },
+    {
+      "engine": "piscina",
+      "kind": "cpu",
+      "size": 1000000,
+      "workers": 4,
+      "memory": "clone",
+      "iterations": 1,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 426.55536000000006,
+      "firstRun": {
+        "wallMs": 212.27923099999998,
+        "preparationMs": 0.0016530000000329892,
+        "executionMsPerIteration": 212.276707,
+        "amortizedMsPerIteration": 212.27923099999998,
+        "cpuMs": 345.871,
+        "cpuPercent": 162.93209579226334,
+        "machineCpuPercent": 40.733023948065835,
+        "rssBeforeBytes": 104693760,
+        "rssAfterBytes": 105345024,
+        "sampledPeakRssBytes": 105345024,
+        "threadIds": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 238.98399999999992,
+          "preparationMs": 0.0022339999998166604,
+          "executionMsPerIteration": 238.98017299999992,
+          "amortizedMsPerIteration": 238.98399999999992,
+          "cpuMs": 312.818,
+          "cpuPercent": 130.89495531081582,
+          "machineCpuPercent": 32.723738827703954,
+          "rssBeforeBytes": 106524672,
+          "rssAfterBytes": 106655744,
+          "sampledPeakRssBytes": 106655744,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 184.49393999999984,
+          "preparationMs": 0.0013719999999466381,
+          "executionMsPerIteration": 184.49225699999988,
+          "amortizedMsPerIteration": 184.49393999999984,
+          "cpuMs": 312.422,
+          "cpuPercent": 169.3399794052858,
+          "machineCpuPercent": 42.33499485132145,
+          "rssBeforeBytes": 106655744,
+          "rssAfterBytes": 107442176,
+          "sampledPeakRssBytes": 107442176,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 169.06661299999996,
+          "preparationMs": 0.0012229999999817665,
+          "executionMsPerIteration": 169.06510000000003,
+          "amortizedMsPerIteration": 169.06661299999996,
+          "cpuMs": 310.786,
+          "cpuPercent": 183.82458516513847,
+          "machineCpuPercent": 45.95614629128462,
+          "rssBeforeBytes": 107442176,
+          "rssAfterBytes": 108359680,
+          "sampledPeakRssBytes": 108359680,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 166.57063299999982,
+          "preparationMs": 0.0012419999998201092,
+          "executionMsPerIteration": 166.5691099999999,
+          "amortizedMsPerIteration": 166.57063299999982,
+          "cpuMs": 309.305,
+          "cpuPercent": 185.68999494646837,
+          "machineCpuPercent": 46.422498736617094,
+          "rssBeforeBytes": 108359680,
+          "rssAfterBytes": 108621824,
+          "sampledPeakRssBytes": 108621824,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 181.67763999999988,
+          "preparationMs": 0.0009820000000217988,
+          "executionMsPerIteration": 181.6763679999999,
+          "amortizedMsPerIteration": 181.67763999999988,
+          "cpuMs": 309.143,
+          "cpuPercent": 170.16018041625824,
+          "machineCpuPercent": 42.54004510406456,
+          "rssBeforeBytes": 108621824,
+          "rssAfterBytes": 108752896,
+          "sampledPeakRssBytes": 108752896,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 0,
+        "commonInputBytes": 0,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 32,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 181.67763999999988,
+        "medianAmortizedMs": 181.67763999999988,
+        "medianExecutionMs": 181.6763679999999,
+        "peakSampledRssBytes": 108752896
+      }
+    },
+    {
+      "engine": "piscina",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 1,
+      "memory": "clone",
+      "iterations": 1,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 225.70027399999998,
+      "firstRun": {
+        "wallMs": 128.7524279999999,
+        "preparationMs": 0.0025749999999788997,
+        "executionMsPerIteration": 128.74548499999992,
+        "amortizedMsPerIteration": 128.7524279999999,
+        "cpuMs": 64.677,
+        "cpuPercent": 50.23361578858929,
+        "machineCpuPercent": 12.558403947147323,
+        "rssBeforeBytes": 86929408,
+        "rssAfterBytes": 106524672,
+        "sampledPeakRssBytes": 119828480,
+        "threadIds": [
+          1
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 67.4190329999999,
+          "preparationMs": 0.0012619999999969878,
+          "executionMsPerIteration": 67.41703899999993,
+          "amortizedMsPerIteration": 67.4190329999999,
+          "cpuMs": 53.202,
+          "cpuPercent": 78.91243411930883,
+          "machineCpuPercent": 19.728108529827207,
+          "rssBeforeBytes": 140173312,
+          "rssAfterBytes": 157044736,
+          "sampledPeakRssBytes": 170844160,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 64.7948130000002,
+          "preparationMs": 0.0012730000000829023,
+          "executionMsPerIteration": 64.79291899999998,
+          "amortizedMsPerIteration": 64.7948130000002,
+          "cpuMs": 57.848,
+          "cpuPercent": 89.27875137165658,
+          "machineCpuPercent": 22.319687842914146,
+          "rssBeforeBytes": 157044736,
+          "rssAfterBytes": 140767232,
+          "sampledPeakRssBytes": 173821952,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 97.20275399999991,
+          "preparationMs": 0.0014329999999063148,
+          "executionMsPerIteration": 97.20058999999992,
+          "amortizedMsPerIteration": 97.20275399999991,
+          "cpuMs": 57.476,
+          "cpuPercent": 59.130011892461454,
+          "machineCpuPercent": 14.782502973115363,
+          "rssBeforeBytes": 140767232,
+          "rssAfterBytes": 174284800,
+          "sampledPeakRssBytes": 188608512,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 81.67711200000008,
+          "preparationMs": 0.0009210000000621221,
+          "executionMsPerIteration": 81.6756499999999,
+          "amortizedMsPerIteration": 81.67711200000008,
+          "cpuMs": 43.718,
+          "cpuPercent": 53.525398890205565,
+          "machineCpuPercent": 13.381349722551391,
+          "rssBeforeBytes": 174284800,
+          "rssAfterBytes": 191004672,
+          "sampledPeakRssBytes": 202334208,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 92.59718599999997,
+          "preparationMs": 0.000831999999945765,
+          "executionMsPerIteration": 92.59561299999996,
+          "amortizedMsPerIteration": 92.59718599999997,
+          "cpuMs": 48.168,
+          "cpuPercent": 52.01885940680748,
+          "machineCpuPercent": 13.00471485170187,
+          "rssBeforeBytes": 191004672,
+          "rssAfterBytes": 207835136,
+          "sampledPeakRssBytes": 219840512,
+          "threadIds": [
+            1
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 16777216,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 1,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 81.67711200000008,
+        "medianAmortizedMs": 81.67711200000008,
+        "medianExecutionMs": 81.6756499999999,
+        "peakSampledRssBytes": 219840512
+      }
+    },
+    {
+      "engine": "pjs",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 1,
+      "memory": "clone",
+      "iterations": 1,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 213.00888599999996,
+      "firstRun": {
+        "wallMs": 118.84560099999999,
+        "preparationMs": 0.002715000000080181,
+        "executionMsPerIteration": 118.84148299999993,
+        "amortizedMsPerIteration": 118.84560099999999,
+        "cpuMs": 86.592,
+        "cpuPercent": 72.86092145724436,
+        "machineCpuPercent": 18.21523036431109,
+        "rssBeforeBytes": 87273472,
+        "rssAfterBytes": 105099264,
+        "sampledPeakRssBytes": 117157888,
+        "threadIds": [
+          1
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 31.0809569999999,
+          "preparationMs": 0.0013420000000223808,
+          "executionMsPerIteration": 31.079103999999916,
+          "amortizedMsPerIteration": 31.0809569999999,
+          "cpuMs": 27.554,
+          "cpuPercent": 88.65235391561491,
+          "machineCpuPercent": 22.163088478903727,
+          "rssBeforeBytes": 171945984,
+          "rssAfterBytes": 188985344,
+          "sampledPeakRssBytes": 188985344,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 29.796755000000076,
+          "preparationMs": 0.0009620000000722939,
+          "executionMsPerIteration": 29.79525200000012,
+          "amortizedMsPerIteration": 29.796755000000076,
+          "cpuMs": 26.733,
+          "cpuPercent": 89.71782329988596,
+          "machineCpuPercent": 22.42945582497149,
+          "rssBeforeBytes": 188985344,
+          "rssAfterBytes": 205762560,
+          "sampledPeakRssBytes": 205762560,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 47.993204000000105,
+          "preparationMs": 0.0019240000001445878,
+          "executionMsPerIteration": 47.99070900000015,
+          "amortizedMsPerIteration": 47.993204000000105,
+          "cpuMs": 41.282,
+          "cpuPercent": 86.01634514753361,
+          "machineCpuPercent": 21.504086286883403,
+          "rssBeforeBytes": 205762560,
+          "rssAfterBytes": 222539776,
+          "sampledPeakRssBytes": 222539776,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 51.34456399999999,
+          "preparationMs": 0.0006310000001121807,
+          "executionMsPerIteration": 51.34349199999997,
+          "amortizedMsPerIteration": 51.34456399999999,
+          "cpuMs": 35.386,
+          "cpuPercent": 68.91868825685229,
+          "machineCpuPercent": 17.229672064213073,
+          "rssBeforeBytes": 222539776,
+          "rssAfterBytes": 206221312,
+          "sampledPeakRssBytes": 222539776,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 49.54635999999982,
+          "preparationMs": 0.0012229999999817665,
+          "executionMsPerIteration": 49.544696999999815,
+          "amortizedMsPerIteration": 49.54635999999982,
+          "cpuMs": 17.767,
+          "cpuPercent": 35.8593446622518,
+          "machineCpuPercent": 8.96483616556295,
+          "rssBeforeBytes": 206221312,
+          "rssAfterBytes": 206221312,
+          "sampledPeakRssBytes": 206221312,
+          "threadIds": [
+            1
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 16777216,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 1,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 47.993204000000105,
+        "medianAmortizedMs": 47.993204000000105,
+        "medianExecutionMs": 47.99070900000015,
+        "peakSampledRssBytes": 222539776
+      }
+    },
+    {
+      "engine": "pjs",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 1,
+      "memory": "transfer",
+      "iterations": 1,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 171.084358,
+      "firstRun": {
+        "wallMs": 58.0100369999999,
+        "preparationMs": 0.0021439999999302017,
+        "executionMsPerIteration": 58.00688099999991,
+        "amortizedMsPerIteration": 58.0100369999999,
+        "cpuMs": 54.476,
+        "cpuPercent": 93.90788700927754,
+        "machineCpuPercent": 23.476971752319386,
+        "rssBeforeBytes": 87457792,
+        "rssAfterBytes": 105676800,
+        "sampledPeakRssBytes": 105676800,
+        "threadIds": [
+          1
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 28.28073799999993,
+          "preparationMs": 0.0012329999999565189,
+          "executionMsPerIteration": 28.278723999999897,
+          "amortizedMsPerIteration": 28.28073799999993,
+          "cpuMs": 23.097,
+          "cpuPercent": 81.67042882685756,
+          "machineCpuPercent": 20.41760720671439,
+          "rssBeforeBytes": 139231232,
+          "rssAfterBytes": 156008448,
+          "sampledPeakRssBytes": 156008448,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 34.046857000000045,
+          "preparationMs": 0.000841000000036729,
+          "executionMsPerIteration": 34.04553499999997,
+          "amortizedMsPerIteration": 34.046857000000045,
+          "cpuMs": 23.446,
+          "cpuPercent": 68.86391892209014,
+          "machineCpuPercent": 17.215979730522534,
+          "rssBeforeBytes": 156008448,
+          "rssAfterBytes": 172916736,
+          "sampledPeakRssBytes": 172916736,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 26.25663099999997,
+          "preparationMs": 0.0015230000000201471,
+          "executionMsPerIteration": 26.254556999999977,
+          "amortizedMsPerIteration": 26.25663099999997,
+          "cpuMs": 25.489,
+          "cpuPercent": 97.07642995020964,
+          "machineCpuPercent": 24.26910748755241,
+          "rssBeforeBytes": 172916736,
+          "rssAfterBytes": 189693952,
+          "sampledPeakRssBytes": 189693952,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 65.840059,
+          "preparationMs": 0.0007920000000467553,
+          "executionMsPerIteration": 65.83883600000001,
+          "amortizedMsPerIteration": 65.840059,
+          "cpuMs": 55.796,
+          "cpuPercent": 84.74476002519987,
+          "machineCpuPercent": 21.186190006299967,
+          "rssBeforeBytes": 189693952,
+          "rssAfterBytes": 122920960,
+          "sampledPeakRssBytes": 189693952,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 44.976598999999965,
+          "preparationMs": 0.001421999999934087,
+          "executionMsPerIteration": 44.96803299999999,
+          "amortizedMsPerIteration": 44.976598999999965,
+          "cpuMs": 36.639,
+          "cpuPercent": 81.46236223863887,
+          "machineCpuPercent": 20.36559055965972,
+          "rssBeforeBytes": 122920960,
+          "rssAfterBytes": 139829248,
+          "sampledPeakRssBytes": 139829248,
+          "threadIds": [
+            1
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 16777216,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 16777216,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 1,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 34.046857000000045,
+        "medianAmortizedMs": 34.046857000000045,
+        "medianExecutionMs": 34.04553499999997,
+        "peakSampledRssBytes": 189693952
+      }
+    },
+    {
+      "engine": "piscina",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 1,
+      "memory": "transfer",
+      "iterations": 1,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 194.64624700000002,
+      "firstRun": {
+        "wallMs": 28.018497000000025,
+        "preparationMs": 0.0016530000000329892,
+        "executionMsPerIteration": 28.01346799999999,
+        "amortizedMsPerIteration": 28.018497000000025,
+        "cpuMs": 31.666,
+        "cpuPercent": 113.01819651496643,
+        "machineCpuPercent": 28.25454912874161,
+        "rssBeforeBytes": 87109632,
+        "rssAfterBytes": 105066496,
+        "sampledPeakRssBytes": 105066496,
+        "threadIds": [
+          1
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 20.998031000000083,
+          "preparationMs": 0.0011220000000093933,
+          "executionMsPerIteration": 20.996368000000075,
+          "amortizedMsPerIteration": 20.998031000000083,
+          "cpuMs": 22.743,
+          "cpuPercent": 108.31015536647179,
+          "machineCpuPercent": 27.077538841617947,
+          "rssBeforeBytes": 138620928,
+          "rssAfterBytes": 155529216,
+          "sampledPeakRssBytes": 155529216,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 31.889140999999995,
+          "preparationMs": 0.0008619999999837091,
+          "executionMsPerIteration": 31.887878,
+          "amortizedMsPerIteration": 31.889140999999995,
+          "cpuMs": 46.881,
+          "cpuPercent": 147.01242658119892,
+          "machineCpuPercent": 36.75310664529973,
+          "rssBeforeBytes": 155529216,
+          "rssAfterBytes": 139677696,
+          "sampledPeakRssBytes": 172568576,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 21.024860999999987,
+          "preparationMs": 0.001242000000047483,
+          "executionMsPerIteration": 21.022626999999943,
+          "amortizedMsPerIteration": 21.024860999999987,
+          "cpuMs": 19.481,
+          "cpuPercent": 92.65697404610673,
+          "machineCpuPercent": 23.16424351152668,
+          "rssBeforeBytes": 139677696,
+          "rssAfterBytes": 156323840,
+          "sampledPeakRssBytes": 156323840,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 21.333519000000024,
+          "preparationMs": 0.0009919999999965512,
+          "executionMsPerIteration": 21.33218599999998,
+          "amortizedMsPerIteration": 21.333519000000024,
+          "cpuMs": 20.918,
+          "cpuPercent": 98.05227163882329,
+          "machineCpuPercent": 24.51306790970582,
+          "rssBeforeBytes": 156323840,
+          "rssAfterBytes": 173232128,
+          "sampledPeakRssBytes": 173232128,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 22.896753999999987,
+          "preparationMs": 0.0005110000000740911,
+          "executionMsPerIteration": 22.895922999999925,
+          "amortizedMsPerIteration": 22.896753999999987,
+          "cpuMs": 22.328,
+          "cpuPercent": 97.51600598058577,
+          "machineCpuPercent": 24.379001495146444,
+          "rssBeforeBytes": 173232128,
+          "rssAfterBytes": 190009344,
+          "sampledPeakRssBytes": 190009344,
+          "threadIds": [
+            1
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 16777216,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 16777216,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 1,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 21.333519000000024,
+        "medianAmortizedMs": 21.333519000000024,
+        "medianExecutionMs": 21.33218599999998,
+        "peakSampledRssBytes": 190009344
+      }
+    },
+    {
+      "engine": "piscina",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 1,
+      "memory": "shared",
+      "iterations": 1,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 149.13352500000002,
+      "firstRun": {
+        "wallMs": 26.777826000000005,
+        "preparationMs": 13.362643999999932,
+        "executionMsPerIteration": 13.383151999999995,
+        "amortizedMsPerIteration": 26.777826000000005,
+        "cpuMs": 30.308,
+        "cpuPercent": 113.18319866594098,
+        "machineCpuPercent": 28.295799666485244,
+        "rssBeforeBytes": 86724608,
+        "rssAfterBytes": 104812544,
+        "sampledPeakRssBytes": 104812544,
+        "threadIds": [
+          1
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 22.669468999999935,
+          "preparationMs": 15.95267100000001,
+          "executionMsPerIteration": 6.708823999999936,
+          "amortizedMsPerIteration": 22.669468999999935,
+          "cpuMs": 20.953,
+          "cpuPercent": 92.4282787567722,
+          "machineCpuPercent": 23.10706968919305,
+          "rssBeforeBytes": 138366976,
+          "rssAfterBytes": 155144192,
+          "sampledPeakRssBytes": 155144192,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 19.972812999999974,
+          "preparationMs": 14.130359999999996,
+          "executionMsPerIteration": 5.83476799999994,
+          "amortizedMsPerIteration": 19.972812999999974,
+          "cpuMs": 19.615,
+          "cpuPercent": 98.20849972410008,
+          "machineCpuPercent": 24.55212493102502,
+          "rssBeforeBytes": 155144192,
+          "rssAfterBytes": 171921408,
+          "sampledPeakRssBytes": 171921408,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 19.81613900000002,
+          "preparationMs": 13.35645199999999,
+          "executionMsPerIteration": 6.454576999999972,
+          "amortizedMsPerIteration": 19.81613900000002,
+          "cpuMs": 18.748,
+          "cpuPercent": 94.60975218229939,
+          "machineCpuPercent": 23.652438045574847,
+          "rssBeforeBytes": 171921408,
+          "rssAfterBytes": 188698624,
+          "sampledPeakRssBytes": 188698624,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 17.74192800000003,
+          "preparationMs": 11.595817000000011,
+          "executionMsPerIteration": 6.140550000000076,
+          "amortizedMsPerIteration": 17.74192800000003,
+          "cpuMs": 17.962,
+          "cpuPercent": 101.24040634140758,
+          "machineCpuPercent": 25.310101585351894,
+          "rssBeforeBytes": 188698624,
+          "rssAfterBytes": 205475840,
+          "sampledPeakRssBytes": 205475840,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 17.50888199999997,
+          "preparationMs": 11.848128999999972,
+          "executionMsPerIteration": 5.654720999999995,
+          "amortizedMsPerIteration": 17.50888199999997,
+          "cpuMs": 17.372,
+          "cpuPercent": 99.21821393279153,
+          "machineCpuPercent": 24.804553483197882,
+          "rssBeforeBytes": 205475840,
+          "rssAfterBytes": 222515200,
+          "sampledPeakRssBytes": 222515200,
+          "threadIds": [
+            1
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 16777216,
+        "sharedPreparationCopyBytesPerSession": 16777216,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 1,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 19.81613900000002,
+        "medianAmortizedMs": 19.81613900000002,
+        "medianExecutionMs": 6.140550000000076,
+        "peakSampledRssBytes": 222515200
+      }
+    },
+    {
+      "engine": "pjs",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 1,
+      "memory": "shared",
+      "iterations": 1,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 180.71485900000005,
+      "firstRun": {
+        "wallMs": 24.852112999999918,
+        "preparationMs": 14.061461000000008,
+        "executionMsPerIteration": 10.784670000000006,
+        "amortizedMsPerIteration": 24.852112999999918,
+        "cpuMs": 26.558,
+        "cpuPercent": 106.86415275835937,
+        "machineCpuPercent": 26.716038189589842,
+        "rssBeforeBytes": 87678976,
+        "rssAfterBytes": 105111552,
+        "sampledPeakRssBytes": 105111552,
+        "threadIds": [
+          1
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 16.16889500000002,
+          "preparationMs": 11.432673000000023,
+          "executionMsPerIteration": 4.7305619999999635,
+          "amortizedMsPerIteration": 16.16889500000002,
+          "cpuMs": 15.277,
+          "cpuPercent": 94.48388402546976,
+          "machineCpuPercent": 23.62097100636744,
+          "rssBeforeBytes": 138534912,
+          "rssAfterBytes": 155443200,
+          "sampledPeakRssBytes": 155443200,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 25.999689999999987,
+          "preparationMs": 16.86953600000004,
+          "executionMsPerIteration": 9.124783999999977,
+          "amortizedMsPerIteration": 25.999689999999987,
+          "cpuMs": 19.558,
+          "cpuPercent": 75.22397382430333,
+          "machineCpuPercent": 18.805993456075832,
+          "rssBeforeBytes": 155443200,
+          "rssAfterBytes": 172220416,
+          "sampledPeakRssBytes": 172220416,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 21.69767999999999,
+          "preparationMs": 14.869743999999969,
+          "executionMsPerIteration": 6.821414000000004,
+          "amortizedMsPerIteration": 21.69767999999999,
+          "cpuMs": 20.079,
+          "cpuPercent": 92.53984757817429,
+          "machineCpuPercent": 23.134961894543572,
+          "rssBeforeBytes": 172220416,
+          "rssAfterBytes": 188997632,
+          "sampledPeakRssBytes": 188997632,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 23.7456820000001,
+          "preparationMs": 15.875945999999999,
+          "executionMsPerIteration": 7.862662,
+          "amortizedMsPerIteration": 23.7456820000001,
+          "cpuMs": 20.334,
+          "cpuPercent": 85.63241097897256,
+          "machineCpuPercent": 21.40810274474314,
+          "rssBeforeBytes": 188997632,
+          "rssAfterBytes": 205774848,
+          "sampledPeakRssBytes": 205774848,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 25.19505499999991,
+          "preparationMs": 18.740566999999942,
+          "executionMsPerIteration": 6.449327999999923,
+          "amortizedMsPerIteration": 25.19505499999991,
+          "cpuMs": 20.775,
+          "cpuPercent": 82.45665667330384,
+          "machineCpuPercent": 20.61416416832596,
+          "rssBeforeBytes": 205774848,
+          "rssAfterBytes": 222552064,
+          "sampledPeakRssBytes": 222552064,
+          "threadIds": [
+            1
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 16777216,
+        "sharedPreparationCopyBytesPerSession": 16777216,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 1,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 23.7456820000001,
+        "medianAmortizedMs": 23.7456820000001,
+        "medianExecutionMs": 6.821414000000004,
+        "peakSampledRssBytes": 222552064
+      }
+    },
+    {
+      "engine": "pjs",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 1,
+      "memory": "clone",
+      "iterations": 5,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 215.60200899999995,
+      "firstRun": {
+        "wallMs": 202.0421359999999,
+        "preparationMs": 0.0014519999999720312,
+        "executionMsPerIteration": 40.40794239999998,
+        "amortizedMsPerIteration": 40.408427199999984,
+        "cpuMs": 169.714,
+        "cpuPercent": 83.99930992612357,
+        "machineCpuPercent": 20.999827481530893,
+        "rssBeforeBytes": 87175168,
+        "rssAfterBytes": 156160000,
+        "sampledPeakRssBytes": 156160000,
+        "threadIds": [
+          1
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 149.98975700000005,
+          "preparationMs": 0.001242000000047483,
+          "executionMsPerIteration": 29.997608799999988,
+          "amortizedMsPerIteration": 29.997951400000012,
+          "cpuMs": 134.32,
+          "cpuPercent": 89.5527819276352,
+          "machineCpuPercent": 22.3881954819088,
+          "rssBeforeBytes": 157065216,
+          "rssAfterBytes": 190562304,
+          "sampledPeakRssBytes": 207265792,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 224.46754800000008,
+          "preparationMs": 0.0008920000000216532,
+          "executionMsPerIteration": 44.893254999999996,
+          "amortizedMsPerIteration": 44.893509600000016,
+          "cpuMs": 124.643,
+          "cpuPercent": 55.5282940053321,
+          "machineCpuPercent": 13.882073501333025,
+          "rssBeforeBytes": 190562304,
+          "rssAfterBytes": 207347712,
+          "sampledPeakRssBytes": 257409024,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 99.42639400000007,
+          "preparationMs": 0.0014620000001741573,
+          "executionMsPerIteration": 19.884886199999983,
+          "amortizedMsPerIteration": 19.885278800000016,
+          "cpuMs": 86.961,
+          "cpuPercent": 87.46269124474124,
+          "machineCpuPercent": 21.86567281118531,
+          "rssBeforeBytes": 207347712,
+          "rssAfterBytes": 157130752,
+          "sampledPeakRssBytes": 207347712,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 183.6452320000003,
+          "preparationMs": 0.0014030000002094312,
+          "executionMsPerIteration": 36.728679600000035,
+          "amortizedMsPerIteration": 36.72904640000006,
+          "cpuMs": 134.483,
+          "cpuPercent": 73.22978034082573,
+          "machineCpuPercent": 18.30744508520643,
+          "rssBeforeBytes": 157130752,
+          "rssAfterBytes": 207462400,
+          "sampledPeakRssBytes": 207462400,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 187.65617799999973,
+          "preparationMs": 0.001362999999855674,
+          "executionMsPerIteration": 37.53086679999997,
+          "amortizedMsPerIteration": 37.531235599999945,
+          "cpuMs": 99.713,
+          "cpuPercent": 53.136007065005955,
+          "machineCpuPercent": 13.284001766251489,
+          "rssBeforeBytes": 207462400,
+          "rssAfterBytes": 157130752,
+          "sampledPeakRssBytes": 207462400,
+          "threadIds": [
+            1
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 16777216,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 1,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 183.6452320000003,
+        "medianAmortizedMs": 36.72904640000006,
+        "medianExecutionMs": 36.728679600000035,
+        "peakSampledRssBytes": 257409024
+      }
+    },
+    {
+      "engine": "piscina",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 1,
+      "memory": "clone",
+      "iterations": 5,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 162.332813,
+      "firstRun": {
+        "wallMs": 198.069122,
+        "preparationMs": 0.0017629999999826396,
+        "executionMsPerIteration": 39.61296279999999,
+        "amortizedMsPerIteration": 39.6138244,
+        "cpuMs": 242.635,
+        "cpuPercent": 122.50016436181303,
+        "machineCpuPercent": 30.62504109045326,
+        "rssBeforeBytes": 87285760,
+        "rssAfterBytes": 139608064,
+        "sampledPeakRssBytes": 172945408,
+        "threadIds": [
+          1
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 156.24465099999998,
+          "preparationMs": 0.0006709999997838167,
+          "executionMsPerIteration": 31.248681800000032,
+          "amortizedMsPerIteration": 31.248930199999997,
+          "cpuMs": 166.044,
+          "cpuPercent": 106.27179806622631,
+          "machineCpuPercent": 26.567949516556578,
+          "rssBeforeBytes": 223760384,
+          "rssAfterBytes": 240578560,
+          "sampledPeakRssBytes": 256299008,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 163.464561,
+          "preparationMs": 0.0009119999999711581,
+          "executionMsPerIteration": 32.69264760000001,
+          "amortizedMsPerIteration": 32.6929122,
+          "cpuMs": 167.757,
+          "cpuPercent": 102.62591412703821,
+          "machineCpuPercent": 25.656478531759554,
+          "rssBeforeBytes": 240578560,
+          "rssAfterBytes": 257605632,
+          "sampledPeakRssBytes": 274436096,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 155.37274000000002,
+          "preparationMs": 0.0007319999999708671,
+          "executionMsPerIteration": 31.074271399999997,
+          "amortizedMsPerIteration": 31.074548000000004,
+          "cpuMs": 175.959,
+          "cpuPercent": 113.249595778513,
+          "machineCpuPercent": 28.31239894462825,
+          "rssBeforeBytes": 257605632,
+          "rssAfterBytes": 207597568,
+          "sampledPeakRssBytes": 274386944,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 191.73320599999988,
+          "preparationMs": 0.0009119999999711581,
+          "executionMsPerIteration": 38.346378799999954,
+          "amortizedMsPerIteration": 38.34664119999998,
+          "cpuMs": 210.847,
+          "cpuPercent": 109.96895342166246,
+          "machineCpuPercent": 27.492238355415616,
+          "rssBeforeBytes": 207597568,
+          "rssAfterBytes": 257843200,
+          "sampledPeakRssBytes": 274628608,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 188.897019,
+          "preparationMs": 0.0010019999999713036,
+          "executionMsPerIteration": 37.77910320000001,
+          "amortizedMsPerIteration": 37.7794038,
+          "cpuMs": 186.812,
+          "cpuPercent": 98.89621392066542,
+          "machineCpuPercent": 24.724053480166354,
+          "rssBeforeBytes": 257843200,
+          "rssAfterBytes": 207384576,
+          "sampledPeakRssBytes": 274698240,
+          "threadIds": [
+            1
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 16777216,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 1,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 163.464561,
+        "medianAmortizedMs": 32.6929122,
+        "medianExecutionMs": 32.69264760000001,
+        "peakSampledRssBytes": 274698240
+      }
+    },
+    {
+      "engine": "piscina",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 1,
+      "memory": "transfer",
+      "iterations": 5,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 129.77043299999997,
+      "firstRun": {
+        "wallMs": 164.62646499999994,
+        "preparationMs": 0.009286999999972068,
+        "executionMsPerIteration": 32.92231939999999,
+        "amortizedMsPerIteration": 32.92529299999999,
+        "cpuMs": 161.192,
+        "cpuPercent": 97.9137831818232,
+        "machineCpuPercent": 24.4784457954558,
+        "rssBeforeBytes": 87060480,
+        "rssAfterBytes": 139862016,
+        "sampledPeakRssBytes": 172650496,
+        "threadIds": [
+          1
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 95.42094900000006,
+          "preparationMs": 0.0007709999999860884,
+          "executionMsPerIteration": 19.083959400000026,
+          "amortizedMsPerIteration": 19.08418980000001,
+          "cpuMs": 105.397,
+          "cpuPercent": 110.45478074211978,
+          "machineCpuPercent": 27.613695185529945,
+          "rssBeforeBytes": 208109568,
+          "rssAfterBytes": 241926144,
+          "sampledPeakRssBytes": 241926144,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 82.20043099999998,
+          "preparationMs": 0.001211999999895852,
+          "executionMsPerIteration": 16.439767600000003,
+          "amortizedMsPerIteration": 16.440086199999996,
+          "cpuMs": 92.33,
+          "cpuPercent": 112.32301202897588,
+          "machineCpuPercent": 28.08075300724397,
+          "rssBeforeBytes": 241926144,
+          "rssAfterBytes": 191791104,
+          "sampledPeakRssBytes": 241926144,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 101.99096300000019,
+          "preparationMs": 0.0005909999999857973,
+          "executionMsPerIteration": 20.39796620000002,
+          "amortizedMsPerIteration": 20.398192600000037,
+          "cpuMs": 113.939,
+          "cpuPercent": 111.7147996729865,
+          "machineCpuPercent": 27.928699918246625,
+          "rssBeforeBytes": 191791104,
+          "rssAfterBytes": 241860608,
+          "sampledPeakRssBytes": 241860608,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 74.83179300000006,
+          "preparationMs": 0.0007910000001629669,
+          "executionMsPerIteration": 14.966128200000004,
+          "amortizedMsPerIteration": 14.966358600000012,
+          "cpuMs": 89.717,
+          "cpuPercent": 119.8915546497729,
+          "machineCpuPercent": 29.972888662443225,
+          "rssBeforeBytes": 241860608,
+          "rssAfterBytes": 192114688,
+          "sampledPeakRssBytes": 241991680,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 79.29372199999989,
+          "preparationMs": 0.0018129999998564017,
+          "executionMsPerIteration": 15.858287599999993,
+          "amortizedMsPerIteration": 15.858744399999978,
+          "cpuMs": 88.589,
+          "cpuPercent": 111.72259009357654,
+          "machineCpuPercent": 27.930647523394136,
+          "rssBeforeBytes": 192114688,
+          "rssAfterBytes": 225538048,
+          "sampledPeakRssBytes": 225538048,
+          "threadIds": [
+            1
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 16777216,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 16777216,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 1,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 82.20043099999998,
+        "medianAmortizedMs": 16.440086199999996,
+        "medianExecutionMs": 16.439767600000003,
+        "peakSampledRssBytes": 241991680
+      }
+    },
+    {
+      "engine": "pjs",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 1,
+      "memory": "transfer",
+      "iterations": 5,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 165.790974,
+      "firstRun": {
+        "wallMs": 123.56797700000004,
+        "preparationMs": 0.0016530000000329892,
+        "executionMsPerIteration": 24.713088399999993,
+        "amortizedMsPerIteration": 24.71359540000001,
+        "cpuMs": 147.319,
+        "cpuPercent": 119.22101791793511,
+        "machineCpuPercent": 29.80525447948378,
+        "rssBeforeBytes": 87113728,
+        "rssAfterBytes": 122527744,
+        "sampledPeakRssBytes": 155402240,
+        "threadIds": [
+          1
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 84.90410000000008,
+          "preparationMs": 0.0009210000000621221,
+          "executionMsPerIteration": 16.980563600000004,
+          "amortizedMsPerIteration": 16.980820000000016,
+          "cpuMs": 103.7,
+          "cpuPercent": 122.13780017690536,
+          "machineCpuPercent": 30.53445004422634,
+          "rssBeforeBytes": 207167488,
+          "rssAfterBytes": 224993280,
+          "sampledPeakRssBytes": 224993280,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 75.82754699999998,
+          "preparationMs": 0.0011220000000093933,
+          "executionMsPerIteration": 15.16521479999999,
+          "amortizedMsPerIteration": 15.165509399999996,
+          "cpuMs": 95.486,
+          "cpuPercent": 125.92521290448711,
+          "machineCpuPercent": 31.481303226121778,
+          "rssBeforeBytes": 224993280,
+          "rssAfterBytes": 191750144,
+          "sampledPeakRssBytes": 224993280,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 75.60824600000001,
+          "preparationMs": 0.0006410000000869331,
+          "executionMsPerIteration": 15.121448800000007,
+          "amortizedMsPerIteration": 15.121649200000002,
+          "cpuMs": 93.432,
+          "cpuPercent": 123.5738228869904,
+          "machineCpuPercent": 30.8934557217476,
+          "rssBeforeBytes": 191750144,
+          "rssAfterBytes": 208396288,
+          "sampledPeakRssBytes": 208396288,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 66.75288599999999,
+          "preparationMs": 0.0006809999999859428,
+          "executionMsPerIteration": 13.350362799999994,
+          "amortizedMsPerIteration": 13.350577199999998,
+          "cpuMs": 82.349,
+          "cpuPercent": 123.36395463111516,
+          "machineCpuPercent": 30.84098865777879,
+          "rssBeforeBytes": 208396288,
+          "rssAfterBytes": 208396288,
+          "sampledPeakRssBytes": 208396288,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 68.57328200000006,
+          "preparationMs": 0.004858999999896696,
+          "executionMsPerIteration": 13.713472200000023,
+          "amortizedMsPerIteration": 13.714656400000013,
+          "cpuMs": 86.873,
+          "cpuPercent": 126.68636743972664,
+          "machineCpuPercent": 31.67159185993166,
+          "rssBeforeBytes": 208396288,
+          "rssAfterBytes": 208396288,
+          "sampledPeakRssBytes": 208396288,
+          "threadIds": [
+            1
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 16777216,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 16777216,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 1,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 75.60824600000001,
+        "medianAmortizedMs": 15.121649200000002,
+        "medianExecutionMs": 15.121448800000007,
+        "peakSampledRssBytes": 224993280
+      }
+    },
+    {
+      "engine": "pjs",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 1,
+      "memory": "shared",
+      "iterations": 5,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 137.53984100000002,
+      "firstRun": {
+        "wallMs": 48.27477099999999,
+        "preparationMs": 13.534556000000066,
+        "executionMsPerIteration": 6.946678399999996,
+        "amortizedMsPerIteration": 9.654954199999997,
+        "cpuMs": 54.222,
+        "cpuPercent": 112.3195385017984,
+        "machineCpuPercent": 28.0798846254496,
+        "rssBeforeBytes": 87285760,
+        "rssAfterBytes": 105111552,
+        "sampledPeakRssBytes": 105111552,
+        "threadIds": [
+          1
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 41.48635899999999,
+          "preparationMs": 15.22031000000004,
+          "executionMsPerIteration": 5.251813199999992,
+          "amortizedMsPerIteration": 8.297271799999999,
+          "cpuMs": 40.725,
+          "cpuPercent": 98.1647967709097,
+          "machineCpuPercent": 24.541199192727426,
+          "rssBeforeBytes": 138797056,
+          "rssAfterBytes": 155574272,
+          "sampledPeakRssBytes": 155574272,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 40.15575899999999,
+          "preparationMs": 15.150079000000005,
+          "executionMsPerIteration": 5.000296400000002,
+          "amortizedMsPerIteration": 8.031151799999998,
+          "cpuMs": 44.416,
+          "cpuPercent": 110.6092901892354,
+          "machineCpuPercent": 27.65232254730885,
+          "rssBeforeBytes": 155574272,
+          "rssAfterBytes": 173137920,
+          "sampledPeakRssBytes": 173137920,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 38.868078999999966,
+          "preparationMs": 14.019051999999988,
+          "executionMsPerIteration": 4.968849599999999,
+          "amortizedMsPerIteration": 7.773615799999993,
+          "cpuMs": 39.014,
+          "cpuPercent": 100.37542632348782,
+          "machineCpuPercent": 25.093856580871954,
+          "rssBeforeBytes": 173137920,
+          "rssAfterBytes": 189915136,
+          "sampledPeakRssBytes": 189915136,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 40.720856000000026,
+          "preparationMs": 14.68686200000002,
+          "executionMsPerIteration": 5.205570400000011,
+          "amortizedMsPerIteration": 8.144171200000006,
+          "cpuMs": 40.475,
+          "cpuPercent": 99.39624058983429,
+          "machineCpuPercent": 24.849060147458573,
+          "rssBeforeBytes": 189915136,
+          "rssAfterBytes": 206692352,
+          "sampledPeakRssBytes": 206692352,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 39.84045800000001,
+          "preparationMs": 14.640255000000025,
+          "executionMsPerIteration": 5.039140999999995,
+          "amortizedMsPerIteration": 7.968091600000003,
+          "cpuMs": 40.451,
+          "cpuPercent": 101.53246732253929,
+          "machineCpuPercent": 25.383116830634822,
+          "rssBeforeBytes": 206692352,
+          "rssAfterBytes": 223731712,
+          "sampledPeakRssBytes": 223731712,
+          "threadIds": [
+            1
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 16777216,
+        "sharedPreparationCopyBytesPerSession": 16777216,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 1,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 40.15575899999999,
+        "medianAmortizedMs": 8.031151799999998,
+        "medianExecutionMs": 5.039140999999995,
+        "peakSampledRssBytes": 223731712
+      }
+    },
+    {
+      "engine": "piscina",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 1,
+      "memory": "shared",
+      "iterations": 5,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 143.60114300000004,
+      "firstRun": {
+        "wallMs": 46.870592999999985,
+        "preparationMs": 14.397289,
+        "executionMsPerIteration": 6.490436799999998,
+        "amortizedMsPerIteration": 9.374118599999997,
+        "cpuMs": 52.186,
+        "cpuPercent": 111.34060113128932,
+        "machineCpuPercent": 27.83515028282233,
+        "rssBeforeBytes": 86900736,
+        "rssAfterBytes": 104726528,
+        "sampledPeakRssBytes": 104726528,
+        "threadIds": [
+          1
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 39.08413299999995,
+          "preparationMs": 14.029140999999981,
+          "executionMsPerIteration": 5.010201000000007,
+          "amortizedMsPerIteration": 7.81682659999999,
+          "cpuMs": 40.528,
+          "cpuPercent": 103.6942536246104,
+          "machineCpuPercent": 25.9235634061526,
+          "rssBeforeBytes": 122429440,
+          "rssAfterBytes": 139075584,
+          "sampledPeakRssBytes": 139075584,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 44.18163199999992,
+          "preparationMs": 14.987483999999995,
+          "executionMsPerIteration": 5.8376091999999975,
+          "amortizedMsPerIteration": 8.836326399999985,
+          "cpuMs": 42.781,
+          "cpuPercent": 96.82983190842764,
+          "machineCpuPercent": 24.20745797710691,
+          "rssBeforeBytes": 139075584,
+          "rssAfterBytes": 155852800,
+          "sampledPeakRssBytes": 155852800,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 51.33995600000003,
+          "preparationMs": 14.710565999999972,
+          "executionMsPerIteration": 7.324423400000001,
+          "amortizedMsPerIteration": 10.267991200000006,
+          "cpuMs": 43.432,
+          "cpuPercent": 84.59687811185498,
+          "machineCpuPercent": 21.149219527963744,
+          "rssBeforeBytes": 155852800,
+          "rssAfterBytes": 172630016,
+          "sampledPeakRssBytes": 172630016,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 43.492793000000006,
+          "preparationMs": 15.152183000000036,
+          "executionMsPerIteration": 5.666931799999998,
+          "amortizedMsPerIteration": 8.698558600000002,
+          "cpuMs": 41.973,
+          "cpuPercent": 96.50564405003834,
+          "machineCpuPercent": 24.126411012509585,
+          "rssBeforeBytes": 172630016,
+          "rssAfterBytes": 189538304,
+          "sampledPeakRssBytes": 189538304,
+          "threadIds": [
+            1
+          ]
+        },
+        {
+          "wallMs": 38.57814700000006,
+          "preparationMs": 13.486736000000064,
+          "executionMsPerIteration": 5.0169596000000185,
+          "amortizedMsPerIteration": 7.715629400000012,
+          "cpuMs": 40.078,
+          "cpuPercent": 103.88783058968576,
+          "machineCpuPercent": 25.97195764742144,
+          "rssBeforeBytes": 189538304,
+          "rssAfterBytes": 206184448,
+          "sampledPeakRssBytes": 206184448,
+          "threadIds": [
+            1
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 16777216,
+        "sharedPreparationCopyBytesPerSession": 16777216,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 1,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 43.492793000000006,
+        "medianAmortizedMs": 8.698558600000002,
+        "medianExecutionMs": 5.666931799999998,
+        "peakSampledRssBytes": 206184448
+      }
+    },
+    {
+      "engine": "piscina",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 2,
+      "memory": "transfer",
+      "iterations": 1,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 168.790025,
+      "firstRun": {
+        "wallMs": 40.64870099999996,
+        "preparationMs": 0.0021639999999933934,
+        "executionMsPerIteration": 40.64543500000002,
+        "amortizedMsPerIteration": 40.64870099999996,
+        "cpuMs": 57.086,
+        "cpuPercent": 140.4374521094784,
+        "machineCpuPercent": 35.1093630273696,
+        "rssBeforeBytes": 98189312,
+        "rssAfterBytes": 133185536,
+        "sampledPeakRssBytes": 133185536,
+        "threadIds": [
+          1,
+          2
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 36.23495200000002,
+          "preparationMs": 0.0009919999999965512,
+          "executionMsPerIteration": 36.23339899999996,
+          "amortizedMsPerIteration": 36.23495200000002,
+          "cpuMs": 61.681,
+          "cpuPercent": 170.22514615170448,
+          "machineCpuPercent": 42.55628653792612,
+          "rssBeforeBytes": 200425472,
+          "rssAfterBytes": 234766336,
+          "sampledPeakRssBytes": 234766336,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 42.713113999999905,
+          "preparationMs": 0.0011629999999058782,
+          "executionMsPerIteration": 42.7112699999999,
+          "amortizedMsPerIteration": 42.713113999999905,
+          "cpuMs": 81.465,
+          "cpuPercent": 190.72596767353508,
+          "machineCpuPercent": 47.68149191838377,
+          "rssBeforeBytes": 234766336,
+          "rssAfterBytes": 202690560,
+          "sampledPeakRssBytes": 235536384,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 33.30755499999998,
+          "preparationMs": 0.001262999999994463,
+          "executionMsPerIteration": 33.305770999999936,
+          "amortizedMsPerIteration": 33.30755499999998,
+          "cpuMs": 35.934,
+          "cpuPercent": 107.88543319976509,
+          "machineCpuPercent": 26.971358299941272,
+          "rssBeforeBytes": 202690560,
+          "rssAfterBytes": 236113920,
+          "sampledPeakRssBytes": 236113920,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 34.264364,
+          "preparationMs": 0.0013420000000223808,
+          "executionMsPerIteration": 34.26230999999996,
+          "amortizedMsPerIteration": 34.264364,
+          "cpuMs": 37.053,
+          "cpuPercent": 108.13858970211734,
+          "machineCpuPercent": 27.034647425529336,
+          "rssBeforeBytes": 236113920,
+          "rssAfterBytes": 269668352,
+          "sampledPeakRssBytes": 269668352,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 34.798945,
+          "preparationMs": 0.0008109999999987849,
+          "executionMsPerIteration": 34.79752200000007,
+          "amortizedMsPerIteration": 34.798945,
+          "cpuMs": 37.654,
+          "cpuPercent": 108.20442976072981,
+          "machineCpuPercent": 27.051107440182452,
+          "rssBeforeBytes": 269668352,
+          "rssAfterBytes": 303222784,
+          "sampledPeakRssBytes": 303222784,
+          "threadIds": [
+            1,
+            2
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 33554432,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 33554432,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 2,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 34.798945,
+        "medianAmortizedMs": 34.798945,
+        "medianExecutionMs": 34.79752200000007,
+        "peakSampledRssBytes": 303222784
+      }
+    },
+    {
+      "engine": "pjs",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 2,
+      "memory": "transfer",
+      "iterations": 1,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 163.618538,
+      "firstRun": {
+        "wallMs": 39.08434299999999,
+        "preparationMs": 0.003857000000039079,
+        "executionMsPerIteration": 39.07939399999998,
+        "amortizedMsPerIteration": 39.08434299999999,
+        "cpuMs": 54.864,
+        "cpuPercent": 140.37334592012974,
+        "machineCpuPercent": 35.093336480032434,
+        "rssBeforeBytes": 98856960,
+        "rssAfterBytes": 133328896,
+        "sampledPeakRssBytes": 133328896,
+        "threadIds": [
+          1,
+          2
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 35.09215400000005,
+          "preparationMs": 0.0013330000000451037,
+          "executionMsPerIteration": 35.09029999999996,
+          "amortizedMsPerIteration": 35.09215400000005,
+          "cpuMs": 59.512,
+          "cpuPercent": 169.58776597184635,
+          "machineCpuPercent": 42.39694149296159,
+          "rssBeforeBytes": 200568832,
+          "rssAfterBytes": 234385408,
+          "sampledPeakRssBytes": 234385408,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 59.74175700000001,
+          "preparationMs": 0.0011120000000346408,
+          "executionMsPerIteration": 59.739994000000024,
+          "amortizedMsPerIteration": 59.74175700000001,
+          "cpuMs": 88.346,
+          "cpuPercent": 147.87981545303396,
+          "machineCpuPercent": 36.96995386325849,
+          "rssBeforeBytes": 234385408,
+          "rssAfterBytes": 168050688,
+          "sampledPeakRssBytes": 234385408,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 40.25353199999995,
+          "preparationMs": 0.001191999999946347,
+          "executionMsPerIteration": 40.25171799999998,
+          "amortizedMsPerIteration": 40.25353199999995,
+          "cpuMs": 43.513,
+          "cpuPercent": 108.09734658812064,
+          "machineCpuPercent": 27.02433664703016,
+          "rssBeforeBytes": 168181760,
+          "rssAfterBytes": 201736192,
+          "sampledPeakRssBytes": 201736192,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 41.50132699999995,
+          "preparationMs": 0.0011929999999438223,
+          "executionMsPerIteration": 41.49966299999994,
+          "amortizedMsPerIteration": 41.50132699999995,
+          "cpuMs": 44.837,
+          "cpuPercent": 108.03750925843904,
+          "machineCpuPercent": 27.00937731460976,
+          "rssBeforeBytes": 201736192,
+          "rssAfterBytes": 235945984,
+          "sampledPeakRssBytes": 235945984,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 34.89796000000001,
+          "preparationMs": 0.0006609999999227512,
+          "executionMsPerIteration": 34.89689800000008,
+          "amortizedMsPerIteration": 34.89796000000001,
+          "cpuMs": 42.281,
+          "cpuPercent": 121.15607903728464,
+          "machineCpuPercent": 30.28901975932116,
+          "rssBeforeBytes": 235945984,
+          "rssAfterBytes": 269631488,
+          "sampledPeakRssBytes": 269631488,
+          "threadIds": [
+            1,
+            2
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 33554432,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 33554432,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 2,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 40.25353199999995,
+        "medianAmortizedMs": 40.25353199999995,
+        "medianExecutionMs": 40.25171799999998,
+        "peakSampledRssBytes": 269631488
+      }
+    },
+    {
+      "engine": "pjs",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 2,
+      "memory": "shared",
+      "iterations": 1,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 152.54231299999998,
+      "firstRun": {
+        "wallMs": 23.258852000000047,
+        "preparationMs": 14.614256000000069,
+        "executionMsPerIteration": 8.63893500000006,
+        "amortizedMsPerIteration": 23.258852000000047,
+        "cpuMs": 36.122,
+        "cpuPercent": 155.3043116659409,
+        "machineCpuPercent": 38.826077916485225,
+        "rssBeforeBytes": 98889728,
+        "rssAfterBytes": 116645888,
+        "sampledPeakRssBytes": 116645888,
+        "threadIds": [
+          1,
+          2
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 18.76191700000004,
+          "preparationMs": 14.30657999999994,
+          "executionMsPerIteration": 4.450548000000026,
+          "amortizedMsPerIteration": 18.76191700000004,
+          "cpuMs": 23.023,
+          "cpuPercent": 122.71134127711977,
+          "machineCpuPercent": 30.677835319279943,
+          "rssBeforeBytes": 150200320,
+          "rssAfterBytes": 167108608,
+          "sampledPeakRssBytes": 167108608,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 18.506498999999963,
+          "preparationMs": 14.759196999999972,
+          "executionMsPerIteration": 3.743194000000017,
+          "amortizedMsPerIteration": 18.506498999999963,
+          "cpuMs": 21.505,
+          "cpuPercent": 116.20242164657964,
+          "machineCpuPercent": 29.05060541164491,
+          "rssBeforeBytes": 167108608,
+          "rssAfterBytes": 184016896,
+          "sampledPeakRssBytes": 184016896,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 18.10952599999996,
+          "preparationMs": 13.900138999999967,
+          "executionMsPerIteration": 4.203685999999948,
+          "amortizedMsPerIteration": 18.10952599999996,
+          "cpuMs": 21.395,
+          "cpuPercent": 118.14224182344721,
+          "machineCpuPercent": 29.535560455861802,
+          "rssBeforeBytes": 184016896,
+          "rssAfterBytes": 200794112,
+          "sampledPeakRssBytes": 200794112,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 20.565562,
+          "preparationMs": 14.85884400000009,
+          "executionMsPerIteration": 5.701999999999998,
+          "amortizedMsPerIteration": 20.565562,
+          "cpuMs": 26.841,
+          "cpuPercent": 130.51430347490626,
+          "machineCpuPercent": 32.628575868726564,
+          "rssBeforeBytes": 200794112,
+          "rssAfterBytes": 218357760,
+          "sampledPeakRssBytes": 218357760,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 19.500618999999915,
+          "preparationMs": 14.33779800000002,
+          "executionMsPerIteration": 5.157921999999985,
+          "amortizedMsPerIteration": 19.500618999999915,
+          "cpuMs": 22.03,
+          "cpuPercent": 112.97077287649226,
+          "machineCpuPercent": 28.242693219123066,
+          "rssBeforeBytes": 218357760,
+          "rssAfterBytes": 235266048,
+          "sampledPeakRssBytes": 235266048,
+          "threadIds": [
+            1,
+            2
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 16777216,
+        "sharedPreparationCopyBytesPerSession": 16777216,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 2,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 18.76191700000004,
+        "medianAmortizedMs": 18.76191700000004,
+        "medianExecutionMs": 4.450548000000026,
+        "peakSampledRssBytes": 235266048
+      }
+    },
+    {
+      "engine": "piscina",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 2,
+      "memory": "shared",
+      "iterations": 1,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 174.34041200000001,
+      "firstRun": {
+        "wallMs": 37.79910899999993,
+        "preparationMs": 20.845686,
+        "executionMsPerIteration": 16.947100999999975,
+        "amortizedMsPerIteration": 37.79910899999993,
+        "cpuMs": 48.278,
+        "cpuPercent": 127.72258732342101,
+        "machineCpuPercent": 31.930646830855252,
+        "rssBeforeBytes": 98168832,
+        "rssAfterBytes": 116781056,
+        "sampledPeakRssBytes": 116781056,
+        "threadIds": [
+          1,
+          2
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 25.37537199999997,
+          "preparationMs": 17.418363,
+          "executionMsPerIteration": 7.9535829999999805,
+          "amortizedMsPerIteration": 25.37537199999997,
+          "cpuMs": 29.046,
+          "cpuPercent": 114.46531700106715,
+          "machineCpuPercent": 28.616329250266787,
+          "rssBeforeBytes": 150335488,
+          "rssAfterBytes": 167899136,
+          "sampledPeakRssBytes": 167899136,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 19.073409999999967,
+          "preparationMs": 13.952077000000031,
+          "executionMsPerIteration": 5.116413999999963,
+          "amortizedMsPerIteration": 19.073409999999967,
+          "cpuMs": 21.4,
+          "cpuPercent": 112.19808099338313,
+          "machineCpuPercent": 28.049520248345782,
+          "rssBeforeBytes": 167899136,
+          "rssAfterBytes": 184676352,
+          "sampledPeakRssBytes": 184676352,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 18.551333,
+          "preparationMs": 14.097538999999983,
+          "executionMsPerIteration": 4.447622000000024,
+          "amortizedMsPerIteration": 18.551333,
+          "cpuMs": 21.721,
+          "cpuPercent": 117.08592584694588,
+          "machineCpuPercent": 29.27148146173647,
+          "rssBeforeBytes": 184676352,
+          "rssAfterBytes": 201453568,
+          "sampledPeakRssBytes": 201453568,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 21.06696999999997,
+          "preparationMs": 14.203686999999945,
+          "executionMsPerIteration": 6.856649999999945,
+          "amortizedMsPerIteration": 21.06696999999997,
+          "cpuMs": 21.162,
+          "cpuPercent": 100.45108527709505,
+          "machineCpuPercent": 25.11277131927376,
+          "rssBeforeBytes": 201453568,
+          "rssAfterBytes": 218230784,
+          "sampledPeakRssBytes": 218230784,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 21.724289999999996,
+          "preparationMs": 16.96253999999999,
+          "executionMsPerIteration": 4.755808999999999,
+          "amortizedMsPerIteration": 21.724289999999996,
+          "cpuMs": 21.763,
+          "cpuPercent": 100.17818764157542,
+          "machineCpuPercent": 25.044546910393855,
+          "rssBeforeBytes": 218230784,
+          "rssAfterBytes": 235008000,
+          "sampledPeakRssBytes": 235008000,
+          "threadIds": [
+            1,
+            2
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 16777216,
+        "sharedPreparationCopyBytesPerSession": 16777216,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 2,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 21.06696999999997,
+        "medianAmortizedMs": 21.06696999999997,
+        "medianExecutionMs": 5.116413999999963,
+        "peakSampledRssBytes": 235008000
+      }
+    },
+    {
+      "engine": "piscina",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 2,
+      "memory": "clone",
+      "iterations": 1,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 172.60319999999996,
+      "firstRun": {
+        "wallMs": 72.09603400000003,
+        "preparationMs": 0.0018830000000207292,
+        "executionMsPerIteration": 72.09332900000004,
+        "amortizedMsPerIteration": 72.09603400000003,
+        "cpuMs": 106.192,
+        "cpuPercent": 147.29242942822617,
+        "machineCpuPercent": 36.82310735705654,
+        "rssBeforeBytes": 98246656,
+        "rssAfterBytes": 133808128,
+        "sampledPeakRssBytes": 147927040,
+        "threadIds": [
+          1,
+          2
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 58.886536999999976,
+          "preparationMs": 0.0007810000000745276,
+          "executionMsPerIteration": 58.88531499999999,
+          "amortizedMsPerIteration": 58.886536999999976,
+          "cpuMs": 125.473,
+          "cpuPercent": 213.07586825830845,
+          "machineCpuPercent": 53.26896706457711,
+          "rssBeforeBytes": 200900608,
+          "rssAfterBytes": 235679744,
+          "sampledPeakRssBytes": 250974208,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 60.50268099999994,
+          "preparationMs": 0.0011519999999336505,
+          "executionMsPerIteration": 60.50099799999998,
+          "amortizedMsPerIteration": 60.50268099999994,
+          "cpuMs": 113.705,
+          "cpuPercent": 187.9338206516834,
+          "machineCpuPercent": 46.98345516292085,
+          "rssBeforeBytes": 235679744,
+          "rssAfterBytes": 203370496,
+          "sampledPeakRssBytes": 249438208,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 73.22700099999997,
+          "preparationMs": 0.0015230000000201471,
+          "executionMsPerIteration": 73.22494700000004,
+          "amortizedMsPerIteration": 73.22700099999997,
+          "cpuMs": 93.231,
+          "cpuPercent": 127.31779087880443,
+          "machineCpuPercent": 31.829447719701108,
+          "rssBeforeBytes": 203370496,
+          "rssAfterBytes": 253648896,
+          "sampledPeakRssBytes": 269250560,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 62.01888799999995,
+          "preparationMs": 0.0006309999999984939,
+          "executionMsPerIteration": 62.017795999999976,
+          "amortizedMsPerIteration": 62.01888799999995,
+          "cpuMs": 83.269,
+          "cpuPercent": 134.26393585128466,
+          "machineCpuPercent": 33.565983962821164,
+          "rssBeforeBytes": 253648896,
+          "rssAfterBytes": 287232000,
+          "sampledPeakRssBytes": 302964736,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 63.0902030000002,
+          "preparationMs": 0.000762000000122498,
+          "executionMsPerIteration": 63.088830000000144,
+          "amortizedMsPerIteration": 63.0902030000002,
+          "cpuMs": 84.651,
+          "cpuPercent": 134.1745563887308,
+          "machineCpuPercent": 33.5436390971827,
+          "rssBeforeBytes": 287232000,
+          "rssAfterBytes": 320757760,
+          "sampledPeakRssBytes": 332062720,
+          "threadIds": [
+            1,
+            2
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 33554432,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 2,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 62.01888799999995,
+        "medianAmortizedMs": 62.01888799999995,
+        "medianExecutionMs": 62.017795999999976,
+        "peakSampledRssBytes": 332062720
+      }
+    },
+    {
+      "engine": "pjs",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 2,
+      "memory": "clone",
+      "iterations": 1,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 164.29262999999997,
+      "firstRun": {
+        "wallMs": 104.13805000000002,
+        "preparationMs": 0.003957000000013977,
+        "executionMsPerIteration": 104.13270999999997,
+        "amortizedMsPerIteration": 104.13805000000002,
+        "cpuMs": 104.683,
+        "cpuPercent": 100.52329575981112,
+        "machineCpuPercent": 25.13082393995278,
+        "rssBeforeBytes": 98934784,
+        "rssAfterBytes": 133767168,
+        "sampledPeakRssBytes": 158310400,
+        "threadIds": [
+          1,
+          2
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 61.65369499999997,
+          "preparationMs": 0.0010019999999713036,
+          "executionMsPerIteration": 61.652232000000026,
+          "amortizedMsPerIteration": 61.65369499999997,
+          "cpuMs": 110.472,
+          "cpuPercent": 179.1814748491555,
+          "machineCpuPercent": 44.79536871228888,
+          "rssBeforeBytes": 217657344,
+          "rssAfterBytes": 234840064,
+          "sampledPeakRssBytes": 283848704,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 51.564516000000026,
+          "preparationMs": 0.0017030000000204382,
+          "executionMsPerIteration": 51.56162100000006,
+          "amortizedMsPerIteration": 51.564516000000026,
+          "cpuMs": 77.112,
+          "cpuPercent": 149.54469852873237,
+          "machineCpuPercent": 37.38617463218309,
+          "rssBeforeBytes": 234840064,
+          "rssAfterBytes": 218767360,
+          "sampledPeakRssBytes": 251916288,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 45.941373999999996,
+          "preparationMs": 0.002303999999980988,
+          "executionMsPerIteration": 45.938048000000094,
+          "amortizedMsPerIteration": 45.941373999999996,
+          "cpuMs": 54.291,
+          "cpuPercent": 118.17452390518403,
+          "machineCpuPercent": 29.543630976296008,
+          "rssBeforeBytes": 218898432,
+          "rssAfterBytes": 218898432,
+          "sampledPeakRssBytes": 252190720,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 62.230944999999906,
+          "preparationMs": 0.001973999999904663,
+          "executionMsPerIteration": 62.22852999999998,
+          "amortizedMsPerIteration": 62.230944999999906,
+          "cpuMs": 81.415,
+          "cpuPercent": 130.82719537683403,
+          "machineCpuPercent": 32.70679884420851,
+          "rssBeforeBytes": 218898432,
+          "rssAfterBytes": 253366272,
+          "sampledPeakRssBytes": 285089792,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 57.197926999999936,
+          "preparationMs": 0.0006409999998595595,
+          "executionMsPerIteration": 57.196885000000066,
+          "amortizedMsPerIteration": 57.197926999999936,
+          "cpuMs": 81.609,
+          "cpuPercent": 142.67824776237097,
+          "machineCpuPercent": 35.66956194059274,
+          "rssBeforeBytes": 253366272,
+          "rssAfterBytes": 286740480,
+          "sampledPeakRssBytes": 320081920,
+          "threadIds": [
+            1,
+            2
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 33554432,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 2,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 57.197926999999936,
+        "medianAmortizedMs": 57.197926999999936,
+        "medianExecutionMs": 57.196885000000066,
+        "peakSampledRssBytes": 320081920
+      }
+    },
+    {
+      "engine": "pjs",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 2,
+      "memory": "transfer",
+      "iterations": 5,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 176.501465,
+      "firstRun": {
+        "wallMs": 204.29132499999992,
+        "preparationMs": 0.004167999999936001,
+        "executionMsPerIteration": 40.857206999999995,
+        "amortizedMsPerIteration": 40.85826499999998,
+        "cpuMs": 274.246,
+        "cpuPercent": 134.24260672840614,
+        "machineCpuPercent": 33.560651682101536,
+        "rssBeforeBytes": 98713600,
+        "rssAfterBytes": 168763392,
+        "sampledPeakRssBytes": 200949760,
+        "threadIds": [
+          1,
+          2
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 134.17383299999983,
+          "preparationMs": 0.0006609999998090643,
+          "executionMsPerIteration": 26.834554200000003,
+          "amortizedMsPerIteration": 26.834766599999966,
+          "cpuMs": 177.472,
+          "cpuPercent": 132.27020204453743,
+          "machineCpuPercent": 33.06755051113436,
+          "rssBeforeBytes": 220545024,
+          "rssAfterBytes": 304300032,
+          "sampledPeakRssBytes": 304300032,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 88.90516699999989,
+          "preparationMs": 0.0008109999998850981,
+          "executionMsPerIteration": 17.780760999999984,
+          "amortizedMsPerIteration": 17.781033399999977,
+          "cpuMs": 132.881,
+          "cpuPercent": 149.46375388958006,
+          "machineCpuPercent": 37.365938472395015,
+          "rssBeforeBytes": 304300032,
+          "rssAfterBytes": 304300032,
+          "sampledPeakRssBytes": 304300032,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 95.85179500000004,
+          "preparationMs": 0.0013020000001233711,
+          "executionMsPerIteration": 19.170004400000018,
+          "amortizedMsPerIteration": 19.17035900000001,
+          "cpuMs": 139.134,
+          "cpuPercent": 145.1553411180249,
+          "machineCpuPercent": 36.28883527950622,
+          "rssBeforeBytes": 304300032,
+          "rssAfterBytes": 304300032,
+          "sampledPeakRssBytes": 304300032,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 106.42557099999999,
+          "preparationMs": 0.0013920000001235167,
+          "executionMsPerIteration": 21.284609199999977,
+          "amortizedMsPerIteration": 21.2851142,
+          "cpuMs": 135.444,
+          "cpuPercent": 127.26640667965032,
+          "machineCpuPercent": 31.81660166991258,
+          "rssBeforeBytes": 304300032,
+          "rssAfterBytes": 304300032,
+          "sampledPeakRssBytes": 304300032,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 106.62813000000006,
+          "preparationMs": 0.001211999999895852,
+          "executionMsPerIteration": 21.325281399999994,
+          "amortizedMsPerIteration": 21.32562600000001,
+          "cpuMs": 133.551,
+          "cpuPercent": 125.24931272826403,
+          "machineCpuPercent": 31.312328182066008,
+          "rssBeforeBytes": 304300032,
+          "rssAfterBytes": 304300032,
+          "sampledPeakRssBytes": 304300032,
+          "threadIds": [
+            1,
+            2
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 33554432,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 33554432,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 2,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 106.42557099999999,
+        "medianAmortizedMs": 21.2851142,
+        "medianExecutionMs": 21.284609199999977,
+        "peakSampledRssBytes": 304300032
+      }
+    },
+    {
+      "engine": "piscina",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 2,
+      "memory": "transfer",
+      "iterations": 5,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 169.822928,
+      "firstRun": {
+        "wallMs": 201.81435900000008,
+        "preparationMs": 0.0022140000000945292,
+        "executionMsPerIteration": 40.36219660000002,
+        "amortizedMsPerIteration": 40.362871800000015,
+        "cpuMs": 279.282,
+        "cpuPercent": 138.38559425793872,
+        "machineCpuPercent": 34.59639856448468,
+        "rssBeforeBytes": 98217984,
+        "rssAfterBytes": 202981376,
+        "sampledPeakRssBytes": 236113920,
+        "threadIds": [
+          1,
+          2
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 92.13749599999983,
+          "preparationMs": 0.0007819999998446292,
+          "executionMsPerIteration": 18.427254799999993,
+          "amortizedMsPerIteration": 18.427499199999964,
+          "cpuMs": 139.238,
+          "cpuPercent": 151.11980034708156,
+          "machineCpuPercent": 37.77995008677039,
+          "rssBeforeBytes": 338489344,
+          "rssAfterBytes": 338620416,
+          "sampledPeakRssBytes": 338620416,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 131.04579000000012,
+          "preparationMs": 0.0023040000000946748,
+          "executionMsPerIteration": 26.208564800000023,
+          "amortizedMsPerIteration": 26.209158000000023,
+          "cpuMs": 193.317,
+          "cpuPercent": 147.51866504067,
+          "machineCpuPercent": 36.8796662601675,
+          "rssBeforeBytes": 338620416,
+          "rssAfterBytes": 372568064,
+          "sampledPeakRssBytes": 372568064,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 177.34339999999997,
+          "preparationMs": 0.0010620000000471919,
+          "executionMsPerIteration": 35.46835539999997,
+          "amortizedMsPerIteration": 35.46867999999999,
+          "cpuMs": 177.886,
+          "cpuPercent": 100.30596007519874,
+          "machineCpuPercent": 25.076490018799685,
+          "rssBeforeBytes": 372568064,
+          "rssAfterBytes": 389476352,
+          "sampledPeakRssBytes": 389476352,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 135.99298599999997,
+          "preparationMs": 0.000661000000036438,
+          "executionMsPerIteration": 27.198316799999976,
+          "amortizedMsPerIteration": 27.198597199999995,
+          "cpuMs": 142.743,
+          "cpuPercent": 104.9635015735297,
+          "machineCpuPercent": 26.240875393382424,
+          "rssBeforeBytes": 389476352,
+          "rssAfterBytes": 356589568,
+          "sampledPeakRssBytes": 389607424,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 161.41312199999993,
+          "preparationMs": 0.0008309999998346029,
+          "executionMsPerIteration": 32.282273799999984,
+          "amortizedMsPerIteration": 32.28262439999999,
+          "cpuMs": 133.947,
+          "cpuPercent": 82.98395963123745,
+          "machineCpuPercent": 20.745989907809363,
+          "rssBeforeBytes": 356589568,
+          "rssAfterBytes": 373104640,
+          "sampledPeakRssBytes": 373104640,
+          "threadIds": [
+            1,
+            2
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 33554432,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 33554432,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 2,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 135.99298599999997,
+        "medianAmortizedMs": 27.198597199999995,
+        "medianExecutionMs": 27.198316799999976,
+        "peakSampledRssBytes": 389607424
+      }
+    },
+    {
+      "engine": "piscina",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 2,
+      "memory": "shared",
+      "iterations": 5,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 180.865832,
+      "firstRun": {
+        "wallMs": 48.44252400000005,
+        "preparationMs": 15.643672000000038,
+        "executionMsPerIteration": 6.558429999999999,
+        "amortizedMsPerIteration": 9.68850480000001,
+        "cpuMs": 74.426,
+        "cpuPercent": 153.63774191452106,
+        "machineCpuPercent": 38.409435478630265,
+        "rssBeforeBytes": 98131968,
+        "rssAfterBytes": 116613120,
+        "sampledPeakRssBytes": 116613120,
+        "threadIds": [
+          1,
+          2
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 38.68440499999997,
+          "preparationMs": 15.638131999999928,
+          "executionMsPerIteration": 4.6080564000000095,
+          "amortizedMsPerIteration": 7.736880999999994,
+          "cpuMs": 51.339,
+          "cpuPercent": 132.71239405129805,
+          "machineCpuPercent": 33.17809851282451,
+          "rssBeforeBytes": 150953984,
+          "rssAfterBytes": 167862272,
+          "sampledPeakRssBytes": 167862272,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 40.57465300000001,
+          "preparationMs": 16.337900999999988,
+          "executionMsPerIteration": 4.845983799999999,
+          "amortizedMsPerIteration": 8.114930600000003,
+          "cpuMs": 53.474,
+          "cpuPercent": 131.79163848918185,
+          "machineCpuPercent": 32.94790962229546,
+          "rssBeforeBytes": 167862272,
+          "rssAfterBytes": 184639488,
+          "sampledPeakRssBytes": 184639488,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 41.134379999999965,
+          "preparationMs": 18.07291799999996,
+          "executionMsPerIteration": 4.6111222,
+          "amortizedMsPerIteration": 8.226875999999994,
+          "cpuMs": 52.895,
+          "cpuPercent": 128.59073115967726,
+          "machineCpuPercent": 32.147682789919315,
+          "rssBeforeBytes": 184639488,
+          "rssAfterBytes": 201678848,
+          "sampledPeakRssBytes": 201678848,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 34.14538199999993,
+          "preparationMs": 14.761901999999964,
+          "executionMsPerIteration": 3.8756219999999986,
+          "amortizedMsPerIteration": 6.829076399999986,
+          "cpuMs": 49.262,
+          "cpuPercent": 144.27133953282498,
+          "machineCpuPercent": 36.067834883206245,
+          "rssBeforeBytes": 201678848,
+          "rssAfterBytes": 218456064,
+          "sampledPeakRssBytes": 218456064,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 42.050563999999895,
+          "preparationMs": 14.430501999999933,
+          "executionMsPerIteration": 5.522721999999999,
+          "amortizedMsPerIteration": 8.410112799999979,
+          "cpuMs": 50.746,
+          "cpuPercent": 120.67852407401749,
+          "machineCpuPercent": 30.169631018504372,
+          "rssBeforeBytes": 218456064,
+          "rssAfterBytes": 235364352,
+          "sampledPeakRssBytes": 235364352,
+          "threadIds": [
+            1,
+            2
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 16777216,
+        "sharedPreparationCopyBytesPerSession": 16777216,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 2,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 40.57465300000001,
+        "medianAmortizedMs": 8.114930600000003,
+        "medianExecutionMs": 4.6111222,
+        "peakSampledRssBytes": 235364352
+      }
+    },
+    {
+      "engine": "pjs",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 2,
+      "memory": "shared",
+      "iterations": 5,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 149.160936,
+      "firstRun": {
+        "wallMs": 47.592614000000026,
+        "preparationMs": 15.782001000000037,
+        "executionMsPerIteration": 6.3604916000000005,
+        "amortizedMsPerIteration": 9.518522800000005,
+        "cpuMs": 69.308,
+        "cpuPercent": 145.62763877605036,
+        "machineCpuPercent": 36.40690969401259,
+        "rssBeforeBytes": 98775040,
+        "rssAfterBytes": 116498432,
+        "sampledPeakRssBytes": 116498432,
+        "threadIds": [
+          1,
+          2
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 42.440233000000035,
+          "preparationMs": 15.346035000000029,
+          "executionMsPerIteration": 5.417531000000008,
+          "amortizedMsPerIteration": 8.488046600000008,
+          "cpuMs": 48.335,
+          "cpuPercent": 113.88957266092285,
+          "machineCpuPercent": 28.472393165230713,
+          "rssBeforeBytes": 150839296,
+          "rssAfterBytes": 167616512,
+          "sampledPeakRssBytes": 167616512,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 48.739149,
+          "preparationMs": 17.02585799999997,
+          "executionMsPerIteration": 6.341319599999997,
+          "amortizedMsPerIteration": 9.7478298,
+          "cpuMs": 50.176,
+          "cpuPercent": 102.94804285565185,
+          "machineCpuPercent": 25.737010713912962,
+          "rssBeforeBytes": 167616512,
+          "rssAfterBytes": 184524800,
+          "sampledPeakRssBytes": 184524800,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 56.829477,
+          "preparationMs": 16.47743200000002,
+          "executionMsPerIteration": 8.069701800000008,
+          "amortizedMsPerIteration": 11.3658954,
+          "cpuMs": 52.37,
+          "cpuPercent": 92.15288044970042,
+          "machineCpuPercent": 23.038220112425105,
+          "rssBeforeBytes": 184524800,
+          "rssAfterBytes": 201433088,
+          "sampledPeakRssBytes": 201433088,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 61.30432100000007,
+          "preparationMs": 21.970451000000025,
+          "executionMsPerIteration": 7.865465600000016,
+          "amortizedMsPerIteration": 12.260864200000015,
+          "cpuMs": 51.575,
+          "cpuPercent": 84.12946943821454,
+          "machineCpuPercent": 21.032367359553636,
+          "rssBeforeBytes": 201433088,
+          "rssAfterBytes": 218210304,
+          "sampledPeakRssBytes": 218210304,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 64.17945099999997,
+          "preparationMs": 17.737300000000005,
+          "executionMsPerIteration": 9.286749200000008,
+          "amortizedMsPerIteration": 12.835890199999994,
+          "cpuMs": 49.992,
+          "cpuPercent": 77.89409105416003,
+          "machineCpuPercent": 19.473522763540007,
+          "rssBeforeBytes": 218210304,
+          "rssAfterBytes": 235118592,
+          "sampledPeakRssBytes": 235118592,
+          "threadIds": [
+            1,
+            2
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 16777216,
+        "sharedPreparationCopyBytesPerSession": 16777216,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 2,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 56.829477,
+        "medianAmortizedMs": 11.3658954,
+        "medianExecutionMs": 7.865465600000016,
+        "peakSampledRssBytes": 235118592
+      }
+    },
+    {
+      "engine": "pjs",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 2,
+      "memory": "clone",
+      "iterations": 5,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 144.27484400000003,
+      "firstRun": {
+        "wallMs": 296.79014599999994,
+        "preparationMs": 0.004337999999961539,
+        "executionMsPerIteration": 59.35690319999999,
+        "amortizedMsPerIteration": 59.35802919999999,
+        "cpuMs": 443.631,
+        "cpuPercent": 149.47632392080837,
+        "machineCpuPercent": 37.36908098020209,
+        "rssBeforeBytes": 98791424,
+        "rssAfterBytes": 235483136,
+        "sampledPeakRssBytes": 268873728,
+        "threadIds": [
+          1,
+          2
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 273.3513479999999,
+          "preparationMs": 0.0006909999999606953,
+          "executionMsPerIteration": 54.670002999999994,
+          "amortizedMsPerIteration": 54.67026959999998,
+          "cpuMs": 368.789,
+          "cpuPercent": 134.91391306400294,
+          "machineCpuPercent": 33.728478266000735,
+          "rssBeforeBytes": 253988864,
+          "rssAfterBytes": 287637504,
+          "sampledPeakRssBytes": 320933888,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 239.2367139999999,
+          "preparationMs": 0.0021339999998417625,
+          "executionMsPerIteration": 47.846753600000014,
+          "amortizedMsPerIteration": 47.84734279999998,
+          "cpuMs": 323.356,
+          "cpuPercent": 135.16152876100787,
+          "machineCpuPercent": 33.79038219025197,
+          "rssBeforeBytes": 287637504,
+          "rssAfterBytes": 254087168,
+          "sampledPeakRssBytes": 337842176,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 290.29221700000016,
+          "preparationMs": 0.0010620000000471919,
+          "executionMsPerIteration": 58.05813480000002,
+          "amortizedMsPerIteration": 58.05844340000003,
+          "cpuMs": 373.553,
+          "cpuPercent": 128.6817138469819,
+          "machineCpuPercent": 32.17042846174547,
+          "rssBeforeBytes": 254087168,
+          "rssAfterBytes": 287539200,
+          "sampledPeakRssBytes": 320868352,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 241.37942299999986,
+          "preparationMs": 0.0007310000000870787,
+          "executionMsPerIteration": 48.2756402,
+          "amortizedMsPerIteration": 48.27588459999997,
+          "cpuMs": 321.805,
+          "cpuPercent": 133.31915206376155,
+          "machineCpuPercent": 33.32978801594039,
+          "rssBeforeBytes": 287539200,
+          "rssAfterBytes": 254205952,
+          "sampledPeakRssBytes": 337866752,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 277.6679750000003,
+          "preparationMs": 0.0010320000001229346,
+          "executionMsPerIteration": 55.533314400000016,
+          "amortizedMsPerIteration": 55.53359500000006,
+          "cpuMs": 368.282,
+          "cpuPercent": 132.63394887365013,
+          "machineCpuPercent": 33.15848721841253,
+          "rssBeforeBytes": 254205952,
+          "rssAfterBytes": 287469568,
+          "sampledPeakRssBytes": 320581632,
+          "threadIds": [
+            1,
+            2
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 33554432,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 2,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 273.3513479999999,
+        "medianAmortizedMs": 54.67026959999998,
+        "medianExecutionMs": 54.670002999999994,
+        "peakSampledRssBytes": 337866752
+      }
+    },
+    {
+      "engine": "piscina",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 2,
+      "memory": "clone",
+      "iterations": 5,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 147.31519300000002,
+      "firstRun": {
+        "wallMs": 310.36096,
+        "preparationMs": 0.002655000000004293,
+        "executionMsPerIteration": 62.071450600000006,
+        "amortizedMsPerIteration": 62.072191999999994,
+        "cpuMs": 480.349,
+        "cpuPercent": 154.77107687771039,
+        "machineCpuPercent": 38.692769219427596,
+        "rssBeforeBytes": 97943552,
+        "rssAfterBytes": 201932800,
+        "sampledPeakRssBytes": 248098816,
+        "threadIds": [
+          1,
+          2
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 293.237879,
+          "preparationMs": 0.0005810000000110449,
+          "executionMsPerIteration": 58.6473876,
+          "amortizedMsPerIteration": 58.647575800000006,
+          "cpuMs": 407.458,
+          "cpuPercent": 138.95135287075243,
+          "machineCpuPercent": 34.73783821768811,
+          "rssBeforeBytes": 354193408,
+          "rssAfterBytes": 421445632,
+          "sampledPeakRssBytes": 438226944,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 274.57967599999984,
+          "preparationMs": 0.001010999999834894,
+          "executionMsPerIteration": 54.9156528,
+          "amortizedMsPerIteration": 54.915935199999964,
+          "cpuMs": 367.702,
+          "cpuPercent": 133.91449992096292,
+          "machineCpuPercent": 33.47862498024073,
+          "rssBeforeBytes": 421445632,
+          "rssAfterBytes": 320774144,
+          "sampledPeakRssBytes": 438231040,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 296.36117300000024,
+          "preparationMs": 0.0010720000000219443,
+          "executionMsPerIteration": 59.271889999999985,
+          "amortizedMsPerIteration": 59.27223460000005,
+          "cpuMs": 419.573,
+          "cpuPercent": 141.5748884217028,
+          "machineCpuPercent": 35.3937221054257,
+          "rssBeforeBytes": 320774144,
+          "rssAfterBytes": 421490688,
+          "sampledPeakRssBytes": 438534144,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 272.19487400000025,
+          "preparationMs": 0.0005310000001372828,
+          "executionMsPerIteration": 54.438796600000025,
+          "amortizedMsPerIteration": 54.438974800000054,
+          "cpuMs": 349.691,
+          "cpuPercent": 128.47082491347712,
+          "machineCpuPercent": 32.11770622836928,
+          "rssBeforeBytes": 421490688,
+          "rssAfterBytes": 320954368,
+          "sampledPeakRssBytes": 438280192,
+          "threadIds": [
+            1,
+            2
+          ]
+        },
+        {
+          "wallMs": 303.13463699999966,
+          "preparationMs": 0.0007209999998849526,
+          "executionMsPerIteration": 60.62671499999997,
+          "amortizedMsPerIteration": 60.62692739999993,
+          "cpuMs": 384.656,
+          "cpuPercent": 126.89279054574038,
+          "machineCpuPercent": 31.723197636435096,
+          "rssBeforeBytes": 320954368,
+          "rssAfterBytes": 388018176,
+          "sampledPeakRssBytes": 404725760,
+          "threadIds": [
+            1,
+            2
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 33554432,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 2,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 293.237879,
+        "medianAmortizedMs": 58.647575800000006,
+        "medianExecutionMs": 58.6473876,
+        "peakSampledRssBytes": 438534144
+      }
+    },
+    {
+      "engine": "piscina",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 4,
+      "memory": "shared",
+      "iterations": 1,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 311.161637,
+      "firstRun": {
+        "wallMs": 30.33367999999996,
+        "preparationMs": 14.360340999999949,
+        "executionMsPerIteration": 15.967237999999952,
+        "amortizedMsPerIteration": 30.33367999999996,
+        "cpuMs": 60.957,
+        "cpuPercent": 200.95484623032908,
+        "machineCpuPercent": 50.23871155758227,
+        "rssBeforeBytes": 120844288,
+        "rssAfterBytes": 141463552,
+        "sampledPeakRssBytes": 141463552,
+        "threadIds": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 20.050276999999937,
+          "preparationMs": 15.166478999999981,
+          "executionMsPerIteration": 4.876394000000005,
+          "amortizedMsPerIteration": 20.050276999999937,
+          "cpuMs": 25.421,
+          "cpuPercent": 126.78627831426009,
+          "machineCpuPercent": 31.696569578565022,
+          "rssBeforeBytes": 175149056,
+          "rssAfterBytes": 191795200,
+          "sampledPeakRssBytes": 191795200,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 20.628078999999957,
+          "preparationMs": 15.546109999999999,
+          "executionMsPerIteration": 5.075396999999953,
+          "amortizedMsPerIteration": 20.628078999999957,
+          "cpuMs": 24.742,
+          "cpuPercent": 119.94330640288923,
+          "machineCpuPercent": 29.98582660072231,
+          "rssBeforeBytes": 191795200,
+          "rssAfterBytes": 208572416,
+          "sampledPeakRssBytes": 208572416,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 18.73389499999996,
+          "preparationMs": 14.372913999999923,
+          "executionMsPerIteration": 4.353896999999961,
+          "amortizedMsPerIteration": 18.73389499999996,
+          "cpuMs": 23.99,
+          "cpuPercent": 128.05665879946508,
+          "machineCpuPercent": 32.01416469986627,
+          "rssBeforeBytes": 208572416,
+          "rssAfterBytes": 225349632,
+          "sampledPeakRssBytes": 225349632,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 18.898342999999954,
+          "preparationMs": 13.71607599999993,
+          "executionMsPerIteration": 5.176046000000042,
+          "amortizedMsPerIteration": 18.898342999999954,
+          "cpuMs": 23.991,
+          "cpuPercent": 126.94763768442587,
+          "machineCpuPercent": 31.736909421106468,
+          "rssBeforeBytes": 225349632,
+          "rssAfterBytes": 242126848,
+          "sampledPeakRssBytes": 242126848,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 17.92171399999995,
+          "preparationMs": 13.268146999999999,
+          "executionMsPerIteration": 4.647435999999971,
+          "amortizedMsPerIteration": 17.92171399999995,
+          "cpuMs": 21.902,
+          "cpuPercent": 122.20929315131389,
+          "machineCpuPercent": 30.55232328782847,
+          "rssBeforeBytes": 242126848,
+          "rssAfterBytes": 258904064,
+          "sampledPeakRssBytes": 258904064,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 16777216,
+        "sharedPreparationCopyBytesPerSession": 16777216,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 4,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 18.898342999999954,
+        "medianAmortizedMs": 18.898342999999954,
+        "medianExecutionMs": 4.876394000000005,
+        "peakSampledRssBytes": 258904064
+      }
+    },
+    {
+      "engine": "pjs",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 4,
+      "memory": "shared",
+      "iterations": 1,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 266.37542499999995,
+      "firstRun": {
+        "wallMs": 31.548403000000008,
+        "preparationMs": 14.687322999999992,
+        "executionMsPerIteration": 16.854848999999945,
+        "amortizedMsPerIteration": 31.548403000000008,
+        "cpuMs": 54.848,
+        "cpuPercent": 173.85349109430354,
+        "machineCpuPercent": 43.463372773575884,
+        "rssBeforeBytes": 121638912,
+        "rssAfterBytes": 141561856,
+        "sampledPeakRssBytes": 141561856,
+        "threadIds": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 18.885046999999986,
+          "preparationMs": 14.673988000000008,
+          "executionMsPerIteration": 4.204125999999974,
+          "amortizedMsPerIteration": 18.885046999999986,
+          "cpuMs": 22.981,
+          "cpuPercent": 121.6888684470842,
+          "machineCpuPercent": 30.42221711177105,
+          "rssBeforeBytes": 175509504,
+          "rssAfterBytes": 192286720,
+          "sampledPeakRssBytes": 192286720,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 20.20570900000007,
+          "preparationMs": 14.502307000000087,
+          "executionMsPerIteration": 5.699245000000019,
+          "amortizedMsPerIteration": 20.20570900000007,
+          "cpuMs": 25.833,
+          "cpuPercent": 127.85000516438157,
+          "machineCpuPercent": 31.962501291095393,
+          "rssBeforeBytes": 192286720,
+          "rssAfterBytes": 209063936,
+          "sampledPeakRssBytes": 209063936,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 21.089461999999912,
+          "preparationMs": 14.050832000000014,
+          "executionMsPerIteration": 7.035794999999894,
+          "amortizedMsPerIteration": 21.089461999999912,
+          "cpuMs": 24.926,
+          "cpuPercent": 118.19173006879029,
+          "machineCpuPercent": 29.547932517197573,
+          "rssBeforeBytes": 209063936,
+          "rssAfterBytes": 225841152,
+          "sampledPeakRssBytes": 225841152,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 19.19158099999993,
+          "preparationMs": 14.752584999999954,
+          "executionMsPerIteration": 4.4322729999998955,
+          "amortizedMsPerIteration": 19.19158099999993,
+          "cpuMs": 23.646,
+          "cpuPercent": 123.21027642277147,
+          "machineCpuPercent": 30.802569105692868,
+          "rssBeforeBytes": 225841152,
+          "rssAfterBytes": 242618368,
+          "sampledPeakRssBytes": 242618368,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 20.04796299999998,
+          "preparationMs": 15.762062999999898,
+          "executionMsPerIteration": 4.279698000000053,
+          "amortizedMsPerIteration": 20.04796299999998,
+          "cpuMs": 24.731,
+          "cpuPercent": 123.35916621554033,
+          "machineCpuPercent": 30.83979155388508,
+          "rssBeforeBytes": 242618368,
+          "rssAfterBytes": 259395584,
+          "sampledPeakRssBytes": 259395584,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 16777216,
+        "sharedPreparationCopyBytesPerSession": 16777216,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 4,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 20.04796299999998,
+        "medianAmortizedMs": 20.04796299999998,
+        "medianExecutionMs": 4.4322729999998955,
+        "peakSampledRssBytes": 259395584
+      }
+    },
+    {
+      "engine": "pjs",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 4,
+      "memory": "clone",
+      "iterations": 1,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 327.77352199999996,
+      "firstRun": {
+        "wallMs": 98.96800599999995,
+        "preparationMs": 0.0012819999999464926,
+        "executionMsPerIteration": 98.965912,
+        "amortizedMsPerIteration": 98.96800599999995,
+        "cpuMs": 205.831,
+        "cpuPercent": 207.97731339560394,
+        "machineCpuPercent": 51.994328348900986,
+        "rssBeforeBytes": 121790464,
+        "rssAfterBytes": 208433152,
+        "sampledPeakRssBytes": 208433152,
+        "threadIds": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 75.41825999999992,
+          "preparationMs": 0.0009710000000495711,
+          "executionMsPerIteration": 75.4167379999999,
+          "amortizedMsPerIteration": 75.41825999999992,
+          "cpuMs": 170.916,
+          "cpuPercent": 226.62416237128804,
+          "machineCpuPercent": 56.65604059282201,
+          "rssBeforeBytes": 326873088,
+          "rssAfterBytes": 360914944,
+          "sampledPeakRssBytes": 402059264,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 91.164806,
+          "preparationMs": 0.001213000000007014,
+          "executionMsPerIteration": 91.16308200000003,
+          "amortizedMsPerIteration": 91.164806,
+          "cpuMs": 127.992,
+          "cpuPercent": 140.39628406602432,
+          "machineCpuPercent": 35.09907101650608,
+          "rssBeforeBytes": 360914944,
+          "rssAfterBytes": 395104256,
+          "sampledPeakRssBytes": 416227328,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 86.97620799999982,
+          "preparationMs": 0.001772999999957392,
+          "executionMsPerIteration": 86.97365300000001,
+          "amortizedMsPerIteration": 86.97620799999982,
+          "cpuMs": 102.662,
+          "cpuPercent": 118.03457791583673,
+          "machineCpuPercent": 29.508644478959184,
+          "rssBeforeBytes": 395104256,
+          "rssAfterBytes": 428396544,
+          "sampledPeakRssBytes": 428396544,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 63.87384899999984,
+          "preparationMs": 0.0014019999998708954,
+          "executionMsPerIteration": 63.872026000000005,
+          "amortizedMsPerIteration": 63.87384899999984,
+          "cpuMs": 90.301,
+          "cpuPercent": 141.37397606961218,
+          "machineCpuPercent": 35.343494017403046,
+          "rssBeforeBytes": 428396544,
+          "rssAfterBytes": 428642304,
+          "sampledPeakRssBytes": 428642304,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 100.5813549999998,
+          "preparationMs": 0.0008919999997942796,
+          "executionMsPerIteration": 100.58006299999988,
+          "amortizedMsPerIteration": 100.5813549999998,
+          "cpuMs": 104.115,
+          "cpuPercent": 103.51322071570839,
+          "machineCpuPercent": 25.878305178927096,
+          "rssBeforeBytes": 428642304,
+          "rssAfterBytes": 462700544,
+          "sampledPeakRssBytes": 462700544,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 67108864,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 4,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 86.97620799999982,
+        "medianAmortizedMs": 86.97620799999982,
+        "medianExecutionMs": 86.97365300000001,
+        "peakSampledRssBytes": 462700544
+      }
+    },
+    {
+      "engine": "piscina",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 4,
+      "memory": "clone",
+      "iterations": 1,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 276.95624300000003,
+      "firstRun": {
+        "wallMs": 117.97332899999992,
+        "preparationMs": 0.00164299999994455,
+        "executionMsPerIteration": 117.97066399999994,
+        "amortizedMsPerIteration": 117.97332899999992,
+        "cpuMs": 204.526,
+        "cpuPercent": 173.36630383635284,
+        "machineCpuPercent": 43.34157595908821,
+        "rssBeforeBytes": 120053760,
+        "rssAfterBytes": 190570496,
+        "sampledPeakRssBytes": 203231232,
+        "threadIds": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 130.440517,
+          "preparationMs": 0.0011719999999968422,
+          "executionMsPerIteration": 130.43891400000007,
+          "amortizedMsPerIteration": 130.440517,
+          "cpuMs": 193.735,
+          "cpuPercent": 148.52363702299647,
+          "machineCpuPercent": 37.13090925574912,
+          "rssBeforeBytes": 324964352,
+          "rssAfterBytes": 392298496,
+          "sampledPeakRssBytes": 403468288,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 199.16957100000013,
+          "preparationMs": 0.00197400000001835,
+          "executionMsPerIteration": 199.16706599999998,
+          "amortizedMsPerIteration": 199.16957100000013,
+          "cpuMs": 255.033,
+          "cpuPercent": 128.0481745878741,
+          "machineCpuPercent": 32.01204364696852,
+          "rssBeforeBytes": 392298496,
+          "rssAfterBytes": 345038848,
+          "sampledPeakRssBytes": 392298496,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 274.668993,
+          "preparationMs": 0.0014830000000074506,
+          "executionMsPerIteration": 274.66652799999997,
+          "amortizedMsPerIteration": 274.668993,
+          "cpuMs": 237.472,
+          "cpuPercent": 86.45752016136747,
+          "machineCpuPercent": 21.614380040341867,
+          "rssBeforeBytes": 345038848,
+          "rssAfterBytes": 329641984,
+          "sampledPeakRssBytes": 345038848,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 232.66229199999998,
+          "preparationMs": 0.0009919999999965512,
+          "executionMsPerIteration": 232.66084899999987,
+          "amortizedMsPerIteration": 232.66229199999998,
+          "cpuMs": 173.737,
+          "cpuPercent": 74.67346706960146,
+          "machineCpuPercent": 18.668366767400364,
+          "rssBeforeBytes": 329641984,
+          "rssAfterBytes": 380010496,
+          "sampledPeakRssBytes": 405196800,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 132.10021299999994,
+          "preparationMs": 0.0029159999999137654,
+          "executionMsPerIteration": 132.09673599999996,
+          "amortizedMsPerIteration": 132.10021299999994,
+          "cpuMs": 205.273,
+          "cpuPercent": 155.39187662021413,
+          "machineCpuPercent": 38.84796915505353,
+          "rssBeforeBytes": 380010496,
+          "rssAfterBytes": 447397888,
+          "sampledPeakRssBytes": 468094976,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 67108864,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 4,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 199.16957100000013,
+        "medianAmortizedMs": 199.16957100000013,
+        "medianExecutionMs": 199.16706599999998,
+        "peakSampledRssBytes": 468094976
+      }
+    },
+    {
+      "engine": "piscina",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 4,
+      "memory": "transfer",
+      "iterations": 1,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 325.391474,
+      "firstRun": {
+        "wallMs": 78.058401,
+        "preparationMs": 0.001874000000043452,
+        "executionMsPerIteration": 78.05570599999999,
+        "amortizedMsPerIteration": 78.058401,
+        "cpuMs": 105.57,
+        "cpuPercent": 135.24489183425624,
+        "machineCpuPercent": 33.81122295856406,
+        "rssBeforeBytes": 121122816,
+        "rssAfterBytes": 190611456,
+        "sampledPeakRssBytes": 190611456,
+        "threadIds": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 76.70508900000004,
+          "preparationMs": 0.0015230000000201471,
+          "executionMsPerIteration": 76.70304499999997,
+          "amortizedMsPerIteration": 76.70508900000004,
+          "cpuMs": 114.133,
+          "cpuPercent": 148.7945604234941,
+          "machineCpuPercent": 37.19864010587352,
+          "rssBeforeBytes": 324829184,
+          "rssAfterBytes": 392069120,
+          "sampledPeakRssBytes": 392069120,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 79.35601900000006,
+          "preparationMs": 0.000841000000036729,
+          "executionMsPerIteration": 79.35440599999993,
+          "amortizedMsPerIteration": 79.35601900000006,
+          "cpuMs": 147.272,
+          "cpuPercent": 185.5839063701014,
+          "machineCpuPercent": 46.39597659252535,
+          "rssBeforeBytes": 392069120,
+          "rssAfterBytes": 328314880,
+          "sampledPeakRssBytes": 392069120,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 69.93572200000017,
+          "preparationMs": 0.002084000000195374,
+          "executionMsPerIteration": 69.93292700000006,
+          "amortizedMsPerIteration": 69.93572200000017,
+          "cpuMs": 103.645,
+          "cpuPercent": 148.20037176423193,
+          "machineCpuPercent": 37.05009294105798,
+          "rssBeforeBytes": 328314880,
+          "rssAfterBytes": 345387008,
+          "sampledPeakRssBytes": 345387008,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 66.42950100000007,
+          "preparationMs": 0.0006210000001374283,
+          "executionMsPerIteration": 66.42852900000003,
+          "amortizedMsPerIteration": 66.42950100000007,
+          "cpuMs": 71.495,
+          "cpuPercent": 107.62537565952803,
+          "machineCpuPercent": 26.906343914882008,
+          "rssBeforeBytes": 345387008,
+          "rssAfterBytes": 412495872,
+          "sampledPeakRssBytes": 412495872,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 72.85142799999994,
+          "preparationMs": 0.0007610000000113359,
+          "executionMsPerIteration": 72.85024599999997,
+          "amortizedMsPerIteration": 72.85142799999994,
+          "cpuMs": 85.728,
+          "cpuPercent": 117.67511269648696,
+          "machineCpuPercent": 29.41877817412174,
+          "rssBeforeBytes": 412495872,
+          "rssAfterBytes": 479997952,
+          "sampledPeakRssBytes": 479997952,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 67108864,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 67108864,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 4,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 72.85142799999994,
+        "medianAmortizedMs": 72.85142799999994,
+        "medianExecutionMs": 72.85024599999997,
+        "peakSampledRssBytes": 479997952
+      }
+    },
+    {
+      "engine": "pjs",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 4,
+      "memory": "transfer",
+      "iterations": 1,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 220.50481199999996,
+      "firstRun": {
+        "wallMs": 84.38313500000004,
+        "preparationMs": 0.0014029999999820575,
+        "executionMsPerIteration": 84.38074100000006,
+        "amortizedMsPerIteration": 84.38313500000004,
+        "cpuMs": 168.945,
+        "cpuPercent": 200.21180772674532,
+        "machineCpuPercent": 50.05295193168633,
+        "rssBeforeBytes": 121606144,
+        "rssAfterBytes": 175321088,
+        "sampledPeakRssBytes": 175321088,
+        "threadIds": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 73.019091,
+          "preparationMs": 0.002043999999955304,
+          "executionMsPerIteration": 73.01578500000005,
+          "amortizedMsPerIteration": 73.019091,
+          "cpuMs": 93.448,
+          "cpuPercent": 127.97749016075808,
+          "machineCpuPercent": 31.99437254018952,
+          "rssBeforeBytes": 309538816,
+          "rssAfterBytes": 377171968,
+          "sampledPeakRssBytes": 377171968,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 48.49397099999999,
+          "preparationMs": 0.0008520000000089567,
+          "executionMsPerIteration": 48.49260800000002,
+          "amortizedMsPerIteration": 48.49397099999999,
+          "cpuMs": 74.029,
+          "cpuPercent": 152.65608997044194,
+          "machineCpuPercent": 38.164022492610485,
+          "rssBeforeBytes": 377303040,
+          "rssAfterBytes": 394080256,
+          "sampledPeakRssBytes": 394080256,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 59.320018000000005,
+          "preparationMs": 0.017191999999909058,
+          "executionMsPerIteration": 59.30229500000007,
+          "amortizedMsPerIteration": 59.320018000000005,
+          "cpuMs": 96.882,
+          "cpuPercent": 163.32092144678717,
+          "machineCpuPercent": 40.83023036169679,
+          "rssBeforeBytes": 394080256,
+          "rssAfterBytes": 394416128,
+          "sampledPeakRssBytes": 394416128,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 77.34031699999991,
+          "preparationMs": 0.0009219999999459105,
+          "executionMsPerIteration": 77.33895499999994,
+          "amortizedMsPerIteration": 77.34031699999991,
+          "cpuMs": 109.599,
+          "cpuPercent": 141.71004755514528,
+          "machineCpuPercent": 35.42751188878632,
+          "rssBeforeBytes": 394416128,
+          "rssAfterBytes": 396382208,
+          "sampledPeakRssBytes": 396382208,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 38.50397700000008,
+          "preparationMs": 0.0007910000001629669,
+          "executionMsPerIteration": 38.502835000000005,
+          "amortizedMsPerIteration": 38.50397700000008,
+          "cpuMs": 47.349,
+          "cpuPercent": 122.9717127661901,
+          "machineCpuPercent": 30.742928191547524,
+          "rssBeforeBytes": 396382208,
+          "rssAfterBytes": 396382208,
+          "sampledPeakRssBytes": 396382208,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 67108864,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 67108864,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 4,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 59.320018000000005,
+        "medianAmortizedMs": 59.320018000000005,
+        "medianExecutionMs": 59.30229500000007,
+        "peakSampledRssBytes": 396382208
+      }
+    },
+    {
+      "engine": "pjs",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 4,
+      "memory": "shared",
+      "iterations": 5,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 316.86229399999996,
+      "firstRun": {
+        "wallMs": 48.837242999999944,
+        "preparationMs": 14.413179000000014,
+        "executionMsPerIteration": 6.883754799999997,
+        "amortizedMsPerIteration": 9.76744859999999,
+        "cpuMs": 89.169,
+        "cpuPercent": 182.5840168741714,
+        "machineCpuPercent": 45.64600421854285,
+        "rssBeforeBytes": 121679872,
+        "rssAfterBytes": 140816384,
+        "sampledPeakRssBytes": 140816384,
+        "threadIds": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 34.62269500000002,
+          "preparationMs": 13.013180000000034,
+          "executionMsPerIteration": 4.320757000000003,
+          "amortizedMsPerIteration": 6.924539000000005,
+          "cpuMs": 61.169,
+          "cpuPercent": 176.67313304178072,
+          "machineCpuPercent": 44.16828326044518,
+          "rssBeforeBytes": 174501888,
+          "rssAfterBytes": 191672320,
+          "sampledPeakRssBytes": 191672320,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 35.60215799999992,
+          "preparationMs": 14.72330999999997,
+          "executionMsPerIteration": 4.174889800000005,
+          "amortizedMsPerIteration": 7.120431599999984,
+          "cpuMs": 60.56,
+          "cpuPercent": 170.10204830842036,
+          "machineCpuPercent": 42.52551207710509,
+          "rssBeforeBytes": 191672320,
+          "rssAfterBytes": 208711680,
+          "sampledPeakRssBytes": 208711680,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 34.99324899999999,
+          "preparationMs": 14.74682400000006,
+          "executionMsPerIteration": 4.0481067999999825,
+          "amortizedMsPerIteration": 6.998649799999998,
+          "cpuMs": 57.819,
+          "cpuPercent": 165.22901317336957,
+          "machineCpuPercent": 41.30725329334239,
+          "rssBeforeBytes": 208711680,
+          "rssAfterBytes": 225488896,
+          "sampledPeakRssBytes": 225488896,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 36.38428099999999,
+          "preparationMs": 14.748616999999967,
+          "executionMsPerIteration": 4.325565800000004,
+          "amortizedMsPerIteration": 7.276856199999997,
+          "cpuMs": 63.453,
+          "cpuPercent": 174.39674017469252,
+          "machineCpuPercent": 43.59918504367313,
+          "rssBeforeBytes": 225882112,
+          "rssAfterBytes": 242659328,
+          "sampledPeakRssBytes": 242659328,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 34.60657500000002,
+          "preparationMs": 14.136230999999952,
+          "executionMsPerIteration": 4.0929126,
+          "amortizedMsPerIteration": 6.921315000000004,
+          "cpuMs": 61.637,
+          "cpuPercent": 178.10777287264042,
+          "machineCpuPercent": 44.526943218160106,
+          "rssBeforeBytes": 242659328,
+          "rssAfterBytes": 259436544,
+          "sampledPeakRssBytes": 259436544,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 16777216,
+        "sharedPreparationCopyBytesPerSession": 16777216,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 4,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 34.99324899999999,
+        "medianAmortizedMs": 6.998649799999998,
+        "medianExecutionMs": 4.174889800000005,
+        "peakSampledRssBytes": 259436544
+      }
+    },
+    {
+      "engine": "piscina",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 4,
+      "memory": "shared",
+      "iterations": 5,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 293.36207099999996,
+      "firstRun": {
+        "wallMs": 61.418113999999946,
+        "preparationMs": 15.47413400000005,
+        "executionMsPerIteration": 9.187547599999993,
+        "amortizedMsPerIteration": 12.28362279999999,
+        "cpuMs": 100.882,
+        "cpuPercent": 164.25447385115098,
+        "machineCpuPercent": 41.063618462787744,
+        "rssBeforeBytes": 120758272,
+        "rssAfterBytes": 140812288,
+        "sampledPeakRssBytes": 140812288,
+        "threadIds": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 43.69057299999997,
+          "preparationMs": 16.79588799999999,
+          "executionMsPerIteration": 5.377744800000005,
+          "amortizedMsPerIteration": 8.738114599999994,
+          "cpuMs": 63.256,
+          "cpuPercent": 144.78180453252477,
+          "machineCpuPercent": 36.19545113313119,
+          "rssBeforeBytes": 174628864,
+          "rssAfterBytes": 191930368,
+          "sampledPeakRssBytes": 191930368,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 36.86287699999991,
+          "preparationMs": 14.37849499999993,
+          "executionMsPerIteration": 4.495728199999985,
+          "amortizedMsPerIteration": 7.372575399999983,
+          "cpuMs": 57.316,
+          "cpuPercent": 155.4843372642893,
+          "machineCpuPercent": 38.87108431607233,
+          "rssBeforeBytes": 191930368,
+          "rssAfterBytes": 208707584,
+          "sampledPeakRssBytes": 208707584,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 36.625552000000084,
+          "preparationMs": 15.77745200000004,
+          "executionMsPerIteration": 4.16847580000001,
+          "amortizedMsPerIteration": 7.325110400000017,
+          "cpuMs": 59.271,
+          "cpuPercent": 161.8296428679078,
+          "machineCpuPercent": 40.45741071697695,
+          "rssBeforeBytes": 208707584,
+          "rssAfterBytes": 225615872,
+          "sampledPeakRssBytes": 225615872,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 43.74469399999998,
+          "preparationMs": 14.210509999999886,
+          "executionMsPerIteration": 5.906019199999991,
+          "amortizedMsPerIteration": 8.748938799999996,
+          "cpuMs": 59.13,
+          "cpuPercent": 135.1706792142609,
+          "machineCpuPercent": 33.792669803565225,
+          "rssBeforeBytes": 225615872,
+          "rssAfterBytes": 242524160,
+          "sampledPeakRssBytes": 242524160,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 36.60660699999994,
+          "preparationMs": 15.83371800000009,
+          "executionMsPerIteration": 4.152479999999969,
+          "amortizedMsPerIteration": 7.321321399999988,
+          "cpuMs": 56.478,
+          "cpuPercent": 154.2836242648768,
+          "machineCpuPercent": 38.5709060662192,
+          "rssBeforeBytes": 242524160,
+          "rssAfterBytes": 259301376,
+          "sampledPeakRssBytes": 259301376,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 16777216,
+        "sharedPreparationCopyBytesPerSession": 16777216,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 4,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 36.86287699999991,
+        "medianAmortizedMs": 7.372575399999983,
+        "medianExecutionMs": 4.495728199999985,
+        "peakSampledRssBytes": 259301376
+      }
+    },
+    {
+      "engine": "piscina",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 4,
+      "memory": "clone",
+      "iterations": 5,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 247.18012700000003,
+      "firstRun": {
+        "wallMs": 565.0238179999999,
+        "preparationMs": 0.001492999999982203,
+        "executionMsPerIteration": 113.00429679999998,
+        "amortizedMsPerIteration": 113.00476359999998,
+        "cpuMs": 936.59,
+        "cpuPercent": 165.76115380679408,
+        "machineCpuPercent": 41.44028845169852,
+        "rssBeforeBytes": 119795712,
+        "rssAfterBytes": 345026560,
+        "sampledPeakRssBytes": 408416256,
+        "threadIds": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 740.5956229999997,
+          "preparationMs": 0.0014229999997041887,
+          "executionMsPerIteration": 148.1187618,
+          "amortizedMsPerIteration": 148.11912459999994,
+          "cpuMs": 782.54,
+          "cpuPercent": 105.66360044501644,
+          "machineCpuPercent": 26.41590011125411,
+          "rssBeforeBytes": 614289408,
+          "rssAfterBytes": 748716032,
+          "sampledPeakRssBytes": 782282752,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 771.0741330000001,
+          "preparationMs": 0.0007110000001375738,
+          "executionMsPerIteration": 154.2146062,
+          "amortizedMsPerIteration": 154.2148266,
+          "cpuMs": 694.224,
+          "cpuPercent": 90.03336648047043,
+          "machineCpuPercent": 22.50834162011761,
+          "rssBeforeBytes": 748716032,
+          "rssAfterBytes": 547459072,
+          "sampledPeakRssBytes": 799051776,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 794.3641540000003,
+          "preparationMs": 0.0009519999998701678,
+          "executionMsPerIteration": 158.87255620000005,
+          "amortizedMsPerIteration": 158.87283080000006,
+          "cpuMs": 840.475,
+          "cpuPercent": 105.80474908992427,
+          "machineCpuPercent": 26.451187272481068,
+          "rssBeforeBytes": 547459072,
+          "rssAfterBytes": 748679168,
+          "sampledPeakRssBytes": 768831488,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 655.9876670000003,
+          "preparationMs": 0.0013930000004620524,
+          "executionMsPerIteration": 131.19702039999993,
+          "amortizedMsPerIteration": 131.19753340000005,
+          "cpuMs": 683.756,
+          "cpuPercent": 104.23305717422879,
+          "machineCpuPercent": 26.058264293557198,
+          "rssBeforeBytes": 748679168,
+          "rssAfterBytes": 547381248,
+          "sampledPeakRssBytes": 765538304,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 616.9355439999999,
+          "preparationMs": 0.0012719999995169928,
+          "executionMsPerIteration": 123.38680220000006,
+          "amortizedMsPerIteration": 123.3871088,
+          "cpuMs": 769.546,
+          "cpuPercent": 124.73685581649679,
+          "machineCpuPercent": 31.184213954124196,
+          "rssBeforeBytes": 547381248,
+          "rssAfterBytes": 681746432,
+          "sampledPeakRssBytes": 707125248,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 67108864,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 4,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 740.5956229999997,
+        "medianAmortizedMs": 148.11912459999994,
+        "medianExecutionMs": 148.1187618,
+        "peakSampledRssBytes": 799051776
+      }
+    },
+    {
+      "engine": "pjs",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 4,
+      "memory": "clone",
+      "iterations": 5,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 514.9390700000001,
+      "firstRun": {
+        "wallMs": 477.4546409999998,
+        "preparationMs": 0.002655000000004293,
+        "executionMsPerIteration": 95.49018679999999,
+        "amortizedMsPerIteration": 95.49092819999996,
+        "cpuMs": 864.537,
+        "cpuPercent": 181.0720696293327,
+        "machineCpuPercent": 45.268017407333176,
+        "rssBeforeBytes": 121847808,
+        "rssAfterBytes": 310427648,
+        "sampledPeakRssBytes": 410738688,
+        "threadIds": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 305.44886799999995,
+          "preparationMs": 0.0006009999997331761,
+          "executionMsPerIteration": 61.08957719999999,
+          "amortizedMsPerIteration": 61.08977359999999,
+          "cpuMs": 527.07,
+          "cpuPercent": 172.55588585124505,
+          "machineCpuPercent": 43.13897146281126,
+          "rssBeforeBytes": 461709312,
+          "rssAfterBytes": 528711680,
+          "sampledPeakRssBytes": 578899968,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 302.144495,
+          "preparationMs": 0.0006109999999353022,
+          "executionMsPerIteration": 60.42870060000005,
+          "amortizedMsPerIteration": 60.428899,
+          "cpuMs": 495.956,
+          "cpuPercent": 164.14530405394282,
+          "machineCpuPercent": 41.036326013485706,
+          "rssBeforeBytes": 528711680,
+          "rssAfterBytes": 428003328,
+          "sampledPeakRssBytes": 578912256,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 305.41509499999984,
+          "preparationMs": 0.000721999999768741,
+          "executionMsPerIteration": 61.08279659999998,
+          "amortizedMsPerIteration": 61.083018999999965,
+          "cpuMs": 569.096,
+          "cpuPercent": 186.33525628456587,
+          "machineCpuPercent": 46.58381407114147,
+          "rssBeforeBytes": 428003328,
+          "rssAfterBytes": 528769024,
+          "sampledPeakRssBytes": 578908160,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 305.8313039999998,
+          "preparationMs": 0.0010119999997186824,
+          "executionMsPerIteration": 61.16599020000003,
+          "amortizedMsPerIteration": 61.16626079999996,
+          "cpuMs": 489.307,
+          "cpuPercent": 159.99245126326252,
+          "machineCpuPercent": 39.99811281581563,
+          "rssBeforeBytes": 528769024,
+          "rssAfterBytes": 428326912,
+          "sampledPeakRssBytes": 562192384,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 314.3328620000002,
+          "preparationMs": 0.0006419999999707215,
+          "executionMsPerIteration": 62.86638800000001,
+          "amortizedMsPerIteration": 62.86657240000004,
+          "cpuMs": 579.335,
+          "cpuPercent": 184.3062148557664,
+          "machineCpuPercent": 46.0765537139416,
+          "rssBeforeBytes": 428326912,
+          "rssAfterBytes": 529428480,
+          "sampledPeakRssBytes": 573067264,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 0,
+        "clonedInputBytesPerIteration": 67108864,
+        "transferredInputBytesPerIteration": 0,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 4,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 305.44886799999995,
+        "medianAmortizedMs": 61.08977359999999,
+        "medianExecutionMs": 61.08957719999999,
+        "peakSampledRssBytes": 578912256
+      }
+    },
+    {
+      "engine": "pjs",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 4,
+      "memory": "transfer",
+      "iterations": 5,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 194.80829000000003,
+      "firstRun": {
+        "wallMs": 341.653143,
+        "preparationMs": 0.0013020000000096843,
+        "executionMsPerIteration": 68.33021780000001,
+        "amortizedMsPerIteration": 68.3306286,
+        "cpuMs": 531.932,
+        "cpuPercent": 155.69357721377673,
+        "machineCpuPercent": 38.923394303444184,
+        "rssBeforeBytes": 121667584,
+        "rssAfterBytes": 259678208,
+        "sampledPeakRssBytes": 324829184,
+        "threadIds": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 158.36563,
+          "preparationMs": 0.0006409999998595595,
+          "executionMsPerIteration": 31.672913599999994,
+          "amortizedMsPerIteration": 31.673126000000003,
+          "cpuMs": 272.932,
+          "cpuPercent": 172.34295092944095,
+          "machineCpuPercent": 43.085737732360236,
+          "rssBeforeBytes": 494903296,
+          "rssAfterBytes": 512073728,
+          "sampledPeakRssBytes": 512073728,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 173.054345,
+          "preparationMs": 0.0010419999998703133,
+          "executionMsPerIteration": 34.61056840000001,
+          "amortizedMsPerIteration": 34.610869,
+          "cpuMs": 287.831,
+          "cpuPercent": 166.32405271303648,
+          "machineCpuPercent": 41.58101317825912,
+          "rssBeforeBytes": 512073728,
+          "rssAfterBytes": 327720960,
+          "sampledPeakRssBytes": 512073728,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 231.18352499999992,
+          "preparationMs": 0.0007409999998344574,
+          "executionMsPerIteration": 46.23648060000001,
+          "amortizedMsPerIteration": 46.236704999999986,
+          "cpuMs": 343.556,
+          "cpuPercent": 148.60747538130155,
+          "machineCpuPercent": 37.15186884532539,
+          "rssBeforeBytes": 327720960,
+          "rssAfterBytes": 495362048,
+          "sampledPeakRssBytes": 495362048,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 159.38759200000004,
+          "preparationMs": 0.0008019999997941341,
+          "executionMsPerIteration": 31.877288000000043,
+          "amortizedMsPerIteration": 31.877518400000007,
+          "cpuMs": 285.363,
+          "cpuPercent": 179.03714863827037,
+          "machineCpuPercent": 44.75928715956759,
+          "rssBeforeBytes": 495362048,
+          "rssAfterBytes": 512008192,
+          "sampledPeakRssBytes": 512008192,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 152.78391599999986,
+          "preparationMs": 0.0007919999998193816,
+          "executionMsPerIteration": 30.55653259999999,
+          "amortizedMsPerIteration": 30.556783199999973,
+          "cpuMs": 262.72,
+          "cpuPercent": 171.95527309301343,
+          "machineCpuPercent": 42.98881827325336,
+          "rssBeforeBytes": 512008192,
+          "rssAfterBytes": 528785408,
+          "sampledPeakRssBytes": 528785408,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 67108864,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 67108864,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 4,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 159.38759200000004,
+        "medianAmortizedMs": 31.877518400000007,
+        "medianExecutionMs": 31.877288000000043,
+        "peakSampledRssBytes": 528785408
+      }
+    },
+    {
+      "engine": "piscina",
+      "kind": "range",
+      "size": 2097152,
+      "workers": 4,
+      "memory": "transfer",
+      "iterations": 5,
+      "trials": 5,
+      "warmups": 2,
+      "startupMs": 192.56881,
+      "firstRun": {
+        "wallMs": 342.25853500000005,
+        "preparationMs": 0.0014730000000326982,
+        "executionMsPerIteration": 68.4512522,
+        "amortizedMsPerIteration": 68.45170700000001,
+        "cpuMs": 535.569,
+        "cpuPercent": 156.4808310770102,
+        "machineCpuPercent": 39.12020776925255,
+        "rssBeforeBytes": 120086528,
+        "rssAfterBytes": 327159808,
+        "sampledPeakRssBytes": 391929856,
+        "threadIds": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "samples": [
+        {
+          "wallMs": 163.32512999999994,
+          "preparationMs": 0.0006209999999100546,
+          "executionMsPerIteration": 32.66482559999999,
+          "amortizedMsPerIteration": 32.66502599999999,
+          "cpuMs": 273.759,
+          "cpuPercent": 167.61596944695535,
+          "machineCpuPercent": 41.90399236173884,
+          "rssBeforeBytes": 596271104,
+          "rssAfterBytes": 629825536,
+          "sampledPeakRssBytes": 629825536,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 155.44175900000005,
+          "preparationMs": 0.0006120000000464643,
+          "executionMsPerIteration": 31.08806119999999,
+          "amortizedMsPerIteration": 31.08835180000001,
+          "cpuMs": 258.081,
+          "cpuPercent": 166.0306739066173,
+          "machineCpuPercent": 41.507668476654324,
+          "rssBeforeBytes": 629825536,
+          "rssAfterBytes": 596377600,
+          "sampledPeakRssBytes": 629825536,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 189.98341200000004,
+          "preparationMs": 0.0006009999999605498,
+          "executionMsPerIteration": 37.996482000000015,
+          "amortizedMsPerIteration": 37.99668240000001,
+          "cpuMs": 284.419,
+          "cpuPercent": 149.70728075985912,
+          "machineCpuPercent": 37.42682018996478,
+          "rssBeforeBytes": 596377600,
+          "rssAfterBytes": 646578176,
+          "sampledPeakRssBytes": 646578176,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 156.35076000000004,
+          "preparationMs": 0.00056100000006154,
+          "executionMsPerIteration": 31.26996360000003,
+          "amortizedMsPerIteration": 31.270152000000007,
+          "cpuMs": 257.29,
+          "cpuPercent": 164.5594815145126,
+          "machineCpuPercent": 41.13987037862815,
+          "rssBeforeBytes": 646578176,
+          "rssAfterBytes": 647102464,
+          "sampledPeakRssBytes": 647102464,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "wallMs": 143.91725499999984,
+          "preparationMs": 0.0005109999997330306,
+          "executionMsPerIteration": 28.783294600000044,
+          "amortizedMsPerIteration": 28.783450999999967,
+          "cpuMs": 231.144,
+          "cpuPercent": 160.60895547236518,
+          "machineCpuPercent": 40.152238868091295,
+          "rssBeforeBytes": 647102464,
+          "rssAfterBytes": 647495680,
+          "sampledPeakRssBytes": 647495680,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "correctness": {
+        "independentOracle": true,
+        "allResultsChecked": true
+      },
+      "allocation": {
+        "sourceBytes": 16777216,
+        "commonInputBytes": 16777216,
+        "sharedBufferBytes": 0,
+        "sharedPreparationCopyBytesPerSession": 0,
+        "temporaryPreparationBytesPerIteration": 67108864,
+        "clonedInputBytesPerIteration": 0,
+        "transferredInputBytesPerIteration": 67108864,
+        "outputBackingBytesPerIteration": 0,
+        "scalarResultsPerIteration": 4,
+        "assemblyAllocationBytesPerIteration": 0,
+        "retainedOutputBytesPerSession": 0,
+        "note": "Known numeric payload backing bytes, not serialized metadata, V8 overhead or exact physical residency; original input retained in every mode."
+      },
+      "piscinaVersion": "5.3.2",
+      "summary": {
+        "medianWallMs": 156.35076000000004,
+        "medianAmortizedMs": 31.270152000000007,
+        "medianExecutionMs": 31.26996360000003,
+        "peakSampledRssBytes": 647495680
+      }
+    }
+  ]
+}

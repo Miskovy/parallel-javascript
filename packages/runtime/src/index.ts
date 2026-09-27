@@ -4,6 +4,7 @@ export { PjsTaskRegistry } from './tasks/registry.js';
 export type { PjsTask } from './tasks/registry.js';
 export { transfer } from './tasks/transfer.js';
 export type { PjsTransfer } from './tasks/transfer.js';
+export { sharedReadonly } from './tasks/shared.js';
 export type {
   RunOptions,
   ShutdownOptions,

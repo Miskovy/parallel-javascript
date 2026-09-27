@@ -16,7 +16,7 @@ const probes = await new Promise((resolve, reject) => {
     output += data;
   });
   child.on('error', reject);
-  child.on('exit', (code) => {
+  child.on('close', (code) => {
     if (code !== 0) {
       reject(new Error(`Transfer probe failed (${code})`));
       return;
@@ -31,7 +31,7 @@ const probes = await new Promise((resolve, reject) => {
 const directory = new URL('../results/', import.meta.url);
 await mkdir(directory, { recursive: true });
 await writeFile(
-  new URL('transfer-v0.2.json', directory),
+  new URL('transfer-v0.3.json', directory),
   JSON.stringify(probes, null, 2) + '\n',
 );
 console.table(
@@ -48,11 +48,11 @@ console.table(
 // Sequential fresh processes prevent clone and transfer runs from competing for CPUs.
 const clone = await runSuite('matrix', [128, 256, 512], {
   memory: 'clone',
-  outputName: 'matrix-clone-v0.2',
+  outputName: 'matrix-clone-v0.3',
 });
 const transfer = await runSuite('matrix', [128, 256, 512], {
   memory: 'transfer',
-  outputName: 'matrix-transfer-v0.2',
+  outputName: 'matrix-transfer-v0.3',
 });
 for (const reference of clone.results) {
   const candidate = transfer.results.find(
