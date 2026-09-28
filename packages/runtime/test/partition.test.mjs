@@ -156,6 +156,13 @@ test('invalid ranges/options/handles reject without parent or child admission', 
     runtime.partitionRange(task, range, input, { timeout: 0 }),
     RangeError,
   );
+  for (const experimentalDispatchBatchSize of [0, 1.5, 17])
+    await assert.rejects(
+      runtime.partitionRange(task, range, input, {
+        experimentalDispatchBatchSize,
+      }),
+      RangeError,
+    );
   await assert.rejects(runtime.partitionRange(task, range, null), TypeError);
   await assert.rejects(
     runtime.partitionRange({ id: 'foreign' }, range, input),

@@ -58,7 +58,7 @@ const ordered: Promise<number[]> = runtime.partitionRange(
   partitionTask,
   range,
   (partition) => ({ input: { partition, shared } }),
-  { timeout: 1000 },
+  { timeout: 1000, experimentalDispatchBatchSize: 4 },
 );
 void ordered;
 const makeInput = (partition: RangePartition): PartitionInput<Uint8Array> => ({

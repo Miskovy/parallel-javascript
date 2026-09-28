@@ -22,6 +22,11 @@ export interface PartitionInput<Input> {
 export interface PartitionOptions {
   signal?: AbortSignal;
   timeout?: number;
+  /**
+   * @experimental Group transfer-free logical partitions into one worker turn.
+   * This research option may change or be removed before the API is stabilized.
+   */
+  experimentalDispatchBatchSize?: number;
 }
 
 export interface RangePlan extends PartitionRange {

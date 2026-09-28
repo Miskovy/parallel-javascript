@@ -20,6 +20,7 @@ export class PartitionOperation {
     readonly id: string,
     readonly task: PjsTask<unknown, unknown>,
     readonly plan: RangePlan,
+    readonly dispatchBatchSize: number,
     public createInput:
       ((partition: RangePartition) => PartitionInput<unknown>) | undefined,
     readonly deadline: number | undefined,

@@ -83,4 +83,30 @@ workers, middle grains improved increasing-cost work over one chunk per worker,
 while 128 chunks slowed range, matrix and skew kernels. One-worker skew changes
 also reveal non-balance effects, so JIT/arithmetic controls are needed. The
 report recommends profiling/bounded batching experiments before work stealing
-or stable algorithm APIs. v0.5 has not been started.
+or stable algorithm APIs.
+
+## v0.5 review: message amortization before scheduler replacement
+
+Reviewed 2026-09-28. Node's [worker-pool guidance](https://nodejs.org/api/async_context.html#using-asyncresource-for-a-worker-thread-pool)
+recommends `AsyncResource` so diagnostics tools can connect submitted work to
+callbacks. PJS records internal timing for this milestone but defers context
+propagation: logical items inside one physical batch need an explicit choice of
+async scope, `AsyncLocalStorage` capture, cancellation lifetime and failure
+attribution. Adding wrappers during a fine-grain cost study would also change
+the path under measurement.
+
+Node's [`performance.eventLoopUtilization`](https://nodejs.org/api/perf_hooks.html#performanceeventlooputilizationutilization1-utilization2)
+and [`monitorEventLoopDelay`](https://nodejs.org/api/perf_hooks.html#perf_hooksmonitoreventloopdelayoptions)
+provide complementary host-pressure observations. v0.5 records both plus an
+independent timer-drift probe. These are process/session observations rather
+than a promise of request latency under a framework workload.
+
+The retained comparison gives Piscina 5.3.2 an explicit harness-side batching
+mode. Both libraries benefit when multiple tiny logical items share one
+message, so the evidence supports batching as a general transport technique,
+not a scheduler superiority claim. PJS keeps its central FIFO, counts queued
+logical weight, preserves per-partition identity and rejects batched input
+transfers. The [proposal](../proposal-v0.5.md), [ADRs](../adr/0010-dispatch-efficiency.md),
+and [measurement report](../benchmarks-v0.5.md) define the limits. Work stealing
+still lacks evidence: the fixed-width skew control instead shows that large
+contiguous batches can reduce dynamic balance.

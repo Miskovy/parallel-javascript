@@ -119,7 +119,7 @@ for (const kind of suite === 'all'
     }
   const report = {
     timestamp: new Date().toISOString(),
-    runtimeVersion: '0.4.0',
+    runtimeVersion: '0.5.0',
     manualRuntimeVersion: '0.3.0',
     baselineCommit: 'f6cd689',
     piscinaVersion: Piscina.version,
@@ -142,7 +142,7 @@ for (const kind of suite === 'all'
       timing:
         'Warm reused input. Original generation and independent validation excluded equally. Shared copy once per config recorded separately. First run separate, then warmups, then all trials. Wall includes lazy payload preparation, dispatch, compute, transport, ordered collection and matrix assembly.',
       producer:
-        'PJS v0.3 and Piscina use a bounded workers-sized manual producer. PJS v0.4 owns descriptors and parent lifecycle. All use same grain, kernels and payloads; maxQueue=workers, no pending window above workers.',
+        'PJS v0.3 and Piscina use a bounded workers-sized manual producer. PJS v0.5 owns descriptors and parent lifecycle. All use same grain, kernels and payloads; maxQueue=workers, no pending window above workers.',
       queue:
         'PJS exact admission-to-scheduling and worker execution means use cumulative-counter deltas. Piscina queue/execution null: different histogram boundaries. All engines report worker kernel and host-payload-ready to worker-kernel-start latency (includes serialization/transport, not pure queue time).',
       dispatch:
@@ -159,7 +159,7 @@ for (const kind of suite === 'all'
   const directory = new URL('../results/', import.meta.url);
   await mkdir(directory, { recursive: true });
   await writeFile(
-    new URL(`${kind}-partition-v0.4.json`, directory),
+    new URL(`${kind}-partition-v0.5.json`, directory),
     JSON.stringify(report, null, 2) + '\n',
   );
 }

@@ -1,4 +1,4 @@
-import { threadId } from 'node:worker_threads';
+import { parentPort, threadId } from 'node:worker_threads';
 import { setTimeout as delay } from 'node:timers/promises';
 import { PjsRuntime, PjsTaskRegistry, transfer } from '../../dist/index.js';
 
@@ -11,7 +11,19 @@ export async function range({
   shared,
   data,
   move = false,
+  counter,
+  badProtocol = false,
+  badOutput = false,
 }) {
+  if (counter) Atomics.add(new Int32Array(counter), partition.index, 1);
+  if (badProtocol)
+    parentPort.postMessage({
+      type: 'batchResult',
+      batchId: 'incorrect-batch',
+      items: [],
+      skippedTaskIds: [],
+      executionMs: 0,
+    });
   if (gate) {
     const control = new Int32Array(gate);
     Atomics.add(control, 0, 1);
@@ -37,6 +49,7 @@ export async function range({
     shared: shared?.buffer instanceof SharedArrayBuffer,
     sum: shared ? shared.reduce((a, b) => a + b, 0) : undefined,
   };
+  if (badOutput) result.invalid = () => {};
   return move ? transfer(result, [values.buffer]) : result;
 }
 

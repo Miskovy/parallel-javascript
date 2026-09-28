@@ -84,7 +84,7 @@ for (const workers of counts)
     });
   }
 await writeFile(
-  new URL('../results/cpu-regression-v0.4.json', import.meta.url),
+  new URL('../results/cpu-regression-v0.5.json', import.meta.url),
   JSON.stringify(
     {
       timestamp: new Date().toISOString(),
@@ -103,7 +103,7 @@ await writeFile(
         baseline:
           'Built committed baseline source; record commit in accompanying report',
         reason:
-          'Interleaved ordinary-task regression control; same kernels and original measurement script in both checkouts',
+          'Interleaved ordinary-task regression control; v0.4 commit 1f3e647 versus the v0.5 candidate with the same kernels and measurement script',
       },
       results,
       summary,

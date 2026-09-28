@@ -452,3 +452,15 @@ test('scheduler policy is independent of worker transport', () => {
   assert.equal(scheduler.next({ status: 'idle' }).id, 'c');
   assert.equal(scheduler.size, 0);
 });
+
+test('scheduler capacity and size count logical admission weight', () => {
+  const scheduler = new PjsScheduler(4);
+  scheduler.enqueue({ id: 'batch', admissionWeight: 3 });
+  scheduler.enqueue({ id: 'ordinary' });
+  assert.equal(scheduler.size, 4);
+  assert.throws(() => scheduler.enqueue({ id: 'overflow' }), PjsQueueFullError);
+  assert.equal(scheduler.remove('ordinary').id, 'ordinary');
+  assert.equal(scheduler.size, 3);
+  assert.equal(scheduler.next({ status: 'idle' }).id, 'batch');
+  assert.equal(scheduler.size, 0);
+});

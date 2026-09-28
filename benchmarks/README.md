@@ -4,7 +4,7 @@ Run `npm run benchmark:cpu`, `npm run benchmark:matrix`, and `npm run benchmark:
 
 Configurations: serial, PJS 1/2/4 workers, and availableParallelism, filtered to available hardware concurrency. Duplicate worker counts run once, with the actual machine count recorded. All timings are retained. Each size has a first-run sample, two untimed warmups, then five timed samples. Startup is measured once per configuration; only the first size follows that fresh startup. No startup cost is folded into warm-pool speedup. For a cold scenario, inspect startup plus the first size's first-run cost. No forced GC or discarded outliers.
 
-`PJS_BENCH_SIZES` (comma-separated), `PJS_BENCH_TRIALS`, and `PJS_BENCH_WARMUPS` override workload defaults. Current reports are written to `results/cpu-v0.4.json` and `results/matrix-v0.4.json`; subsequent invocations overwrite only those current reports. `PJS_BENCH_OUTPUT` can choose an alternate safe filename for CPU/matrix runs. Existing v0.1 `cpu.json`, `matrix.json`, and `cpu-initial.json` baselines are preserved.
+`PJS_BENCH_SIZES` (comma-separated), `PJS_BENCH_TRIALS`, and `PJS_BENCH_WARMUPS` override workload defaults. Current reports are written to `results/cpu-v0.5.json` and `results/matrix-v0.5.json`; subsequent invocations overwrite only those current reports. `PJS_BENCH_OUTPUT` can choose an alternate safe filename for CPU/matrix runs. Existing v0.1–v0.4 artifacts are preserved.
 
 CPU: trial-division prime search over [0, N), partitioned into a fixed 32 contiguous chunks independent of worker count. The serial reference runs the same kernel monolithically. A separate serial-with-32-chunks control exposes chunking/JIT differences; it runs after each monolithic size's samples, so it is diagnostic and can further warm the main isolate for subsequent sizes. Correctness uses an independent sieve. Results include exact count and observed thread IDs. Small inputs can be slower under PJS. `cpu-initial.json` retains the preliminary run before the independent sieve and chunked-serial diagnostic were added; it is not the final comparison.
 
@@ -26,7 +26,7 @@ Each matrix mode obtains its own serial baseline in fresh processes. The complet
 
 ## v0.3 shared-input comparison
 
-The v0.3 run wrote `transfer-v0.3.json`, `matrix-clone-v0.3.json` and `matrix-transfer-v0.3.json`. Current runners write corresponding v0.4 filenames and preserve all historical artifacts. Shared/matrix-shared/Piscina runners also now target v0.4 filenames.
+The v0.3 run wrote `transfer-v0.3.json`, `matrix-clone-v0.3.json` and `matrix-transfer-v0.3.json`. Current runners write corresponding v0.5 filenames and preserve all historical artifacts. Shared/matrix-shared/Piscina runners also now target v0.5 filenames.
 
 - `npm run benchmark:shared`: a 16 MiB Float64 array, disjoint sums, full common input per task, small independent outputs.
 - `npm run benchmark:matrix:shared`: existing matrix kernel at sizes 128 and 512, clone/transfer/shared, full independent reference validation. Shared B is constructed once per sample session; A row blocks and outputs transfer independently.
@@ -53,3 +53,24 @@ To investigate visible phase drift, run `node benchmarks/cpu-baseline/compare.mj
 ## v0.4 runtime-owned partitioning
 
 See the [reproduction instructions and metric definitions](partitioning/README.md) and [measurement report](../docs/benchmarks-v0.4.md). The new runner compares archived v0.3 manual production, v0.4 runtime-owned ranges and bounded manual Piscina 5.3.2 across five grain sizes. Range input compares full clone, reused shared backing and compact transfers; matrix uses shared B and transferred A/outputs. Increasing-cost skew and no-op control expose balance and dispatch tradeoffs. Raw results use `*-partition-v0.4.json`. The CPU comparison runner now writes `cpu-regression-v0.4.json`; its supplied checkout determines the baseline version.
+
+## v0.5 dispatch efficiency
+
+Run `npm run benchmark:dispatch` for the retained no-op, shared-scan, matrix,
+increasing-cost skew, fixed-width skew, output-retention, Piscina, CPU/RSS and
+event-loop sweep. See the dedicated [methodology](dispatch-efficiency/README.md)
+and [report](../docs/benchmarks-v0.5.md). Raw samples are in
+`results/dispatch-efficiency-v0.5.json`; profiling and fairness use separate
+v0.5 artifacts. The key no-op endpoint repeats in fresh processes using
+manual/batched balanced order. No historical result is overwritten.
+
+`node benchmarks/dispatch-efficiency/profile.mjs` runs disabled/enabled internal
+profiling in off/on/on/off process order and retains host microbenchmarks.
+`node benchmarks/dispatch-efficiency/fairness.mjs` competes two range parents
+with a continuous bounded ordinary producer at batch sizes 1, 4 and 8.
+
+For the ordinary-task regression control, build archived commit `1f3e647` in an
+isolated directory and run
+`node benchmarks/cpu-baseline/compare.mjs /path/to/built-v0.4`. The runner uses
+baseline/candidate/candidate/baseline order and writes
+`cpu-regression-v0.5.json`.

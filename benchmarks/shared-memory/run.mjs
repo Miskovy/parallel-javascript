@@ -106,7 +106,7 @@ for (const [kind, size] of workloads)
   }
 const report = {
   timestamp: new Date().toISOString(),
-  runtimeVersion: '0.4.0',
+  runtimeVersion: '0.5.0',
   piscinaVersion: Piscina.version,
   environment: {
     node: process.version,
@@ -135,7 +135,7 @@ const report = {
   },
   results,
 };
-const name = suite === 'matrix' ? 'matrix-shared-v0.4' : `${suite}-v0.4`;
+const name = suite === 'matrix' ? 'matrix-shared-v0.5' : `${suite}-v0.5`;
 const directory = new URL('../results/', import.meta.url);
 await mkdir(directory, { recursive: true });
 await writeFile(

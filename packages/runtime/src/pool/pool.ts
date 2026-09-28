@@ -39,7 +39,7 @@ export class PjsPool {
   }
   idle(): PjsWorker[] {
     return [...this.workers.values()].filter(
-      (worker) => worker.snapshot().status === 'idle',
+      (worker) => worker.status === 'idle',
     );
   }
   snapshots(): WorkerState[] {

@@ -53,7 +53,7 @@ export async function runSuite(
   defaults,
   {
     memory = 'clone',
-    outputName = process.env.PJS_BENCH_OUTPUT ?? `${suite}-v0.4`,
+    outputName = process.env.PJS_BENCH_OUTPUT ?? `${suite}-v0.5`,
   } = {},
 ) {
   assert.ok(memory === 'clone' || memory === 'transfer');

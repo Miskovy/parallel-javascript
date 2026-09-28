@@ -256,7 +256,7 @@ try {
         engine === 'pjs-manual'
           ? '0.3.0'
           : engine === 'pjs-owned'
-            ? '0.4.0'
+            ? '0.5.0'
             : null,
       allocation: {
         sourceBytes: kind === 'matrix' ? bytes * 2 : bytes,

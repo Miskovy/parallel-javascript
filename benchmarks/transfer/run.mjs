@@ -31,7 +31,7 @@ const probes = await new Promise((resolve, reject) => {
 const directory = new URL('../results/', import.meta.url);
 await mkdir(directory, { recursive: true });
 await writeFile(
-  new URL('transfer-v0.4.json', directory),
+  new URL('transfer-v0.5.json', directory),
   JSON.stringify(probes, null, 2) + '\n',
 );
 console.table(
@@ -48,11 +48,11 @@ console.table(
 // Sequential fresh processes prevent clone and transfer runs from competing for CPUs.
 const clone = await runSuite('matrix', [128, 256, 512], {
   memory: 'clone',
-  outputName: 'matrix-clone-v0.4',
+  outputName: 'matrix-clone-v0.5',
 });
 const transfer = await runSuite('matrix', [128, 256, 512], {
   memory: 'transfer',
-  outputName: 'matrix-transfer-v0.4',
+  outputName: 'matrix-transfer-v0.5',
 });
 for (const reference of clone.results) {
   const candidate = transfer.results.find(

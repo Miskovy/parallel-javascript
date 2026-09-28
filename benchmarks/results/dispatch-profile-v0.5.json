@@ -1,0 +1,891 @@
+{
+  "version": "0.5.0",
+  "timestamp": "2026-09-28T09:24:55.980Z",
+  "node": "v24.13.1",
+  "methodology": {
+    "sessionOrder": [
+      "off",
+      "on",
+      "on",
+      "off"
+    ],
+    "runtimeSamplesPerSession": 8,
+    "runtimeWarmInterpretation": "report uses final two samples per session",
+    "hostSamples": 7,
+    "warning": "Stage durations overlap and must not be summed into wall time."
+  },
+  "sessions": [
+    {
+      "enabled": false,
+      "samples": [
+        59.21319199999999,
+        36.78709700000002,
+        34.408394000000044,
+        35.34575799999999,
+        31.476635999999985,
+        42.77636699999999,
+        29.39831700000002,
+        26.78779099999997
+      ],
+      "profiles": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "enabled": true,
+      "samples": [
+        75.496511,
+        40.230601999999976,
+        34.79808300000002,
+        36.860573999999986,
+        36.10080199999999,
+        33.77052000000003,
+        29.462135999999987,
+        28.905854999999974
+      ],
+      "profiles": [
+        {
+          "descriptorCreation": {
+            "count": 512,
+            "totalMs": 0.8320460000005312
+          },
+          "factory": {
+            "count": 512,
+            "totalMs": 0.4721379999996884
+          },
+          "childAdmission": {
+            "count": 512,
+            "totalMs": 13.44776900000042
+          },
+          "hostPostMessage": {
+            "count": 512,
+            "totalMs": 13.400377999999563
+          },
+          "workerIngress": {
+            "count": 512,
+            "totalMs": 5.408837000000375
+          },
+          "workerOutputPreparation": {
+            "count": 512,
+            "totalMs": 1.7070399999994663
+          },
+          "workerResultTransport": {
+            "count": 512,
+            "totalMs": 165.99353799999986
+          },
+          "parentCollection": {
+            "count": 512,
+            "totalMs": 1.1429069999996955
+          },
+          "hostResultSettlement": {
+            "count": 512,
+            "totalMs": 4.335378999999904
+          },
+          "parentSettlement": {
+            "count": 1,
+            "totalMs": 0.09489800000000059
+          }
+        },
+        {
+          "descriptorCreation": {
+            "count": 512,
+            "totalMs": 1.0603959999994572
+          },
+          "factory": {
+            "count": 512,
+            "totalMs": 0.40777900000017553
+          },
+          "childAdmission": {
+            "count": 512,
+            "totalMs": 6.116546000000426
+          },
+          "hostPostMessage": {
+            "count": 512,
+            "totalMs": 7.347249999999747
+          },
+          "workerIngress": {
+            "count": 512,
+            "totalMs": 5.0596370000006345
+          },
+          "workerOutputPreparation": {
+            "count": 512,
+            "totalMs": 0.7316340000003834
+          },
+          "workerResultTransport": {
+            "count": 512,
+            "totalMs": 89.23367900000002
+          },
+          "parentCollection": {
+            "count": 512,
+            "totalMs": 0.2544820000004506
+          },
+          "hostResultSettlement": {
+            "count": 512,
+            "totalMs": 1.9085999999997512
+          },
+          "parentSettlement": {
+            "count": 1,
+            "totalMs": 0.011220999999977721
+          }
+        },
+        {
+          "descriptorCreation": {
+            "count": 512,
+            "totalMs": 0.3274939999989783
+          },
+          "factory": {
+            "count": 512,
+            "totalMs": 0.10710399999896936
+          },
+          "childAdmission": {
+            "count": 512,
+            "totalMs": 5.505461000001048
+          },
+          "hostPostMessage": {
+            "count": 512,
+            "totalMs": 5.125171999999736
+          },
+          "workerIngress": {
+            "count": 512,
+            "totalMs": 3.6602580000008516
+          },
+          "workerOutputPreparation": {
+            "count": 512,
+            "totalMs": 0.7171960000005129
+          },
+          "workerResultTransport": {
+            "count": 512,
+            "totalMs": 75.2835940000001
+          },
+          "parentCollection": {
+            "count": 512,
+            "totalMs": 0.2445629999998573
+          },
+          "hostResultSettlement": {
+            "count": 512,
+            "totalMs": 1.2567849999998089
+          },
+          "parentSettlement": {
+            "count": 1,
+            "totalMs": 0.023654000000021824
+          }
+        },
+        {
+          "descriptorCreation": {
+            "count": 512,
+            "totalMs": 0.34324600000030614
+          },
+          "factory": {
+            "count": 512,
+            "totalMs": 0.129333000000031
+          },
+          "childAdmission": {
+            "count": 512,
+            "totalMs": 5.3087239999990175
+          },
+          "hostPostMessage": {
+            "count": 512,
+            "totalMs": 7.616215999999042
+          },
+          "workerIngress": {
+            "count": 512,
+            "totalMs": 4.549080000000572
+          },
+          "workerOutputPreparation": {
+            "count": 512,
+            "totalMs": 0.8630170000000135
+          },
+          "workerResultTransport": {
+            "count": 512,
+            "totalMs": 82.65195899999998
+          },
+          "parentCollection": {
+            "count": 512,
+            "totalMs": 0.2230010000004654
+          },
+          "hostResultSettlement": {
+            "count": 512,
+            "totalMs": 1.360841999999991
+          },
+          "parentSettlement": {
+            "count": 1,
+            "totalMs": 0.011160999999958676
+          }
+        },
+        {
+          "descriptorCreation": {
+            "count": 512,
+            "totalMs": 0.37165800000059335
+          },
+          "factory": {
+            "count": 512,
+            "totalMs": 0.15400699999952394
+          },
+          "childAdmission": {
+            "count": 512,
+            "totalMs": 5.5550009999999475
+          },
+          "hostPostMessage": {
+            "count": 512,
+            "totalMs": 6.272754000000987
+          },
+          "workerIngress": {
+            "count": 512,
+            "totalMs": 3.7847340000000145
+          },
+          "workerOutputPreparation": {
+            "count": 512,
+            "totalMs": 0.7267690000001608
+          },
+          "workerResultTransport": {
+            "count": 512,
+            "totalMs": 77.00330399999999
+          },
+          "parentCollection": {
+            "count": 512,
+            "totalMs": 0.27103600000020833
+          },
+          "hostResultSettlement": {
+            "count": 512,
+            "totalMs": 1.3175620000008053
+          },
+          "parentSettlement": {
+            "count": 1,
+            "totalMs": 0.01619999999996935
+          }
+        },
+        {
+          "descriptorCreation": {
+            "count": 512,
+            "totalMs": 0.3508420000013075
+          },
+          "factory": {
+            "count": 512,
+            "totalMs": 0.1761160000000359
+          },
+          "childAdmission": {
+            "count": 512,
+            "totalMs": 5.497468000000197
+          },
+          "hostPostMessage": {
+            "count": 512,
+            "totalMs": 5.188107000000457
+          },
+          "workerIngress": {
+            "count": 512,
+            "totalMs": 3.5881309999997484
+          },
+          "workerOutputPreparation": {
+            "count": 512,
+            "totalMs": 0.5846309999994332
+          },
+          "workerResultTransport": {
+            "count": 512,
+            "totalMs": 81.68459800000001
+          },
+          "parentCollection": {
+            "count": 512,
+            "totalMs": 0.2697999999998615
+          },
+          "hostResultSettlement": {
+            "count": 512,
+            "totalMs": 1.2789070000008564
+          },
+          "parentSettlement": {
+            "count": 1,
+            "totalMs": 0.02912399999996751
+          }
+        },
+        {
+          "descriptorCreation": {
+            "count": 512,
+            "totalMs": 0.3242290000006278
+          },
+          "factory": {
+            "count": 512,
+            "totalMs": 0.11340500000079601
+          },
+          "childAdmission": {
+            "count": 512,
+            "totalMs": 4.650945000000377
+          },
+          "hostPostMessage": {
+            "count": 512,
+            "totalMs": 5.588746000001095
+          },
+          "workerIngress": {
+            "count": 512,
+            "totalMs": 4.0249879999996665
+          },
+          "workerOutputPreparation": {
+            "count": 512,
+            "totalMs": 0.5655130000002941
+          },
+          "workerResultTransport": {
+            "count": 512,
+            "totalMs": 75.41287799999986
+          },
+          "parentCollection": {
+            "count": 512,
+            "totalMs": 0.20593000000013717
+          },
+          "hostResultSettlement": {
+            "count": 512,
+            "totalMs": 1.1318610000000149
+          },
+          "parentSettlement": {
+            "count": 1,
+            "totalMs": 0.011863000000005286
+          }
+        },
+        {
+          "descriptorCreation": {
+            "count": 512,
+            "totalMs": 0.3216789999999037
+          },
+          "factory": {
+            "count": 512,
+            "totalMs": 0.12347599999958447
+          },
+          "childAdmission": {
+            "count": 512,
+            "totalMs": 4.563358999998684
+          },
+          "hostPostMessage": {
+            "count": 512,
+            "totalMs": 4.38773599999746
+          },
+          "workerIngress": {
+            "count": 512,
+            "totalMs": 3.155691999999817
+          },
+          "workerOutputPreparation": {
+            "count": 512,
+            "totalMs": 0.14650800000015352
+          },
+          "workerResultTransport": {
+            "count": 512,
+            "totalMs": 69.50560300000005
+          },
+          "parentCollection": {
+            "count": 512,
+            "totalMs": 0.20219200000030924
+          },
+          "hostResultSettlement": {
+            "count": 512,
+            "totalMs": 1.1170339999986254
+          },
+          "parentSettlement": {
+            "count": 1,
+            "totalMs": 0.012904999999932443
+          }
+        }
+      ]
+    },
+    {
+      "enabled": true,
+      "samples": [
+        69.68092600000003,
+        40.66814099999999,
+        29.842917999999997,
+        35.19208200000003,
+        34.303147000000024,
+        33.94875400000001,
+        32.05792500000001,
+        28.174645999999996
+      ],
+      "profiles": [
+        {
+          "descriptorCreation": {
+            "count": 512,
+            "totalMs": 0.6587580000006596
+          },
+          "factory": {
+            "count": 512,
+            "totalMs": 0.706085000000229
+          },
+          "childAdmission": {
+            "count": 512,
+            "totalMs": 10.859231000000136
+          },
+          "hostPostMessage": {
+            "count": 512,
+            "totalMs": 8.691309999999959
+          },
+          "workerIngress": {
+            "count": 512,
+            "totalMs": 6.9615419999998664
+          },
+          "workerOutputPreparation": {
+            "count": 512,
+            "totalMs": 1.478713999999826
+          },
+          "workerResultTransport": {
+            "count": 512,
+            "totalMs": 161.09675000000001
+          },
+          "parentCollection": {
+            "count": 512,
+            "totalMs": 0.9188869999995006
+          },
+          "hostResultSettlement": {
+            "count": 512,
+            "totalMs": 3.962442999999894
+          },
+          "parentSettlement": {
+            "count": 1,
+            "totalMs": 0.05961200000001554
+          }
+        },
+        {
+          "descriptorCreation": {
+            "count": 512,
+            "totalMs": 0.4754439999996407
+          },
+          "factory": {
+            "count": 512,
+            "totalMs": 0.3830929999998034
+          },
+          "childAdmission": {
+            "count": 512,
+            "totalMs": 5.931688999999494
+          },
+          "hostPostMessage": {
+            "count": 512,
+            "totalMs": 7.889205999998865
+          },
+          "workerIngress": {
+            "count": 512,
+            "totalMs": 4.005312999999489
+          },
+          "workerOutputPreparation": {
+            "count": 512,
+            "totalMs": 0.6756719999996221
+          },
+          "workerResultTransport": {
+            "count": 512,
+            "totalMs": 94.11540599999991
+          },
+          "parentCollection": {
+            "count": 512,
+            "totalMs": 0.2581339999998704
+          },
+          "hostResultSettlement": {
+            "count": 512,
+            "totalMs": 1.7547209999997335
+          },
+          "parentSettlement": {
+            "count": 1,
+            "totalMs": 0.011932000000001608
+          }
+        },
+        {
+          "descriptorCreation": {
+            "count": 512,
+            "totalMs": 0.3504790000002913
+          },
+          "factory": {
+            "count": 512,
+            "totalMs": 0.12014900000087891
+          },
+          "childAdmission": {
+            "count": 512,
+            "totalMs": 4.774956000000259
+          },
+          "hostPostMessage": {
+            "count": 512,
+            "totalMs": 4.698651000000041
+          },
+          "workerIngress": {
+            "count": 512,
+            "totalMs": 4.655650000000321
+          },
+          "workerOutputPreparation": {
+            "count": 512,
+            "totalMs": 0.72863800000016
+          },
+          "workerResultTransport": {
+            "count": 512,
+            "totalMs": 65.38031399999997
+          },
+          "parentCollection": {
+            "count": 512,
+            "totalMs": 0.20589200000028995
+          },
+          "hostResultSettlement": {
+            "count": 512,
+            "totalMs": 1.1208150000001638
+          },
+          "parentSettlement": {
+            "count": 1,
+            "totalMs": 0.011691999999982272
+          }
+        },
+        {
+          "descriptorCreation": {
+            "count": 512,
+            "totalMs": 0.3359850000003348
+          },
+          "factory": {
+            "count": 512,
+            "totalMs": 0.12345400000049267
+          },
+          "childAdmission": {
+            "count": 512,
+            "totalMs": 5.206129000000601
+          },
+          "hostPostMessage": {
+            "count": 512,
+            "totalMs": 4.733212000000265
+          },
+          "workerIngress": {
+            "count": 512,
+            "totalMs": 4.427464999998904
+          },
+          "workerOutputPreparation": {
+            "count": 512,
+            "totalMs": 0.8023249999998825
+          },
+          "workerResultTransport": {
+            "count": 512,
+            "totalMs": 74.63876800000006
+          },
+          "parentCollection": {
+            "count": 512,
+            "totalMs": 0.22321800000071335
+          },
+          "hostResultSettlement": {
+            "count": 512,
+            "totalMs": 1.1489319999998315
+          },
+          "parentSettlement": {
+            "count": 1,
+            "totalMs": 0.013706000000013319
+          }
+        },
+        {
+          "descriptorCreation": {
+            "count": 512,
+            "totalMs": 0.379835000000071
+          },
+          "factory": {
+            "count": 512,
+            "totalMs": 0.16582400000044117
+          },
+          "childAdmission": {
+            "count": 512,
+            "totalMs": 6.440882999999417
+          },
+          "hostPostMessage": {
+            "count": 512,
+            "totalMs": 5.586987999999849
+          },
+          "workerIngress": {
+            "count": 512,
+            "totalMs": 3.618545000000836
+          },
+          "workerOutputPreparation": {
+            "count": 512,
+            "totalMs": 0.7394430000002217
+          },
+          "workerResultTransport": {
+            "count": 512,
+            "totalMs": 73.73053099999998
+          },
+          "parentCollection": {
+            "count": 512,
+            "totalMs": 0.24731799999915438
+          },
+          "hostResultSettlement": {
+            "count": 512,
+            "totalMs": 1.2650849999999991
+          },
+          "parentSettlement": {
+            "count": 1,
+            "totalMs": 0.012743999999997868
+          }
+        },
+        {
+          "descriptorCreation": {
+            "count": 512,
+            "totalMs": 0.36027200000057746
+          },
+          "factory": {
+            "count": 512,
+            "totalMs": 0.13370599999990418
+          },
+          "childAdmission": {
+            "count": 512,
+            "totalMs": 6.643528000000629
+          },
+          "hostPostMessage": {
+            "count": 512,
+            "totalMs": 4.757849000001102
+          },
+          "workerIngress": {
+            "count": 512,
+            "totalMs": 2.717721999999469
+          },
+          "workerOutputPreparation": {
+            "count": 512,
+            "totalMs": 0.5413019999991775
+          },
+          "workerResultTransport": {
+            "count": 512,
+            "totalMs": 89.4715529999999
+          },
+          "parentCollection": {
+            "count": 512,
+            "totalMs": 0.25440000000014606
+          },
+          "hostResultSettlement": {
+            "count": 512,
+            "totalMs": 1.8460240000000567
+          },
+          "parentSettlement": {
+            "count": 1,
+            "totalMs": 0.011119999999948504
+          }
+        },
+        {
+          "descriptorCreation": {
+            "count": 512,
+            "totalMs": 0.3230349999996065
+          },
+          "factory": {
+            "count": 512,
+            "totalMs": 0.12111199999998234
+          },
+          "childAdmission": {
+            "count": 512,
+            "totalMs": 5.3737989999996785
+          },
+          "hostPostMessage": {
+            "count": 512,
+            "totalMs": 6.111517999999762
+          },
+          "workerIngress": {
+            "count": 512,
+            "totalMs": 3.262962999999445
+          },
+          "workerOutputPreparation": {
+            "count": 512,
+            "totalMs": 0.5894050000003404
+          },
+          "workerResultTransport": {
+            "count": 512,
+            "totalMs": 81.70219199999994
+          },
+          "parentCollection": {
+            "count": 512,
+            "totalMs": 0.22697200000050088
+          },
+          "hostResultSettlement": {
+            "count": 512,
+            "totalMs": 1.2479800000004388
+          },
+          "parentSettlement": {
+            "count": 1,
+            "totalMs": 0.01168200000000752
+          }
+        },
+        {
+          "descriptorCreation": {
+            "count": 512,
+            "totalMs": 0.3142720000004715
+          },
+          "factory": {
+            "count": 512,
+            "totalMs": 0.11720699999983708
+          },
+          "childAdmission": {
+            "count": 512,
+            "totalMs": 5.222282000000746
+          },
+          "hostPostMessage": {
+            "count": 512,
+            "totalMs": 4.414546999999516
+          },
+          "workerIngress": {
+            "count": 512,
+            "totalMs": 2.83670399999869
+          },
+          "workerOutputPreparation": {
+            "count": 512,
+            "totalMs": 0.13498900000092817
+          },
+          "workerResultTransport": {
+            "count": 512,
+            "totalMs": 67.76296100000006
+          },
+          "parentCollection": {
+            "count": 512,
+            "totalMs": 0.19352500000007922
+          },
+          "hostResultSettlement": {
+            "count": 512,
+            "totalMs": 1.0090670000000728
+          },
+          "parentSettlement": {
+            "count": 1,
+            "totalMs": 0.01153199999998833
+          }
+        }
+      ]
+    },
+    {
+      "enabled": false,
+      "samples": [
+        59.09294799999998,
+        48.03589100000005,
+        27.017610999999988,
+        31.75010800000001,
+        31.032145000000014,
+        28.057015999999976,
+        32.081278,
+        27.483833000000004
+      ],
+      "profiles": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    }
+  ],
+  "summary": [
+    {
+      "enabled": false,
+      "finalTwoMedianMs": 28.093053999999995
+    },
+    {
+      "enabled": true,
+      "finalTwoMedianMs": 29.18399549999998
+    },
+    {
+      "enabled": true,
+      "finalTwoMedianMs": 30.116285500000004
+    },
+    {
+      "enabled": false,
+      "finalTwoMedianMs": 29.7825555
+    }
+  ],
+  "host": {
+    "loop": {
+      "count": 500000,
+      "samples": [
+        5.926202999999987,
+        3.2877039999998487,
+        0.6385150000000976,
+        0.6534529999998995,
+        0.5755080000003545,
+        0.5774110000002111,
+        0.49276300000019546
+      ],
+      "medianMs": 0.6385150000000976
+    },
+    "descriptorPlain": {
+      "count": 500000,
+      "samples": [
+        4.427326999999877,
+        3.9475689999999304,
+        5.067674999999781,
+        2.924083000000337,
+        2.8267110000001594,
+        3.7217259999997623,
+        4.04433999999992
+      ],
+      "medianMs": 3.9475689999999304
+    },
+    "descriptorFrozen": {
+      "count": 500000,
+      "samples": [
+        28.06036200000017,
+        28.774688999999853,
+        28.06774600000017,
+        28.958082999999988,
+        28.33557699999983,
+        28.334004999999706,
+        31.797978000000057
+      ],
+      "medianMs": 28.33557699999983
+    },
+    "numericTriple": {
+      "count": 500000,
+      "samples": [
+        1.5726439999998547,
+        1.078117999999904,
+        1.0275539999997818,
+        1.0390959999999723,
+        0.5201130000000376,
+        0.5334079999997812,
+        0.5201139999999214
+      ],
+      "medianMs": 1.0275539999997818
+    },
+    "uuid": {
+      "count": 100000,
+      "samples": [
+        26.458504000000175,
+        24.83880199999976,
+        21.94660900000008,
+        21.780277000000297,
+        20.368085000000065,
+        20.483890999999858,
+        20.784684000000198
+      ],
+      "medianMs": 21.780277000000297
+    },
+    "mapInsertDelete": {
+      "count": 500000,
+      "samples": [
+        38.90664400000014,
+        38.8835509999999,
+        39.16417599999977,
+        38.74834800000008,
+        39.10291099999995,
+        39.07376699999986,
+        38.99155299999984
+      ],
+      "medianMs": 38.99155299999984
+    },
+    "promiseConstruction": {
+      "count": 100000,
+      "samples": [
+        7.547147000000223,
+        4.137274000000161,
+        4.890394000000015,
+        6.27261099999987,
+        4.692984000000251,
+        4.9024460000000545,
+        6.208231000000069
+      ],
+      "medianMs": 4.9024460000000545
+    },
+    "abortListenerLifecycle": {
+      "count": 100000,
+      "samples": [
+        36.86884000000009,
+        36.156876999999895,
+        36.925996999999825,
+        35.854721000000154,
+        36.48229600000013,
+        36.60389299999997,
+        36.5434409999998
+      ],
+      "medianMs": 36.5434409999998
+    }
+  }
+}

@@ -30,6 +30,10 @@ import type { PjsTask, TaskDescriptor } from './tasks/registry.js';
 import type { PendingTask } from './tasks/task.js';
 import { reserveTransfers, snapshotTransferList } from './tasks/transfer.js';
 import { Metrics } from './telemetry/metrics.js';
+import {
+  internalProfilingEnabled,
+  recordInternalProfile,
+} from './telemetry/profile.js';
 import type {
   RunOptions,
   RuntimeState,
@@ -37,7 +41,11 @@ import type {
   TaskSnapshot,
 } from './types/index.js';
 import type { PjsWorker } from './workers/worker.js';
-import type { TaskResultMessage } from './workers/protocol.js';
+import type {
+  BatchItemResult,
+  ExecutionResultMessage,
+  TaskResultMessage,
+} from './workers/protocol.js';
 
 export interface PjsRuntimeOptions {
   registry: PjsTaskRegistry;
@@ -88,6 +96,14 @@ export class PjsRuntime {
     cancelled: 0,
   };
   private admissionReservations = 0;
+  private readonly reservedWorkers = new Set<number>();
+  private readonly dispatchMetrics = {
+    executeMessages: 0,
+    resultMessages: 0,
+    batchedExecuteMessages: 0,
+    logicalTasks: 0,
+    logicalPartitions: 0,
+  };
   private pumping = false;
   private productionTick: ReturnType<typeof setImmediate> | undefined;
   private readonly readyPromise: Promise<void>;
@@ -135,7 +151,13 @@ export class PjsRuntime {
         ready: () => this.pump(),
         started: (worker, taskId) => {
           const task = this.tasks.get(taskId);
-          if (task) {
+          if (task?.batch) {
+            for (const item of task.batch) {
+              item.snapshot.status = 'running';
+              item.snapshot.startedAt = Date.now();
+              item.snapshot.workerId = worker.id;
+            }
+          } else if (task) {
             task.snapshot.status = 'running';
             task.snapshot.startedAt = Date.now();
             task.snapshot.workerId = worker.id;
@@ -203,12 +225,19 @@ export class PjsRuntime {
     let plan;
     let timeout: number | undefined;
     let signal: AbortSignal | undefined;
+    let dispatchBatchSize: number;
     try {
       plan = planRange(range);
       if (typeof createInput !== 'function')
         throw new TypeError('createInput must be a synchronous function');
       timeout = options.timeout;
       signal = options.signal;
+      dispatchBatchSize = integer(
+        'experimentalDispatchBatchSize',
+        options.experimentalDispatchBatchSize ?? 1,
+        1,
+        16,
+      );
       if (timeout !== undefined) integer('timeout', timeout, 1, 2 ** 31 - 1);
     } catch (error) {
       return reject(error as Error);
@@ -246,6 +275,7 @@ export class PjsRuntime {
         id,
         task as PjsTask<unknown, unknown>,
         plan,
+        dispatchBatchSize,
         createInput,
         timeout === undefined ? undefined : acceptedAt + timeout,
         (outputs) => resolve(outputs as Output[]),
@@ -308,6 +338,7 @@ export class PjsRuntime {
     input: Input,
     options: RunOptions,
     child?: PartitionChild,
+    deferred?: PendingTask[],
   ): Promise<Output> {
     const id = randomUUID();
     const reject = (error: Error): Promise<Output> => {
@@ -351,6 +382,15 @@ export class PjsRuntime {
       transferList = snapshotTransferList(
         options.transferList === undefined ? [] : options.transferList,
       );
+      if (
+        child &&
+        child.operation.dispatchBatchSize > 1 &&
+        transferList.length > 0
+      )
+        throw new PjsSerializationError(
+          'Batched partition dispatch does not accept input transfer lists; use batch size 1',
+          { taskId: id },
+        );
     } catch (cause) {
       return reject(
         new PjsSerializationError(
@@ -372,11 +412,14 @@ export class PjsRuntime {
         }),
       );
     const idle =
-      this.dispatchAllowed() && this.scheduler.size === 0
-        ? this.pool.idle()[0]
+      !deferred && this.dispatchAllowed() && this.scheduler.size === 0
+        ? this.idleWorkers()[0]
         : undefined;
     if (
-      (!idle && this.scheduler.size >= this.scheduler.capacity) ||
+      (!deferred &&
+        !idle &&
+        this.scheduler.size + this.admissionReservations >=
+          this.scheduler.capacity) ||
       (!child &&
         this.admissionReservations > 0 &&
         this.availableAdmission() <= 0)
@@ -470,7 +513,8 @@ export class PjsRuntime {
         }, options.timeout);
       pending.snapshot.status = 'queued';
       pending.snapshot.queuedAt = Date.now();
-      if (idle) {
+      if (deferred) deferred.push(pending);
+      else if (idle) {
         this.dispatch(idle, pending);
         this.pump();
       } else {
@@ -510,6 +554,13 @@ export class PjsRuntime {
         capacity: this.operationLimit,
       },
       partitions: { ...this.partitionMetrics },
+      dispatch: {
+        ...this.dispatchMetrics,
+        averageLogicalTasksPerExecute: this.dispatchMetrics.executeMessages
+          ? this.dispatchMetrics.logicalTasks /
+            this.dispatchMetrics.executeMessages
+          : 0,
+      },
       activeOperations: [...this.operations.values()].map((operation) => {
         let queued = 0,
           running = 0;
@@ -606,9 +657,16 @@ export class PjsRuntime {
     return (
       this.scheduler.capacity -
       this.scheduler.size +
-      (this.dispatchAllowed() ? this.pool.idle().length : 0) -
+      (this.dispatchAllowed() ? this.idleWorkers().length : 0) -
       this.admissionReservations
     );
+  }
+
+  private idleWorkers(): PjsWorker[] {
+    const idle = this.pool.idle();
+    return this.reservedWorkers.size === 0
+      ? idle
+      : idle.filter((worker) => !this.reservedWorkers.has(worker.id));
   }
 
   private childContext(child: PartitionChild) {
@@ -648,6 +706,7 @@ export class PjsRuntime {
     status: Exclude<OperationStatus, 'created' | 'running'>,
     error?: Error,
   ): void {
+    const profileStarted = internalProfilingEnabled() ? performance.now() : 0;
     if (operation.status !== 'running') return;
     operation.status = status;
     this.operations.delete(operation.id);
@@ -680,6 +739,11 @@ export class PjsRuntime {
     operation.outputs = [];
     if (error) operation.reject(error);
     else operation.resolve(outputs);
+    if (profileStarted)
+      recordInternalProfile(
+        'parentSettlement',
+        performance.now() - profileStarted,
+      );
   }
 
   private childSettled(
@@ -688,6 +752,7 @@ export class PjsRuntime {
     error?: Error,
     output?: unknown,
   ): void {
+    const profileStarted = internalProfilingEnabled() ? performance.now() : 0;
     const child = task.child!;
     const operation = child.operation;
     operation.children.delete(task.id);
@@ -702,13 +767,18 @@ export class PjsRuntime {
       if (operation.completed === operation.plan.chunkCount)
         this.finishOperation(operation, 'completed');
     }
+    if (profileStarted)
+      recordInternalProfile(
+        'parentCollection',
+        performance.now() - profileStarted,
+      );
   }
 
   private nextProducer(): PartitionOperation | undefined {
     for (const operation of this.operations.values()) {
       if (
         operation.generated < operation.plan.chunkCount &&
-        operation.children.size < this.workerCount
+        operation.children.size < this.workerCount * operation.dispatchBatchSize
       )
         return operation;
     }
@@ -716,68 +786,130 @@ export class PjsRuntime {
   }
 
   private producePartitions(): void {
-    // Bound synchronous factory work too; yield if immediate failures leave more producers.
-    for (
-      let produced = 0;
-      produced < this.workerCount &&
-      this.dispatchAllowed() &&
-      this.availableAdmission() > 0;
-      produced++
-    ) {
+    // Bound synchronous factory work to worker-count physical batches per turn.
+    for (let produced = 0; produced < this.workerCount; produced++) {
+      if (!this.dispatchAllowed()) break;
       const operation = this.nextProducer();
       if (!operation) break;
+      const idle =
+        this.scheduler.size === 0 ? this.idleWorkers()[0] : undefined;
+      const queueCapacity =
+        this.scheduler.capacity -
+        this.scheduler.size -
+        this.admissionReservations;
+      if (!idle && queueCapacity <= 0) break;
       this.operations.delete(operation.id);
       this.operations.set(operation.id, operation);
       if (this.expireOperation(operation)) continue;
-      const partition = partitionAt(operation.plan, operation.generated++);
-      this.partitionMetrics.generated++;
-      const child = { operation, partition };
-      this.admissionReservations++;
+      const target = Math.min(
+        operation.dispatchBatchSize,
+        operation.plan.chunkCount - operation.generated,
+        this.workerCount * operation.dispatchBatchSize -
+          operation.children.size,
+        idle ? operation.dispatchBatchSize : queueCapacity,
+      );
+      if (target < 1) continue;
+      if (idle) this.reservedWorkers.add(idle.id);
+      else this.admissionReservations += target;
+      const staged: PendingTask[] = [];
       try {
-        const prepared = operation.createInput!(partition);
-        if (
-          operation.status !== 'running' ||
-          !this.dispatchAllowed() ||
-          this.expireOperation(operation)
-        )
-          continue;
-        if (
-          prepared === null ||
-          typeof prepared !== 'object' ||
-          !('input' in prepared)
-        )
-          throw new TypeError(
-            'createInput must synchronously return { input, transferList? }',
-          );
-        const input = prepared.input;
-        const transferList = prepared.transferList;
-        if (
-          operation.status !== 'running' ||
-          !this.dispatchAllowed() ||
-          this.expireOperation(operation)
-        )
-          continue;
-        // Child outcomes notify the parent synchronously in settle/reject. No Promise list.
-        void this.submit(
-          operation.task,
-          input,
-          transferList === undefined ? {} : { transferList },
-          child,
-        ).catch(() => {});
-      } catch (cause) {
-        this.finishOperation(
-          operation,
-          'failed',
-          new PjsError(
-            `Partition input factory failed: ${serializeError(cause).message}`,
-            {
-              ...this.childContext(child),
-              cause,
-            },
-          ),
-        );
+        for (let index = 0; index < target; index++) {
+          if (
+            operation.status !== 'running' ||
+            !this.dispatchAllowed() ||
+            this.expireOperation(operation)
+          )
+            break;
+          const descriptorStarted = internalProfilingEnabled()
+            ? performance.now()
+            : 0;
+          const partition = partitionAt(operation.plan, operation.generated++);
+          if (descriptorStarted)
+            recordInternalProfile(
+              'descriptorCreation',
+              performance.now() - descriptorStarted,
+            );
+          this.partitionMetrics.generated++;
+          const child = { operation, partition };
+          try {
+            const factoryStarted = internalProfilingEnabled()
+              ? performance.now()
+              : 0;
+            const prepared = operation.createInput!(partition);
+            if (factoryStarted)
+              recordInternalProfile(
+                'factory',
+                performance.now() - factoryStarted,
+              );
+            if (
+              operation.status !== 'running' ||
+              !this.dispatchAllowed() ||
+              this.expireOperation(operation)
+            )
+              break;
+            if (
+              prepared === null ||
+              typeof prepared !== 'object' ||
+              !('input' in prepared)
+            )
+              throw new TypeError(
+                'createInput must synchronously return { input, transferList? }',
+              );
+            const input = prepared.input;
+            const transferList = prepared.transferList;
+            if (
+              operation.status !== 'running' ||
+              !this.dispatchAllowed() ||
+              this.expireOperation(operation)
+            )
+              break;
+            const admissionStarted = internalProfilingEnabled()
+              ? performance.now()
+              : 0;
+            const submitted = this.submit(
+              operation.task,
+              input,
+              transferList === undefined ? {} : { transferList },
+              child,
+              staged,
+            );
+            if (admissionStarted)
+              recordInternalProfile(
+                'childAdmission',
+                performance.now() - admissionStarted,
+              );
+            void submitted.catch(() => {});
+          } catch (cause) {
+            this.finishOperation(
+              operation,
+              'failed',
+              new PjsError(
+                `Partition input factory failed: ${serializeError(cause).message}`,
+                {
+                  ...this.childContext(child),
+                  cause,
+                },
+              ),
+            );
+            break;
+          }
+        }
+        const live = staged.filter((task) => this.tasks.has(task.id));
+        if (live.length > 0) {
+          const leader = live[0]!;
+          leader.batch = live;
+          Object.assign(leader, { admissionWeight: live.length });
+          for (const task of live) task.batchLeaderId = leader.id;
+          if (idle) this.dispatch(idle, leader);
+          else {
+            this.admissionReservations -= target;
+            this.scheduler.enqueue(leader);
+          }
+        }
       } finally {
-        this.admissionReservations--;
+        if (idle) this.reservedWorkers.delete(idle.id);
+        else if (this.admissionReservations >= target)
+          this.admissionReservations -= target;
       }
     }
     if (
@@ -813,8 +945,8 @@ export class PjsRuntime {
   }
 
   private dispatchQueued(): void {
-    for (const worker of this.pool.idle()) {
-      while (this.dispatchAllowed() && worker.snapshot().status === 'idle') {
+    for (const worker of this.idleWorkers()) {
+      while (this.dispatchAllowed() && worker.status === 'idle') {
         const task = this.scheduler.next(worker.snapshot());
         if (!task) break;
         this.dispatch(worker, task);
@@ -823,22 +955,58 @@ export class PjsRuntime {
   }
 
   private dispatch(worker: PjsWorker, task: PendingTask): void {
-    task.snapshot.status = 'scheduled';
-    task.snapshot.scheduledAt = Date.now();
-    task.snapshot.workerId = worker.id;
-    this.metrics.scheduled(performance.now() - task.admittedAt);
+    const items = task.batch;
+    const scheduledAt = Date.now();
+    const monotonicNow = performance.now();
+    if (items) {
+      for (const item of items) {
+        item.snapshot.status = 'scheduled';
+        item.snapshot.scheduledAt = scheduledAt;
+        item.snapshot.workerId = worker.id;
+        this.metrics.scheduled(monotonicNow - item.admittedAt);
+      }
+    } else {
+      task.snapshot.status = 'scheduled';
+      task.snapshot.scheduledAt = scheduledAt;
+      task.snapshot.workerId = worker.id;
+      this.metrics.scheduled(monotonicNow - task.admittedAt);
+    }
     try {
-      worker.execute(
-        task.id,
-        task.snapshot.taskName,
-        task.input,
-        task.transferList,
-      );
+      if (items && items.length > 1)
+        worker.executeBatch(
+          task.id,
+          task.snapshot.taskName,
+          items.map((item) => ({ taskId: item.id, input: item.input })),
+        );
+      else
+        worker.execute(
+          task.id,
+          task.snapshot.taskName,
+          task.input,
+          task.transferList,
+          Boolean(task.child && internalProfilingEnabled()),
+        );
+      this.dispatchMetrics.executeMessages++;
+      this.dispatchMetrics.logicalTasks += items?.length ?? 1;
+      this.dispatchMetrics.logicalPartitions += items
+        ? items.reduce((count, item) => count + (item.child ? 1 : 0), 0)
+        : task.child
+          ? 1
+          : 0;
+      if (items && items.length > 1)
+        this.dispatchMetrics.batchedExecuteMessages++;
     } catch (error) {
       this.settle(task, 'failed', error as Error);
     } finally {
-      task.input = undefined;
-      this.releaseTransfers(task);
+      if (items) {
+        for (const item of items) {
+          item.input = undefined;
+          this.releaseTransfers(item);
+        }
+      } else {
+        task.input = undefined;
+        this.releaseTransfers(task);
+      }
     }
   }
 
@@ -848,7 +1016,24 @@ export class PjsRuntime {
     task.transferList = [];
   }
 
-  private result(worker: PjsWorker, message: TaskResultMessage): void {
+  private result(worker: PjsWorker, message: ExecutionResultMessage): void {
+    const profileStarted = message.profile ? performance.now() : 0;
+    this.dispatchMetrics.resultMessages++;
+    if (message.type === 'batchResult') {
+      for (const item of message.items) this.resultItem(worker, item);
+    } else this.resultItem(worker, message);
+    if (profileStarted)
+      recordInternalProfile(
+        'hostResultSettlement',
+        performance.now() - profileStarted,
+      );
+    this.pump();
+  }
+
+  private resultItem(
+    worker: PjsWorker,
+    message: TaskResultMessage | BatchItemResult,
+  ): void {
     this.metrics.executed(message.executionMs);
     const task = this.tasks.get(message.taskId);
     // Late results after cancellation/deadline free the worker without settling twice.
@@ -867,7 +1052,6 @@ export class PjsRuntime {
         this.settle(task, 'failed', error);
       }
     }
-    this.pump();
   }
 
   private settle(

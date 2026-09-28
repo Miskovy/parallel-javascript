@@ -2,18 +2,23 @@ import { Worker } from 'node:worker_threads';
 import { PjsSerializationError, PjsWorkerError } from '../errors/index.js';
 import type { TaskDescriptor } from '../tasks/registry.js';
 import { validateTransferList } from '../tasks/transfer.js';
+import {
+  internalProfilingEnabled,
+  recordInternalProfile,
+} from '../telemetry/profile.js';
 import type { WorkerState } from '../types/index.js';
 import { isWorkerMessage } from './protocol.js';
 import type {
+  BatchInput,
   BootstrapData,
+  ExecutionResultMessage,
   HostMessage,
-  TaskResultMessage,
 } from './protocol.js';
 
 export interface WorkerCallbacks {
   ready(worker: PjsWorker): void;
   started(worker: PjsWorker, taskId: string): void;
-  result(worker: PjsWorker, message: TaskResultMessage): void;
+  result(worker: PjsWorker, message: ExecutionResultMessage): void;
   failed(worker: PjsWorker, error: PjsWorkerError, wasStarting: boolean): void;
 }
 
@@ -26,6 +31,7 @@ export class PjsWorker {
   private rejectReady!: (error: Error) => void;
   private stopPromise: Promise<void> | undefined;
   private executionPhase: 'none' | 'scheduled' | 'running' = 'none';
+  private currentTaskIds: string[] = [];
 
   constructor(
     readonly id: number,
@@ -40,7 +46,7 @@ export class PjsWorker {
     // A replacement can fail before the pool attaches a readiness waiter.
     void this.ready.catch(() => {});
     this.thread = new Worker(new URL('./bootstrap.js', import.meta.url), {
-      workerData: { version: 1, tasks } satisfies BootstrapData,
+      workerData: { version: 2, tasks } satisfies BootstrapData,
     });
     this.state = {
       id,
@@ -71,11 +77,17 @@ export class PjsWorker {
     return { ...this.state };
   }
 
+  /** Internal hot-path state check; public snapshots remain defensive copies. */
+  get status(): WorkerState['status'] {
+    return this.state.status;
+  }
+
   execute(
     taskId: string,
     taskName: string,
     input: unknown,
     transferList: readonly ArrayBuffer[] = [],
+    profile = false,
   ): void {
     if (this.state.status !== 'idle')
       throw new PjsWorkerError('Worker is not idle', {
@@ -87,18 +99,32 @@ export class PjsWorker {
     this.executionPhase = 'scheduled';
     try {
       validateTransferList(transferList);
-      this.thread.postMessage(
-        {
-          type: 'execute',
-          taskId,
-          taskName,
-          input,
-        } satisfies HostMessage,
-        transferList,
-      );
+      const postStarted = profile ? performance.now() : 0;
+      if (profile)
+        this.thread.postMessage(
+          {
+            type: 'execute',
+            taskId,
+            taskName,
+            input,
+            profile: true,
+          } satisfies HostMessage,
+          transferList,
+        );
+      else
+        this.thread.postMessage(
+          { type: 'execute', taskId, taskName, input } satisfies HostMessage,
+          transferList,
+        );
+      if (profile)
+        recordInternalProfile(
+          'hostPostMessage',
+          performance.now() - postStarted,
+        );
     } catch (cause) {
       this.state.status = 'idle';
       delete this.state.currentTaskId;
+      this.currentTaskIds = [];
       this.executionPhase = 'none';
       throw new PjsSerializationError(
         `Task input could not be serialized: ${cause instanceof Error ? cause.message : 'unknown cause'}`,
@@ -107,6 +133,48 @@ export class PjsWorker {
           workerId: this.id,
           cause,
         },
+      );
+    }
+  }
+
+  executeBatch(batchId: string, taskName: string, items: BatchInput[]): void {
+    if (this.state.status !== 'idle')
+      throw new PjsWorkerError('Worker is not idle', {
+        taskId: batchId,
+        workerId: this.id,
+      });
+    if (items.length < 2)
+      throw new PjsWorkerError('A physical batch requires multiple items', {
+        taskId: batchId,
+        workerId: this.id,
+      });
+    this.state.status = 'busy';
+    this.state.currentTaskId = batchId;
+    this.currentTaskIds = items.map((item) => item.taskId);
+    this.executionPhase = 'scheduled';
+    try {
+      const profile = internalProfilingEnabled();
+      const postStarted = profile ? performance.now() : 0;
+      this.thread.postMessage({
+        type: 'executeBatch',
+        batchId,
+        taskName,
+        items,
+        ...(profile ? { profile: true } : {}),
+      } satisfies HostMessage);
+      if (profile)
+        recordInternalProfile(
+          'hostPostMessage',
+          performance.now() - postStarted,
+        );
+    } catch (cause) {
+      this.state.status = 'idle';
+      delete this.state.currentTaskId;
+      this.currentTaskIds = [];
+      this.executionPhase = 'none';
+      throw new PjsSerializationError(
+        `Batch input could not be serialized: ${cause instanceof Error ? cause.message : 'unknown cause'}`,
+        { taskId: batchId, workerId: this.id, cause },
       );
     }
   }
@@ -121,6 +189,7 @@ export class PjsWorker {
       this.thread.postMessage({ type: 'shutdown' } satisfies HostMessage);
     this.state.status = 'stopped';
     delete this.state.currentTaskId;
+    this.currentTaskIds = [];
     this.stopPromise = this.thread.terminate().then(() => {
       this.thread.removeAllListeners();
     });
@@ -149,11 +218,13 @@ export class PjsWorker {
       this.callbacks.ready(this);
       return;
     }
+    const correlationId =
+      value.type === 'batchResult' ? value.batchId : value.taskId;
     if (
       this.state.status !== 'busy' ||
-      this.state.currentTaskId !== value.taskId
+      this.state.currentTaskId !== correlationId
     ) {
-      this.fail(`Unexpected task message for ${value.taskId}`);
+      this.fail(`Unexpected task message for ${correlationId}`);
       return;
     }
     if (value.type === 'started') {
@@ -169,12 +240,57 @@ export class PjsWorker {
       this.fail('Task result arrived before start');
       return;
     }
+    if (value.type === 'batchResult') {
+      const ids = [
+        ...value.items.map((item) => item.taskId),
+        ...value.skippedTaskIds,
+      ];
+      const failureIndex = value.items.findIndex(
+        (item) => item.type === 'failure',
+      );
+      if (
+        ids.length !== this.currentTaskIds.length ||
+        new Set(ids).size !== ids.length ||
+        ids.some((id, index) => id !== this.currentTaskIds[index]) ||
+        value.items.filter((item) => item.type === 'failure').length > 1 ||
+        (failureIndex >= 0 && failureIndex !== value.items.length - 1) ||
+        (value.skippedTaskIds.length > 0 && failureIndex < 0)
+      ) {
+        this.fail('Invalid logical task correlation in batch result');
+        return;
+      }
+    }
     this.state.status = 'idle';
     delete this.state.currentTaskId;
+    this.currentTaskIds = [];
     this.executionPhase = 'none';
-    if (value.type === 'success') this.state.completedTasks++;
-    else this.state.failedTasks++;
-    this.state.totalExecutionTimeMs += value.executionMs;
+    if (value.type === 'batchResult') {
+      this.state.completedTasks += value.items.filter(
+        (item) => item.type === 'success',
+      ).length;
+      this.state.failedTasks += value.items.filter(
+        (item) => item.type === 'failure',
+      ).length;
+      this.state.totalExecutionTimeMs += value.items.reduce(
+        (total, item) => total + item.executionMs,
+        0,
+      );
+    } else {
+      if (value.type === 'success') this.state.completedTasks++;
+      else this.state.failedTasks++;
+      this.state.totalExecutionTimeMs += value.executionMs;
+    }
+    if (value.profile) {
+      recordInternalProfile('workerIngress', value.profile.workerIngressMs);
+      recordInternalProfile(
+        'workerOutputPreparation',
+        value.profile.outputPreparationMs,
+      );
+      recordInternalProfile(
+        'workerResultTransport',
+        Number(process.hrtime.bigint() - value.profile.postedAtNs) / 1e6,
+      );
+    }
     this.callbacks.result(this, value);
   }
 
@@ -185,6 +301,7 @@ export class PjsWorker {
     const taskId = this.state.currentTaskId;
     if (taskId) this.state.failedTasks++;
     this.state.status = 'failed';
+    this.currentTaskIds = [];
     clearTimeout(this.startupTimer);
     const error = new PjsWorkerError(message, {
       workerId: this.id,
