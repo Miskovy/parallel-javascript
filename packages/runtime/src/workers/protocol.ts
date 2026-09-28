@@ -25,6 +25,7 @@ export type HostMessage =
       taskName: string;
       input: unknown;
       profile?: boolean;
+      completionOnly?: boolean;
     }
   | {
       type: 'executeBatch';
@@ -32,6 +33,7 @@ export type HostMessage =
       taskName: string;
       items: BatchInput[];
       profile?: boolean;
+      completionOnly?: boolean;
     }
   | { type: 'shutdown' };
 export type TaskResultMessage =
@@ -39,6 +41,12 @@ export type TaskResultMessage =
       type: 'success';
       taskId: string;
       output: unknown;
+      executionMs: number;
+      profile?: InternalWorkerProfile;
+    }
+  | {
+      type: 'completed';
+      taskId: string;
       executionMs: number;
       profile?: InternalWorkerProfile;
     }
@@ -52,6 +60,7 @@ export type TaskResultMessage =
     };
 export type BatchItemResult =
   | { type: 'success'; taskId: string; output: unknown; executionMs: number }
+  | { type: 'completed'; taskId: string; executionMs: number }
   | {
       type: 'failure';
       taskId: string;
@@ -108,6 +117,7 @@ function result(value: unknown): value is BatchItemResult {
     return false;
   return (
     (value.type === 'success' && 'output' in value) ||
+    value.type === 'completed' ||
     (value.type === 'failure' &&
       error(value.error) &&
       (value.kind === 'task' || value.kind === 'serialization'))
@@ -139,6 +149,7 @@ export function isWorkerMessage(value: unknown): value is WorkerMessage {
     return false;
   return (
     (value.type === 'success' && 'output' in value && profile(value.profile)) ||
+    (value.type === 'completed' && profile(value.profile)) ||
     (value.type === 'failure' &&
       error(value.error) &&
       profile(value.profile) &&
@@ -150,7 +161,9 @@ export function isHostMessage(value: unknown): value is HostMessage {
   if (value.type === 'shutdown') return true;
   const common =
     typeof value.taskName === 'string' &&
-    (value.profile === undefined || typeof value.profile === 'boolean');
+    (value.profile === undefined || typeof value.profile === 'boolean') &&
+    (value.completionOnly === undefined ||
+      typeof value.completionOnly === 'boolean');
   if (value.type === 'execute')
     return common && typeof value.taskId === 'string' && 'input' in value;
   if (value.type !== 'executeBatch' || !common) return false;

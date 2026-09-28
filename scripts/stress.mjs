@@ -1,6 +1,6 @@
 import { spawnSync } from 'node:child_process';
 
-const rounds = Number(process.env.PJS_STRESS_ROUNDS ?? 5);
+const rounds = Number(process.env.PJS_STRESS_ROUNDS ?? 10);
 if (!Number.isSafeInteger(rounds) || rounds < 1)
   throw new Error('PJS_STRESS_ROUNDS must be a positive integer');
 for (let round = 1; round <= rounds; round++) {

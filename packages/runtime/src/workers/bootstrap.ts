@@ -82,6 +82,19 @@ async function handle(value: unknown): Promise<void> {
     if (!execute) throw new Error(`Unknown task ${value.taskName}`);
     const output = await execute(value.input);
     const executionMs = performance.now() - started;
+    if (value.completionOnly) {
+      send({
+        type: 'completed',
+        taskId: value.taskId,
+        executionMs,
+        ...(value.profile
+          ? {
+              profile: workerProfile(value.profile, workerIngressMs, 0)!,
+            }
+          : {}),
+      });
+      return;
+    }
     try {
       const preparationStarted = value.profile ? performance.now() : 0;
       const result = transferOutput(output);
@@ -164,6 +177,14 @@ async function executeBatch(
       if (!execute) throw new Error(`Unknown task ${value.taskName}`);
       const output = await execute(item.input);
       const executionMs = performance.now() - started;
+      if (value.completionOnly) {
+        items.push({
+          type: 'completed',
+          taskId: item.taskId,
+          executionMs,
+        });
+        continue;
+      }
       try {
         const preparationStarted = performance.now();
         const result = transferOutput(output);

@@ -105,6 +105,17 @@ Immutable compute input requires no Atomics in its read loop. Initialize before
 publication, then have no writers. Mutexes, barriers and semaphores are outside
 the public PJS API. The test-only controls do not change that scope.
 
+## Disjoint shared output
+
+v0.6 `parallelFor()` can receive an application-allocated SAB-backed output and
+write non-overlapping ranges without returning per-partition values. This is a
+mutable-output contract, distinct from `sharedReadonly()`: PJS does not make it
+safe automatically. Establish all sizes and input data before dispatch, assign
+each logical partition an exclusive region, and do not let the host read final
+results until the parent resolves. Overlapping writes require an explicit
+correct synchronization design. Cancellation, timeout, failure, and worker crash
+do not roll back writes that already happened.
+
 ## Costs and choice
 
 Sharing still costs allocation/copy at construction, metadata transport, worker

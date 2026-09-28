@@ -1,12 +1,15 @@
 # Experimental numeric range operations
 
 v0.4 added `runtime.partitionRange(task, range, createInput, options?)`; v0.5
-adds an experimental bounded transport batch option.
-It returns one promise of ordered chunk outputs. The API and its derived
-admission limits are experimental; no stable `parallel.for/map/reduce` family
-is exported. See the [v0.5 proposal](proposal-v0.5.md),
-[dispatch decision](adr/0010-dispatch-efficiency.md), and
-[batching decision](adr/0011-batched-partition-dispatch.md).
+added bounded transport batches; v0.6 adds
+`runtime.parallelFor(task, range, createInput, options?)` over the same engine.
+`partitionRange()` returns ordered chunk outputs. `parallelFor()` returns
+`Promise<void>` and discards task values before worker result transport. Both
+APIs and their derived admission limits remain experimental; no stable
+`parallel.for/map/reduce` family is exported. See the
+[v0.6 proposal](proposal-v0.6.md),
+[completion decision](adr/0012-completion-only-operations.md), and
+[async-context decision](adr/0013-async-resource-context.md).
 
 ## Reuse shared input
 
@@ -63,6 +66,24 @@ This example returns chunk sums; application aggregation is ordinary JavaScript.
 PJS does not define parallel reduction semantics. Never mutate shared input
 after publication, including while cancelled worker executions still access it.
 
+For completion-only work, the same task/factory model can expose results through
+a disjoint shared output:
+
+```ts
+await runtime.parallelFor(
+  transform,
+  { start: 0, end: output.length, grainSize: 10_000 },
+  (partition) => ({ input: { partition, input, output } }),
+  { experimentalDispatchBatchSize: 4 },
+);
+```
+
+The worker may return a value, but PJS ignores it without structured-cloning or
+transferring it. Prefer naturally `void` tasks. A returned transfer envelope is
+also ignored. Only disjoint writes or correctly synchronized access are safe;
+PJS provides no implicit mutex, rollback, or transaction. Completed writes stay
+visible after later failure, cancellation, or timeout.
+
 `grainSize` defines logical range boundaries. `experimentalDispatchBatchSize`
 only groups adjacent logical children into one worker round trip. Values are
 integers from 1 through 16; 1 preserves the v0.4 transport path. One batch runs
@@ -74,9 +95,11 @@ also increasing non-preemptive occupancy and reducing skew balancing.
 The domain is `[start, end)`, with safe integer endpoints, a safe integer span,
 `end >= start`, and a required positive safe integer `grainSize`. Negative
 endpoints are valid. Grain is the maximum width, independent of worker count;
-the last partition may be smaller. Empty ranges return `[]` without calling
-the factory. Descriptors are frozen `{ index, start, end }` values. More than
-2³²−1 outputs is rejected because the result is a JavaScript array.
+the last partition may be smaller. Empty collecting ranges return `[]`; empty
+completion ranges resolve `undefined`; neither calls the factory. Descriptors
+are frozen `{ index, start, end }` values. Collecting more than 2³²−1 outputs is
+rejected because the result is a JavaScript array. Completion ranges can use the
+full safe-integer logical count while production remains bounded.
 
 Factories must synchronously return `{ input, transferList? }`, finish their own
 work and remain short. They run only as capacity permits, once per generated
@@ -121,12 +144,13 @@ the chosen worker or logical queue credits, so reentrant ordinary work cannot
 steal capacity. Eligible parents rotate at production boundaries; continuously
 competing external submissions still have no formal fairness guarantee.
 
-These are task-count bounds, **not output-memory bounds**. Completed results
-are retained by logical index until success, so collecting millions of outputs
-can exhaust memory. The factory's captured data can also be large. Nothing
-allocates all descriptors, result slots, or child promises at acceptance.
-Streaming collection and a separate configurable operation limit remain open
-design questions.
+These are task-count bounds, **not output-memory bounds**. `partitionRange()`
+retains completed results by logical index until success, so collecting millions
+of outputs can exhaust memory. `parallelFor()` creates no indexed output array
+and successful worker values never reach the host. User task allocations and the
+factory's captured data can still be large. Neither mode allocates all
+descriptors or child promises at acceptance. Streaming collection remains an
+open design question.
 
 ## Failure, cancellation, deadlines and shutdown
 
@@ -166,14 +190,14 @@ General nested compute remains unsupported.
 
 ## Statistics
 
-| Namespace              | Meaning                                                                            |
-| ---------------------- | ---------------------------------------------------------------------------------- |
-| `tasks.*` and `timing` | Ordinary submissions plus actual admitted child tasks; existing definitions        |
-| `operations.*`         | Parent accepted/rejected/completed/failed/cancelled/timedOut, pending and capacity |
-| `partitions.*`         | Descriptors generated, children admitted, child caller completed/failed/cancelled  |
-| `dispatch.*`           | Physical execute/result messages plus logical task/partition totals and ratio      |
-| `activeOperations`     | Live range/progress snapshots; queued children and scheduled/running children      |
-| `activeTasks`          | Existing task snapshots plus optional operation/partition context                  |
+| Namespace              | Meaning                                                                           |
+| ---------------------- | --------------------------------------------------------------------------------- |
+| `tasks.*` and `timing` | Ordinary submissions plus actual admitted child tasks; existing definitions       |
+| `operations.*`         | Parent totals plus collecting/completion outcomes, pending and capacity           |
+| `partitions.*`         | Descriptors generated, children admitted, child caller completed/failed/cancelled |
+| `dispatch.*`           | Physical execute/result messages plus logical task/partition totals and ratio     |
+| `activeOperations`     | Live range/progress snapshots including collect/discard result mode               |
+| `activeTasks`          | Existing task snapshots plus optional operation/partition context                 |
 
 Generated can exceed admitted if a factory fails or cancellation intervenes.
 A parent timeout increments `operations.timedOut`; its pending children count

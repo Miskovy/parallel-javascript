@@ -88,6 +88,7 @@ export class PjsWorker {
     input: unknown,
     transferList: readonly ArrayBuffer[] = [],
     profile = false,
+    completionOnly = false,
   ): void {
     if (this.state.status !== 'idle')
       throw new PjsWorkerError('Worker is not idle', {
@@ -108,12 +109,19 @@ export class PjsWorker {
             taskName,
             input,
             profile: true,
+            ...(completionOnly ? { completionOnly: true } : {}),
           } satisfies HostMessage,
           transferList,
         );
       else
         this.thread.postMessage(
-          { type: 'execute', taskId, taskName, input } satisfies HostMessage,
+          {
+            type: 'execute',
+            taskId,
+            taskName,
+            input,
+            ...(completionOnly ? { completionOnly: true } : {}),
+          } satisfies HostMessage,
           transferList,
         );
       if (profile)
@@ -137,7 +145,12 @@ export class PjsWorker {
     }
   }
 
-  executeBatch(batchId: string, taskName: string, items: BatchInput[]): void {
+  executeBatch(
+    batchId: string,
+    taskName: string,
+    items: BatchInput[],
+    completionOnly = false,
+  ): void {
     if (this.state.status !== 'idle')
       throw new PjsWorkerError('Worker is not idle', {
         taskId: batchId,
@@ -161,6 +174,7 @@ export class PjsWorker {
         taskName,
         items,
         ...(profile ? { profile: true } : {}),
+        ...(completionOnly ? { completionOnly: true } : {}),
       } satisfies HostMessage);
       if (profile)
         recordInternalProfile(
@@ -266,7 +280,7 @@ export class PjsWorker {
     this.executionPhase = 'none';
     if (value.type === 'batchResult') {
       this.state.completedTasks += value.items.filter(
-        (item) => item.type === 'success',
+        (item) => item.type === 'success' || item.type === 'completed',
       ).length;
       this.state.failedTasks += value.items.filter(
         (item) => item.type === 'failure',
@@ -276,7 +290,8 @@ export class PjsWorker {
         0,
       );
     } else {
-      if (value.type === 'success') this.state.completedTasks++;
+      if (value.type === 'success' || value.type === 'completed')
+        this.state.completedTasks++;
       else this.state.failedTasks++;
       this.state.totalExecutionTimeMs += value.executionMs;
     }

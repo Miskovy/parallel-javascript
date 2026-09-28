@@ -1,0 +1,221 @@
+{
+  "version": "0.6.0",
+  "timestamp": "2026-09-28T17:08:05.647Z",
+  "methodology": {
+    "workers": 4,
+    "maxQueue": 8,
+    "logicalPartitionsPerParent": 128,
+    "ordinaryTasks": 128,
+    "trialsPerBatch": 3,
+    "timerIntervalMs": 1
+  },
+  "results": [
+    {
+      "batchSize": 1,
+      "trial": 0,
+      "firstSeenMs": [
+        6.849099999999993,
+        6.849099999999993,
+        7.606899999999996
+      ],
+      "terminalMs": {
+        "completion": 58.441900000000004,
+        "ordinary": 58.9529,
+        "collecting": 59.24260000000001
+      },
+      "completed": [
+        128,
+        128,
+        128
+      ],
+      "starvation": false,
+      "maxTimerDriftMs": 2.7854999999999848,
+      "eventLoopDelayMeanMs": 1.0550104615384615,
+      "eventLoopDelayMaxMs": 3.119103
+    },
+    {
+      "batchSize": 1,
+      "trial": 1,
+      "firstSeenMs": [
+        3.562000000000012,
+        4.682099999999991,
+        5.573399999999992
+      ],
+      "terminalMs": {
+        "completion": 53.324900000000014,
+        "collecting": 53.7251,
+        "ordinary": 54.08710000000002
+      },
+      "completed": [
+        128,
+        128,
+        128
+      ],
+      "starvation": false,
+      "maxTimerDriftMs": 1.9098000000000184,
+      "eventLoopDelayMeanMs": 1.0379896470588235,
+      "eventLoopDelayMaxMs": 2.912255
+    },
+    {
+      "batchSize": 1,
+      "trial": 2,
+      "firstSeenMs": [
+        4.284500000000037,
+        5.364100000000008,
+        5.364100000000008
+      ],
+      "terminalMs": {
+        "completion": 50.37760000000003,
+        "collecting": 50.69050000000004,
+        "ordinary": 51.11420000000004
+      },
+      "completed": [
+        128,
+        128,
+        128
+      ],
+      "starvation": false,
+      "maxTimerDriftMs": 2.605099999999993,
+      "eventLoopDelayMeanMs": 1.0779547826086955,
+      "eventLoopDelayMaxMs": 3.606527
+    },
+    {
+      "batchSize": 4,
+      "trial": 0,
+      "firstSeenMs": [
+        6.310299999999984,
+        8.138199999999983,
+        42.330799999999954
+      ],
+      "terminalMs": {
+        "completion": 41.632999999999925,
+        "collecting": 43.897899999999936,
+        "ordinary": 59.08949999999993
+      },
+      "completed": [
+        128,
+        128,
+        128
+      ],
+      "starvation": false,
+      "maxTimerDriftMs": 4.420099999999934,
+      "eventLoopDelayMeanMs": 1.2366024347826086,
+      "eventLoopDelayMaxMs": 5.419007
+    },
+    {
+      "batchSize": 4,
+      "trial": 1,
+      "firstSeenMs": [
+        4.471200000000067,
+        6.505700000000047,
+        34.952499999999986
+      ],
+      "terminalMs": {
+        "completion": 34.555900000000065,
+        "collecting": 35.71730000000002,
+        "ordinary": 52.75329999999997
+      },
+      "completed": [
+        128,
+        128,
+        128
+      ],
+      "starvation": false,
+      "maxTimerDriftMs": 1.5982999999999947,
+      "eventLoopDelayMeanMs": 1.061488,
+      "eventLoopDelayMaxMs": 2.596863
+    },
+    {
+      "batchSize": 4,
+      "trial": 2,
+      "firstSeenMs": [
+        5.635700000000043,
+        7.626099999999951,
+        35.4126
+      ],
+      "terminalMs": {
+        "completion": 34.11180000000002,
+        "collecting": 35.31089999999995,
+        "ordinary": 54.54549999999995
+      },
+      "completed": [
+        128,
+        128,
+        128
+      ],
+      "starvation": false,
+      "maxTimerDriftMs": 3.054100000000062,
+      "eventLoopDelayMeanMs": 1.070837551020408,
+      "eventLoopDelayMaxMs": 4.050943
+    },
+    {
+      "batchSize": 8,
+      "trial": 0,
+      "firstSeenMs": [
+        7.708600000000047,
+        10.155399999999986,
+        32.1644
+      ],
+      "terminalMs": {
+        "completion": 29.774599999999964,
+        "collecting": 32.79759999999999,
+        "ordinary": 48.310299999999984
+      },
+      "completed": [
+        128,
+        128,
+        128
+      ],
+      "starvation": false,
+      "maxTimerDriftMs": 4.684200000000033,
+      "eventLoopDelayMeanMs": 1.1000746666666668,
+      "eventLoopDelayMaxMs": 5.681151
+    },
+    {
+      "batchSize": 8,
+      "trial": 1,
+      "firstSeenMs": [
+        6.609100000000012,
+        7.2812000000000126,
+        35.99649999999997
+      ],
+      "terminalMs": {
+        "completion": 35.35900000000004,
+        "collecting": 38.19889999999998,
+        "ordinary": 53.45240000000001
+      },
+      "completed": [
+        128,
+        128,
+        128
+      ],
+      "starvation": false,
+      "maxTimerDriftMs": 3.610400000000027,
+      "eventLoopDelayMeanMs": 1.1246859130434783,
+      "eventLoopDelayMaxMs": 4.612095
+    },
+    {
+      "batchSize": 8,
+      "trial": 2,
+      "firstSeenMs": [
+        3.75850000000014,
+        8.328500000000076,
+        34.906400000000076
+      ],
+      "terminalMs": {
+        "completion": 33.197000000000116,
+        "collecting": 36.83310000000006,
+        "ordinary": 52.33770000000004
+      },
+      "completed": [
+        128,
+        128,
+        128
+      ],
+      "starvation": false,
+      "maxTimerDriftMs": 1.5195000000001073,
+      "eventLoopDelayMeanMs": 1.0572586666666668,
+      "eventLoopDelayMaxMs": 2.525183
+    }
+  ]
+}

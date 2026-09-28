@@ -1,8 +1,12 @@
 import { availableParallelism } from 'node:os';
 import { randomUUID } from 'node:crypto';
 import { isMainThread } from 'node:worker_threads';
-import { PartitionOperation } from './partition/operation.js';
-import type { PartitionChild, OperationStatus } from './partition/operation.js';
+import { RangeOperation } from './partition/operation.js';
+import type {
+  PartitionChild,
+  OperationStatus,
+  RangeResultMode,
+} from './partition/operation.js';
 import { planRange, partitionAt } from './partition/range.js';
 import type {
   PartitionRange,
@@ -79,7 +83,7 @@ export class PjsRuntime {
   private readonly pool: PjsPool;
   private readonly workerCount: number;
   private readonly operationLimit: number;
-  private readonly operations = new Map<string, PartitionOperation>();
+  private readonly operations = new Map<string, RangeOperation>();
   private readonly operationMetrics = {
     accepted: 0,
     rejected: 0,
@@ -87,6 +91,24 @@ export class PjsRuntime {
     failed: 0,
     cancelled: 0,
     timedOut: 0,
+  };
+  private readonly operationTypeMetrics = {
+    collecting: {
+      accepted: 0,
+      rejected: 0,
+      completed: 0,
+      failed: 0,
+      cancelled: 0,
+      timedOut: 0,
+    },
+    completion: {
+      accepted: 0,
+      rejected: 0,
+      completed: 0,
+      failed: 0,
+      cancelled: 0,
+      timedOut: 0,
+    },
   };
   private readonly partitionMetrics = {
     generated: 0,
@@ -209,10 +231,47 @@ export class PjsRuntime {
     createInput: (partition: RangePartition) => PartitionInput<Input>,
     options: PartitionOptions = {},
   ): Promise<Output[]> {
+    return this.startRangeOperation(
+      task,
+      range,
+      createInput,
+      options,
+      'collect',
+    ) as Promise<Output[]>;
+  }
+
+  /**
+   * @experimental Completion-only CPU work over a numeric range.
+   * Worker return values are ignored before result serialization.
+   */
+  parallelFor<Input>(
+    task: PjsTask<Input, unknown>,
+    range: PartitionRange,
+    createInput: (partition: RangePartition) => PartitionInput<Input>,
+    options: PartitionOptions = {},
+  ): Promise<void> {
+    return this.startRangeOperation(
+      task,
+      range,
+      createInput,
+      options,
+      'discard',
+    ) as Promise<void>;
+  }
+
+  private startRangeOperation<Input>(
+    task: PjsTask<Input, unknown>,
+    range: PartitionRange,
+    createInput: (partition: RangePartition) => PartitionInput<Input>,
+    options: PartitionOptions,
+    resultMode: RangeResultMode,
+  ): Promise<unknown[] | void> {
     const id = randomUUID();
     const acceptedAt = performance.now();
-    const reject = (error: Error): Promise<Output[]> => {
+    const kind = resultMode === 'collect' ? 'collecting' : 'completion';
+    const reject = (error: Error): Promise<never> => {
       this.operationMetrics.rejected++;
+      this.operationTypeMetrics[kind].rejected++;
       return Promise.reject(error);
     };
     if (!isMainThread)
@@ -227,7 +286,10 @@ export class PjsRuntime {
     let signal: AbortSignal | undefined;
     let dispatchBatchSize: number;
     try {
-      plan = planRange(range);
+      plan = planRange(
+        range,
+        resultMode === 'collect' ? 2 ** 32 - 1 : Number.MAX_SAFE_INTEGER,
+      );
       if (typeof createInput !== 'function')
         throw new TypeError('createInput must be a synchronous function');
       timeout = options.timeout;
@@ -270,20 +332,22 @@ export class PjsRuntime {
         ),
       );
 
-    return new Promise<Output[]>((resolve, reject) => {
-      const operation = new PartitionOperation(
+    return new Promise<unknown[] | void>((resolve, reject) => {
+      const operation = new RangeOperation(
         id,
         task as PjsTask<unknown, unknown>,
         plan,
         dispatchBatchSize,
+        resultMode,
         createInput,
         timeout === undefined ? undefined : acceptedAt + timeout,
-        (outputs) => resolve(outputs as Output[]),
+        resolve,
         reject,
       );
       operation.status = 'running';
       this.operations.set(id, operation);
       this.operationMetrics.accepted++;
+      this.operationTypeMetrics[kind].accepted++;
       const abort = () => {
         this.finishOperation(
           operation,
@@ -552,6 +616,18 @@ export class PjsRuntime {
         ...this.operationMetrics,
         pending: this.operations.size,
         capacity: this.operationLimit,
+        collecting: {
+          ...this.operationTypeMetrics.collecting,
+          pending: [...this.operations.values()].filter(
+            (operation) => operation.resultMode === 'collect',
+          ).length,
+        },
+        completion: {
+          ...this.operationTypeMetrics.completion,
+          pending: [...this.operations.values()].filter(
+            (operation) => operation.resultMode === 'discard',
+          ).length,
+        },
       },
       partitions: { ...this.partitionMetrics },
       dispatch: {
@@ -573,6 +649,7 @@ export class PjsRuntime {
           id: operation.id,
           taskName: operation.task.id,
           status: operation.status,
+          resultMode: operation.resultMode,
           ...operation.plan,
           generated: operation.generated,
           admitted: operation.admitted,
@@ -683,7 +760,7 @@ export class PjsRuntime {
     return Object.assign(error, this.childContext(child));
   }
 
-  private expireOperation(operation: PartitionOperation): boolean {
+  private expireOperation(operation: RangeOperation): boolean {
     if (operation.status !== 'running') return true;
     if (
       operation.deadline === undefined ||
@@ -702,7 +779,7 @@ export class PjsRuntime {
   }
 
   private finishOperation(
-    operation: PartitionOperation,
+    operation: RangeOperation,
     status: Exclude<OperationStatus, 'created' | 'running'>,
     error?: Error,
   ): void {
@@ -713,8 +790,15 @@ export class PjsRuntime {
     operation.cleanup();
     operation.cleanup = () => {};
     operation.createInput = undefined;
-    if (status === 'timed_out') this.operationMetrics.timedOut++;
-    else this.operationMetrics[status]++;
+    const kind =
+      operation.resultMode === 'collect' ? 'collecting' : 'completion';
+    if (status === 'timed_out') {
+      this.operationMetrics.timedOut++;
+      this.operationTypeMetrics[kind].timedOut++;
+    } else {
+      this.operationMetrics[status]++;
+      this.operationTypeMetrics[kind][status]++;
+    }
     // Set terminal state before cancelling siblings; their settlement is reentrant.
     for (const id of operation.children.keys()) {
       const task = this.tasks.get(id);
@@ -736,9 +820,10 @@ export class PjsRuntime {
         );
     }
     const outputs = operation.outputs;
-    operation.outputs = [];
-    if (error) operation.reject(error);
-    else operation.resolve(outputs);
+    operation.outputs = undefined;
+    if (error) operation.runInAsyncScope(operation.reject, undefined, error);
+    else operation.runInAsyncScope(operation.resolve, undefined, outputs);
+    operation.emitDestroy();
     if (profileStarted)
       recordInternalProfile(
         'parentSettlement',
@@ -763,7 +848,7 @@ export class PjsRuntime {
     if (error) {
       this.finishOperation(operation, 'failed', this.childError(error, child));
     } else if (!this.expireOperation(operation)) {
-      operation.outputs[child.partition.index] = output;
+      if (operation.outputs) operation.outputs[child.partition.index] = output;
       if (operation.completed === operation.plan.chunkCount)
         this.finishOperation(operation, 'completed');
     }
@@ -774,7 +859,7 @@ export class PjsRuntime {
       );
   }
 
-  private nextProducer(): PartitionOperation | undefined {
+  private nextProducer(): RangeOperation | undefined {
     for (const operation of this.operations.values()) {
       if (
         operation.generated < operation.plan.chunkCount &&
@@ -835,7 +920,11 @@ export class PjsRuntime {
             const factoryStarted = internalProfilingEnabled()
               ? performance.now()
               : 0;
-            const prepared = operation.createInput!(partition);
+            const prepared = operation.runInAsyncScope(
+              operation.createInput!,
+              undefined,
+              partition,
+            );
             if (factoryStarted)
               recordInternalProfile(
                 'factory',
@@ -977,6 +1066,7 @@ export class PjsRuntime {
           task.id,
           task.snapshot.taskName,
           items.map((item) => ({ taskId: item.id, input: item.input })),
+          task.child?.operation.resultMode === 'discard',
         );
       else
         worker.execute(
@@ -985,6 +1075,7 @@ export class PjsRuntime {
           task.input,
           task.transferList,
           Boolean(task.child && internalProfilingEnabled()),
+          task.child?.operation.resultMode === 'discard',
         );
       this.dispatchMetrics.executeMessages++;
       this.dispatchMetrics.logicalTasks += items?.length ?? 1;
@@ -1040,6 +1131,7 @@ export class PjsRuntime {
     if (task) {
       if (message.type === 'success')
         this.settle(task, 'completed', undefined, message.output);
+      else if (message.type === 'completed') this.settle(task, 'completed');
       else {
         const context = { taskId: task.id, workerId: worker.id };
         const error =

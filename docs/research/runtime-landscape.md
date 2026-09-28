@@ -110,3 +110,28 @@ transfers. The [proposal](../proposal-v0.5.md), [ADRs](../adr/0010-dispatch-effi
 and [measurement report](../benchmarks-v0.5.md) define the limits. Work stealing
 still lacks evidence: the fixed-width skew control instead shows that large
 contiguous batches can reduce dynamic balance.
+
+## v0.6 review: pay only for required results
+
+Reviewed 2026-09-28. Node worker messages cannot suppress serialization after a
+value has already been placed in `postMessage`; completion-only behavior must be
+chosen before worker result construction. PJS therefore marks completion
+executions and returns only task identity/timing after awaiting user code. This
+is materially different from collecting and discarding on the host.
+
+Node's worker-pool AsyncResource guidance is adopted at parent-operation scope.
+Host factories and settlement run in the captured scope, while worker isolates
+receive no implicit AsyncLocalStorage store. The retained micro-control supports
+avoiding one resource per child. See [ADR 0013](../adr/0013-async-resource-context.md).
+
+Rayon's structured parallel iterators and OpenMP worksharing remain useful
+algorithm references, but neither removes JavaScript isolate transport or
+shared-memory ownership requirements. v0.6 adds only an experimental numeric
+completion loop. Disjoint SAB output demonstrates a shared-memory algorithm
+without generalizing mutexes, transactions, map, or reduce.
+
+Piscina 5.3.2 is compared through a bounded manual producer whose benchmark task
+returns `undefined`; this is a fair minimal-result transport control, not an
+equivalent algorithm API. The evidence again favors explicit batching for very
+fine work and still does not justify work stealing or automatic grain/batch
+selection.

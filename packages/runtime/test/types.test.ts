@@ -84,3 +84,25 @@ runtime.partitionRange(task, range, (partition) => {
   partition.start = 10;
   return { input: data };
 });
+
+const completion: Promise<void> = runtime.parallelFor(
+  partitionTask,
+  range,
+  (partition) => ({ input: { partition, shared } }),
+  { timeout: 1000, experimentalDispatchBatchSize: 8 },
+);
+void completion;
+// Existing value-returning registered tasks are reusable; their values are discarded.
+const discardValue: Promise<void> = runtime.parallelFor(task, range, () => ({
+  input: data,
+}));
+void discardValue;
+// @ts-expect-error Task input typing applies to completion factories.
+runtime.parallelFor(task, range, () => ({ input: 'bad' }));
+// @ts-expect-error Completion payload factories must be synchronous.
+runtime.parallelFor(task, range, async () => ({ input: data }));
+runtime.parallelFor(sharedTask, range, () => ({
+  input: shared,
+  // @ts-expect-error Shared memory cannot enter a completion child transfer list.
+  transferList: [shared.buffer],
+}));

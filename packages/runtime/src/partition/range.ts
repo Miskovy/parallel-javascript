@@ -34,7 +34,10 @@ export interface RangePlan extends PartitionRange {
 }
 
 /** Validate without materializing any partitions or result slots. */
-export function planRange(range: PartitionRange): RangePlan {
+export function planRange(
+  range: PartitionRange,
+  maximumChunkCount = 2 ** 32 - 1,
+): RangePlan {
   const { start, end, grainSize } = range;
   if (!Number.isSafeInteger(start) || !Number.isSafeInteger(end) || end < start)
     throw new RangeError(
@@ -47,9 +50,9 @@ export function planRange(range: PartitionRange): RangePlan {
     throw new RangeError('grainSize must be a positive safe integer');
   const chunkCount =
     Math.floor(span / grainSize) + (span % grainSize === 0 ? 0 : 1);
-  if (chunkCount > 2 ** 32 - 1)
+  if (chunkCount > maximumChunkCount)
     throw new RangeError(
-      'Partition results exceed the maximum JavaScript array length',
+      'Range has more logical partitions than this operation can represent',
     );
   return Object.freeze({ start, end, grainSize, chunkCount });
 }

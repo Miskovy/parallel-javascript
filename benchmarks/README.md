@@ -74,3 +74,14 @@ isolated directory and run
 `node benchmarks/cpu-baseline/compare.mjs /path/to/built-v0.4`. The runner uses
 baseline/candidate/candidate/baseline order and writes
 `cpu-regression-v0.5.json`.
+
+## v0.6 completion-only ranges
+
+Run `npm run benchmark:completion` for collecting/completion comparisons,
+32 MiB output retention, disjoint shared vector and matrix output, CPU controls,
+event-loop measurements, a bounded Piscina completion harness, AsyncResource
+micro-controls, and mixed completion/collecting/ordinary fairness. See the
+[dedicated methodology](completion-only/README.md) and
+[measurement report](../docs/benchmarks-v0.6.md). Raw samples are retained in
+`results/completion-only-v0.6.json` and
+`results/completion-fairness-v0.6.json`; historical artifacts are unchanged.

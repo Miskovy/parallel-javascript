@@ -53,6 +53,55 @@ export async function range({
   return move ? transfer(result, [values.buffer]) : result;
 }
 
+export async function completion({
+  partition,
+  gate,
+  ms = 0,
+  fail = false,
+  crash = false,
+  counter,
+  input,
+  output,
+  matrixA,
+  matrixB,
+  matrixSize,
+  returnValue,
+}) {
+  if (counter) Atomics.add(new Int32Array(counter), partition.index, 1);
+  if (gate) {
+    const control = new Int32Array(gate);
+    Atomics.add(control, 0, 1);
+    Atomics.notify(control, 0);
+    while (!Atomics.load(control, 1)) {
+      if (Atomics.wait(control, 1, 0, 5000) === 'timed-out')
+        throw new Error('Completion gate was never released');
+    }
+  }
+  if (ms) await delay(ms);
+  if (crash) process.exit(23);
+  if (fail) throw new RangeError('completion deliberately failed');
+  if (input && output) {
+    for (let index = partition.start; index < partition.end; index++) {
+      const value = input[index];
+      output[index] = Math.sin(value) ** 2 + Math.cos(value) ** 2;
+    }
+  }
+  if (matrixA && matrixB && output && matrixSize) {
+    for (let row = partition.start; row < partition.end; row++) {
+      for (let column = 0; column < matrixSize; column++) {
+        let sum = 0;
+        for (let k = 0; k < matrixSize; k++)
+          sum +=
+            matrixA[row * matrixSize + k] * matrixB[k * matrixSize + column];
+        output[row * matrixSize + column] = sum;
+      }
+    }
+  }
+  if (returnValue === 'uncloneable') return () => partition.index;
+  if (returnValue === 'large') return new Uint8Array(1024 * 1024);
+  return returnValue;
+}
+
 export async function nested() {
   const registry = new PjsTaskRegistry();
   const task = registry.register('range', new URL(import.meta.url), 'range');
