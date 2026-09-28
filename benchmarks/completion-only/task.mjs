@@ -1,3 +1,5 @@
+import { transfer } from '@pjs/runtime';
+
 function burn(value, iterations) {
   let state = (value + 1) | 0;
   for (let index = 0; index < iterations; index++) {
@@ -15,6 +17,12 @@ function execute(input) {
     if (input.outputType === 'scalar') return partition.index;
     if (input.outputType === 'large')
       return new Uint8Array(input.outputBytes).fill(partition.index & 255);
+    if (input.outputType === 'large-transfer') {
+      const output = new Uint8Array(input.outputBytes).fill(
+        partition.index & 255,
+      );
+      return transfer(output, [output.buffer]);
+    }
   }
   if (input.kind === 'cpu') {
     const value = burn(partition.index, input.iterations);
@@ -31,6 +39,17 @@ function execute(input) {
         burn(index, input.iterations) * 0;
     }
     return partition.index;
+  }
+  if (input.kind === 'vector-private') {
+    const output = new Float64Array(partition.end - partition.start);
+    for (let index = partition.start; index < partition.end; index++) {
+      const value = input.source[index];
+      output[index - partition.start] =
+        Math.sin(value) * Math.sin(value) +
+        Math.cos(value) * Math.cos(value) +
+        burn(index, input.iterations) * 0;
+    }
+    return output;
   }
   if (input.kind === 'matrix-shared') {
     const { a, b, output, size } = input;

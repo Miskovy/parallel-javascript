@@ -116,6 +116,26 @@ results until the parent resolves. Overlapping writes require an explicit
 correct synchronization design. Cancellation, timeout, failure, and worker crash
 do not roll back writes that already happened.
 
+## Streamed results
+
+v0.7 `streamRange()` bounds retained host results by logical count. A result
+credit is reserved before its child is admitted, so completed buffered results
+plus unsettled children never exceed `experimentalMaxBufferedResults`. This is
+not a byte budget: one result can contain an arbitrarily large structured-clone
+graph.
+
+A transferred output buffer is worker-owned until posting, host-buffer-owned
+until iterator delivery, then consumer-owned. PJS drops its buffered reference
+after yield. Closing or failing the stream drops undelivered transferred values;
+ownership cannot be restored to the worker. Allocator and GC behavior can keep
+RSS high after references are dropped, so the logical retention bound is
+stronger than any promise of immediate process-memory release.
+
+SAB-backed views yield as ordinary shared views. Yielding neither transfers nor
+freezes their backing memory and adds no ordering guarantee. Producers and
+consumers must still use disjoint regions or Atomics where synchronization is
+required.
+
 ## Costs and choice
 
 Sharing still costs allocation/copy at construction, metadata transport, worker

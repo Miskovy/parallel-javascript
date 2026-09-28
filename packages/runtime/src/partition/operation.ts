@@ -1,10 +1,11 @@
 import { AsyncResource } from 'node:async_hooks';
 import type { PjsTask } from '../tasks/registry.js';
 import type { PartitionInput, RangePartition, RangePlan } from './range.js';
+import type { RangeStream } from './stream.js';
 
 export type OperationStatus =
   'created' | 'running' | 'completed' | 'failed' | 'cancelled' | 'timed_out';
-export type RangeResultMode = 'collect' | 'discard';
+export type RangeResultMode = 'collect' | 'discard' | 'stream';
 
 /** Host-owned state only. No worker slot and no preallocated child Promise list. */
 export class RangeOperation extends AsyncResource {
@@ -24,6 +25,7 @@ export class RangeOperation extends AsyncResource {
     readonly plan: RangePlan,
     readonly dispatchBatchSize: number,
     readonly resultMode: RangeResultMode,
+    readonly stream: RangeStream<unknown> | undefined,
     public createInput:
       ((partition: RangePartition) => PartitionInput<unknown>) | undefined,
     readonly deadline: number | undefined,

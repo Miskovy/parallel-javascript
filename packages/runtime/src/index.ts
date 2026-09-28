@@ -10,7 +10,9 @@ export type {
   RangePartition,
   PartitionInput,
   PartitionOptions,
+  StreamRangeOptions,
 } from './partition/range.js';
+export type { StreamRangeResult } from './partition/stream.js';
 export type {
   RunOptions,
   ShutdownOptions,

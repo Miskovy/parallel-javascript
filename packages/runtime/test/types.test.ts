@@ -8,6 +8,7 @@ import type {
   PjsTransfer,
   RangePartition,
   PartitionInput,
+  StreamRangeResult,
 } from '../dist/index.js';
 
 const registry = new PjsTaskRegistry();
@@ -106,3 +107,17 @@ runtime.parallelFor(sharedTask, range, () => ({
   // @ts-expect-error Shared memory cannot enter a completion child transfer list.
   transferList: [shared.buffer],
 }));
+
+const stream: AsyncIterable<StreamRangeResult<number>> = runtime.streamRange(
+  partitionTask,
+  range,
+  (partition) => ({ input: { partition, shared } }),
+  {
+    timeout: 1000,
+    experimentalDispatchBatchSize: 4,
+    experimentalMaxBufferedResults: 8,
+  },
+);
+void stream;
+// @ts-expect-error Stream task input typing applies to every payload.
+runtime.streamRange(task, range, () => ({ input: 'bad' }));

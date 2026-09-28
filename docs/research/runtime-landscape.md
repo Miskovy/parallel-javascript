@@ -135,3 +135,31 @@ returns `undefined`; this is a fair minimal-result transport control, not an
 equivalent algorithm API. The evidence again favors explicit batching for very
 fine work and still does not justify work stealing or automatic grain/batch
 selection.
+
+## v0.7 review: bounded delivery before a map name
+
+Reviewed 2026-09-28. JavaScript `AsyncIterable` supplies incremental pull and
+standard iterator close behavior without adopting Node object streams or Web
+Stream adapters. PJS uses it only as the consumer surface; the range coordinator
+still owns worker admission, failure correlation, deadlines, and shutdown.
+
+`partitionRange()` already provides ordered, fully retained, one-result-per-
+partition semantics. Calling the same shape `parallelMapRange()` would imply
+element mapping even when grain is greater than one. Numeric element transforms
+also have a distinct efficient representation: reusable shared input, disjoint
+shared output, and `parallelFor()`. v0.7 therefore adds completion-order
+`streamRange()` and rejects a map alias pending an explicit block-flattening or
+element-output contract.
+
+The result high-water mark is separate from Piscina-style queue backpressure:
+one bounds future output retention and the other bounds waiting compute work.
+The Piscina 5.3.2 benchmark uses harness-side bounded producer loops for manual
+collection, incremental callbacks, and completion-only work. Piscina does not
+provide the same range `AsyncIterable` lifecycle, so those numbers compare
+transport techniques rather than API superiority.
+
+Severe slow-first skew confirms the ordered-stream tradeoff: completion-order
+delivery exposes fast results immediately, while userland ordering can retain
+nearly the full logical result set outside the runtime's buffer. This evidence
+supports one ordering mode. It does not justify work stealing, automatic
+grain/batch selection, reduce, or cooperative cancellation.

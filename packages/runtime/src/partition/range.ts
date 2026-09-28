@@ -29,6 +29,12 @@ export interface PartitionOptions {
   experimentalDispatchBatchSize?: number;
 }
 
+/** @experimental Completion-order stream delivery options. */
+export interface StreamRangeOptions extends PartitionOptions {
+  /** Logical results retained or reserved in-flight for this stream. */
+  experimentalMaxBufferedResults?: number;
+}
+
 export interface RangePlan extends PartitionRange {
   chunkCount: number;
 }

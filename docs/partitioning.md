@@ -1,15 +1,16 @@
 # Experimental numeric range operations
 
 v0.4 added `runtime.partitionRange(task, range, createInput, options?)`; v0.5
-added bounded transport batches; v0.6 adds
-`runtime.parallelFor(task, range, createInput, options?)` over the same engine.
-`partitionRange()` returns ordered chunk outputs. `parallelFor()` returns
-`Promise<void>` and discards task values before worker result transport. Both
-APIs and their derived admission limits remain experimental; no stable
+added bounded transport batches; v0.6 added completion-only `parallelFor()`;
+v0.7 adds bounded completion-order `streamRange()` over the same engine.
+`partitionRange()` returns ordered chunk outputs, `parallelFor()` returns
+`Promise<void>` without transporting successful values, and `streamRange()`
+returns an `AsyncIterable` of identified partition outputs. All three APIs and
+their derived admission limits remain experimental; no stable
 `parallel.for/map/reduce` family is exported. See the
-[v0.6 proposal](proposal-v0.6.md),
+[v0.7 proposal](proposal-v0.7.md),
 [completion decision](adr/0012-completion-only-operations.md), and
-[async-context decision](adr/0013-async-resource-context.md).
+[stream decision](adr/0014-streaming-result-semantics.md).
 
 ## Reuse shared input
 
@@ -84,6 +85,28 @@ also ignored. Only disjoint writes or correctly synchronized access are safe;
 PJS provides no implicit mutex, rollback, or transaction. Completed writes stay
 visible after later failure, cancellation, or timeout.
 
+For incremental results, consume completion order explicitly:
+
+```ts
+for await (const { partition, output } of runtime.streamRange(
+  transformBlock,
+  { start: 0, end: input.length, grainSize: 10_000 },
+  (partition) => ({ input: { partition, input } }),
+  {
+    timeout: 5_000,
+    experimentalDispatchBatchSize: 4,
+    experimentalMaxBufferedResults: 8,
+  },
+)) {
+  consume(partition, output);
+}
+```
+
+Partition identity is mandatory because delivery is not index ordered. Breaking
+the loop cancels unconsumed work. If the task returns a transferred buffer, the
+consumer owns it after yield. Userland can reorder or collect results, but doing
+so owns the corresponding retention cost.
+
 `grainSize` defines logical range boundaries. `experimentalDispatchBatchSize`
 only groups adjacent logical children into one worker round trip. Values are
 integers from 1 through 16; 1 preserves the v0.4 transport path. One batch runs
@@ -96,7 +119,7 @@ The domain is `[start, end)`, with safe integer endpoints, a safe integer span,
 `end >= start`, and a required positive safe integer `grainSize`. Negative
 endpoints are valid. Grain is the maximum width, independent of worker count;
 the last partition may be smaller. Empty collecting ranges return `[]`; empty
-completion ranges resolve `undefined`; neither calls the factory. Descriptors
+completion ranges resolve `undefined`; empty streams end immediately; none call the factory. Descriptors
 are frozen `{ index, start, end }` values. Collecting more than 2³²−1 outputs is
 rejected because the result is a JavaScript array. Completion ranges can use the
 full safe-integer logical count while production remains bounded.
@@ -149,8 +172,14 @@ retains completed results by logical index until success, so collecting millions
 of outputs can exhaust memory. `parallelFor()` creates no indexed output array
 and successful worker values never reach the host. User task allocations and the
 factory's captured data can still be large. Neither mode allocates all
-descriptors or child promises at acceptance. Streaming collection remains an
-open design question.
+descriptors or child promises at acceptance.
+
+`streamRange()` adds a separate positive logical-result bound,
+`experimentalMaxBufferedResults`, defaulting to the worker count. Each admitted
+unsettled child reserves one result credit. Buffered results plus such children
+cannot exceed the capacity, including when a physical batch contains multiple
+items. Reading releases a credit and production resumes. The count does not
+estimate bytes, and application-side reordering or collection is outside it.
 
 ## Failure, cancellation, deadlines and shutdown
 
@@ -164,8 +193,15 @@ context. Factory exceptions become local `PjsError` with the original cause.
 Serialization and crash errors retain their existing classes. There are no
 automatic retries or worker termination on ordinary task failure.
 
+Collection exposes no successful array on failure. Streaming is intentionally
+different: values already yielded remain observable and cannot be rolled back;
+buffered values are discarded, future production stops, and subsequent
+iteration rejects. Earlier successful items in a failing physical batch may
+therefore have reached the consumer before the first failing item terminates the
+stream.
+
 One signal and deadline cover startup, capacity waiting, factory work, queueing,
-execution and collection. Timeout is never reset per chunk. Synchronous host
+execution, buffering, and stream consumer waiting. Timeout is never reset per chunk. Synchronous host
 code cannot be preempted; elapsed time is checked at production/settlement
 boundaries in addition to the timer. The first observed terminal reason wins.
 
@@ -179,8 +215,9 @@ No logical item is retried because the host cannot know which side effects ran.
 Malformed batch correlation fails the worker safely.
 
 Graceful shutdown closes public admission and finishes the **entire accepted
-range**, including chunks not yet generated. It waits for cancelled executions
-too. `shutdown({ drain: false })` cancels parents and terminates workers under
+range**, including chunks not yet generated. For streams it also waits for every
+result to be consumed; close an abandoned iterator to avoid an indefinite drain.
+It waits for cancelled executions too. `shutdown({ drain: false })` cancels parents and terminates workers under
 the existing shutdown rules. The first shutdown call fixes the mode. Large
 ranges or uncooperative tasks can keep graceful shutdown waiting indefinitely.
 
@@ -193,10 +230,12 @@ General nested compute remains unsupported.
 | Namespace              | Meaning                                                                           |
 | ---------------------- | --------------------------------------------------------------------------------- |
 | `tasks.*` and `timing` | Ordinary submissions plus actual admitted child tasks; existing definitions       |
-| `operations.*`         | Parent totals plus collecting/completion outcomes, pending and capacity           |
+| `operations.*`         | Parent totals plus collecting/completion/streaming outcomes, pending and capacity |
+| `streams.*`            | Streaming parent accepted/rejected/terminal outcomes and pending count            |
+| `streamResults.*`      | Produced/yielded/currently buffered/peak buffered logical result counts           |
 | `partitions.*`         | Descriptors generated, children admitted, child caller completed/failed/cancelled |
 | `dispatch.*`           | Physical execute/result messages plus logical task/partition totals and ratio     |
-| `activeOperations`     | Live range/progress snapshots including collect/discard result mode               |
+| `activeOperations`     | Live range/progress snapshots including result mode and stream buffer state       |
 | `activeTasks`          | Existing task snapshots plus optional operation/partition context                 |
 
 Generated can exceed admitted if a factory fails or cancellation intervenes.

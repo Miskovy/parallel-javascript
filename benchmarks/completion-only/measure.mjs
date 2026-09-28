@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { monitorEventLoopDelay, performance } from 'node:perf_hooks';
 import { availableParallelism } from 'node:os';
+import { setTimeout as delayConsumer } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
 import Piscina from 'piscina';
 import { PjsRuntime, PjsTaskRegistry, sharedReadonly } from '@pjs/runtime';
@@ -19,6 +20,10 @@ const {
   outputBytes = 0,
   size = logicalPartitions,
   iterations = 32,
+  consumerDelayMs = 0,
+  orderedConsumer = false,
+  collectStreamResults = false,
+  slowFirstIterations = 0,
 } = config;
 
 let runtime;
@@ -54,11 +59,12 @@ const partitions = Array.from({ length: chunks }, (_, index) => ({
 let source;
 let output;
 let matrix;
-if (kind === 'vector') {
+if (kind.startsWith('vector')) {
   source = sharedReadonly(
     Float64Array.from({ length: size }, (_, index) => index / 100),
   );
-  output = new Float64Array(new SharedArrayBuffer(source.byteLength));
+  if (kind === 'vector')
+    output = new Float64Array(new SharedArrayBuffer(source.byteLength));
 }
 if (kind.startsWith('matrix')) {
   const elements = size * size;
@@ -82,7 +88,10 @@ const createInput = (partition, completionOnly = false) => ({
     partition,
     outputType,
     outputBytes,
-    iterations,
+    iterations:
+      partition.index === 0 && slowFirstIterations
+        ? slowFirstIterations
+        : iterations,
     completionOnly,
     ...(source ? { source, output } : {}),
     ...(matrix
@@ -96,9 +105,10 @@ const createInput = (partition, completionOnly = false) => ({
   },
 });
 
-async function piscinaCompletion() {
+async function piscinaRange(onResult) {
   let next = 0;
   let dispatches = 0;
+  const results = mode === 'collecting' ? new Array(chunks) : undefined;
   await Promise.all(
     Array.from({ length: Math.min(workers, chunks) }, async () => {
       while (next < chunks) {
@@ -106,19 +116,28 @@ async function piscinaCompletion() {
         next += batchSize;
         const group = partitions.slice(start, start + batchSize);
         dispatches++;
-        if (group.length === 1)
-          await pool.run(createInput(group[0], true).input);
-        else
-          await pool.run({
-            batchItems: group.map(
-              (partition) => createInput(partition, true).input,
-            ),
-            completionOnly: true,
-          });
+        const completionOnly = mode === 'completion';
+        const value =
+          group.length === 1
+            ? await pool.run(createInput(group[0], completionOnly).input)
+            : await pool.run({
+                batchItems: group.map(
+                  (partition) => createInput(partition, completionOnly).input,
+                ),
+                completionOnly,
+              });
+        if (!completionOnly) {
+          const values = group.length === 1 ? [value] : value;
+          for (let index = 0; index < group.length; index++) {
+            const item = { partition: group[index], output: values[index] };
+            if (results) results[item.partition.index] = item.output;
+            if (onResult) await onResult(item);
+          }
+        }
       }
     }),
   );
-  return { results: undefined, dispatches };
+  return { results, dispatches };
 }
 
 async function sample() {
@@ -143,8 +162,19 @@ async function sample() {
   const started = performance.now();
   let results;
   let executeMessages;
+  let firstResultMs = null;
+  let peakBufferedResults = 0;
+  let delivered = 0;
   if (engine === 'piscina') {
-    ({ results, dispatches: executeMessages } = await piscinaCompletion());
+    ({ results, dispatches: executeMessages } = await piscinaRange(
+      mode === 'stream'
+        ? async () => {
+            firstResultMs ??= performance.now() - started;
+            delivered++;
+            if (consumerDelayMs) await delayConsumer(consumerDelayMs);
+          }
+        : undefined,
+    ));
   } else if (mode === 'completion') {
     await runtime.parallelFor(
       task,
@@ -152,6 +182,35 @@ async function sample() {
       createInput,
       { experimentalDispatchBatchSize: batchSize },
     );
+  } else if (mode === 'stream') {
+    results = collectStreamResults ? [] : undefined;
+    const pending = orderedConsumer ? new Map() : undefined;
+    let nextIndex = 0;
+    for await (const result of runtime.streamRange(
+      task,
+      { start: 0, end: size, grainSize },
+      createInput,
+      {
+        experimentalDispatchBatchSize: batchSize,
+        experimentalMaxBufferedResults: config.maxBufferedResults ?? workers,
+      },
+    )) {
+      if (pending) {
+        pending.set(result.partition.index, result.output);
+        while (pending.has(nextIndex)) {
+          firstResultMs ??= performance.now() - started;
+          results?.push(pending.get(nextIndex));
+          pending.delete(nextIndex++);
+          delivered++;
+        }
+        peakBufferedResults = Math.max(peakBufferedResults, pending.size);
+      } else {
+        firstResultMs ??= performance.now() - started;
+        results?.push(result.output);
+        delivered++;
+      }
+      if (consumerDelayMs) await delayConsumer(consumerDelayMs);
+    }
   } else {
     results = await runtime.partitionRange(
       task,
@@ -169,6 +228,11 @@ async function sample() {
   peakRssBytes = Math.max(peakRssBytes, process.memoryUsage().rss);
   if (runtime) {
     const after = runtime.stats();
+    if (mode === 'stream')
+      peakBufferedResults = Math.max(
+        peakBufferedResults,
+        after.streamResults.peakBuffered,
+      );
     executeMessages =
       after.dispatch.executeMessages - before.dispatch.executeMessages;
     assert.equal(
@@ -177,8 +241,12 @@ async function sample() {
     );
   }
   if (mode === 'collecting') assert.equal(results.length, chunks);
+  if (mode === 'stream') assert.equal(delivered, chunks);
   if (kind === 'vector')
     for (const value of output) assert.ok(Math.abs(value - 1) < 1e-12);
+  if (kind === 'vector-private')
+    for (const block of results)
+      for (const value of block) assert.ok(Math.abs(value - 1) < 1e-12);
   if (kind === 'matrix-private') {
     const assembled = new Float64Array(size * size);
     results.forEach((value, index) =>
@@ -207,14 +275,19 @@ async function sample() {
     peakRssBytes,
     executeMessages,
     resultMessages: executeMessages,
+    firstResultMs,
+    lastResultMs: wallMs,
+    peakBufferedResults,
     declaredSuccessfulOutputBytes:
       mode === 'completion' || engine === 'piscina'
         ? 0
-        : outputType === 'large'
+        : outputType === 'large' || outputType === 'large-transfer'
           ? outputBytes * chunks
           : kind === 'matrix-private'
             ? size * size * Float64Array.BYTES_PER_ELEMENT
-            : 0,
+            : kind === 'vector-private'
+              ? size * Float64Array.BYTES_PER_ELEMENT
+              : 0,
     eventLoopUtilization: elu.utilization,
     eventLoopDelayMeanMs: Number.isFinite(delay.mean) ? delay.mean / 1e6 : null,
     eventLoopDelayMaxMs: delay.max / 1e6,

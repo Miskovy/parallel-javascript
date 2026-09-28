@@ -13,7 +13,10 @@ import type {
   PartitionInput,
   PartitionOptions,
   RangePartition,
+  StreamRangeOptions,
 } from './partition/range.js';
+import { RangeStream } from './partition/stream.js';
+import type { StreamRangeResult } from './partition/stream.js';
 import { serializeError } from './workers/protocol.js';
 import {
   PjsError,
@@ -109,6 +112,19 @@ export class PjsRuntime {
       cancelled: 0,
       timedOut: 0,
     },
+    streaming: {
+      accepted: 0,
+      rejected: 0,
+      completed: 0,
+      failed: 0,
+      cancelled: 0,
+      timedOut: 0,
+    },
+  };
+  private readonly streamResultMetrics = {
+    produced: 0,
+    yielded: 0,
+    peakBuffered: 0,
   };
   private readonly partitionMetrics = {
     generated: 0,
@@ -259,16 +275,59 @@ export class PjsRuntime {
     ) as Promise<void>;
   }
 
+  /** @experimental Bounded completion-order delivery of partition results. */
+  streamRange<Input, Output>(
+    task: PjsTask<Input, Output>,
+    range: PartitionRange,
+    createInput: (partition: RangePartition) => PartitionInput<Input>,
+    options: StreamRangeOptions = {},
+  ): AsyncIterable<StreamRangeResult<Output>> {
+    let capacity: number;
+    try {
+      capacity = integer(
+        'experimentalMaxBufferedResults',
+        options.experimentalMaxBufferedResults ?? this.workerCount,
+        1,
+      );
+    } catch (error) {
+      this.operationMetrics.rejected++;
+      this.operationTypeMetrics.streaming.rejected++;
+      const failed = new RangeStream<Output>(1);
+      failed.fail(error as Error);
+      return failed;
+    }
+    const stream = new RangeStream<Output>(capacity);
+    const lifecycle = this.startRangeOperation(
+      task,
+      range,
+      createInput,
+      options,
+      'stream',
+      stream as RangeStream<unknown>,
+    );
+    void lifecycle.then(
+      () => stream.complete(),
+      (error: Error) => stream.fail(error),
+    );
+    return stream;
+  }
+
   private startRangeOperation<Input>(
     task: PjsTask<Input, unknown>,
     range: PartitionRange,
     createInput: (partition: RangePartition) => PartitionInput<Input>,
     options: PartitionOptions,
     resultMode: RangeResultMode,
+    stream?: RangeStream<unknown>,
   ): Promise<unknown[] | void> {
     const id = randomUUID();
     const acceptedAt = performance.now();
-    const kind = resultMode === 'collect' ? 'collecting' : 'completion';
+    const kind =
+      resultMode === 'collect'
+        ? 'collecting'
+        : resultMode === 'discard'
+          ? 'completion'
+          : 'streaming';
     const reject = (error: Error): Promise<never> => {
       this.operationMetrics.rejected++;
       this.operationTypeMetrics[kind].rejected++;
@@ -339,6 +398,7 @@ export class PjsRuntime {
         plan,
         dispatchBatchSize,
         resultMode,
+        stream,
         createInput,
         timeout === undefined ? undefined : acceptedAt + timeout,
         resolve,
@@ -348,6 +408,27 @@ export class PjsRuntime {
       this.operations.set(id, operation);
       this.operationMetrics.accepted++;
       this.operationTypeMetrics[kind].accepted++;
+      stream?.connect({
+        demand: () => {
+          if (operation.status !== 'running') return;
+          this.finishDeliveredStream(operation);
+          this.pump();
+        },
+        cancel: () => {
+          this.finishOperation(
+            operation,
+            'cancelled',
+            new PjsCancelledError(
+              'Range stream was closed by its consumer; active executions may still finish',
+              { operationId: operation.id },
+            ),
+          );
+          this.pump();
+        },
+        yielded: () => {
+          this.streamResultMetrics.yielded++;
+        },
+      });
       const abort = () => {
         this.finishOperation(
           operation,
@@ -628,6 +709,25 @@ export class PjsRuntime {
             (operation) => operation.resultMode === 'discard',
           ).length,
         },
+        streaming: {
+          ...this.operationTypeMetrics.streaming,
+          pending: [...this.operations.values()].filter(
+            (operation) => operation.resultMode === 'stream',
+          ).length,
+        },
+      },
+      streams: {
+        ...this.operationTypeMetrics.streaming,
+        pending: [...this.operations.values()].filter(
+          (operation) => operation.resultMode === 'stream',
+        ).length,
+      },
+      streamResults: {
+        ...this.streamResultMetrics,
+        buffered: [...this.operations.values()].reduce(
+          (count, operation) => count + (operation.stream?.buffered ?? 0),
+          0,
+        ),
       },
       partitions: { ...this.partitionMetrics },
       dispatch: {
@@ -658,6 +758,14 @@ export class PjsRuntime {
           completed: operation.completed,
           failed: operation.failed,
           cancelled: operation.cancelled,
+          ...(operation.stream
+            ? {
+                bufferedResults: operation.stream.buffered,
+                resultBufferCapacity: operation.stream.capacity,
+                producedResults: operation.stream.produced,
+                yieldedResults: operation.stream.yielded,
+              }
+            : {}),
         };
       }),
       activeTasks: [...this.tasks.values()].map((task): TaskSnapshot => ({
@@ -791,7 +899,11 @@ export class PjsRuntime {
     operation.cleanup = () => {};
     operation.createInput = undefined;
     const kind =
-      operation.resultMode === 'collect' ? 'collecting' : 'completion';
+      operation.resultMode === 'collect'
+        ? 'collecting'
+        : operation.resultMode === 'discard'
+          ? 'completion'
+          : 'streaming';
     if (status === 'timed_out') {
       this.operationMetrics.timedOut++;
       this.operationTypeMetrics[kind].timedOut++;
@@ -821,6 +933,8 @@ export class PjsRuntime {
     }
     const outputs = operation.outputs;
     operation.outputs = undefined;
+    if (error) operation.stream?.fail(error);
+    else operation.stream?.complete();
     if (error) operation.runInAsyncScope(operation.reject, undefined, error);
     else operation.runInAsyncScope(operation.resolve, undefined, outputs);
     operation.emitDestroy();
@@ -848,9 +962,24 @@ export class PjsRuntime {
     if (error) {
       this.finishOperation(operation, 'failed', this.childError(error, child));
     } else if (!this.expireOperation(operation)) {
-      if (operation.outputs) operation.outputs[child.partition.index] = output;
-      if (operation.completed === operation.plan.chunkCount)
+      if (operation.stream) {
+        operation.stream.push({ partition: child.partition, output });
+        this.streamResultMetrics.produced++;
+        this.streamResultMetrics.peakBuffered = Math.max(
+          this.streamResultMetrics.peakBuffered,
+          [...this.operations.values()].reduce(
+            (count, active) => count + (active.stream?.buffered ?? 0),
+            0,
+          ),
+        );
+      } else if (operation.outputs)
+        operation.outputs[child.partition.index] = output;
+      if (
+        operation.completed === operation.plan.chunkCount &&
+        operation.resultMode !== 'stream'
+      )
         this.finishOperation(operation, 'completed');
+      else this.finishDeliveredStream(operation);
     }
     if (profileStarted)
       recordInternalProfile(
@@ -859,11 +988,31 @@ export class PjsRuntime {
       );
   }
 
+  private finishDeliveredStream(operation: RangeOperation): boolean {
+    const stream = operation.stream;
+    if (
+      operation.status === 'running' &&
+      stream &&
+      operation.completed === operation.plan.chunkCount &&
+      stream.yielded === operation.plan.chunkCount
+    ) {
+      this.finishOperation(operation, 'completed');
+      return true;
+    }
+    return false;
+  }
+
   private nextProducer(): RangeOperation | undefined {
     for (const operation of this.operations.values()) {
       if (
         operation.generated < operation.plan.chunkCount &&
-        operation.children.size < this.workerCount * operation.dispatchBatchSize
+        operation.children.size <
+          this.workerCount * operation.dispatchBatchSize &&
+        (!operation.stream ||
+          operation.stream.capacity -
+            operation.stream.buffered -
+            operation.children.size >
+            0)
       )
         return operation;
     }
@@ -886,13 +1035,20 @@ export class PjsRuntime {
       this.operations.delete(operation.id);
       this.operations.set(operation.id, operation);
       if (this.expireOperation(operation)) continue;
-      const target = Math.min(
+      let target = Math.min(
         operation.dispatchBatchSize,
         operation.plan.chunkCount - operation.generated,
         this.workerCount * operation.dispatchBatchSize -
           operation.children.size,
         idle ? operation.dispatchBatchSize : queueCapacity,
       );
+      if (operation.stream)
+        target = Math.min(
+          target,
+          operation.stream.capacity -
+            operation.stream.buffered -
+            operation.children.size,
+        );
       if (target < 1) continue;
       if (idle) this.reservedWorkers.add(idle.id);
       else this.admissionReservations += target;

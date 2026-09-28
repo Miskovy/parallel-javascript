@@ -85,3 +85,26 @@ micro-controls, and mixed completion/collecting/ordinary fairness. See the
 [measurement report](../docs/benchmarks-v0.6.md). Raw samples are retained in
 `results/completion-only-v0.6.json` and
 `results/completion-fairness-v0.6.json`; historical artifacts are unchanged.
+
+## v0.7 bounded result streams
+
+Run `npm run benchmark:stream` for fresh-process 32 Ã— 1 MiB collection,
+completion, and fast/slow stream measurements; capacities 1/4/8; slow-first
+completion-order versus userland ordered delivery; stream-plus-collect versus
+`partitionRange()`; disjoint shared output; and bounded Piscina 5.3.2 manual
+collect/incremental/completion controls. See the
+[dedicated methodology](streaming/README.md) and
+[measurement report](../docs/benchmarks-v0.7.md).
+
+The runner records first and last result latency, wall/CPU time, sampled RSS,
+logical buffer occupancy, physical messages, event-loop delay/utilization, and
+timer drift. One warmup and three retained trials run per configuration with no
+outlier deletion or forced GC. `node benchmarks/streaming/fairness.mjs` records
+mixed slow/fast streams, ordinary `run()`, and `parallelFor()`.
+
+For the causal control, build committed v0.6 (`988ac16`) separately and run
+`node benchmarks/streaming/regression.mjs /path/to/built-v0.6`. It uses
+baseline/candidate/candidate/baseline process order for ordinary clone,
+transfer, shared, partition, and completion paths. Raw v0.7 files are
+`result-streaming-v0.7.json`, `stream-fairness-v0.7.json`, and
+`runtime-regression-v0.7.json`; historical artifacts are unchanged.

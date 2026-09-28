@@ -1,0 +1,132 @@
+{
+  "version": "0.7.0",
+  "timestamp": "2026-09-28T20:00:52.742Z",
+  "results": [
+    {
+      "capacity": 1,
+      "trial": 0,
+      "first": {
+        "slow": 6.8648000000000025,
+        "fast": 7.92519999999999,
+        "ordinary": 9.0522,
+        "parallel": 13.882299999999987
+      },
+      "slowCount": 64,
+      "fastCount": 64,
+      "wallMs": 803.007,
+      "starvation": false
+    },
+    {
+      "capacity": 1,
+      "trial": 1,
+      "first": {
+        "slow": 2.766599999999926,
+        "fast": 2.973899999999958,
+        "ordinary": 4.795499999999947,
+        "parallel": 9.548999999999978
+      },
+      "slowCount": 64,
+      "fastCount": 64,
+      "wallMs": 802.0384999999999,
+      "starvation": false
+    },
+    {
+      "capacity": 1,
+      "trial": 2,
+      "first": {
+        "slow": 4.090299999999843,
+        "fast": 4.341799999999921,
+        "ordinary": 7.700599999999895,
+        "parallel": 12.20900000000006
+      },
+      "slowCount": 64,
+      "fastCount": 64,
+      "wallMs": 827.0437999999999,
+      "starvation": false
+    },
+    {
+      "capacity": 4,
+      "trial": 0,
+      "first": {
+        "slow": 4.212399999999889,
+        "fast": 4.465500000000247,
+        "ordinary": 4.915599999999813,
+        "parallel": 11.748199999999997
+      },
+      "slowCount": 64,
+      "fastCount": 64,
+      "wallMs": 806.6196,
+      "starvation": false
+    },
+    {
+      "capacity": 4,
+      "trial": 1,
+      "first": {
+        "fast": 4.481299999999919,
+        "slow": 4.961800000000039,
+        "parallel": 14.948699999999917,
+        "ordinary": 15.101799999999912
+      },
+      "slowCount": 64,
+      "fastCount": 64,
+      "wallMs": 611.2983000000004,
+      "starvation": false
+    },
+    {
+      "capacity": 4,
+      "trial": 2,
+      "first": {
+        "slow": 3.768500000000131,
+        "fast": 4.673800000000483,
+        "ordinary": 5.090300000000752,
+        "parallel": 11.555700000000797
+      },
+      "slowCount": 64,
+      "fastCount": 64,
+      "wallMs": 550.2993000000006,
+      "starvation": false
+    },
+    {
+      "capacity": 8,
+      "trial": 0,
+      "first": {
+        "fast": 3.9882000000006883,
+        "slow": 4.171700000000783,
+        "parallel": 14.371100000000297,
+        "ordinary": 14.90480000000025
+      },
+      "slowCount": 64,
+      "fastCount": 64,
+      "wallMs": 764.7177000000001,
+      "starvation": false
+    },
+    {
+      "capacity": 8,
+      "trial": 1,
+      "first": {
+        "fast": 4.816299999999501,
+        "slow": 5.018399999999929,
+        "parallel": 15.855800000000272,
+        "ordinary": 16.156600000000253
+      },
+      "slowCount": 64,
+      "fastCount": 64,
+      "wallMs": 380.1806999999999,
+      "starvation": false
+    },
+    {
+      "capacity": 8,
+      "trial": 2,
+      "first": {
+        "slow": 3.7786999999998443,
+        "fast": 4.105099999999766,
+        "parallel": 15.348799999999756,
+        "ordinary": 15.881999999999607
+      },
+      "slowCount": 64,
+      "fastCount": 64,
+      "wallMs": 811.6269999999995,
+      "starvation": false
+    }
+  ]
+}

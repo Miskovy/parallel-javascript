@@ -1,7 +1,7 @@
 {
   "name": "pjs-workspace",
   "private": true,
-  "version": "0.6.0",
+  "version": "0.7.0",
   "license": "MIT",
   "type": "module",
   "workspaces": [
@@ -29,7 +29,8 @@
     "benchmark:piscina": "npm run build && node benchmarks/shared-memory/run.mjs piscina",
     "benchmark:partition": "npm run build && node benchmarks/partitioning/run.mjs",
     "benchmark:dispatch": "npm run build && node benchmarks/dispatch-efficiency/run.mjs",
-    "benchmark:completion": "npm run build && node benchmarks/completion-only/run.mjs && node benchmarks/completion-only/fairness.mjs"
+    "benchmark:completion": "npm run build && node benchmarks/completion-only/run.mjs && node benchmarks/completion-only/fairness.mjs",
+    "benchmark:stream": "npm run build && node benchmarks/streaming/run.mjs && node benchmarks/streaming/fairness.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
