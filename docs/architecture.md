@@ -1,10 +1,12 @@
 # Runtime architecture
 
-The [initial proposal](proposal.md) defines the boundaries. The public package exports `PjsRuntime`, `PjsTaskRegistry`, `transfer`, `sharedReadonly`, task/transfer/option/snapshot types, and errors. Pool, worker transport, FIFO implementation, mutable task records, metrics accumulator, and protocol are internal modules. Package exports prevent accidental dependence on these internals. v0.2 adds explicit buffer ownership; v0.3 adds shared-input construction and a usage contract. Neither changes FIFO policy or the worker population model.
+The [initial proposal](proposal.md) defines the boundaries. The public package exports `PjsRuntime`, `PjsTaskRegistry`, `transfer`, `sharedReadonly`, task/transfer/option/snapshot types, and errors. Pool, worker transport, FIFO implementation, mutable task records, metrics accumulator, and protocol are internal modules. Package exports prevent accidental dependence on these internals. v0.2 adds explicit buffer ownership; v0.3 adds shared-input construction and a usage contract. v0.4 adds an experimental main-isolate range coordinator. All three preserve FIFO policy and the worker population model.
 
 ```mermaid
 flowchart TD
   A[Application] --> R[PjsRuntime: admission and task lifecycle]
+  A --> O[Host partition operation: lazy descriptors and ordered outputs]
+  O --> R
   R --> Q[Scheduler: bounded task queue]
   R --> P[PjsPool: worker ownership and recovery]
   P --> W[PjsWorker: correlated execution slot]
@@ -31,7 +33,7 @@ Worker: `starting → idle ↔ busy`; crash/protocol/bootstrap error → `failed
 
 Task: `created → queued → scheduled → running → completed | failed`; any nonterminal accepted state may become `cancelled | timed_out`. `started` is an explicit protocol acknowledgement. Every accepted task has a UUID. Terminal settlement deletes the runtime record, removes it from the queue, removes its abort listener, clears its timer, releases the retained input, and resolves or rejects once. Returned errors retain task IDs. Completed records are not retained indefinitely.
 
-The crucial distinction is caller settlement versus execution completion. A cancelled/timed-out running task has no remaining promise bookkeeping, but its worker retains the task ID until its result or crash. Late responses release that slot without touching the settled promise. Thus `tasks.pending` may be zero while `workers.busy` is positive. Runtime draining checks both.
+The crucial distinction is caller settlement versus execution completion. A cancelled/timed-out running task has no remaining promise bookkeeping, but its worker retains the task ID until its result or crash. Late responses release that slot without touching the settled promise. Thus `tasks.pending` may be zero while `workers.busy` is positive. Runtime draining checks both, plus live partition operations.
 
 ## Task contract and protocol
 
@@ -43,9 +45,19 @@ Payload serialization lives in `PjsWorker.execute()` and bootstrap result postin
 
 ## Admission, deadlines, and cancellation
 
-`maxQueue` bounds waiting task count, not bytes. Accepted work is bounded by queue capacity plus execution slots. Large inputs still require application memory budgeting. There are no hidden admission waiters. Overflow returns `PjsQueueFullError`. During startup, work consumes waiting capacity.
+`maxQueue` bounds waiting task count, not bytes. Accepted work is bounded by queue capacity plus execution slots. Large inputs still require application memory budgeting. Ordinary run() has no admission waiters. Overflow returns `PjsQueueFullError`. During startup, work consumes waiting capacity.
 
 Timeouts start at acceptance, include queue delay, and use Node timers with integer delays from 1 to 2³¹−1 ms. Delivery depends on event-loop progress; deadlines are not hard real-time CPU preemption. Abort before admission rejects without accepting work. Queued cancellation/deadline removes work. Active cancellation/deadline settles the caller but preserves the slot. No task is retried automatically; side effects may already have occurred.
+
+## Range coordinator (v0.4, experimental)
+
+`partitionRange()` describes one safe integer half-open range with an explicit grain and synchronous host payload factory. `partition/range.ts` validates the plan and generates immutable descriptors; `partition/operation.ts` owns the parent state and ordered collector. Runtime integration handles admission, production and child settlement. Scheduler, pool, worker transport and shared-input helper are unchanged.
+
+Parents follow `created → running → completed | failed | cancelled | timed_out`, with running including startup/capacity waiting. Parents occupy no worker or FIFO slot. At most `min(MAX_SAFE_INTEGER, workers + maxQueue)` parent records are accepted; each has at most worker-count unsettled children. Production requires actual global capacity and reserves one credit through factory/transfer-list evaluation. A guarded pump rotates eligible producers and limits each synchronous batch to worker count. Children use the ordinary FIFO and settlement path, with direct synchronous parent notification so first failure closes production immediately. No per-ungenerated-child promises or descriptors exist.
+
+Results are stored by logical index and returned only after every chunk succeeds. Their memory grows with completed outputs; maxQueue is a task bound, not a result-byte bound. First failure cancels siblings and discards outputs without freeing occupied workers. One signal/deadline belongs to the whole operation, with monotonic deadline checks at production/settlement as well as a timer. Worker-created range operations reject explicitly; no parent compute slot waits for children. General nested parallelism is unsupported.
+
+Graceful shutdown finishes the entire accepted logical range, including ungenerated work. Non-draining shutdown cancels parents before remaining ordinary tasks. Fatal runtime failure rejects every live parent. See the [usage contract](partitioning.md), [ADR 0008](adr/0008-runtime-owned-partitioning.md) and [admission ADR](adr/0009-partition-admission-and-metrics.md).
 
 ## Failure and shutdown
 
@@ -63,10 +75,10 @@ Lists are copied at submission and validated both then and immediately before po
 
 Typed-array subviews can clone or transfer a whole backing buffer, so benchmarks explicitly build compact row blocks. Transferring the right matrix to several workers needs a dedicated copy for each worker; those costs are timed and reported. SharedArrayBuffer can pass through naturally but cannot be transferred. PJS supplies no race-safety guarantees or synchronization API for shared data. v0.3 adds `sharedReadonly` construction and a read-only usage contract over native SAB transport; see [the memory guide](memory.md) and [ADR 0007](adr/0007-shared-input-model.md). There is no resource registry or disposal: GC manages references, and replacement workers receive shared backing through subsequent task messages. Read-only is not enforced protection. Cancellation does not end active access. maxQueue does not bound shared bytes; no hidden compute jobs or speculative byte metrics are added.
 
-Snapshots are copies. `tasks` counts caller outcomes, including cancellations and deadlines; `workers.details` counts completed/failed executions for current worker identities, including late responses. Worker crashes increment execution failure counters, but missing execution durations are never fabricated. Runtime-wide execution-duration samples survive replacement.
+Snapshots are copies. `operations` counts parent outcomes independently; `partitions` counts generated/admitted children and their completed/failed/cancelled callers. Parent timeouts cancel children, so `operations.timedOut` and `tasks.cancelled` describe different levels. `activeOperations` derives queued/running children from live records (scheduled counts as running); terminal parent history is not retained. Generated may exceed admitted after factory failure/cancellation. `tasks` counts ordinary and child caller outcomes, including cancellations and deadlines; `workers.details` counts completed/failed executions for current worker identities, including late responses. Worker crashes increment execution failure counters, but missing execution durations are never fabricated. Runtime-wide execution-duration samples survive replacement.
 
 Queue latency is monotonic acceptance-to-dispatch time, including startup; queue samples include unsuccessful serialization dispatches. Execution latency is measured inside a worker around its function/await, excluding messaging and output cloning, and includes returned failures and late cancelled results. Total latency is acceptance-to-caller-settlement for accepted tasks only. Counts for each mean are exposed; an empty mean is zero with zero samples. Wall-clock task timestamps describe main-thread observations (`startedAt` is receipt of the start acknowledgement). No completed task history or percentile histograms are retained. Cross-isolate async context propagation and AsyncResource integration remain future work.
 
 ## Next layers
 
-Use the v0.3 shared-input measurements to evaluate runtime-owned partitioning, followed by structured map/for/reduce scopes. v0.3 does not implement these APIs. Cooperative cancellation needs a task context and polling semantics for synchronous kernels. Nested execution needs shared runtime capacity and dependency handling to prevent starvation/deadlock; constructing a separate runtime inside every task oversubscribes the machine. Work stealing, adaptive chunking, affinity, NUMA, and priorities require workload-specific evidence before implementation. Ordinary Node async I/O stays outside CPU task scheduling.
+Use the [v0.4 partition measurements](benchmarks-v0.4.md) to select the next grain/algorithm milestone. The experimental range API does not stabilize map/for/reduce scopes. Cooperative cancellation needs a task context and polling semantics for synchronous kernels. Nested execution needs shared runtime capacity and dependency handling to prevent starvation/deadlock; constructing a separate runtime inside every task oversubscribes the machine. Work stealing, adaptive chunking, affinity, NUMA, and priorities require workload-specific evidence before implementation. Ordinary Node async I/O stays outside CPU task scheduling.

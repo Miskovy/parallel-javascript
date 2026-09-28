@@ -41,3 +41,46 @@ Reviewed 2026-09-27: [Node worker messaging](https://nodejs.org/api/worker_threa
 The [ECMAScript shared memory model](https://tc39.es/ecma262/multipage/memory-model.html) and [Atomics algorithms](https://tc39.es/ecma262/multipage/structured-data.html#sec-atomics-object) distinguish atomic integer access from compound unsynchronized updates. Read-only kernels need no atomic read loop when initialization precedes publication and no participant writes. The [memory guide](../memory.md) documents load/store/add/compareExchange/wait/notify and a deterministic lost-update demonstration. This is groundwork, not a synchronization library.
 
 Piscina **5.3.2** is an exact development-only dependency. Its installed README and implementation define the tested fixed min/max pool, concurrency one, default synchronous Atomics and transfer-list behavior. [The upstream project](https://github.com/piscinajs/piscina) is the primary reference; the lockfile pins the actual artifact. Matched kernels compare CPU, clone, transfer and shared read workloads. Cancellation is deliberately not compared: Piscina can terminate active workers while PJS preserves execution occupancy. See [measured results and limitations](../benchmarks-v0.3.md); neither these workloads nor a single machine support a general performance ranking.
+
+## v0.4 review: partition ownership before scheduler changes
+
+Reviewed 2026-09-27. [Rayon indexed iterators](https://docs.rs/rayon/latest/rayon/iter/trait.IndexedParallelIterator.html#method.with_min_len)
+provide grain controls within a richer parallel-iterator model. PJS adopts the
+separation of logical range order from execution order, while retaining explicit
+module tasks and isolate payloads. Its experimental grain is an exact maximum
+chunk width, not Rayon's minimum split hint. There is no automatic grain policy.
+
+[Piscina backpressure](https://github.com/piscinajs/piscina#backpressure)
+shows why an application producer must respect a bounded pool. v0.4 moves that
+producer and its lifecycle into PJS. The benchmark uses a bounded workers-sized
+manual producer over **archived PJS v0.3** and **Piscina 5.3.2**, rather than
+comparing against an unbounded eager Promise list. Piscina is not required to
+expose a range API for this successful-work comparison.
+
+[Node's worker transport](https://nodejs.org/api/worker_threads.html)
+already supplies shared backing and exclusive transfers. A synchronous host
+payload factory combines the same shared view, compact transferred slices and
+cloned range metadata. No per-worker resource registry or protocol change is
+needed. Factories reserve admission before invoking application code, because
+reentrant host callbacks must not invalidate the bounded-production contract.
+
+The [proposal](../proposal-v0.4.md), [ownership ADR](../adr/0008-runtime-owned-partitioning.md)
+and [admission/metrics ADR](../adr/0009-partition-admission-and-metrics.md)
+keep parents outside worker capacity, reject worker-created partitioning, and
+separate logical-parent settlement from execution occupancy. Output retention
+remains proportional to completed results. This is intentionally narrower than
+nested structured parallelism or streaming map.
+
+The [v0.4 report](../benchmarks-v0.4.md) evaluates uniform range sums, shared-B
+matrix rows, increasing-cost indices, and a no-op transport control across five
+grains. Per-worker kernel intervals are an occupancy proxy, not precise idle or
+CPU time. The next milestone must follow those observations; no adaptive
+chunking, distributed queues, work stealing or public algorithm family is
+implemented in v0.4.
+
+The completed study favors an overhead/grain-efficiency follow-up: at four
+workers, middle grains improved increasing-cost work over one chunk per worker,
+while 128 chunks slowed range, matrix and skew kernels. One-worker skew changes
+also reveal non-balance effects, so JIT/arithmetic controls are needed. The
+report recommends profiling/bounded batching experiments before work stealing
+or stable algorithm APIs. v0.5 has not been started.

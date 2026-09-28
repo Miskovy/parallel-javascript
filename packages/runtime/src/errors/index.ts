@@ -2,16 +2,28 @@ export interface ErrorContext {
   taskId?: string;
   workerId?: number;
   cause?: unknown;
+  operationId?: string;
+  partitionIndex?: number;
+  rangeStart?: number;
+  rangeEnd?: number;
 }
 
 export class PjsError extends Error {
   readonly taskId: string | undefined;
   readonly workerId: number | undefined;
+  readonly operationId: string | undefined;
+  readonly partitionIndex: number | undefined;
+  readonly rangeStart: number | undefined;
+  readonly rangeEnd: number | undefined;
   constructor(message: string, context: ErrorContext = {}) {
     super(message, { cause: context.cause });
     this.name = new.target.name;
     this.taskId = context.taskId;
     this.workerId = context.workerId;
+    this.operationId = context.operationId;
+    this.partitionIndex = context.partitionIndex;
+    this.rangeStart = context.rangeStart;
+    this.rangeEnd = context.rangeEnd;
   }
 }
 

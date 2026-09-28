@@ -4,7 +4,7 @@ Run `npm run benchmark:cpu`, `npm run benchmark:matrix`, and `npm run benchmark:
 
 Configurations: serial, PJS 1/2/4 workers, and availableParallelism, filtered to available hardware concurrency. Duplicate worker counts run once, with the actual machine count recorded. All timings are retained. Each size has a first-run sample, two untimed warmups, then five timed samples. Startup is measured once per configuration; only the first size follows that fresh startup. No startup cost is folded into warm-pool speedup. For a cold scenario, inspect startup plus the first size's first-run cost. No forced GC or discarded outliers.
 
-`PJS_BENCH_SIZES` (comma-separated), `PJS_BENCH_TRIALS`, and `PJS_BENCH_WARMUPS` override workload defaults. Current reports are written to `results/cpu-v0.3.json` and `results/matrix-v0.3.json`; subsequent invocations overwrite only those current reports. `PJS_BENCH_OUTPUT` can choose an alternate safe filename for CPU/matrix runs. Existing v0.1 `cpu.json`, `matrix.json`, and `cpu-initial.json` baselines are preserved.
+`PJS_BENCH_SIZES` (comma-separated), `PJS_BENCH_TRIALS`, and `PJS_BENCH_WARMUPS` override workload defaults. Current reports are written to `results/cpu-v0.4.json` and `results/matrix-v0.4.json`; subsequent invocations overwrite only those current reports. `PJS_BENCH_OUTPUT` can choose an alternate safe filename for CPU/matrix runs. Existing v0.1 `cpu.json`, `matrix.json`, and `cpu-initial.json` baselines are preserved.
 
 CPU: trial-division prime search over [0, N), partitioned into a fixed 32 contiguous chunks independent of worker count. The serial reference runs the same kernel monolithically. A separate serial-with-32-chunks control exposes chunking/JIT differences; it runs after each monolithic size's samples, so it is diagnostic and can further warm the main isolate for subsequent sizes. Correctness uses an independent sieve. Results include exact count and observed thread IDs. Small inputs can be slower under PJS. `cpu-initial.json` retains the preliminary run before the independent sieve and chunked-serial diagnostic were added; it is not the final comparison.
 
@@ -26,7 +26,7 @@ Each matrix mode obtains its own serial baseline in fresh processes. The complet
 
 ## v0.3 shared-input comparison
 
-Current `benchmark:transfer` writes `transfer-v0.3.json`, `matrix-clone-v0.3.json` and `matrix-transfer-v0.3.json`, retaining the v0.2 methodology and historical files.
+The v0.3 run wrote `transfer-v0.3.json`, `matrix-clone-v0.3.json` and `matrix-transfer-v0.3.json`. Current runners write corresponding v0.4 filenames and preserve all historical artifacts. Shared/matrix-shared/Piscina runners also now target v0.4 filenames.
 
 - `npm run benchmark:shared`: a 16 MiB Float64 array, disjoint sums, full common input per task, small independent outputs.
 - `npm run benchmark:matrix:shared`: existing matrix kernel at sizes 128 and 512, clone/transfer/shared, full independent reference validation. Shared B is constructed once per sample session; A row blocks and outputs transfer independently.
@@ -49,3 +49,7 @@ Piscina uses minThreads=maxThreads, concurrentTasksPerWorker=1, maxQueue=1024 an
 Historical v0.2 artifacts were recorded on another OS/CPU. For the v0.3 check, a temporary checkout of commit `a2c784d` was built with the same installed compiler. Its runtime source and kernels were unchanged; only the first comparison's launcher output name, worker-count filter and child-close collection were aligned. `cpu-v0.2-local.json` preserves that full run beside `cpu-v0.3.json`.
 
 To investigate visible phase drift, run `node benchmarks/cpu-baseline/compare.mjs /path/to/built-v0.2-checkout`. Both checkouts must resolve their own `@pjs/runtime` package and dependencies. The control calls their original `benchmarks/measure.mjs` with identical configuration, in baseline/candidate/candidate/baseline order at serial, one worker and up to four workers. Each run records one first execution, one warmup and three samples per size; six timed observations per version/size/count are retained. CPU count, host load and reported frequency snapshots accompany the raw data in `cpu-regression-v0.3.json`. These observations diagnose drift; they do not replace a controlled multi-machine performance study.
+
+## v0.4 runtime-owned partitioning
+
+See the [reproduction instructions and metric definitions](partitioning/README.md) and [measurement report](../docs/benchmarks-v0.4.md). The new runner compares archived v0.3 manual production, v0.4 runtime-owned ranges and bounded manual Piscina 5.3.2 across five grain sizes. Range input compares full clone, reused shared backing and compact transfers; matrix uses shared B and transferred A/outputs. Increasing-cost skew and no-op control expose balance and dispatch tradeoffs. Raw results use `*-partition-v0.4.json`. The CPU comparison runner now writes `cpu-regression-v0.4.json`; its supplied checkout determines the baseline version.

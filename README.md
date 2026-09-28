@@ -9,7 +9,7 @@
 <p>
   <a href="packages/runtime/package.json"><img src="https://img.shields.io/badge/Node.js-%E2%89%A522-339933?style=flat-square&amp;logo=nodedotjs&amp;logoColor=white" alt="Runtime: Node.js 22 or newer"></a>
   <a href="package.json"><img src="https://img.shields.io/badge/TypeScript-7.0-3178C6?style=flat-square&amp;logo=typescript&amp;logoColor=white" alt="Build compiler: TypeScript 7.0"></a>
-  <a href="docs/architecture.md"><img src="https://img.shields.io/badge/status-v0.3%20shared%20inputs-0F766E?style=flat-square" alt="Status: v0.3 shared inputs"></a>
+  <a href="docs/architecture.md"><img src="https://img.shields.io/badge/status-v0.4%20partitioning-0F766E?style=flat-square" alt="Status: v0.4 partitioning"></a>
   <a href="packages/runtime/package.json"><img src="https://img.shields.io/badge/runtime_dependencies-0-0F766E?style=flat-square" alt="Zero runtime dependencies"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-64748B?style=flat-square" alt="License: MIT"></a>
 </p>
@@ -18,7 +18,7 @@
   <a href="#quick-start">Quick start</a> ·
   <a href="#define-a-task">Task API</a> ·
   <a href="docs/architecture.md">Architecture</a> ·
-  <a href="docs/benchmarks-v0.3.md">Benchmarks</a> ·
+  <a href="docs/benchmarks-v0.4.md">Benchmarks</a> ·
   <a href="docs/toolchain.md">Toolchain choices</a>
 </p>
 
@@ -26,28 +26,29 @@
 
 ---
 
-PJS v0.3 is a small foundation for explicit CPU parallelism in Node.js: persistent workers, registered module tasks, bounded FIFO admission, explicit buffer transfers, reusable shared inputs, task lifecycles, failure recovery, cancellation/deadlines, and real statistics. It builds with TypeScript 7 and has no runtime dependencies.
+PJS v0.4 is a small foundation for explicit CPU parallelism in Node.js: persistent workers, registered module tasks, bounded FIFO admission, explicit buffer transfers, reusable shared inputs, experimental runtime-owned range partitioning, task lifecycles, failure recovery, cancellation/deadlines, and real statistics. It builds with TypeScript 7 and has no runtime dependencies.
 
 > **The programmer declares parallelizable work. PJS decides how accepted tasks use the available workers.**
 
-Higher-level partitioning and parallel algorithms are future work; benchmark examples currently partition their own workloads.
+The experimental `partitionRange()` operation owns lazy range division and ordered results over the same FIFO. Higher-level parallel algorithms remain future work; see the [range guide](docs/partitioning.md).
 
 ## What works today
 
-| Capability                     | v0.3 behavior                                                                 |
-| ------------------------------ | ----------------------------------------------------------------------------- |
-| **Persistent workers**         | A fixed, configurable population reused across tasks                          |
-| **Explicit task registration** | Typed handles for local module exports; no closure serialization or eval      |
-| **Bounded scheduling**         | FIFO admission with a finite queue and explicit overflow errors               |
-| **Failure recovery**           | Correlated errors, crash replacement, and a bounded restart budget            |
-| **Cancellation and deadlines** | Queued work is removed; active caller settlement preserves worker occupancy   |
-| **Observability**              | Task counts, queue/execution timings, worker state, and thread IDs            |
-| **Reusable shared inputs**     | Explicit construction over native SAB backing with a read-only usage contract |
-| **Graceful shutdown**          | Close admission, drain accepted work, and release workers                     |
+| Capability                     | v0.4 behavior                                                                  |
+| ------------------------------ | ------------------------------------------------------------------------------ |
+| **Persistent workers**         | A fixed, configurable population reused across tasks                           |
+| **Explicit task registration** | Typed handles for local module exports; no closure serialization or eval       |
+| **Bounded scheduling**         | FIFO admission with a finite queue and explicit overflow errors                |
+| **Failure recovery**           | Correlated errors, crash replacement, and a bounded restart budget             |
+| **Cancellation and deadlines** | Queued work is removed; active caller settlement preserves worker occupancy    |
+| **Observability**              | Task counts, queue/execution timings, worker state, and thread IDs             |
+| **Reusable shared inputs**     | Explicit construction over native SAB backing with a read-only usage contract  |
+| **Numeric range partitioning** | Lazy bounded children, explicit grain, ordered outputs and one parent deadline |
+| **Graceful shutdown**          | Close admission, drain accepted work, and release workers                      |
 
 ## Quick start
 
-The runtime targets Node.js 22 or newer. Repository development tools require Node.js 22.13+ or 24+. v0.3 was tested on Node.js 24.13.1 on Linux; historical v0.2 measurements used Node.js 24.21.0 on Windows. Other supported Node versions/platforms still need CI coverage.
+The runtime targets Node.js 22 or newer. Repository development tools require Node.js 22.13+ or 24+. v0.4 was tested on Node.js 24.13.1 on Linux; historical v0.2 measurements used Node.js 24.21.0 on Windows. Other supported Node versions/platforms still need CI coverage.
 
 ```sh
 npm ci
@@ -163,9 +164,22 @@ The helper copies once; passing the resulting view again does not copy its
 backing bytes. Prefer private result buffers for each task. See the
 [memory guide](docs/memory.md) for supported types, lifetime and tradeoffs.
 
+### Runtime-owned ranges (experimental)
+
+```ts
+const chunks = await runtime.partitionRange(
+  rangeTask,
+  { start: 0, end: referenceData.length, grainSize: 10_000 },
+  (partition) => ({ input: { partition, data: referenceData } }),
+  { timeout: 5_000 },
+);
+```
+
+Register `rangeTask` as a normal module task accepting this payload. The factory runs lazily on the host; outputs retain logical chunk order. Children use the existing FIFO and transfer/shared rules. Parents have a separate bounded admission count and can wait for capacity. Graceful shutdown finishes their entire accepted ranges. Collected output bytes are not bounded by `maxQueue`. See the [complete example and lifecycle contract](docs/partitioning.md).
+
 ### Statistics
 
-`stats()` returns copied snapshots, accepted/rejected and terminal task counts, active task timestamps, queue occupancy, worker/thread IDs, crash/restart counts, and sampled latency means. It retains no completed-task history. See [metric definitions and lifecycle details](docs/architecture.md).
+`stats()` returns copied snapshots, accepted/rejected and terminal task counts, active task timestamps, queue occupancy, worker/thread IDs, crash/restart counts, and sampled latency means. It also reports parent operation outcomes and generated/admitted child counts; `tasks.*` includes actual children. It retains no completed-task history. See [metric definitions and lifecycle details](docs/architecture.md).
 
 ## Measure before optimizing
 
@@ -179,6 +193,8 @@ npm run benchmark:piscina
 ```
 
 The [benchmark methodology](benchmarks/README.md) separates startup from warm-pool execution and retains every sample. Small workloads can be slower under PJS, and more workers do not guarantee linear scaling.
+
+The [v0.4 report](docs/benchmarks-v0.4.md) compares archived manual v0.3, runtime-owned ranges and pinned Piscina across grain sizes, including a skewed workload. Follow the [partition benchmark setup](benchmarks/partitioning/README.md) for `npm run benchmark:partition`.
 
 The [v0.3 report](docs/benchmarks-v0.3.md) compares clone, transfer and reusable shared input, including a pinned Piscina baseline. The [v0.2 measurement report](docs/benchmarks-v0.2.md) compares clone and transfer paths, including matrix input preparation. The [v0.1 baseline](docs/benchmarks-v0.1.md) and its raw JSON remain preserved. Neither compiler nor runtime speedups are assumed.
 
@@ -205,9 +221,9 @@ All dependencies are development tools or benchmark baselines (Piscina is pinned
 - [Architecture decisions](docs/adr/0001-task-registration.md): registration, pool model, scheduler, and cancellation.
 - [Runtime research](docs/research/runtime-landscape.md): existing systems and concepts worth investigating.
 
-The roadmap is measurement-driven: runtime-owned partitioning over reusable shared inputs, structured parallel algorithms, cooperative cancellation, then evidence-backed scheduling improvements.
+The next milestone is selected from the [v0.4 measurements](docs/benchmarks-v0.4.md). High-level algorithms, streaming results, cooperative cancellation and scheduling changes remain design work; v0.4 stabilizes none of them.
 
-Framework integrations, compiler transforms, custom syntax, browser support, and advanced schedulers are outside v0.3.
+Framework integrations, compiler transforms, custom syntax, browser support, and advanced schedulers are outside v0.4.
 
 ## License
 

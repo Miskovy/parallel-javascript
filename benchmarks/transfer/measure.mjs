@@ -59,7 +59,7 @@ try {
   process.stdout.write(
     JSON.stringify({
       timestamp: new Date().toISOString(),
-      runtimeVersion: '0.3.0',
+      runtimeVersion: '0.4.0',
       environment: {
         node: process.version,
         platform: platform(),

@@ -12,7 +12,7 @@ import {
 } from 'node:os';
 import { median } from '../harness.mjs';
 
-assert.ok(process.argv[2], 'Pass a built v0.2 checkout directory');
+assert.ok(process.argv[2], 'Pass a built baseline checkout directory');
 const roots = {
   baseline: resolve(process.argv[2]),
   candidate: fileURLToPath(new URL('../../', import.meta.url)),
@@ -84,7 +84,7 @@ for (const workers of counts)
     });
   }
 await writeFile(
-  new URL('../results/cpu-regression-v0.3.json', import.meta.url),
+  new URL('../results/cpu-regression-v0.4.json', import.meta.url),
   JSON.stringify(
     {
       timestamp: new Date().toISOString(),
@@ -101,9 +101,9 @@ await writeFile(
         order:
           'baseline/candidate/candidate/baseline per worker count; fresh process each time; six retained samples per version/size/count, no outlier removal',
         baseline:
-          'Built committed v0.2 source; record commit in accompanying report',
+          'Built committed baseline source; record commit in accompanying report',
         reason:
-          'Follow up phase drift in initial sequential CPU comparison; same kernels and original measurement script in both checkouts',
+          'Interleaved ordinary-task regression control; same kernels and original measurement script in both checkouts',
       },
       results,
       summary,

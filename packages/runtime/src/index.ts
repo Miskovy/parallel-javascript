@@ -6,6 +6,12 @@ export { transfer } from './tasks/transfer.js';
 export type { PjsTransfer } from './tasks/transfer.js';
 export { sharedReadonly } from './tasks/shared.js';
 export type {
+  PartitionRange,
+  RangePartition,
+  PartitionInput,
+  PartitionOptions,
+} from './partition/range.js';
+export type {
   RunOptions,
   ShutdownOptions,
   RuntimeState,

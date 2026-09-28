@@ -1,6 +1,18 @@
 import { availableParallelism } from 'node:os';
 import { randomUUID } from 'node:crypto';
+import { isMainThread } from 'node:worker_threads';
+import { PartitionOperation } from './partition/operation.js';
+import type { PartitionChild, OperationStatus } from './partition/operation.js';
+import { planRange, partitionAt } from './partition/range.js';
+import type {
+  PartitionRange,
+  PartitionInput,
+  PartitionOptions,
+  RangePartition,
+} from './partition/range.js';
+import { serializeError } from './workers/protocol.js';
 import {
+  PjsError,
   PjsCancelledError,
   PjsQueueFullError,
   PjsRuntimeStateError,
@@ -57,6 +69,27 @@ export class PjsRuntime {
   private readonly tasks = new Map<string, PendingTask>();
   private readonly metrics = new Metrics();
   private readonly pool: PjsPool;
+  private readonly workerCount: number;
+  private readonly operationLimit: number;
+  private readonly operations = new Map<string, PartitionOperation>();
+  private readonly operationMetrics = {
+    accepted: 0,
+    rejected: 0,
+    completed: 0,
+    failed: 0,
+    cancelled: 0,
+    timedOut: 0,
+  };
+  private readonly partitionMetrics = {
+    generated: 0,
+    admitted: 0,
+    completed: 0,
+    failed: 0,
+    cancelled: 0,
+  };
+  private admissionReservations = 0;
+  private pumping = false;
+  private productionTick: ReturnType<typeof setImmediate> | undefined;
   private readonly readyPromise: Promise<void>;
   private shutdownPromise: Promise<void> | undefined;
   private drainMode = true;
@@ -89,6 +122,11 @@ export class PjsRuntime {
       0,
     );
     this.scheduler = new PjsScheduler(options.maxQueue ?? 1024);
+    this.workerCount = workers;
+    this.operationLimit = Math.min(
+      Number.MAX_SAFE_INTEGER,
+      workers + this.scheduler.capacity,
+    );
     this.registry = options.registry.snapshot();
     this.pool = new PjsPool(
       { workers, startupTimeout, maxRestarts },
@@ -138,17 +176,151 @@ export class PjsRuntime {
     return this.readyPromise;
   }
 
+  /**
+   * @experimental Host-coordinated numeric ranges; this API is not yet stable.
+   * The synchronous factory runs lazily on the main thread with reserved admission.
+   * Results are collected by partition index. maxQueue does not bound result bytes.
+   */
+  partitionRange<Input, Output>(
+    task: PjsTask<Input, Output>,
+    range: PartitionRange,
+    createInput: (partition: RangePartition) => PartitionInput<Input>,
+    options: PartitionOptions = {},
+  ): Promise<Output[]> {
+    const id = randomUUID();
+    const acceptedAt = performance.now();
+    const reject = (error: Error): Promise<Output[]> => {
+      this.operationMetrics.rejected++;
+      return Promise.reject(error);
+    };
+    if (!isMainThread)
+      return reject(
+        new PjsRuntimeStateError(
+          'Partition operations require the main thread; nested worker partitioning is unsupported',
+          { operationId: id },
+        ),
+      );
+    let plan;
+    let timeout: number | undefined;
+    let signal: AbortSignal | undefined;
+    try {
+      plan = planRange(range);
+      if (typeof createInput !== 'function')
+        throw new TypeError('createInput must be a synchronous function');
+      timeout = options.timeout;
+      signal = options.signal;
+      if (timeout !== undefined) integer('timeout', timeout, 1, 2 ** 31 - 1);
+    } catch (error) {
+      return reject(error as Error);
+    }
+    if (this.state !== 'starting' && this.state !== 'running')
+      return reject(
+        new PjsRuntimeStateError(`Runtime is ${this.state}`, {
+          operationId: id,
+        }),
+      );
+    if (!this.registry.has(task))
+      return reject(
+        new PjsTaskRegistrationError(
+          'Task does not belong to this runtime registry snapshot',
+          { operationId: id },
+        ),
+      );
+    if (signal?.aborted)
+      return reject(
+        new PjsCancelledError('Partition operation was already aborted', {
+          operationId: id,
+          cause: signal.reason,
+        }),
+      );
+    if (this.operations.size >= this.operationLimit)
+      return reject(
+        new PjsQueueFullError(
+          `Partition operation capacity ${this.operationLimit} exhausted`,
+          { operationId: id },
+        ),
+      );
+
+    return new Promise<Output[]>((resolve, reject) => {
+      const operation = new PartitionOperation(
+        id,
+        task as PjsTask<unknown, unknown>,
+        plan,
+        createInput,
+        timeout === undefined ? undefined : acceptedAt + timeout,
+        (outputs) => resolve(outputs as Output[]),
+        reject,
+      );
+      operation.status = 'running';
+      this.operations.set(id, operation);
+      this.operationMetrics.accepted++;
+      const abort = () => {
+        this.finishOperation(
+          operation,
+          'cancelled',
+          new PjsCancelledError(
+            'Partition operation cancelled; active executions may still finish',
+            { operationId: id, cause: signal?.reason },
+          ),
+        );
+        this.pump();
+      };
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      operation.cleanup = () => {
+        if (timer) clearTimeout(timer);
+        signal?.removeEventListener('abort', abort);
+      };
+      signal?.addEventListener('abort', abort, { once: true });
+      if (timeout !== undefined) {
+        const onDeadline = () => {
+          if (
+            !this.expireOperation(operation) &&
+            operation.status === 'running'
+          )
+            timer = setTimeout(
+              onDeadline,
+              Math.max(1, Math.ceil(operation.deadline! - performance.now())),
+            );
+          this.pump();
+        };
+        timer = setTimeout(
+          onDeadline,
+          Math.max(1, Math.ceil(timeout - (performance.now() - acceptedAt))),
+        );
+      }
+      if (!this.expireOperation(operation)) {
+        if (plan.chunkCount === 0) this.finishOperation(operation, 'completed');
+        else this.pump();
+      }
+    });
+  }
+
   run<Input, Output>(
     task: PjsTask<Input, Output>,
     input: Input,
     options: RunOptions = {},
   ): Promise<Output> {
+    return this.submit(task, input, options);
+  }
+
+  private submit<Input, Output>(
+    task: PjsTask<Input, Output>,
+    input: Input,
+    options: RunOptions,
+    child?: PartitionChild,
+  ): Promise<Output> {
     const id = randomUUID();
     const reject = (error: Error): Promise<Output> => {
       this.metrics.rejected++;
+      if (child)
+        this.finishOperation(
+          child.operation,
+          'failed',
+          this.childError(error, child),
+        );
       return Promise.reject(error);
     };
-    if (this.state !== 'starting' && this.state !== 'running')
+    if (!this.canSubmit(child))
       return reject(
         new PjsRuntimeStateError(`Runtime is ${this.state}`, { taskId: id }),
       );
@@ -188,7 +360,7 @@ export class PjsRuntime {
       );
     }
     // Reading an application-provided list may invoke getters/iterators.
-    if (this.state !== 'starting' && this.state !== 'running')
+    if (!this.canSubmit(child))
       return reject(
         new PjsRuntimeStateError(`Runtime is ${this.state}`, { taskId: id }),
       );
@@ -200,10 +372,15 @@ export class PjsRuntime {
         }),
       );
     const idle =
-      this.state === 'running' && this.scheduler.size === 0
+      this.dispatchAllowed() && this.scheduler.size === 0
         ? this.pool.idle()[0]
         : undefined;
-    if (!idle && this.scheduler.size >= this.scheduler.capacity)
+    if (
+      (!idle && this.scheduler.size >= this.scheduler.capacity) ||
+      (!child &&
+        this.admissionReservations > 0 &&
+        this.availableAdmission() <= 0)
+    )
       return reject(
         new PjsQueueFullError(
           `Queue capacity ${this.scheduler.capacity} exhausted`,
@@ -221,8 +398,10 @@ export class PjsRuntime {
     return new Promise<Output>((resolve, reject) => {
       const pending: PendingTask = {
         id,
+        ...(child ? { child } : {}),
         snapshot: {
           id,
+          ...(child ? this.childContext(child) : {}),
           taskName: descriptor.id,
           status: 'created',
           createdAt: Date.now(),
@@ -237,6 +416,11 @@ export class PjsRuntime {
       };
       this.tasks.set(id, pending);
       this.metrics.accepted++;
+      if (child) {
+        child.operation.children.set(id, child.partition);
+        child.operation.admitted++;
+        this.partitionMetrics.admitted++;
+      }
       let timer: ReturnType<typeof setTimeout> | undefined;
       const signal = options.signal;
       const abort = (): void => {
@@ -320,6 +504,34 @@ export class PjsRuntime {
         timedOut: this.metrics.timedOut,
       },
       timing: this.metrics.timing(),
+      operations: {
+        ...this.operationMetrics,
+        pending: this.operations.size,
+        capacity: this.operationLimit,
+      },
+      partitions: { ...this.partitionMetrics },
+      activeOperations: [...this.operations.values()].map((operation) => {
+        let queued = 0,
+          running = 0;
+        for (const id of operation.children.keys()) {
+          const status = this.tasks.get(id)?.snapshot.status;
+          if (status === 'queued') queued++;
+          else if (status === 'scheduled' || status === 'running') running++;
+        }
+        return {
+          id: operation.id,
+          taskName: operation.task.id,
+          status: operation.status,
+          ...operation.plan,
+          generated: operation.generated,
+          admitted: operation.admitted,
+          queued,
+          running,
+          completed: operation.completed,
+          failed: operation.failed,
+          cancelled: operation.cancelled,
+        };
+      }),
       activeTasks: [...this.tasks.values()].map((task): TaskSnapshot => ({
         ...task.snapshot,
       })),
@@ -341,6 +553,15 @@ export class PjsRuntime {
           this.checkDrained();
         });
       } else {
+        for (const operation of this.operations.values())
+          this.finishOperation(
+            operation,
+            'cancelled',
+            new PjsCancelledError(
+              'Runtime shutdown cancelled partition operation',
+              { operationId: operation.id },
+            ),
+          );
         for (const task of this.tasks.values())
           this.settle(
             task,
@@ -354,28 +575,251 @@ export class PjsRuntime {
           );
       }
       await this.pool.stop();
+      if (this.productionTick) clearImmediate(this.productionTick);
+      this.productionTick = undefined;
       this.state = 'stopped';
     });
     return this.shutdownPromise;
   }
 
-  private pump(): void {
+  private dispatchAllowed(): boolean {
+    return (
+      this.state === 'running' || (this.state === 'stopping' && this.drainMode)
+    );
+  }
+
+  private canSubmit(child?: PartitionChild): boolean {
     if (
-      this.state !== 'running' &&
-      !(this.state === 'stopping' && this.drainMode)
+      child &&
+      (child.operation.status !== 'running' ||
+        this.expireOperation(child.operation))
+    )
+      return false;
+    return (
+      this.state === 'starting' ||
+      this.state === 'running' ||
+      (child !== undefined && this.state === 'stopping' && this.drainMode)
+    );
+  }
+
+  private availableAdmission(): number {
+    return (
+      this.scheduler.capacity -
+      this.scheduler.size +
+      (this.dispatchAllowed() ? this.pool.idle().length : 0) -
+      this.admissionReservations
+    );
+  }
+
+  private childContext(child: PartitionChild) {
+    return {
+      operationId: child.operation.id,
+      partitionIndex: child.partition.index,
+      rangeStart: child.partition.start,
+      rangeEnd: child.partition.end,
+    };
+  }
+
+  private childError(error: Error, child: PartitionChild): Error {
+    // These are runtime-created child errors, not application-owned factory errors.
+    return Object.assign(error, this.childContext(child));
+  }
+
+  private expireOperation(operation: PartitionOperation): boolean {
+    if (operation.status !== 'running') return true;
+    if (
+      operation.deadline === undefined ||
+      performance.now() < operation.deadline
+    )
+      return false;
+    this.finishOperation(
+      operation,
+      'timed_out',
+      new PjsTimeoutError(
+        'Partition operation deadline exceeded; active executions may still finish',
+        { operationId: operation.id },
+      ),
+    );
+    return true;
+  }
+
+  private finishOperation(
+    operation: PartitionOperation,
+    status: Exclude<OperationStatus, 'created' | 'running'>,
+    error?: Error,
+  ): void {
+    if (operation.status !== 'running') return;
+    operation.status = status;
+    this.operations.delete(operation.id);
+    operation.cleanup();
+    operation.cleanup = () => {};
+    operation.createInput = undefined;
+    if (status === 'timed_out') this.operationMetrics.timedOut++;
+    else this.operationMetrics[status]++;
+    // Set terminal state before cancelling siblings; their settlement is reentrant.
+    for (const id of operation.children.keys()) {
+      const task = this.tasks.get(id);
+      if (task)
+        this.settle(
+          task,
+          'cancelled',
+          new PjsCancelledError(
+            'Partition sibling cancelled after parent settlement',
+            {
+              taskId: id,
+              operationId: operation.id,
+              cause: error,
+              ...(task.snapshot.workerId === undefined
+                ? {}
+                : { workerId: task.snapshot.workerId }),
+            },
+          ),
+        );
+    }
+    const outputs = operation.outputs;
+    operation.outputs = [];
+    if (error) operation.reject(error);
+    else operation.resolve(outputs);
+  }
+
+  private childSettled(
+    task: PendingTask,
+    status: 'completed' | 'failed' | 'cancelled' | 'timed_out',
+    error?: Error,
+    output?: unknown,
+  ): void {
+    const child = task.child!;
+    const operation = child.operation;
+    operation.children.delete(task.id);
+    const counter = status === 'timed_out' ? 'cancelled' : status;
+    operation[counter]++;
+    this.partitionMetrics[counter]++;
+    if (operation.status !== 'running') return;
+    if (error) {
+      this.finishOperation(operation, 'failed', this.childError(error, child));
+    } else if (!this.expireOperation(operation)) {
+      operation.outputs[child.partition.index] = output;
+      if (operation.completed === operation.plan.chunkCount)
+        this.finishOperation(operation, 'completed');
+    }
+  }
+
+  private nextProducer(): PartitionOperation | undefined {
+    for (const operation of this.operations.values()) {
+      if (
+        operation.generated < operation.plan.chunkCount &&
+        operation.children.size < this.workerCount
+      )
+        return operation;
+    }
+    return undefined;
+  }
+
+  private producePartitions(): void {
+    // Bound synchronous factory work too; yield if immediate failures leave more producers.
+    for (
+      let produced = 0;
+      produced < this.workerCount &&
+      this.dispatchAllowed() &&
+      this.availableAdmission() > 0;
+      produced++
     ) {
+      const operation = this.nextProducer();
+      if (!operation) break;
+      this.operations.delete(operation.id);
+      this.operations.set(operation.id, operation);
+      if (this.expireOperation(operation)) continue;
+      const partition = partitionAt(operation.plan, operation.generated++);
+      this.partitionMetrics.generated++;
+      const child = { operation, partition };
+      this.admissionReservations++;
+      try {
+        const prepared = operation.createInput!(partition);
+        if (
+          operation.status !== 'running' ||
+          !this.dispatchAllowed() ||
+          this.expireOperation(operation)
+        )
+          continue;
+        if (
+          prepared === null ||
+          typeof prepared !== 'object' ||
+          !('input' in prepared)
+        )
+          throw new TypeError(
+            'createInput must synchronously return { input, transferList? }',
+          );
+        const input = prepared.input;
+        const transferList = prepared.transferList;
+        if (
+          operation.status !== 'running' ||
+          !this.dispatchAllowed() ||
+          this.expireOperation(operation)
+        )
+          continue;
+        // Child outcomes notify the parent synchronously in settle/reject. No Promise list.
+        void this.submit(
+          operation.task,
+          input,
+          transferList === undefined ? {} : { transferList },
+          child,
+        ).catch(() => {});
+      } catch (cause) {
+        this.finishOperation(
+          operation,
+          'failed',
+          new PjsError(
+            `Partition input factory failed: ${serializeError(cause).message}`,
+            {
+              ...this.childContext(child),
+              cause,
+            },
+          ),
+        );
+      } finally {
+        this.admissionReservations--;
+      }
+    }
+    if (
+      this.dispatchAllowed() &&
+      this.availableAdmission() > 0 &&
+      this.nextProducer() &&
+      !this.productionTick
+    ) {
+      this.productionTick = setImmediate(() => {
+        this.productionTick = undefined;
+        this.pump();
+      });
+    }
+  }
+
+  private pump(): void {
+    if (this.pumping) return;
+    if (!this.dispatchAllowed()) {
       this.checkDrained();
       return;
     }
+    this.pumping = true;
+    try {
+      this.dispatchQueued();
+      if (this.operations.size > 0) {
+        this.producePartitions();
+        this.dispatchQueued();
+      }
+    } finally {
+      this.pumping = false;
+    }
+    this.checkDrained();
+  }
+
+  private dispatchQueued(): void {
     for (const worker of this.pool.idle()) {
-      // Serialization failures release a slot synchronously; continue consuming FIFO work.
-      while (worker.snapshot().status === 'idle') {
+      while (this.dispatchAllowed() && worker.snapshot().status === 'idle') {
         const task = this.scheduler.next(worker.snapshot());
         if (!task) break;
         this.dispatch(worker, task);
       }
     }
-    this.checkDrained();
   }
 
   private dispatch(worker: PjsWorker, task: PendingTask): void {
@@ -443,10 +887,15 @@ export class PjsRuntime {
     else this.metrics[status]++;
     if (error) task.reject(error);
     else task.resolve(output);
+    if (task.child) this.childSettled(task, status, error, output);
   }
 
   private checkDrained(): void {
-    if (this.tasks.size === 0 && this.pool.busy === 0) {
+    if (
+      this.tasks.size === 0 &&
+      this.operations.size === 0 &&
+      this.pool.busy === 0
+    ) {
       this.drainResolve?.();
       this.drainResolve = undefined;
     }
@@ -455,6 +904,15 @@ export class PjsRuntime {
   private fail(error: Error): void {
     if (this.state === 'failed' || this.state === 'stopped') return;
     this.state = 'failed';
+    for (const operation of this.operations.values())
+      this.finishOperation(
+        operation,
+        'failed',
+        new PjsWorkerError(error.message, {
+          operationId: operation.id,
+          cause: error,
+        }),
+      );
     for (const task of this.tasks.values())
       this.settle(
         task,

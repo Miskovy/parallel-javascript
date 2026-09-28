@@ -31,6 +31,11 @@ export interface TaskSnapshot {
   scheduledAt?: number;
   startedAt?: number;
   completedAt?: number;
+  /** Experimental parent/partition context, absent for ordinary run() tasks. */
+  operationId?: string;
+  partitionIndex?: number;
+  rangeStart?: number;
+  rangeEnd?: number;
 }
 
 export interface RunOptions {
