@@ -1,11 +1,17 @@
 import { AsyncResource } from 'node:async_hooks';
 import type { PjsTask } from '../tasks/registry.js';
-import type { PartitionInput, RangePartition, RangePlan } from './range.js';
+import type {
+  PartitionInput,
+  PjsTypedArray,
+  PjsTypedArrayConstructor,
+  RangePartition,
+  RangePlan,
+} from './range.js';
 import type { RangeStream } from './stream.js';
 
 export type OperationStatus =
   'created' | 'running' | 'completed' | 'failed' | 'cancelled' | 'timed_out';
-export type RangeResultMode = 'collect' | 'discard' | 'stream';
+export type RangeResultMode = 'collect' | 'discard' | 'stream' | 'map';
 
 /** Host-owned state only. No worker slot and no preallocated child Promise list. */
 export class RangeOperation extends AsyncResource {
@@ -16,7 +22,8 @@ export class RangeOperation extends AsyncResource {
   failed = 0;
   cancelled = 0;
   readonly children = new Map<string, RangePartition>();
-  outputs: unknown[] | undefined;
+  outputs: unknown[] | PjsTypedArray | undefined;
+  mapAssemblyMs = 0;
   cleanup: () => void = () => {};
 
   constructor(
@@ -26,14 +33,16 @@ export class RangeOperation extends AsyncResource {
     readonly dispatchBatchSize: number,
     readonly resultMode: RangeResultMode,
     readonly stream: RangeStream<unknown> | undefined,
+    readonly mapOutputConstructor: PjsTypedArrayConstructor | undefined,
+    outputs: unknown[] | PjsTypedArray | undefined,
     public createInput:
       ((partition: RangePartition) => PartitionInput<unknown>) | undefined,
     readonly deadline: number | undefined,
-    readonly resolve: (outputs: unknown[] | undefined) => void,
+    readonly resolve: (outputs: unknown[] | PjsTypedArray | undefined) => void,
     readonly reject: (error: Error) => void,
   ) {
     super('PjsRangeOperation', { requireManualDestroy: true });
-    this.outputs = resultMode === 'collect' ? [] : undefined;
+    this.outputs = outputs;
   }
 }
 

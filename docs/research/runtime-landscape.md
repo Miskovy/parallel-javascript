@@ -163,3 +163,36 @@ delivery exposes fast results immediately, while userland ordering can retain
 nearly the full logical result set outside the runtime's buffer. This evidence
 supports one ordering mode. It does not justify work stealing, automatic
 grain/batch selection, reduce, or cooperative cancellation.
+
+## v0.8 review: define map at the element boundary
+
+Reviewed 2026-09-29. v0.7 deliberately withheld a map name because one value
+per partition is not one value per element. v0.8 resolves that ambiguity with
+an element-block contract: each numeric partition returns exactly one array or
+typed-array entry per index, and the host validates and copies blocks into one
+flat ordered result. Transport remains block-oriented, preserving batching and
+avoiding one message per element.
+
+The generic and typed models remain separate. Generic arrays support arbitrary
+structured-cloneable elements; typed mode requires an explicit built-in
+constructor so empty output and wrong-view rejection are deterministic. A
+disjoint shared-output `parallelFor()` is still faster in the retained numeric
+case, but its mutable partial-write failure semantics differ from returned map
+ownership. The [decision](../adr/0015-element-block-map-semantics.md) and
+[measurements](../benchmarks-v0.8.md) reject turning either model into a hidden
+alias for the other.
+
+Result-memory observability also stays deliberately narrower than heap sizing.
+Direct buffers and views expose a cheap visible `byteLength`; arbitrary object
+graphs do not. Aliases count per view because SAB wrapper identity is not a
+reliable physical-backing identity across messages. The realistic pipeline
+confirmed exact queue-byte high-water marks while sampled RSS could not resolve
+the differences. This supports diagnostics, not a post-receipt hard byte cap;
+see [ADR 0016](../adr/0016-result-memory-observability.md).
+
+The high-result-count capacity control showed no degradation at a 256-entry
+buffer, so replacing the small array queue with a ring buffer lacks evidence.
+Mixed map/stream/completion/ordinary trials showed no starvation. Work stealing,
+ordered streaming, reduce, and automatic sizing remain unsupported. The next
+narrow research target is a binary-only contract with declared bytes reserved
+before dispatch, provided real workloads first demonstrate the need.

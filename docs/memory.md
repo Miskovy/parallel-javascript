@@ -124,6 +124,30 @@ plus unsettled children never exceed `experimentalMaxBufferedResults`. This is
 not a byte budget: one result can contain an arbitrarily large structured-clone
 graph.
 
+v0.8 adds diagnostic queued-payload accounting for direct `ArrayBuffer`,
+`SharedArrayBuffer`, typed-array, Node `Buffer`, and `DataView` outputs. Buffers
+contribute their `byteLength`; views contribute their visible `byteLength`.
+Ordinary objects, arrays, and scalars count as unknown, even if a nested value is
+a buffer. PJS does not traverse output graphs because getters, proxies, cycles,
+aliases, native values, and unbounded traversal work would make the observation
+unsafe and misleading.
+
+Aliased views count separately, including overlapping bytes. Separate worker
+messages can produce different host wrappers for the same physical SAB, so
+cheap wrapper-identity deduplication would not reliably measure unique backing
+memory. `knownBufferedPayloadBytes` is therefore visible payload bytes retained
+in the PJS queue, not heap size, RSS, exclusive ownership, or physical memory.
+Direct delivery to an already waiting consumer is not buffered. Current values
+return to zero on yield, close, failure, or cancellation; peak values remain
+diagnostic history in runtime metrics.
+
+These observations cannot support a hard general byte limit. Unknown graphs are
+not zero-sized, transport temporaries are outside the queue, and a result's size
+is known only after it crossed the worker boundary. A future restricted binary
+contract could reserve declared bytes before dispatch, but v0.8 retains only
+the enforceable logical-result credit bound. See
+[ADR 0016](adr/0016-result-memory-observability.md).
+
 A transferred output buffer is worker-owned until posting, host-buffer-owned
 until iterator delivery, then consumer-owned. PJS drops its buffered reference
 after yield. Closing or failing the stream drops undelivered transferred values;

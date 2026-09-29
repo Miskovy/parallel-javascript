@@ -48,3 +48,4 @@ export class PjsCancelledError extends PjsError {}
 export class PjsSerializationError extends PjsError {}
 export class PjsRuntimeStateError extends PjsError {}
 export class PjsTaskRegistrationError extends PjsError {}
+export class PjsMapContractError extends PjsError {}

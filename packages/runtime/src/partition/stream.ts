@@ -11,6 +11,13 @@ interface StreamCallbacks {
   yielded(): void;
 }
 
+function observablePayloadBytes(value: unknown): number | undefined {
+  if (typeof value !== 'object' || value === null) return undefined;
+  if (value instanceof ArrayBuffer || value instanceof SharedArrayBuffer)
+    return value.byteLength;
+  return ArrayBuffer.isView(value) ? value.byteLength : undefined;
+}
+
 /** @internal Single-consumer completion-order delivery with bounded buffering. */
 export class RangeStream<Output> implements AsyncIterableIterator<
   StreamRangeResult<Output>
@@ -28,6 +35,10 @@ export class RangeStream<Output> implements AsyncIterableIterator<
   produced = 0;
   yielded = 0;
   peakBuffered = 0;
+  knownBufferedPayloadBytes = 0;
+  peakKnownBufferedPayloadBytes = 0;
+  unknownBufferedResults = 0;
+  peakUnknownBufferedResults = 0;
 
   constructor(readonly capacity: number) {}
 
@@ -51,12 +62,14 @@ export class RangeStream<Output> implements AsyncIterableIterator<
       return;
     }
     this.buffer.push(value);
+    this.retain(value.output);
     this.peakBuffered = Math.max(this.peakBuffered, this.buffer.length);
   }
 
   complete(): void {
     if (this.done) return;
     this.done = true;
+    this.clearBuffer();
     this.callbacks = undefined;
     const waiter = this.waiter;
     this.waiter = undefined;
@@ -67,7 +80,7 @@ export class RangeStream<Output> implements AsyncIterableIterator<
     if (this.done) return;
     this.done = true;
     this.terminalError = error;
-    this.buffer.length = 0;
+    this.clearBuffer();
     this.callbacks = undefined;
     const waiter = this.waiter;
     this.waiter = undefined;
@@ -77,6 +90,7 @@ export class RangeStream<Output> implements AsyncIterableIterator<
   next(): Promise<IteratorResult<StreamRangeResult<Output>>> {
     if (this.buffer.length > 0) {
       const value = this.buffer.shift()!;
+      this.release(value.output);
       this.yielded++;
       this.callbacks?.yielded();
       this.callbacks?.demand();
@@ -97,7 +111,7 @@ export class RangeStream<Output> implements AsyncIterableIterator<
   return(): Promise<IteratorResult<StreamRangeResult<Output>>> {
     if (!this.done) {
       this.done = true;
-      this.buffer.length = 0;
+      this.clearBuffer();
       const callbacks = this.callbacks;
       this.callbacks = undefined;
       const waiter = this.waiter;
@@ -112,7 +126,7 @@ export class RangeStream<Output> implements AsyncIterableIterator<
     const reason = error instanceof Error ? error : new Error(String(error));
     if (!this.done) {
       this.done = true;
-      this.buffer.length = 0;
+      this.clearBuffer();
       const callbacks = this.callbacks;
       this.callbacks = undefined;
       const waiter = this.waiter;
@@ -125,5 +139,37 @@ export class RangeStream<Output> implements AsyncIterableIterator<
 
   [Symbol.asyncIterator](): AsyncIterableIterator<StreamRangeResult<Output>> {
     return this;
+  }
+
+  private retain(output: Output): void {
+    const bytes = observablePayloadBytes(output);
+    if (bytes === undefined) {
+      this.unknownBufferedResults++;
+      this.peakUnknownBufferedResults = Math.max(
+        this.peakUnknownBufferedResults,
+        this.unknownBufferedResults,
+      );
+      return;
+    }
+    this.knownBufferedPayloadBytes += bytes;
+    this.peakKnownBufferedPayloadBytes = Math.max(
+      this.peakKnownBufferedPayloadBytes,
+      this.knownBufferedPayloadBytes,
+    );
+  }
+
+  private release(output: Output): void {
+    const bytes = observablePayloadBytes(output);
+    if (bytes === undefined) {
+      this.unknownBufferedResults--;
+      return;
+    }
+    this.knownBufferedPayloadBytes -= bytes;
+  }
+
+  private clearBuffer(): void {
+    this.buffer.length = 0;
+    this.knownBufferedPayloadBytes = 0;
+    this.unknownBufferedResults = 0;
   }
 }

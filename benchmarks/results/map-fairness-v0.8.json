@@ -1,0 +1,132 @@
+{
+  "version": "0.8.0",
+  "timestamp": "2026-09-28T20:43:22.137Z",
+  "results": [
+    {
+      "capacity": 1,
+      "trial": 0,
+      "completed": {
+        "ordinary": 10.862500000000011,
+        "map": 16.7414,
+        "parallel": 16.8956,
+        "stream": 30.640899999999988
+      },
+      "mapCount": 32768,
+      "streamCount": 64,
+      "wallMs": 30.682299999999998,
+      "starvation": false
+    },
+    {
+      "capacity": 1,
+      "trial": 1,
+      "completed": {
+        "ordinary": 6.168600000000026,
+        "parallel": 11.790300000000002,
+        "map": 11.91700000000003,
+        "stream": 18.71859999999998
+      },
+      "mapCount": 32768,
+      "streamCount": 64,
+      "wallMs": 18.74200000000002,
+      "starvation": false
+    },
+    {
+      "capacity": 1,
+      "trial": 2,
+      "completed": {
+        "ordinary": 5.0120000000000005,
+        "parallel": 11.371899999999982,
+        "map": 11.886300000000006,
+        "stream": 19.636300000000006
+      },
+      "mapCount": 32768,
+      "streamCount": 64,
+      "wallMs": 19.64670000000001,
+      "starvation": false
+    },
+    {
+      "capacity": 4,
+      "trial": 0,
+      "completed": {
+        "ordinary": 5.033999999999992,
+        "map": 11.566599999999994,
+        "parallel": 11.843999999999937,
+        "stream": 17.572000000000003
+      },
+      "mapCount": 32768,
+      "streamCount": 64,
+      "wallMs": 17.582899999999995,
+      "starvation": false
+    },
+    {
+      "capacity": 4,
+      "trial": 1,
+      "completed": {
+        "ordinary": 7.056899999999928,
+        "map": 12.958599999999933,
+        "parallel": 14.979199999999992,
+        "stream": 20.782899999999927
+      },
+      "mapCount": 32768,
+      "streamCount": 64,
+      "wallMs": 20.797500000000014,
+      "starvation": false
+    },
+    {
+      "capacity": 4,
+      "trial": 2,
+      "completed": {
+        "ordinary": 5.133300000000077,
+        "map": 11.016000000000076,
+        "parallel": 11.23860000000002,
+        "stream": 15.981300000000033
+      },
+      "mapCount": 32768,
+      "streamCount": 64,
+      "wallMs": 15.992399999999975,
+      "starvation": false
+    },
+    {
+      "capacity": 8,
+      "trial": 0,
+      "completed": {
+        "ordinary": 5.270500000000084,
+        "map": 12.38530000000003,
+        "parallel": 13.611700000000042,
+        "stream": 16.895500000000084
+      },
+      "mapCount": 32768,
+      "streamCount": 64,
+      "wallMs": 16.911699999999996,
+      "starvation": false
+    },
+    {
+      "capacity": 8,
+      "trial": 1,
+      "completed": {
+        "ordinary": 7.731899999999996,
+        "parallel": 18.834800000000087,
+        "map": 19.242500000000064,
+        "stream": 21.93730000000005
+      },
+      "mapCount": 32768,
+      "streamCount": 64,
+      "wallMs": 21.949299999999994,
+      "starvation": false
+    },
+    {
+      "capacity": 8,
+      "trial": 2,
+      "completed": {
+        "ordinary": 7.030999999999949,
+        "map": 15.17470000000003,
+        "parallel": 15.742700000000013,
+        "stream": 19.282699999999977
+      },
+      "mapCount": 32768,
+      "streamCount": 64,
+      "wallMs": 19.28800000000001,
+      "starvation": false
+    }
+  ]
+}

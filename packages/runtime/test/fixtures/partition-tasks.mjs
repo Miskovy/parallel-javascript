@@ -102,6 +102,53 @@ export async function completion({
   return returnValue;
 }
 
+export async function mapBlock({
+  partition,
+  gate,
+  ms = 0,
+  fail = false,
+  crash = false,
+  kind = 'array',
+  lengthDelta = 0,
+  move = false,
+  source,
+}) {
+  if (gate) {
+    const control = new Int32Array(gate);
+    Atomics.add(control, 0, 1);
+    Atomics.notify(control, 0);
+    while (!Atomics.load(control, 1)) {
+      if (Atomics.wait(control, 1, 0, 5000) === 'timed-out')
+        throw new Error('Map gate was never released');
+    }
+  }
+  if (ms) await delay(ms);
+  if (crash) process.exit(24);
+  if (fail) throw new RangeError('map block deliberately failed');
+  const length = partition.end - partition.start + lengthDelta;
+  if (kind === 'wrong') return { length };
+  if (kind === 'uncloneable') return [() => partition.index];
+  if (kind === 'objects')
+    return Array.from({ length }, (_, offset) => {
+      const index = partition.start + offset;
+      return { index, score: index * index, category: Math.abs(index) % 3 };
+    });
+  if (kind === 'float64' || kind === 'uint32') {
+    const values =
+      kind === 'float64' ? new Float64Array(length) : new Uint32Array(length);
+    for (let offset = 0; offset < length; offset++) {
+      const index = partition.start + offset;
+      values[offset] = source ? source[index - partition.start] * 2 : index * 2;
+    }
+    return move ? transfer(values, [values.buffer]) : values;
+  }
+  return Array.from({ length }, (_, offset) => (partition.start + offset) * 2);
+}
+
+export function directResult({ returnValue, move = false }) {
+  return move ? transfer(returnValue, [returnValue.buffer]) : returnValue;
+}
+
 export async function nested() {
   const registry = new PjsTaskRegistry();
   const task = registry.register('range', new URL(import.meta.url), 'range');

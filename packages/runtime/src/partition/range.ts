@@ -35,6 +35,41 @@ export interface StreamRangeOptions extends PartitionOptions {
   experimentalMaxBufferedResults?: number;
 }
 
+/** @experimental Typed numeric blocks supported by element-range mapping. */
+export type PjsTypedArray =
+  | Int8Array<ArrayBufferLike>
+  | Uint8Array<ArrayBufferLike>
+  | Uint8ClampedArray<ArrayBufferLike>
+  | Int16Array<ArrayBufferLike>
+  | Uint16Array<ArrayBufferLike>
+  | Int32Array<ArrayBufferLike>
+  | Uint32Array<ArrayBufferLike>
+  | Float32Array<ArrayBufferLike>
+  | Float64Array<ArrayBufferLike>
+  | BigInt64Array<ArrayBufferLike>
+  | BigUint64Array<ArrayBufferLike>;
+
+/** @experimental Built-in typed-array constructors accepted by typed map mode. */
+export type PjsTypedArrayConstructor =
+  | Int8ArrayConstructor
+  | Uint8ArrayConstructor
+  | Uint8ClampedArrayConstructor
+  | Int16ArrayConstructor
+  | Uint16ArrayConstructor
+  | Int32ArrayConstructor
+  | Uint32ArrayConstructor
+  | Float32ArrayConstructor
+  | Float64ArrayConstructor
+  | BigInt64ArrayConstructor
+  | BigUint64ArrayConstructor;
+
+/** @experimental Selects a stable flat typed result, including for empty ranges. */
+export interface TypedMapRangeOptions<
+  Constructor extends PjsTypedArrayConstructor = PjsTypedArrayConstructor,
+> extends PartitionOptions {
+  experimentalOutputConstructor: Constructor;
+}
+
 export interface RangePlan extends PartitionRange {
   chunkCount: number;
 }

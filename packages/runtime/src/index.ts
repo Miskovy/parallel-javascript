@@ -11,6 +11,9 @@ export type {
   PartitionInput,
   PartitionOptions,
   StreamRangeOptions,
+  PjsTypedArray,
+  PjsTypedArrayConstructor,
+  TypedMapRangeOptions,
 } from './partition/range.js';
 export type { StreamRangeResult } from './partition/stream.js';
 export type {
@@ -32,4 +35,5 @@ export {
   PjsSerializationError,
   PjsRuntimeStateError,
   PjsTaskRegistrationError,
+  PjsMapContractError,
 } from './errors/index.js';

@@ -9,6 +9,8 @@ import type {
   RangePartition,
   PartitionInput,
   StreamRangeResult,
+  PjsTypedArray,
+  TypedMapRangeOptions,
 } from '../dist/index.js';
 
 const registry = new PjsTaskRegistry();
@@ -121,3 +123,44 @@ const stream: AsyncIterable<StreamRangeResult<number>> = runtime.streamRange(
 void stream;
 // @ts-expect-error Stream task input typing applies to every payload.
 runtime.streamRange(task, range, () => ({ input: 'bad' }));
+
+const arrayMapTask = registry.register<{ partition: RangePartition }, number[]>(
+  'array-map',
+  new URL('./fixture.js', import.meta.url),
+  'arrayMap',
+);
+const mapped: Promise<number[]> = runtime.parallelMapRange(
+  arrayMapTask,
+  range,
+  (partition) => ({ input: { partition } }),
+);
+void mapped;
+
+const typedMapTask = registry.register<
+  { partition: RangePartition },
+  Float64Array<ArrayBuffer>
+>('typed-map', new URL('./fixture.js', import.meta.url), 'typedMap');
+const typedOptions: TypedMapRangeOptions<Float64ArrayConstructor> = {
+  experimentalOutputConstructor: Float64Array,
+  experimentalDispatchBatchSize: 4,
+};
+const typedMapped: Promise<Float64Array<ArrayBuffer>> =
+  runtime.parallelMapRange(
+    typedMapTask,
+    range,
+    (partition) => ({ input: { partition } }),
+    typedOptions,
+  );
+void typedMapped;
+const typedUnion: PjsTypedArray = new Uint32Array(1);
+void typedUnion;
+const wrongTypedOptions: TypedMapRangeOptions<Uint32ArrayConstructor> = {
+  experimentalOutputConstructor: Uint32Array,
+};
+runtime.parallelMapRange(
+  // @ts-expect-error Typed task output must match the selected constructor.
+  typedMapTask,
+  range,
+  (partition) => ({ input: { partition } }),
+  wrongTypedOptions,
+);

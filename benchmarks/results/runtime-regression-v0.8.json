@@ -1,0 +1,923 @@
+{
+  "version": "0.8.0",
+  "timestamp": "2026-09-28T20:44:44.336Z",
+  "environment": {
+    "node": "v24.21.0",
+    "platform": "win32",
+    "release": "10.0.19045",
+    "cpuModel": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz"
+  },
+  "methodology": {
+    "order": "baseline/candidate/candidate/baseline in fresh processes",
+    "samplesPerVersionCase": 10,
+    "warmupsPerProcessCase": 1,
+    "baseline": "v0.8 source with only stream payload-byte accounting disabled; v0.7 was not committed separately",
+    "outliers": "all retained"
+  },
+  "results": [
+    {
+      "version": "baseline",
+      "workers": 4,
+      "results": [
+        {
+          "name": "run-noop",
+          "kind": "run",
+          "count": 1024,
+          "samples": [
+            {
+              "wallMs": 43.34899999999999
+            },
+            {
+              "wallMs": 41.43920000000003
+            },
+            {
+              "wallMs": 36.2337
+            },
+            {
+              "wallMs": 42.69620000000003
+            },
+            {
+              "wallMs": 35.983600000000024
+            }
+          ]
+        },
+        {
+          "name": "run-transfer-8mib",
+          "kind": "transfer",
+          "count": 64,
+          "bytes": 8388608,
+          "samples": [
+            {
+              "wallMs": 17.434500000000014
+            },
+            {
+              "wallMs": 18.986500000000035
+            },
+            {
+              "wallMs": 17.26769999999999
+            },
+            {
+              "wallMs": 14.483300000000042
+            },
+            {
+              "wallMs": 18.962200000000053
+            }
+          ]
+        },
+        {
+          "name": "run-shared-8mib",
+          "kind": "shared",
+          "count": 256,
+          "bytes": 8388608,
+          "samples": [
+            {
+              "wallMs": 14.793499999999995
+            },
+            {
+              "wallMs": 14.676900000000046
+            },
+            {
+              "wallMs": 11.514599999999973
+            },
+            {
+              "wallMs": 11.616399999999999
+            },
+            {
+              "wallMs": 14.226800000000026
+            }
+          ]
+        },
+        {
+          "name": "partition-noop-b1",
+          "kind": "partition",
+          "count": 2048,
+          "batchSize": 1,
+          "samples": [
+            {
+              "wallMs": 86.88390000000004
+            },
+            {
+              "wallMs": 86.86079999999993
+            },
+            {
+              "wallMs": 89.70690000000002
+            },
+            {
+              "wallMs": 89.95749999999998
+            },
+            {
+              "wallMs": 88.41689999999994
+            }
+          ]
+        },
+        {
+          "name": "partition-noop-b8",
+          "kind": "partition",
+          "count": 2048,
+          "batchSize": 8,
+          "samples": [
+            {
+              "wallMs": 30.695500000000038
+            },
+            {
+              "wallMs": 29.506799999999885
+            },
+            {
+              "wallMs": 24.235299999999825
+            },
+            {
+              "wallMs": 35.05060000000003
+            },
+            {
+              "wallMs": 34.575000000000045
+            }
+          ]
+        },
+        {
+          "name": "parallel-noop-b1",
+          "kind": "parallel",
+          "count": 2048,
+          "batchSize": 1,
+          "samples": [
+            {
+              "wallMs": 83.83860000000004
+            },
+            {
+              "wallMs": 88.66010000000006
+            },
+            {
+              "wallMs": 92.77729999999997
+            },
+            {
+              "wallMs": 77.47690000000011
+            },
+            {
+              "wallMs": 92.85910000000013
+            }
+          ]
+        },
+        {
+          "name": "parallel-noop-b8",
+          "kind": "parallel",
+          "count": 2048,
+          "batchSize": 8,
+          "samples": [
+            {
+              "wallMs": 23.29989999999998
+            },
+            {
+              "wallMs": 28.163800000000037
+            },
+            {
+              "wallMs": 24.335199999999986
+            },
+            {
+              "wallMs": 24.686300000000074
+            },
+            {
+              "wallMs": 25.314800000000105
+            }
+          ]
+        },
+        {
+          "name": "stream-scalar-b1",
+          "kind": "stream",
+          "count": 4096,
+          "batchSize": 1,
+          "samples": [
+            {
+              "wallMs": 176.42599999999993
+            },
+            {
+              "wallMs": 170.64080000000013
+            },
+            {
+              "wallMs": 173.01330000000007
+            },
+            {
+              "wallMs": 165.38420000000042
+            },
+            {
+              "wallMs": 163.70919999999978
+            }
+          ]
+        },
+        {
+          "name": "stream-scalar-b8",
+          "kind": "stream",
+          "count": 4096,
+          "batchSize": 8,
+          "samples": [
+            {
+              "wallMs": 191.96669999999995
+            },
+            {
+              "wallMs": 188.04309999999987
+            },
+            {
+              "wallMs": 188.8067000000001
+            },
+            {
+              "wallMs": 167.2248999999997
+            },
+            {
+              "wallMs": 168.45489999999972
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "candidate",
+      "workers": 4,
+      "results": [
+        {
+          "name": "run-noop",
+          "kind": "run",
+          "count": 1024,
+          "samples": [
+            {
+              "wallMs": 39.331199999999995
+            },
+            {
+              "wallMs": 44.85859999999997
+            },
+            {
+              "wallMs": 44.185299999999984
+            },
+            {
+              "wallMs": 42.83339999999998
+            },
+            {
+              "wallMs": 42.27539999999999
+            }
+          ]
+        },
+        {
+          "name": "run-transfer-8mib",
+          "kind": "transfer",
+          "count": 64,
+          "bytes": 8388608,
+          "samples": [
+            {
+              "wallMs": 14.945400000000006
+            },
+            {
+              "wallMs": 16.10179999999997
+            },
+            {
+              "wallMs": 15.375400000000013
+            },
+            {
+              "wallMs": 16.22739999999999
+            },
+            {
+              "wallMs": 17.99630000000002
+            }
+          ]
+        },
+        {
+          "name": "run-shared-8mib",
+          "kind": "shared",
+          "count": 256,
+          "bytes": 8388608,
+          "samples": [
+            {
+              "wallMs": 16.15859999999998
+            },
+            {
+              "wallMs": 12.535000000000082
+            },
+            {
+              "wallMs": 14.579700000000003
+            },
+            {
+              "wallMs": 11.07370000000003
+            },
+            {
+              "wallMs": 11.468999999999937
+            }
+          ]
+        },
+        {
+          "name": "partition-noop-b1",
+          "kind": "partition",
+          "count": 2048,
+          "batchSize": 1,
+          "samples": [
+            {
+              "wallMs": 90.45060000000001
+            },
+            {
+              "wallMs": 86.39359999999999
+            },
+            {
+              "wallMs": 84.20859999999993
+            },
+            {
+              "wallMs": 84.41250000000014
+            },
+            {
+              "wallMs": 86.0340000000001
+            }
+          ]
+        },
+        {
+          "name": "partition-noop-b8",
+          "kind": "partition",
+          "count": 2048,
+          "batchSize": 8,
+          "samples": [
+            {
+              "wallMs": 37.580000000000155
+            },
+            {
+              "wallMs": 22.75540000000001
+            },
+            {
+              "wallMs": 22.898400000000038
+            },
+            {
+              "wallMs": 33.28649999999993
+            },
+            {
+              "wallMs": 37.427200000000084
+            }
+          ]
+        },
+        {
+          "name": "parallel-noop-b1",
+          "kind": "parallel",
+          "count": 2048,
+          "batchSize": 1,
+          "samples": [
+            {
+              "wallMs": 95.66509999999994
+            },
+            {
+              "wallMs": 79.31859999999983
+            },
+            {
+              "wallMs": 82.62879999999996
+            },
+            {
+              "wallMs": 84.68910000000005
+            },
+            {
+              "wallMs": 89.2926
+            }
+          ]
+        },
+        {
+          "name": "parallel-noop-b8",
+          "kind": "parallel",
+          "count": 2048,
+          "batchSize": 8,
+          "samples": [
+            {
+              "wallMs": 29.67969999999991
+            },
+            {
+              "wallMs": 22.34609999999998
+            },
+            {
+              "wallMs": 23.99389999999994
+            },
+            {
+              "wallMs": 45.684999999999945
+            },
+            {
+              "wallMs": 23.616800000000012
+            }
+          ]
+        },
+        {
+          "name": "stream-scalar-b1",
+          "kind": "stream",
+          "count": 4096,
+          "batchSize": 1,
+          "samples": [
+            {
+              "wallMs": 179.84889999999996
+            },
+            {
+              "wallMs": 176.9308000000001
+            },
+            {
+              "wallMs": 164.31929999999966
+            },
+            {
+              "wallMs": 162.86770000000024
+            },
+            {
+              "wallMs": 158.00990000000002
+            }
+          ]
+        },
+        {
+          "name": "stream-scalar-b8",
+          "kind": "stream",
+          "count": 4096,
+          "batchSize": 8,
+          "samples": [
+            {
+              "wallMs": 181.6194999999998
+            },
+            {
+              "wallMs": 161.26490000000013
+            },
+            {
+              "wallMs": 155.61709999999994
+            },
+            {
+              "wallMs": 175.37440000000015
+            },
+            {
+              "wallMs": 171.6781000000001
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "candidate",
+      "workers": 4,
+      "results": [
+        {
+          "name": "run-noop",
+          "kind": "run",
+          "count": 1024,
+          "samples": [
+            {
+              "wallMs": 49.8408
+            },
+            {
+              "wallMs": 54.264700000000005
+            },
+            {
+              "wallMs": 35.9264
+            },
+            {
+              "wallMs": 40.48660000000001
+            },
+            {
+              "wallMs": 34.91579999999999
+            }
+          ]
+        },
+        {
+          "name": "run-transfer-8mib",
+          "kind": "transfer",
+          "count": 64,
+          "bytes": 8388608,
+          "samples": [
+            {
+              "wallMs": 16.3544
+            },
+            {
+              "wallMs": 16.215899999999976
+            },
+            {
+              "wallMs": 18.032100000000014
+            },
+            {
+              "wallMs": 15.514299999999992
+            },
+            {
+              "wallMs": 17.512099999999975
+            }
+          ]
+        },
+        {
+          "name": "run-shared-8mib",
+          "kind": "shared",
+          "count": 256,
+          "bytes": 8388608,
+          "samples": [
+            {
+              "wallMs": 13.780300000000011
+            },
+            {
+              "wallMs": 17.84489999999994
+            },
+            {
+              "wallMs": 11.434299999999894
+            },
+            {
+              "wallMs": 10.885699999999929
+            },
+            {
+              "wallMs": 11.598500000000058
+            }
+          ]
+        },
+        {
+          "name": "partition-noop-b1",
+          "kind": "partition",
+          "count": 2048,
+          "batchSize": 1,
+          "samples": [
+            {
+              "wallMs": 93.51239999999996
+            },
+            {
+              "wallMs": 99.53070000000002
+            },
+            {
+              "wallMs": 83.33360000000005
+            },
+            {
+              "wallMs": 88.72149999999999
+            },
+            {
+              "wallMs": 89.19669999999996
+            }
+          ]
+        },
+        {
+          "name": "partition-noop-b8",
+          "kind": "partition",
+          "count": 2048,
+          "batchSize": 8,
+          "samples": [
+            {
+              "wallMs": 27.186500000000024
+            },
+            {
+              "wallMs": 30.596599999999853
+            },
+            {
+              "wallMs": 23.44529999999986
+            },
+            {
+              "wallMs": 37.34500000000003
+            },
+            {
+              "wallMs": 35.78890000000001
+            }
+          ]
+        },
+        {
+          "name": "parallel-noop-b1",
+          "kind": "parallel",
+          "count": 2048,
+          "batchSize": 1,
+          "samples": [
+            {
+              "wallMs": 89.23230000000012
+            },
+            {
+              "wallMs": 89.2328
+            },
+            {
+              "wallMs": 87.90980000000013
+            },
+            {
+              "wallMs": 75.4172000000001
+            },
+            {
+              "wallMs": 82.72080000000005
+            }
+          ]
+        },
+        {
+          "name": "parallel-noop-b8",
+          "kind": "parallel",
+          "count": 2048,
+          "batchSize": 8,
+          "samples": [
+            {
+              "wallMs": 23.58310000000006
+            },
+            {
+              "wallMs": 29.642200000000003
+            },
+            {
+              "wallMs": 26.840099999999893
+            },
+            {
+              "wallMs": 25.94509999999991
+            },
+            {
+              "wallMs": 24.83069999999998
+            }
+          ]
+        },
+        {
+          "name": "stream-scalar-b1",
+          "kind": "stream",
+          "count": 4096,
+          "batchSize": 1,
+          "samples": [
+            {
+              "wallMs": 183.8146999999999
+            },
+            {
+              "wallMs": 169.48050000000012
+            },
+            {
+              "wallMs": 165.91560000000027
+            },
+            {
+              "wallMs": 182.30340000000024
+            },
+            {
+              "wallMs": 162.04379999999992
+            }
+          ]
+        },
+        {
+          "name": "stream-scalar-b8",
+          "kind": "stream",
+          "count": 4096,
+          "batchSize": 8,
+          "samples": [
+            {
+              "wallMs": 193.33170000000018
+            },
+            {
+              "wallMs": 166.6648
+            },
+            {
+              "wallMs": 163.6302999999998
+            },
+            {
+              "wallMs": 180.99900000000025
+            },
+            {
+              "wallMs": 172.02710000000025
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "baseline",
+      "workers": 4,
+      "results": [
+        {
+          "name": "run-noop",
+          "kind": "run",
+          "count": 1024,
+          "samples": [
+            {
+              "wallMs": 47.597699999999975
+            },
+            {
+              "wallMs": 45.77429999999998
+            },
+            {
+              "wallMs": 37.34269999999998
+            },
+            {
+              "wallMs": 36.02109999999999
+            },
+            {
+              "wallMs": 40.25
+            }
+          ]
+        },
+        {
+          "name": "run-transfer-8mib",
+          "kind": "transfer",
+          "count": 64,
+          "bytes": 8388608,
+          "samples": [
+            {
+              "wallMs": 18.05529999999999
+            },
+            {
+              "wallMs": 22.005299999999977
+            },
+            {
+              "wallMs": 15.156000000000006
+            },
+            {
+              "wallMs": 16.639500000000055
+            },
+            {
+              "wallMs": 14.503500000000031
+            }
+          ]
+        },
+        {
+          "name": "run-shared-8mib",
+          "kind": "shared",
+          "count": 256,
+          "bytes": 8388608,
+          "samples": [
+            {
+              "wallMs": 13.952100000000087
+            },
+            {
+              "wallMs": 10.38110000000006
+            },
+            {
+              "wallMs": 14.5548
+            },
+            {
+              "wallMs": 11.072900000000004
+            },
+            {
+              "wallMs": 12.39269999999999
+            }
+          ]
+        },
+        {
+          "name": "partition-noop-b1",
+          "kind": "partition",
+          "count": 2048,
+          "batchSize": 1,
+          "samples": [
+            {
+              "wallMs": 91.23500000000001
+            },
+            {
+              "wallMs": 84.3039
+            },
+            {
+              "wallMs": 88.11890000000005
+            },
+            {
+              "wallMs": 91.45709999999997
+            },
+            {
+              "wallMs": 86.03089999999997
+            }
+          ]
+        },
+        {
+          "name": "partition-noop-b8",
+          "kind": "partition",
+          "count": 2048,
+          "batchSize": 8,
+          "samples": [
+            {
+              "wallMs": 35.18639999999982
+            },
+            {
+              "wallMs": 38.7023999999999
+            },
+            {
+              "wallMs": 33.17419999999993
+            },
+            {
+              "wallMs": 36.17410000000018
+            },
+            {
+              "wallMs": 35.84860000000003
+            }
+          ]
+        },
+        {
+          "name": "parallel-noop-b1",
+          "kind": "parallel",
+          "count": 2048,
+          "batchSize": 1,
+          "samples": [
+            {
+              "wallMs": 87.35699999999997
+            },
+            {
+              "wallMs": 84.51649999999995
+            },
+            {
+              "wallMs": 85.98779999999988
+            },
+            {
+              "wallMs": 80.42679999999996
+            },
+            {
+              "wallMs": 85.88130000000001
+            }
+          ]
+        },
+        {
+          "name": "parallel-noop-b8",
+          "kind": "parallel",
+          "count": 2048,
+          "batchSize": 8,
+          "samples": [
+            {
+              "wallMs": 27.33289999999988
+            },
+            {
+              "wallMs": 21.180900000000065
+            },
+            {
+              "wallMs": 30.546699999999873
+            },
+            {
+              "wallMs": 25.768100000000004
+            },
+            {
+              "wallMs": 21.04600000000005
+            }
+          ]
+        },
+        {
+          "name": "stream-scalar-b1",
+          "kind": "stream",
+          "count": 4096,
+          "batchSize": 1,
+          "samples": [
+            {
+              "wallMs": 172.2547000000004
+            },
+            {
+              "wallMs": 158.08199999999988
+            },
+            {
+              "wallMs": 169.2862
+            },
+            {
+              "wallMs": 164.58329999999978
+            },
+            {
+              "wallMs": 167.3489999999997
+            }
+          ]
+        },
+        {
+          "name": "stream-scalar-b8",
+          "kind": "stream",
+          "count": 4096,
+          "batchSize": 8,
+          "samples": [
+            {
+              "wallMs": 174.0927999999999
+            },
+            {
+              "wallMs": 170.8197
+            },
+            {
+              "wallMs": 168.99069999999983
+            },
+            {
+              "wallMs": 171.29350000000022
+            },
+            {
+              "wallMs": 156.58849999999984
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "summary": [
+    {
+      "name": "run-noop",
+      "baseline": 40.844600000000014,
+      "candidate": 42.55439999999999,
+      "candidateOverBaseline": 1.04186110281408
+    },
+    {
+      "name": "run-transfer-8mib",
+      "baseline": 17.351100000000002,
+      "candidate": 16.221649999999983,
+      "candidateOverBaseline": 0.934906144279036
+    },
+    {
+      "name": "run-shared-8mib",
+      "baseline": 13.172400000000039,
+      "candidate": 12.06675000000007,
+      "candidateOverBaseline": 0.9160631320032822
+    },
+    {
+      "name": "partition-noop-b1",
+      "baseline": 88.2679,
+      "candidate": 87.55754999999999,
+      "candidateOverBaseline": 0.9919523405450905
+    },
+    {
+      "name": "partition-noop-b8",
+      "baseline": 34.81280000000004,
+      "candidate": 31.941549999999893,
+      "candidateOverBaseline": 0.9175231524037095
+    },
+    {
+      "name": "parallel-noop-b1",
+      "baseline": 85.93454999999994,
+      "candidate": 86.29945000000009,
+      "candidateOverBaseline": 1.0042462548532591
+    },
+    {
+      "name": "parallel-noop-b8",
+      "baseline": 25.00055000000009,
+      "candidate": 25.387899999999945,
+      "candidateOverBaseline": 1.0154936591394932
+    },
+    {
+      "name": "stream-scalar-b1",
+      "baseline": 168.31759999999986,
+      "candidate": 167.6980500000002,
+      "candidateOverBaseline": 0.9963191609195968
+    },
+    {
+      "name": "stream-scalar-b8",
+      "baseline": 171.05660000000012,
+      "candidate": 171.85260000000017,
+      "candidateOverBaseline": 1.004653430501951
+    }
+  ]
+}

@@ -12,8 +12,11 @@ import type {
   PartitionRange,
   PartitionInput,
   PartitionOptions,
+  PjsTypedArray,
+  PjsTypedArrayConstructor,
   RangePartition,
   StreamRangeOptions,
+  TypedMapRangeOptions,
 } from './partition/range.js';
 import { RangeStream } from './partition/stream.js';
 import type { StreamRangeResult } from './partition/stream.js';
@@ -26,6 +29,7 @@ import {
   PjsSerializationError,
   PjsTaskError,
   PjsTaskRegistrationError,
+  PjsMapContractError,
   PjsTimeoutError,
   PjsWorkerError,
 } from './errors/index.js';
@@ -53,6 +57,20 @@ import type {
   ExecutionResultMessage,
   TaskResultMessage,
 } from './workers/protocol.js';
+
+const typedArrayConstructors = new Set<PjsTypedArrayConstructor>([
+  Int8Array,
+  Uint8Array,
+  Uint8ClampedArray,
+  Int16Array,
+  Uint16Array,
+  Int32Array,
+  Uint32Array,
+  Float32Array,
+  Float64Array,
+  BigInt64Array,
+  BigUint64Array,
+]);
 
 export interface PjsRuntimeOptions {
   registry: PjsTaskRegistry;
@@ -120,11 +138,26 @@ export class PjsRuntime {
       cancelled: 0,
       timedOut: 0,
     },
+    mapping: {
+      accepted: 0,
+      rejected: 0,
+      completed: 0,
+      failed: 0,
+      cancelled: 0,
+      timedOut: 0,
+    },
   };
   private readonly streamResultMetrics = {
     produced: 0,
     yielded: 0,
     peakBuffered: 0,
+    peakKnownBufferedPayloadBytes: 0,
+    peakUnknownBufferedResults: 0,
+  };
+  private readonly mapResultMetrics = {
+    blocks: 0,
+    elements: 0,
+    assemblyMs: 0,
   };
   private readonly partitionMetrics = {
     generated: 0,
@@ -275,6 +308,41 @@ export class PjsRuntime {
     ) as Promise<void>;
   }
 
+  /** @experimental Ordered element map assembled from validated typed blocks. */
+  parallelMapRange<Input, Constructor extends PjsTypedArrayConstructor>(
+    task: PjsTask<Input, InstanceType<Constructor>>,
+    range: PartitionRange,
+    createInput: (partition: RangePartition) => PartitionInput<Input>,
+    options: TypedMapRangeOptions<Constructor>,
+  ): Promise<InstanceType<Constructor>>;
+  /** @experimental Ordered element map assembled from validated array blocks. */
+  parallelMapRange<Input, Output>(
+    task: PjsTask<Input, readonly Output[]>,
+    range: PartitionRange,
+    createInput: (partition: RangePartition) => PartitionInput<Input>,
+    options?: PartitionOptions,
+  ): Promise<Output[]>;
+  parallelMapRange<Input>(
+    task: PjsTask<Input, readonly unknown[] | PjsTypedArray>,
+    range: PartitionRange,
+    createInput: (partition: RangePartition) => PartitionInput<Input>,
+    options: PartitionOptions | TypedMapRangeOptions = {},
+  ): Promise<unknown[] | PjsTypedArray> {
+    const outputConstructor =
+      'experimentalOutputConstructor' in options
+        ? options.experimentalOutputConstructor
+        : undefined;
+    return this.startRangeOperation(
+      task,
+      range,
+      createInput,
+      options,
+      'map',
+      undefined,
+      outputConstructor,
+    ) as Promise<unknown[] | PjsTypedArray>;
+  }
+
   /** @experimental Bounded completion-order delivery of partition results. */
   streamRange<Input, Output>(
     task: PjsTask<Input, Output>,
@@ -319,7 +387,8 @@ export class PjsRuntime {
     options: PartitionOptions,
     resultMode: RangeResultMode,
     stream?: RangeStream<unknown>,
-  ): Promise<unknown[] | void> {
+    mapOutputConstructor?: PjsTypedArrayConstructor,
+  ): Promise<unknown[] | PjsTypedArray | void> {
     const id = randomUUID();
     const acceptedAt = performance.now();
     const kind =
@@ -327,7 +396,9 @@ export class PjsRuntime {
         ? 'collecting'
         : resultMode === 'discard'
           ? 'completion'
-          : 'streaming';
+          : resultMode === 'stream'
+            ? 'streaming'
+            : 'mapping';
     const reject = (error: Error): Promise<never> => {
       this.operationMetrics.rejected++;
       this.operationTypeMetrics[kind].rejected++;
@@ -344,10 +415,13 @@ export class PjsRuntime {
     let timeout: number | undefined;
     let signal: AbortSignal | undefined;
     let dispatchBatchSize: number;
+    let outputs: unknown[] | PjsTypedArray | undefined;
     try {
       plan = planRange(
         range,
-        resultMode === 'collect' ? 2 ** 32 - 1 : Number.MAX_SAFE_INTEGER,
+        resultMode === 'collect' || resultMode === 'map'
+          ? 2 ** 32 - 1
+          : Number.MAX_SAFE_INTEGER,
       );
       if (typeof createInput !== 'function')
         throw new TypeError('createInput must be a synchronous function');
@@ -360,6 +434,14 @@ export class PjsRuntime {
         16,
       );
       if (timeout !== undefined) integer('timeout', timeout, 1, 2 ** 31 - 1);
+      if (
+        resultMode === 'map' &&
+        mapOutputConstructor !== undefined &&
+        !typedArrayConstructors.has(mapOutputConstructor)
+      )
+        throw new TypeError(
+          'experimentalOutputConstructor must be a built-in typed-array constructor',
+        );
     } catch (error) {
       return reject(error as Error);
     }
@@ -391,7 +473,23 @@ export class PjsRuntime {
         ),
       );
 
-    return new Promise<unknown[] | void>((resolve, reject) => {
+    try {
+      if (resultMode === 'collect') outputs = [];
+      else if (resultMode === 'map') {
+        const length = plan.end - plan.start;
+        if (length > 2 ** 32 - 1)
+          throw new RangeError(
+            'Map output has more elements than a JavaScript array can represent',
+          );
+        outputs = mapOutputConstructor
+          ? (new mapOutputConstructor(length) as PjsTypedArray)
+          : new Array(length);
+      }
+    } catch (error) {
+      return reject(error as Error);
+    }
+
+    return new Promise<unknown[] | PjsTypedArray | void>((resolve, reject) => {
       const operation = new RangeOperation(
         id,
         task as PjsTask<unknown, unknown>,
@@ -399,6 +497,8 @@ export class PjsRuntime {
         dispatchBatchSize,
         resultMode,
         stream,
+        mapOutputConstructor,
+        outputs,
         createInput,
         timeout === undefined ? undefined : acceptedAt + timeout,
         resolve,
@@ -715,6 +815,12 @@ export class PjsRuntime {
             (operation) => operation.resultMode === 'stream',
           ).length,
         },
+        mapping: {
+          ...this.operationTypeMetrics.mapping,
+          pending: [...this.operations.values()].filter(
+            (operation) => operation.resultMode === 'map',
+          ).length,
+        },
       },
       streams: {
         ...this.operationTypeMetrics.streaming,
@@ -728,6 +834,25 @@ export class PjsRuntime {
           (count, operation) => count + (operation.stream?.buffered ?? 0),
           0,
         ),
+        knownBufferedPayloadBytes: [...this.operations.values()].reduce(
+          (bytes, operation) =>
+            bytes + (operation.stream?.knownBufferedPayloadBytes ?? 0),
+          0,
+        ),
+        unknownBufferedResults: [...this.operations.values()].reduce(
+          (count, operation) =>
+            count + (operation.stream?.unknownBufferedResults ?? 0),
+          0,
+        ),
+      },
+      maps: {
+        ...this.operationTypeMetrics.mapping,
+        pending: [...this.operations.values()].filter(
+          (operation) => operation.resultMode === 'map',
+        ).length,
+      },
+      mapResults: {
+        ...this.mapResultMetrics,
       },
       partitions: { ...this.partitionMetrics },
       dispatch: {
@@ -764,6 +889,17 @@ export class PjsRuntime {
                 resultBufferCapacity: operation.stream.capacity,
                 producedResults: operation.stream.produced,
                 yieldedResults: operation.stream.yielded,
+                knownBufferedPayloadBytes:
+                  operation.stream.knownBufferedPayloadBytes,
+                unknownBufferedResults: operation.stream.unknownBufferedResults,
+              }
+            : {}),
+          ...(operation.resultMode === 'map'
+            ? {
+                mappedElements: operation.plan.end - operation.plan.start,
+                assembledBlocks: operation.completed,
+                assemblyMs: operation.mapAssemblyMs,
+                typedOutput: operation.mapOutputConstructor?.name,
               }
             : {}),
         };
@@ -903,7 +1039,9 @@ export class PjsRuntime {
         ? 'collecting'
         : operation.resultMode === 'discard'
           ? 'completion'
-          : 'streaming';
+          : operation.resultMode === 'stream'
+            ? 'streaming'
+            : 'mapping';
     if (status === 'timed_out') {
       this.operationMetrics.timedOut++;
       this.operationTypeMetrics[kind].timedOut++;
@@ -972,9 +1110,44 @@ export class PjsRuntime {
             0,
           ),
         );
+        this.streamResultMetrics.peakKnownBufferedPayloadBytes = Math.max(
+          this.streamResultMetrics.peakKnownBufferedPayloadBytes,
+          [...this.operations.values()].reduce(
+            (bytes, active) =>
+              bytes + (active.stream?.knownBufferedPayloadBytes ?? 0),
+            0,
+          ),
+        );
+        this.streamResultMetrics.peakUnknownBufferedResults = Math.max(
+          this.streamResultMetrics.peakUnknownBufferedResults,
+          [...this.operations.values()].reduce(
+            (count, active) =>
+              count + (active.stream?.unknownBufferedResults ?? 0),
+            0,
+          ),
+        );
+      } else if (operation.resultMode === 'map') {
+        const assemblyStarted = performance.now();
+        try {
+          this.assembleMapBlock(operation, child.partition, output);
+        } catch (cause) {
+          const error =
+            cause instanceof PjsMapContractError
+              ? cause
+              : new PjsMapContractError('Map block assembly failed', {
+                  ...this.childContext(child),
+                  cause,
+                });
+          this.finishOperation(operation, 'failed', error);
+        } finally {
+          const elapsed = performance.now() - assemblyStarted;
+          operation.mapAssemblyMs += elapsed;
+          this.mapResultMetrics.assemblyMs += elapsed;
+        }
       } else if (operation.outputs)
         operation.outputs[child.partition.index] = output;
       if (
+        operation.status === 'running' &&
         operation.completed === operation.plan.chunkCount &&
         operation.resultMode !== 'stream'
       )
@@ -986,6 +1159,65 @@ export class PjsRuntime {
         'parentCollection',
         performance.now() - profileStarted,
       );
+  }
+
+  private assembleMapBlock(
+    operation: RangeOperation,
+    partition: RangePartition,
+    output: unknown,
+  ): void {
+    const expected = partition.end - partition.start;
+    const offset = partition.start - operation.plan.start;
+    const context = {
+      operationId: operation.id,
+      partitionIndex: partition.index,
+      rangeStart: partition.start,
+      rangeEnd: partition.end,
+    };
+    if (operation.mapOutputConstructor) {
+      if (
+        !ArrayBuffer.isView(output) ||
+        output instanceof DataView ||
+        output.constructor !== operation.mapOutputConstructor
+      )
+        throw new PjsMapContractError(
+          `Map partition ${partition.index} must return ${operation.mapOutputConstructor.name}`,
+          context,
+        );
+      const block = output as PjsTypedArray;
+      if (block.length !== expected)
+        throw new PjsMapContractError(
+          `Map partition ${partition.index} returned ${block.length} elements; expected ${expected}`,
+          context,
+        );
+      const target = operation.outputs as PjsTypedArray;
+      const setter = target as unknown as {
+        set(
+          values: ArrayLike<number> | ArrayLike<bigint>,
+          offset?: number,
+        ): void;
+      };
+      setter.set(
+        block as unknown as ArrayLike<number> | ArrayLike<bigint>,
+        offset,
+      );
+    } else {
+      if (!Array.isArray(output))
+        throw new PjsMapContractError(
+          `Map partition ${partition.index} must return an Array`,
+          context,
+        );
+      if (output.length !== expected)
+        throw new PjsMapContractError(
+          `Map partition ${partition.index} returned ${output.length} elements; expected ${expected}`,
+          context,
+        );
+      const target = operation.outputs as unknown[];
+      for (let index = 0; index < output.length; index++)
+        target[offset + index] = output[index];
+    }
+    this.mapResultMetrics.blocks++;
+    this.mapResultMetrics.elements += expected;
   }
 
   private finishDeliveredStream(operation: RangeOperation): boolean {

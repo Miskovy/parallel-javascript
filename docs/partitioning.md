@@ -2,15 +2,16 @@
 
 v0.4 added `runtime.partitionRange(task, range, createInput, options?)`; v0.5
 added bounded transport batches; v0.6 added completion-only `parallelFor()`;
-v0.7 adds bounded completion-order `streamRange()` over the same engine.
-`partitionRange()` returns ordered chunk outputs, `parallelFor()` returns
-`Promise<void>` without transporting successful values, and `streamRange()`
-returns an `AsyncIterable` of identified partition outputs. All three APIs and
-their derived admission limits remain experimental; no stable
+v0.7 added bounded completion-order `streamRange()` over the same engine; v0.8
+adds element-block `parallelMapRange()`. `partitionRange()` returns ordered
+chunk outputs, `parallelFor()` returns `Promise<void>` without transporting
+successful values, `streamRange()` returns an `AsyncIterable` of identified
+partition outputs, and map returns one flat ordered element array. All four APIs
+and their derived admission limits remain experimental; no stable
 `parallel.for/map/reduce` family is exported. See the
-[v0.7 proposal](proposal-v0.7.md),
+[v0.8 proposal](proposal-v0.8.md),
 [completion decision](adr/0012-completion-only-operations.md), and
-[stream decision](adr/0014-streaming-result-semantics.md).
+[map decision](adr/0015-element-block-map-semantics.md).
 
 ## Reuse shared input
 
@@ -85,6 +86,31 @@ also ignored. Only disjoint writes or correctly synchronized access are safe;
 PJS provides no implicit mutex, rollback, or transaction. Completed writes stay
 visible after later failure, cancellation, or timeout.
 
+For element-oriented returned results, each task returns exactly one block
+element per numeric index in its partition:
+
+```ts
+const result = await runtime.parallelMapRange(
+  transformBlock,
+  { start: -100, end: 100, grainSize: 32 },
+  (partition) => ({ input: { partition, input } }),
+  {
+    experimentalDispatchBatchSize: 4,
+    experimentalOutputConstructor: Float64Array,
+  },
+);
+```
+
+The task must return a `Float64Array` of length
+`partition.end - partition.start`. Generic mode omits the constructor and
+requires an ordinary array block. PJS validates before copying into the
+preallocated flat output at `partition.start - range.start`. Completion order
+does not affect element order. Wrong length, block kind, constructor, or a
+detached block rejects the whole parent with `PjsMapContractError`; no partial
+result resolves. Transferred typed blocks avoid cloning their backing into the
+host but still require the final host copy. `streamRange()` remains the block
+streaming primitive; v0.8 adds no separate streaming-map or ordered-stream API.
+
 For incremental results, consume completion order explicitly:
 
 ```ts
@@ -118,11 +144,14 @@ also increasing non-preemptive occupancy and reducing skew balancing.
 The domain is `[start, end)`, with safe integer endpoints, a safe integer span,
 `end >= start`, and a required positive safe integer `grainSize`. Negative
 endpoints are valid. Grain is the maximum width, independent of worker count;
-the last partition may be smaller. Empty collecting ranges return `[]`; empty
-completion ranges resolve `undefined`; empty streams end immediately; none call the factory. Descriptors
-are frozen `{ index, start, end }` values. Collecting more than 2³²−1 outputs is
-rejected because the result is a JavaScript array. Completion ranges can use the
-full safe-integer logical count while production remains bounded.
+the last partition may be smaller. Empty collecting and generic-map ranges
+return `[]`; empty typed maps return a zero-length requested typed array; empty
+completion ranges resolve `undefined`; empty streams end immediately; none call
+the factory. Descriptors are frozen `{ index, start, end }` values. Collecting
+more than 2³²−1 partition outputs or mapping more than 2³²−1 elements is
+rejected because the result uses JavaScript array-indexed storage. Completion
+ranges can use the full safe-integer logical count while production remains
+bounded.
 
 Factories must synchronously return `{ input, transferList? }`, finish their own
 work and remain short. They run only as capacity permits, once per generated
@@ -230,12 +259,13 @@ General nested compute remains unsupported.
 | Namespace              | Meaning                                                                           |
 | ---------------------- | --------------------------------------------------------------------------------- |
 | `tasks.*` and `timing` | Ordinary submissions plus actual admitted child tasks; existing definitions       |
-| `operations.*`         | Parent totals plus collecting/completion/streaming outcomes, pending and capacity |
+| `operations.*`         | Parent totals plus collect/complete/stream/map outcomes, pending and capacity     |
 | `streams.*`            | Streaming parent accepted/rejected/terminal outcomes and pending count            |
-| `streamResults.*`      | Produced/yielded/currently buffered/peak buffered logical result counts           |
+| `streamResults.*`      | Logical counts plus current/peak visible payload bytes and unknown counts         |
+| `mapResults.*`         | Validated block/element totals and cumulative host assembly time                  |
 | `partitions.*`         | Descriptors generated, children admitted, child caller completed/failed/cancelled |
 | `dispatch.*`           | Physical execute/result messages plus logical task/partition totals and ratio     |
-| `activeOperations`     | Live range/progress snapshots including result mode and stream buffer state       |
+| `activeOperations`     | Live range/progress snapshots including map and stream buffer/byte state          |
 | `activeTasks`          | Existing task snapshots plus optional operation/partition context                 |
 
 Generated can exceed admitted if a factory fails or cancellation intervenes.

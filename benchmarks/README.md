@@ -108,3 +108,31 @@ baseline/candidate/candidate/baseline process order for ordinary clone,
 transfer, shared, partition, and completion paths. Raw v0.7 files are
 `result-streaming-v0.7.json`, `stream-fairness-v0.7.json`, and
 `runtime-regression-v0.7.json`; historical artifacts are unchanged.
+
+## v0.8 element-block mapping and result memory
+
+Run `npm run benchmark:map` for serial, generic and typed
+`parallelMapRange()`, clone/transfer, `partitionRange()` plus assembly,
+completion-order stream collect/discard, disjoint shared output, generic object
+mapping, and bounded Piscina 5.3.2 controls. It also runs a realistic transferred
+binary pipeline at result capacities 1/4/8 and a mixed map/stream/
+`parallelFor()`/ordinary fairness suite. See the
+[dedicated methodology](mapping/README.md) and
+[measurement report](../docs/benchmarks-v0.8.md).
+
+Each main configuration runs in a fresh process with one warmup, three retained
+trials, no outlier removal, and no forced GC. The harness retains wall/CPU time,
+sampled RSS and busy-worker occupancy, first-result and assembly time, logical
+results, known output bytes, physical messages, event-loop delay/utilization,
+and timer drift. A 4,096-result
+stream control tests capacities 8/64/256 before changing the internal buffer
+data structure.
+
+`node benchmarks/mapping/regression.mjs /path/to/built/control` compares two
+built trees in baseline/candidate/candidate/baseline order. The retained v0.8
+artifact uses an isolated same-source build with only stream payload-byte
+accounting disabled because no separately committed v0.7 tree exists. It is a
+causal diagnostics-overhead control, not a full historical version comparison.
+Raw files are `element-map-v0.8.json`, `map-pipeline-v0.8.json`,
+`map-fairness-v0.8.json`, and `runtime-regression-v0.8.json`; all historical
+artifacts remain unchanged.
