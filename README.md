@@ -9,7 +9,7 @@
 <p>
   <a href="packages/runtime/package.json"><img src="https://img.shields.io/badge/Node.js-%E2%89%A522-339933?style=flat-square&amp;logo=nodedotjs&amp;logoColor=white" alt="Runtime: Node.js 22 or newer"></a>
   <a href="package.json"><img src="https://img.shields.io/badge/TypeScript-7.0-3178C6?style=flat-square&amp;logo=typescript&amp;logoColor=white" alt="Build compiler: TypeScript 7.0"></a>
-  <a href="docs/architecture.md"><img src="https://img.shields.io/badge/status-v0.8%20element--block%20mapping-0F766E?style=flat-square" alt="Status: v0.8 element-block mapping"></a>
+  <a href="docs/architecture.md"><img src="https://img.shields.io/badge/status-v0.9%20binary%20result%20credits-0F766E?style=flat-square" alt="Status: v0.9 strict binary result credits"></a>
   <a href="packages/runtime/package.json"><img src="https://img.shields.io/badge/runtime_dependencies-0-0F766E?style=flat-square" alt="Zero runtime dependencies"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-64748B?style=flat-square" alt="License: MIT"></a>
 </p>
@@ -18,7 +18,7 @@
   <a href="#quick-start">Quick start</a> ·
   <a href="#define-a-task">Task API</a> ·
   <a href="docs/architecture.md">Architecture</a> ·
-  <a href="docs/benchmarks-v0.8.md">Benchmarks</a> ·
+  <a href="docs/benchmarks-v0.9.md">Benchmarks</a> ·
   <a href="docs/toolchain.md">Toolchain choices</a>
 </p>
 
@@ -26,7 +26,7 @@
 
 ---
 
-PJS v0.8 is a small foundation for explicit CPU parallelism in Node.js: persistent workers, registered module tasks, bounded FIFO admission, explicit buffer transfers, reusable shared inputs, experimental runtime-owned range partitioning, bounded dispatch batching, completion-only parallel ranges, bounded completion-order result streams, element-block mapping, host async-context association, task lifecycles, failure recovery, cancellation/deadlines, and real statistics. It builds with TypeScript 7 and has no runtime dependencies.
+PJS v0.9 is a small foundation for explicit CPU parallelism in Node.js: persistent workers, registered module tasks, bounded FIFO admission, explicit buffer transfers, reusable shared inputs, experimental runtime-owned range partitioning, bounded dispatch batching, completion-only parallel ranges, bounded completion-order result streams, strict binary result-byte credits, element-block mapping, host async-context association, task lifecycles, failure recovery, cancellation/deadlines, and real statistics. It builds with TypeScript 7 and has no runtime dependencies.
 
 > **The programmer declares parallelizable work. PJS decides how accepted tasks use the available workers.**
 
@@ -34,7 +34,7 @@ The experimental `partitionRange()` operation owns lazy range division and order
 
 ## What works today
 
-| Capability                     | v0.8 behavior                                                                    |
+| Capability                     | v0.9 behavior                                                                    |
 | ------------------------------ | -------------------------------------------------------------------------------- |
 | **Persistent workers**         | A fixed, configurable population reused across tasks                             |
 | **Explicit task registration** | Typed handles for local module exports; no closure serialization or eval         |
@@ -47,6 +47,7 @@ The experimental `partitionRange()` operation owns lazy range division and order
 | **Bounded dispatch batching**  | Experimental transfer-free grouping with separate logical/physical accounting    |
 | **Completion-only ranges**     | Experimental parallel-for semantics without worker output transport or retention |
 | **Bounded result streams**     | Experimental completion-order AsyncIterable with consumer backpressure           |
+| **Binary result credits**      | Opt-in exact pre-admission byte reservations plus worker validation              |
 | **Element-block mapping**      | Experimental flat generic/typed results with strict block cardinality            |
 | **Result memory diagnostics**  | Visible queued buffer/view bytes plus unknown-result counts                      |
 | **Host async context**         | One AsyncResource per range operation; worker stores are not implicitly copied   |
@@ -54,7 +55,7 @@ The experimental `partitionRange()` operation owns lazy range division and order
 
 ## Quick start
 
-The runtime targets Node.js 22 or newer. Repository development tools require Node.js 22.13+ or 24+. v0.8 was tested on Node.js 24.21.0 on Windows; v0.5 was tested on Node.js 24.13.1 on Linux. Other supported Node versions/platforms still need CI coverage.
+The runtime targets Node.js 22 or newer. Repository development tools require Node.js 22.13+ or 24+. v0.9 was tested on Node.js 24.21.0 on Windows; v0.5 was tested on Node.js 24.13.1 on Linux. Other supported Node versions/platforms still need CI coverage.
 
 ```sh
 npm ci
@@ -243,6 +244,33 @@ memory bound. `break` cancels remaining work. Producer failure leaves
 already-yielded values observable. Stream timeouts and graceful shutdown
 include consumer delivery time.
 
+For direct owned binary results whose exact size is known before dispatch, add
+the strict v0.9 byte contract:
+
+```ts
+for await (const { output } of runtime.streamRange(
+  binaryTask,
+  { start: 0, end: blocks.length, grainSize: 1 },
+  (partition) => ({ input: { partition, blocks } }),
+  {
+    experimentalMaxBufferedResults: 8,
+    experimentalResultBytes: (partition) => blocks[partition.index].byteLength,
+    experimentalMaxReservedResultBytes: 4 * 1024 * 1024,
+  },
+)) {
+  await consume(output);
+}
+```
+
+Both byte options are required together. The declaration is exact, not an
+upper bound. Workers accept only a live direct `ArrayBuffer` or an
+ArrayBuffer-backed typed array, Buffer, or DataView with the declared visible
+`byteLength`. Nested graphs and shared backing do not qualify. Count and byte
+credits both apply; credit lasts until yield, or until a cancelled running
+execution actually ends. The capacity bounds declared result payloads, not
+RSS, worker allocations, transport temporaries, inputs, or values retained by
+the consumer.
+
 ### Statistics
 
 `stats()` returns copied snapshots, accepted/rejected and terminal task counts, active task timestamps, queue occupancy, worker/thread IDs, crash/restart counts, and sampled latency means. It also reports parent operation outcomes, map block/element/assembly totals, stream result counts/buffer occupancy and observable payload bytes, generated/admitted child counts, and separate physical dispatch-message counts; `tasks.*` remains logical. It retains no completed-task history. See [metric definitions and lifecycle details](docs/architecture.md).
@@ -260,11 +288,12 @@ npm run benchmark:dispatch
 npm run benchmark:completion
 npm run benchmark:stream
 npm run benchmark:map
+npm run benchmark:binary
 ```
 
 The [benchmark methodology](benchmarks/README.md) separates startup from warm-pool execution and retains every sample. Small workloads can be slower under PJS, and more workers do not guarantee linear scaling.
 
-The [v0.8 report](docs/benchmarks-v0.8.md) evaluates generic and typed element maps, clone/transfer/shared output, realistic stream pipelines, visible payload-byte diagnostics, fairness, regression controls, and bounded Piscina equivalents. The [v0.7 report](docs/benchmarks-v0.7.md) and all earlier evidence remain preserved.
+The [v0.9 report](docs/benchmarks-v0.9.md) evaluates strict binary result credits, count-versus-byte capacity, realistic fast/slow consumers, fairness, v0.8 regression controls, and an application-managed Piscina equivalent. The [v0.8 report](docs/benchmarks-v0.8.md) and all earlier evidence remain preserved.
 
 The [v0.3 report](docs/benchmarks-v0.3.md) compares clone, transfer and reusable shared input, including a pinned Piscina baseline. The [v0.2 measurement report](docs/benchmarks-v0.2.md) compares clone and transfer paths, including matrix input preparation. The [v0.1 baseline](docs/benchmarks-v0.1.md) and its raw JSON remain preserved. Neither compiler nor runtime speedups are assumed.
 
@@ -291,9 +320,9 @@ All dependencies are development tools or benchmark baselines (Piscina is pinned
 - [Architecture decisions](docs/adr/0001-task-registration.md): registration, pool model, scheduler, and cancellation.
 - [Runtime research](docs/research/runtime-landscape.md): existing systems and concepts worth investigating.
 
-The next milestone should be selected from the [v0.8 measurements](docs/benchmarks-v0.8.md). A restricted binary result budget is the leading research candidate. Reduce, ordered streaming, cooperative cancellation, worker-context propagation and scheduling changes remain design work; v0.8 stabilizes none of them.
+The next milestone should be selected from the [v0.9 measurements](docs/benchmarks-v0.9.md). Reduce, ordered streaming, cooperative cancellation, worker-context propagation, global byte pools, and scheduling changes remain design work; v0.9 stabilizes none of them.
 
-Framework integrations, compiler transforms, custom syntax, browser support, and advanced schedulers are outside v0.8.
+Framework integrations, compiler transforms, custom syntax, browser support, and advanced schedulers are outside v0.9.
 
 ## License
 

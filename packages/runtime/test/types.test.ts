@@ -11,6 +11,8 @@ import type {
   StreamRangeResult,
   PjsTypedArray,
   TypedMapRangeOptions,
+  BinaryStreamRangeOptions,
+  PjsBinaryResult,
 } from '../dist/index.js';
 
 const registry = new PjsTaskRegistry();
@@ -123,6 +125,30 @@ const stream: AsyncIterable<StreamRangeResult<number>> = runtime.streamRange(
 void stream;
 // @ts-expect-error Stream task input typing applies to every payload.
 runtime.streamRange(task, range, () => ({ input: 'bad' }));
+
+const binaryOptions: BinaryStreamRangeOptions = {
+  experimentalResultBytes: (partition) => partition.end - partition.start,
+  experimentalMaxReservedResultBytes: 1024,
+  experimentalMaxBufferedResults: 4,
+};
+const binaryStream: AsyncIterable<StreamRangeResult<Uint8Array>> =
+  runtime.streamRange(task, range, () => ({ input: data }), binaryOptions);
+void binaryStream;
+const binaryValue: PjsBinaryResult = new DataView(new ArrayBuffer(8));
+void binaryValue;
+runtime.streamRange(
+  partitionTask,
+  range,
+  (partition) => ({
+    input: { partition, shared },
+  }),
+  // @ts-expect-error Strict binary options require a direct binary task result.
+  binaryOptions,
+);
+runtime.streamRange(task, range, () => ({ input: data }), {
+  // @ts-expect-error Both strict binary options are required together.
+  experimentalResultBytes: 16,
+});
 
 const arrayMapTask = registry.register<{ partition: RangePartition }, number[]>(
   'array-map',

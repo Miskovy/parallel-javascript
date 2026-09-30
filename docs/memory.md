@@ -143,10 +143,31 @@ diagnostic history in runtime metrics.
 
 These observations cannot support a hard general byte limit. Unknown graphs are
 not zero-sized, transport temporaries are outside the queue, and a result's size
-is known only after it crossed the worker boundary. A future restricted binary
-contract could reserve declared bytes before dispatch, but v0.8 retains only
-the enforceable logical-result credit bound. See
+is known only after it crossed the worker boundary. Ordinary streams therefore
+retain only the enforceable logical-result credit bound. See
 [ADR 0016](adr/0016-result-memory-observability.md).
+
+v0.9 adds a separate opt-in strict contract for binary results whose exact
+visible length is known before dispatch. The host reserves declared bytes before
+child admission, and the worker checks direct live ArrayBuffer-owned binary
+output before successful posting. Count credit still applies independently.
+For a view, the reservation and validation use its visible `byteLength`, not the
+whole backing buffer. The declaration is exact; over- and undersized results
+both fail.
+
+Raw SharedArrayBuffer and SAB-backed views do not qualify. They may outlive the
+operation through unrelated references, cannot transfer ownership, and have a
+different memory model. Nested objects also do not qualify because PJS does not
+traverse result graphs. Both remain valid in ordinary count-only streams and
+continue contributing the v0.8 diagnostics where directly observable.
+
+Reservations last through buffered retention and release on yield. Queued
+cancellation releases immediately. Running cancellation, timeout, or parent
+failure retains credit until the worker execution returns, fails, crashes, or
+is terminated, because allocation may still occur. This bound covers declared
+payload pressure only: worker temporaries, clone/transfer machinery, allocator
+history, RSS, inputs, and consumer-held outputs remain outside it. See
+[ADR 0017](adr/0017-binary-result-reservations.md).
 
 A transferred output buffer is worker-owned until posting, host-buffer-owned
 until iterator delivery, then consumer-owned. PJS drops its buffered reference

@@ -89,6 +89,7 @@ export class PjsWorker {
     transferList: readonly ArrayBuffer[] = [],
     profile = false,
     completionOnly = false,
+    expectedResultBytes?: number,
   ): void {
     if (this.state.status !== 'idle')
       throw new PjsWorkerError('Worker is not idle', {
@@ -110,6 +111,9 @@ export class PjsWorker {
             input,
             profile: true,
             ...(completionOnly ? { completionOnly: true } : {}),
+            ...(expectedResultBytes === undefined
+              ? {}
+              : { expectedResultBytes }),
           } satisfies HostMessage,
           transferList,
         );
@@ -121,6 +125,9 @@ export class PjsWorker {
             taskName,
             input,
             ...(completionOnly ? { completionOnly: true } : {}),
+            ...(expectedResultBytes === undefined
+              ? {}
+              : { expectedResultBytes }),
           } satisfies HostMessage,
           transferList,
         );

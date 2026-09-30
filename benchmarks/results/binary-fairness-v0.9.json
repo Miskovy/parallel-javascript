@@ -1,0 +1,114 @@
+{
+  "version": "0.9.0",
+  "timestamp": "2026-09-29T18:10:27.646Z",
+  "results": [
+    {
+      "largeCapacity": 262144,
+      "trial": 0,
+      "completed": {
+        "ordinary": 18.39100000000002,
+        "parallel": 29.228200000000015,
+        "map": 31.055000000000007,
+        "smallStream": 39.875,
+        "largeStream": 160.63260000000002
+      },
+      "largeCount": 32,
+      "smallCount": 64,
+      "mapCount": 32768,
+      "wallMs": 161.08710000000002,
+      "peakReservedResultBytes": 294912,
+      "currentReservedResultBytes": 0,
+      "starvation": false
+    },
+    {
+      "largeCapacity": 262144,
+      "trial": 1,
+      "completed": {
+        "ordinary": 13.40039999999999,
+        "parallel": 27.50630000000001,
+        "map": 29.060100000000034,
+        "smallStream": 41.26940000000002,
+        "largeStream": 154.74009999999998
+      },
+      "largeCount": 32,
+      "smallCount": 64,
+      "mapCount": 32768,
+      "wallMs": 154.79460000000006,
+      "peakReservedResultBytes": 294912,
+      "currentReservedResultBytes": 0,
+      "starvation": false
+    },
+    {
+      "largeCapacity": 262144,
+      "trial": 2,
+      "completed": {
+        "ordinary": 15.207100000000082,
+        "parallel": 44.2491,
+        "map": 45.261000000000195,
+        "smallStream": 60.3886,
+        "largeStream": 196.96580000000017
+      },
+      "largeCount": 32,
+      "smallCount": 64,
+      "mapCount": 32768,
+      "wallMs": 197.06320000000005,
+      "peakReservedResultBytes": 286720,
+      "currentReservedResultBytes": 0,
+      "starvation": false
+    },
+    {
+      "largeCapacity": 1048576,
+      "trial": 0,
+      "completed": {
+        "ordinary": 18.318399999999883,
+        "parallel": 47.730999999999995,
+        "map": 57.57310000000007,
+        "smallStream": 81.30669999999986,
+        "largeStream": 90.24749999999995
+      },
+      "largeCount": 32,
+      "smallCount": 64,
+      "mapCount": 32768,
+      "wallMs": 90.33420000000001,
+      "peakReservedResultBytes": 1073152,
+      "currentReservedResultBytes": 0,
+      "starvation": false
+    },
+    {
+      "largeCapacity": 1048576,
+      "trial": 1,
+      "completed": {
+        "ordinary": 23.954400000000078,
+        "parallel": 57.33800000000019,
+        "map": 59.39240000000018,
+        "smallStream": 101.3420000000001,
+        "largeStream": 106.86890000000017
+      },
+      "largeCount": 32,
+      "smallCount": 64,
+      "mapCount": 32768,
+      "wallMs": 106.94810000000007,
+      "peakReservedResultBytes": 1073152,
+      "currentReservedResultBytes": 0,
+      "starvation": false
+    },
+    {
+      "largeCapacity": 1048576,
+      "trial": 2,
+      "completed": {
+        "ordinary": 24.491100000000188,
+        "parallel": 53.11799999999994,
+        "map": 54.22069999999985,
+        "smallStream": 110.99130000000014,
+        "largeStream": 112.04170000000022
+      },
+      "largeCount": 32,
+      "smallCount": 64,
+      "mapCount": 32768,
+      "wallMs": 112.0985999999998,
+      "peakReservedResultBytes": 1073152,
+      "currentReservedResultBytes": 0,
+      "starvation": false
+    }
+  ]
+}

@@ -11,6 +11,8 @@ export type {
   PartitionInput,
   PartitionOptions,
   StreamRangeOptions,
+  BinaryStreamRangeOptions,
+  PjsBinaryResult,
   PjsTypedArray,
   PjsTypedArrayConstructor,
   TypedMapRangeOptions,
@@ -36,4 +38,6 @@ export {
   PjsRuntimeStateError,
   PjsTaskRegistrationError,
   PjsMapContractError,
+  PjsBinaryResultContractError,
+  PjsResultCapacityError,
 } from './errors/index.js';

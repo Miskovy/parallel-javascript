@@ -1,4 +1,5 @@
 import { parentPort, threadId } from 'node:worker_threads';
+import { Buffer } from 'node:buffer';
 import { setTimeout as delay } from 'node:timers/promises';
 import { PjsRuntime, PjsTaskRegistry, transfer } from '../../dist/index.js';
 
@@ -147,6 +148,56 @@ export async function mapBlock({
 
 export function directResult({ returnValue, move = false }) {
   return move ? transfer(returnValue, [returnValue.buffer]) : returnValue;
+}
+
+export async function binaryResult({
+  partition,
+  bytes,
+  kind = 'uint8',
+  move = false,
+  gate,
+  ms = 0,
+  fail = false,
+  crash = false,
+  counter,
+  detached = false,
+}) {
+  if (counter) Atomics.add(new Int32Array(counter), partition.index, 1);
+  if (gate) {
+    const control = new Int32Array(gate);
+    Atomics.add(control, 0, 1);
+    Atomics.notify(control, 0);
+    while (!Atomics.load(control, 1)) {
+      if (Atomics.wait(control, 1, 0, 5000) === 'timed-out')
+        throw new Error('Binary result gate was never released');
+    }
+  }
+  if (ms) await delay(ms);
+  if (crash) process.exit(25);
+  if (fail) throw new RangeError('binary result deliberately failed');
+  if (kind === 'object') return { bytes };
+  if (kind === 'nested') return { data: new Uint8Array(bytes) };
+  if (kind === 'shared') return new Uint8Array(new SharedArrayBuffer(bytes));
+  if (kind === 'shared-buffer') return new SharedArrayBuffer(bytes);
+  let value;
+  if (kind === 'arraybuffer') value = new ArrayBuffer(bytes);
+  else if (kind === 'float64') value = new Float64Array(bytes / 8);
+  else if (kind === 'buffer') value = Buffer.allocUnsafeSlow(bytes);
+  else if (kind === 'dataview') value = new DataView(new ArrayBuffer(bytes));
+  else if (kind === 'subview')
+    value = new Uint8Array(new ArrayBuffer(bytes + 32), 16, bytes);
+  else value = new Uint8Array(bytes);
+  const fill = ArrayBuffer.isView(value)
+    ? new Uint8Array(value.buffer, value.byteOffset, value.byteLength)
+    : new Uint8Array(value);
+  for (let index = 0; index < fill.length; index++)
+    fill[index] = (partition.start + index * 17) & 0xff;
+  const buffer = ArrayBuffer.isView(value) ? value.buffer : value;
+  if (detached) {
+    structuredClone(buffer, { transfer: [buffer] });
+    return value;
+  }
+  return move ? transfer(value, [buffer]) : value;
 }
 
 export async function nested() {

@@ -1,0 +1,1111 @@
+{
+  "version": "0.9.0",
+  "timestamp": "2026-09-29T17:56:07.664Z",
+  "environment": {
+    "node": "v24.21.0",
+    "platform": "win32",
+    "release": "10.0.19045",
+    "cpuModel": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz"
+  },
+  "methodology": {
+    "order": "v0.8/v0.9/v0.9/v0.8 in fresh processes",
+    "samplesPerVersionCase": 10,
+    "warmupsPerProcessCase": 1,
+    "baseline": "committed v0.8 tree at the parent revision of this work",
+    "outliers": "all retained"
+  },
+  "results": [
+    {
+      "version": "baseline",
+      "workers": 4,
+      "results": [
+        {
+          "name": "run-noop",
+          "kind": "run",
+          "count": 1024,
+          "samples": [
+            {
+              "wallMs": 66.82130000000001
+            },
+            {
+              "wallMs": 69.26929999999993
+            },
+            {
+              "wallMs": 76.99210000000005
+            },
+            {
+              "wallMs": 61.66649999999993
+            },
+            {
+              "wallMs": 58.252700000000004
+            }
+          ]
+        },
+        {
+          "name": "run-transfer-8mib",
+          "kind": "transfer",
+          "count": 32,
+          "bytes": 8388608,
+          "samples": [
+            {
+              "wallMs": 21.095800000000054
+            },
+            {
+              "wallMs": 11.491399999999999
+            },
+            {
+              "wallMs": 11.365300000000047
+            },
+            {
+              "wallMs": 10.595299999999952
+            },
+            {
+              "wallMs": 16.445299999999975
+            }
+          ]
+        },
+        {
+          "name": "run-shared-8mib",
+          "kind": "shared",
+          "count": 128,
+          "bytes": 8388608,
+          "samples": [
+            {
+              "wallMs": 19.56580000000008
+            },
+            {
+              "wallMs": 12.308099999999968
+            },
+            {
+              "wallMs": 15.358799999999974
+            },
+            {
+              "wallMs": 13.217700000000036
+            },
+            {
+              "wallMs": 13.739100000000008
+            }
+          ]
+        },
+        {
+          "name": "partition-noop-b1",
+          "kind": "partition",
+          "count": 2048,
+          "batchSize": 1,
+          "samples": [
+            {
+              "wallMs": 170.2424000000001
+            },
+            {
+              "wallMs": 147.51930000000016
+            },
+            {
+              "wallMs": 161.47780000000012
+            },
+            {
+              "wallMs": 144.8798999999999
+            },
+            {
+              "wallMs": 119.15200000000004
+            }
+          ]
+        },
+        {
+          "name": "partition-noop-b8",
+          "kind": "partition",
+          "count": 2048,
+          "batchSize": 8,
+          "samples": [
+            {
+              "wallMs": 44.40079999999989
+            },
+            {
+              "wallMs": 40.86660000000006
+            },
+            {
+              "wallMs": 47.66249999999991
+            },
+            {
+              "wallMs": 36.429499999999734
+            },
+            {
+              "wallMs": 65.65610000000015
+            }
+          ]
+        },
+        {
+          "name": "parallel-noop-b1",
+          "kind": "parallel",
+          "count": 2048,
+          "batchSize": 1,
+          "samples": [
+            {
+              "wallMs": 123.6884
+            },
+            {
+              "wallMs": 143.79950000000008
+            },
+            {
+              "wallMs": 148.80110000000013
+            },
+            {
+              "wallMs": 145.0079999999998
+            },
+            {
+              "wallMs": 139.42329999999993
+            }
+          ]
+        },
+        {
+          "name": "parallel-noop-b8",
+          "kind": "parallel",
+          "count": 2048,
+          "batchSize": 8,
+          "samples": [
+            {
+              "wallMs": 56.365800000000036
+            },
+            {
+              "wallMs": 38.725200000000314
+            },
+            {
+              "wallMs": 42.9704999999999
+            },
+            {
+              "wallMs": 33.94180000000006
+            },
+            {
+              "wallMs": 42.16199999999981
+            }
+          ]
+        },
+        {
+          "name": "stream-count-only-b1",
+          "kind": "stream",
+          "count": 2048,
+          "batchSize": 1,
+          "samples": [
+            {
+              "wallMs": 140.01110000000017
+            },
+            {
+              "wallMs": 125.5672999999997
+            },
+            {
+              "wallMs": 181.8415
+            },
+            {
+              "wallMs": 146.1176999999998
+            },
+            {
+              "wallMs": 129.97989999999982
+            }
+          ]
+        },
+        {
+          "name": "stream-count-only-b8",
+          "kind": "stream",
+          "count": 2048,
+          "batchSize": 8,
+          "samples": [
+            {
+              "wallMs": 139.4957999999997
+            },
+            {
+              "wallMs": 164.45599999999922
+            },
+            {
+              "wallMs": 137.6216999999997
+            },
+            {
+              "wallMs": 138.3173999999999
+            },
+            {
+              "wallMs": 137.54770000000008
+            }
+          ]
+        },
+        {
+          "name": "map-generic",
+          "kind": "map-generic",
+          "count": 65536,
+          "samples": [
+            {
+              "wallMs": 13.485899999999674
+            },
+            {
+              "wallMs": 17.236499999999978
+            },
+            {
+              "wallMs": 14.523999999999432
+            },
+            {
+              "wallMs": 13.581599999999526
+            },
+            {
+              "wallMs": 10.444800000000214
+            }
+          ]
+        },
+        {
+          "name": "map-typed",
+          "kind": "map-typed",
+          "count": 65536,
+          "samples": [
+            {
+              "wallMs": 7.110200000000077
+            },
+            {
+              "wallMs": 12.0024999999996
+            },
+            {
+              "wallMs": 18.268600000000333
+            },
+            {
+              "wallMs": 9.38379999999961
+            },
+            {
+              "wallMs": 10.436200000000099
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "candidate",
+      "workers": 4,
+      "results": [
+        {
+          "name": "run-noop",
+          "kind": "run",
+          "count": 1024,
+          "samples": [
+            {
+              "wallMs": 65.0865
+            },
+            {
+              "wallMs": 66.94999999999999
+            },
+            {
+              "wallMs": 65.45540000000005
+            },
+            {
+              "wallMs": 65.4457000000001
+            },
+            {
+              "wallMs": 65.7165
+            }
+          ]
+        },
+        {
+          "name": "run-transfer-8mib",
+          "kind": "transfer",
+          "count": 32,
+          "bytes": 8388608,
+          "samples": [
+            {
+              "wallMs": 16.252800000000093
+            },
+            {
+              "wallMs": 13.190799999999967
+            },
+            {
+              "wallMs": 19.65840000000003
+            },
+            {
+              "wallMs": 13.061500000000024
+            },
+            {
+              "wallMs": 11.930600000000027
+            }
+          ]
+        },
+        {
+          "name": "run-shared-8mib",
+          "kind": "shared",
+          "count": 128,
+          "bytes": 8388608,
+          "samples": [
+            {
+              "wallMs": 18.785799999999995
+            },
+            {
+              "wallMs": 12.09820000000002
+            },
+            {
+              "wallMs": 11.951800000000048
+            },
+            {
+              "wallMs": 8.902699999999982
+            },
+            {
+              "wallMs": 10.757600000000025
+            }
+          ]
+        },
+        {
+          "name": "partition-noop-b1",
+          "kind": "partition",
+          "count": 2048,
+          "batchSize": 1,
+          "samples": [
+            {
+              "wallMs": 146.8737000000001
+            },
+            {
+              "wallMs": 173.39249999999993
+            },
+            {
+              "wallMs": 140.89750000000004
+            },
+            {
+              "wallMs": 154.98890000000006
+            },
+            {
+              "wallMs": 153.55389999999989
+            }
+          ]
+        },
+        {
+          "name": "partition-noop-b8",
+          "kind": "partition",
+          "count": 2048,
+          "batchSize": 8,
+          "samples": [
+            {
+              "wallMs": 39.00739999999996
+            },
+            {
+              "wallMs": 47.42689999999993
+            },
+            {
+              "wallMs": 43.08840000000009
+            },
+            {
+              "wallMs": 76.63189999999986
+            },
+            {
+              "wallMs": 67.0664999999999
+            }
+          ]
+        },
+        {
+          "name": "parallel-noop-b1",
+          "kind": "parallel",
+          "count": 2048,
+          "batchSize": 1,
+          "samples": [
+            {
+              "wallMs": 140.77509999999984
+            },
+            {
+              "wallMs": 137.73460000000023
+            },
+            {
+              "wallMs": 147.39190000000008
+            },
+            {
+              "wallMs": 139.82499999999982
+            },
+            {
+              "wallMs": 146.6971999999996
+            }
+          ]
+        },
+        {
+          "name": "parallel-noop-b8",
+          "kind": "parallel",
+          "count": 2048,
+          "batchSize": 8,
+          "samples": [
+            {
+              "wallMs": 38.70920000000024
+            },
+            {
+              "wallMs": 40.602100000000064
+            },
+            {
+              "wallMs": 34.62019999999984
+            },
+            {
+              "wallMs": 42.598199999999906
+            },
+            {
+              "wallMs": 58.103200000000015
+            }
+          ]
+        },
+        {
+          "name": "stream-count-only-b1",
+          "kind": "stream",
+          "count": 2048,
+          "batchSize": 1,
+          "samples": [
+            {
+              "wallMs": 200.8357000000001
+            },
+            {
+              "wallMs": 155.33989999999994
+            },
+            {
+              "wallMs": 148.35620000000017
+            },
+            {
+              "wallMs": 156.8788999999997
+            },
+            {
+              "wallMs": 164.67879999999968
+            }
+          ]
+        },
+        {
+          "name": "stream-count-only-b8",
+          "kind": "stream",
+          "count": 2048,
+          "batchSize": 8,
+          "samples": [
+            {
+              "wallMs": 166.79959999999937
+            },
+            {
+              "wallMs": 146.98739999999998
+            },
+            {
+              "wallMs": 137.64419999999973
+            },
+            {
+              "wallMs": 149.09280000000035
+            },
+            {
+              "wallMs": 143.8678
+            }
+          ]
+        },
+        {
+          "name": "map-generic",
+          "kind": "map-generic",
+          "count": 65536,
+          "samples": [
+            {
+              "wallMs": 16.368999999999687
+            },
+            {
+              "wallMs": 14.444700000000012
+            },
+            {
+              "wallMs": 13.575900000000729
+            },
+            {
+              "wallMs": 9.084899999999834
+            },
+            {
+              "wallMs": 16.8799999999992
+            }
+          ]
+        },
+        {
+          "name": "map-typed",
+          "kind": "map-typed",
+          "count": 65536,
+          "samples": [
+            {
+              "wallMs": 10.487699999999677
+            },
+            {
+              "wallMs": 9.918899999999667
+            },
+            {
+              "wallMs": 9.167000000000371
+            },
+            {
+              "wallMs": 7.8653000000003885
+            },
+            {
+              "wallMs": 9.521900000000642
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "candidate",
+      "workers": 4,
+      "results": [
+        {
+          "name": "run-noop",
+          "kind": "run",
+          "count": 1024,
+          "samples": [
+            {
+              "wallMs": 62.515499999999975
+            },
+            {
+              "wallMs": 70.32580000000002
+            },
+            {
+              "wallMs": 63.04070000000007
+            },
+            {
+              "wallMs": 64.04919999999993
+            },
+            {
+              "wallMs": 66.99709999999993
+            }
+          ]
+        },
+        {
+          "name": "run-transfer-8mib",
+          "kind": "transfer",
+          "count": 32,
+          "bytes": 8388608,
+          "samples": [
+            {
+              "wallMs": 19.114000000000033
+            },
+            {
+              "wallMs": 19.901599999999917
+            },
+            {
+              "wallMs": 17.43889999999999
+            },
+            {
+              "wallMs": 28.646000000000072
+            },
+            {
+              "wallMs": 15.760499999999979
+            }
+          ]
+        },
+        {
+          "name": "run-shared-8mib",
+          "kind": "shared",
+          "count": 128,
+          "bytes": 8388608,
+          "samples": [
+            {
+              "wallMs": 17.20150000000001
+            },
+            {
+              "wallMs": 10.527900000000045
+            },
+            {
+              "wallMs": 12.269600000000082
+            },
+            {
+              "wallMs": 11.962300000000027
+            },
+            {
+              "wallMs": 11.503599999999892
+            }
+          ]
+        },
+        {
+          "name": "partition-noop-b1",
+          "kind": "partition",
+          "count": 2048,
+          "batchSize": 1,
+          "samples": [
+            {
+              "wallMs": 138.1944000000001
+            },
+            {
+              "wallMs": 149.19859999999994
+            },
+            {
+              "wallMs": 145.90210000000002
+            },
+            {
+              "wallMs": 137.70799999999986
+            },
+            {
+              "wallMs": 142.9331000000002
+            }
+          ]
+        },
+        {
+          "name": "partition-noop-b8",
+          "kind": "partition",
+          "count": 2048,
+          "batchSize": 8,
+          "samples": [
+            {
+              "wallMs": 48.28989999999999
+            },
+            {
+              "wallMs": 51.66769999999997
+            },
+            {
+              "wallMs": 37.58400000000006
+            },
+            {
+              "wallMs": 49.8128999999999
+            },
+            {
+              "wallMs": 50.20730000000003
+            }
+          ]
+        },
+        {
+          "name": "parallel-noop-b1",
+          "kind": "parallel",
+          "count": 2048,
+          "batchSize": 1,
+          "samples": [
+            {
+              "wallMs": 109.57459999999992
+            },
+            {
+              "wallMs": 149.80139999999983
+            },
+            {
+              "wallMs": 129.2841000000003
+            },
+            {
+              "wallMs": 114.17749999999978
+            },
+            {
+              "wallMs": 137.18809999999985
+            }
+          ]
+        },
+        {
+          "name": "parallel-noop-b8",
+          "kind": "parallel",
+          "count": 2048,
+          "batchSize": 8,
+          "samples": [
+            {
+              "wallMs": 35.401200000000244
+            },
+            {
+              "wallMs": 39.073199999999815
+            },
+            {
+              "wallMs": 36.971300000000156
+            },
+            {
+              "wallMs": 37.47029999999995
+            },
+            {
+              "wallMs": 39.441100000000006
+            }
+          ]
+        },
+        {
+          "name": "stream-count-only-b1",
+          "kind": "stream",
+          "count": 2048,
+          "batchSize": 1,
+          "samples": [
+            {
+              "wallMs": 167.76909999999998
+            },
+            {
+              "wallMs": 142.50440000000026
+            },
+            {
+              "wallMs": 143.77760000000035
+            },
+            {
+              "wallMs": 146.067
+            },
+            {
+              "wallMs": 135.25729999999976
+            }
+          ]
+        },
+        {
+          "name": "stream-count-only-b8",
+          "kind": "stream",
+          "count": 2048,
+          "batchSize": 8,
+          "samples": [
+            {
+              "wallMs": 150.4640999999997
+            },
+            {
+              "wallMs": 141.66460000000006
+            },
+            {
+              "wallMs": 140.6889000000001
+            },
+            {
+              "wallMs": 132.03160000000025
+            },
+            {
+              "wallMs": 135.5651000000007
+            }
+          ]
+        },
+        {
+          "name": "map-generic",
+          "kind": "map-generic",
+          "count": 65536,
+          "samples": [
+            {
+              "wallMs": 15.42070000000058
+            },
+            {
+              "wallMs": 12.893799999999828
+            },
+            {
+              "wallMs": 13.451100000000224
+            },
+            {
+              "wallMs": 13.514400000000023
+            },
+            {
+              "wallMs": 15.14930000000004
+            }
+          ]
+        },
+        {
+          "name": "map-typed",
+          "kind": "map-typed",
+          "count": 65536,
+          "samples": [
+            {
+              "wallMs": 13.880300000000716
+            },
+            {
+              "wallMs": 10.740499999999884
+            },
+            {
+              "wallMs": 10.925400000000081
+            },
+            {
+              "wallMs": 12.78859999999986
+            },
+            {
+              "wallMs": 10.785899999999856
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "baseline",
+      "workers": 4,
+      "results": [
+        {
+          "name": "run-noop",
+          "kind": "run",
+          "count": 1024,
+          "samples": [
+            {
+              "wallMs": 65.11510000000004
+            },
+            {
+              "wallMs": 63.26170000000002
+            },
+            {
+              "wallMs": 61.21659999999997
+            },
+            {
+              "wallMs": 64.48990000000003
+            },
+            {
+              "wallMs": 62.056100000000015
+            }
+          ]
+        },
+        {
+          "name": "run-transfer-8mib",
+          "kind": "transfer",
+          "count": 32,
+          "bytes": 8388608,
+          "samples": [
+            {
+              "wallMs": 14.758800000000065
+            },
+            {
+              "wallMs": 12.529999999999973
+            },
+            {
+              "wallMs": 18.68889999999999
+            },
+            {
+              "wallMs": 13.478200000000015
+            },
+            {
+              "wallMs": 17.619500000000016
+            }
+          ]
+        },
+        {
+          "name": "run-shared-8mib",
+          "kind": "shared",
+          "count": 128,
+          "bytes": 8388608,
+          "samples": [
+            {
+              "wallMs": 16.36170000000004
+            },
+            {
+              "wallMs": 12.289700000000039
+            },
+            {
+              "wallMs": 13.717700000000036
+            },
+            {
+              "wallMs": 16.791000000000054
+            },
+            {
+              "wallMs": 10.45519999999999
+            }
+          ]
+        },
+        {
+          "name": "partition-noop-b1",
+          "kind": "partition",
+          "count": 2048,
+          "batchSize": 1,
+          "samples": [
+            {
+              "wallMs": 154.3141999999998
+            },
+            {
+              "wallMs": 159.12729999999988
+            },
+            {
+              "wallMs": 128.00829999999996
+            },
+            {
+              "wallMs": 123.61559999999986
+            },
+            {
+              "wallMs": 118.1842999999999
+            }
+          ]
+        },
+        {
+          "name": "partition-noop-b8",
+          "kind": "partition",
+          "count": 2048,
+          "batchSize": 8,
+          "samples": [
+            {
+              "wallMs": 48.928300000000036
+            },
+            {
+              "wallMs": 59.86649999999986
+            },
+            {
+              "wallMs": 46.450000000000045
+            },
+            {
+              "wallMs": 53.44939999999997
+            },
+            {
+              "wallMs": 48.56199999999967
+            }
+          ]
+        },
+        {
+          "name": "parallel-noop-b1",
+          "kind": "parallel",
+          "count": 2048,
+          "batchSize": 1,
+          "samples": [
+            {
+              "wallMs": 120.96619999999984
+            },
+            {
+              "wallMs": 122.68330000000014
+            },
+            {
+              "wallMs": 146.34550000000036
+            },
+            {
+              "wallMs": 152.35690000000022
+            },
+            {
+              "wallMs": 405.80740000000014
+            }
+          ]
+        },
+        {
+          "name": "parallel-noop-b8",
+          "kind": "parallel",
+          "count": 2048,
+          "batchSize": 8,
+          "samples": [
+            {
+              "wallMs": 52.515100000000075
+            },
+            {
+              "wallMs": 43.06880000000001
+            },
+            {
+              "wallMs": 52.08699999999999
+            },
+            {
+              "wallMs": 50.01270000000022
+            },
+            {
+              "wallMs": 99.06790000000001
+            }
+          ]
+        },
+        {
+          "name": "stream-count-only-b1",
+          "kind": "stream",
+          "count": 2048,
+          "batchSize": 1,
+          "samples": [
+            {
+              "wallMs": 200.95899999999983
+            },
+            {
+              "wallMs": 182.11100000000033
+            },
+            {
+              "wallMs": 177.46540000000005
+            },
+            {
+              "wallMs": 135.1769000000004
+            },
+            {
+              "wallMs": 172.6305000000002
+            }
+          ]
+        },
+        {
+          "name": "stream-count-only-b8",
+          "kind": "stream",
+          "count": 2048,
+          "batchSize": 8,
+          "samples": [
+            {
+              "wallMs": 183.1914999999999
+            },
+            {
+              "wallMs": 139.10959999999977
+            },
+            {
+              "wallMs": 200.39080000000013
+            },
+            {
+              "wallMs": 146.0033000000003
+            },
+            {
+              "wallMs": 139.5023000000001
+            }
+          ]
+        },
+        {
+          "name": "map-generic",
+          "kind": "map-generic",
+          "count": 65536,
+          "samples": [
+            {
+              "wallMs": 24.0649999999996
+            },
+            {
+              "wallMs": 17.277500000000146
+            },
+            {
+              "wallMs": 17.83129999999983
+            },
+            {
+              "wallMs": 17.770399999999427
+            },
+            {
+              "wallMs": 15.046000000000276
+            }
+          ]
+        },
+        {
+          "name": "map-typed",
+          "kind": "map-typed",
+          "count": 65536,
+          "samples": [
+            {
+              "wallMs": 14.07549999999992
+            },
+            {
+              "wallMs": 16.39099999999962
+            },
+            {
+              "wallMs": 15.633600000000115
+            },
+            {
+              "wallMs": 13.533399999999347
+            },
+            {
+              "wallMs": 13.792500000000473
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "summary": [
+    {
+      "name": "run-noop",
+      "baseline": 63.87580000000003,
+      "candidate": 65.45055000000008,
+      "candidateOverBaseline": 1.0246533115827912
+    },
+    {
+      "name": "run-transfer-8mib",
+      "baseline": 14.11850000000004,
+      "candidate": 16.84585000000004,
+      "candidateOverBaseline": 1.1931756206395858
+    },
+    {
+      "name": "run-shared-8mib",
+      "baseline": 13.728400000000022,
+      "candidate": 11.957050000000038,
+      "candidateOverBaseline": 0.8709718539669604
+    },
+    {
+      "name": "partition-noop-b1",
+      "baseline": 146.19960000000003,
+      "candidate": 146.38790000000006,
+      "candidateOverBaseline": 1.0012879652201512
+    },
+    {
+      "name": "partition-noop-b8",
+      "baseline": 48.11224999999979,
+      "candidate": 49.051399999999944,
+      "candidateOverBaseline": 1.0195199767211087
+    },
+    {
+      "name": "parallel-noop-b1",
+      "baseline": 144.40374999999995,
+      "candidate": 138.77980000000002,
+      "candidateOverBaseline": 0.9610539892488947
+    },
+    {
+      "name": "parallel-noop-b8",
+      "baseline": 46.540750000000116,
+      "candidate": 38.891200000000026,
+      "candidateOverBaseline": 0.8356375864162037
+    },
+    {
+      "name": "stream-count-only-b1",
+      "baseline": 159.3741,
+      "candidate": 151.84805000000006,
+      "candidateOverBaseline": 0.9527774588217286
+    },
+    {
+      "name": "stream-count-only-b8",
+      "baseline": 139.4990499999999,
+      "candidate": 142.76620000000003,
+      "candidateOverBaseline": 1.0234205896025825
+    },
+    {
+      "name": "map-generic",
+      "baseline": 16.141250000000127,
+      "candidate": 14.01030000000037,
+      "candidateOverBaseline": 0.8679811043134986
+    },
+    {
+      "name": "map-typed",
+      "baseline": 13.66294999999991,
+      "candidate": 10.61409999999978,
+      "candidateOverBaseline": 0.7768527294617817
+    }
+  ]
+}

@@ -136,3 +136,18 @@ causal diagnostics-overhead control, not a full historical version comparison.
 Raw files are `element-map-v0.8.json`, `map-pipeline-v0.8.json`,
 `map-fairness-v0.8.json`, and `runtime-regression-v0.8.json`; all historical
 artifacts remain unchanged.
+
+## v0.9 strict binary-result credits
+
+Run `npm run benchmark:binary` for fixed and variable direct-binary streams,
+count-versus-byte capacity, clone/transfer, fast/slow realistic consumers,
+object-stream and typed-map controls, a Piscina 5.3.2 manual semaphore, and
+mixed fairness. See the [dedicated methodology](binary-results/README.md) and
+[measurement report](../docs/benchmarks-v0.9.md).
+
+The main runner uses fresh processes, one warmup and three retained trials per
+configuration. Raw results are `binary-results-v0.9.json` and
+`binary-fairness-v0.9.json`. Build committed v0.8 separately and pass its root
+to `node benchmarks/binary-results/regression.mjs` for established-API controls
+in v0.8/v0.9/v0.9/v0.8 order; that report is
+`runtime-regression-v0.9.json`. Historical artifacts remain unchanged.

@@ -17,6 +17,7 @@ export interface InternalWorkerProfile {
 export interface BatchInput {
   taskId: string;
   input: unknown;
+  expectedResultBytes?: number;
 }
 export type HostMessage =
   | {
@@ -26,6 +27,7 @@ export type HostMessage =
       input: unknown;
       profile?: boolean;
       completionOnly?: boolean;
+      expectedResultBytes?: number;
     }
   | {
       type: 'executeBatch';
@@ -54,7 +56,8 @@ export type TaskResultMessage =
       type: 'failure';
       taskId: string;
       error: SerializedError;
-      kind: 'task' | 'serialization';
+      kind: 'task' | 'serialization' | 'binaryContract';
+      binaryContract?: BinaryContractFailure;
       executionMs: number;
       profile?: InternalWorkerProfile;
     };
@@ -65,7 +68,8 @@ export type BatchItemResult =
       type: 'failure';
       taskId: string;
       error: SerializedError;
-      kind: 'task' | 'serialization';
+      kind: 'task' | 'serialization' | 'binaryContract';
+      binaryContract?: BinaryContractFailure;
       executionMs: number;
     };
 export interface BatchResultMessage {
@@ -75,6 +79,11 @@ export interface BatchResultMessage {
   skippedTaskIds: string[];
   executionMs: number;
   profile?: InternalWorkerProfile;
+}
+export interface BinaryContractFailure {
+  declaredBytes: number;
+  actualBytes?: number;
+  actualType: string;
 }
 export type ExecutionResultMessage = TaskResultMessage | BatchResultMessage;
 export type WorkerMessage =
@@ -107,6 +116,24 @@ function profile(value: unknown): value is InternalWorkerProfile | undefined {
     typeof value.postedAtNs === 'bigint'
   );
 }
+function safeBytes(value: unknown): value is number {
+  return Number.isSafeInteger(value) && (value as number) >= 0;
+}
+function binaryContract(value: unknown): value is BinaryContractFailure {
+  return (
+    record(value) &&
+    safeBytes(value.declaredBytes) &&
+    (value.actualBytes === undefined || safeBytes(value.actualBytes)) &&
+    typeof value.actualType === 'string'
+  );
+}
+function failureKind(value: Record<string, unknown>): boolean {
+  if (value.kind === 'task' || value.kind === 'serialization')
+    return value.binaryContract === undefined;
+  return (
+    value.kind === 'binaryContract' && binaryContract(value.binaryContract)
+  );
+}
 function result(value: unknown): value is BatchItemResult {
   if (!record(value) || typeof value.taskId !== 'string') return false;
   if (
@@ -118,9 +145,7 @@ function result(value: unknown): value is BatchItemResult {
   return (
     (value.type === 'success' && 'output' in value) ||
     value.type === 'completed' ||
-    (value.type === 'failure' &&
-      error(value.error) &&
-      (value.kind === 'task' || value.kind === 'serialization'))
+    (value.type === 'failure' && error(value.error) && failureKind(value))
   );
 }
 export function isWorkerMessage(value: unknown): value is WorkerMessage {
@@ -153,7 +178,7 @@ export function isWorkerMessage(value: unknown): value is WorkerMessage {
     (value.type === 'failure' &&
       error(value.error) &&
       profile(value.profile) &&
-      (value.kind === 'task' || value.kind === 'serialization'))
+      failureKind(value))
   );
 }
 export function isHostMessage(value: unknown): value is HostMessage {
@@ -163,7 +188,9 @@ export function isHostMessage(value: unknown): value is HostMessage {
     typeof value.taskName === 'string' &&
     (value.profile === undefined || typeof value.profile === 'boolean') &&
     (value.completionOnly === undefined ||
-      typeof value.completionOnly === 'boolean');
+      typeof value.completionOnly === 'boolean') &&
+    (value.expectedResultBytes === undefined ||
+      safeBytes(value.expectedResultBytes));
   if (value.type === 'execute')
     return common && typeof value.taskId === 'string' && 'input' in value;
   if (value.type !== 'executeBatch' || !common) return false;
@@ -179,6 +206,8 @@ export function isHostMessage(value: unknown): value is HostMessage {
       !record(item) ||
       typeof item.taskId !== 'string' ||
       !('input' in item) ||
+      (item.expectedResultBytes !== undefined &&
+        !safeBytes(item.expectedResultBytes)) ||
       ids.has(item.taskId)
     )
       return false;

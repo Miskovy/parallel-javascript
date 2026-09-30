@@ -12,6 +12,8 @@ import type {
   PartitionRange,
   PartitionInput,
   PartitionOptions,
+  BinaryStreamRangeOptions,
+  PjsBinaryResult,
   PjsTypedArray,
   PjsTypedArrayConstructor,
   RangePartition,
@@ -30,6 +32,8 @@ import {
   PjsTaskError,
   PjsTaskRegistrationError,
   PjsMapContractError,
+  PjsBinaryResultContractError,
+  PjsResultCapacityError,
   PjsTimeoutError,
   PjsWorkerError,
 } from './errors/index.js';
@@ -57,6 +61,21 @@ import type {
   ExecutionResultMessage,
   TaskResultMessage,
 } from './workers/protocol.js';
+
+type CountOnlyStreamRangeOptions = StreamRangeOptions & {
+  experimentalResultBytes?: never;
+  experimentalMaxReservedResultBytes?: never;
+};
+
+interface ResultReservation {
+  readonly taskId: string;
+  readonly operation: RangeOperation;
+  readonly partitionIndex: number;
+  readonly bytes: number;
+  dispatched: boolean;
+  executionDone: boolean;
+  callerSettled: boolean;
+}
 
 const typedArrayConstructors = new Set<PjsTypedArrayConstructor>([
   Int8Array,
@@ -153,7 +172,14 @@ export class PjsRuntime {
     peakBuffered: 0,
     peakKnownBufferedPayloadBytes: 0,
     peakUnknownBufferedResults: 0,
+    currentReservedResultBytes: 0,
+    peakReservedResultBytes: 0,
+    resultByteReservationWaits: 0,
+    resultByteReservationRejected: 0,
+    binaryResultContractFailures: 0,
   };
+  private readonly resultReservations = new Map<string, ResultReservation>();
+  private readonly resultReservationExecutions = new Map<string, string[]>();
   private readonly mapResultMetrics = {
     blocks: 0,
     elements: 0,
@@ -236,6 +262,7 @@ export class PjsRuntime {
         },
         result: (worker, message) => this.result(worker, message),
         failed: (_worker, error) => {
+          if (error.taskId) this.markResultExecutionEnded(error.taskId);
           const task = error.taskId ? this.tasks.get(error.taskId) : undefined;
           if (task) this.settle(task, 'failed', error);
         },
@@ -344,22 +371,69 @@ export class PjsRuntime {
   }
 
   /** @experimental Bounded completion-order delivery of partition results. */
+  streamRange<Input, Output extends PjsBinaryResult>(
+    task: PjsTask<Input, Output>,
+    range: PartitionRange,
+    createInput: (partition: RangePartition) => PartitionInput<Input>,
+    options: BinaryStreamRangeOptions,
+  ): AsyncIterable<StreamRangeResult<Output>>;
   streamRange<Input, Output>(
     task: PjsTask<Input, Output>,
     range: PartitionRange,
     createInput: (partition: RangePartition) => PartitionInput<Input>,
-    options: StreamRangeOptions = {},
+    options?: CountOnlyStreamRangeOptions,
+  ): AsyncIterable<StreamRangeResult<Output>>;
+  streamRange<Input, Output>(
+    task: PjsTask<Input, Output>,
+    range: PartitionRange,
+    createInput: (partition: RangePartition) => PartitionInput<Input>,
+    options: StreamRangeOptions | BinaryStreamRangeOptions = {},
   ): AsyncIterable<StreamRangeResult<Output>> {
     let capacity: number;
+    let resultByteDeclaration:
+      BinaryStreamRangeOptions['experimentalResultBytes'] | undefined;
+    let resultByteCapacity: number | undefined;
     try {
       capacity = integer(
         'experimentalMaxBufferedResults',
         options.experimentalMaxBufferedResults ?? this.workerCount,
         1,
       );
+      const hasDeclaration = 'experimentalResultBytes' in options;
+      const hasByteCapacity = 'experimentalMaxReservedResultBytes' in options;
+      if (hasDeclaration !== hasByteCapacity)
+        throw new TypeError(
+          'experimentalResultBytes and experimentalMaxReservedResultBytes must be provided together',
+        );
+      if (hasDeclaration && hasByteCapacity) {
+        resultByteDeclaration = options.experimentalResultBytes;
+        resultByteCapacity = integer(
+          'experimentalMaxReservedResultBytes',
+          options.experimentalMaxReservedResultBytes,
+          0,
+        );
+        if (typeof resultByteDeclaration === 'number') {
+          try {
+            integer('experimentalResultBytes', resultByteDeclaration, 0);
+          } catch (cause) {
+            throw new PjsBinaryResultContractError(
+              'experimentalResultBytes must be a nonnegative safe integer',
+              { cause },
+            );
+          }
+        } else if (typeof resultByteDeclaration !== 'function')
+          throw new TypeError(
+            'experimentalResultBytes must be a nonnegative safe integer or function',
+          );
+      }
     } catch (error) {
       this.operationMetrics.rejected++;
       this.operationTypeMetrics.streaming.rejected++;
+      if (
+        'experimentalResultBytes' in options ||
+        'experimentalMaxReservedResultBytes' in options
+      )
+        this.streamResultMetrics.resultByteReservationRejected++;
       const failed = new RangeStream<Output>(1);
       failed.fail(error as Error);
       return failed;
@@ -372,6 +446,9 @@ export class PjsRuntime {
       options,
       'stream',
       stream as RangeStream<unknown>,
+      undefined,
+      resultByteDeclaration,
+      resultByteCapacity,
     );
     void lifecycle.then(
       () => stream.complete(),
@@ -388,6 +465,8 @@ export class PjsRuntime {
     resultMode: RangeResultMode,
     stream?: RangeStream<unknown>,
     mapOutputConstructor?: PjsTypedArrayConstructor,
+    resultByteDeclaration?: BinaryStreamRangeOptions['experimentalResultBytes'],
+    resultByteCapacity?: number,
   ): Promise<unknown[] | PjsTypedArray | void> {
     const id = randomUUID();
     const acceptedAt = performance.now();
@@ -498,6 +577,8 @@ export class PjsRuntime {
         resultMode,
         stream,
         mapOutputConstructor,
+        resultByteDeclaration,
+        resultByteCapacity,
         outputs,
         createInput,
         timeout === undefined ? undefined : acceptedAt + timeout,
@@ -525,8 +606,12 @@ export class PjsRuntime {
           );
           this.pump();
         },
-        yielded: () => {
+        yielded: (partition) => {
           this.streamResultMetrics.yielded++;
+          const taskId = operation.resultReservationTaskByPartition.get(
+            partition.index,
+          );
+          if (taskId) this.releaseResultReservation(taskId);
         },
       });
       const abort = () => {
@@ -696,12 +781,32 @@ export class PjsRuntime {
         },
         input,
         transferList,
+        ...(child?.expectedResultBytes === undefined
+          ? {}
+          : { expectedResultBytes: child.expectedResultBytes }),
         releaseTransfers,
         admittedAt: performance.now(),
         resolve: (output) => resolve(output as Output),
         reject,
         cleanup: () => {},
       };
+      if (child?.expectedResultBytes !== undefined) {
+        try {
+          this.reserveResultBytes(pending, child);
+        } catch (cause) {
+          releaseTransfers();
+          this.metrics.rejected++;
+          const error =
+            cause instanceof Error ? cause : new Error(String(cause));
+          this.finishOperation(
+            child.operation,
+            'failed',
+            this.childError(error, child),
+          );
+          reject(error);
+          return;
+        }
+      }
       this.tasks.set(id, pending);
       this.metrics.accepted++;
       if (child) {
@@ -892,6 +997,14 @@ export class PjsRuntime {
                 knownBufferedPayloadBytes:
                   operation.stream.knownBufferedPayloadBytes,
                 unknownBufferedResults: operation.stream.unknownBufferedResults,
+                ...(operation.resultByteCapacity === undefined
+                  ? {}
+                  : {
+                      reservedResultBytes: operation.reservedResultBytes,
+                      bufferedKnownPayloadBytes:
+                        operation.stream.knownBufferedPayloadBytes,
+                      resultByteCapacity: operation.resultByteCapacity,
+                    }),
               }
             : {}),
           ...(operation.resultMode === 'map'
@@ -947,6 +1060,7 @@ export class PjsRuntime {
           );
       }
       await this.pool.stop();
+      this.releaseAllResultReservations();
       if (this.productionTick) clearImmediate(this.productionTick);
       this.productionTick = undefined;
       this.state = 'stopped';
@@ -1069,6 +1183,7 @@ export class PjsRuntime {
           ),
         );
     }
+    this.cancelOperationResultReservations(operation);
     const outputs = operation.outputs;
     operation.outputs = undefined;
     if (error) operation.stream?.fail(error);
@@ -1220,6 +1335,97 @@ export class PjsRuntime {
     this.mapResultMetrics.elements += expected;
   }
 
+  private reserveResultBytes(task: PendingTask, child: PartitionChild): void {
+    const bytes = child.expectedResultBytes!;
+    const operation = child.operation;
+    if (
+      operation.resultByteCapacity === undefined ||
+      bytes > operation.resultByteCapacity - operation.reservedResultBytes
+    )
+      throw new PjsResultCapacityError(
+        'Result-byte reservation invariant was violated before admission',
+        {
+          ...this.childContext(child),
+          taskId: task.id,
+          declaredBytes: bytes,
+          resultByteCapacity: operation.resultByteCapacity!,
+        },
+      );
+    const reservation: ResultReservation = {
+      taskId: task.id,
+      operation,
+      partitionIndex: child.partition.index,
+      bytes,
+      dispatched: false,
+      executionDone: false,
+      callerSettled: false,
+    };
+    this.resultReservations.set(task.id, reservation);
+    operation.resultReservationTaskByPartition.set(
+      child.partition.index,
+      task.id,
+    );
+    operation.reservedResultBytes += bytes;
+    this.streamResultMetrics.currentReservedResultBytes += bytes;
+    this.streamResultMetrics.peakReservedResultBytes = Math.max(
+      this.streamResultMetrics.peakReservedResultBytes,
+      this.streamResultMetrics.currentReservedResultBytes,
+    );
+  }
+
+  private releaseResultReservation(taskId: string): void {
+    const reservation = this.resultReservations.get(taskId);
+    if (!reservation) return;
+    this.resultReservations.delete(taskId);
+    const operation = reservation.operation;
+    if (
+      operation.resultReservationTaskByPartition.get(
+        reservation.partitionIndex,
+      ) === taskId
+    )
+      operation.resultReservationTaskByPartition.delete(
+        reservation.partitionIndex,
+      );
+    operation.reservedResultBytes -= reservation.bytes;
+    this.streamResultMetrics.currentReservedResultBytes -= reservation.bytes;
+  }
+
+  private settleResultReservation(taskId: string): void {
+    const reservation = this.resultReservations.get(taskId);
+    if (!reservation) return;
+    reservation.callerSettled = true;
+    if (!reservation.dispatched || reservation.executionDone)
+      this.releaseResultReservation(taskId);
+  }
+
+  private cancelOperationResultReservations(operation: RangeOperation): void {
+    operation.pendingResultDeclaration = undefined;
+    for (const [taskId, reservation] of this.resultReservations) {
+      if (reservation.operation !== operation) continue;
+      reservation.callerSettled = true;
+      if (!reservation.dispatched || reservation.executionDone)
+        this.releaseResultReservation(taskId);
+    }
+  }
+
+  private markResultExecutionEnded(correlationId: string): void {
+    const taskIds = this.resultReservationExecutions.get(correlationId);
+    if (!taskIds) return;
+    this.resultReservationExecutions.delete(correlationId);
+    for (const taskId of taskIds) {
+      const reservation = this.resultReservations.get(taskId);
+      if (!reservation) continue;
+      reservation.executionDone = true;
+      if (reservation.callerSettled) this.releaseResultReservation(taskId);
+    }
+  }
+
+  private releaseAllResultReservations(): void {
+    this.resultReservationExecutions.clear();
+    for (const taskId of [...this.resultReservations.keys()])
+      this.releaseResultReservation(taskId);
+  }
+
   private finishDeliveredStream(operation: RangeOperation): boolean {
     const stream = operation.stream;
     if (
@@ -1234,19 +1440,88 @@ export class PjsRuntime {
     return false;
   }
 
+  private prepareResultDeclaration(
+    operation: RangeOperation,
+  ): { partition: RangePartition; bytes: number; waited: boolean } | undefined {
+    if (operation.resultByteDeclaration === undefined) return undefined;
+    if (operation.pendingResultDeclaration)
+      return operation.pendingResultDeclaration;
+    const partition = partitionAt(operation.plan, operation.generated);
+    let bytes: number;
+    try {
+      const declaration = operation.resultByteDeclaration;
+      bytes =
+        typeof declaration === 'function'
+          ? operation.runInAsyncScope(declaration, undefined, partition)
+          : declaration;
+      integer('declared result bytes', bytes, 0);
+    } catch (cause) {
+      this.streamResultMetrics.resultByteReservationRejected++;
+      this.finishOperation(
+        operation,
+        'failed',
+        new PjsBinaryResultContractError(
+          `Invalid binary result declaration for partition ${partition.index}`,
+          { ...this.childContext({ operation, partition }), cause },
+        ),
+      );
+      return undefined;
+    }
+    if (bytes > operation.resultByteCapacity!) {
+      this.streamResultMetrics.resultByteReservationRejected++;
+      this.finishOperation(
+        operation,
+        'failed',
+        new PjsResultCapacityError(
+          `Partition ${partition.index} declares ${bytes} result bytes, exceeding capacity ${operation.resultByteCapacity}`,
+          {
+            ...this.childContext({ operation, partition }),
+            declaredBytes: bytes,
+            resultByteCapacity: operation.resultByteCapacity!,
+          },
+        ),
+      );
+      return undefined;
+    }
+    operation.pendingResultDeclaration = {
+      partition,
+      bytes,
+      waited: false,
+    };
+    return operation.pendingResultDeclaration;
+  }
+
+  private operationHasCountCredit(operation: RangeOperation): boolean {
+    return (
+      operation.generated < operation.plan.chunkCount &&
+      operation.children.size <
+        this.workerCount * operation.dispatchBatchSize &&
+      (!operation.stream ||
+        operation.stream.capacity -
+          operation.stream.buffered -
+          operation.children.size >
+          0)
+    );
+  }
+
   private nextProducer(): RangeOperation | undefined {
-    for (const operation of this.operations.values()) {
-      if (
-        operation.generated < operation.plan.chunkCount &&
-        operation.children.size <
-          this.workerCount * operation.dispatchBatchSize &&
-        (!operation.stream ||
-          operation.stream.capacity -
-            operation.stream.buffered -
-            operation.children.size >
-            0)
-      )
-        return operation;
+    for (const operation of [...this.operations.values()]) {
+      if (!this.operationHasCountCredit(operation)) continue;
+      if (operation.resultByteDeclaration !== undefined) {
+        const declaration = this.prepareResultDeclaration(operation);
+        if (!declaration || operation.status !== 'running') continue;
+        if (
+          declaration.bytes >
+          operation.resultByteCapacity! - operation.reservedResultBytes
+        ) {
+          if (!declaration.waited) {
+            declaration.waited = true;
+            this.streamResultMetrics.resultByteReservationWaits++;
+          }
+          continue;
+        }
+      }
+      return operation;
     }
     return undefined;
   }
@@ -1296,14 +1571,41 @@ export class PjsRuntime {
           const descriptorStarted = internalProfilingEnabled()
             ? performance.now()
             : 0;
-          const partition = partitionAt(operation.plan, operation.generated++);
+          let partition: RangePartition;
+          let expectedResultBytes: number | undefined;
+          if (operation.resultByteDeclaration !== undefined) {
+            const declaration = this.prepareResultDeclaration(operation);
+            if (!declaration || operation.status !== 'running') break;
+            if (
+              declaration.bytes >
+              operation.resultByteCapacity! - operation.reservedResultBytes
+            ) {
+              if (!declaration.waited) {
+                declaration.waited = true;
+                this.streamResultMetrics.resultByteReservationWaits++;
+              }
+              break;
+            }
+            partition = declaration.partition;
+            expectedResultBytes = declaration.bytes;
+            operation.pendingResultDeclaration = undefined;
+            operation.generated++;
+          } else {
+            partition = partitionAt(operation.plan, operation.generated++);
+          }
           if (descriptorStarted)
             recordInternalProfile(
               'descriptorCreation',
               performance.now() - descriptorStarted,
             );
           this.partitionMetrics.generated++;
-          const child = { operation, partition };
+          const child: PartitionChild = {
+            operation,
+            partition,
+            ...(expectedResultBytes === undefined
+              ? {}
+              : { expectedResultBytes }),
+          };
           try {
             const factoryStarted = internalProfilingEnabled()
               ? performance.now()
@@ -1453,7 +1755,13 @@ export class PjsRuntime {
         worker.executeBatch(
           task.id,
           task.snapshot.taskName,
-          items.map((item) => ({ taskId: item.id, input: item.input })),
+          items.map((item) => ({
+            taskId: item.id,
+            input: item.input,
+            ...(item.expectedResultBytes === undefined
+              ? {}
+              : { expectedResultBytes: item.expectedResultBytes }),
+          })),
           task.child?.operation.resultMode === 'discard',
         );
       else
@@ -1464,7 +1772,18 @@ export class PjsRuntime {
           task.transferList,
           Boolean(task.child && internalProfilingEnabled()),
           task.child?.operation.resultMode === 'discard',
+          task.expectedResultBytes,
         );
+      const reservationIds = (items ?? [task])
+        .filter((item) => item.expectedResultBytes !== undefined)
+        .map((item) => item.id);
+      if (reservationIds.length > 0) {
+        for (const id of reservationIds) {
+          const reservation = this.resultReservations.get(id);
+          if (reservation) reservation.dispatched = true;
+        }
+        this.resultReservationExecutions.set(task.id, reservationIds);
+      }
       this.dispatchMetrics.executeMessages++;
       this.dispatchMetrics.logicalTasks += items?.length ?? 1;
       this.dispatchMetrics.logicalPartitions += items
@@ -1498,6 +1817,9 @@ export class PjsRuntime {
   private result(worker: PjsWorker, message: ExecutionResultMessage): void {
     const profileStarted = message.profile ? performance.now() : 0;
     this.dispatchMetrics.resultMessages++;
+    this.markResultExecutionEnded(
+      message.type === 'batchResult' ? message.batchId : message.taskId,
+    );
     if (message.type === 'batchResult') {
       for (const item of message.items) this.resultItem(worker, item);
     } else this.resultItem(worker, message);
@@ -1514,6 +1836,8 @@ export class PjsRuntime {
     message: TaskResultMessage | BatchItemResult,
   ): void {
     this.metrics.executed(message.executionMs);
+    if (message.type === 'failure' && message.kind === 'binaryContract')
+      this.streamResultMetrics.binaryResultContractFailures++;
     const task = this.tasks.get(message.taskId);
     // Late results after cancellation/deadline free the worker without settling twice.
     if (task) {
@@ -1528,7 +1852,17 @@ export class PjsRuntime {
                 `Task output could not be serialized: ${message.error.message}`,
                 { ...context, cause: message.error },
               )
-            : new PjsTaskError(message.error, context);
+            : message.kind === 'binaryContract'
+              ? new PjsBinaryResultContractError(message.error.message, {
+                  ...context,
+                  cause: message.error,
+                  declaredBytes: message.binaryContract!.declaredBytes,
+                  ...(message.binaryContract!.actualBytes === undefined
+                    ? {}
+                    : { actualBytes: message.binaryContract!.actualBytes }),
+                  actualType: message.binaryContract!.actualType,
+                })
+              : new PjsTaskError(message.error, context);
         this.settle(task, 'failed', error);
       }
     }
@@ -1541,6 +1875,7 @@ export class PjsRuntime {
     output?: unknown,
   ): void {
     if (!this.tasks.delete(task.id)) return;
+    if (status !== 'completed' || error) this.settleResultReservation(task.id);
     this.scheduler.remove(task.id);
     task.cleanup();
     task.input = undefined;
@@ -1589,6 +1924,9 @@ export class PjsRuntime {
           cause: error,
         }),
       );
-    void this.pool.stop().then(() => this.checkDrained());
+    void this.pool.stop().then(() => {
+      this.releaseAllResultReservations();
+      this.checkDrained();
+    });
   }
 }

@@ -196,3 +196,33 @@ Mixed map/stream/completion/ordinary trials showed no starvation. Work stealing,
 ordered streaming, reduce, and automatic sizing remain unsupported. The next
 narrow research target is a binary-only contract with declared bytes reserved
 before dispatch, provided real workloads first demonstrate the need.
+
+## v0.9 review: exact binary credit, not generic heap accounting
+
+Reviewed 2026-09-29. v0.9 implements the narrow target from v0.8: exact
+per-partition visible bytes are reserved before strict stream admission and
+validated in the worker before successful transport. The feature is opt-in so
+ordinary structured-clone values keep count-only semantics. ArrayBuffer-owned
+direct binary values qualify; shared backing and nested graphs do not.
+
+The retained matrix separates count from bytes. Fixed 256 KiB results showed
+that count capacity one held one worker busy regardless of a larger byte cap,
+while count 8/16 under a 1 MiB cap recorded waits and never exceeded 1 MiB.
+Variable 4/16/64/256 KiB results peaked exactly at 512 KiB under the small cap.
+This supports two explicit independent limits rather than deriving one from the
+other or estimating generic object size.
+
+The application-managed Piscina control was faster in the retained matched
+fixed and slow-variable cases, though PJS results also varied materially across
+nearby configurations and an earlier harness-validation run. PJS's contribution
+is the integrated lifecycle: declaration timing, per-logical-item batching,
+worker-side kind/size validation, cancellation ownership, metrics, and shutdown
+cleanup. It is not a claim that byte semaphores require a new scheduler or that
+PJS outperforms a mature pool.
+
+Mixed trials completed both strict streams, ordinary work, parallelFor, and
+typed map without starvation, and every run ended at zero reserved bytes. The
+same-machine committed-v0.8 controls show no broad established-path regression,
+though an 8 MiB transfer probe was slower in this noisy run. Work stealing,
+ordered delivery, upper-bound refunds, global byte pools, compression-aware
+contracts, reduce, and automatic sizing remain separate research questions.

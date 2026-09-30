@@ -1,9 +1,14 @@
 import { parentPort, workerData } from 'node:worker_threads';
-import { PjsSerializationError } from '../errors/index.js';
+import {
+  PjsBinaryResultContractError,
+  PjsSerializationError,
+} from '../errors/index.js';
+import { inspectBinaryResult } from '../partition/binary.js';
 import { transferOutput } from '../tasks/transfer.js';
 import { isHostMessage, serializeError } from './protocol.js';
 import type {
   BatchItemResult,
+  BinaryContractFailure,
   BootstrapData,
   HostMessage,
   InternalWorkerProfile,
@@ -57,6 +62,41 @@ function workerProfile(
     : undefined;
 }
 
+function validateBinaryResult(output: unknown, declaredBytes: number): void {
+  const inspected = inspectBinaryResult(output);
+  if (inspected.problem || inspected.bytes !== declaredBytes) {
+    const detail = inspected.problem
+      ? inspected.problem === 'shared'
+        ? 'uses SharedArrayBuffer backing'
+        : inspected.problem === 'detached'
+          ? 'is detached'
+          : 'is not a direct binary value'
+      : `contains ${inspected.bytes} visible bytes`;
+    throw new PjsBinaryResultContractError(
+      `Binary result ${detail}; expected exactly ${declaredBytes} visible bytes`,
+      {
+        declaredBytes,
+        ...(inspected.bytes === undefined
+          ? {}
+          : { actualBytes: inspected.bytes }),
+        actualType: inspected.actualType,
+      },
+    );
+  }
+}
+
+function binaryFailure(
+  error: PjsBinaryResultContractError,
+): BinaryContractFailure {
+  return {
+    declaredBytes: error.declaredBytes!,
+    ...(error.actualBytes === undefined
+      ? {}
+      : { actualBytes: error.actualBytes }),
+    actualType: error.actualType ?? 'unknown',
+  };
+}
+
 async function handle(value: unknown): Promise<void> {
   if (!isHostMessage(value)) throw new Error('Invalid PJS host message');
   if (value.type === 'shutdown') {
@@ -98,6 +138,8 @@ async function handle(value: unknown): Promise<void> {
     try {
       const preparationStarted = value.profile ? performance.now() : 0;
       const result = transferOutput(output);
+      if (value.expectedResultBytes !== undefined)
+        validateBinaryResult(result.value, value.expectedResultBytes);
       const outputPreparationMs = value.profile
         ? performance.now() - preparationStarted
         : 0;
@@ -130,7 +172,13 @@ async function handle(value: unknown): Promise<void> {
       send({
         type: 'failure',
         taskId: value.taskId,
-        kind: 'serialization',
+        kind:
+          cause instanceof PjsBinaryResultContractError
+            ? 'binaryContract'
+            : 'serialization',
+        ...(cause instanceof PjsBinaryResultContractError
+          ? { binaryContract: binaryFailure(cause) }
+          : {}),
         error: serializeError(cause),
         executionMs,
         ...(value.profile
@@ -188,6 +236,8 @@ async function executeBatch(
       try {
         const preparationStarted = performance.now();
         const result = transferOutput(output);
+        if (item.expectedResultBytes !== undefined)
+          validateBinaryResult(result.value, item.expectedResultBytes);
         outputPreparationMs += performance.now() - preparationStarted;
         transferList.push(...result.transferList);
         items.push({
@@ -200,7 +250,13 @@ async function executeBatch(
         items.push({
           type: 'failure',
           taskId: item.taskId,
-          kind: 'serialization',
+          kind:
+            cause instanceof PjsBinaryResultContractError
+              ? 'binaryContract'
+              : 'serialization',
+          ...(cause instanceof PjsBinaryResultContractError
+            ? { binaryContract: binaryFailure(cause) }
+            : {}),
           error: serializeError(cause),
           executionMs,
         });

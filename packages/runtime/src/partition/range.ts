@@ -35,6 +35,20 @@ export interface StreamRangeOptions extends PartitionOptions {
   experimentalMaxBufferedResults?: number;
 }
 
+/** @experimental Direct binary values eligible for strict result-byte contracts. */
+export type PjsBinaryResult =
+  ArrayBuffer | PjsTypedArray | DataView<ArrayBufferLike>;
+
+export type ResultByteDeclaration =
+  number | ((partition: RangePartition) => number);
+
+/** @experimental Exact visible bytes declared before each stream child is admitted. */
+export interface BinaryStreamRangeOptions extends PartitionOptions {
+  experimentalMaxBufferedResults?: number;
+  experimentalResultBytes: ResultByteDeclaration;
+  experimentalMaxReservedResultBytes: number;
+}
+
 /** @experimental Typed numeric blocks supported by element-range mapping. */
 export type PjsTypedArray =
   | Int8Array<ArrayBufferLike>

@@ -3,13 +3,14 @@
 v0.4 added `runtime.partitionRange(task, range, createInput, options?)`; v0.5
 added bounded transport batches; v0.6 added completion-only `parallelFor()`;
 v0.7 added bounded completion-order `streamRange()` over the same engine; v0.8
-adds element-block `parallelMapRange()`. `partitionRange()` returns ordered
+adds element-block `parallelMapRange()`; v0.9 adds opt-in strict binary-result
+credits to streams. `partitionRange()` returns ordered
 chunk outputs, `parallelFor()` returns `Promise<void>` without transporting
 successful values, `streamRange()` returns an `AsyncIterable` of identified
 partition outputs, and map returns one flat ordered element array. All four APIs
 and their derived admission limits remain experimental; no stable
 `parallel.for/map/reduce` family is exported. See the
-[v0.8 proposal](proposal-v0.8.md),
+[v0.9 proposal](proposal-v0.9.md),
 [completion decision](adr/0012-completion-only-operations.md), and
 [map decision](adr/0015-element-block-map-semantics.md).
 
@@ -210,6 +211,30 @@ cannot exceed the capacity, including when a physical batch contains multiple
 items. Reading releases a credit and production resumes. The count does not
 estimate bytes, and application-side reordering or collection is outside it.
 
+Strict binary mode requires both `experimentalResultBytes` and
+`experimentalMaxReservedResultBytes`. The declaration is a nonnegative safe
+integer or a synchronous per-partition callback returning one. It runs lazily
+in the operation AsyncResource before the input factory and is cached while
+waiting for credit. A single declaration larger than capacity fails with
+`PjsResultCapacityError` before input construction or worker execution.
+
+Every admitted strict child reserves its exact declared visible bytes. The
+worker accepts only a live direct `ArrayBuffer`, or an ArrayBuffer-backed typed
+array, Buffer, or DataView, with exactly that `byteLength`. Nested graphs,
+shared backing, detached values, wrong kinds, and size mismatches fail with
+`PjsBinaryResultContractError` before successful output transport. Zero-byte
+results are valid but still consume count credit. Count and byte limits both
+apply; the tighter one controls admission. A producer lacking byte credit can
+be skipped while another operation progresses.
+
+The byte capacity is per stream, while the runtime's current/peak reservation
+metrics aggregate strict streams. It bounds declared result payloads only. It
+does not bound worker allocation before validation, backing allocation beyond a
+view, structured-clone temporaries, RSS, heap, inputs, shared memory, or values
+already yielded to the consumer. Collected operations have no byte-credit
+option because retaining the final output while waiting for credit could
+deadlock.
+
 ## Failure, cancellation, deadlines and shutdown
 
 The parent succeeds only after every required child completes. A worker executes
@@ -237,7 +262,10 @@ boundaries in addition to the timer. The first observed terminal reason wins.
 **Caller cancellation does not release an executing worker.** A posted batch is
 one non-preemptive physical execution and finishes all of its items unless an
 item fails. Busy siblings continue until completion/crash; only then can another
-execution use the slot. Cancellation does not undo side effects.
+execution use the slot. A strict binary reservation follows the same physical
+lifetime: queued cancellation releases immediately, but running cancellation
+holds credit until that execution terminates. Cancellation does not undo side
+effects.
 
 A worker crash during a batch fails the parent and triggers bounded replacement.
 No logical item is retried because the host cannot know which side effects ran.
@@ -261,7 +289,7 @@ General nested compute remains unsupported.
 | `tasks.*` and `timing` | Ordinary submissions plus actual admitted child tasks; existing definitions       |
 | `operations.*`         | Parent totals plus collect/complete/stream/map outcomes, pending and capacity     |
 | `streams.*`            | Streaming parent accepted/rejected/terminal outcomes and pending count            |
-| `streamResults.*`      | Logical counts plus current/peak visible payload bytes and unknown counts         |
+| `streamResults.*`      | Logical/visible payload counts plus binary reservation peaks, waits, and failures |
 | `mapResults.*`         | Validated block/element totals and cumulative host assembly time                  |
 | `partitions.*`         | Descriptors generated, children admitted, child caller completed/failed/cancelled |
 | `dispatch.*`           | Physical execute/result messages plus logical task/partition totals and ratio     |

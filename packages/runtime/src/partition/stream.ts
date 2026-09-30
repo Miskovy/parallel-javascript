@@ -8,7 +8,7 @@ export interface StreamRangeResult<Output> {
 interface StreamCallbacks {
   demand(): void;
   cancel(): void;
-  yielded(): void;
+  yielded(partition: RangePartition): void;
 }
 
 function observablePayloadBytes(value: unknown): number | undefined {
@@ -57,7 +57,7 @@ export class RangeStream<Output> implements AsyncIterableIterator<
     if (waiter) {
       this.waiter = undefined;
       this.yielded++;
-      this.callbacks?.yielded();
+      this.callbacks?.yielded(value.partition);
       waiter.resolve({ value, done: false });
       return;
     }
@@ -92,7 +92,7 @@ export class RangeStream<Output> implements AsyncIterableIterator<
       const value = this.buffer.shift()!;
       this.release(value.output);
       this.yielded++;
-      this.callbacks?.yielded();
+      this.callbacks?.yielded(value.partition);
       this.callbacks?.demand();
       return Promise.resolve({ value, done: false });
     }

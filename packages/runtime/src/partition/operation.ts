@@ -6,6 +6,7 @@ import type {
   PjsTypedArrayConstructor,
   RangePartition,
   RangePlan,
+  ResultByteDeclaration,
 } from './range.js';
 import type { RangeStream } from './stream.js';
 
@@ -24,6 +25,10 @@ export class RangeOperation extends AsyncResource {
   readonly children = new Map<string, RangePartition>();
   outputs: unknown[] | PjsTypedArray | undefined;
   mapAssemblyMs = 0;
+  reservedResultBytes = 0;
+  readonly resultReservationTaskByPartition = new Map<number, string>();
+  pendingResultDeclaration:
+    { partition: RangePartition; bytes: number; waited: boolean } | undefined;
   cleanup: () => void = () => {};
 
   constructor(
@@ -34,6 +39,8 @@ export class RangeOperation extends AsyncResource {
     readonly resultMode: RangeResultMode,
     readonly stream: RangeStream<unknown> | undefined,
     readonly mapOutputConstructor: PjsTypedArrayConstructor | undefined,
+    readonly resultByteDeclaration: ResultByteDeclaration | undefined,
+    readonly resultByteCapacity: number | undefined,
     outputs: unknown[] | PjsTypedArray | undefined,
     public createInput:
       ((partition: RangePartition) => PartitionInput<unknown>) | undefined,
@@ -49,4 +56,5 @@ export class RangeOperation extends AsyncResource {
 export interface PartitionChild {
   operation: RangeOperation;
   partition: RangePartition;
+  expectedResultBytes?: number;
 }
