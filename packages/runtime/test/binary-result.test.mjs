@@ -96,6 +96,29 @@ test('binary protocol fields validate single, batch, legacy, and failure message
     }),
     false,
   );
+  for (const expectedResultBytes of [0.5, Number.NaN, Infinity, 2 ** 53])
+    assert.equal(
+      isHostMessage({
+        type: 'execute',
+        taskId: 'bad',
+        taskName: 'task',
+        input: null,
+        expectedResultBytes,
+      }),
+      false,
+    );
+  assert.equal(
+    isHostMessage({
+      type: 'executeBatch',
+      batchId: 'duplicate',
+      taskName: 'task',
+      items: [
+        { taskId: 'same', input: null },
+        { taskId: 'same', input: null },
+      ],
+    }),
+    false,
+  );
   assert.equal(
     isWorkerMessage({
       type: 'failure',
@@ -121,6 +144,46 @@ test('binary protocol fields validate single, batch, legacy, and failure message
     }),
     false,
   );
+  assert.equal(
+    isWorkerMessage({
+      type: 'failure',
+      taskId: 'one',
+      kind: 'task',
+      error: { name: 'Error', message: 'inconsistent detail' },
+      executionMs: 1,
+      binaryContract: {
+        declaredBytes: 8,
+        actualType: 'Uint8Array',
+      },
+    }),
+    false,
+  );
+  assert.equal(
+    isWorkerMessage({
+      type: 'failure',
+      taskId: 'one',
+      kind: 'binaryContract',
+      error: { name: 'Error', message: 'invalid detail' },
+      executionMs: 1,
+      binaryContract: {
+        declaredBytes: 0.5,
+        actualType: 'Uint8Array',
+      },
+    }),
+    false,
+  );
+  const batchResult = (items, skippedTaskIds) => ({
+    type: 'batchResult',
+    batchId: 'batch',
+    items,
+    skippedTaskIds,
+    executionMs: 1,
+  });
+  const success = { type: 'success', taskId: 'one', output: 1, executionMs: 1 };
+  assert.equal(isWorkerMessage(batchResult([success, success], [])), false);
+  assert.equal(isWorkerMessage(batchResult([success], ['one'])), false);
+  assert.equal(isWorkerMessage(batchResult([success], ['two', 'two'])), false);
+  assert.equal(isWorkerMessage(batchResult([success], [1])), false);
 });
 
 test('strict streams accept direct owned binary kinds, zero length, and subviews', async (t) => {

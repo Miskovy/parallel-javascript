@@ -1,0 +1,617 @@
+{
+  "version": "0.10.0",
+  "timestamp": "2026-09-30T20:41:17.184Z",
+  "environment": {
+    "machineLabel": "Miskovy",
+    "cpuModel": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz",
+    "logicalCpuCount": 8,
+    "availableParallelism": 8,
+    "physicalCoreCount": null,
+    "totalMemoryBytes": 17037594624,
+    "platform": "win32",
+    "osType": "Windows_NT",
+    "release": "10.0.19045",
+    "architecture": "x64",
+    "node": "v24.21.0",
+    "v8": "13.6.233.17-node.53",
+    "pjsCommit": "037be5cca9a04bdff7cc8019006d822f622ac86c",
+    "worktreeDirty": true,
+    "power": "unknown",
+    "settings": {
+      "baseline": "E:\\Miskovy\\Work\\pjs\\pjs\\.benchmark-v09"
+    }
+  },
+  "methodology": {
+    "order": "v0.9/v0.10/v0.10/v0.9, fresh processes",
+    "samplesPerVersionCase": 10,
+    "outliers": "all retained"
+  },
+  "results": [
+    {
+      "version": "baseline",
+      "results": [
+        {
+          "name": "run-noop",
+          "kind": "run",
+          "count": 1024,
+          "samples": [
+            {
+              "wallMs": 56.9162
+            },
+            {
+              "wallMs": 62.459
+            },
+            {
+              "wallMs": 61.69169999999997
+            },
+            {
+              "wallMs": 57.26419999999996
+            },
+            {
+              "wallMs": 53.93050000000005
+            }
+          ]
+        },
+        {
+          "name": "parallel-noop-b8",
+          "kind": "parallel",
+          "count": 2048,
+          "samples": [
+            {
+              "wallMs": 54.427599999999984
+            },
+            {
+              "wallMs": 49.67679999999996
+            },
+            {
+              "wallMs": 39.440399999999954
+            },
+            {
+              "wallMs": 53.36200000000008
+            },
+            {
+              "wallMs": 61.30149999999992
+            }
+          ]
+        },
+        {
+          "name": "stream-count-b4",
+          "kind": "count",
+          "count": 2048,
+          "samples": [
+            {
+              "wallMs": 213.05880000000002
+            },
+            {
+              "wallMs": 136.7329000000002
+            },
+            {
+              "wallMs": 128.13159999999993
+            },
+            {
+              "wallMs": 144.41470000000004
+            },
+            {
+              "wallMs": 134.79210000000012
+            }
+          ]
+        },
+        {
+          "name": "strict-clone-fixed-256k",
+          "kind": "strict-fixed",
+          "count": 64,
+          "samples": [
+            {
+              "wallMs": 57.78570000000013
+            },
+            {
+              "wallMs": 55.7518
+            },
+            {
+              "wallMs": 49.78830000000016
+            },
+            {
+              "wallMs": 60.42730000000029
+            },
+            {
+              "wallMs": 55.679099999999835
+            }
+          ]
+        },
+        {
+          "name": "strict-transfer-fixed-256k",
+          "kind": "strict-transfer-fixed",
+          "count": 64,
+          "samples": [
+            {
+              "wallMs": 66.76770000000033
+            },
+            {
+              "wallMs": 106.03369999999995
+            },
+            {
+              "wallMs": 70.34550000000036
+            },
+            {
+              "wallMs": 61.897899999999936
+            },
+            {
+              "wallMs": 65.84129999999959
+            }
+          ]
+        },
+        {
+          "name": "strict-transfer-callback-256k",
+          "kind": "strict-transfer-callback",
+          "count": 64,
+          "samples": [
+            {
+              "wallMs": 69.45190000000002
+            },
+            {
+              "wallMs": 65.79669999999987
+            },
+            {
+              "wallMs": 75.08629999999994
+            },
+            {
+              "wallMs": 77.88439999999991
+            },
+            {
+              "wallMs": 65.31619999999975
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "candidate",
+      "results": [
+        {
+          "name": "run-noop",
+          "kind": "run",
+          "count": 1024,
+          "samples": [
+            {
+              "wallMs": 61.428300000000036
+            },
+            {
+              "wallMs": 78.45949999999999
+            },
+            {
+              "wallMs": 63.34379999999999
+            },
+            {
+              "wallMs": 57.79390000000001
+            },
+            {
+              "wallMs": 58.11709999999994
+            }
+          ]
+        },
+        {
+          "name": "parallel-noop-b8",
+          "kind": "parallel",
+          "count": 2048,
+          "samples": [
+            {
+              "wallMs": 46.9923
+            },
+            {
+              "wallMs": 51.50170000000003
+            },
+            {
+              "wallMs": 47.15610000000004
+            },
+            {
+              "wallMs": 48.46939999999995
+            },
+            {
+              "wallMs": 49.29570000000001
+            }
+          ]
+        },
+        {
+          "name": "stream-count-b4",
+          "kind": "count",
+          "count": 2048,
+          "samples": [
+            {
+              "wallMs": 177.59860000000003
+            },
+            {
+              "wallMs": 136.8581999999999
+            },
+            {
+              "wallMs": 136.50420000000008
+            },
+            {
+              "wallMs": 130.48570000000018
+            },
+            {
+              "wallMs": 144.4828
+            }
+          ]
+        },
+        {
+          "name": "strict-clone-fixed-256k",
+          "kind": "strict-fixed",
+          "count": 64,
+          "samples": [
+            {
+              "wallMs": 86.8248000000001
+            },
+            {
+              "wallMs": 63.355600000000095
+            },
+            {
+              "wallMs": 57.197999999999865
+            },
+            {
+              "wallMs": 67.67050000000017
+            },
+            {
+              "wallMs": 62.20080000000007
+            }
+          ]
+        },
+        {
+          "name": "strict-transfer-fixed-256k",
+          "kind": "strict-transfer-fixed",
+          "count": 64,
+          "samples": [
+            {
+              "wallMs": 71.13269999999966
+            },
+            {
+              "wallMs": 74.2215000000001
+            },
+            {
+              "wallMs": 79.35930000000008
+            },
+            {
+              "wallMs": 91.73730000000023
+            },
+            {
+              "wallMs": 70.82470000000012
+            }
+          ]
+        },
+        {
+          "name": "strict-transfer-callback-256k",
+          "kind": "strict-transfer-callback",
+          "count": 64,
+          "samples": [
+            {
+              "wallMs": 77.67080000000033
+            },
+            {
+              "wallMs": 66.0028000000002
+            },
+            {
+              "wallMs": 73.82950000000028
+            },
+            {
+              "wallMs": 91.66259999999966
+            },
+            {
+              "wallMs": 68.90119999999979
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "candidate",
+      "results": [
+        {
+          "name": "run-noop",
+          "kind": "run",
+          "count": 1024,
+          "samples": [
+            {
+              "wallMs": 66.55309999999997
+            },
+            {
+              "wallMs": 63.219899999999996
+            },
+            {
+              "wallMs": 69.0247
+            },
+            {
+              "wallMs": 87.4724
+            },
+            {
+              "wallMs": 74.60939999999994
+            }
+          ]
+        },
+        {
+          "name": "parallel-noop-b8",
+          "kind": "parallel",
+          "count": 2048,
+          "samples": [
+            {
+              "wallMs": 52.16579999999999
+            },
+            {
+              "wallMs": 64.87180000000001
+            },
+            {
+              "wallMs": 49.411699999999996
+            },
+            {
+              "wallMs": 64.23579999999993
+            },
+            {
+              "wallMs": 58.316400000000044
+            }
+          ]
+        },
+        {
+          "name": "stream-count-b4",
+          "kind": "count",
+          "count": 2048,
+          "samples": [
+            {
+              "wallMs": 150.3216
+            },
+            {
+              "wallMs": 147.24660000000017
+            },
+            {
+              "wallMs": 147.80009999999993
+            },
+            {
+              "wallMs": 141.481
+            },
+            {
+              "wallMs": 147.81180000000018
+            }
+          ]
+        },
+        {
+          "name": "strict-clone-fixed-256k",
+          "kind": "strict-fixed",
+          "count": 64,
+          "samples": [
+            {
+              "wallMs": 63.74410000000012
+            },
+            {
+              "wallMs": 64.29510000000028
+            },
+            {
+              "wallMs": 61.758800000000065
+            },
+            {
+              "wallMs": 60.61020000000008
+            },
+            {
+              "wallMs": 55.68029999999999
+            }
+          ]
+        },
+        {
+          "name": "strict-transfer-fixed-256k",
+          "kind": "strict-transfer-fixed",
+          "count": 64,
+          "samples": [
+            {
+              "wallMs": 63.39269999999988
+            },
+            {
+              "wallMs": 71.66940000000022
+            },
+            {
+              "wallMs": 66.91760000000022
+            },
+            {
+              "wallMs": 73.52669999999989
+            },
+            {
+              "wallMs": 71.41210000000001
+            }
+          ]
+        },
+        {
+          "name": "strict-transfer-callback-256k",
+          "kind": "strict-transfer-callback",
+          "count": 64,
+          "samples": [
+            {
+              "wallMs": 66.14439999999968
+            },
+            {
+              "wallMs": 68.9978000000001
+            },
+            {
+              "wallMs": 65.0652
+            },
+            {
+              "wallMs": 67.66020000000026
+            },
+            {
+              "wallMs": 63.321100000000115
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "baseline",
+      "results": [
+        {
+          "name": "run-noop",
+          "kind": "run",
+          "count": 1024,
+          "samples": [
+            {
+              "wallMs": 63.87639999999999
+            },
+            {
+              "wallMs": 62.04669999999999
+            },
+            {
+              "wallMs": 60.06129999999996
+            },
+            {
+              "wallMs": 63.66370000000006
+            },
+            {
+              "wallMs": 75.61500000000001
+            }
+          ]
+        },
+        {
+          "name": "parallel-noop-b8",
+          "kind": "parallel",
+          "count": 2048,
+          "samples": [
+            {
+              "wallMs": 54.487499999999955
+            },
+            {
+              "wallMs": 46.57209999999998
+            },
+            {
+              "wallMs": 47.70100000000002
+            },
+            {
+              "wallMs": 51.34379999999999
+            },
+            {
+              "wallMs": 56.917100000000005
+            }
+          ]
+        },
+        {
+          "name": "stream-count-b4",
+          "kind": "count",
+          "count": 2048,
+          "samples": [
+            {
+              "wallMs": 186.92149999999992
+            },
+            {
+              "wallMs": 164.0369999999998
+            },
+            {
+              "wallMs": 161.1377
+            },
+            {
+              "wallMs": 143.6543999999999
+            },
+            {
+              "wallMs": 149.94900000000007
+            }
+          ]
+        },
+        {
+          "name": "strict-clone-fixed-256k",
+          "kind": "strict-fixed",
+          "count": 64,
+          "samples": [
+            {
+              "wallMs": 56.843700000000354
+            },
+            {
+              "wallMs": 62.222299999999905
+            },
+            {
+              "wallMs": 75.9342999999999
+            },
+            {
+              "wallMs": 69.25599999999986
+            },
+            {
+              "wallMs": 92.91199999999981
+            }
+          ]
+        },
+        {
+          "name": "strict-transfer-fixed-256k",
+          "kind": "strict-transfer-fixed",
+          "count": 64,
+          "samples": [
+            {
+              "wallMs": 90.10179999999991
+            },
+            {
+              "wallMs": 95.16630000000032
+            },
+            {
+              "wallMs": 258.74469999999974
+            },
+            {
+              "wallMs": 115.18499999999995
+            },
+            {
+              "wallMs": 79.89089999999987
+            }
+          ]
+        },
+        {
+          "name": "strict-transfer-callback-256k",
+          "kind": "strict-transfer-callback",
+          "count": 64,
+          "samples": [
+            {
+              "wallMs": 80.40809999999965
+            },
+            {
+              "wallMs": 96.72560000000021
+            },
+            {
+              "wallMs": 91.27800000000025
+            },
+            {
+              "wallMs": 76.94849999999997
+            },
+            {
+              "wallMs": 81.95010000000002
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "summary": [
+    {
+      "name": "run-noop",
+      "baseline": 61.86919999999998,
+      "candidate": 64.94844999999998,
+      "candidateOverBaseline": 1.0497703219049221
+    },
+    {
+      "name": "parallel-noop-b8",
+      "baseline": 52.352900000000034,
+      "candidate": 50.45670000000001,
+      "candidateOverBaseline": 0.9637804209508924
+    },
+    {
+      "name": "stream-count-b4",
+      "baseline": 147.18185000000005,
+      "candidate": 145.86470000000008,
+      "candidateOverBaseline": 0.9910508666659648
+    },
+    {
+      "name": "strict-clone-fixed-256k",
+      "baseline": 59.10650000000021,
+      "candidate": 62.77820000000008,
+      "candidateOverBaseline": 1.0621200713965446
+    },
+    {
+      "name": "strict-transfer-fixed-256k",
+      "baseline": 84.9963499999999,
+      "candidate": 71.54075000000012,
+      "candidateOverBaseline": 0.8416920255987488
+    },
+    {
+      "name": "strict-transfer-callback-256k",
+      "baseline": 77.41644999999994,
+      "candidate": 68.28070000000002,
+      "candidateOverBaseline": 0.8819921347465568
+    }
+  ]
+}

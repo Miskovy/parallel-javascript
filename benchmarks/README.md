@@ -151,3 +151,19 @@ configuration. Raw results are `binary-results-v0.9.json` and
 to `node benchmarks/binary-results/regression.mjs` for established-API controls
 in v0.8/v0.9/v0.9/v0.8 order; that report is
 `runtime-regression-v0.9.json`. Historical artifacts remain unchanged.
+
+## v0.10 reservation durability and cost audit
+
+Run `npm run benchmark:reservation` for the clone/transfer size sweep and the
+application pipeline, or `npm run soak:reservations` for the 30-second mixed
+failure soak. `npm run soak:reservations:smoke` provides the short harness
+check. See the [methodology](reservation-audit/README.md), the
+[proposal](../docs/proposal-v0.10.md), and the
+[measurement report](../docs/benchmarks-v0.10.md).
+
+The retained artifacts are `reservation-performance-v0.10.json`,
+`reservation-pipeline-v0.10.json`, `reservation-soak-v0.10.json`,
+`reservation-soak-forced-gc-v0.10.json`, and
+`runtime-regression-v0.10.json`. Build committed v0.9 separately and pass its
+root to `node benchmarks/reservation-audit/regression.mjs` to reproduce the
+v0.9/v0.10/v0.10/v0.9 causal control. Historical artifacts remain unchanged.

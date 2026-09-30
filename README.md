@@ -9,7 +9,7 @@
 <p>
   <a href="packages/runtime/package.json"><img src="https://img.shields.io/badge/Node.js-%E2%89%A522-339933?style=flat-square&amp;logo=nodedotjs&amp;logoColor=white" alt="Runtime: Node.js 22 or newer"></a>
   <a href="package.json"><img src="https://img.shields.io/badge/TypeScript-7.0-3178C6?style=flat-square&amp;logo=typescript&amp;logoColor=white" alt="Build compiler: TypeScript 7.0"></a>
-  <a href="docs/architecture.md"><img src="https://img.shields.io/badge/status-v0.9%20binary%20result%20credits-0F766E?style=flat-square" alt="Status: v0.9 strict binary result credits"></a>
+  <a href="docs/architecture.md"><img src="https://img.shields.io/badge/status-v0.10%20reservation%20audit-0F766E?style=flat-square" alt="Status: v0.10 reservation audit"></a>
   <a href="packages/runtime/package.json"><img src="https://img.shields.io/badge/runtime_dependencies-0-0F766E?style=flat-square" alt="Zero runtime dependencies"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-64748B?style=flat-square" alt="License: MIT"></a>
 </p>
@@ -18,7 +18,7 @@
   <a href="#quick-start">Quick start</a> ·
   <a href="#define-a-task">Task API</a> ·
   <a href="docs/architecture.md">Architecture</a> ·
-  <a href="docs/benchmarks-v0.9.md">Benchmarks</a> ·
+  <a href="docs/benchmarks-v0.10.md">Benchmarks</a> ·
   <a href="docs/toolchain.md">Toolchain choices</a>
 </p>
 
@@ -26,7 +26,7 @@
 
 ---
 
-PJS v0.9 is a small foundation for explicit CPU parallelism in Node.js: persistent workers, registered module tasks, bounded FIFO admission, explicit buffer transfers, reusable shared inputs, experimental runtime-owned range partitioning, bounded dispatch batching, completion-only parallel ranges, bounded completion-order result streams, strict binary result-byte credits, element-block mapping, host async-context association, task lifecycles, failure recovery, cancellation/deadlines, and real statistics. It builds with TypeScript 7 and has no runtime dependencies.
+PJS v0.10 is a small foundation for explicit CPU parallelism in Node.js: persistent workers, registered module tasks, bounded FIFO admission, explicit buffer transfers, reusable shared inputs, experimental runtime-owned range partitioning, bounded dispatch batching, completion-only parallel ranges, bounded completion-order result streams, strict binary result-byte credits, element-block mapping, host async-context association, task lifecycles, failure recovery, cancellation/deadlines, and real statistics. v0.10 audits and soaks the v0.9 reservation design without adding a public algorithm. It builds with TypeScript 7 and has no runtime dependencies.
 
 > **The programmer declares parallelizable work. PJS decides how accepted tasks use the available workers.**
 
@@ -34,7 +34,7 @@ The experimental `partitionRange()` operation owns lazy range division and order
 
 ## What works today
 
-| Capability                     | v0.9 behavior                                                                    |
+| Capability                     | v0.10 behavior                                                                   |
 | ------------------------------ | -------------------------------------------------------------------------------- |
 | **Persistent workers**         | A fixed, configurable population reused across tasks                             |
 | **Explicit task registration** | Typed handles for local module exports; no closure serialization or eval         |
@@ -55,7 +55,7 @@ The experimental `partitionRange()` operation owns lazy range division and order
 
 ## Quick start
 
-The runtime targets Node.js 22 or newer. Repository development tools require Node.js 22.13+ or 24+. v0.9 was tested on Node.js 24.21.0 on Windows; v0.5 was tested on Node.js 24.13.1 on Linux. Other supported Node versions/platforms still need CI coverage.
+The runtime targets Node.js 22 or newer. Repository development tools require Node.js 22.13+ or 24+. v0.10 was tested on Node.js 24.21.0 on Windows. Node 22 and current Linux/macOS environments were unavailable for this milestone and still need CI coverage; the historical v0.5 Linux run is not a v0.10 reproduction.
 
 ```sh
 npm ci
@@ -293,7 +293,7 @@ npm run benchmark:binary
 
 The [benchmark methodology](benchmarks/README.md) separates startup from warm-pool execution and retains every sample. Small workloads can be slower under PJS, and more workers do not guarantee linear scaling.
 
-The [v0.9 report](docs/benchmarks-v0.9.md) evaluates strict binary result credits, count-versus-byte capacity, realistic fast/slow consumers, fairness, v0.8 regression controls, and an application-managed Piscina equivalent. The [v0.8 report](docs/benchmarks-v0.8.md) and all earlier evidence remain preserved.
+The [v0.10 report](docs/benchmarks-v0.10.md) audits strict reservation ownership, long-running failure cleanup, transfer/clone size sweeps, application traces, and v0.9 regression controls. The [v0.9 report](docs/benchmarks-v0.9.md) and all earlier evidence remain preserved.
 
 The [v0.3 report](docs/benchmarks-v0.3.md) compares clone, transfer and reusable shared input, including a pinned Piscina baseline. The [v0.2 measurement report](docs/benchmarks-v0.2.md) compares clone and transfer paths, including matrix input preparation. The [v0.1 baseline](docs/benchmarks-v0.1.md) and its raw JSON remain preserved. Neither compiler nor runtime speedups are assumed.
 
@@ -320,9 +320,9 @@ All dependencies are development tools or benchmark baselines (Piscina is pinned
 - [Architecture decisions](docs/adr/0001-task-registration.md): registration, pool model, scheduler, and cancellation.
 - [Runtime research](docs/research/runtime-landscape.md): existing systems and concepts worth investigating.
 
-The next milestone should be selected from the [v0.9 measurements](docs/benchmarks-v0.9.md). Reduce, ordered streaming, cooperative cancellation, worker-context propagation, global byte pools, and scheduling changes remain design work; v0.9 stabilizes none of them.
+The next milestone should be selected from the [v0.10 measurements](docs/benchmarks-v0.10.md). Cross-platform reproduction and upper-bound/refund research for genuinely variable outputs have stronger evidence than another algorithm API. Reduce, ordered streaming, cooperative cancellation, worker-context propagation, global byte pools, and scheduling changes remain design work; v0.10 stabilizes none of them.
 
-Framework integrations, compiler transforms, custom syntax, browser support, and advanced schedulers are outside v0.9.
+Framework integrations, compiler transforms, custom syntax, browser support, and advanced schedulers are outside v0.10.
 
 ## License
 

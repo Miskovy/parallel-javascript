@@ -77,6 +77,9 @@ interface ResultReservation {
   callerSettled: boolean;
 }
 
+const reservationInvariantChecksEnabled =
+  process.env.PJS_DEBUG_RESERVATION_INVARIANTS === '1';
+
 const typedArrayConstructors = new Set<PjsTypedArrayConstructor>([
   Int8Array,
   Uint8Array,
@@ -1371,9 +1374,13 @@ export class PjsRuntime {
       this.streamResultMetrics.peakReservedResultBytes,
       this.streamResultMetrics.currentReservedResultBytes,
     );
+    this.assertResultReservationInvariants('reserve');
   }
 
-  private releaseResultReservation(taskId: string): void {
+  private releaseResultReservation(
+    taskId: string,
+    checkInvariants = true,
+  ): void {
     const reservation = this.resultReservations.get(taskId);
     if (!reservation) return;
     this.resultReservations.delete(taskId);
@@ -1388,6 +1395,7 @@ export class PjsRuntime {
       );
     operation.reservedResultBytes -= reservation.bytes;
     this.streamResultMetrics.currentReservedResultBytes -= reservation.bytes;
+    if (checkInvariants) this.assertResultReservationInvariants('release');
   }
 
   private settleResultReservation(taskId: string): void {
@@ -1396,6 +1404,7 @@ export class PjsRuntime {
     reservation.callerSettled = true;
     if (!reservation.dispatched || reservation.executionDone)
       this.releaseResultReservation(taskId);
+    else this.assertResultReservationInvariants('settle-running');
   }
 
   private cancelOperationResultReservations(operation: RangeOperation): void {
@@ -1406,6 +1415,7 @@ export class PjsRuntime {
       if (!reservation.dispatched || reservation.executionDone)
         this.releaseResultReservation(taskId);
     }
+    this.assertResultReservationInvariants('cancel-operation');
   }
 
   private markResultExecutionEnded(correlationId: string): void {
@@ -1416,14 +1426,108 @@ export class PjsRuntime {
       const reservation = this.resultReservations.get(taskId);
       if (!reservation) continue;
       reservation.executionDone = true;
-      if (reservation.callerSettled) this.releaseResultReservation(taskId);
+      if (reservation.callerSettled)
+        this.releaseResultReservation(taskId, false);
     }
+    this.assertResultReservationInvariants('execution-ended');
   }
 
   private releaseAllResultReservations(): void {
     this.resultReservationExecutions.clear();
     for (const taskId of [...this.resultReservations.keys()])
-      this.releaseResultReservation(taskId);
+      this.releaseResultReservation(taskId, false);
+    this.assertResultReservationInvariants('release-all');
+  }
+
+  private assertResultReservationInvariants(stage: string): void {
+    if (!reservationInvariantChecksEnabled) return;
+    const fail = (detail: string): never => {
+      throw new Error(
+        `Result reservation invariant failed after ${stage}: ${detail}`,
+      );
+    };
+    const current = this.streamResultMetrics.currentReservedResultBytes;
+    if (!Number.isSafeInteger(current) || current < 0)
+      fail(`current reserved bytes is ${current}`);
+
+    const correlated = new Set<string>();
+    for (const [correlationId, taskIds] of this.resultReservationExecutions) {
+      if (taskIds.length === 0)
+        fail(`execution ${correlationId} has no logical reservations`);
+      for (const taskId of taskIds) {
+        if (correlated.has(taskId))
+          fail(`reservation ${taskId} has multiple execution correlations`);
+        correlated.add(taskId);
+        const reservation =
+          this.resultReservations.get(taskId) ??
+          fail(`execution ${correlationId} references missing ${taskId}`);
+        if (!reservation.dispatched || reservation.executionDone)
+          fail(`execution ${correlationId} references inactive ${taskId}`);
+      }
+    }
+
+    let reservationBytes = 0;
+    const referencedOperations = new Set<RangeOperation>(
+      this.operations.values(),
+    );
+    for (const [taskId, reservation] of this.resultReservations) {
+      if (reservation.taskId !== taskId)
+        fail(`reservation key ${taskId} disagrees with record task ID`);
+      if (!Number.isSafeInteger(reservation.bytes) || reservation.bytes < 0)
+        fail(`reservation ${taskId} has invalid byte count`);
+      if (
+        reservation.operation.resultReservationTaskByPartition.get(
+          reservation.partitionIndex,
+        ) !== taskId
+      )
+        fail(`reservation ${taskId} has no matching partition mapping`);
+      if (reservation.dispatched && !reservation.executionDone) {
+        if (!correlated.has(taskId))
+          fail(`dispatched reservation ${taskId} has no execution correlation`);
+      } else if (correlated.has(taskId))
+        fail(`inactive reservation ${taskId} retains execution correlation`);
+      reservationBytes += reservation.bytes;
+      if (!Number.isSafeInteger(reservationBytes))
+        fail('reservation byte sum exceeds safe integer range');
+      referencedOperations.add(reservation.operation);
+    }
+    if (reservationBytes !== current)
+      fail(
+        `metric ${current} disagrees with reservation sum ${reservationBytes}`,
+      );
+
+    let operationBytes = 0;
+    for (const operation of referencedOperations) {
+      if (
+        !Number.isSafeInteger(operation.reservedResultBytes) ||
+        operation.reservedResultBytes < 0
+      )
+        fail(`operation ${operation.id} has invalid reserved bytes`);
+      if (
+        operation.resultByteCapacity !== undefined &&
+        operation.reservedResultBytes > operation.resultByteCapacity
+      )
+        fail(`operation ${operation.id} exceeds its result byte capacity`);
+      for (const [
+        partitionIndex,
+        taskId,
+      ] of operation.resultReservationTaskByPartition) {
+        const reservation = this.resultReservations.get(taskId);
+        if (
+          !reservation ||
+          reservation.operation !== operation ||
+          reservation.partitionIndex !== partitionIndex
+        )
+          fail(
+            `operation ${operation.id} has stale partition ${partitionIndex}`,
+          );
+      }
+      operationBytes += operation.reservedResultBytes;
+      if (!Number.isSafeInteger(operationBytes))
+        fail('operation byte sum exceeds safe integer range');
+    }
+    if (operationBytes !== current)
+      fail(`metric ${current} disagrees with operation sum ${operationBytes}`);
   }
 
   private finishDeliveredStream(operation: RangeOperation): boolean {
@@ -1783,6 +1887,7 @@ export class PjsRuntime {
           if (reservation) reservation.dispatched = true;
         }
         this.resultReservationExecutions.set(task.id, reservationIds);
+        this.assertResultReservationInvariants('dispatch');
       }
       this.dispatchMetrics.executeMessages++;
       this.dispatchMetrics.logicalTasks += items?.length ?? 1;

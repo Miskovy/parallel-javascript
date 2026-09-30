@@ -1,0 +1,251 @@
+{
+  "version": "0.10.0",
+  "timestamp": "2026-09-30T20:58:06.067Z",
+  "environment": {
+    "machineLabel": "Miskovy",
+    "cpuModel": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz",
+    "logicalCpuCount": 8,
+    "availableParallelism": 8,
+    "physicalCoreCount": null,
+    "totalMemoryBytes": 17037594624,
+    "platform": "win32",
+    "osType": "Windows_NT",
+    "release": "10.0.19045",
+    "architecture": "x64",
+    "node": "v24.21.0",
+    "v8": "13.6.233.17-node.53",
+    "pjsCommit": "037be5cca9a04bdff7cc8019006d822f622ac86c",
+    "worktreeDirty": true,
+    "power": "unknown",
+    "settings": {
+      "workers": 4,
+      "quick": false
+    }
+  },
+  "longPipeline": {
+    "received": 320,
+    "bytes": 89391104,
+    "checksum": 153,
+    "wallMs": 50.7749,
+    "samples": [
+      {
+        "atMs": 647.3628,
+        "rss": 108138496,
+        "arrayBuffers": 144414,
+        "reserved": 1392640,
+        "buffered": 0,
+        "activeOperations": 1,
+        "busyWorkers": 4
+      },
+      {
+        "atMs": 652.1507,
+        "rss": 111362048,
+        "arrayBuffers": 143651,
+        "reserved": 1392640,
+        "buffered": 0,
+        "activeOperations": 1,
+        "busyWorkers": 4
+      },
+      {
+        "atMs": 657.1716,
+        "rss": 115032064,
+        "arrayBuffers": 143651,
+        "reserved": 1380352,
+        "buffered": 0,
+        "activeOperations": 1,
+        "busyWorkers": 4
+      },
+      {
+        "atMs": 661.9465,
+        "rss": 119726080,
+        "arrayBuffers": 143651,
+        "reserved": 1331200,
+        "buffered": 0,
+        "activeOperations": 1,
+        "busyWorkers": 4
+      },
+      {
+        "atMs": 666.9446,
+        "rss": 122003456,
+        "arrayBuffers": 143651,
+        "reserved": 606208,
+        "buffered": 0,
+        "activeOperations": 1,
+        "busyWorkers": 4
+      },
+      {
+        "atMs": 672.2464,
+        "rss": 124944384,
+        "arrayBuffers": 143651,
+        "reserved": 1331200,
+        "buffered": 0,
+        "activeOperations": 1,
+        "busyWorkers": 4
+      },
+      {
+        "atMs": 677.0558,
+        "rss": 127229952,
+        "arrayBuffers": 143651,
+        "reserved": 1392640,
+        "buffered": 0,
+        "activeOperations": 1,
+        "busyWorkers": 4
+      },
+      {
+        "atMs": 682.3294,
+        "rss": 127012864,
+        "arrayBuffers": 143651,
+        "reserved": 1331200,
+        "buffered": 0,
+        "activeOperations": 1,
+        "busyWorkers": 4
+      },
+      {
+        "atMs": 687.2416,
+        "rss": 113733632,
+        "arrayBuffers": 143615,
+        "reserved": 1331200,
+        "buffered": 0,
+        "activeOperations": 1,
+        "busyWorkers": 4
+      },
+      {
+        "atMs": 691.9147,
+        "rss": 117575680,
+        "arrayBuffers": 143615,
+        "reserved": 1331200,
+        "buffered": 0,
+        "activeOperations": 1,
+        "busyWorkers": 4
+      }
+    ],
+    "reservationWaits": 0,
+    "terminalReservedBytes": 0
+  },
+  "variableOutputTrace": {
+    "inputBytes": 786432,
+    "outputBytes": 19704,
+    "ratio": 0.025054931640625,
+    "received": 192,
+    "wallMs": 27.412799999999947,
+    "callbackCalls": 192,
+    "callbackMs": 1.676700000000551,
+    "outputSize": {
+      "min": 86,
+      "max": 122,
+      "mean": 102.625
+    },
+    "declarationObservation": "Exact mode requires a host-side RLE sizing pass before the worker repeats the scan."
+  },
+  "multiStreamPressure": {
+    "wallMs": 1394.7133,
+    "completions": {
+      "large": 224.96309999999994,
+      "b": 334.0135,
+      "a": 519.1538,
+      "small": 1394.6459
+    },
+    "operationIdsObserved": 4,
+    "perOperationPeakReservedBytes": {
+      "large": 2097152,
+      "small": 65536,
+      "a": 524288,
+      "b": 1048576
+    },
+    "globalPeakObservedBytes": 3735552,
+    "starvation": false
+  },
+  "weightedFairness": {
+    "completion": {
+      "small": 28.325200000000223,
+      "large": 421.3059000000003
+    },
+    "smallCompletedBeforeLarge": true,
+    "starvation": false
+  },
+  "headOfLineCredit": {
+    "completion": {
+      "b": 8.227699999999913,
+      "a": 342.95029999999997
+    },
+    "independentStreamProgressed": true
+  },
+  "callbackCosts": [
+    {
+      "kind": "cheap",
+      "calls": 512,
+      "callbackMs": 0.5512999999937165,
+      "callbackChecksum": 0,
+      "reentrantRuns": 0,
+      "wallMs": 38.78099999999995
+    },
+    {
+      "kind": "moderate",
+      "calls": 512,
+      "callbackMs": 0.8340999999982159,
+      "callbackChecksum": -1499463168,
+      "reentrantRuns": 0,
+      "wallMs": 37.985499999999774
+    },
+    {
+      "kind": "reentrant",
+      "calls": 512,
+      "callbackMs": 0.7355000000002292,
+      "callbackChecksum": 0,
+      "reentrantRuns": 8,
+      "wallMs": 42.72830000000022
+    },
+    {
+      "kind": "throw",
+      "throws": true,
+      "wallMs": 1.14220000000023
+    }
+  ],
+  "microControls": [
+    {
+      "name": "safe-integer-check",
+      "iterations": 1000000,
+      "wallMs": 2.4666000000001986,
+      "nanosecondsPerOperation": 2.4666000000001986,
+      "checksum": 0
+    },
+    {
+      "name": "binary-inspection-mixed-kind",
+      "iterations": 500000,
+      "wallMs": 159.6885000000002,
+      "nanosecondsPerOperation": 319.3770000000004,
+      "checksum": 0
+    },
+    {
+      "name": "reservation-map-insert-delete",
+      "iterations": 200000,
+      "wallMs": 20.87850000000026,
+      "nanosecondsPerOperation": 104.39250000000129,
+      "checksum": 0
+    },
+    {
+      "name": "worker-protocol-validation",
+      "iterations": 500000,
+      "wallMs": 8.407600000000002,
+      "nanosecondsPerOperation": 16.815200000000004,
+      "checksum": 0
+    },
+    {
+      "name": "contract-error-construction",
+      "iterations": 20000,
+      "wallMs": 255.23489999999993,
+      "nanosecondsPerOperation": 12761.744999999995,
+      "checksum": 0
+    }
+  ],
+  "eventLoop": {
+    "utilization": 0.3852754838999969,
+    "delayMaxMs": 16.506879,
+    "delayMeanMs": 5.427477774712644
+  },
+  "final": {
+    "currentReservedResultBytes": 0,
+    "operationsPending": 0,
+    "tasksPending": 0
+  }
+}

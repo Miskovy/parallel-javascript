@@ -152,18 +152,30 @@ export function isWorkerMessage(value: unknown): value is WorkerMessage {
   if (!record(value)) return false;
   if (value.type === 'ready') return value.version === 2;
   if (value.type === 'bootstrapFailure') return error(value.error);
-  if (value.type === 'batchResult')
-    return (
-      typeof value.batchId === 'string' &&
-      Array.isArray(value.items) &&
-      value.items.every(result) &&
-      Array.isArray(value.skippedTaskIds) &&
-      value.skippedTaskIds.every((id) => typeof id === 'string') &&
-      typeof value.executionMs === 'number' &&
-      Number.isFinite(value.executionMs) &&
-      value.executionMs >= 0 &&
-      profile(value.profile)
-    );
+  if (value.type === 'batchResult') {
+    if (
+      typeof value.batchId !== 'string' ||
+      !Array.isArray(value.items) ||
+      !value.items.every(result) ||
+      !Array.isArray(value.skippedTaskIds) ||
+      !value.skippedTaskIds.every((id) => typeof id === 'string') ||
+      typeof value.executionMs !== 'number' ||
+      !Number.isFinite(value.executionMs) ||
+      value.executionMs < 0 ||
+      !profile(value.profile)
+    )
+      return false;
+    const ids = new Set<string>();
+    for (const item of value.items) {
+      if (ids.has(item.taskId)) return false;
+      ids.add(item.taskId);
+    }
+    for (const taskId of value.skippedTaskIds) {
+      if (ids.has(taskId)) return false;
+      ids.add(taskId);
+    }
+    return true;
+  }
   if (typeof value.taskId !== 'string') return false;
   if (value.type === 'started') return true;
   if (

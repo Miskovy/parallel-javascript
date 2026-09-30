@@ -1,0 +1,1096 @@
+{
+  "version": "0.10.0",
+  "timestamp": "2026-09-30T20:42:38.410Z",
+  "environment": {
+    "machineLabel": "Miskovy",
+    "cpuModel": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz",
+    "logicalCpuCount": 8,
+    "availableParallelism": 8,
+    "physicalCoreCount": null,
+    "totalMemoryBytes": 17037594624,
+    "platform": "win32",
+    "osType": "Windows_NT",
+    "release": "10.0.19045",
+    "architecture": "x64",
+    "node": "v24.21.0",
+    "v8": "13.6.233.17-node.53",
+    "pjsCommit": "037be5cca9a04bdff7cc8019006d822f622ac86c",
+    "worktreeDirty": true,
+    "power": "unknown",
+    "settings": {
+      "mode": "quick",
+      "durationMs": 30000,
+      "maximumIterations": 9007199254740991,
+      "workers": 4,
+      "resultBytes": 16384,
+      "countCapacity": 4,
+      "byteCapacity": 32768,
+      "sampleIntervalMs": 1000,
+      "seed": 269033510,
+      "forcedGc": false
+    }
+  },
+  "elapsedMs": 30998.3949,
+  "iterations": 640,
+  "scenarioCounts": {
+    "success:clone:fixed": 24,
+    "cancellation:queued": 20,
+    "timeout:buffer": 35,
+    "crash:batch-1:item-0": 61,
+    "abandonment:break": 31,
+    "shutdown:crash": 29,
+    "success:clone:callback": 33,
+    "cancellation:buffered": 19,
+    "abandonment:iterator-throw": 28,
+    "shutdown:buffered": 25,
+    "timeout:consumer": 21,
+    "shutdown:graceful": 21,
+    "success:transfer:fixed": 28,
+    "cancellation:pre-abort": 18,
+    "crash:batch-4:item-3": 16,
+    "abandonment:throw": 21,
+    "success:transfer:callback": 22,
+    "crash:batch-4:item-0": 16,
+    "abandonment:return": 26,
+    "shutdown:non-drain-running": 31,
+    "cancellation:credit-wait": 13,
+    "timeout:execution": 24,
+    "cancellation:consumer-wait": 17,
+    "crash:batch-4:item-1": 14,
+    "cancellation:running": 11,
+    "timeout:queue": 27,
+    "cancellation:after-yield": 9
+  },
+  "samples": [
+    {
+      "elapsedMs": 11.209899999999976,
+      "iteration": 1,
+      "scenario": "success:clone:fixed",
+      "memory": {
+        "rss": 107991040,
+        "heapTotal": 11575296,
+        "heapUsed": 7591536,
+        "external": 2904882,
+        "arrayBuffers": 274723
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 0,
+        "restarts": 0,
+        "threadIds": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 1060.8310999999999,
+      "iteration": 24,
+      "scenario": "shutdown:crash",
+      "memory": {
+        "rss": 154279936,
+        "heapTotal": 12623872,
+        "heapUsed": 8238848,
+        "external": 3739258,
+        "arrayBuffers": 848171
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 4,
+        "restarts": 4,
+        "threadIds": [
+          5,
+          11,
+          16,
+          21
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 2131.8252,
+      "iteration": 48,
+      "scenario": "shutdown:crash",
+      "memory": {
+        "rss": 155172864,
+        "heapTotal": 13410304,
+        "heapUsed": 9839848,
+        "external": 4525690,
+        "arrayBuffers": 1257771
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 8,
+        "restarts": 8,
+        "threadIds": [
+          27,
+          32,
+          37,
+          42
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 3180.2470000000003,
+      "iteration": 72,
+      "scenario": "shutdown:graceful",
+      "memory": {
+        "rss": 163471360,
+        "heapTotal": 18128896,
+        "heapUsed": 9418424,
+        "external": 5344890,
+        "arrayBuffers": 1618227
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 12,
+        "restarts": 12,
+        "threadIds": [
+          48,
+          53,
+          58,
+          64
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 4227.196,
+      "iteration": 96,
+      "scenario": "shutdown:buffered",
+      "memory": {
+        "rss": 162496512,
+        "heapTotal": 18128896,
+        "heapUsed": 7937760,
+        "external": 3329622,
+        "arrayBuffers": 471319
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 16,
+        "restarts": 16,
+        "threadIds": [
+          69,
+          74,
+          79,
+          84
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 5316.5057,
+      "iteration": 120,
+      "scenario": "shutdown:graceful",
+      "memory": {
+        "rss": 163201024,
+        "heapTotal": 18391040,
+        "heapUsed": 9455144,
+        "external": 4279894,
+        "arrayBuffers": 1061159
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 20,
+        "restarts": 20,
+        "threadIds": [
+          89,
+          94,
+          99,
+          104
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 6400.1005,
+      "iteration": 144,
+      "scenario": "shutdown:crash",
+      "memory": {
+        "rss": 164630528,
+        "heapTotal": 18391040,
+        "heapUsed": 10930584,
+        "external": 5115478,
+        "arrayBuffers": 1487175
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 24,
+        "restarts": 24,
+        "threadIds": [
+          109,
+          114,
+          119,
+          125
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 7497.0062,
+      "iteration": 168,
+      "scenario": "shutdown:crash",
+      "memory": {
+        "rss": 165625856,
+        "heapTotal": 18391040,
+        "heapUsed": 9592336,
+        "external": 5803606,
+        "arrayBuffers": 1929559
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 28,
+        "restarts": 28,
+        "threadIds": [
+          131,
+          137,
+          142,
+          147
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 8630.8019,
+      "iteration": 192,
+      "scenario": "shutdown:crash",
+      "memory": {
+        "rss": 168898560,
+        "heapTotal": 26779648,
+        "heapUsed": 8873376,
+        "external": 3149398,
+        "arrayBuffers": 438543
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 32,
+        "restarts": 32,
+        "threadIds": [
+          153,
+          158,
+          164,
+          169
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 9680.9246,
+      "iteration": 216,
+      "scenario": "shutdown:buffered",
+      "memory": {
+        "rss": 172544000,
+        "heapTotal": 26779648,
+        "heapUsed": 13001184,
+        "external": 4279894,
+        "arrayBuffers": 930063
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 36,
+        "restarts": 36,
+        "threadIds": [
+          175,
+          180,
+          185,
+          190
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 10782.759,
+      "iteration": 240,
+      "scenario": "shutdown:non-drain-running",
+      "memory": {
+        "rss": 174874624,
+        "heapTotal": 26779648,
+        "heapUsed": 10811920,
+        "external": 4738646,
+        "arrayBuffers": 1143063
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 40,
+        "restarts": 40,
+        "threadIds": [
+          195,
+          201,
+          207,
+          212
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 11827.264500000001,
+      "iteration": 269,
+      "scenario": "abandonment:throw",
+      "memory": {
+        "rss": 176738304,
+        "heapTotal": 26779648,
+        "heapUsed": 9932112,
+        "external": 5574230,
+        "arrayBuffers": 1700151
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 45,
+        "restarts": 45,
+        "threadIds": [
+          222,
+          227,
+          232,
+          237
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 12827.776100000001,
+      "iteration": 291,
+      "scenario": "timeout:consumer",
+      "memory": {
+        "rss": 176791552,
+        "heapTotal": 27041792,
+        "heapUsed": 13827600,
+        "external": 6688342,
+        "arrayBuffers": 2322751
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 48,
+        "restarts": 48,
+        "threadIds": [
+          237,
+          242,
+          247,
+          252
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 13852.712800000001,
+      "iteration": 312,
+      "scenario": "shutdown:graceful",
+      "memory": {
+        "rss": 179023872,
+        "heapTotal": 27041792,
+        "heapUsed": 11985208,
+        "external": 7245398,
+        "arrayBuffers": 2765127
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 52,
+        "restarts": 52,
+        "threadIds": [
+          257,
+          262,
+          267,
+          273
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 14897.1602,
+      "iteration": 330,
+      "scenario": "shutdown:buffered",
+      "memory": {
+        "rss": 178118656,
+        "heapTotal": 27041792,
+        "heapUsed": 15117816,
+        "external": 7999062,
+        "arrayBuffers": 3240279
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 55,
+        "restarts": 55,
+        "threadIds": [
+          273,
+          278,
+          283,
+          288
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 16007.2937,
+      "iteration": 354,
+      "scenario": "shutdown:non-drain-running",
+      "memory": {
+        "rss": 185163776,
+        "heapTotal": 28090368,
+        "heapUsed": 13761288,
+        "external": 8588886,
+        "arrayBuffers": 3404135
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 59,
+        "restarts": 59,
+        "threadIds": [
+          293,
+          298,
+          303,
+          309
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 17022.187299999998,
+      "iteration": 378,
+      "scenario": "shutdown:buffered",
+      "memory": {
+        "rss": 174145536,
+        "heapTotal": 27566080,
+        "heapUsed": 10799680,
+        "external": 3427926,
+        "arrayBuffers": 602391
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 63,
+        "restarts": 63,
+        "threadIds": [
+          314,
+          320,
+          326,
+          331
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 18100.823099999998,
+      "iteration": 402,
+      "scenario": "shutdown:buffered",
+      "memory": {
+        "rss": 176173056,
+        "heapTotal": 27566080,
+        "heapUsed": 8880552,
+        "external": 4165206,
+        "arrayBuffers": 1077535
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 67,
+        "restarts": 67,
+        "threadIds": [
+          336,
+          341,
+          347,
+          352
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 19154.578599999997,
+      "iteration": 425,
+      "scenario": "abandonment:return",
+      "memory": {
+        "rss": 181563392,
+        "heapTotal": 27566080,
+        "heapUsed": 12300312,
+        "external": 5262934,
+        "arrayBuffers": 1798447
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 71,
+        "restarts": 71,
+        "threadIds": [
+          357,
+          362,
+          367,
+          372
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 20301.4107,
+      "iteration": 450,
+      "scenario": "shutdown:graceful",
+      "memory": {
+        "rss": 183320576,
+        "heapTotal": 27566080,
+        "heapUsed": 10691512,
+        "external": 5852758,
+        "arrayBuffers": 2158903
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 75,
+        "restarts": 75,
+        "threadIds": [
+          377,
+          382,
+          388,
+          393
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 21349.9666,
+      "iteration": 474,
+      "scenario": "shutdown:non-drain-running",
+      "memory": {
+        "rss": 185065472,
+        "heapTotal": 27566080,
+        "heapUsed": 14273944,
+        "external": 7048790,
+        "arrayBuffers": 2797879
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 79,
+        "restarts": 79,
+        "threadIds": [
+          398,
+          403,
+          408,
+          414
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 22407.680399999997,
+      "iteration": 498,
+      "scenario": "shutdown:non-drain-running",
+      "memory": {
+        "rss": 185610240,
+        "heapTotal": 27566080,
+        "heapUsed": 12628984,
+        "external": 7769686,
+        "arrayBuffers": 3387719
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 83,
+        "restarts": 83,
+        "threadIds": [
+          419,
+          425,
+          430,
+          435
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 23513.602,
+      "iteration": 526,
+      "scenario": "crash:batch-4:item-0",
+      "memory": {
+        "rss": 175484928,
+        "heapTotal": 44605440,
+        "heapUsed": 8274584,
+        "external": 2838102,
+        "arrayBuffers": 176407
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 88,
+        "restarts": 88,
+        "threadIds": [
+          445,
+          450,
+          456,
+          461
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 24552.1292,
+      "iteration": 546,
+      "scenario": "shutdown:buffered",
+      "memory": {
+        "rss": 193564672,
+        "heapTotal": 44605440,
+        "heapUsed": 11492864,
+        "external": 3673686,
+        "arrayBuffers": 504079
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 91,
+        "restarts": 91,
+        "threadIds": [
+          461,
+          466,
+          472,
+          478
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 25712.796899999998,
+      "iteration": 570,
+      "scenario": "shutdown:non-drain-running",
+      "memory": {
+        "rss": 193765376,
+        "heapTotal": 44605440,
+        "heapUsed": 15202464,
+        "external": 4755030,
+        "arrayBuffers": 1224991
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 95,
+        "restarts": 95,
+        "threadIds": [
+          483,
+          489,
+          495,
+          501
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 26791.6151,
+      "iteration": 587,
+      "scenario": "abandonment:break",
+      "memory": {
+        "rss": 195788800,
+        "heapTotal": 44605440,
+        "heapUsed": 17775424,
+        "external": 5557846,
+        "arrayBuffers": 1716527
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 98,
+        "restarts": 98,
+        "threadIds": [
+          501,
+          506,
+          511,
+          516
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 27876.0246,
+      "iteration": 599,
+      "scenario": "abandonment:break",
+      "memory": {
+        "rss": 199299072,
+        "heapTotal": 44605440,
+        "heapUsed": 19633688,
+        "external": 6180438,
+        "arrayBuffers": 2224431
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 100,
+        "restarts": 100,
+        "threadIds": [
+          511,
+          516,
+          521,
+          527
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 28930.2938,
+      "iteration": 623,
+      "scenario": "abandonment:return",
+      "memory": {
+        "rss": 197685248,
+        "heapTotal": 44605440,
+        "heapUsed": 11052104,
+        "external": 6245974,
+        "arrayBuffers": 2109743
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 104,
+        "restarts": 104,
+        "threadIds": [
+          533,
+          538,
+          543,
+          548
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 29946.2156,
+      "iteration": 638,
+      "scenario": "cancellation:queued",
+      "memory": {
+        "rss": 199536640,
+        "heapTotal": 44605440,
+        "heapUsed": 13358504,
+        "external": 6901334,
+        "arrayBuffers": 2371903
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 106,
+        "restarts": 106,
+        "threadIds": [
+          543,
+          548,
+          553,
+          558
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    },
+    {
+      "elapsedMs": 30153.261899999998,
+      "iteration": 640,
+      "scenario": "final-quiescent",
+      "memory": {
+        "rss": 197136384,
+        "heapTotal": 44605440,
+        "heapUsed": 13646568,
+        "external": 6934102,
+        "arrayBuffers": 2404671
+      },
+      "workers": {
+        "total": 4,
+        "busy": 0,
+        "starting": 0,
+        "failures": 107,
+        "restarts": 107,
+        "threadIds": [
+          548,
+          553,
+          558,
+          564
+        ]
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "reservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "resources": {
+        "PipeWrap": 2,
+        "MessagePort": 4
+      }
+    }
+  ],
+  "final": {
+    "state": "stopped",
+    "currentReservedResultBytes": 0,
+    "reservations": 0,
+    "executions": 0,
+    "tasksPending": 0,
+    "operationsPending": 0,
+    "workerFailures": 107,
+    "workerRestarts": 107
+  }
+}

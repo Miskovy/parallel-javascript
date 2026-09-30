@@ -4,13 +4,14 @@ v0.4 added `runtime.partitionRange(task, range, createInput, options?)`; v0.5
 added bounded transport batches; v0.6 added completion-only `parallelFor()`;
 v0.7 added bounded completion-order `streamRange()` over the same engine; v0.8
 adds element-block `parallelMapRange()`; v0.9 adds opt-in strict binary-result
-credits to streams. `partitionRange()` returns ordered
+credits to streams; v0.10 audits their failure and performance behavior without
+changing the API. `partitionRange()` returns ordered
 chunk outputs, `parallelFor()` returns `Promise<void>` without transporting
 successful values, `streamRange()` returns an `AsyncIterable` of identified
 partition outputs, and map returns one flat ordered element array. All four APIs
 and their derived admission limits remain experimental; no stable
 `parallel.for/map/reduce` family is exported. See the
-[v0.9 proposal](proposal-v0.9.md),
+[v0.10 validation proposal](proposal-v0.10.md),
 [completion decision](adr/0012-completion-only-operations.md), and
 [map decision](adr/0015-element-block-map-semantics.md).
 

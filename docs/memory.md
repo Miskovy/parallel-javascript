@@ -169,6 +169,14 @@ payload pressure only: worker temporaries, clone/transfer machinery, allocator
 history, RSS, inputs, and consumer-held outputs remain outside it. See
 [ADR 0017](adr/0017-binary-result-reservations.md).
 
+v0.10 leaves this contract unchanged. Its debug-only invariant scanner and
+failure soaks validate that queued cancellation, running cancellation, timeout,
+crash, buffering, consumer abandonment, and shutdown release the same owned
+records at their documented terminal events. A crash-heavy Windows soak ended
+with zero PJS-owned reservation state while RSS retained a native/allocator
+high-water mark; RSS alone is therefore not the byte-credit invariant. See the
+[v0.10 report](benchmarks-v0.10.md).
+
 A transferred output buffer is worker-owned until posting, host-buffer-owned
 until iterator delivery, then consumer-owned. PJS drops its buffered reference
 after yield. Closing or failing the stream drops undelivered transferred values;
