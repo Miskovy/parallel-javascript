@@ -142,6 +142,17 @@ const battery = campaigns.some((campaign) =>
     (record) => record.contextBefore.powerSource === 'battery',
   ),
 );
+const windowsPowerSaver = windows.some((campaign) =>
+  [
+    campaign.data.metadata.context,
+    ...campaign.data.measurements.flatMap((record) => [
+      record.contextBefore,
+      record.contextAfter,
+    ]),
+  ].some((context) =>
+    /a1841308-3541-4fab-bc81-f71556f20b4a/i.test(context.powerProfile ?? ''),
+  ),
+);
 const discontinuity = campaigns.some((campaign) =>
   campaign.data.measurements.some(
     (record) =>
@@ -180,7 +191,11 @@ const materialNodeDifference = campaigns.some((campaign) => {
 });
 const decision = failed
   ? 'NOT READY'
-  : missingCells.length || battery || discontinuity || materialNodeDifference
+  : missingCells.length ||
+      battery ||
+      windowsPowerSaver ||
+      discontinuity ||
+      materialNodeDifference
     ? 'READY WITH CAVEATS'
     : 'READY';
 add(
@@ -189,7 +204,7 @@ add(
 );
 section('VALIDATION SUMMARY');
 add(
-  `**${decision}.** ${failed ? 'Recorded failures require investigation before v0.12.' : 'The tested environments preserve correctness and runtime-owned cleanup.'} ${missingOS ? 'A fresh second-OS campaign is missing, so AMD/Intel and Linux/Windows reproduction is not established.' : 'Both Linux and Windows artifacts are present.'} ${battery ? 'Laptop performance was measured on battery; an AC repeat remains a performance-quality caveat.' : ''}`,
+  `**${decision}.** ${failed ? 'Recorded failures require investigation before v0.12.' : 'The tested environments preserve correctness and runtime-owned cleanup.'} ${missingOS ? 'A fresh second-OS campaign is missing, so AMD/Intel and Linux/Windows reproduction is not established.' : 'Both Linux and Windows artifacts are present.'} ${battery ? 'Laptop performance was measured on battery; an AC repeat remains a performance-quality caveat.' : ''} ${windowsPowerSaver ? 'Windows measurements used the Power saver plan; this limits performance conclusions.' : ''}`,
 );
 section('SOURCE COMMIT');
 add(
@@ -741,7 +756,7 @@ if (failed)
   );
 else
   add(
-    'No PJS correctness, reservation or lifecycle failures in the tested cells. Windows was unavailable, not passing by assumption. Initial dependency download and host execution sandbox restrictions were resolved before the campaign; they are not PJS failures.',
+    `No PJS correctness, reservation or lifecycle failures in the tested cells. ${windows.length ? 'Windows correctness and cleanup are established by the retained Windows checks.' : 'Windows was unavailable, not passing by assumption.'} The retained Fedora setup notes describe initial dependency download and host execution sandbox restrictions resolved before that campaign; they are not PJS failures.`,
   );
 const harnessFailures = campaigns.flatMap((campaign) =>
   campaign.data.failures
@@ -806,7 +821,12 @@ for (const campaign of campaigns)
   );
 section('WHAT DID NOT REPRODUCE');
 add(
-  'A portable exact percentage for strict binary reservation overhead is not established by this design. Small differences can change sign within retained process/sample variation. Historical architectural regression percentages are not re-measured against v0.10 here. Missing Windows cells cannot be treated as reproduction failures or passes.',
+  'A portable exact percentage for strict binary reservation overhead is not established by this design. Small differences can change sign within retained process/sample variation. Historical architectural regression percentages are not re-measured against v0.10 here.',
+  ...(missingCells.length
+    ? [
+        'Missing Node/OS cells cannot be treated as reproduction failures or passes.',
+      ]
+    : []),
 );
 section('OPEN GAPS');
 add(
@@ -823,12 +843,17 @@ add(
         '- Idle AC-powered laptop repeat for primary retained performance conclusions.',
       ]
     : []),
+  ...(windowsPowerSaver
+    ? [
+        '- Windows performance repeat under an agreed power plan; this session preserved the existing Power saver configuration.',
+      ]
+    : []),
   '- A second independent session for small strict-reservation differences and any large/noisy Node deltas.',
   '- Architectures beyond the actually captured x64 machines remain untested; AMD/Intel is a microarchitecture distinction, not x64-versus-ARM validation.',
 );
 section('V0.12 READINESS DECISION');
 add(
-  `**${decision}**. ${failed ? 'Produce a minimal reproducer and causal explanation for recorded correctness/resource failures before changing runtime code or starting v0.12.' : 'The tested correctness and ownership evidence supports proceeding with caveats; complete the missing reproduction cells and control performance conditions before making platform-wide claims. Recommend v0.12 upper-bound binary reservation + refund research after accepting these gaps.'} This campaign stops at validation and does not implement v0.12.`,
+  `**${decision}**. ${failed ? 'Produce a minimal reproducer and causal explanation for recorded correctness/resource failures before changing runtime code or starting v0.12.' : `The tested correctness and ownership evidence supports proceeding with the reported caveats; ${missingCells.length ? 'complete the missing reproduction cells and ' : ''}control performance conditions and obtain independent repeats before making portable performance claims. Review the combined evidence before starting v0.12.`} This campaign stops at validation and does not implement v0.12.`,
 );
 section('USER-FACING RUN WORKFLOW');
 add(
