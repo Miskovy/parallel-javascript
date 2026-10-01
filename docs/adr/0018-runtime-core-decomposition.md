@@ -111,6 +111,16 @@ PjsRuntime
 No component receives `PjsRuntime`. Composition-root closures route pool events
 and the narrow parent port. There is no service locator or generic event bus.
 
+### Construction invariant
+
+Subsystem constructors must not synchronously invoke operational callbacks
+during composition. The composition-root closures may refer to coordinators
+assigned later in the constructor. Constructors may store callbacks and compose
+their own passive dependencies; operational callbacks must wait until the full
+object graph exists. `PjsRuntime` starts workers through `dispatcher.start()`
+only after assigning all coordinators and telemetry. Preserve this ordering
+when adding internal components.
+
 ## Reentrancy model
 
 The facade retains the existing guarded pump: dispatch queued work, produce a

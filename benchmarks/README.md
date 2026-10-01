@@ -1,5 +1,23 @@
 # Benchmark methodology
 
+## Exact-reference v0.11 platform validation
+
+The portable campaign runner is `scripts/cross-platform-v011/run.mjs`.
+It extracts commit `716e86d48987ae838c421ff22ade2b7a469e8242`, installs the
+lockfile with `npm ci`, validates each supplied existing Node executable, and
+uses fresh processes in balanced Node 22/24 order. It records source hashes,
+machine/power/load context, correctness, invariant/stress/soak output, CPU
+worker sweeps, established v0.11 cases and controlled binary mode sweeps.
+It never changes Node installations or historical repository evidence.
+
+Use `node scripts/cross-platform-v011/run.mjs --help` for executable-path
+options. New campaign JSON and adjacent metadata go to `benchmarks/results/`;
+existing campaign filenames are refused. For another session use `--output`
+with a new directory. Only supply runtimes already installed on the machine.
+The Windows and Fedora machines can run independently. Aggregate their original
+campaign JSON with `scripts/cross-platform-v011/report.mjs`.
+See [the campaign report and platform workflows](../docs/cross-platform-v0.11.md).
+
 Run `npm run benchmark:cpu`, `npm run benchmark:matrix`, and `npm run benchmark:transfer` separately on an otherwise idle machine. Each runner builds first. Each worker count runs in a fresh child process; the pool is reused across sizes. Serial is measured first, followed by descending worker counts. This is a reproducible baseline, not a randomized multi-session statistical study. Background load, power policy, clock/thermal changes, JIT, GC, and ordering can affect results.
 
 Configurations: serial, PJS 1/2/4 workers, and availableParallelism, filtered to available hardware concurrency. Duplicate worker counts run once, with the actual machine count recorded. All timings are retained. Each size has a first-run sample, two untimed warmups, then five timed samples. Startup is measured once per configuration; only the first size follows that fresh startup. No startup cost is folded into warm-pool speedup. For a cold scenario, inspect startup plus the first size's first-run cost. No forced GC or discarded outliers.

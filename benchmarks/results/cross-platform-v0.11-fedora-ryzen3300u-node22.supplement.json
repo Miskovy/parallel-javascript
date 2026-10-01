@@ -1,0 +1,4260 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "716e86d48987ae838c421ff22ade2b7a469e8242",
+  "supplements": "/home/miskovy/Documents/pjs/benchmarks/results/cross-platform-v0.11-fedora-ryzen3300u-node22.json",
+  "metadataFile": "cross-platform-v0.11-fedora-ryzen3300u-node22.supplement.metadata.json",
+  "metadata": {
+    "timestamp": "2026-10-01T10:32:41.524Z",
+    "hostname": "fedora",
+    "os": "Linux",
+    "osVersion": "#1 SMP PREEMPT_DYNAMIC Wed Mar 25 18:23:49 UTC 2026",
+    "osRelease": "6.19.10-300.fc44.x86_64",
+    "kernel": "6.19.10-300.fc44.x86_64",
+    "architecture": "x64",
+    "platform": "linux",
+    "cpuModel": "AMD Ryzen 3 PRO 3300U w/ Radeon Vega Mobile Gfx",
+    "logicalCpuCount": 4,
+    "availableParallelism": 4,
+    "memoryTotalBytes": 7715655680,
+    "nodeVersion": "v22.23.3",
+    "v8Version": "12.4.254.21-node.57",
+    "versions": {
+      "node": "22.23.3",
+      "acorn": "8.16.0",
+      "ada": "2.9.2",
+      "amaro": "1.1.8",
+      "ares": "1.34.8",
+      "brotli": "1.1.0",
+      "cjs_module_lexer": "2.2.0",
+      "cldr": "48.0",
+      "icu": "78.3",
+      "llhttp": "9.4.3",
+      "modules": "127",
+      "napi": "10",
+      "nbytes": "0.1.3",
+      "ncrypto": "0.0.1",
+      "nghttp2": "1.69.0",
+      "openssl": "3.5.8",
+      "simdjson": "4.5.0",
+      "simdutf": "6.4.2",
+      "sqlite": "3.51.3",
+      "tz": "2026c",
+      "undici": "6.28.1",
+      "unicode": "17.0",
+      "uv": "1.51.0",
+      "uvwasi": "0.0.23",
+      "v8": "12.4.254.21-node.57",
+      "zlib": "1.3.1-e00f703",
+      "zstd": "1.5.7"
+    },
+    "nodeExecutable": "/home/miskovy/.nvm/versions/node/v22.23.3/bin/node",
+    "osReleaseFile": "NAME=\"Fedora Linux\"\nVERSION=\"44 (KDE Plasma Desktop Edition)\"\nRELEASE_TYPE=stable\nID=fedora\nVERSION_ID=44\nVERSION_CODENAME=\"\"\nPRETTY_NAME=\"Fedora Linux 44 (KDE Plasma Desktop Edition)\"\nANSI_COLOR=\"0;38;2;60;110;180\"\nLOGO=fedora-logo-icon\nCPE_NAME=\"cpe:/o:fedoraproject:fedora:44\"\nDEFAULT_HOSTNAME=\"fedora\"\nHOME_URL=\"https://fedoraproject.org/\"\nDOCUMENTATION_URL=\"https://docs.fedoraproject.org/en-US/fedora/f44/\"\nSUPPORT_URL=\"https://ask.fedoraproject.org/\"\nBUG_REPORT_URL=\"https://bugzilla.redhat.com/\"\nREDHAT_BUGZILLA_PRODUCT=\"Fedora\"\nREDHAT_BUGZILLA_PRODUCT_VERSION=44\nREDHAT_SUPPORT_PRODUCT=\"Fedora\"\nREDHAT_SUPPORT_PRODUCT_VERSION=44\nSUPPORT_END=2027-05-19\nVARIANT=\"KDE Plasma Desktop Edition\"\nVARIANT_ID=kde",
+    "cpuTopology": "{\n   \"lscpu\": [\n      {\n         \"field\": \"Architecture:\",\n         \"data\": \"x86_64\"\n      },{\n         \"field\": \"CPU op-mode(s):\",\n         \"data\": \"32-bit, 64-bit\"\n      },{\n         \"field\": \"Address sizes:\",\n         \"data\": \"43 bits physical, 48 bits virtual\"\n      },{\n         \"field\": \"Byte Order:\",\n         \"data\": \"Little Endian\"\n      },{\n         \"field\": \"CPU(s):\",\n         \"data\": \"4\"\n      },{\n         \"field\": \"On-line CPU(s) list:\",\n         \"data\": \"0-3\"\n      },{\n         \"field\": \"Vendor ID:\",\n         \"data\": \"AuthenticAMD\"\n      },{\n         \"field\": \"Model name:\",\n         \"data\": \"AMD Ryzen 3 PRO 3300U w/ Radeon Vega Mobile Gfx\"\n      },{\n         \"field\": \"CPU family:\",\n         \"data\": \"23\"\n      },{\n         \"field\": \"Model:\",\n         \"data\": \"24\"\n      },{\n         \"field\": \"Thread(s) per core:\",\n         \"data\": \"1\"\n      },{\n         \"field\": \"Core(s) per socket:\",\n         \"data\": \"4\"\n      },{\n         \"field\": \"Socket(s):\",\n         \"data\": \"1\"\n      },{\n         \"field\": \"Stepping:\",\n         \"data\": \"1\"\n      },{\n         \"field\": \"Frequency boost:\",\n         \"data\": \"enabled\"\n      },{\n         \"field\": \"CPU(s) scaling MHz:\",\n         \"data\": \"96%\"\n      },{\n         \"field\": \"CPU max MHz:\",\n         \"data\": \"2100.0000\"\n      },{\n         \"field\": \"CPU min MHz:\",\n         \"data\": \"1400.0000\"\n      },{\n         \"field\": \"BogoMIPS:\",\n         \"data\": \"4191.91\"\n      },{\n         \"field\": \"Flags:\",\n         \"data\": \"fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl nonstop_tsc cpuid extd_apicid aperfmperf rapl pni pclmulqdq monitor ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw skinit wdt tce topoext perfctr_core perfctr_nb bpext perfctr_llc mwaitx cpb hw_pstate ssbd ibpb vmmcall fsgsbase bmi1 avx2 smep bmi2 rdseed adx smap clflushopt sha_ni xsaveopt xsavec xgetbv1 clzero xsaveerptr arat npt lbrv svm_lock nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold avic v_vmsave_vmload vgif overflow_recov succor smca sev sev_es\"\n      },{\n         \"field\": \"Virtualization:\",\n         \"data\": \"AMD-V\"\n      },{\n         \"field\": \"L1d cache:\",\n         \"data\": \"128 KiB (4 instances)\"\n      },{\n         \"field\": \"L1i cache:\",\n         \"data\": \"256 KiB (4 instances)\"\n      },{\n         \"field\": \"L2 cache:\",\n         \"data\": \"2 MiB (4 instances)\"\n      },{\n         \"field\": \"L3 cache:\",\n         \"data\": \"4 MiB (1 instance)\"\n      },{\n         \"field\": \"NUMA node(s):\",\n         \"data\": \"1\"\n      },{\n         \"field\": \"NUMA node0 CPU(s):\",\n         \"data\": \"0-3\"\n      },{\n         \"field\": \"Vulnerability Gather data sampling:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Ghostwrite:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Indirect target selection:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Itlb multihit:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability L1tf:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Mds:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Meltdown:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Mmio stale data:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Old microcode:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Reg file data sampling:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Retbleed:\",\n         \"data\": \"Mitigation; untrained return thunk; SMT disabled\"\n      },{\n         \"field\": \"Vulnerability Spec rstack overflow:\",\n         \"data\": \"Mitigation; SMT disabled\"\n      },{\n         \"field\": \"Vulnerability Spec store bypass:\",\n         \"data\": \"Mitigation; Speculative Store Bypass disabled via prctl\"\n      },{\n         \"field\": \"Vulnerability Spectre v1:\",\n         \"data\": \"Mitigation; usercopy/swapgs barriers and __user pointer sanitization\"\n      },{\n         \"field\": \"Vulnerability Spectre v2:\",\n         \"data\": \"Mitigation; Retpolines; IBPB conditional; STIBP disabled; RSB filling; PBRSB-eIBRS Not affected; BHI Not affected\"\n      },{\n         \"field\": \"Vulnerability Srbds:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Tsa:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Tsx async abort:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Vmscape:\",\n         \"data\": \"Mitigation; IBPB before exit to userspace\"\n      }\n   ]\n}",
+    "context": {
+      "timestamp": "2026-10-01T10:32:41.544Z",
+      "uptimeSeconds": 181973.44,
+      "loadAverage": [
+        1,
+        3.12,
+        3.67
+      ],
+      "freeMemoryBytes": 3155181568,
+      "cpuMHz": [
+        2394,
+        2393,
+        2395,
+        1197
+      ],
+      "powerSource": "battery",
+      "powerProfile": null,
+      "batteries": [
+        {
+          "name": "BAT0",
+          "type": "Battery",
+          "online": null,
+          "status": "Discharging",
+          "capacityPercent": "58"
+        }
+      ],
+      "cpuFrequency": [
+        {
+          "cpu": "cpu0",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "1197401",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu1",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "2393701",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu2",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "2398227",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu3",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "1197497",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        }
+      ],
+      "temperatures": [
+        {
+          "type": "acpitz",
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "43000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "0"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "39000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "41000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "33000"
+        },
+        {
+          "type": "iwlwifi_1",
+          "milliCelsius": "41000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "43000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "0"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "39000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "41000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "33000"
+        },
+        {
+          "type": "amdgpu",
+          "label": "edge",
+          "milliCelsius": "44000"
+        },
+        {
+          "type": "k10temp",
+          "label": "Tctl",
+          "milliCelsius": "44875"
+        },
+        {
+          "type": "iwlwifi_1",
+          "label": null,
+          "milliCelsius": "41000"
+        }
+      ],
+      "powerSupplies": [
+        {
+          "name": "AC",
+          "type": "Mains",
+          "online": "0",
+          "status": null,
+          "capacityPercent": null
+        },
+        {
+          "name": "BAT0",
+          "type": "Battery",
+          "online": null,
+          "status": "Discharging",
+          "capacityPercent": "58"
+        }
+      ],
+      "memoryInfo": "MemTotal:        7534820 kB\nMemFree:         1061968 kB\nMemAvailable:    3080884 kB\nBuffers:             540 kB\nCached:          2088404 kB\nSwapCached:         2088 kB\nActive:          1975300 kB\nInactive:        1751404 kB\nActive(anon):    1170164 kB\nInactive(anon):   660060 kB\nActive(file):     805136 kB\nInactive(file):  1091344 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        4775000 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              1348 kB\nWriteback:             0 kB\nAnonPages:       1636272 kB\nMapped:           687732 kB\nShmem:            192868 kB\nKReclaimable:     429860 kB\nSlab:             736220 kB\nSReclaimable:     429860 kB\nSUnreclaim:       306360 kB\nKernelStack:       17368 kB\nPageTables:        72324 kB\nSecPageTables:      3544 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   19790876 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      112996 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5084876 kB\nDirectMap2M:     2711552 kB\nDirectMap1G:     1048576 kB",
+      "backgroundProcesses": [
+        "PID COMMAND         %CPU %MEM",
+        " 125770 ps               200  0.0",
+        " 125760 node            70.0  0.7",
+        " 125747 MainThread      66.6  1.0",
+        " 125746 rtk             14.7  0.0",
+        " 100186 code             8.4  5.1",
+        "  99903 code             7.7  1.1",
+        "  99942 code             3.8  3.2",
+        "  99852 code             3.1  1.8"
+      ]
+    },
+    "gitCommit": "716e86d48987ae838c421ff22ade2b7a469e8242",
+    "machineLabel": "fedora-ryzen3300u",
+    "npmVersion": "10.9.9",
+    "npmCli": "/home/miskovy/.nvm/versions/node/v22.23.3/lib/node_modules/npm/bin/npm-cli.js",
+    "lockfileSha256": "1e447b3528ce00a47ff01515f74832d06bd6511aa69c2d6db8d3abdc0a2ff073",
+    "sourceArchiveSha256": "6622264e6a6d34c029faac87f3a53246f2cd383f51acd55fa48fcf883900138d",
+    "sourceFileSha256": {
+      ".gitattributes": "fd2ca94a1e98ee4609cd3f8338e973038819afe8d25760990149a5a7d46d9982",
+      ".gitignore": "3903957389e10bc16d10e7d9070d49ae46a89dad8be6e5d2ea20bd70de15dd58",
+      ".prettierignore": "5add3c266aff2ea97a1e1622b51637a5b222a40674ae7ad04a43905feb563621",
+      ".prettierrc.json": "32dcd743a0ffca59a737c87abcfcc3f57a0cede5cedb6a8b1b68d32a3b6d4506",
+      "LICENSE": "7977502d5d3bdd267520de1cce1176142296dd2a0d00309206703c7bba990135",
+      "README.md": "767f6091ff77aee1241e3fe4d6a5829bba4ecc6e2fd61eed4ad04a2deb19c21a",
+      "benchmarks/README.md": "1b460399ea1239d355ee08882520b22626fc653a1d66f5dfd5d80af43870df24",
+      "benchmarks/binary-results/README.md": "54c7c2baaa27486b74fe2e9d5350e64a15370969d8a7a2d902e05579f99fd786",
+      "benchmarks/binary-results/fairness.mjs": "cae99b356a7c64acbc99ee1b4a388be46b8601bd34a3161d32192d4db5f6c84f",
+      "benchmarks/binary-results/measure.mjs": "106e012623748c95150b9e6257a66441521cf0c20b83ff7b7c8d5fb909e195f9",
+      "benchmarks/binary-results/regression-measure.mjs": "887f78d8129a28759bbb33f19acdae3aad8650ba6676b6abba0c522a236651c6",
+      "benchmarks/binary-results/regression.mjs": "1bdf7da71f53063f1b3bb221ddc4ebecdd0b9a017368d1076913a17e596301b7",
+      "benchmarks/binary-results/run.mjs": "7878a6162c8999567e496f6544df81d0a406d45632123619cd04754519df2bc9",
+      "benchmarks/binary-results/task.mjs": "773570f6f491527b626ca93ff992c2b01912cf53f63078968cf0b037d9c5aa99",
+      "benchmarks/completion-only/README.md": "0eb3fba65d4ce6d544c1f376730f1addfd48d69e19528911f390261bda167b0c",
+      "benchmarks/completion-only/fairness.mjs": "c93d7acd6cf15b28d5d3b6c5bc5db1146592c6c3dcf6dc0dbaa877c7b2ddc293",
+      "benchmarks/completion-only/measure.mjs": "81a1fe17767e8d15207a8f43a80594caab484d9bf0ed6107aa480b4d017b00e9",
+      "benchmarks/completion-only/regression-measure.mjs": "3e832c69c9dc82b4d46f13587551df686c32e455dec91edf317151c40245fcf0",
+      "benchmarks/completion-only/regression.mjs": "c7e255260aa805f7b4405522a33715ddf9feab0e02de2227f310d5758f813308",
+      "benchmarks/completion-only/run.mjs": "e6ea847b1cfb59c5b4cc6f452d7acd9aca8b00199505992ddba9ced78792b508",
+      "benchmarks/completion-only/task.mjs": "c0b769dead0ba13e0a7a8d1f58b563ac78326e0ce85e9ab336bc975e1a02481f",
+      "benchmarks/cpu-baseline/compare.mjs": "5061b2fd17f4af1b6b1332b10b3630f4bee8df2e1017dd205285ef0501b492c0",
+      "benchmarks/cpu-baseline/probe.mjs": "f8b4bd0bbc27bf5cbff6bf3d052e746f035e00ff886bc3b18cb4c9bb0f38c44b",
+      "benchmarks/cpu-baseline/run.mjs": "61b9b3f10bd1b78e20b0d147e16d73bc7a51003d4d881b9211568dd566fd8653",
+      "benchmarks/dispatch-efficiency/README.md": "7a623f3e8f4059ee08c20001831396b92b4fbf25a73b3f0c309324f0d3a78485",
+      "benchmarks/dispatch-efficiency/fairness.mjs": "6adef8ff7c2033f2479a55721b5a6c3fa20e3542686f9235120552f2cf9f8c2a",
+      "benchmarks/dispatch-efficiency/kernel.mjs": "9626e0fb785994eee7b6407073cfbd84b523187a64b052b280b854ef60c11a17",
+      "benchmarks/dispatch-efficiency/measure.mjs": "cf94452e10d2d5d761cbd16801f195ae40dfecc1c3cedaabd8126e1c8614ba12",
+      "benchmarks/dispatch-efficiency/piscina-task.mjs": "cda332fc4a8a82483ade6a16a5eccd0391a11aec8ad7afe3b1c059457970dbf4",
+      "benchmarks/dispatch-efficiency/pjs-task.mjs": "37c62cc9bea13cf180a17af5523a9c7886ac9afa92520a670c69162145c71a16",
+      "benchmarks/dispatch-efficiency/profile-child.mjs": "9413217884e838f5dc5228ae6c0c70023d3321c8f6fbcb9157f6c4f0deaccffa",
+      "benchmarks/dispatch-efficiency/profile.mjs": "d5a8d07bc58b86f4736559a7a896515fb75712195a65a01ed8fb67a08fc85054",
+      "benchmarks/dispatch-efficiency/run.mjs": "b7cd6494b780317de94c93ce9c9b39db0ebaf72b0d5fef748e3d24e82873ba71",
+      "benchmarks/environment.mjs": "c4867d0a1476912bed9ca9077091b685967d59edb0d7e7644af5bafe28320a75",
+      "benchmarks/harness.mjs": "0d76869e82f126f868210386c21598640d229bc5d260ac1ce61652fadb304056",
+      "benchmarks/mapping/README.md": "7d8bf50cbf3acfe39347426900576726e0e5c63b8c1ddba1fc0082dbdcd3f8cc",
+      "benchmarks/mapping/fairness.mjs": "e79766d3c3f69f42d9552669cc84bbf813dfcf778d989382bfc281e423953e63",
+      "benchmarks/mapping/measure.mjs": "f4aa35ca8ff25a6ecf573996c58e7b5d6fd1705ccb2f514b2a439e03f20b37dc",
+      "benchmarks/mapping/pipeline-measure.mjs": "36290ceb4234934b478f8d21b789158dd7634c88c6a2372eaddb05688ffd7174",
+      "benchmarks/mapping/pipeline.mjs": "f30557965552f3397e5197ec0e7700ad9e162d0357f936e642e4ddb7966f0475",
+      "benchmarks/mapping/regression-measure.mjs": "471e4cc09376ee9ced280a196cf822d9f5aa519dac7b8456dcbcc5275fb36bf5",
+      "benchmarks/mapping/regression.mjs": "5bbdbc37976555aa51287205c0e8e92b96b828667d73e424b9327608cbe9c281",
+      "benchmarks/mapping/run.mjs": "84d674219838b8ea3d01175c590de57d0846a068fa624498fee2df14c7f971d8",
+      "benchmarks/mapping/task.mjs": "8ce6c23e87261cb2cb4518e466d7aceb6eda54e4ebf3a80b7c41b05f60eebd5d",
+      "benchmarks/matrix-multiplication/run.mjs": "a25452266216aae857d2e8ea72d15e6c9d604c0bd2507404ecddb08a2fd32da2",
+      "benchmarks/matrix-multiplication/task.mjs": "91fca609c5f366cbdd5b91d590a7fe78caa612c93619fa2befbf574bc4d57e6b",
+      "benchmarks/measure.mjs": "41ea5392d8416b470a560854d21fbdc33b640fe92bdd7a30ed1d8bf654f2c391",
+      "benchmarks/partitioning/README.md": "0a417c6cfd352e3b04bbdecfec16a62e8d90057bd404cf23d470e4316c5c0f86",
+      "benchmarks/partitioning/kernel.mjs": "1460ce4da902f10f64c861b6ffc38dff6048180d9f604ef0b077a4f8e259bad8",
+      "benchmarks/partitioning/measure.mjs": "e390fe22398ef022d46bb6296692dc6f1804176e27b059debf5d676c7bf14390",
+      "benchmarks/partitioning/piscina-task.mjs": "1576afbf54bcf0d21ba96726f4845d263867b3900c69dba3cce6fae48d704ac0",
+      "benchmarks/partitioning/pjs-task.mjs": "6dfa823473c858b35448393b9c25bda50dc248b361d92672a05373de9c6c15e7",
+      "benchmarks/partitioning/run.mjs": "c983246a5dcb796ed956b3d26cc1edf4c76f648b58b42839143af263eac1736c",
+      "benchmarks/prime-search/task.mjs": "71d83204652180db4c0e86bf294d790c582478ae592f8d94cdfdf8ee144a6c2a",
+      "benchmarks/reservation-audit/README.md": "ef8cc3113ffadc3d911bf982814777bbffbc4d4772efb026b054a3695e235b62",
+      "benchmarks/reservation-audit/measure.mjs": "5476fe83d31ed602dabcdc1fba215eaf05f762b55651fd8d95e0e679ee4f4b01",
+      "benchmarks/reservation-audit/pipeline.mjs": "ab44c62b6a6f2d47e9256cbc9b58fd3c930433635e98c7b909958e66a6ba8684",
+      "benchmarks/reservation-audit/regression-measure.mjs": "5f38feeaadc3136a9ca4e14c22834b80078e5c95e993e5c144bee66461f24041",
+      "benchmarks/reservation-audit/regression.mjs": "c82eb930b9f6d7653ef6d809086c6029b84171e5ce083cfa2e61049b809cda90",
+      "benchmarks/reservation-audit/run.mjs": "b007e76ec6a7a9c53b166b96607f1d6fc5f2e9463d8cfe57fcdd02eecf00ed5f",
+      "benchmarks/reservation-audit/task.mjs": "58208bbcb5d87922308638136a761d1e3ce06f5e2879392de7d4688ebef000e3",
+      "benchmarks/results/binary-fairness-v0.9.json": "1ea21af7e3feb7e6ba13ca2ef91a0393f4a308de9db72b0ad065f12afab851d9",
+      "benchmarks/results/binary-results-v0.9.json": "21d1429896b807b3c797cb9fa62d346aa520db24990615115fa8a9a6f270b1a9",
+      "benchmarks/results/completion-fairness-v0.6.json": "dde6fc4a75e32e08fffc1903d1cbe09ba97dbd3bf7a100795430d626b59cab89",
+      "benchmarks/results/completion-only-v0.6.json": "3ff1dd2c9b8870109c8ed8f52ccfd1a2ed4d0c6d640743600b697396f5a6acd2",
+      "benchmarks/results/cpu-initial.json": "0a4a00aa9e49df39e07d5579178686941f039845e8a650eee8399810d0b44e94",
+      "benchmarks/results/cpu-regression-v0.3.json": "66de47681d979edfcd7eb7b8a4ed254529987fcc90fb463670e83cdc78711b51",
+      "benchmarks/results/cpu-regression-v0.4.json": "f5622ada07ba62acece62757b806a3de6998ceebeb15cd4c6e8c9a6465ef618d",
+      "benchmarks/results/cpu-regression-v0.5.json": "b5c37305a91e3bf97e5b3cc9faba1ae82a3ddc9f3fb9d761ce421459c54bd267",
+      "benchmarks/results/cpu-v0.2-local.json": "56f08e828c37e4351fed114fa3fa530b82a15359d2c8106f8e52cfb260a031c7",
+      "benchmarks/results/cpu-v0.2.json": "99fcd166293b90bda31e6efd9f36d43c4e80a23bb99136c1100088d0aa35f26e",
+      "benchmarks/results/cpu-v0.3.json": "66e09453263cbb49070b7c9f306b133ae597108aa09528f963d08ee65769831b",
+      "benchmarks/results/cpu.json": "eed0f9a1371f579b6a2da9ea8dfde3ad52b325b4b21a56ba8609619c603a6295",
+      "benchmarks/results/dispatch-efficiency-v0.5.json": "3576c316f3a43cab1678edd44021984d29560c491a620ea37149ffd7425cc696",
+      "benchmarks/results/dispatch-fairness-v0.5.json": "0d4d1ee28d1af0743ae02abbfd4a76aff1da0b68fd2db80ac45d321b0a3f727c",
+      "benchmarks/results/dispatch-partition-v0.4.json": "745800cda8b569ec872ad7931abebce3678dac701fac9b8b4023d3fe0f23b1bb",
+      "benchmarks/results/dispatch-profile-v0.5.json": "f550026045711e072652bba337ca60a1f9b4901ea5d2246ffba3b850a002155a",
+      "benchmarks/results/element-map-v0.8.json": "84667733d77b6d640aa4334a127bac566077e72df7d71256ef84dbeaf31ce653",
+      "benchmarks/results/map-fairness-v0.8.json": "acf9369f300bb61792f48aef7bd8b257fc16c9a896b907d6952d1f7c0ed3adda",
+      "benchmarks/results/map-pipeline-v0.8.json": "551f6e79c652b8c2e3985c5025f0380e9c2027ad23967144ee488fa2feb9b741",
+      "benchmarks/results/matrix-clone-v0.2.json": "21ad3f281b01a73d91ff0388aeeb02f7225395c9ec7cba7f917ffa7887cca193",
+      "benchmarks/results/matrix-clone-v0.3.json": "eb55143dd9ba67c90c6cf5311836a1dae1f743e91ac62fc51bb65aade8ecab18",
+      "benchmarks/results/matrix-partition-v0.4.json": "200117376bcc8a8b8a36a8b0aa4061a9872506c7b63ec3dda8af7542aef461f2",
+      "benchmarks/results/matrix-shared-v0.3.json": "7306152bb718cf56a655e65f7135d61692975d433b6ba2b49b6b3d6f8ea5e287",
+      "benchmarks/results/matrix-transfer-v0.2.json": "de70b0ad43a7eebb71caa63bd8d44d33014574fe5b405d0eb9271c7be8d34cbc",
+      "benchmarks/results/matrix-transfer-v0.3.json": "0f9c44fb145fd603789620a8817f02344ecac15aaf99377602cff863a07c3430",
+      "benchmarks/results/matrix-v0.3.json": "b6d3b595a2c5adff4f7148ea2fc687ab2ce5c85badd63c688ccdf74dce204020",
+      "benchmarks/results/matrix.json": "71c92c529da18e58a75943fd7c9622f25c8fc866f0835b435ada85b0859afef6",
+      "benchmarks/results/piscina-v0.3.json": "c21aa905638252bcebf2a82896bbd9ffb1b1086aa5c8cb10f47bf12ef6791425",
+      "benchmarks/results/range-partition-v0.4.json": "6d68c9da75ac9f6cbcec16e85db713b612302ae01706aa50af5d8c7ba35656d3",
+      "benchmarks/results/reservation-performance-v0.10.json": "2d1108d920f6ae6f89f8a49c732c37e739116b38a9f0fab5ae68923303cae430",
+      "benchmarks/results/reservation-pipeline-v0.10.json": "fa362c60dd35ac94846e186810732f7d1246e2a742b37eeae87a6011e51fc445",
+      "benchmarks/results/reservation-soak-forced-gc-v0.10.json": "cc90469ed662a42990f393a66480442a92d26a2c6e7bc9332f16e5df9532cc98",
+      "benchmarks/results/reservation-soak-v0.10.json": "3423bc636a646e40d92341bb9a58aa566e221f846cc19ea84e26571329b0d099",
+      "benchmarks/results/reservation-soak-v0.11.json": "13288569c5a682bb1133d66b49a1aaa8abcb1aae788496acb0b6fac31228220e",
+      "benchmarks/results/result-streaming-v0.7.json": "1dbc6b4f34ec8f4766249088601f1cae2d26f97ed28a4d2ac1c763a75262e45d",
+      "benchmarks/results/runtime-architecture-v0.11.json": "e8b97916f77818a3a5e4dcd0752ea811238b7a372f8a44a8d3e8b3218a62be3e",
+      "benchmarks/results/runtime-regression-v0.10.json": "ae003dc82e9e171ee0ac0fccf50a9f701ae5798f0c8aa10ef40f6e727dfd7888",
+      "benchmarks/results/runtime-regression-v0.6.json": "d3ede383b565375359b9cd6e32855e775685365f64fa27c21d23d4f65fc3e966",
+      "benchmarks/results/runtime-regression-v0.7.json": "bb3f98c7f6c6983cb09b0d0c35dd6a03a7110280ddb524b166cc4964469e450e",
+      "benchmarks/results/runtime-regression-v0.8.json": "6c00d187c1eda74d934aa9befea149f9d3a2855aa9a287554010e86824f1bc3c",
+      "benchmarks/results/runtime-regression-v0.9.json": "6edff3b9bf48d8364569a2ee9165054212a9f4d952d9f0aa838cc1c4fcddf881",
+      "benchmarks/results/shared-v0.3.json": "5afe52bb66c997c017c9e3625cd21a7fc519a60d9e60b24e81487d0ce796f0c2",
+      "benchmarks/results/skew-partition-v0.4.json": "977a9ae51795b8be0cc64c304d22a569c5b6ca4dd2c08c8fe84d84d3b117eae1",
+      "benchmarks/results/stream-fairness-v0.7.json": "ead3608769d499aa1d7f2d7fdcf6333171257aacf2fd53591f83fee4698a0c23",
+      "benchmarks/results/transfer-v0.2.json": "da141b32b7f93d476dac953d19164622e644b4014b41399ec97cd461bacd1a50",
+      "benchmarks/results/transfer-v0.3.json": "cbed90757915e5cadbc208a5f4af75cbb0d2f09765629e7f15df1bd8b4b92a34",
+      "benchmarks/runtime-architecture/compare.mjs": "b0d9fa8ca40a55b6807a452b0ac891097a48dadc8d0dca020412d9c8ed4aac93",
+      "benchmarks/runtime-architecture/measure.mjs": "996ad0b031aa0f623818002875ba14a6425c3d7ca2c1c42971720b0d3d76d397",
+      "benchmarks/runtime-architecture/task.mjs": "7531e0381d06861b3560edd5669c91df3dfe991fb2ab0a3e6fde0307de20218c",
+      "benchmarks/shared-memory/kernel.mjs": "52d87ae751f13358f6dd136b2a8f60ace14b0c0f0c8a21de2b2e61066651e8ae",
+      "benchmarks/shared-memory/measure.mjs": "18ff6f2d98879393e089f99d3bae2f0efb601c08fd447f4560531da7fe574e5e",
+      "benchmarks/shared-memory/piscina-task.mjs": "a6bcbe9379eb896388881e5c54ba24b210dc510772e3c3819a2d32d5f3864255",
+      "benchmarks/shared-memory/pjs-task.mjs": "9599b21bf44703f5f34f5cb602cf2a5486e5b2b531dd18f9ec025dba6a2c88b9",
+      "benchmarks/shared-memory/run.mjs": "3dda14f769801c436d78777d99e32ea57c50d832f0798b516e2a2873f6751bfb",
+      "benchmarks/streaming/README.md": "f717d84b1939bfc389e834497abdbb0aa90084988fce4df2223ceaa407dee6cc",
+      "benchmarks/streaming/fairness.mjs": "4d9c66b5f234c9f79decade3ad273420ded273b878c24efbb23d760f73b9e9dc",
+      "benchmarks/streaming/regression-measure.mjs": "46ba31dad40f1cb82e461a1dedbeaec77b07540c1d2c8726a72da447f728e9d8",
+      "benchmarks/streaming/regression.mjs": "644f045c408bc4c5e91eb81670c13589ba0dca24fbe24275f584072e9be222dd",
+      "benchmarks/streaming/run.mjs": "67a86142337d76439d8f6847311116e080418a7eb2c9476904883ad001836303",
+      "benchmarks/transfer/measure.mjs": "4ba8d04aa57d21e78039a308f5f72c740eb2e9dc94b8a941285e9b75bbac7ab1",
+      "benchmarks/transfer/run.mjs": "b6fc35a56a07c46a94765f22e10209e85c7c388aae6aa18138b22ab0f13b3b37",
+      "benchmarks/transfer/tasks.mjs": "0095d78d41b857b1478e30db50a512973ead4b04e33c003bbcbfc67b5a5ef3c3",
+      "docs/adr/0001-task-registration.md": "c155dcf8d804ab1b933b7c2796e25c043568349fbfcca46b8475a77b42ae1b6a",
+      "docs/adr/0002-worker-pool-model.md": "2f6fa4e608906e5d39b1dc5955154c8a9ab56fb696df9ce99bc15368349dab73",
+      "docs/adr/0003-scheduler-interface.md": "87b2b06bfa24d5666284b9e6159814df13e98bd6fe6fb93d188682addc17436e",
+      "docs/adr/0004-cancellation-and-deadlines.md": "cc1f19223953e1385abad098c39b043f943813bcafdc0d221c74f0460fd3bb5d",
+      "docs/adr/0005-transfer-ownership.md": "92d832acda8d4a9548135b00b538e20f5c04a8f4078542540216f087e19400ed",
+      "docs/adr/0006-typescript7-toolchain.md": "af790339e3c56a5449585fdef5b7032bfacb56026bcd92db960df2d43c6cb75c",
+      "docs/adr/0007-shared-input-model.md": "e824fe575a6843ace40f720d4eb4c325de479730fe76c7c924c5625cefc01141",
+      "docs/adr/0008-runtime-owned-partitioning.md": "66b3ea01bc1fbda694581881d1a661e9fa71a1f1eaff7b86d70e62683d33c145",
+      "docs/adr/0009-partition-admission-and-metrics.md": "bd41ba358dd5a17e4bee039736c941796a184fc6cb621ba913c3c17283ac4796",
+      "docs/adr/0010-dispatch-efficiency.md": "3202372ca615149e084365b8471c4bf779a4fa2aaac097ac222a26ad649d88b2",
+      "docs/adr/0011-batched-partition-dispatch.md": "4b08b80b39a1bc34410b8b81e57eb7ee96c9752b7f61eb574d332b4c65e7b3d2",
+      "docs/adr/0012-completion-only-operations.md": "35130193251d8ec551a15d2df81c9b051e99ebc32af53edf74df5662b0f1fd1c",
+      "docs/adr/0013-async-resource-context.md": "9334d5d04c44971a6b46cc07185da64f1811f5254434645d5b6c7aea98e776d7",
+      "docs/adr/0014-streaming-result-semantics.md": "ef6a7c18530ae77b60658d7fb2a97c939189628cbef4647d2fe6078111c5dde6",
+      "docs/adr/0015-element-block-map-semantics.md": "396f6cb86814efb0a1ccfd2926988dec6f7de85f27529e5e0fc85853e8bfb432",
+      "docs/adr/0016-result-memory-observability.md": "1c460f7180f3e36e76253c805ce0a7e54e3cfcc507c58cf73e61307c7012c6b8",
+      "docs/adr/0017-binary-result-reservations.md": "ff56a34cab50315b2c67bee80c93b79642c9334de74aeea578c7603cb2a60d74",
+      "docs/adr/0018-runtime-core-decomposition.md": "69ff9affb92fd47eb152bdc198a9b71952ba29a804f466ad9405884dc366ce92",
+      "docs/architecture.md": "0615f4673b36dd73c39421ba9f9a01ba36f4abc3b130f18b374c2d759e2a4392",
+      "docs/benchmarks-v0.1.md": "b120a02ce71bb6e65835b3df002bcebcc1dedacdbf4b69bc2145286d8d52e63a",
+      "docs/benchmarks-v0.10.md": "b966ba3286fd43e3d6399b19eb05e16235d22736753ca54db6dc2ed253af4d6b",
+      "docs/benchmarks-v0.11.md": "2846d0a6192c4d03baa96d801b8ee8cd0120c33896875ce1d88c153b7df57723",
+      "docs/benchmarks-v0.2.md": "29ea9944f3da667210a8f298a9d8bd72438739726d9339b7f44cf451a01741b4",
+      "docs/benchmarks-v0.3.md": "659e68343ab7059fd31e1936d6578b8088760d795b7c80d981cb2059abfba6b1",
+      "docs/benchmarks-v0.4.md": "2e2ff50fbbda95ebe4dcfc038a1c58c3872902fd42b780de2c232613bfd991ab",
+      "docs/benchmarks-v0.5.md": "7c8becc4dec12e3e8453d1698138f4ff1025a7bafed81103d477d14c7837b0df",
+      "docs/benchmarks-v0.6.md": "86924ec7d41924659c31fff67cabb1ff9b153cbd0ce01dc786ca90383a344361",
+      "docs/benchmarks-v0.7.md": "2ba826d3d9c7257ee74f4fef1fad43934f99265d808b88ae8ebeb45b3fee7568",
+      "docs/benchmarks-v0.8.md": "5b677bdee49021047c60a233d7abedf5287fb606c4d35afe406776289f5e8e0f",
+      "docs/benchmarks-v0.9.md": "b1ee2597717343a1da8c000983d059e28b9053822f35fcd75dbd69213d088af9",
+      "docs/memory.md": "8e418af1b820bbecea522ada5602acf1058df22f3984d03d6684b5a23e77b28a",
+      "docs/partitioning.md": "f4c05578001fbe358d2136c597f8ee408fbed0e5f4f4eab91967f7ee185b1e2a",
+      "docs/proposal-v0.10.md": "a6b18da0bcf0752eb9b916573f63f48eb81e65a5fd73d264a7f06277c3d2007b",
+      "docs/proposal-v0.11.md": "45470c66279a5c09cdf5e65b424b4e2bdc586333046dadd22891a34da10b15f4",
+      "docs/proposal-v0.3.md": "3c8f2afc5f011a2a4fbccf72a8c2f5b32f3fc7edd3bedff577b380b2cd86400e",
+      "docs/proposal-v0.4.md": "e66115ef817fa198edad13b2bd949c407c2d25db08471de9d25529a53914b1d9",
+      "docs/proposal-v0.5.md": "173584953587a5b24a386e6d7474770811d2ecdce30b8abb4f95267c8be4590b",
+      "docs/proposal-v0.6.md": "ca2a6d6bdbac7c6c0a9dcd86728a920ea67ac27ea00a74b0f8da86aa181f40c8",
+      "docs/proposal-v0.7.md": "54cdf089f2da6269ade6aa5b866d5b41611f70ed02b017d2dc25587a6f4c51c9",
+      "docs/proposal-v0.8.md": "15edc4da215407e71555a434e975e5b3310f902d004f9e742592beb5a760d8c8",
+      "docs/proposal-v0.9.md": "75c8b0a242ca00e78bd3943cfccf3b23a838b44aa2e0804aa156a77f06e5de56",
+      "docs/proposal.md": "0ce7cc0f507e394cc770411e7be4367b9753739aab6ba5a1d47fab0a2ce0edc0",
+      "docs/research/runtime-landscape.md": "568bab8876199bf4a94ee690fa2b56606e5f4aae5e6c96631899144ceab041a1",
+      "docs/toolchain.md": "be21fefa24f09b53645cb457e28e4591cefc42a2f625641cbc526f1c3c1d1ca6",
+      "eslint.config.mjs": "07de637ebe66cd5cd95ae4e7b9fbf65986bdbf85ce10296c8088100f13cd51cf",
+      "examples/prime-search.mjs": "a8405dd78e95cb14abc8b1606d5e6e8e6b34ead075ba185c555bb3faabd4dc5b",
+      "examples/transfer-task.mjs": "f20181393bcfa2bddd7d1c12f320ccea8a4c820680466a63e18c6a755ecf56c9",
+      "examples/transfer.mjs": "5043480fb9ca025577e19336afba06c4e10a12574fdd0ad4f8a14760e35f4242",
+      "package-lock.json": "1e447b3528ce00a47ff01515f74832d06bd6511aa69c2d6db8d3abdc0a2ff073",
+      "package.json": "2b5c34c1fe0e5a20cf111968a1e1da0f372d5603cadfd0636d254dc87e2577c2",
+      "packages/runtime/package.json": "375cb9ace5ea89e5a07b972f09f3abc78296d4c21cae344a712a30a40f722978",
+      "packages/runtime/src/dispatch/dispatcher.ts": "719ac7702d4d51371fce2f97a0018dcf8cc042fc79e7adc1bf27e611d4f7de19",
+      "packages/runtime/src/errors/index.ts": "2f1458c63366be67919f51866acd7e1a9966300166c39f164c481913d0b1f4e7",
+      "packages/runtime/src/index.ts": "cbd052aa9e57ee8ccda759c3a001248aacf2a1e30db3d8eaa6dd370e41dbec9c",
+      "packages/runtime/src/internal/integer.ts": "c1d5f34cd7a4d6aa228910e0a7e7f7929e21bea0f84e231d5984a3b7e7d51b6c",
+      "packages/runtime/src/partition/binary.ts": "20e4ff84ea39912befa189a5a3e5f57739e249d3954c3d7aea6cfa45e1b97120",
+      "packages/runtime/src/partition/coordinator.ts": "5603b007222240f59d5f1b748d7569f8122a5cf2389c97f426cc022e8840cb5b",
+      "packages/runtime/src/partition/operation.ts": "729522d644fceb865a61374dbef4edcef345fab2adf15d2d1cc81137939cf53c",
+      "packages/runtime/src/partition/range.ts": "d36bb74d3e77d1ce3953d7eb7b98a132bf65cd2e7edf137c93279c9600020838",
+      "packages/runtime/src/partition/stream.ts": "09d2dcb73771334c0a4fb9647c6234d59acdef43e3170045d8c8e810a7017566",
+      "packages/runtime/src/pool/pool.ts": "880be0c7764e184bf3e8ccfee8fa63bf3c2f26e81d40aab5e2cdb94827849ec5",
+      "packages/runtime/src/results/credit.ts": "66b8a516fbbde6370a2005a087dbda8f4e2ea74cb5d572042386241d1893899f",
+      "packages/runtime/src/runtime.ts": "ab580e32ee0f7ad0b01c2e4c1585d625a61eecee0aac73492ea4ac622e4d1fde",
+      "packages/runtime/src/scheduler/fifo.ts": "caa0307b7ce3b71d412ae9b432ad90cd946eed209958d88a1d6f9a13d481e014",
+      "packages/runtime/src/tasks/coordinator.ts": "eb1b9d7b6140bbdff68270d40a5c72e61899ea825b93063f37735947bd3d5f91",
+      "packages/runtime/src/tasks/registry.ts": "b0698736068769a2b7ab2b8c1cbf2179650f7b41701e82ab4dccf8e8c8254eca",
+      "packages/runtime/src/tasks/shared.ts": "d3a6b371f5b20657bf47d6b84f6c7d7bd4cfec0f0395b6bade2ac828ee5a3ca5",
+      "packages/runtime/src/tasks/task.ts": "d4413535c077eb6b785de15ddc0877e63b667a6804821149afe180b267cd4144",
+      "packages/runtime/src/tasks/transfer.ts": "9de35965f11f40ab7697ca8e5439af634fe8122829c357c3b36f310dbfd278ac",
+      "packages/runtime/src/telemetry/metrics.ts": "031d1994dd4fec40d50b265f4e59c00dd9348d089d507ed87019bb1fef7b088e",
+      "packages/runtime/src/telemetry/profile.ts": "831b42554f3dcb74a45ae42bdfca5811eab921d8c248986ca1859af26f9496f7",
+      "packages/runtime/src/telemetry/runtime.ts": "de144702cc694650fb5d7d50ff76109a6cfe9ef5ef3aecc3825a9a3e911fe6e7",
+      "packages/runtime/src/types/index.ts": "7a252af8bb57fe42ac43f015a73ee111afd932725da039ffd77c36140c7b35fa",
+      "packages/runtime/src/workers/bootstrap.ts": "abb04508ad7a2356576cda3348ac2b3f3006def864095b60bb53c9ccb17dce57",
+      "packages/runtime/src/workers/protocol.ts": "4516e3c824b5171fa8c3dec61a3bbeb17fde1ba5d89ff88f62bb9a0ceabab8b6",
+      "packages/runtime/src/workers/worker.ts": "ada465d1d655209ff3bfdc9c6ace5f166695cef2e8ca07105c29e8856670a2e0",
+      "packages/runtime/test/batch.test.mjs": "684efad2d53714614bccfc43d83c16d0fea7a6dd18c03dc314dbb4643ba3830f",
+      "packages/runtime/test/binary-result.test.mjs": "ee9f54ca52fc96c3935683e7c79fb03acbc53034a8c0a36ce30c1c20a536ab43",
+      "packages/runtime/test/completion.test.mjs": "beddbd7f82ad6c3a41fb0e7998e6ecb21a6be337771a4f9dedc27b4dfc6f2cad",
+      "packages/runtime/test/fixtures/broken.mjs": "bd7e2480d5f6bc450d5f0024e5d8b78ce8bcbccc71b945660ba9106b94336087",
+      "packages/runtime/test/fixtures/hanging-import.mjs": "5b9a6689d226104b61ad384931f385be2931d0656894e55b2713273ea2a43b81",
+      "packages/runtime/test/fixtures/partition-tasks.mjs": "add612a198f718ec19b4d2edacd0b0f3ebeb34c94affbae62f9a4ec1e348288c",
+      "packages/runtime/test/fixtures/shared-tasks.mjs": "aa2d3f81da337e36c6297c741298701c2af535e2f21218b866a2ce5f413d9ad8",
+      "packages/runtime/test/fixtures/tasks.mjs": "df49e8c964cd17f1be76b65c042bc986c78ba9927496c658636ce9a556d23be6",
+      "packages/runtime/test/fixtures/transfer-tasks.mjs": "5e5e54a87956f0a54d1d979877034a7a2c85f311c2b3a160cac3aaea750159a7",
+      "packages/runtime/test/map.test.mjs": "cb45271cd7115fd6263142b51aa1cfeb321bb462dfe3ebe8cba288f15a5583bf",
+      "packages/runtime/test/matrix.test.mjs": "cf9a9ba12151f1ecb399636e1773a2b9f12239e4ac16c064f94d5e293216a4dd",
+      "packages/runtime/test/memory-observability.test.mjs": "abd94718006048402bd74b27c0b56da68cec043c45a45dee0f9e6086df41575d",
+      "packages/runtime/test/partition.test.mjs": "3c8cd8f875ce31d8091674324267772fd0891692129a16efcfc4a0be102b8bb0",
+      "packages/runtime/test/result-credit.test.mjs": "6702de7b2a4e89292db627cf2cf07a95c919bdfdd99d0b00dac5f5f7c245856e",
+      "packages/runtime/test/runtime.test.mjs": "2ca16d6c2a9634209e747caea86ce419cf56f856c813b63249efb993530f7991",
+      "packages/runtime/test/shared.test.mjs": "d04afa2bc7cdeeb3e20c8de39385b77263270e787a687f86e495fd72aebfe326",
+      "packages/runtime/test/stream.test.mjs": "8d2e9caeec24510d9366d739224f042db3a04fcc37316c0be329cb553347c2b7",
+      "packages/runtime/test/transfer.test.mjs": "348c0b13f9714748a06bb8beb20974f71c320664eb6e3a89fcc35b41d4c8216a",
+      "packages/runtime/test/tsconfig.json": "6f8c2ca79d1e31c62ef4173e118393d460a99c49462a96e551675fb5674bd690",
+      "packages/runtime/test/types.test.ts": "f033501f96981ca9444e2763424a9fc6d41949eefa12752c5c8ed2d311f649b4",
+      "packages/runtime/tsconfig.json": "b60926d0fc960d49f920218c75396faa65796212a96eba7ba05c4066bcafa5b8",
+      "scripts/reservation-soak.mjs": "6cac3467660ad8e4509f4b5d54e1b61b791a1adf53dbcb074e8d052629f23f1c",
+      "scripts/stress.mjs": "d409a484518a72d17eee1614a7b3a03f4fc021f075607b186dbd9828cf5ce884"
+    },
+    "sourceMethod": "git archive of the exact reference commit into a temporary directory; working tree preserved"
+  },
+  "startedAt": "2026-10-01T10:32:41.615Z",
+  "status": "complete",
+  "methodology": {
+    "workerCounts": [
+      1,
+      2,
+      4
+    ],
+    "nodeOrder": [
+      {
+        "sequence": 1,
+        "phase": 0,
+        "configuration": "noop-batch-16"
+      },
+      {
+        "sequence": 4,
+        "phase": 3,
+        "configuration": "noop-batch-16"
+      },
+      {
+        "sequence": 5,
+        "phase": 0,
+        "configuration": "stable-skew-batch-16"
+      },
+      {
+        "sequence": 8,
+        "phase": 3,
+        "configuration": "stable-skew-batch-16"
+      },
+      {
+        "sequence": 9,
+        "phase": 0,
+        "configuration": "coarse-skew-batch-1"
+      },
+      {
+        "sequence": 12,
+        "phase": 3,
+        "configuration": "coarse-skew-batch-1"
+      },
+      {
+        "sequence": 13,
+        "phase": 0,
+        "configuration": "coarse-skew-batch-16"
+      },
+      {
+        "sequence": 16,
+        "phase": 3,
+        "configuration": "coarse-skew-batch-16"
+      }
+    ],
+    "freshProcessPerCaseConfiguration": true,
+    "sourceImmutable": true,
+    "thermalControl": "balanced ordering, context before and after each process; no governor changes or arbitrary cooldown sleeps",
+    "retainedSamples": "all, including failed processes; no silent retries or outlier removal",
+    "architecture": "unchanged existing v0.11 definitions, four workers, two warmups, six sustained samples per process, forced GC between samples",
+    "binary": "existing reservation-audit task; all transports use batch=1, count capacity=16, equal exact byte capacity; two warmups, six sustained samples, forced GC between samples, no profiling sink"
+  },
+  "checks": [],
+  "measurements": [
+    {
+      "name": "relationships/noop-batch-16",
+      "group": "relationships",
+      "configuration": "noop-batch-16",
+      "phase": 0,
+      "sequence": 1,
+      "argv": [
+        "/tmp/pjs-cross-platform-v011-K7pF48/reference/benchmarks/dispatch-efficiency/measure.mjs",
+        "{\"engine\":\"pjs-owned\",\"workers\":4,\"size\":2048,\"scale\":32,\"trials\":5,\"warmups\":2,\"name\":\"noop-batch-16\",\"kind\":\"noop\",\"logicalPartitions\":2048,\"batchSize\":16}"
+      ],
+      "executable": "/home/miskovy/.nvm/versions/node/v22.23.3/bin/node",
+      "contextBefore": {
+        "timestamp": "2026-10-01T10:32:41.866Z",
+        "uptimeSeconds": 181973.76,
+        "loadAverage": [
+          1,
+          3.12,
+          3.67
+        ],
+        "freeMemoryBytes": 3141570560,
+        "cpuMHz": [
+          2395,
+          2388,
+          2395,
+          2394
+        ],
+        "powerSource": "battery",
+        "powerProfile": null,
+        "batteries": [
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "58"
+          }
+        ],
+        "cpuFrequency": [
+          {
+            "cpu": "cpu0",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2394702",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu1",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2352785",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu2",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2395337",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu3",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "1197300",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          }
+        ],
+        "temperatures": [
+          {
+            "type": "acpitz",
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "43000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "41000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "iwlwifi_1",
+            "milliCelsius": "41000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "43000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "41000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "amdgpu",
+            "label": "edge",
+            "milliCelsius": "45000"
+          },
+          {
+            "type": "k10temp",
+            "label": "Tctl",
+            "milliCelsius": "45375"
+          },
+          {
+            "type": "iwlwifi_1",
+            "label": null,
+            "milliCelsius": "41000"
+          }
+        ],
+        "powerSupplies": [
+          {
+            "name": "AC",
+            "type": "Mains",
+            "online": "0",
+            "status": null,
+            "capacityPercent": null
+          },
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "58"
+          }
+        ],
+        "memoryInfo": "MemTotal:        7534820 kB\nMemFree:         1037188 kB\nMemAvailable:    3067768 kB\nBuffers:             540 kB\nCached:          2100036 kB\nSwapCached:         2088 kB\nActive:          1983944 kB\nInactive:        1752292 kB\nActive(anon):    1168032 kB\nInactive(anon):   660060 kB\nActive(file):     815912 kB\nInactive(file):  1092232 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        4776536 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:               848 kB\nWriteback:             0 kB\nAnonPages:       1634256 kB\nMapped:           651000 kB\nShmem:            192868 kB\nKReclaimable:     429860 kB\nSlab:             736296 kB\nSReclaimable:     429860 kB\nSUnreclaim:       306436 kB\nKernelStack:       17328 kB\nPageTables:        72120 kB\nSecPageTables:      3544 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   19759664 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      112932 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5084876 kB\nDirectMap2M:     2711552 kB\nDirectMap1G:     1048576 kB",
+        "backgroundProcesses": [
+          "PID COMMAND         %CPU %MEM",
+          " 125747 MainThread      49.1  1.1",
+          " 100186 code             8.4  5.1",
+          "  99903 code             7.7  1.1",
+          " 125746 rtk              7.5  0.0",
+          "  99942 code             3.8  3.2",
+          "  99852 code             3.1  1.8",
+          " 100075 code             2.5  2.0",
+          "   1966 kwin_wayland     1.2  1.6"
+        ]
+      },
+      "contextAfter": {
+        "timestamp": "2026-10-01T10:32:42.731Z",
+        "uptimeSeconds": 181974.63,
+        "loadAverage": [
+          1,
+          3.12,
+          3.67
+        ],
+        "freeMemoryBytes": 3080970240,
+        "cpuMHz": [
+          2394,
+          2394,
+          2395,
+          2395
+        ],
+        "powerSource": "battery",
+        "powerProfile": null,
+        "batteries": [
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "58"
+          }
+        ],
+        "cpuFrequency": [
+          {
+            "cpu": "cpu0",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2394303",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu1",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2258441",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu2",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2395124",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu3",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "1197684",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          }
+        ],
+        "temperatures": [
+          {
+            "type": "acpitz",
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "43000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "41000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "iwlwifi_1",
+            "milliCelsius": "41000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "43000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "41000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "amdgpu",
+            "label": "edge",
+            "milliCelsius": "46000"
+          },
+          {
+            "type": "k10temp",
+            "label": "Tctl",
+            "milliCelsius": "46750"
+          },
+          {
+            "type": "iwlwifi_1",
+            "label": null,
+            "milliCelsius": "41000"
+          }
+        ],
+        "powerSupplies": [
+          {
+            "name": "AC",
+            "type": "Mains",
+            "online": "0",
+            "status": null,
+            "capacityPercent": null
+          },
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "58"
+          }
+        ],
+        "memoryInfo": "MemTotal:        7534820 kB\nMemFree:          977412 kB\nMemAvailable:    3008760 kB\nBuffers:             540 kB\nCached:          2100804 kB\nSwapCached:         2088 kB\nActive:          1984576 kB\nInactive:        1753060 kB\nActive(anon):    1168664 kB\nInactive(anon):   660060 kB\nActive(file):     815912 kB\nInactive(file):  1093000 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        4777036 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              1040 kB\nWriteback:             0 kB\nAnonPages:       1634936 kB\nMapped:           651812 kB\nShmem:            192868 kB\nKReclaimable:     429860 kB\nSlab:             736216 kB\nSReclaimable:     429860 kB\nSUnreclaim:       306356 kB\nKernelStack:       17308 kB\nPageTables:        73184 kB\nSecPageTables:      3544 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   19756924 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      112964 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5084876 kB\nDirectMap2M:     2711552 kB\nDirectMap1G:     1048576 kB",
+        "backgroundProcesses": [
+          "PID COMMAND         %CPU %MEM",
+          " 125801 ps               100  0.0",
+          " 125747 MainThread      22.6  1.1",
+          " 100186 code             8.4  5.1",
+          "  99903 code             7.7  1.1",
+          "  99942 code             3.8  3.2",
+          " 125746 rtk              3.2  0.0",
+          "  99852 code             3.1  1.8",
+          " 100075 code             2.5  2.0"
+        ]
+      },
+      "durationMs": 861.5508269999999,
+      "exitCode": 0,
+      "signal": null,
+      "stderr": "",
+      "result": {
+        "engine": "pjs-owned",
+        "workers": 4,
+        "size": 2048,
+        "scale": 32,
+        "trials": 5,
+        "warmups": 2,
+        "name": "noop-batch-16",
+        "kind": "noop",
+        "logicalPartitions": 2048,
+        "batchSize": 16,
+        "grainSize": 1,
+        "chunks": 2048,
+        "firstRun": {
+          "wallMs": 111.70801200000002,
+          "cpuMs": 194.176,
+          "cpuPercent": 173.82459549991808,
+          "machineCpuPercent": 43.45614887497952,
+          "logicalPartitions": 2048,
+          "executeMessages": 128,
+          "resultMessages": 128,
+          "microsecondsPerLogicalPartition": 54.544927734375015,
+          "microsecondsPerPhysicalDispatch": 872.7188437500002,
+          "rssBeforeBytes": 113618944,
+          "rssAfterBytes": 126464000,
+          "peakRssBytes": 126464000,
+          "eventLoopUtilization": 0.9908041641496077,
+          "eventLoopDelayMeanMs": 3.189104,
+          "eventLoopDelayMaxMs": 6.844415,
+          "maxTimerDriftMs": 5.812041000000022
+        },
+        "samples": [
+          {
+            "wallMs": 37.957043999999996,
+            "cpuMs": 80.062,
+            "cpuPercent": 210.9279110354326,
+            "machineCpuPercent": 52.73197775885815,
+            "logicalPartitions": 2048,
+            "executeMessages": 128,
+            "resultMessages": 128,
+            "microsecondsPerLogicalPartition": 18.533712890624997,
+            "microsecondsPerPhysicalDispatch": 296.53940624999996,
+            "rssBeforeBytes": 140591104,
+            "rssAfterBytes": 141770752,
+            "peakRssBytes": 141770752,
+            "eventLoopUtilization": 1,
+            "eventLoopDelayMeanMs": 1.1148567272727272,
+            "eventLoopDelayMaxMs": 3.811327,
+            "maxTimerDriftMs": 2.663413999999989
+          },
+          {
+            "wallMs": 39.735184000000004,
+            "cpuMs": 71.509,
+            "cpuPercent": 179.96393322351295,
+            "machineCpuPercent": 44.99098330587824,
+            "logicalPartitions": 2048,
+            "executeMessages": 128,
+            "resultMessages": 128,
+            "microsecondsPerLogicalPartition": 19.4019453125,
+            "microsecondsPerPhysicalDispatch": 310.431125,
+            "rssBeforeBytes": 141770752,
+            "rssAfterBytes": 146358272,
+            "peakRssBytes": 146358272,
+            "eventLoopUtilization": 1,
+            "eventLoopDelayMeanMs": 1.210552,
+            "eventLoopDelayMaxMs": 5.652479,
+            "maxTimerDriftMs": 4.657984000000056
+          },
+          {
+            "wallMs": 45.90964799999995,
+            "cpuMs": 114.236,
+            "cpuPercent": 248.82787164911423,
+            "machineCpuPercent": 62.20696791227856,
+            "logicalPartitions": 2048,
+            "executeMessages": 128,
+            "resultMessages": 128,
+            "microsecondsPerLogicalPartition": 22.416820312499976,
+            "microsecondsPerPhysicalDispatch": 358.6691249999996,
+            "rssBeforeBytes": 146358272,
+            "rssAfterBytes": 152387584,
+            "peakRssBytes": 152387584,
+            "eventLoopUtilization": 1,
+            "eventLoopDelayMeanMs": 1.4483114666666665,
+            "eventLoopDelayMaxMs": 6.647807,
+            "maxTimerDriftMs": 5.656887999999981
+          },
+          {
+            "wallMs": 43.721991,
+            "cpuMs": 107.807,
+            "cpuPercent": 246.5738579928805,
+            "machineCpuPercent": 61.643464498220126,
+            "logicalPartitions": 2048,
+            "executeMessages": 128,
+            "resultMessages": 128,
+            "microsecondsPerLogicalPartition": 21.34862841796875,
+            "microsecondsPerPhysicalDispatch": 341.5780546875,
+            "rssBeforeBytes": 152387584,
+            "rssAfterBytes": 161755136,
+            "peakRssBytes": 161492992,
+            "eventLoopUtilization": 1,
+            "eventLoopDelayMeanMs": 1.3773130322580645,
+            "eventLoopDelayMaxMs": 7.512063,
+            "maxTimerDriftMs": 6.513420999999994
+          },
+          {
+            "wallMs": 41.13511700000004,
+            "cpuMs": 92.811,
+            "cpuPercent": 225.62473810394152,
+            "machineCpuPercent": 56.40618452598538,
+            "logicalPartitions": 2048,
+            "executeMessages": 128,
+            "resultMessages": 128,
+            "microsecondsPerLogicalPartition": 20.085506347656267,
+            "microsecondsPerPhysicalDispatch": 321.36810156250027,
+            "rssBeforeBytes": 161886208,
+            "rssAfterBytes": 162836480,
+            "peakRssBytes": 162836480,
+            "eventLoopUtilization": 0.9930076176291727,
+            "eventLoopDelayMeanMs": 1.46663424,
+            "eventLoopDelayMaxMs": 6.090751,
+            "maxTimerDriftMs": 5.090584000000035
+          }
+        ]
+      }
+    },
+    {
+      "name": "relationships/noop-batch-16",
+      "group": "relationships",
+      "configuration": "noop-batch-16",
+      "phase": 3,
+      "sequence": 4,
+      "argv": [
+        "/tmp/pjs-cross-platform-v011-K7pF48/reference/benchmarks/dispatch-efficiency/measure.mjs",
+        "{\"engine\":\"pjs-owned\",\"workers\":4,\"size\":2048,\"scale\":32,\"trials\":5,\"warmups\":2,\"name\":\"noop-batch-16\",\"kind\":\"noop\",\"logicalPartitions\":2048,\"batchSize\":16}"
+      ],
+      "executable": "/home/miskovy/.nvm/versions/node/v22.23.3/bin/node",
+      "contextBefore": {
+        "timestamp": "2026-10-01T10:32:44.608Z",
+        "uptimeSeconds": 181976.51,
+        "loadAverage": [
+          1,
+          3.12,
+          3.67
+        ],
+        "freeMemoryBytes": 3073466368,
+        "cpuMHz": [
+          1197,
+          1197,
+          1197,
+          2394
+        ],
+        "powerSource": "battery",
+        "powerProfile": null,
+        "batteries": [
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "58"
+          }
+        ],
+        "cpuFrequency": [
+          {
+            "cpu": "cpu0",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2395320",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu1",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "1197642",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu2",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2391739",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu3",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "1197672",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          }
+        ],
+        "temperatures": [
+          {
+            "type": "acpitz",
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "44000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "41000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "iwlwifi_1",
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "44000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "41000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "amdgpu",
+            "label": "edge",
+            "milliCelsius": "47000"
+          },
+          {
+            "type": "k10temp",
+            "label": "Tctl",
+            "milliCelsius": "47500"
+          },
+          {
+            "type": "iwlwifi_1",
+            "label": null,
+            "milliCelsius": "39000"
+          }
+        ],
+        "powerSupplies": [
+          {
+            "name": "AC",
+            "type": "Mains",
+            "online": "0",
+            "status": null,
+            "capacityPercent": null
+          },
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "58"
+          }
+        ],
+        "memoryInfo": "MemTotal:        7534820 kB\nMemFree:          968600 kB\nMemAvailable:    3001432 kB\nBuffers:             540 kB\nCached:          2102288 kB\nSwapCached:         2088 kB\nActive:          1988676 kB\nInactive:        1754452 kB\nActive(anon):    1172744 kB\nInactive(anon):   659988 kB\nActive(file):     815932 kB\nInactive(file):  1094464 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        4778432 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              1608 kB\nWriteback:             0 kB\nAnonPages:       1638836 kB\nMapped:           655436 kB\nShmem:            192868 kB\nKReclaimable:     429860 kB\nSlab:             736228 kB\nSReclaimable:     429860 kB\nSUnreclaim:       306368 kB\nKernelStack:       17280 kB\nPageTables:        72084 kB\nSecPageTables:      3544 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   19757020 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      112916 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5084876 kB\nDirectMap2M:     2711552 kB\nDirectMap1G:     1048576 kB",
+        "backgroundProcesses": [
+          "PID COMMAND         %CPU %MEM",
+          " 125747 MainThread      13.5  1.1",
+          " 100186 code             8.4  5.1",
+          "  99903 code             7.7  1.1",
+          "  99942 code             3.8  3.2",
+          "  99852 code             3.1  1.8",
+          " 100075 code             2.5  2.0",
+          " 125746 rtk              1.4  0.0",
+          "   1966 kwin_wayland     1.2  1.6"
+        ]
+      },
+      "contextAfter": {
+        "timestamp": "2026-10-01T10:32:45.448Z",
+        "uptimeSeconds": 181977.35,
+        "loadAverage": [
+          1.08,
+          3.1,
+          3.66
+        ],
+        "freeMemoryBytes": 3014660096,
+        "cpuMHz": [
+          2389,
+          2392,
+          2394,
+          2383
+        ],
+        "powerSource": "battery",
+        "powerProfile": null,
+        "batteries": [
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "58"
+          }
+        ],
+        "cpuFrequency": [
+          {
+            "cpu": "cpu0",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2395327",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu1",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "1204454",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu2",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2395302",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu3",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "1197670",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          }
+        ],
+        "temperatures": [
+          {
+            "type": "acpitz",
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "44000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "41000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "iwlwifi_1",
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "44000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "41000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "amdgpu",
+            "label": "edge",
+            "milliCelsius": "47000"
+          },
+          {
+            "type": "k10temp",
+            "label": "Tctl",
+            "milliCelsius": "47875"
+          },
+          {
+            "type": "iwlwifi_1",
+            "label": null,
+            "milliCelsius": "39000"
+          }
+        ],
+        "powerSupplies": [
+          {
+            "name": "AC",
+            "type": "Mains",
+            "online": "0",
+            "status": null,
+            "capacityPercent": null
+          },
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "58"
+          }
+        ],
+        "memoryInfo": "MemTotal:        7534820 kB\nMemFree:          911156 kB\nMemAvailable:    2944004 kB\nBuffers:             540 kB\nCached:          2102304 kB\nSwapCached:         2088 kB\nActive:          1989836 kB\nInactive:        1754468 kB\nActive(anon):    1173904 kB\nInactive(anon):   659988 kB\nActive(file):     815932 kB\nInactive(file):  1094480 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        4778436 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              1296 kB\nWriteback:             0 kB\nAnonPages:       1639916 kB\nMapped:           655588 kB\nShmem:            192868 kB\nKReclaimable:     429860 kB\nSlab:             736220 kB\nSReclaimable:     429860 kB\nSUnreclaim:       306360 kB\nKernelStack:       17308 kB\nPageTables:        72272 kB\nSecPageTables:      3544 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   19757020 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      112948 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5084876 kB\nDirectMap2M:     2711552 kB\nDirectMap1G:     1048576 kB",
+        "backgroundProcesses": [
+          "PID COMMAND         %CPU %MEM",
+          " 125747 MainThread      11.2  1.1",
+          " 100186 code             8.4  5.1",
+          "  99903 code             7.7  1.1",
+          "  99942 code             3.8  3.2",
+          "  99852 code             3.1  1.8",
+          " 100075 code             2.5  2.0",
+          "   1966 kwin_wayland     1.2  1.6",
+          " 100100 code             1.2  0.8"
+        ]
+      },
+      "durationMs": 838.5962379999996,
+      "exitCode": 0,
+      "signal": null,
+      "stderr": "",
+      "result": {
+        "engine": "pjs-owned",
+        "workers": 4,
+        "size": 2048,
+        "scale": 32,
+        "trials": 5,
+        "warmups": 2,
+        "name": "noop-batch-16",
+        "kind": "noop",
+        "logicalPartitions": 2048,
+        "batchSize": 16,
+        "grainSize": 1,
+        "chunks": 2048,
+        "firstRun": {
+          "wallMs": 113.127883,
+          "cpuMs": 198.968,
+          "cpuPercent": 175.87883263050188,
+          "machineCpuPercent": 43.96970815762547,
+          "logicalPartitions": 2048,
+          "executeMessages": 128,
+          "resultMessages": 128,
+          "microsecondsPerLogicalPartition": 55.23822412109375,
+          "microsecondsPerPhysicalDispatch": 883.8115859375,
+          "rssBeforeBytes": 113496064,
+          "rssAfterBytes": 125444096,
+          "peakRssBytes": 125313024,
+          "eventLoopUtilization": 0.9946236184612618,
+          "eventLoopDelayMeanMs": 3.143568,
+          "eventLoopDelayMaxMs": 6.258687,
+          "maxTimerDriftMs": 10.95607099999998
+        },
+        "samples": [
+          {
+            "wallMs": 39.784087,
+            "cpuMs": 82.937,
+            "cpuPercent": 208.46777255438838,
+            "machineCpuPercent": 52.116943138597094,
+            "logicalPartitions": 2048,
+            "executeMessages": 128,
+            "resultMessages": 128,
+            "microsecondsPerLogicalPartition": 19.42582373046875,
+            "microsecondsPerPhysicalDispatch": 310.8131796875,
+            "rssBeforeBytes": 139943936,
+            "rssAfterBytes": 140599296,
+            "peakRssBytes": 140599296,
+            "eventLoopUtilization": 0.9908071084503258,
+            "eventLoopDelayMeanMs": 1.3355431724137932,
+            "eventLoopDelayMaxMs": 4.702207,
+            "maxTimerDriftMs": 3.703695000000039
+          },
+          {
+            "wallMs": 38.685564,
+            "cpuMs": 76.732,
+            "cpuPercent": 198.347890184566,
+            "machineCpuPercent": 49.5869725461415,
+            "logicalPartitions": 2048,
+            "executeMessages": 128,
+            "resultMessages": 128,
+            "microsecondsPerLogicalPartition": 18.889435546875,
+            "microsecondsPerPhysicalDispatch": 302.23096875,
+            "rssBeforeBytes": 140599296,
+            "rssAfterBytes": 143613952,
+            "peakRssBytes": 143613952,
+            "eventLoopUtilization": 1,
+            "eventLoopDelayMeanMs": 1.257216,
+            "eventLoopDelayMaxMs": 6.066175,
+            "maxTimerDriftMs": 5.067379999999957
+          },
+          {
+            "wallMs": 48.4789770000001,
+            "cpuMs": 116.098,
+            "cpuPercent": 239.48112601468415,
+            "machineCpuPercent": 59.87028150367104,
+            "logicalPartitions": 2048,
+            "executeMessages": 128,
+            "resultMessages": 128,
+            "microsecondsPerLogicalPartition": 23.6713754882813,
+            "microsecondsPerPhysicalDispatch": 378.7420078125008,
+            "rssBeforeBytes": 143745024,
+            "rssAfterBytes": 150319104,
+            "peakRssBytes": 150691840,
+            "eventLoopUtilization": 0.979475401574024,
+            "eventLoopDelayMeanMs": 1.6043078620689655,
+            "eventLoopDelayMaxMs": 7.299071,
+            "maxTimerDriftMs": 6.3063379999999825
+          },
+          {
+            "wallMs": 48.25412099999994,
+            "cpuMs": 110.754,
+            "cpuPercent": 229.52236556127534,
+            "machineCpuPercent": 57.380591390318834,
+            "logicalPartitions": 2048,
+            "executeMessages": 128,
+            "resultMessages": 128,
+            "microsecondsPerLogicalPartition": 23.56158251953122,
+            "microsecondsPerPhysicalDispatch": 376.98532031249954,
+            "rssBeforeBytes": 150319104,
+            "rssAfterBytes": 159756288,
+            "peakRssBytes": 159756288,
+            "eventLoopUtilization": 0.9876795049465142,
+            "eventLoopDelayMeanMs": 1.6215216551724136,
+            "eventLoopDelayMaxMs": 6.352895,
+            "maxTimerDriftMs": 5.1983280000000605
+          },
+          {
+            "wallMs": 34.24990700000001,
+            "cpuMs": 78.59,
+            "cpuPercent": 229.460477075164,
+            "machineCpuPercent": 57.365119268791,
+            "logicalPartitions": 2048,
+            "executeMessages": 128,
+            "resultMessages": 128,
+            "microsecondsPerLogicalPartition": 16.723587402343753,
+            "microsecondsPerPhysicalDispatch": 267.57739843750005,
+            "rssBeforeBytes": 159756288,
+            "rssAfterBytes": 159350784,
+            "peakRssBytes": 160280576,
+            "eventLoopUtilization": 1,
+            "eventLoopDelayMeanMs": 1.1685302857142856,
+            "eventLoopDelayMaxMs": 4.620287,
+            "maxTimerDriftMs": 3.639184
+          }
+        ]
+      }
+    },
+    {
+      "name": "relationships/stable-skew-batch-16",
+      "group": "relationships",
+      "configuration": "stable-skew-batch-16",
+      "phase": 0,
+      "sequence": 5,
+      "argv": [
+        "/tmp/pjs-cross-platform-v011-K7pF48/reference/benchmarks/dispatch-efficiency/measure.mjs",
+        "{\"engine\":\"pjs-owned\",\"workers\":4,\"size\":2048,\"scale\":32,\"trials\":5,\"warmups\":2,\"name\":\"stable-skew-batch-16\",\"kind\":\"stable-skew\",\"logicalPartitions\":2048,\"batchSize\":16}"
+      ],
+      "executable": "/home/miskovy/.nvm/versions/node/v22.23.3/bin/node",
+      "contextBefore": {
+        "timestamp": "2026-10-01T10:32:45.503Z",
+        "uptimeSeconds": 181977.4,
+        "loadAverage": [
+          1.08,
+          3.1,
+          3.66
+        ],
+        "freeMemoryBytes": 3014664192,
+        "cpuMHz": [
+          1197,
+          1197,
+          1197,
+          2394
+        ],
+        "powerSource": "battery",
+        "powerProfile": null,
+        "batteries": [
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "58"
+          }
+        ],
+        "cpuFrequency": [
+          {
+            "cpu": "cpu0",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2395265",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu1",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2369182",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu2",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2390596",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu3",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "1197683",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          }
+        ],
+        "temperatures": [
+          {
+            "type": "acpitz",
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "44000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "41000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "iwlwifi_1",
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "44000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "41000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "amdgpu",
+            "label": "edge",
+            "milliCelsius": "47000"
+          },
+          {
+            "type": "k10temp",
+            "label": "Tctl",
+            "milliCelsius": "47750"
+          },
+          {
+            "type": "iwlwifi_1",
+            "label": null,
+            "milliCelsius": "39000"
+          }
+        ],
+        "powerSupplies": [
+          {
+            "name": "AC",
+            "type": "Mains",
+            "online": "0",
+            "status": null,
+            "capacityPercent": null
+          },
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "58"
+          }
+        ],
+        "memoryInfo": "MemTotal:        7534820 kB\nMemFree:          911160 kB\nMemAvailable:    2943948 kB\nBuffers:             540 kB\nCached:          2102244 kB\nSwapCached:         2088 kB\nActive:          1990096 kB\nInactive:        1754408 kB\nActive(anon):    1174164 kB\nInactive(anon):   659988 kB\nActive(file):     815932 kB\nInactive(file):  1094420 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        4778440 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              1260 kB\nWriteback:             0 kB\nAnonPages:       1640228 kB\nMapped:           655436 kB\nShmem:            192868 kB\nKReclaimable:     429860 kB\nSlab:             736220 kB\nSReclaimable:     429860 kB\nSUnreclaim:       306360 kB\nKernelStack:       17264 kB\nPageTables:        71956 kB\nSecPageTables:      3544 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   19757276 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      112916 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5084876 kB\nDirectMap2M:     2711552 kB\nDirectMap1G:     1048576 kB",
+        "backgroundProcesses": [
+          "PID COMMAND         %CPU %MEM",
+          " 125747 MainThread      11.5  1.1",
+          " 100186 code             8.4  5.1",
+          "  99903 code             7.7  1.1",
+          "  99942 code             3.8  3.2",
+          "  99852 code             3.1  1.8",
+          " 100075 code             2.5  2.0",
+          "   1966 kwin_wayland     1.2  1.6",
+          " 100100 code             1.2  0.8"
+        ]
+      },
+      "contextAfter": {
+        "timestamp": "2026-10-01T10:32:49.410Z",
+        "uptimeSeconds": 181981.31,
+        "loadAverage": [
+          1.08,
+          3.1,
+          3.66
+        ],
+        "freeMemoryBytes": 3000397824,
+        "cpuMHz": [
+          1197,
+          2392,
+          2395,
+          2394
+        ],
+        "powerSource": "battery",
+        "powerProfile": null,
+        "batteries": [
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "58"
+          }
+        ],
+        "cpuFrequency": [
+          {
+            "cpu": "cpu0",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "1195023",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu1",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "1197656",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu2",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2394364",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu3",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2392694",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          }
+        ],
+        "temperatures": [
+          {
+            "type": "acpitz",
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "45000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "41000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "iwlwifi_1",
+            "milliCelsius": "40000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "45000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "41000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "amdgpu",
+            "label": "edge",
+            "milliCelsius": "47000"
+          },
+          {
+            "type": "k10temp",
+            "label": "Tctl",
+            "milliCelsius": "47500"
+          },
+          {
+            "type": "iwlwifi_1",
+            "label": null,
+            "milliCelsius": "40000"
+          }
+        ],
+        "powerSupplies": [
+          {
+            "name": "AC",
+            "type": "Mains",
+            "online": "0",
+            "status": null,
+            "capacityPercent": null
+          },
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "58"
+          }
+        ],
+        "memoryInfo": "MemTotal:        7534820 kB\nMemFree:          897160 kB\nMemAvailable:    2930076 kB\nBuffers:             540 kB\nCached:          2102368 kB\nSwapCached:         2088 kB\nActive:          1993124 kB\nInactive:        1754408 kB\nActive(anon):    1177188 kB\nInactive(anon):   659864 kB\nActive(file):     815936 kB\nInactive(file):  1094544 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        4778452 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              1496 kB\nWriteback:             0 kB\nAnonPages:       1643368 kB\nMapped:           655576 kB\nShmem:            192868 kB\nKReclaimable:     429860 kB\nSlab:             736212 kB\nSReclaimable:     429860 kB\nSUnreclaim:       306352 kB\nKernelStack:       17336 kB\nPageTables:        72404 kB\nSecPageTables:      3544 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   19764144 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      112964 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5084876 kB\nDirectMap2M:     2711552 kB\nDirectMap1G:     1048576 kB",
+        "backgroundProcesses": [
+          "PID COMMAND         %CPU %MEM",
+          " 125901 ps               100  0.0",
+          " 100186 code             8.4  5.1",
+          "  99903 code             7.7  1.1",
+          " 125747 MainThread       6.3  1.1",
+          "  99942 code             3.7  3.2",
+          "  99852 code             3.1  1.8",
+          " 100075 code             2.5  2.0",
+          "   1966 kwin_wayland     1.2  1.6"
+        ]
+      },
+      "durationMs": 3906.530191,
+      "exitCode": 0,
+      "signal": null,
+      "stderr": "",
+      "result": {
+        "engine": "pjs-owned",
+        "workers": 4,
+        "size": 2048,
+        "scale": 32,
+        "trials": 5,
+        "warmups": 2,
+        "name": "stable-skew-batch-16",
+        "kind": "stable-skew",
+        "logicalPartitions": 2048,
+        "batchSize": 16,
+        "grainSize": 1,
+        "chunks": 2048,
+        "firstRun": {
+          "wallMs": 181.570509,
+          "cpuMs": 441.473,
+          "cpuPercent": 243.14135727845542,
+          "machineCpuPercent": 60.785339319613854,
+          "logicalPartitions": 2048,
+          "executeMessages": 128,
+          "resultMessages": 128,
+          "microsecondsPerLogicalPartition": 88.65747509765625,
+          "microsecondsPerPhysicalDispatch": 1418.5196015625,
+          "rssBeforeBytes": 113459200,
+          "rssAfterBytes": 125911040,
+          "peakRssBytes": 125779968,
+          "eventLoopUtilization": 0.8771865921673848,
+          "eventLoopDelayMeanMs": 3.332667076923077,
+          "eventLoopDelayMaxMs": 9.887743,
+          "maxTimerDriftMs": 8.374228000000016
+        },
+        "samples": [
+          {
+            "wallMs": 112.89800700000023,
+            "cpuMs": 325.463,
+            "cpuPercent": 288.2805539693888,
+            "machineCpuPercent": 72.0701384923472,
+            "logicalPartitions": 2048,
+            "executeMessages": 128,
+            "resultMessages": 128,
+            "microsecondsPerLogicalPartition": 55.12597998046886,
+            "microsecondsPerPhysicalDispatch": 882.0156796875018,
+            "rssBeforeBytes": 139878400,
+            "rssAfterBytes": 140664832,
+            "peakRssBytes": 140664832,
+            "eventLoopUtilization": 0.617084598235277,
+            "eventLoopDelayMeanMs": 1.5727414084507043,
+            "eventLoopDelayMaxMs": 8.347647,
+            "maxTimerDriftMs": 7.349345999999969
+          },
+          {
+            "wallMs": 111.88484699999981,
+            "cpuMs": 311.52,
+            "cpuPercent": 278.42912454445286,
+            "machineCpuPercent": 69.60728113611322,
+            "logicalPartitions": 2048,
+            "executeMessages": 128,
+            "resultMessages": 128,
+            "microsecondsPerLogicalPartition": 54.631272949218655,
+            "microsecondsPerPhysicalDispatch": 874.1003671874985,
+            "rssBeforeBytes": 140664832,
+            "rssAfterBytes": 144859136,
+            "peakRssBytes": 144334848,
+            "eventLoopUtilization": 0.575954807578124,
+            "eventLoopDelayMeanMs": 1.719812,
+            "eventLoopDelayMaxMs": 9.207807,
+            "maxTimerDriftMs": 8.06919999999991
+          },
+          {
+            "wallMs": 123.40269800000033,
+            "cpuMs": 363.828,
+            "cpuPercent": 294.82985858218353,
+            "machineCpuPercent": 73.70746464554588,
+            "logicalPartitions": 2048,
+            "executeMessages": 128,
+            "resultMessages": 128,
+            "microsecondsPerLogicalPartition": 60.25522363281266,
+            "microsecondsPerPhysicalDispatch": 964.0835781250025,
+            "rssBeforeBytes": 144859136,
+            "rssAfterBytes": 151207936,
+            "peakRssBytes": 151805952,
+            "eventLoopUtilization": 0.6605421606521589,
+            "eventLoopDelayMeanMs": 1.791262117647059,
+            "eventLoopDelayMaxMs": 7.950335,
+            "maxTimerDriftMs": 6.948485999999775
+          },
+          {
+            "wallMs": 114.6562100000001,
+            "cpuMs": 339.06,
+            "cpuPercent": 295.7188276151808,
+            "machineCpuPercent": 73.9297069037952,
+            "logicalPartitions": 2048,
+            "executeMessages": 128,
+            "resultMessages": 128,
+            "microsecondsPerLogicalPartition": 55.98447753906255,
+            "microsecondsPerPhysicalDispatch": 895.7516406250008,
+            "rssBeforeBytes": 151207936,
+            "rssAfterBytes": 159551488,
+            "peakRssBytes": 160251904,
+            "eventLoopUtilization": 0.5784881104383186,
+            "eventLoopDelayMeanMs": 1.981309754385965,
+            "eventLoopDelayMaxMs": 11.722751,
+            "maxTimerDriftMs": 8.324333000000024
+          },
+          {
+            "wallMs": 122.74041299999999,
+            "cpuMs": 365.512,
+            "cpuPercent": 297.7927082582002,
+            "machineCpuPercent": 74.44817706455005,
+            "logicalPartitions": 2048,
+            "executeMessages": 128,
+            "resultMessages": 128,
+            "microsecondsPerLogicalPartition": 59.93184228515624,
+            "microsecondsPerPhysicalDispatch": 958.9094765624999,
+            "rssBeforeBytes": 159551488,
+            "rssAfterBytes": 161259520,
+            "peakRssBytes": 161767424,
+            "eventLoopUtilization": 0.6038252415454783,
+            "eventLoopDelayMeanMs": 1.7163682253521126,
+            "eventLoopDelayMaxMs": 10.469375,
+            "maxTimerDriftMs": 9.445087000000058
+          }
+        ]
+      }
+    },
+    {
+      "name": "relationships/stable-skew-batch-16",
+      "group": "relationships",
+      "configuration": "stable-skew-batch-16",
+      "phase": 3,
+      "sequence": 8,
+      "argv": [
+        "/tmp/pjs-cross-platform-v011-K7pF48/reference/benchmarks/dispatch-efficiency/measure.mjs",
+        "{\"engine\":\"pjs-owned\",\"workers\":4,\"size\":2048,\"scale\":32,\"trials\":5,\"warmups\":2,\"name\":\"stable-skew-batch-16\",\"kind\":\"stable-skew\",\"logicalPartitions\":2048,\"batchSize\":16}"
+      ],
+      "executable": "/home/miskovy/.nvm/versions/node/v22.23.3/bin/node",
+      "contextBefore": {
+        "timestamp": "2026-10-01T10:33:00.983Z",
+        "uptimeSeconds": 181992.88,
+        "loadAverage": [
+          1.34,
+          3.06,
+          3.64
+        ],
+        "freeMemoryBytes": 2974765056,
+        "cpuMHz": [
+          1201,
+          1283,
+          1368,
+          2395
+        ],
+        "powerSource": "battery",
+        "powerProfile": null,
+        "batteries": [
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "58"
+          }
+        ],
+        "cpuFrequency": [
+          {
+            "cpu": "cpu0",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2395332",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu1",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "1901129",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu2",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2395230",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu3",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2019281",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          }
+        ],
+        "temperatures": [
+          {
+            "type": "acpitz",
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "47000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "42000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "iwlwifi_1",
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "47000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "42000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "amdgpu",
+            "label": "edge",
+            "milliCelsius": "48000"
+          },
+          {
+            "type": "k10temp",
+            "label": "Tctl",
+            "milliCelsius": "48250"
+          },
+          {
+            "type": "iwlwifi_1",
+            "label": null,
+            "milliCelsius": "39000"
+          }
+        ],
+        "powerSupplies": [
+          {
+            "name": "AC",
+            "type": "Mains",
+            "online": "0",
+            "status": null,
+            "capacityPercent": null
+          },
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "58"
+          }
+        ],
+        "memoryInfo": "MemTotal:        7534820 kB\nMemFree:          870608 kB\nMemAvailable:    2905060 kB\nBuffers:             540 kB\nCached:          2106212 kB\nSwapCached:         2088 kB\nActive:          1994060 kB\nInactive:        1754268 kB\nActive(anon):    1177348 kB\nInactive(anon):   658964 kB\nActive(file):     816712 kB\nInactive(file):  1095304 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        4779280 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              2252 kB\nWriteback:             0 kB\nAnonPages:       1640088 kB\nMapped:           655480 kB\nShmem:            195172 kB\nKReclaimable:     429860 kB\nSlab:             736228 kB\nSReclaimable:     429860 kB\nSUnreclaim:       306368 kB\nKernelStack:       17264 kB\nPageTables:        72180 kB\nSecPageTables:      3544 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   19763752 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      112916 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5084876 kB\nDirectMap2M:     2711552 kB\nDirectMap1G:     1048576 kB",
+        "backgroundProcesses": [
+          "PID COMMAND         %CPU %MEM",
+          " 126203 ps               100  0.0",
+          " 100186 code             8.4  5.1",
+          "  99903 code             7.8  1.1",
+          "  99942 code             3.8  3.1",
+          " 125747 MainThread       3.2  1.2",
+          "  99852 code             3.1  1.8",
+          " 100075 code             2.5  2.0",
+          "   1966 kwin_wayland     1.2  1.6"
+        ]
+      },
+      "contextAfter": {
+        "timestamp": "2026-10-01T10:33:04.938Z",
+        "uptimeSeconds": 181996.84,
+        "loadAverage": [
+          1.31,
+          3.02,
+          3.62
+        ],
+        "freeMemoryBytes": 3002920960,
+        "cpuMHz": [
+          2394,
+          2380,
+          2395,
+          2394
+        ],
+        "powerSource": "battery",
+        "powerProfile": null,
+        "batteries": [
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "58"
+          }
+        ],
+        "cpuFrequency": [
+          {
+            "cpu": "cpu0",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "1197554",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu1",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2389725",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu2",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "1197648",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu3",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2394734",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          }
+        ],
+        "temperatures": [
+          {
+            "type": "acpitz",
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "47000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "42000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "iwlwifi_1",
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "47000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "42000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "amdgpu",
+            "label": "edge",
+            "milliCelsius": "48000"
+          },
+          {
+            "type": "k10temp",
+            "label": "Tctl",
+            "milliCelsius": "48875"
+          },
+          {
+            "type": "iwlwifi_1",
+            "label": null,
+            "milliCelsius": "39000"
+          }
+        ],
+        "powerSupplies": [
+          {
+            "name": "AC",
+            "type": "Mains",
+            "online": "0",
+            "status": null,
+            "capacityPercent": null
+          },
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "58"
+          }
+        ],
+        "memoryInfo": "MemTotal:        7534820 kB\nMemFree:          897512 kB\nMemAvailable:    2932596 kB\nBuffers:             540 kB\nCached:          2107880 kB\nSwapCached:         2088 kB\nActive:          2002352 kB\nInactive:        1754864 kB\nActive(anon):    1185632 kB\nInactive(anon):   658936 kB\nActive(file):     816720 kB\nInactive(file):  1095928 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        4784996 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              2480 kB\nWriteback:             0 kB\nAnonPages:       1647340 kB\nMapped:           659220 kB\nShmem:            196216 kB\nKReclaimable:     429860 kB\nSlab:             736228 kB\nSReclaimable:     429860 kB\nSUnreclaim:       306368 kB\nKernelStack:       17352 kB\nPageTables:        72968 kB\nSecPageTables:      3544 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   19771400 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      112980 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5084876 kB\nDirectMap2M:     2711552 kB\nDirectMap1G:     1048576 kB",
+        "backgroundProcesses": [
+          "PID COMMAND         %CPU %MEM",
+          " 100186 code             8.4  5.1",
+          "  99903 code             7.8  1.1",
+          "  99942 code             3.8  3.1",
+          "  99852 code             3.1  1.8",
+          " 126241 postgres         2.9  0.3",
+          " 125747 MainThread       2.7  1.2",
+          " 100075 code             2.5  2.0",
+          "   1966 kwin_wayland     1.2  1.6"
+        ]
+      },
+      "durationMs": 3958.1373490000005,
+      "exitCode": 0,
+      "signal": null,
+      "stderr": "",
+      "result": {
+        "engine": "pjs-owned",
+        "workers": 4,
+        "size": 2048,
+        "scale": 32,
+        "trials": 5,
+        "warmups": 2,
+        "name": "stable-skew-batch-16",
+        "kind": "stable-skew",
+        "logicalPartitions": 2048,
+        "batchSize": 16,
+        "grainSize": 1,
+        "chunks": 2048,
+        "firstRun": {
+          "wallMs": 185.70743499999998,
+          "cpuMs": 435.666,
+          "cpuPercent": 234.59803857610763,
+          "machineCpuPercent": 58.64950964402691,
+          "logicalPartitions": 2048,
+          "executeMessages": 128,
+          "resultMessages": 128,
+          "microsecondsPerLogicalPartition": 90.67745849609373,
+          "microsecondsPerPhysicalDispatch": 1450.8393359374998,
+          "rssBeforeBytes": 113373184,
+          "rssAfterBytes": 126406656,
+          "peakRssBytes": 126406656,
+          "eventLoopUtilization": 0.8988257338004807,
+          "eventLoopDelayMeanMs": 3.3632796981132076,
+          "eventLoopDelayMaxMs": 11.132927,
+          "maxTimerDriftMs": 9.974245999999994
+        },
+        "samples": [
+          {
+            "wallMs": 120.24900700000035,
+            "cpuMs": 332.299,
+            "cpuPercent": 276.34240671941603,
+            "machineCpuPercent": 69.08560167985401,
+            "logicalPartitions": 2048,
+            "executeMessages": 128,
+            "resultMessages": 128,
+            "microsecondsPerLogicalPartition": 58.71533544921892,
+            "microsecondsPerPhysicalDispatch": 939.4453671875027,
+            "rssBeforeBytes": 141312000,
+            "rssAfterBytes": 142229504,
+            "peakRssBytes": 142229504,
+            "eventLoopUtilization": 0.6254500718173556,
+            "eventLoopDelayMeanMs": 1.884279741935484,
+            "eventLoopDelayMaxMs": 6.340607,
+            "maxTimerDriftMs": 5.6289630000001125
+          },
+          {
+            "wallMs": 105.72103800000014,
+            "cpuMs": 307.16,
+            "cpuPercent": 290.53819921821014,
+            "machineCpuPercent": 72.63454980455253,
+            "logicalPartitions": 2048,
+            "executeMessages": 128,
+            "resultMessages": 128,
+            "microsecondsPerLogicalPartition": 51.621600585937564,
+            "microsecondsPerPhysicalDispatch": 825.945609375001,
+            "rssBeforeBytes": 142229504,
+            "rssAfterBytes": 145768448,
+            "peakRssBytes": 145375232,
+            "eventLoopUtilization": 0.5576427933997729,
+            "eventLoopDelayMeanMs": 1.6027923692307693,
+            "eventLoopDelayMaxMs": 7.561215,
+            "maxTimerDriftMs": 6.562741000000187
+          },
+          {
+            "wallMs": 158.29239800000005,
+            "cpuMs": 347.684,
+            "cpuPercent": 219.64668195878863,
+            "machineCpuPercent": 54.91167048969716,
+            "logicalPartitions": 2048,
+            "executeMessages": 128,
+            "resultMessages": 128,
+            "microsecondsPerLogicalPartition": 77.29120996093752,
+            "microsecondsPerPhysicalDispatch": 1236.6593593750003,
+            "rssBeforeBytes": 145768448,
+            "rssAfterBytes": 152846336,
+            "peakRssBytes": 152584192,
+            "eventLoopUtilization": 0.6395949651330759,
+            "eventLoopDelayMeanMs": 2.164088888888889,
+            "eventLoopDelayMaxMs": 11.051007,
+            "maxTimerDriftMs": 9.931145000000015
+          },
+          {
+            "wallMs": 124.71104000000014,
+            "cpuMs": 357.746,
+            "cpuPercent": 286.85992835918904,
+            "machineCpuPercent": 71.71498208979726,
+            "logicalPartitions": 2048,
+            "executeMessages": 128,
+            "resultMessages": 128,
+            "microsecondsPerLogicalPartition": 60.89406250000007,
+            "microsecondsPerPhysicalDispatch": 974.3050000000011,
+            "rssBeforeBytes": 152846336,
+            "rssAfterBytes": 161169408,
+            "peakRssBytes": 161890304,
+            "eventLoopUtilization": 0.5802224868054939,
+            "eventLoopDelayMeanMs": 1.5417648607594936,
+            "eventLoopDelayMaxMs": 10.297343,
+            "maxTimerDriftMs": 9.12572900000032
+          },
+          {
+            "wallMs": 118.69392900000003,
+            "cpuMs": 366.643,
+            "cpuPercent": 308.89785441342997,
+            "machineCpuPercent": 77.22446360335749,
+            "logicalPartitions": 2048,
+            "executeMessages": 128,
+            "resultMessages": 128,
+            "microsecondsPerLogicalPartition": 57.956020019531266,
+            "microsecondsPerPhysicalDispatch": 927.2963203125003,
+            "rssBeforeBytes": 161169408,
+            "rssAfterBytes": 163438592,
+            "peakRssBytes": 163438592,
+            "eventLoopUtilization": 0.6688771942418296,
+            "eventLoopDelayMeanMs": 1.758632119402985,
+            "eventLoopDelayMaxMs": 10.584063,
+            "maxTimerDriftMs": 9.551038999999946
+          }
+        ]
+      }
+    },
+    {
+      "name": "relationships/coarse-skew-batch-1",
+      "group": "relationships",
+      "configuration": "coarse-skew-batch-1",
+      "phase": 0,
+      "sequence": 9,
+      "argv": [
+        "/tmp/pjs-cross-platform-v011-K7pF48/reference/benchmarks/dispatch-efficiency/measure.mjs",
+        "{\"engine\":\"pjs-owned\",\"workers\":4,\"size\":2048,\"scale\":32,\"trials\":5,\"warmups\":2,\"name\":\"coarse-skew-batch-1\",\"kind\":\"stable-skew\",\"logicalPartitions\":16,\"batchSize\":1}"
+      ],
+      "executable": "/home/miskovy/.nvm/versions/node/v22.23.3/bin/node",
+      "contextBefore": {
+        "timestamp": "2026-10-01T10:33:04.994Z",
+        "uptimeSeconds": 181996.89,
+        "loadAverage": [
+          1.31,
+          3.02,
+          3.62
+        ],
+        "freeMemoryBytes": 3003789312,
+        "cpuMHz": [
+          1196,
+          1197,
+          2395,
+          1197
+        ],
+        "powerSource": "battery",
+        "powerProfile": null,
+        "batteries": [
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "58"
+          }
+        ],
+        "cpuFrequency": [
+          {
+            "cpu": "cpu0",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "1991229",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu1",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "1712005",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu2",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "1197599",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu3",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2393813",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          }
+        ],
+        "temperatures": [
+          {
+            "type": "acpitz",
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "47000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "42000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "iwlwifi_1",
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "47000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "42000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "amdgpu",
+            "label": "edge",
+            "milliCelsius": "48000"
+          },
+          {
+            "type": "k10temp",
+            "label": "Tctl",
+            "milliCelsius": "48875"
+          },
+          {
+            "type": "iwlwifi_1",
+            "label": null,
+            "milliCelsius": "39000"
+          }
+        ],
+        "powerSupplies": [
+          {
+            "name": "AC",
+            "type": "Mains",
+            "online": "0",
+            "status": null,
+            "capacityPercent": null
+          },
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "58"
+          }
+        ],
+        "memoryInfo": "MemTotal:        7534820 kB\nMemFree:          898304 kB\nMemAvailable:    2933404 kB\nBuffers:             540 kB\nCached:          2107896 kB\nSwapCached:         2088 kB\nActive:          2002196 kB\nInactive:        1754880 kB\nActive(anon):    1185476 kB\nInactive(anon):   658936 kB\nActive(file):     816720 kB\nInactive(file):  1095944 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        4784996 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              2480 kB\nWriteback:             0 kB\nAnonPages:       1647204 kB\nMapped:           659136 kB\nShmem:            196216 kB\nKReclaimable:     429860 kB\nSlab:             736228 kB\nSReclaimable:     429860 kB\nSUnreclaim:       306368 kB\nKernelStack:       17312 kB\nPageTables:        72660 kB\nSecPageTables:      3544 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   19771400 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      112948 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5084876 kB\nDirectMap2M:     2711552 kB\nDirectMap1G:     1048576 kB",
+        "backgroundProcesses": [
+          "PID COMMAND         %CPU %MEM",
+          " 126246 ps               100  0.0",
+          " 100186 code             8.4  5.1",
+          "  99903 code             7.8  1.1",
+          "  99942 code             3.8  3.1",
+          "  99852 code             3.1  1.8",
+          " 125747 MainThread       2.8  1.2",
+          " 126241 postgres         2.7  0.3",
+          " 100075 code             2.5  2.0"
+        ]
+      },
+      "contextAfter": {
+        "timestamp": "2026-10-01T10:33:10.493Z",
+        "uptimeSeconds": 182002.39,
+        "loadAverage": [
+          1.36,
+          3.01,
+          3.62
+        ],
+        "freeMemoryBytes": 3059105792,
+        "cpuMHz": [
+          2394,
+          2387,
+          2395,
+          2394
+        ],
+        "powerSource": "battery",
+        "powerProfile": null,
+        "batteries": [
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "58"
+          }
+        ],
+        "cpuFrequency": [
+          {
+            "cpu": "cpu0",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2397921",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu1",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2388156",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu2",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2395322",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu3",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "1196595",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          }
+        ],
+        "temperatures": [
+          {
+            "type": "acpitz",
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "47000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "42000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "iwlwifi_1",
+            "milliCelsius": "38000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "47000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "42000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "amdgpu",
+            "label": "edge",
+            "milliCelsius": "47000"
+          },
+          {
+            "type": "k10temp",
+            "label": "Tctl",
+            "milliCelsius": "47500"
+          },
+          {
+            "type": "iwlwifi_1",
+            "label": null,
+            "milliCelsius": "38000"
+          }
+        ],
+        "powerSupplies": [
+          {
+            "name": "AC",
+            "type": "Mains",
+            "online": "0",
+            "status": null,
+            "capacityPercent": null
+          },
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "58"
+          }
+        ],
+        "memoryInfo": "MemTotal:        7534820 kB\nMemFree:          950028 kB\nMemAvailable:    2987484 kB\nBuffers:             540 kB\nCached:          2110296 kB\nSwapCached:         2088 kB\nActive:          2002788 kB\nInactive:        1754916 kB\nActive(anon):    1183760 kB\nInactive(anon):   658924 kB\nActive(file):     819028 kB\nInactive(file):  1095992 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        4785132 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              1412 kB\nWriteback:             0 kB\nAnonPages:       1645480 kB\nMapped:           659644 kB\nShmem:            196244 kB\nKReclaimable:     429860 kB\nSlab:             736228 kB\nSReclaimable:     429860 kB\nSUnreclaim:       306368 kB\nKernelStack:       17224 kB\nPageTables:        72900 kB\nSecPageTables:      3544 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   19685880 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      112868 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5084876 kB\nDirectMap2M:     2711552 kB\nDirectMap1G:     1048576 kB",
+        "backgroundProcesses": [
+          "PID COMMAND         %CPU %MEM",
+          " 126291 ps               100  0.0",
+          " 100186 code             8.4  5.1",
+          "  99903 code             7.8  1.1",
+          "  99942 code             3.8  3.1",
+          "  99852 code             3.1  1.8",
+          " 100075 code             2.5  2.0",
+          " 125747 MainThread       2.3  1.2",
+          "   1966 kwin_wayland     1.2  1.6"
+        ]
+      },
+      "durationMs": 5499.497983000001,
+      "exitCode": 0,
+      "signal": null,
+      "stderr": "",
+      "result": {
+        "engine": "pjs-owned",
+        "workers": 4,
+        "size": 2048,
+        "scale": 32,
+        "trials": 5,
+        "warmups": 2,
+        "name": "coarse-skew-batch-1",
+        "kind": "stable-skew",
+        "logicalPartitions": 16,
+        "batchSize": 1,
+        "grainSize": 128,
+        "chunks": 16,
+        "firstRun": {
+          "wallMs": 167.022087,
+          "cpuMs": 512.052,
+          "cpuPercent": 306.5774169137283,
+          "machineCpuPercent": 76.64435422843208,
+          "logicalPartitions": 16,
+          "executeMessages": 16,
+          "resultMessages": 16,
+          "microsecondsPerLogicalPartition": 10438.8804375,
+          "microsecondsPerPhysicalDispatch": 10438.8804375,
+          "rssBeforeBytes": 113397760,
+          "rssAfterBytes": 115290112,
+          "peakRssBytes": 115290112,
+          "eventLoopUtilization": 0.13789358928692882,
+          "eventLoopDelayMeanMs": 1.228809696969697,
+          "eventLoopDelayMaxMs": 4.030463,
+          "maxTimerDriftMs": 3.004410000000007
+        },
+        "samples": [
+          {
+            "wallMs": 116.89750600000025,
+            "cpuMs": 368.512,
+            "cpuPercent": 315.24368022017444,
+            "machineCpuPercent": 78.81092005504361,
+            "logicalPartitions": 16,
+            "executeMessages": 16,
+            "resultMessages": 16,
+            "microsecondsPerLogicalPartition": 7306.094125000016,
+            "microsecondsPerPhysicalDispatch": 7306.094125000016,
+            "rssBeforeBytes": 116338688,
+            "rssAfterBytes": 116600832,
+            "peakRssBytes": 116600832,
+            "eventLoopUtilization": 0.09774217635615363,
+            "eventLoopDelayMeanMs": 1.1525888,
+            "eventLoopDelayMaxMs": 4.702207,
+            "maxTimerDriftMs": 3.5411510000003545
+          },
+          {
+            "wallMs": 150.83654800000022,
+            "cpuMs": 410.988,
+            "cpuPercent": 272.4724249191909,
+            "machineCpuPercent": 68.11810622979773,
+            "logicalPartitions": 16,
+            "executeMessages": 16,
+            "resultMessages": 16,
+            "microsecondsPerLogicalPartition": 9427.284250000013,
+            "microsecondsPerPhysicalDispatch": 9427.284250000013,
+            "rssBeforeBytes": 116600832,
+            "rssAfterBytes": 116731904,
+            "peakRssBytes": 116731904,
+            "eventLoopUtilization": 0.08818090797966885,
+            "eventLoopDelayMeanMs": 1.1473762461538461,
+            "eventLoopDelayMaxMs": 3.330047,
+            "maxTimerDriftMs": 2.346190999999635
+          },
+          {
+            "wallMs": 142.09814300000016,
+            "cpuMs": 411.778,
+            "cpuPercent": 289.78422328854754,
+            "machineCpuPercent": 72.44605582213688,
+            "logicalPartitions": 16,
+            "executeMessages": 16,
+            "resultMessages": 16,
+            "microsecondsPerLogicalPartition": 8881.13393750001,
+            "microsecondsPerPhysicalDispatch": 8881.13393750001,
+            "rssBeforeBytes": 116731904,
+            "rssAfterBytes": 116862976,
+            "peakRssBytes": 116862976,
+            "eventLoopUtilization": 0.08371700251341922,
+            "eventLoopDelayMeanMs": 1.110800125984252,
+            "eventLoopDelayMaxMs": 3.872767,
+            "maxTimerDriftMs": 2.868615000000318
+          },
+          {
+            "wallMs": 155.20766000000003,
+            "cpuMs": 410.637,
+            "cpuPercent": 264.5726377164632,
+            "machineCpuPercent": 66.1431594291158,
+            "logicalPartitions": 16,
+            "executeMessages": 16,
+            "resultMessages": 16,
+            "microsecondsPerLogicalPartition": 9700.478750000002,
+            "microsecondsPerPhysicalDispatch": 9700.478750000002,
+            "rssBeforeBytes": 116862976,
+            "rssAfterBytes": 117649408,
+            "peakRssBytes": 117649408,
+            "eventLoopUtilization": 0.08925408193605365,
+            "eventLoopDelayMeanMs": 1.1462973134328358,
+            "eventLoopDelayMaxMs": 3.198975,
+            "maxTimerDriftMs": 2.1886640000002444
+          },
+          {
+            "wallMs": 107.95635800000036,
+            "cpuMs": 368.391,
+            "cpuPercent": 341.24067060505945,
+            "machineCpuPercent": 85.31016765126486,
+            "logicalPartitions": 16,
+            "executeMessages": 16,
+            "resultMessages": 16,
+            "microsecondsPerLogicalPartition": 6747.272375000022,
+            "microsecondsPerPhysicalDispatch": 6747.272375000022,
+            "rssBeforeBytes": 117649408,
+            "rssAfterBytes": 118042624,
+            "peakRssBytes": 118042624,
+            "eventLoopUtilization": 0.10334610729931437,
+            "eventLoopDelayMeanMs": 1.123144757894737,
+            "eventLoopDelayMaxMs": 3.887103,
+            "maxTimerDriftMs": 2.8860479999993913
+          }
+        ]
+      }
+    },
+    {
+      "name": "relationships/coarse-skew-batch-1",
+      "group": "relationships",
+      "configuration": "coarse-skew-batch-1",
+      "phase": 3,
+      "sequence": 12,
+      "argv": [
+        "/tmp/pjs-cross-platform-v011-K7pF48/reference/benchmarks/dispatch-efficiency/measure.mjs",
+        "{\"engine\":\"pjs-owned\",\"workers\":4,\"size\":2048,\"scale\":32,\"trials\":5,\"warmups\":2,\"name\":\"coarse-skew-batch-1\",\"kind\":\"stable-skew\",\"logicalPartitions\":16,\"batchSize\":1}"
+      ],
+      "executable": "/home/miskovy/.nvm/versions/node/v22.23.3/bin/node",
+      "contextBefore": {
+        "timestamp": "2026-10-01T10:48:08.687Z",
+        "uptimeSeconds": 182900.59,
+        "loadAverage": [
+          2.39,
+          3.14,
+          3.65
+        ],
+        "freeMemoryBytes": 3047661568,
+        "cpuMHz": [
+          2395,
+          2393,
+          1197,
+          1197
+        ],
+        "powerSource": "battery",
+        "powerProfile": null,
+        "batteries": [
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "57"
+          }
+        ],
+        "cpuFrequency": [
+          {
+            "cpu": "cpu0",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2394964",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu1",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2391349",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu2",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2395323",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu3",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2394486",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          }
+        ],
+        "temperatures": [
+          {
+            "type": "acpitz",
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "47000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "42000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "iwlwifi_1",
+            "milliCelsius": "34000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "47000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "39000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "42000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "amdgpu",
+            "label": "edge",
+            "milliCelsius": "38000"
+          },
+          {
+            "type": "k10temp",
+            "label": "Tctl",
+            "milliCelsius": "38250"
+          },
+          {
+            "type": "iwlwifi_1",
+            "label": null,
+            "milliCelsius": "34000"
+          }
+        ],
+        "powerSupplies": [
+          {
+            "name": "AC",
+            "type": "Mains",
+            "online": "0",
+            "status": null,
+            "capacityPercent": null
+          },
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "57"
+          }
+        ],
+        "memoryInfo": "MemTotal:        7534820 kB\nMemFree:          835124 kB\nMemAvailable:    2976168 kB\nBuffers:             540 kB\nCached:          2195868 kB\nSwapCached:         2428 kB\nActive:          1967700 kB\nInactive:        1938592 kB\nActive(anon):    1090620 kB\nInactive(anon):   801064 kB\nActive(file):     877080 kB\nInactive(file):  1137528 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        4788200 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              2824 kB\nWriteback:             0 kB\nAnonPages:       1708676 kB\nMapped:           701336 kB\nShmem:            182296 kB\nKReclaimable:     429764 kB\nSlab:             735272 kB\nSReclaimable:     429764 kB\nSUnreclaim:       305508 kB\nKernelStack:       18444 kB\nPageTables:        74916 kB\nSecPageTables:      3560 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   20091120 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      114080 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5084876 kB\nDirectMap2M:     2711552 kB\nDirectMap1G:     1048576 kB",
+        "backgroundProcesses": [
+          "PID COMMAND         %CPU %MEM",
+          " 126557 ps               200  0.0",
+          " 126492 (udev-worker)    6.0  0.1",
+          " 100186 code             5.7  5.2",
+          "  99903 code             5.3  1.1",
+          " 126483 systemd-rfkill   3.9  0.0",
+          "  99942 code             2.6  3.1",
+          "  99852 code             2.1  1.8",
+          " 100075 code             1.7  2.0"
+        ]
+      },
+      "contextAfter": {
+        "timestamp": "2026-10-01T10:48:14.765Z",
+        "uptimeSeconds": 182906.66,
+        "loadAverage": [
+          2.35,
+          3.12,
+          3.64
+        ],
+        "freeMemoryBytes": 2962800640,
+        "cpuMHz": [
+          2394,
+          2394,
+          2395,
+          2394
+        ],
+        "powerSource": "battery",
+        "powerProfile": null,
+        "batteries": [
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "57"
+          }
+        ],
+        "cpuFrequency": [
+          {
+            "cpu": "cpu0",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "1197635",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu1",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2395117",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu2",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "1222084",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu3",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2394930",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          }
+        ],
+        "temperatures": [
+          {
+            "type": "acpitz",
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "13000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "iwlwifi_1",
+            "milliCelsius": "36000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "13000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "amdgpu",
+            "label": "edge",
+            "milliCelsius": "40000"
+          },
+          {
+            "type": "k10temp",
+            "label": "Tctl",
+            "milliCelsius": "40875"
+          },
+          {
+            "type": "iwlwifi_1",
+            "label": null,
+            "milliCelsius": "36000"
+          }
+        ],
+        "powerSupplies": [
+          {
+            "name": "AC",
+            "type": "Mains",
+            "online": "0",
+            "status": null,
+            "capacityPercent": null
+          },
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "57"
+          }
+        ],
+        "memoryInfo": "MemTotal:        7534820 kB\nMemFree:          896180 kB\nMemAvailable:    2893480 kB\nBuffers:             540 kB\nCached:          2061420 kB\nSwapCached:         2444 kB\nActive:          1986560 kB\nInactive:        1854300 kB\nActive(anon):    1163296 kB\nInactive(anon):   804776 kB\nActive(file):     823264 kB\nInactive(file):  1049524 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        4808424 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              5068 kB\nWriteback:             0 kB\nAnonPages:       1777664 kB\nMapped:           684772 kB\nShmem:            189668 kB\nKReclaimable:     427840 kB\nSlab:             734048 kB\nSReclaimable:     427840 kB\nSUnreclaim:       306208 kB\nKernelStack:       18808 kB\nPageTables:        75380 kB\nSecPageTables:      3560 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   20377352 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      114484 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5084876 kB\nDirectMap2M:     2711552 kB\nDirectMap1G:     1048576 kB",
+        "backgroundProcesses": [
+          "PID COMMAND         %CPU %MEM",
+          " 100186 code             5.7  5.3",
+          "  99903 code             5.3  1.1",
+          " 126616 fprintd          2.6  0.1",
+          "  99942 code             2.5  3.2",
+          "  99852 code             2.1  1.8",
+          " 100075 code             1.7  2.2",
+          "   1966 kwin_wayland     1.2  1.6",
+          " 126492 (udev-worker)    1.2  0.1"
+        ]
+      },
+      "durationMs": 6085.024081999996,
+      "exitCode": 0,
+      "signal": null,
+      "stderr": "",
+      "result": {
+        "engine": "pjs-owned",
+        "workers": 4,
+        "size": 2048,
+        "scale": 32,
+        "trials": 5,
+        "warmups": 2,
+        "name": "coarse-skew-batch-1",
+        "kind": "stable-skew",
+        "logicalPartitions": 16,
+        "batchSize": 1,
+        "grainSize": 128,
+        "chunks": 16,
+        "firstRun": {
+          "wallMs": 220.94771799999995,
+          "cpuMs": 509.412,
+          "cpuPercent": 230.5577104896825,
+          "machineCpuPercent": 57.63942762242063,
+          "logicalPartitions": 16,
+          "executeMessages": 16,
+          "resultMessages": 16,
+          "microsecondsPerLogicalPartition": 13809.232374999998,
+          "microsecondsPerPhysicalDispatch": 13809.232374999998,
+          "rssBeforeBytes": 112893952,
+          "rssAfterBytes": 116068352,
+          "peakRssBytes": 116068352,
+          "eventLoopUtilization": 0.2959710676156658,
+          "eventLoopDelayMeanMs": 2.3079215824175825,
+          "eventLoopDelayMaxMs": 29.409279,
+          "maxTimerDriftMs": 28.180230999999992
+        },
+        "samples": [
+          {
+            "wallMs": 119.50972500000034,
+            "cpuMs": 378.657,
+            "cpuPercent": 316.84199758638795,
+            "machineCpuPercent": 79.21049939659699,
+            "logicalPartitions": 16,
+            "executeMessages": 16,
+            "resultMessages": 16,
+            "microsecondsPerLogicalPartition": 7469.357812500021,
+            "microsecondsPerPhysicalDispatch": 7469.357812500021,
+            "rssBeforeBytes": 116985856,
+            "rssAfterBytes": 117379072,
+            "peakRssBytes": 117379072,
+            "eventLoopUtilization": 0.1235430942035996,
+            "eventLoopDelayMeanMs": 1.1882511515151517,
+            "eventLoopDelayMaxMs": 5.177343,
+            "maxTimerDriftMs": 2.8008169999998245
+          },
+          {
+            "wallMs": 135.20413999999982,
+            "cpuMs": 401.014,
+            "cpuPercent": 296.5989059210765,
+            "machineCpuPercent": 74.14972648026912,
+            "logicalPartitions": 16,
+            "executeMessages": 16,
+            "resultMessages": 16,
+            "microsecondsPerLogicalPartition": 8450.25874999999,
+            "microsecondsPerPhysicalDispatch": 8450.25874999999,
+            "rssBeforeBytes": 117379072,
+            "rssAfterBytes": 117510144,
+            "peakRssBytes": 117510144,
+            "eventLoopUtilization": 0.05690976078105382,
+            "eventLoopDelayMeanMs": 1.0848454876033058,
+            "eventLoopDelayMaxMs": 2.695167,
+            "maxTimerDriftMs": 2.3253819999999905
+          },
+          {
+            "wallMs": 139.00183100000004,
+            "cpuMs": 402.669,
+            "cpuPercent": 289.6861121203503,
+            "machineCpuPercent": 72.42152803008757,
+            "logicalPartitions": 16,
+            "executeMessages": 16,
+            "resultMessages": 16,
+            "microsecondsPerLogicalPartition": 8687.614437500002,
+            "microsecondsPerPhysicalDispatch": 8687.614437500002,
+            "rssBeforeBytes": 117510144,
+            "rssAfterBytes": 117772288,
+            "peakRssBytes": 117772288,
+            "eventLoopUtilization": 0.06592573623535107,
+            "eventLoopDelayMeanMs": 1.1250423606557378,
+            "eventLoopDelayMaxMs": 3.745791,
+            "maxTimerDriftMs": 2.652266999999938
+          },
+          {
+            "wallMs": 163.58256099999926,
+            "cpuMs": 383.957,
+            "cpuPercent": 234.71756258908414,
+            "machineCpuPercent": 58.679390647271035,
+            "logicalPartitions": 16,
+            "executeMessages": 16,
+            "resultMessages": 16,
+            "microsecondsPerLogicalPartition": 10223.910062499954,
+            "microsecondsPerPhysicalDispatch": 10223.910062499954,
+            "rssBeforeBytes": 117772288,
+            "rssAfterBytes": 118165504,
+            "peakRssBytes": 118165504,
+            "eventLoopUtilization": 0.14178352671618097,
+            "eventLoopDelayMeanMs": 1.286731776,
+            "eventLoopDelayMaxMs": 2.983935,
+            "maxTimerDriftMs": 2.0222610000000714
+          },
+          {
+            "wallMs": 260.8069489999998,
+            "cpuMs": 412.639,
+            "cpuPercent": 158.21625979758704,
+            "machineCpuPercent": 39.55406494939676,
+            "logicalPartitions": 16,
+            "executeMessages": 16,
+            "resultMessages": 16,
+            "microsecondsPerLogicalPartition": 16300.434312499987,
+            "microsecondsPerPhysicalDispatch": 16300.434312499987,
+            "rssBeforeBytes": 118165504,
+            "rssAfterBytes": 118689792,
+            "peakRssBytes": 118689792,
+            "eventLoopUtilization": 0.14202007596940314,
+            "eventLoopDelayMeanMs": 1.5733170424242424,
+            "eventLoopDelayMaxMs": 7.458815,
+            "maxTimerDriftMs": 6.42359899999974
+          }
+        ]
+      }
+    },
+    {
+      "name": "relationships/coarse-skew-batch-16",
+      "group": "relationships",
+      "configuration": "coarse-skew-batch-16",
+      "phase": 0,
+      "sequence": 13,
+      "argv": [
+        "/tmp/pjs-cross-platform-v011-K7pF48/reference/benchmarks/dispatch-efficiency/measure.mjs",
+        "{\"engine\":\"pjs-owned\",\"workers\":4,\"size\":2048,\"scale\":32,\"trials\":5,\"warmups\":2,\"name\":\"coarse-skew-batch-16\",\"kind\":\"stable-skew\",\"logicalPartitions\":16,\"batchSize\":16}"
+      ],
+      "executable": "/home/miskovy/.nvm/versions/node/v22.23.3/bin/node",
+      "contextBefore": {
+        "timestamp": "2026-10-01T10:48:14.838Z",
+        "uptimeSeconds": 182906.74,
+        "loadAverage": [
+          2.35,
+          3.12,
+          3.64
+        ],
+        "freeMemoryBytes": 2963353600,
+        "cpuMHz": [
+          1273,
+          2395,
+          1197,
+          1197
+        ],
+        "powerSource": "battery",
+        "powerProfile": null,
+        "batteries": [
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "57"
+          }
+        ],
+        "cpuFrequency": [
+          {
+            "cpu": "cpu0",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "1197285",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu1",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "1700000",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu2",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2395650",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu3",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "1197538",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          }
+        ],
+        "temperatures": [
+          {
+            "type": "acpitz",
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "13000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "iwlwifi_1",
+            "milliCelsius": "36000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "13000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "amdgpu",
+            "label": "edge",
+            "milliCelsius": "41000"
+          },
+          {
+            "type": "k10temp",
+            "label": "Tctl",
+            "milliCelsius": "41000"
+          },
+          {
+            "type": "iwlwifi_1",
+            "label": null,
+            "milliCelsius": "36000"
+          }
+        ],
+        "powerSupplies": [
+          {
+            "name": "AC",
+            "type": "Mains",
+            "online": "0",
+            "status": null,
+            "capacityPercent": null
+          },
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "57"
+          }
+        ],
+        "memoryInfo": "MemTotal:        7534820 kB\nMemFree:          896480 kB\nMemAvailable:    2893968 kB\nBuffers:             540 kB\nCached:          2061608 kB\nSwapCached:         2444 kB\nActive:          1987244 kB\nInactive:        1854452 kB\nActive(anon):    1163944 kB\nInactive(anon):   804776 kB\nActive(file):     823300 kB\nInactive(file):  1049676 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        4808424 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              5208 kB\nWriteback:             0 kB\nAnonPages:       1778292 kB\nMapped:           684716 kB\nShmem:            189668 kB\nKReclaimable:     427840 kB\nSlab:             734044 kB\nSReclaimable:     427840 kB\nSUnreclaim:       306204 kB\nKernelStack:       18772 kB\nPageTables:        75356 kB\nSecPageTables:      3560 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   20377640 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      114468 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5084876 kB\nDirectMap2M:     2711552 kB\nDirectMap1G:     1048576 kB",
+        "backgroundProcesses": [
+          "PID COMMAND         %CPU %MEM",
+          " 126723 ps               100  0.0",
+          " 100186 code             5.7  5.3",
+          "  99903 code             5.3  1.1",
+          " 126616 fprintd          2.6  0.1",
+          "  99942 code             2.5  3.2",
+          "  99852 code             2.1  1.8",
+          " 100075 code             1.7  2.2",
+          "   1966 kwin_wayland     1.2  1.6"
+        ]
+      },
+      "contextAfter": {
+        "timestamp": "2026-10-01T10:48:21.320Z",
+        "uptimeSeconds": 182913.22,
+        "loadAverage": [
+          2.81,
+          3.2,
+          3.66
+        ],
+        "freeMemoryBytes": 3016970240,
+        "cpuMHz": [
+          2394,
+          2394,
+          2394,
+          2393
+        ],
+        "powerSource": "battery",
+        "powerProfile": null,
+        "batteries": [
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "57"
+          }
+        ],
+        "cpuFrequency": [
+          {
+            "cpu": "cpu0",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "1230069",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu1",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2392463",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu2",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "1821541",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu3",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2395020",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          }
+        ],
+        "temperatures": [
+          {
+            "type": "acpitz",
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "34000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "iwlwifi_1",
+            "milliCelsius": "37000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "34000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "amdgpu",
+            "label": "edge",
+            "milliCelsius": "42000"
+          },
+          {
+            "type": "k10temp",
+            "label": "Tctl",
+            "milliCelsius": "42500"
+          },
+          {
+            "type": "iwlwifi_1",
+            "label": null,
+            "milliCelsius": "37000"
+          }
+        ],
+        "powerSupplies": [
+          {
+            "name": "AC",
+            "type": "Mains",
+            "online": "0",
+            "status": null,
+            "capacityPercent": null
+          },
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "57"
+          }
+        ],
+        "memoryInfo": "MemTotal:        7534820 kB\nMemFree:          994476 kB\nMemAvailable:    2946260 kB\nBuffers:             540 kB\nCached:          2019144 kB\nSwapCached:         2432 kB\nActive:          2073572 kB\nInactive:        1744664 kB\nActive(anon):    1209436 kB\nInactive(anon):   781540 kB\nActive(file):     864136 kB\nInactive(file):   963124 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        4811712 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              6112 kB\nWriteback:             0 kB\nAnonPages:       1796896 kB\nMapped:           642544 kB\nShmem:            192876 kB\nKReclaimable:     427852 kB\nSlab:             733512 kB\nSReclaimable:     427852 kB\nSUnreclaim:       305660 kB\nKernelStack:       18412 kB\nPageTables:        73164 kB\nSecPageTables:      3560 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   20005104 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      114136 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5084876 kB\nDirectMap2M:     2711552 kB\nDirectMap1G:     1048576 kB",
+        "backgroundProcesses": [
+          "PID COMMAND         %CPU %MEM",
+          " 126883 ps               200  0.0",
+          " 100186 code             5.9  6.1",
+          "  99903 code             5.3  1.1",
+          "  99942 code             2.6  3.3",
+          "  99852 code             2.1  1.8",
+          " 100075 code             1.8  2.5",
+          "   1966 kwin_wayland     1.2  1.6",
+          " 126616 fprintd          1.0  0.1"
+        ]
+      },
+      "durationMs": 6487.821674999999,
+      "exitCode": 0,
+      "signal": null,
+      "stderr": "",
+      "result": {
+        "engine": "pjs-owned",
+        "workers": 4,
+        "size": 2048,
+        "scale": 32,
+        "trials": 5,
+        "warmups": 2,
+        "name": "coarse-skew-batch-16",
+        "kind": "stable-skew",
+        "logicalPartitions": 16,
+        "batchSize": 16,
+        "grainSize": 128,
+        "chunks": 16,
+        "firstRun": {
+          "wallMs": 217.919754,
+          "cpuMs": 234.597,
+          "cpuPercent": 107.6529298945519,
+          "machineCpuPercent": 26.913232473637976,
+          "logicalPartitions": 16,
+          "executeMessages": 1,
+          "resultMessages": 1,
+          "microsecondsPerLogicalPartition": 13619.984625000001,
+          "microsecondsPerPhysicalDispatch": 217919.75400000002,
+          "rssBeforeBytes": 113074176,
+          "rssAfterBytes": 114122752,
+          "peakRssBytes": 113467392,
+          "eventLoopUtilization": 0.1134231381936628,
+          "eventLoopDelayMeanMs": 1.2039827976878614,
+          "eventLoopDelayMaxMs": 5.033983,
+          "maxTimerDriftMs": 3.685241999999988
+        },
+        "samples": [
+          {
+            "wallMs": 198.7312810000003,
+            "cpuMs": 212.664,
+            "cpuPercent": 107.01083338762338,
+            "machineCpuPercent": 26.752708346905845,
+            "logicalPartitions": 16,
+            "executeMessages": 1,
+            "resultMessages": 1,
+            "microsecondsPerLogicalPartition": 12420.70506250002,
+            "microsecondsPerPhysicalDispatch": 198731.2810000003,
+            "rssBeforeBytes": 114384896,
+            "rssAfterBytes": 114384896,
+            "peakRssBytes": 114384896,
+            "eventLoopUtilization": 0.15804126116031908,
+            "eventLoopDelayMeanMs": 1.2441648607594937,
+            "eventLoopDelayMaxMs": 4.317183,
+            "maxTimerDriftMs": 2.478791000000001
+          },
+          {
+            "wallMs": 220.595417,
+            "cpuMs": 220.507,
+            "cpuPercent": 99.95991893158869,
+            "machineCpuPercent": 24.989979732897172,
+            "logicalPartitions": 16,
+            "executeMessages": 1,
+            "resultMessages": 1,
+            "microsecondsPerLogicalPartition": 13787.2135625,
+            "microsecondsPerPhysicalDispatch": 220595.417,
+            "rssBeforeBytes": 114384896,
+            "rssAfterBytes": 114647040,
+            "peakRssBytes": 114647040,
+            "eventLoopUtilization": 0.21374765634602094,
+            "eventLoopDelayMeanMs": 1.4626791946308724,
+            "eventLoopDelayMaxMs": 12.582911,
+            "maxTimerDriftMs": 8.284232999999858
+          },
+          {
+            "wallMs": 203.21028800000022,
+            "cpuMs": 219.128,
+            "cpuPercent": 107.83312309463375,
+            "machineCpuPercent": 26.958280773658437,
+            "logicalPartitions": 16,
+            "executeMessages": 1,
+            "resultMessages": 1,
+            "microsecondsPerLogicalPartition": 12700.643000000015,
+            "microsecondsPerPhysicalDispatch": 203210.28800000023,
+            "rssBeforeBytes": 114647040,
+            "rssAfterBytes": 115040256,
+            "peakRssBytes": 115040256,
+            "eventLoopUtilization": 0.18213930712466242,
+            "eventLoopDelayMeanMs": 1.3976142222222223,
+            "eventLoopDelayMaxMs": 5.017599,
+            "maxTimerDriftMs": 3.847685000000638
+          },
+          {
+            "wallMs": 239.98411399999986,
+            "cpuMs": 224.519,
+            "cpuPercent": 93.55577594606956,
+            "machineCpuPercent": 23.38894398651739,
+            "logicalPartitions": 16,
+            "executeMessages": 1,
+            "resultMessages": 1,
+            "microsecondsPerLogicalPartition": 14999.007124999991,
+            "microsecondsPerPhysicalDispatch": 239984.11399999986,
+            "rssBeforeBytes": 115040256,
+            "rssAfterBytes": 115171328,
+            "peakRssBytes": 115171328,
+            "eventLoopUtilization": 0.20600092363700168,
+            "eventLoopDelayMeanMs": 1.4950673710691824,
+            "eventLoopDelayMaxMs": 11.083775,
+            "maxTimerDriftMs": 10.008200000000215
+          },
+          {
+            "wallMs": 195.45049999999992,
+            "cpuMs": 215.645,
+            "cpuPercent": 110.33228362168433,
+            "machineCpuPercent": 27.58307090542108,
+            "logicalPartitions": 16,
+            "executeMessages": 1,
+            "resultMessages": 1,
+            "microsecondsPerLogicalPartition": 12215.656249999995,
+            "microsecondsPerPhysicalDispatch": 195450.4999999999,
+            "rssBeforeBytes": 115171328,
+            "rssAfterBytes": 115417088,
+            "peakRssBytes": 115417088,
+            "eventLoopUtilization": 0.15458224534535853,
+            "eventLoopDelayMeanMs": 1.3296463448275864,
+            "eventLoopDelayMaxMs": 3.432447,
+            "maxTimerDriftMs": 2.412296999999853
+          }
+        ]
+      }
+    },
+    {
+      "name": "relationships/coarse-skew-batch-16",
+      "group": "relationships",
+      "configuration": "coarse-skew-batch-16",
+      "phase": 3,
+      "sequence": 16,
+      "argv": [
+        "/tmp/pjs-cross-platform-v011-K7pF48/reference/benchmarks/dispatch-efficiency/measure.mjs",
+        "{\"engine\":\"pjs-owned\",\"workers\":4,\"size\":2048,\"scale\":32,\"trials\":5,\"warmups\":2,\"name\":\"coarse-skew-batch-16\",\"kind\":\"stable-skew\",\"logicalPartitions\":16,\"batchSize\":16}"
+      ],
+      "executable": "/home/miskovy/.nvm/versions/node/v22.23.3/bin/node",
+      "contextBefore": {
+        "timestamp": "2026-10-01T10:48:40.330Z",
+        "uptimeSeconds": 182932.23,
+        "loadAverage": [
+          3,
+          3.23,
+          3.66
+        ],
+        "freeMemoryBytes": 2957635584,
+        "cpuMHz": [
+          2393,
+          2391,
+          1197,
+          2394
+        ],
+        "powerSource": "battery",
+        "powerProfile": null,
+        "batteries": [
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "57"
+          }
+        ],
+        "cpuFrequency": [
+          {
+            "cpu": "cpu0",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2395127",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu1",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2390990",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu2",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "1197623",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu3",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2393299",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          }
+        ],
+        "temperatures": [
+          {
+            "type": "acpitz",
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "41000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "35000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "31000"
+          },
+          {
+            "type": "iwlwifi_1",
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "41000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "35000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "31000"
+          },
+          {
+            "type": "amdgpu",
+            "label": "edge",
+            "milliCelsius": "42000"
+          },
+          {
+            "type": "k10temp",
+            "label": "Tctl",
+            "milliCelsius": "42375"
+          },
+          {
+            "type": "iwlwifi_1",
+            "label": null,
+            "milliCelsius": "33000"
+          }
+        ],
+        "powerSupplies": [
+          {
+            "name": "AC",
+            "type": "Mains",
+            "online": "0",
+            "status": null,
+            "capacityPercent": null
+          },
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "57"
+          }
+        ],
+        "memoryInfo": "MemTotal:        7534820 kB\nMemFree:          928464 kB\nMemAvailable:    2888316 kB\nBuffers:             540 kB\nCached:          2024188 kB\nSwapCached:         2432 kB\nActive:          2052040 kB\nInactive:        1735268 kB\nActive(anon):    1182684 kB\nInactive(anon):   769248 kB\nActive(file):     869356 kB\nInactive(file):   966020 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        4812468 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              1724 kB\nWriteback:           176 kB\nAnonPages:       1760732 kB\nMapped:           644068 kB\nShmem:            189800 kB\nKReclaimable:     427804 kB\nSlab:             733320 kB\nSReclaimable:     427804 kB\nSUnreclaim:       305516 kB\nKernelStack:       17984 kB\nPageTables:        72728 kB\nSecPageTables:      3560 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   19763492 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      113748 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5084876 kB\nDirectMap2M:     2711552 kB\nDirectMap1G:     1048576 kB",
+        "backgroundProcesses": [
+          "PID COMMAND         %CPU %MEM",
+          " 100186 code             5.9  6.1",
+          "  99903 code             5.4  1.1",
+          "  99942 code             2.6  2.9",
+          "  99852 code             2.1  1.8",
+          " 100075 code             1.8  2.4",
+          "   1966 kwin_wayland     1.2  1.6",
+          " 100100 code             0.8  0.9",
+          " 100198 codex            0.6  1.8"
+        ]
+      },
+      "contextAfter": {
+        "timestamp": "2026-10-01T10:48:46.614Z",
+        "uptimeSeconds": 182938.51,
+        "loadAverage": [
+          2.92,
+          3.21,
+          3.65
+        ],
+        "freeMemoryBytes": 3006259200,
+        "cpuMHz": [
+          2395,
+          1595,
+          2391,
+          2395
+        ],
+        "powerSource": "battery",
+        "powerProfile": null,
+        "batteries": [
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "57"
+          }
+        ],
+        "cpuFrequency": [
+          {
+            "cpu": "cpu0",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "1197526",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu1",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2392078",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu2",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "2395171",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          },
+          {
+            "cpu": "cpu3",
+            "governor": "schedutil",
+            "driver": "acpi-cpufreq",
+            "currentKHz": "1197546",
+            "minimumKHz": "1400000",
+            "maximumKHz": "2100000"
+          }
+        ],
+        "temperatures": [
+          {
+            "type": "acpitz",
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "42000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "35000"
+          },
+          {
+            "type": "acpitz",
+            "milliCelsius": "31000"
+          },
+          {
+            "type": "iwlwifi_1",
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "30000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "42000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "0"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "33000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "35000"
+          },
+          {
+            "type": "acpitz",
+            "label": null,
+            "milliCelsius": "31000"
+          },
+          {
+            "type": "amdgpu",
+            "label": "edge",
+            "milliCelsius": "42000"
+          },
+          {
+            "type": "k10temp",
+            "label": "Tctl",
+            "milliCelsius": "42750"
+          },
+          {
+            "type": "iwlwifi_1",
+            "label": null,
+            "milliCelsius": "33000"
+          }
+        ],
+        "powerSupplies": [
+          {
+            "name": "AC",
+            "type": "Mains",
+            "online": "0",
+            "status": null,
+            "capacityPercent": null
+          },
+          {
+            "name": "BAT0",
+            "type": "Battery",
+            "online": null,
+            "status": "Discharging",
+            "capacityPercent": "57"
+          }
+        ],
+        "memoryInfo": "MemTotal:        7534820 kB\nMemFree:          977568 kB\nMemAvailable:    2938184 kB\nBuffers:             540 kB\nCached:          2024888 kB\nSwapCached:         2452 kB\nActive:          2063920 kB\nInactive:        1735184 kB\nActive(anon):    1194484 kB\nInactive(anon):   768480 kB\nActive(file):     869436 kB\nInactive(file):   966704 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        4812528 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              1120 kB\nWriteback:             0 kB\nAnonPages:       1771796 kB\nMapped:           643076 kB\nShmem:            189732 kB\nKReclaimable:     427804 kB\nSlab:             733268 kB\nSReclaimable:     427804 kB\nSUnreclaim:       305464 kB\nKernelStack:       18052 kB\nPageTables:        72756 kB\nSecPageTables:      3560 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   19722644 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      113668 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5084876 kB\nDirectMap2M:     2711552 kB\nDirectMap1G:     1048576 kB",
+        "backgroundProcesses": [
+          "PID COMMAND         %CPU %MEM",
+          " 127073 ps               200  0.0",
+          " 100186 code             5.9  6.1",
+          "  99903 code             5.4  1.1",
+          "  99942 code             2.7  2.9",
+          "  99852 code             2.1  1.8",
+          " 100075 code             1.8  2.5",
+          "   1966 kwin_wayland     1.2  1.6",
+          " 100100 code             0.8  0.9"
+        ]
+      },
+      "durationMs": 6287.814677000002,
+      "exitCode": 0,
+      "signal": null,
+      "stderr": "",
+      "result": {
+        "engine": "pjs-owned",
+        "workers": 4,
+        "size": 2048,
+        "scale": 32,
+        "trials": 5,
+        "warmups": 2,
+        "name": "coarse-skew-batch-16",
+        "kind": "stable-skew",
+        "logicalPartitions": 16,
+        "batchSize": 16,
+        "grainSize": 128,
+        "chunks": 16,
+        "firstRun": {
+          "wallMs": 237.63600899999997,
+          "cpuMs": 235.016,
+          "cpuPercent": 98.8974697012354,
+          "machineCpuPercent": 24.72436742530885,
+          "logicalPartitions": 16,
+          "executeMessages": 1,
+          "resultMessages": 1,
+          "microsecondsPerLogicalPartition": 14852.250562499998,
+          "microsecondsPerPhysicalDispatch": 237636.00899999996,
+          "rssBeforeBytes": 113295360,
+          "rssAfterBytes": 114081792,
+          "peakRssBytes": 113950720,
+          "eventLoopUtilization": 0.11976024676825396,
+          "eventLoopDelayMeanMs": 1.238719650273224,
+          "eventLoopDelayMaxMs": 2.582527,
+          "maxTimerDriftMs": 6.85531499999999
+        },
+        "samples": [
+          {
+            "wallMs": 190.68693299999995,
+            "cpuMs": 205.593,
+            "cpuPercent": 107.8170364195852,
+            "machineCpuPercent": 26.9542591048963,
+            "logicalPartitions": 16,
+            "executeMessages": 1,
+            "resultMessages": 1,
+            "microsecondsPerLogicalPartition": 11917.933312499998,
+            "microsecondsPerPhysicalDispatch": 190686.93299999996,
+            "rssBeforeBytes": 114606080,
+            "rssAfterBytes": 114868224,
+            "peakRssBytes": 114868224,
+            "eventLoopUtilization": 0.08622810360880794,
+            "eventLoopDelayMeanMs": 1.1538294634146342,
+            "eventLoopDelayMaxMs": 3.074047,
+            "maxTimerDriftMs": 2.051130000000285
+          },
+          {
+            "wallMs": 190.36798499999986,
+            "cpuMs": 200.344,
+            "cpuPercent": 105.2403848262617,
+            "machineCpuPercent": 26.310096206565426,
+            "logicalPartitions": 16,
+            "executeMessages": 1,
+            "resultMessages": 1,
+            "microsecondsPerLogicalPartition": 11897.999062499992,
+            "microsecondsPerPhysicalDispatch": 190367.98499999987,
+            "rssBeforeBytes": 114868224,
+            "rssAfterBytes": 115130368,
+            "peakRssBytes": 114999296,
+            "eventLoopUtilization": 0.06501472433511718,
+            "eventLoopDelayMeanMs": 1.1125881183431952,
+            "eventLoopDelayMaxMs": 1.654783,
+            "maxTimerDriftMs": 0.6652119999998831
+          },
+          {
+            "wallMs": 190.759638,
+            "cpuMs": 201.823,
+            "cpuPercent": 105.79963461662683,
+            "machineCpuPercent": 26.449908654156708,
+            "logicalPartitions": 16,
+            "executeMessages": 1,
+            "resultMessages": 1,
+            "microsecondsPerLogicalPartition": 11922.477375,
+            "microsecondsPerPhysicalDispatch": 190759.638,
+            "rssBeforeBytes": 115130368,
+            "rssAfterBytes": 115392512,
+            "peakRssBytes": 115392512,
+            "eventLoopUtilization": 0.06702235328969802,
+            "eventLoopDelayMeanMs": 1.0975032558139535,
+            "eventLoopDelayMaxMs": 1.394687,
+            "maxTimerDriftMs": 0.3949130000000878
+          },
+          {
+            "wallMs": 190.72351999999955,
+            "cpuMs": 208.481,
+            "cpuPercent": 109.31058738848805,
+            "machineCpuPercent": 27.32764684712201,
+            "logicalPartitions": 16,
+            "executeMessages": 1,
+            "resultMessages": 1,
+            "microsecondsPerLogicalPartition": 11920.219999999972,
+            "microsecondsPerPhysicalDispatch": 190723.51999999955,
+            "rssBeforeBytes": 115392512,
+            "rssAfterBytes": 115916800,
+            "peakRssBytes": 115916800,
+            "eventLoopUtilization": 0.10623725873278742,
+            "eventLoopDelayMeanMs": 1.1752689689440992,
+            "eventLoopDelayMaxMs": 3.577855,
+            "maxTimerDriftMs": 2.566299999999501
+          },
+          {
+            "wallMs": 194.68508999999995,
+            "cpuMs": 213.162,
+            "cpuPercent": 109.49066515571381,
+            "machineCpuPercent": 27.372666288928453,
+            "logicalPartitions": 16,
+            "executeMessages": 1,
+            "resultMessages": 1,
+            "microsecondsPerLogicalPartition": 12167.818124999996,
+            "microsecondsPerPhysicalDispatch": 194685.08999999994,
+            "rssBeforeBytes": 115916800,
+            "rssAfterBytes": 116310016,
+            "peakRssBytes": 116310016,
+            "eventLoopUtilization": 0.1405415728870711,
+            "eventLoopDelayMeanMs": 1.207848,
+            "eventLoopDelayMaxMs": 3.567615,
+            "maxTimerDriftMs": 2.632121999999981
+          }
+        ]
+      }
+    }
+  ],
+  "failures": [],
+  "explanation": "The initial campaign incorrectly requested unsupported batch=64. Those rejected attempts remain in the original artifacts. This supplement uses documented batch<=16 and adds a coarse/skewed load-balance control; no runtime change or discarded timing samples.",
+  "sourceVerification": {
+    "differences": [],
+    "explanation": "All original source and lockfile hashes verified before and after the supplemental run; historical soak output excluded"
+  },
+  "completedAt": "2026-10-01T10:48:46.744Z"
+}
