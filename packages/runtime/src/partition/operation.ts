@@ -25,8 +25,6 @@ export class RangeOperation extends AsyncResource {
   readonly children = new Map<string, RangePartition>();
   outputs: unknown[] | PjsTypedArray | undefined;
   mapAssemblyMs = 0;
-  reservedResultBytes = 0;
-  readonly resultReservationTaskByPartition = new Map<number, string>();
   pendingResultDeclaration:
     { partition: RangePartition; bytes: number; waited: boolean } | undefined;
   cleanup: () => void = () => {};

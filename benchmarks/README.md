@@ -167,3 +167,21 @@ The retained artifacts are `reservation-performance-v0.10.json`,
 `runtime-regression-v0.10.json`. Build committed v0.9 separately and pass its
 root to `node benchmarks/reservation-audit/regression.mjs` to reproduce the
 v0.9/v0.10/v0.10/v0.9 causal control. Historical artifacts remain unchanged.
+
+## v0.11 runtime architecture decomposition
+
+Build committed v0.10 separately and run
+`node benchmarks/runtime-architecture/compare.mjs /path/to/built-v0.10` for
+the behavior-preserving decomposition control. Every workload/version pairing
+runs in fresh processes with balanced ordering, sustained samples, and forced
+collection only between timed samples. Set `PJS_BENCH_QUICK=1` for a smoke
+run.
+
+The matrix covers ordinary no-op, CPU, clone, transfer, and shared work plus
+partition, completion-only, count-only stream, strict binary clone/transfer,
+and generic/typed map paths. Raw results are
+`runtime-architecture-v0.11.json`; the post-refactor mixed failure soak is
+`reservation-soak-v0.11.json`. See the
+[proposal](../docs/proposal-v0.11.md) and
+[measurement report](../docs/benchmarks-v0.11.md). Historical artifacts remain
+unchanged.

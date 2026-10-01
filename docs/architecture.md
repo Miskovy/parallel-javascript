@@ -1,23 +1,102 @@
 # Runtime architecture
 
-The [initial proposal](proposal.md) defines the boundaries. The public package exports `PjsRuntime`, `PjsTaskRegistry`, `transfer`, `sharedReadonly`, task/transfer/option/snapshot types, and errors. Pool, worker transport, FIFO implementation, mutable task records, metrics accumulator, internal profiling hooks, and protocol are internal modules. Package exports prevent accidental dependence on these internals. v0.2 adds explicit buffer ownership; v0.3 adds shared-input construction; v0.4 adds an experimental main-isolate range coordinator; v0.5 adds experimental bounded dispatch batching; v0.6 adds completion-only ranges and operation-level async context; v0.7 adds bounded completion-order result streams; v0.8 adds element-block mapping and diagnostic queued-payload bytes; v0.9 adds opt-in exact binary-result reservations. v0.10 audits that ownership model, adds debug-only internal invariant scans, and makes no public architectural change. FIFO policy and the worker population model remain unchanged.
+The [initial proposal](proposal.md) defines the public boundaries. The package
+exports `PjsRuntime`, `PjsTaskRegistry`, `transfer`, `sharedReadonly`, public
+types, and errors. Pool, worker transport, FIFO implementation, coordinators,
+mutable records, telemetry, profiling hooks, and protocol remain internal.
+
+v0.11 decomposes the host core without changing public behavior. `PjsRuntime`
+is now the public facade, composition root, runtime-lifecycle authority, and
+owner of one guarded progress loop. Task, range, physical-dispatch,
+result-credit, and telemetry responsibilities have explicit owners. The
+boundary criterion is independent mutable state plus lifecycle invariants, not
+file size; this is systems decomposition rather than microservice-style
+layering.
 
 ```mermaid
 flowchart TD
-  A[Application] --> R[PjsRuntime: admission and task lifecycle]
-  A --> O[Host range operation: lazy descriptors and collect/discard policy]
-  O --> R
-  R --> Q[Scheduler: bounded task queue]
-  R --> P[PjsPool: worker ownership and recovery]
+  A[Application] --> R[PjsRuntime facade / composition / lifecycle / pump]
+  R --> O[RangeCoordinator: parent lifecycle and result policy]
+  R --> T[TaskCoordinator: logical task lifecycle]
+  R --> D[ExecutionDispatcher: admission and physical dispatch]
+  R --> V[RuntimeTelemetry: read-only projection]
+  O --> T
+  O --> C[ResultCreditManager: binary reservation lifecycle]
+  O --> S[RangeStream: consumer buffer lifecycle]
+  D --> Q[Scheduler: bounded FIFO policy]
+  D --> P[PjsPool: worker ownership and recovery]
+  D --> C
   P --> W[PjsWorker: correlated execution slot]
   W --> N[Node worker_threads and V8 isolates]
-  G[PjsTaskRegistry: module descriptors] --> R
-  R --> M[Metrics and snapshots]
+  G[PjsTaskRegistry: immutable module descriptors] --> R
+  V -. snapshots .-> O
+  V -. snapshots .-> T
+  V -. snapshots .-> D
 ```
+
+## v0.11 component ownership
+
+| Mutable domain              | Authority             | Important state                                                                      |
+| --------------------------- | --------------------- | ------------------------------------------------------------------------------------ |
+| Runtime lifecycle           | `PjsRuntime`          | state, readiness/shutdown promises, drain mode, pump guard                           |
+| Range parents               | `RangeCoordinator`    | operations, production cursor, deadlines, result policy, operation/partition metrics |
+| Logical tasks               | `TaskCoordinator`     | task records, timers/listeners, transfer claims, caller settlement, task metrics     |
+| Physical admission/dispatch | `ExecutionDispatcher` | queue-credit/idle-worker claims, batching, physical counters                         |
+| FIFO ordering               | `PjsScheduler`        | weighted queued entries                                                              |
+| Result byte credit          | `ResultCreditManager` | reservations, execution correlations, per-operation credit, invariant scanner        |
+| Worker population           | `PjsPool`             | workers, repair promises, restart budget                                             |
+| Worker execution            | `PjsWorker`           | one physical correlation and protocol phase                                          |
+| Stream delivery             | `RangeStream`         | buffer, waiter, single-consumer terminal state                                       |
+| Stats                       | `RuntimeTelemetry`    | no correctness state; read-only aggregation only                                     |
+
+The coordinator types are internal. Applications still construct only
+`PjsRuntime`. `RangeOperation` remains a data-oriented host record and one
+`AsyncResource`; `RangeCoordinator` is its transition authority. Result modes
+remain a concrete discriminated switch because separate strategy objects would
+add indirection without creating a new state owner.
+
+Dependencies point from the facade/coordinators toward execution primitives.
+No subsystem receives the runtime facade. Task-to-parent notification uses a
+narrow synchronous `TaskParentPort`; it cannot mutate arbitrary runtime state.
+There is no service locator, generic event bus, or asynchronous command layer.
+
+## Progress loop and reentrancy
+
+`PjsRuntime` retains one guarded pump with the established order:
+
+```text
+dispatch queued work
+produce a bounded number of range batches
+dispatch newly queued work
+check graceful-drain completion
+```
+
+The `pumping` guard is a correctness boundary. Nested requests collapse into
+the active turn. Range production retains one immediate continuation after its
+bounded synchronous budget.
+
+The following synchronous reentrancy is intentional and must be preserved:
+
+- an input factory may call `runtime.run()`;
+- a transfer-list iterator or payload getter may abort during dispatch;
+- task settlement may immediately notify and finish its parent;
+- parent settlement may synchronously cancel sibling tasks;
+- stream demand, yield, close, or throw may request another pump;
+- pool readiness/result/failure callbacks may request progress;
+- shutdown may begin inside an input factory.
+
+Accordingly, dispatch claims capacity before application callbacks, physical
+posting owns a worker before structured clone invokes getters, and parent
+terminal state is stored before sibling cancellation.
 
 ## Ownership and scheduling
 
-The main isolate owns task settlement, worker state, and dispatch decisions. Each worker owns one active execution and a private module registry. Promise continuations, worker messages, timer callbacks, and abort callbacks serialize through the main event loop. Input getters invoked by structured clone can re-enter the public API synchronously, so dispatch claims its slot before cloning.
+The main isolate coordinates the component owners. `TaskCoordinator` owns task
+settlement, `ExecutionDispatcher` owns assignment, and each worker owns one
+active execution plus a private module registry. Promise continuations, worker
+messages, timer callbacks, and abort callbacks serialize through the main event
+loop. Input getters invoked by structured clone can re-enter the public API
+synchronously, so dispatch claims its slot before cloning.
 
 `PjsScheduler` implements a `Scheduler<T>` interface with enqueue, next(worker snapshot), removal, size, and capacity. A Map supplies insertion-order FIFO and direct queued cancellation without an ever-growing tombstone array. Idle slots can accept tasks directly only when the queue is empty. A serialization failure frees its slot synchronously and dispatch continues. Completion order across workers is deliberately unspecified; FIFO describes dispatch order.
 
@@ -49,9 +128,9 @@ Payload serialization lives in `PjsWorker.execute()` and bootstrap result postin
 
 Timeouts start at acceptance, include queue delay, and use Node timers with integer delays from 1 to 2³¹−1 ms. Delivery depends on event-loop progress; deadlines are not hard real-time CPU preemption. Abort before admission rejects without accepting work. Queued cancellation/deadline removes work. Active cancellation/deadline settles the caller but preserves the slot. No task is retried automatically; side effects may already have occurred.
 
-## Range coordinator, result policies, and batching (v0.4-v0.10, experimental)
+## Range coordinator, result policies, and batching (experimental)
 
-`partitionRange()`, `parallelFor()`, `streamRange()`, and `parallelMapRange()` describe a safe integer half-open range with an explicit grain and synchronous host payload factory. `partition/range.ts` validates the plan and generates immutable descriptors; `partition/operation.ts` owns parent state, result policy, and one `PjsRangeOperation` AsyncResource. Runtime integration handles admission, production and child settlement. Collecting mode allocates an indexed output array. Discard mode allocates none and resolves `void`. Stream mode uses a single-consumer `AsyncIterable` coordinator and yields `{ partition, output }` in completion order. Map mode preallocates one flat element result and copies validated partition blocks into their logical offsets.
+`partitionRange()`, `parallelFor()`, `streamRange()`, and `parallelMapRange()` describe a safe integer half-open range with an explicit grain and synchronous host payload factory. `partition/range.ts` validates the plan and generates immutable descriptors; `RangeOperation` is the host state/AsyncResource record, while `RangeCoordinator` owns parent transitions, production, result policy, and child settlement. `TaskCoordinator` admits each logical child and `ExecutionDispatcher` maps admitted work onto the existing FIFO/pool. Collecting mode allocates an indexed output array. Discard mode allocates none and resolves `void`. Stream mode uses a single-consumer `AsyncIterable` coordinator and yields `{ partition, output }` in completion order. Map mode preallocates one flat element result and copies validated partition blocks into their logical offsets.
 
 Parents follow `created → running → completed | failed | cancelled | timed_out`, with running including startup/capacity waiting. Parents occupy no worker or FIFO slot. At most `min(MAX_SAFE_INTEGER, workers + maxQueue)` parent records are accepted. Batch size 1 retains the v0.4 worker-count live-child window. A configured batch size `B` permits at most `workers × B` live logical children for that parent, while the FIFO counts each queued batch by its logical weight. Thus waiting logical work remains at most `maxQueue`; physical queue nodes may be fewer. Production stages at most `B` descriptors per physical dispatch and at most worker-count physical batches per synchronous turn. It never materializes a whole range.
 
@@ -91,4 +170,4 @@ Queue latency is monotonic acceptance-to-physical-dispatch time, including start
 
 ## Next layers
 
-Use the [v0.10 measurements](benchmarks-v0.10.md) to select the next milestone. The experimental range, completion, streaming, mapping, batching, and binary-credit options do not stabilize reduce or a parallel namespace. Arbitrary object graphs remain unsuitable for exact byte reservations. A variable-output RLE trace shows that honest exact declaration can duplicate codec work, but upper-bound refunds still need explicit slack, release, metric, and batching semantics. Cooperative cancellation needs a task context and polling semantics for synchronous kernels. Nested execution needs shared runtime capacity and dependency handling to prevent starvation/deadlock. Work stealing, adaptive chunking, affinity, NUMA, priorities, and global byte pools still lack supporting evidence. Ordinary Node async I/O stays outside CPU task scheduling.
+Use the [v0.11 measurements](benchmarks-v0.11.md) to select the next milestone. The experimental range, completion, streaming, mapping, batching, and binary-credit options do not stabilize reduce or a parallel namespace. Arbitrary object graphs remain unsuitable for exact byte reservations. A variable-output RLE trace shows that honest exact declaration can duplicate codec work, but upper-bound refunds still need explicit slack, release, metric, and batching semantics. Cooperative cancellation needs a task context and polling semantics for synchronous kernels. Nested execution needs shared runtime capacity and dependency handling to prevent starvation/deadlock. Work stealing, adaptive chunking, affinity, NUMA, priorities, and global byte pools still lack supporting evidence. Ordinary Node async I/O stays outside CPU task scheduling.

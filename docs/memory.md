@@ -1,5 +1,10 @@
 # Clone, transfer, and reusable shared input
 
+v0.11 preserves the v0.10 memory contract. The refactor moves exact binary
+result-credit state into `ResultCreditManager` and task input transfer claims
+into `TaskCoordinator`; it does not change clone, transfer, shared backing,
+detachment, or reservation timing.
+
 | Model    | Backing storage                          | Ownership                               | Typical use                                         |
 | -------- | ---------------------------------------- | --------------------------------------- | --------------------------------------------------- |
 | Clone    | One copy per receiving task/isolate      | Independent data                        | Small messages and simple ownership                 |

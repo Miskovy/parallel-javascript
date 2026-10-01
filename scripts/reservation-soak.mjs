@@ -117,11 +117,14 @@ async function consumeExpectedFailure(stream) {
   assert.fail('expected stream failure');
 }
 function internalCounts(runtime) {
-  const reservations = runtime.resultReservations;
-  const executions = runtime.resultReservationExecutions;
-  assert.ok(reservations instanceof Map, 'internal reservation map is present');
-  assert.ok(executions instanceof Map, 'internal execution map is present');
-  return { reservations: reservations.size, executions: executions.size };
+  const credits = runtime.resultCredits;
+  assert.equal(
+    typeof credits?.diagnostics,
+    'function',
+    'internal result-credit diagnostics are present',
+  );
+  const { reservations, executions } = credits.diagnostics();
+  return { reservations, executions };
 }
 async function quiescent(runtime, healthyWorkers = true) {
   await until(() => {
@@ -487,7 +490,7 @@ try {
   assert.equal(finalStats.streamResults.currentReservedResultBytes, 0);
   assert.deepEqual(internalCounts(runtime), { reservations: 0, executions: 0 });
   const report = {
-    version: '0.10.0',
+    version: '0.11.0',
     timestamp: new Date().toISOString(),
     environment: machineReport({
       mode,
@@ -524,8 +527,8 @@ try {
   await writeFile(
     new URL(
       forcedGc
-        ? '../benchmarks/results/reservation-soak-forced-gc-v0.10.json'
-        : '../benchmarks/results/reservation-soak-v0.10.json',
+        ? '../benchmarks/results/reservation-soak-forced-gc-v0.11.json'
+        : '../benchmarks/results/reservation-soak-v0.11.json',
       import.meta.url,
     ),
     JSON.stringify(report, null, 2) + '\n',
