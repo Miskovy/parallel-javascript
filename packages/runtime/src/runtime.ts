@@ -18,6 +18,7 @@ import type {
   RangePartition,
   StreamRangeOptions,
   TypedMapRangeOptions,
+  UpperBoundBinaryStreamRangeOptions,
 } from './partition/range.js';
 import type { StreamRangeResult } from './partition/stream.js';
 import { ResultCreditManager } from './results/credit.js';
@@ -33,6 +34,7 @@ import type {
 
 type CountOnlyStreamRangeOptions = StreamRangeOptions & {
   experimentalResultBytes?: never;
+  experimentalMaxResultBytes?: never;
   experimentalMaxReservedResultBytes?: never;
 };
 
@@ -264,7 +266,7 @@ export class PjsRuntime {
     task: PjsTask<Input, Output>,
     range: PartitionRange,
     createInput: (partition: RangePartition) => PartitionInput<Input>,
-    options: BinaryStreamRangeOptions,
+    options: BinaryStreamRangeOptions | UpperBoundBinaryStreamRangeOptions,
   ): AsyncIterable<StreamRangeResult<Output>>;
   streamRange<Input, Output>(
     task: PjsTask<Input, Output>,
@@ -276,7 +278,10 @@ export class PjsRuntime {
     task: PjsTask<Input, Output>,
     range: PartitionRange,
     createInput: (partition: RangePartition) => PartitionInput<Input>,
-    options: StreamRangeOptions | BinaryStreamRangeOptions = {},
+    options:
+      | StreamRangeOptions
+      | BinaryStreamRangeOptions
+      | UpperBoundBinaryStreamRangeOptions = {},
   ): AsyncIterable<StreamRangeResult<Output>> {
     return this.rangeCoordinator.stream(task, range, createInput, options);
   }

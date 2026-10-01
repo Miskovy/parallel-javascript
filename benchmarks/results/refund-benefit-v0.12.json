@@ -1,0 +1,324 @@
+{
+  "version": "0.12.0",
+  "timestamp": "2026-10-01T20:05:18.737Z",
+  "environment": {
+    "machineLabel": "Miskovy",
+    "cpuModel": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz",
+    "logicalCpuCount": 8,
+    "availableParallelism": 8,
+    "physicalCoreCount": null,
+    "totalMemoryBytes": 17037594624,
+    "platform": "win32",
+    "osType": "Windows_NT",
+    "release": "10.0.19045",
+    "architecture": "x64",
+    "node": "v24.21.0",
+    "v8": "13.6.233.17-node.53",
+    "pjsCommit": "8fcd0fd9e9e3a6987198fce80a338b02c076b0d7",
+    "worktreeDirty": true,
+    "power": "Power Scheme GUID: a1841308-3541-4fab-bc81-f71556f20b4a  (Power saver)",
+    "settings": {}
+  },
+  "settings": {
+    "maximum": 1048576,
+    "actual": 65536,
+    "capacity": 2097152,
+    "countCapacity": 64,
+    "count": 64,
+    "trials": 6,
+    "workers": 4
+  },
+  "methodology": "consumer withheld until physical work quiesces; identical binary task and capacity; benchmark-only reconciliation suppression; alternating order; every observation retained",
+  "order": [
+    {
+      "trial": 0,
+      "mode": "upper"
+    },
+    {
+      "trial": 0,
+      "mode": "held-maximum"
+    },
+    {
+      "trial": 1,
+      "mode": "held-maximum"
+    },
+    {
+      "trial": 1,
+      "mode": "upper"
+    },
+    {
+      "trial": 2,
+      "mode": "upper"
+    },
+    {
+      "trial": 2,
+      "mode": "held-maximum"
+    },
+    {
+      "trial": 3,
+      "mode": "held-maximum"
+    },
+    {
+      "trial": 3,
+      "mode": "upper"
+    },
+    {
+      "trial": 4,
+      "mode": "upper"
+    },
+    {
+      "trial": 4,
+      "mode": "held-maximum"
+    },
+    {
+      "trial": 5,
+      "mode": "held-maximum"
+    },
+    {
+      "trial": 5,
+      "mode": "upper"
+    }
+  ],
+  "results": [
+    {
+      "trial": 0,
+      "mode": "upper",
+      "prefillMs": 23.5488,
+      "wallMs": 33.390299999999996,
+      "producedBeforeYield": 17,
+      "reservedBeforeYield": 1114112,
+      "bufferedActualBytes": 1114112,
+      "refundsBeforeYield": 16711680,
+      "reservationWaits": 16,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 1114112
+      },
+      "terminal": {
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0
+      }
+    },
+    {
+      "trial": 0,
+      "mode": "held-maximum",
+      "prefillMs": 8.541999999999973,
+      "wallMs": 15.020399999999995,
+      "producedBeforeYield": 2,
+      "reservedBeforeYield": 2097152,
+      "bufferedActualBytes": 131072,
+      "refundsBeforeYield": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2097152,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0
+      }
+    },
+    {
+      "trial": 1,
+      "mode": "held-maximum",
+      "prefillMs": 16.187900000000013,
+      "wallMs": 24.22460000000001,
+      "producedBeforeYield": 2,
+      "reservedBeforeYield": 2097152,
+      "bufferedActualBytes": 131072,
+      "refundsBeforeYield": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2097152,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0
+      }
+    },
+    {
+      "trial": 1,
+      "mode": "upper",
+      "prefillMs": 15.287500000000023,
+      "wallMs": 20.99770000000001,
+      "producedBeforeYield": 17,
+      "reservedBeforeYield": 1114112,
+      "bufferedActualBytes": 1114112,
+      "refundsBeforeYield": 16711680,
+      "reservationWaits": 16,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 1114112
+      },
+      "terminal": {
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0
+      }
+    },
+    {
+      "trial": 2,
+      "mode": "upper",
+      "prefillMs": 11.467300000000023,
+      "wallMs": 16.079000000000065,
+      "producedBeforeYield": 17,
+      "reservedBeforeYield": 1114112,
+      "bufferedActualBytes": 1114112,
+      "refundsBeforeYield": 16711680,
+      "reservationWaits": 16,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 1114112
+      },
+      "terminal": {
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0
+      }
+    },
+    {
+      "trial": 2,
+      "mode": "held-maximum",
+      "prefillMs": 4.222099999999955,
+      "wallMs": 11.349699999999984,
+      "producedBeforeYield": 2,
+      "reservedBeforeYield": 2097152,
+      "bufferedActualBytes": 131072,
+      "refundsBeforeYield": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2097152,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0
+      }
+    },
+    {
+      "trial": 3,
+      "mode": "held-maximum",
+      "prefillMs": 18.11340000000007,
+      "wallMs": 26.118600000000015,
+      "producedBeforeYield": 2,
+      "reservedBeforeYield": 2097152,
+      "bufferedActualBytes": 131072,
+      "refundsBeforeYield": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2097152,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0
+      }
+    },
+    {
+      "trial": 3,
+      "mode": "upper",
+      "prefillMs": 6.57039999999995,
+      "wallMs": 13.027799999999957,
+      "producedBeforeYield": 17,
+      "reservedBeforeYield": 1114112,
+      "bufferedActualBytes": 1114112,
+      "refundsBeforeYield": 16711680,
+      "reservationWaits": 16,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 1114112
+      },
+      "terminal": {
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0
+      }
+    },
+    {
+      "trial": 4,
+      "mode": "upper",
+      "prefillMs": 10.746799999999894,
+      "wallMs": 16.422000000000025,
+      "producedBeforeYield": 17,
+      "reservedBeforeYield": 1114112,
+      "bufferedActualBytes": 1114112,
+      "refundsBeforeYield": 16711680,
+      "reservationWaits": 16,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 1114112
+      },
+      "terminal": {
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0
+      }
+    },
+    {
+      "trial": 4,
+      "mode": "held-maximum",
+      "prefillMs": 3.191000000000031,
+      "wallMs": 10.339200000000119,
+      "producedBeforeYield": 2,
+      "reservedBeforeYield": 2097152,
+      "bufferedActualBytes": 131072,
+      "refundsBeforeYield": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2097152,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0
+      }
+    },
+    {
+      "trial": 5,
+      "mode": "held-maximum",
+      "prefillMs": 1.8579999999999472,
+      "wallMs": 7.7034000000001015,
+      "producedBeforeYield": 2,
+      "reservedBeforeYield": 2097152,
+      "bufferedActualBytes": 131072,
+      "refundsBeforeYield": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2097152,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0
+      }
+    },
+    {
+      "trial": 5,
+      "mode": "upper",
+      "prefillMs": 7.874399999999923,
+      "wallMs": 14.11629999999991,
+      "producedBeforeYield": 17,
+      "reservedBeforeYield": 1114112,
+      "bufferedActualBytes": 1114112,
+      "refundsBeforeYield": 16711680,
+      "reservationWaits": 16,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 1114112
+      },
+      "terminal": {
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0
+      }
+    }
+  ]
+}

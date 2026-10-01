@@ -12,6 +12,7 @@ export type {
   PartitionOptions,
   StreamRangeOptions,
   BinaryStreamRangeOptions,
+  UpperBoundBinaryStreamRangeOptions,
   PjsBinaryResult,
   PjsTypedArray,
   PjsTypedArrayConstructor,

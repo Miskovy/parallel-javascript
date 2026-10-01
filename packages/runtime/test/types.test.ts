@@ -135,6 +135,39 @@ const binaryStream: AsyncIterable<StreamRangeResult<Uint8Array>> =
   runtime.streamRange(task, range, () => ({ input: data }), binaryOptions);
 void binaryStream;
 const binaryValue: PjsBinaryResult = new DataView(new ArrayBuffer(8));
+const upperOptions = {
+  experimentalMaxResultBytes: (partition: RangePartition) =>
+    partition.end - partition.start,
+  experimentalMaxReservedResultBytes: 1024,
+};
+const upperStream: AsyncIterable<StreamRangeResult<Uint8Array>> =
+  runtime.streamRange(task, range, () => ({ input: data }), upperOptions);
+void upperStream;
+runtime.streamRange(
+  partitionTask,
+  range,
+  (partition) => ({ input: { partition, shared } }),
+  // @ts-expect-error Upper-bound streams require direct binary task results.
+  upperOptions,
+);
+runtime.streamRange(task, range, () => ({ input: data }), {
+  // @ts-expect-error Exact and upper-bound declarations cannot coexist.
+  experimentalResultBytes: 16,
+  // @ts-expect-error Mutually exclusive declarations fail every overload.
+  experimentalMaxResultBytes: 32,
+  // @ts-expect-error Count-only fallback excludes byte capacity.
+  experimentalMaxReservedResultBytes: 64,
+});
+runtime.streamRange(task, range, () => ({ input: data }), {
+  // @ts-expect-error A maximum needs a byte capacity.
+  experimentalMaxResultBytes: 32,
+});
+runtime.streamRange(task, range, () => ({ input: data }), {
+  // @ts-expect-error Declaration callbacks must be synchronous.
+  experimentalMaxResultBytes: async () => 32,
+  // @ts-expect-error Count-only fallback excludes byte capacity.
+  experimentalMaxReservedResultBytes: 64,
+});
 void binaryValue;
 runtime.streamRange(
   partitionTask,

@@ -9,6 +9,8 @@ import type {
   ResultByteDeclaration,
 } from './range.js';
 import type { RangeStream } from './stream.js';
+import type { ResultByteMode } from '../results/credit.js';
+import type { UpperBoundResultByteContract } from '../workers/protocol.js';
 
 export type OperationStatus =
   'created' | 'running' | 'completed' | 'failed' | 'cancelled' | 'timed_out';
@@ -39,6 +41,7 @@ export class RangeOperation extends AsyncResource {
     readonly mapOutputConstructor: PjsTypedArrayConstructor | undefined,
     readonly resultByteDeclaration: ResultByteDeclaration | undefined,
     readonly resultByteCapacity: number | undefined,
+    readonly resultByteMode: ResultByteMode,
     outputs: unknown[] | PjsTypedArray | undefined,
     public createInput:
       ((partition: RangePartition) => PartitionInput<unknown>) | undefined,
@@ -55,4 +58,5 @@ export interface PartitionChild {
   operation: RangeOperation;
   partition: RangePartition;
   expectedResultBytes?: number;
+  resultByteContract?: UpperBoundResultByteContract;
 }

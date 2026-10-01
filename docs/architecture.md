@@ -150,6 +150,20 @@ Graceful shutdown finishes the entire accepted logical range, including ungenera
 
 ## Failure and shutdown
 
+v0.12 extends the result-credit owner with upper-bound reconciliation. The range
+coordinator selects an explicit maximum declaration and checks eligibility;
+it never reads mutable reservation internals. The worker receives an exclusive
+`resultByteContract: { mode: 'upper-bound', bytes }`, validates before posting,
+and returns `actualResultBytes`. Exact protocol fields remain unchanged.
+After the dispatcher marks physical execution ended, TaskCoordinator suppresses
+late/non-deliverable results and invokes ResultCreditManager.reconcile before
+logical settlement and stream push. Positive slack refunds then; actual credit
+releases on yield. The existing guarded pump runs after the entire response is
+settled, so new admissions see refunds without a second scheduling loop.
+Credit amounts, mode, reconciliation identity, metrics, and invariants all stay
+inside ResultCreditManager. PjsRuntime gains only option typing. See
+[ADR 0019](adr/0019-upper-bound-result-reservations.md).
+
 Task exceptions become `PjsTaskError` with remote name, message, and stack plus local task/worker IDs. Input/output clone or transfer failures become `PjsSerializationError`; they do not normally damage the worker. Invalid lists rejected before admission count as rejected tasks; serialization failures at dispatch or result posting count as failed accepted tasks. Crashes, protocol violations, startup errors, and replacement exhaustion become `PjsWorkerError`. Registration, admission, runtime state, cancellation, and deadlines have distinct exported errors. Uninspectable thrown values use a safe fallback description.
 
 An unexpected exit, including exit code zero, fails the occupied task and replaces the worker while the pool remains active. Queue entries survive. Bootstrap failures are fatal immediately, because repeatedly importing invalid configuration is not recovery. Runtime-wide replacement count is bounded to prevent a hot crash loop. Exhaustion fails accepted work with task-specific errors and stops the pool.

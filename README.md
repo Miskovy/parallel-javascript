@@ -9,7 +9,7 @@
 <p>
   <a href="packages/runtime/package.json"><img src="https://img.shields.io/badge/Node.js-%E2%89%A522-339933?style=flat-square&amp;logo=nodedotjs&amp;logoColor=white" alt="Runtime: Node.js 22 or newer"></a>
   <a href="package.json"><img src="https://img.shields.io/badge/TypeScript-7.0-3178C6?style=flat-square&amp;logo=typescript&amp;logoColor=white" alt="Build compiler: TypeScript 7.0"></a>
-  <a href="docs/architecture.md"><img src="https://img.shields.io/badge/status-v0.11%20runtime%20decomposition-0F766E?style=flat-square" alt="Status: v0.11 runtime decomposition"></a>
+  <a href="docs/architecture.md"><img src="https://img.shields.io/badge/status-v0.12%20upper--bound%20credits-0F766E?style=flat-square" alt="Status: v0.12 upper-bound result credits"></a>
   <a href="packages/runtime/package.json"><img src="https://img.shields.io/badge/runtime_dependencies-0-0F766E?style=flat-square" alt="Zero runtime dependencies"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-64748B?style=flat-square" alt="License: MIT"></a>
 </p>
@@ -18,7 +18,7 @@
   <a href="#quick-start">Quick start</a> ·
   <a href="#define-a-task">Task API</a> ·
   <a href="docs/architecture.md">Architecture</a> ·
-  <a href="docs/benchmarks-v0.11.md">Benchmarks</a> ·
+  <a href="docs/benchmarks-v0.12.md">Benchmarks</a> ·
   <a href="docs/toolchain.md">Toolchain choices</a>
 </p>
 
@@ -26,7 +26,7 @@
 
 ---
 
-PJS v0.11 is a small foundation for explicit CPU parallelism in Node.js: persistent workers, registered module tasks, bounded FIFO admission, explicit buffer transfers, reusable shared inputs, experimental runtime-owned range partitioning, bounded dispatch batching, completion-only parallel ranges, bounded completion-order result streams, strict binary result-byte credits, element-block mapping, host async-context association, task lifecycles, failure recovery, cancellation/deadlines, and real statistics. v0.11 decomposes the runtime core into explicit task, range, dispatch, result-credit, and telemetry owners without adding a public algorithm or changing semantics. It builds with TypeScript 7 and has no runtime dependencies.
+PJS v0.12 is a small foundation for explicit CPU parallelism in Node.js: persistent workers, registered module tasks, bounded FIFO admission, explicit buffer transfers, reusable shared inputs, experimental runtime-owned range partitioning, bounded dispatch batching, completion-only parallel ranges, bounded completion-order result streams, strict binary result-byte credits, element-block mapping, host async-context association, task lifecycles, failure recovery, cancellation/deadlines, and real statistics. v0.12 adds explicit upper-bound binary declarations and prompt unused-credit refunds within the v0.11 component ownership model. Exact declarations retain their equality contract. It builds with TypeScript 7 and has no runtime dependencies.
 
 > **The programmer declares parallelizable work. PJS decides how accepted tasks use the available workers.**
 
@@ -34,28 +34,28 @@ The experimental `partitionRange()` operation owns lazy range division and order
 
 ## What works today
 
-| Capability                     | v0.11 behavior                                                                   |
-| ------------------------------ | -------------------------------------------------------------------------------- |
-| **Persistent workers**         | A fixed, configurable population reused across tasks                             |
-| **Explicit task registration** | Typed handles for local module exports; no closure serialization or eval         |
-| **Bounded scheduling**         | FIFO admission with a finite queue and explicit overflow errors                  |
-| **Failure recovery**           | Correlated errors, crash replacement, and a bounded restart budget               |
-| **Cancellation and deadlines** | Queued work is removed; active caller settlement preserves worker occupancy      |
-| **Observability**              | Task counts, queue/execution timings, worker state, and thread IDs               |
-| **Reusable shared inputs**     | Explicit construction over native SAB backing with a read-only usage contract    |
-| **Numeric range partitioning** | Lazy bounded children, explicit grain, ordered outputs and one parent deadline   |
-| **Bounded dispatch batching**  | Experimental transfer-free grouping with separate logical/physical accounting    |
-| **Completion-only ranges**     | Experimental parallel-for semantics without worker output transport or retention |
-| **Bounded result streams**     | Experimental completion-order AsyncIterable with consumer backpressure           |
-| **Binary result credits**      | Opt-in exact pre-admission byte reservations plus worker validation              |
-| **Element-block mapping**      | Experimental flat generic/typed results with strict block cardinality            |
-| **Result memory diagnostics**  | Visible queued buffer/view bytes plus unknown-result counts                      |
-| **Host async context**         | One AsyncResource per range operation; worker stores are not implicitly copied   |
-| **Graceful shutdown**          | Close admission, drain accepted work, and release workers                        |
+| Capability                     | v0.12 behavior                                                                       |
+| ------------------------------ | ------------------------------------------------------------------------------------ |
+| **Persistent workers**         | A fixed, configurable population reused across tasks                                 |
+| **Explicit task registration** | Typed handles for local module exports; no closure serialization or eval             |
+| **Bounded scheduling**         | FIFO admission with a finite queue and explicit overflow errors                      |
+| **Failure recovery**           | Correlated errors, crash replacement, and a bounded restart budget                   |
+| **Cancellation and deadlines** | Queued work is removed; active caller settlement preserves worker occupancy          |
+| **Observability**              | Task counts, queue/execution timings, worker state, and thread IDs                   |
+| **Reusable shared inputs**     | Explicit construction over native SAB backing with a read-only usage contract        |
+| **Numeric range partitioning** | Lazy bounded children, explicit grain, ordered outputs and one parent deadline       |
+| **Bounded dispatch batching**  | Experimental transfer-free grouping with separate logical/physical accounting        |
+| **Completion-only ranges**     | Experimental parallel-for semantics without worker output transport or retention     |
+| **Bounded result streams**     | Experimental completion-order AsyncIterable with consumer backpressure               |
+| **Binary result credits**      | Explicit exact/maximum reservations, worker validation, and successful slack refunds |
+| **Element-block mapping**      | Experimental flat generic/typed results with strict block cardinality                |
+| **Result memory diagnostics**  | Visible queued buffer/view bytes plus unknown-result counts                          |
+| **Host async context**         | One AsyncResource per range operation; worker stores are not implicitly copied       |
+| **Graceful shutdown**          | Close admission, drain accepted work, and release workers                            |
 
 ## Quick start
 
-The runtime targets Node.js 22 or newer. Repository development tools require Node.js 22.13+ or 24+. v0.11 was tested on Node.js 24.21.0 on Windows. Node 22 and current Linux/macOS environments were unavailable for this milestone and still need CI coverage; the historical v0.5 Linux run is not a v0.11 reproduction.
+The runtime targets Node.js 22 or newer. Repository development tools require Node.js 22.13+ or 24+. v0.12 was validated locally on Windows with Node.js 24.21.0. Its separate [cross-platform campaign](docs/cross-platform-v0.12.md) is prepared; the completed [v0.11 Fedora/Windows campaign](docs/cross-platform-v0.11.md) remains historical evidence.
 
 ```sh
 npm ci
@@ -262,14 +262,24 @@ for await (const { output } of runtime.streamRange(
 }
 ```
 
-Both byte options are required together. The declaration is exact, not an
-upper bound. Workers accept only a live direct `ArrayBuffer` or an
+Both byte options are required together. `experimentalResultBytes` requires
+exact equality, including rejection of smaller outputs. Workers accept only a live direct `ArrayBuffer` or an
 ArrayBuffer-backed typed array, Buffer, or DataView with the declared visible
 `byteLength`. Nested graphs and shared backing do not qualify. Count and byte
 credits both apply; credit lasts until yield, or until a cancelled running
 execution actually ends. The capacity bounds declared result payloads, not
 RSS, worker allocations, transport temporaries, inputs, or values retained by
 the consumer.
+
+For variable-size output, v0.12 adds explicit `experimentalMaxResultBytes`
+instead of the exact declaration. Declare a proven worst case, for example
+`(partition) => 2 * (partition.end - partition.start)` for value/count RLE.
+Keep `experimentalMaxReservedResultBytes` as the per-stream capacity. PJS reserves
+the maximum before execution, validates actual <= maximum before transport,
+refunds unused credit on receipt, and retains actual credit until yield.
+Declarations are mutually exclusive. Conservative maxima can reduce concurrency;
+PJS never estimates them. See the [range guide](docs/partitioning.md) and
+[v0.12 report](docs/benchmarks-v0.12.md).
 
 ### Statistics
 
@@ -293,7 +303,7 @@ npm run benchmark:binary
 
 The [benchmark methodology](benchmarks/README.md) separates startup from warm-pool execution and retains every sample. Small workloads can be slower under PJS, and more workers do not guarantee linear scaling.
 
-The [v0.11 report](docs/benchmarks-v0.11.md) records the runtime-core decomposition, compatibility validation, reservation soak, stress, and before/after regression matrix. The [v0.10 report](docs/benchmarks-v0.10.md) and all earlier evidence remain preserved.
+The [v0.12 report](docs/benchmarks-v0.12.md) records upper-bound semantics, refund evidence, RLE/slack/capacity measurements, exact-mode regression controls, stress, soak, and the architectural audit. The [v0.11 report](docs/benchmarks-v0.11.md) records the runtime-core decomposition. All earlier reports and evidence remain preserved.
 
 The [v0.3 report](docs/benchmarks-v0.3.md) compares clone, transfer and reusable shared input, including a pinned Piscina baseline. The [v0.2 measurement report](docs/benchmarks-v0.2.md) compares clone and transfer paths, including matrix input preparation. The [v0.1 baseline](docs/benchmarks-v0.1.md) and its raw JSON remain preserved. Neither compiler nor runtime speedups are assumed.
 
@@ -320,9 +330,9 @@ All dependencies are development tools or benchmark baselines (Piscina is pinned
 - [Architecture decisions](docs/adr/0001-task-registration.md): registration, pool model, scheduler, and cancellation.
 - [Runtime research](docs/research/runtime-landscape.md): existing systems and concepts worth investigating.
 
-The next milestone should be selected from the [v0.11 measurements](docs/benchmarks-v0.11.md). Cross-platform reproduction and upper-bound/refund research for genuinely variable outputs have stronger evidence than another algorithm API. Reduce, ordered streaming, cooperative cancellation, worker-context propagation, global byte pools, and scheduling changes remain design work; v0.11 stabilizes none of them.
+The next milestone should follow the [v0.12 measurements](docs/benchmarks-v0.12.md), starting with the prepared cross-platform validation campaign. Reduce, ordered streaming, cooperative cancellation, worker-context propagation, global byte pools, and scheduling changes remain design work; v0.12 stabilizes none of them.
 
-Framework integrations, compiler transforms, custom syntax, browser support, and advanced schedulers are outside v0.11.
+Framework integrations, compiler transforms, custom syntax, browser support, and advanced schedulers are outside v0.12.
 
 ## License
 

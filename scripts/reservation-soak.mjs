@@ -88,7 +88,9 @@ function strict(expectedBytes = resultBytes, extra = {}) {
     typeof expectedBytes === 'number' ? expectedBytes : resultBytes;
   return {
     experimentalMaxBufferedResults: countCapacity,
-    experimentalResultBytes: expectedBytes,
+    ...(random() < 0.5
+      ? { experimentalMaxResultBytes: expectedBytes }
+      : { experimentalResultBytes: expectedBytes }),
     experimentalMaxReservedResultBytes: Math.max(byteCapacity, capacityBytes),
     ...extra,
   };
@@ -350,6 +352,60 @@ async function successScenario(runtime, task) {
   return `success:${move ? 'transfer' : 'clone'}:${callback ? 'callback' : 'fixed'}`;
 }
 
+async function upperBoundScenario(runtime, task) {
+  const maximum = choice([1, 16, 256, 4096, resultBytes]);
+  const actuals = Array.from({ length: 8 }, () =>
+    Math.floor(random() * (maximum + 1)),
+  );
+  const batch = choice([1, 2, 4]);
+  const failure = choice(['none', 'none', 'abort', 'timeout', 'crash']);
+  const controller = new AbortController();
+  const refundBefore = runtime.stats().streamResults.refundedResultBytes;
+  const stream = runtime.streamRange(
+    task,
+    { start: 0, end: actuals.length, grainSize: 1 },
+    (partition) =>
+      payload(partition, {
+        bytes: actuals[partition.index],
+        move: random() < 0.5,
+        ms: failure === 'timeout' ? 15 : choice([0, 0, 1]),
+        crash: failure === 'crash' && partition.index === 1,
+      }),
+    {
+      experimentalMaxResultBytes: random() < 0.5 ? maximum : () => maximum,
+      experimentalMaxReservedResultBytes: maximum * choice([1, 2, 4]),
+      experimentalMaxBufferedResults: choice([2, 4, 8]),
+      experimentalDispatchBatchSize: batch,
+      signal: controller.signal,
+      ...(failure === 'timeout' ? { timeout: 2 } : {}),
+    },
+  );
+  let count = 0;
+  const cancelAfter = choice([0, 1, 3]);
+  if (failure === 'abort' && cancelAfter === 0)
+    controller.abort('before result');
+  try {
+    for await (const { partition, output } of stream) {
+      assert.equal(output.byteLength, actuals[partition.index]);
+      count++;
+      if (failure === 'abort' && count === cancelAfter)
+        controller.abort('after yield');
+      if (random() < 0.3) await delay(choice([1, 2]));
+    }
+    assert.equal(failure, 'none');
+    assert.equal(count, actuals.length);
+    assert.equal(
+      runtime.stats().streamResults.refundedResultBytes - refundBefore,
+      actuals.reduce((sum, actual) => sum + maximum - actual, 0),
+    );
+  } catch (error) {
+    if (failure === 'none') throw error;
+  }
+  await quiescent(runtime);
+  assert.equal(getEventListeners(controller.signal, 'abort').length, 0);
+  return `upper-bound:${failure}:batch-${batch}`;
+}
+
 async function shutdownScenario(kind) {
   const { runtime, task } = createRuntime({ maxRestarts: 8 });
   await runtime.ready();
@@ -449,7 +505,7 @@ let iteration = 0;
 let lastScenario;
 try {
   while (iteration < maximumIterations && performance.now() < deadline) {
-    const family = iteration % 6;
+    const family = iteration % 7;
     lastScenario =
       family === 0
         ? await successScenario(runtime, task)
@@ -461,14 +517,16 @@ try {
               ? await crashScenario(runtime, task)
               : family === 4
                 ? await abandonmentScenario(runtime, task)
-                : await shutdownScenario(
-                    choice([
-                      'graceful',
-                      'non-drain-running',
-                      'buffered',
-                      'crash',
-                    ]),
-                  );
+                : family === 5
+                  ? await upperBoundScenario(runtime, task)
+                  : await shutdownScenario(
+                      choice([
+                        'graceful',
+                        'non-drain-running',
+                        'buffered',
+                        'crash',
+                      ]),
+                    );
     scenarioCounts[lastScenario] = (scenarioCounts[lastScenario] ?? 0) + 1;
     iteration++;
     if (performance.now() >= nextSampleAt) {
@@ -490,7 +548,7 @@ try {
   assert.equal(finalStats.streamResults.currentReservedResultBytes, 0);
   assert.deepEqual(internalCounts(runtime), { reservations: 0, executions: 0 });
   const report = {
-    version: '0.11.0',
+    version: '0.12.0',
     timestamp: new Date().toISOString(),
     environment: machineReport({
       mode,
@@ -515,6 +573,9 @@ try {
         finalStats.streamResults.currentReservedResultBytes,
       reservations: 0,
       executions: 0,
+      creditOperations: runtime.resultCredits.diagnostics().operations,
+      ...runtime.resultCredits.creditDiagnostics(),
+      refundMetrics: finalStats.streamResults,
       tasksPending: finalStats.tasks.pending,
       operationsPending: finalStats.operations.pending,
       workerFailures: finalStats.workers.failures,
@@ -527,8 +588,8 @@ try {
   await writeFile(
     new URL(
       forcedGc
-        ? '../benchmarks/results/reservation-soak-forced-gc-v0.11.json'
-        : '../benchmarks/results/reservation-soak-v0.11.json',
+        ? '../benchmarks/results/reservation-soak-forced-gc-v0.12.json'
+        : '../benchmarks/results/reservation-soak-v0.12.json',
       import.meta.url,
     ),
     JSON.stringify(report, null, 2) + '\n',

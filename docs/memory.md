@@ -196,6 +196,24 @@ required.
 
 ## Costs and choice
 
+v0.12 adds explicit upper-bound declarations to strict binary streams through
+`experimentalMaxResultBytes`, together with `experimentalMaxReservedResultBytes`.
+Exact `experimentalResultBytes` keeps equality semantics; declarations cannot
+be combined. Both use live direct non-shared binary values and visible bytes.
+
+The maximum is charged before admission. A successful worker validates and
+reports actual bytes before transfer, and ResultCreditManager refunds
+`maximum - actual` before buffering or direct delivery. Only actual retained
+bytes remain charged until yield. Current reserved bytes thus comprise
+unreconciled maxima plus reconciled actuals and unchanged exact reservations.
+Refund counters describe successful slack reconciliation; release on yield,
+failure, cancellation, crash, or termination does not increment them.
+Cancelled running results are discarded and release full outstanding credit at
+physical termination without reconciliation. Zero actual bytes refund the whole
+maximum but still occupy one count credit. Conservative maxima can reduce
+concurrency; PJS does not estimate bounds or capacities. This still cannot limit
+worker temporary allocations or RSS. See [ADR 0019](adr/0019-upper-bound-result-reservations.md).
+
 Sharing still costs allocation/copy at construction, metadata transport, worker
 startup and memory bandwidth. Tiny inputs or expensive kernels may show little
 gain. Measure one-shot preparation and repeated reuse separately. RSS includes

@@ -203,3 +203,17 @@ and generic/typed map paths. Raw results are
 [proposal](../docs/proposal-v0.11.md) and
 [measurement report](../docs/benchmarks-v0.11.md). Historical artifacts remain
 unchanged.
+
+## v0.12 upper-bound result reservations and refunds
+
+Run `npm run benchmark:upper-bound` for structural-bound RLE, slack/capacity
+sweeps, fast/slow consumers, equal-size overhead, and a benchmark-only
+held-maximum control. Build v0.11 separately and pass its root to
+`node benchmarks/upper-bound-results/regression.mjs` for the established API
+controls. The reservation soak now mixes exact and upper-bound cases and writes
+`reservation-soak-v0.12.json`; historical evidence remains untouched.
+
+See the [methodology](upper-bound-results/README.md),
+[proposal](../docs/proposal-v0.12.md), and
+[report](../docs/benchmarks-v0.12.md). New raw evidence is
+`upper-bound-results-v0.12.json` and `runtime-regression-v0.12.json`.

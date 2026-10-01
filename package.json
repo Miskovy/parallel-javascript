@@ -1,7 +1,7 @@
 {
   "name": "pjs-workspace",
   "private": true,
-  "version": "0.11.0",
+  "version": "0.12.0",
   "license": "MIT",
   "type": "module",
   "workspaces": [
@@ -34,6 +34,7 @@
     "benchmark:map": "npm run build && node benchmarks/mapping/run.mjs && node benchmarks/mapping/pipeline.mjs && node benchmarks/mapping/fairness.mjs",
     "benchmark:binary": "npm run build && node benchmarks/binary-results/run.mjs && node benchmarks/binary-results/fairness.mjs",
     "benchmark:reservation": "npm run build && node benchmarks/reservation-audit/run.mjs && node benchmarks/reservation-audit/pipeline.mjs",
+    "benchmark:upper-bound": "npm run build && node benchmarks/upper-bound-results/run.mjs && node benchmarks/upper-bound-results/refund.mjs && node benchmarks/upper-bound-results/profile.mjs",
     "soak:reservations:smoke": "npm run build && node scripts/reservation-soak.mjs --mode=smoke",
     "soak:reservations": "npm run build && node scripts/reservation-soak.mjs --mode=quick"
   },

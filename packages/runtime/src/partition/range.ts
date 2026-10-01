@@ -46,6 +46,15 @@ export type ResultByteDeclaration =
 export interface BinaryStreamRangeOptions extends PartitionOptions {
   experimentalMaxBufferedResults?: number;
   experimentalResultBytes: ResultByteDeclaration;
+  experimentalMaxResultBytes?: never;
+  experimentalMaxReservedResultBytes: number;
+}
+
+/** @experimental Maximum visible bytes; successful unused credit refunds on arrival. */
+export interface UpperBoundBinaryStreamRangeOptions extends PartitionOptions {
+  experimentalMaxBufferedResults?: number;
+  experimentalMaxResultBytes: ResultByteDeclaration;
+  experimentalResultBytes?: never;
   experimentalMaxReservedResultBytes: number;
 }
 

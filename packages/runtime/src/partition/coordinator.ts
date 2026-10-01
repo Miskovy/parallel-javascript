@@ -13,7 +13,7 @@ import {
   PjsTimeoutError,
 } from '../errors/index.js';
 import { integer } from '../internal/integer.js';
-import type { ResultCreditManager } from '../results/credit.js';
+import type { ResultByteMode, ResultCreditManager } from '../results/credit.js';
 import type { PjsTask } from '../tasks/registry.js';
 import type {
   TaskCoordinator,
@@ -42,6 +42,7 @@ import type {
   PjsTypedArrayConstructor,
   RangePartition,
   StreamRangeOptions,
+  UpperBoundBinaryStreamRangeOptions,
 } from './range.js';
 import { RangeStream } from './stream.js';
 import type { StreamRangeResult } from './stream.js';
@@ -145,6 +146,7 @@ export class RangeCoordinator implements TaskParentPort {
     mapOutputConstructor?: PjsTypedArrayConstructor,
     resultByteDeclaration?: BinaryStreamRangeOptions['experimentalResultBytes'],
     resultByteCapacity?: number,
+    resultByteMode: ResultByteMode = 'exact',
   ): Promise<unknown[] | PjsTypedArray | void> {
     const id = randomUUID();
     const acceptedAt = performance.now();
@@ -249,6 +251,7 @@ export class RangeCoordinator implements TaskParentPort {
         mapOutputConstructor,
         resultByteDeclaration,
         resultByteCapacity,
+        resultByteMode,
         outputs,
         createInput,
         timeout === undefined ? undefined : acceptedAt + timeout,
@@ -326,26 +329,43 @@ export class RangeCoordinator implements TaskParentPort {
     task: PjsTask<Input, Output>,
     range: { start: number; end: number; grainSize: number },
     createInput: (partition: RangePartition) => PartitionInput<Input>,
-    options: StreamRangeOptions | BinaryStreamRangeOptions = {},
+    options:
+      | StreamRangeOptions
+      | BinaryStreamRangeOptions
+      | UpperBoundBinaryStreamRangeOptions = {},
   ): AsyncIterable<StreamRangeResult<Output>> {
     let capacity: number;
     let resultByteDeclaration:
       BinaryStreamRangeOptions['experimentalResultBytes'] | undefined;
     let resultByteCapacity: number | undefined;
+    let resultByteMode: ResultByteMode = 'exact';
     try {
       capacity = integer(
         'experimentalMaxBufferedResults',
         options.experimentalMaxBufferedResults ?? this.workerCount,
         1,
       );
-      const hasDeclaration = 'experimentalResultBytes' in options;
+      const hasExact = 'experimentalResultBytes' in options;
+      const hasMaximum = 'experimentalMaxResultBytes' in options;
+      if (hasExact && hasMaximum)
+        throw new TypeError(
+          'Exact and upper-bound result declarations are mutually exclusive',
+        );
+      const hasDeclaration = hasExact || hasMaximum;
       const hasByteCapacity = 'experimentalMaxReservedResultBytes' in options;
       if (hasDeclaration !== hasByteCapacity)
         throw new TypeError(
-          'experimentalResultBytes and experimentalMaxReservedResultBytes must be provided together',
+          'One result-byte declaration and experimentalMaxReservedResultBytes must be provided together',
         );
       if (hasDeclaration && hasByteCapacity) {
-        resultByteDeclaration = options.experimentalResultBytes;
+        resultByteMode = hasMaximum ? 'upper-bound' : 'exact';
+        const declarationName = hasMaximum
+          ? 'experimentalMaxResultBytes'
+          : 'experimentalResultBytes';
+        resultByteDeclaration = hasMaximum
+          ? (options as UpperBoundBinaryStreamRangeOptions)
+              .experimentalMaxResultBytes
+          : (options as BinaryStreamRangeOptions).experimentalResultBytes;
         resultByteCapacity = integer(
           'experimentalMaxReservedResultBytes',
           options.experimentalMaxReservedResultBytes,
@@ -353,16 +373,16 @@ export class RangeCoordinator implements TaskParentPort {
         );
         if (typeof resultByteDeclaration === 'number') {
           try {
-            integer('experimentalResultBytes', resultByteDeclaration, 0);
+            integer(declarationName, resultByteDeclaration, 0);
           } catch (cause) {
             throw new PjsBinaryResultContractError(
-              'experimentalResultBytes must be a nonnegative safe integer',
+              `${declarationName} must be a nonnegative safe integer`,
               { cause },
             );
           }
         } else if (typeof resultByteDeclaration !== 'function')
           throw new TypeError(
-            'experimentalResultBytes must be a nonnegative safe integer or function',
+            `${declarationName} must be a nonnegative safe integer or function`,
           );
       }
     } catch (error) {
@@ -370,6 +390,7 @@ export class RangeCoordinator implements TaskParentPort {
       this.operationTypeMetrics.streaming.rejected++;
       if (
         'experimentalResultBytes' in options ||
+        'experimentalMaxResultBytes' in options ||
         'experimentalMaxReservedResultBytes' in options
       )
         this.resultCredits.recordRejected();
@@ -388,6 +409,7 @@ export class RangeCoordinator implements TaskParentPort {
       undefined,
       resultByteDeclaration,
       resultByteCapacity,
+      resultByteMode,
     );
     void lifecycle.then(
       () => stream.complete(),
@@ -548,7 +570,14 @@ export class RangeCoordinator implements TaskParentPort {
             partition,
             ...(expectedResultBytes === undefined
               ? {}
-              : { expectedResultBytes }),
+              : operation.resultByteMode === 'upper-bound'
+                ? {
+                    resultByteContract: {
+                      mode: 'upper-bound',
+                      bytes: expectedResultBytes,
+                    },
+                  }
+                : { expectedResultBytes }),
           };
           try {
             const factoryStarted = internalProfilingEnabled()

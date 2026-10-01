@@ -1,0 +1,1601 @@
+{
+  "version": "0.12.0",
+  "timestamp": "2026-10-01T20:12:19.171Z",
+  "environment": {
+    "machineLabel": "Miskovy",
+    "cpuModel": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz",
+    "logicalCpuCount": 8,
+    "availableParallelism": 8,
+    "physicalCoreCount": null,
+    "totalMemoryBytes": 17037594624,
+    "platform": "win32",
+    "osType": "Windows_NT",
+    "release": "10.0.19045",
+    "architecture": "x64",
+    "node": "v24.21.0",
+    "v8": "13.6.233.17-node.53",
+    "pjsCommit": "8fcd0fd9e9e3a6987198fce80a338b02c076b0d7",
+    "worktreeDirty": true,
+    "power": "Power Scheme GUID: a1841308-3541-4fab-bc81-f71556f20b4a  (Power saver)",
+    "settings": {}
+  },
+  "checks": [
+    {
+      "name": "build",
+      "args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "build"
+      ],
+      "elapsedMs": 1091.5479,
+      "code": 0,
+      "stdout": "\n> pjs-workspace@0.12.0 build\n> tsc -p packages/runtime/tsconfig.json\n\n",
+      "stderr": ""
+    },
+    {
+      "name": "test:types",
+      "args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "test:types"
+      ],
+      "elapsedMs": 436.1974,
+      "code": 0,
+      "stdout": "\n> pjs-workspace@0.12.0 test:types\n> tsc -p packages/runtime/test/tsconfig.json\n\n",
+      "stderr": ""
+    },
+    {
+      "name": "typecheck:compat",
+      "args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "typecheck:compat"
+      ],
+      "elapsedMs": 1539.9025,
+      "code": 0,
+      "stdout": "\n> pjs-workspace@0.12.0 typecheck:compat\n> tsc6 --noEmit -p packages/runtime/tsconfig.json\n\n",
+      "stderr": ""
+    },
+    {
+      "name": "lint",
+      "args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "lint"
+      ],
+      "elapsedMs": 4079.8275,
+      "code": 0,
+      "stdout": "\n> pjs-workspace@0.12.0 lint\n> eslint .\n\n",
+      "stderr": ""
+    },
+    {
+      "name": "format:check",
+      "args": [
+        "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+        "run",
+        "format:check"
+      ],
+      "elapsedMs": 3743.5393000000004,
+      "code": 0,
+      "stdout": "\n> pjs-workspace@0.12.0 format:check\n> prettier --check .\n\nChecking formatting...\nAll matched files use Prettier code style!\n",
+      "stderr": ""
+    },
+    {
+      "name": "normal suite",
+      "args": [
+        "--test",
+        "--test-timeout=20000",
+        "packages/runtime/test/*.test.mjs"
+      ],
+      "elapsedMs": 5823.039000000001,
+      "code": 0,
+      "stdout": "✔ batch size one preserves v0.4 logical output and message semantics (354.5858ms)\n✔ multiple logical items retain order across reversed physical completion (527.5971ms)\n✔ batch stops after logical failure at item 0 (179.1753ms)\n✔ batch stops after logical failure at item 1 (265.5275ms)\n✔ batch stops after logical failure at item 3 (126.625ms)\n✔ shared and cloned inputs batch while transferred inputs reject before detachment (233.1964ms)\n✔ batched private outputs can transfer back together (254.9991ms)\n✔ combined output serialization failure rejects once and leaves replacement unnecessary (164.733ms)\n✔ queued parent cancellation removes one weighted FIFO batch (133.9113ms)\n✔ abort during a batch settles callers but the full batch retains occupancy (155.2682ms)\n✔ timeout during a batch settles callers but the full batch retains occupancy (297.2661ms)\n✔ worker crash during a batch fails without retry and replacement remains usable (214.3707ms)\n✔ malformed batch response fails its worker and operation safely (250.7925ms)\n✔ graceful shutdown drains ungenerated batches (115.5059ms)\n✔ non-draining shutdown cancels active and ungenerated batches (102.6185ms)\n✔ reentrant factory cannot steal a worker reserved for a batch (112.3531ms)\n✔ concurrent parents and ordinary work preserve logical and physical accounting (184.4793ms)\n✔ binary protocol fields validate single, batch, legacy, and failure messages (3.5816ms)\n✔ strict streams accept direct owned binary kinds, zero length, and subviews (384.8501ms)\n✔ clone, transfer, uneven declarations, and physical batching retain logical byte weights (358.9763ms)\n✔ count and byte credits compose and variable declarations wait for consumer release (296.0571ms)\n✔ impossible and invalid declarations fail before factory or worker execution (160.6492ms)\n✔ worker rejects wrong, nested, shared, detached, over, and undersized results before success transport (172.535ms)\n✔ queued cancellation releases immediately while running cancellation holds credit until execution ends (249.8714ms)\n✔ timeout, crash, and first batch failure clean every reservation exactly once (375.8749ms)\n✔ consumer failure and weighted head-of-line pressure do not leak or starve another stream (176.6743ms)\n✔ strict streams retain parent saturation and count-only streams remain available (159.2233ms)\n✔ graceful and terminating shutdown preserve reservation ownership (322.9ms)\n✔ parallelFor handles empty, single, multiple, and batched ranges as Promise<void> (366.3936ms)\n✔ completion protocol ignores large and uncloneable worker values without output serialization (345.411ms)\n✔ completion preserves exclusive input transfer rules (167.2303ms)\n✔ shared vector and matrix outputs use disjoint completion-only writes (254.1192ms)\n✔ first failure in a completion batch skips later items and leaves earlier effects (184.779ms)\n✔ completion abort settles once while posted work retains occupancy (201.3725ms)\n✔ completion timeout settles once while posted work retains occupancy (290.6008ms)\n✔ completion operation capacity and ordinary queue admission remain bounded (160.4936ms)\n✔ completion worker crash fails once and replacement remains usable (387.4618ms)\n✔ graceful shutdown drains completion work and non-draining shutdown cancels it (304.1192ms)\n✔ operation AsyncResource preserves isolated AsyncLocalStorage stores for factories and continuations (153.0208ms)\n✔ operation async resources emit destroy and do not leak abort listeners (194.7101ms)\n✔ generic map covers empty, single, uneven, and negative ranges (375.9345ms)\n✔ map assembles logical element order across reversed block completion (352.2477ms)\n✔ map validates array and typed block cardinality and kind (295.7612ms)\n✔ typed map clones and transfers blocks without boxing the final output (188.53ms)\n✔ generic object map preserves one object per element (209.7776ms)\n✔ map propagates worker, serialization, cancellation, timeout, and crash failures (190.5465ms)\n✔ map drains graceful shutdown and rejects non-draining shutdown (308.4401ms)\n✔ map saturation, metrics, and AsyncLocalStorage reuse range invariants (128.289ms)\n✔ matrix kernel agrees with independent reference on unequal signed entries (4.3618ms)\n✔ uneven matrix row partitions execute correctly across multiple workers (clone) (309.1475ms)\n✔ uneven matrix row partitions execute correctly across multiple workers (shared) (321.8793ms)\n✔ stream diagnostics distinguish known direct backings from unknown results (305.8415ms)\n✔ multiple buffered views report payload bytes and explicitly alias-count (301.2862ms)\n✔ yield, transfer, cancellation, and failure release diagnostic retention (187.1368ms)\n✔ stream start remains eager and its deadline starts before consumption (319.0559ms)\n✔ stream remains single-consumer and an async processing pipeline cleans up on sink failure (176.9726ms)\n✔ seeded range properties cover every integer once without gaps or overlaps (73.2189ms)\n✔ empty, singleton, awkward and randomized runtime ranges agree with independent coverage (780.6947ms)\n✔ invalid ranges/options/handles reject without parent or child admission (213.7155ms)\n✔ logical result order survives reversed completion order (186.0292ms)\n✔ ten million logical chunks generate only a worker-sized window and cancel lazily (166.5935ms)\n✔ saturated FIFO delays production, and active parent records have a finite bound (120.9019ms)\n✔ input factory reserves admission against reentrant ordinary work (183.9074ms)\n✔ shared common input and compact transferred inputs/outputs preserve ownership (170.277ms)\n✔ worker exception identifies the failed partition and cancels queued siblings (138.2396ms)\n✔ failed parent discards late running sibling output without releasing its slot (136.0398ms)\n✔ factory and serialization failures stop production and leave the runtime usable (249.1969ms)\n✔ partition queued abort settles once and preserves worker occupancy (134.4874ms)\n✔ partition queued timeout settles once and preserves worker occupancy (280.8221ms)\n✔ partition running abort settles once and preserves worker occupancy (121.3149ms)\n✔ partition running timeout settles once and preserves worker occupancy (267.5491ms)\n✔ one parent deadline includes synchronous preparation and is not restarted per chunk (205.2616ms)\n✔ crashed partition fails once; unrelated operation and replacement retain shared input (230.2209ms)\n✔ restart exhaustion rejects all parent operations including those without children (143.0103ms)\n✔ graceful shutdown drains the entire accepted range including ungenerated chunks and startup (180.6863ms)\n✔ non-draining shutdown cancels running, queued and ungenerated partition work (159.162ms)\n✔ reentrant cancellation and shutdown during factory/serialization preserve transfer rules (95.8578ms)\n✔ queued transfer reservation releases when a parent is cancelled (72.5104ms)\n✔ nested worker-created partitioning is explicitly rejected (95.3813ms)\n✔ many sequential and simultaneous operations preserve accounting and listener cleanup (175.4676ms)\n✔ deadline expires while saturation prevents any chunk generation (114.7241ms)\n✔ graceful shutdown initiated inside a factory finishes the remaining range (85.935ms)\n✔ shutdown during startup cancels an accepted parent before generation (14.6509ms)\n✔ simultaneous sibling failures retain only the first parent outcome (90.0923ms)\n✔ abort/deadline/crash races with concurrent producers retain bounded admission and settlement (476.7493ms)\n✔ upper-bound reconciliation refunds immediately and yield releases actual credit (5.0323ms)\n✔ upper-bound zero and equal actuals reconcile independently in a batch (3.5625ms)\n✔ upper-bound cancellation races do not refund discarded successes (0.7525ms)\n✔ invalid upper-bound reconciliation cannot corrupt accounting; exact never refunds (1.5766ms)\n✔ result credits release queued cancellation immediately (0.715ms)\n✔ result credits retain running cancellation until execution ends (0.3654ms)\n✔ result credits survive successful buffering until yield (0.3644ms)\n✔ result credits correlate batch items and cancel operations exactly once (0.3646ms)\n✔ result credits enforce capacity and release all physical owners (1.2808ms)\n✔ executes before explicit readiness, reuses a worker, and clones input (91.7488ms)\n✔ CPU tasks execute simultaneously in four distinct isolates (161.8508ms)\n✔ FIFO queue, queued removal, and bounded admission (185.6917ms)\n✔ zero queue accepts only immediately idle capacity (161.5224ms)\n✔ task errors retain remote details and serialization failures preserve worker health (149.5801ms)\n✔ worker exit 0 fails its task once and replaces the worker (187.0273ms)\n✔ worker exit 23 fails its task once and replaces the worker (234.7605ms)\n✔ invalid worker messages fail the occupied task and recover (204.5769ms)\n✔ uncaught error followed by exit counts once and recovers (164.9825ms)\n✔ abort listeners and timers are removed after successful and failed settlement (117.5101ms)\n✔ serialization getters may enqueue and throw without stranding the queue (75.043ms)\n✔ bounded crash replacement fails remaining work when budget is exhausted (80.5063ms)\n✔ queued deadlines remove bookkeeping; pre-abort never enters the queue (91.6545ms)\n✔ running abort settles caller without releasing execution capacity (95.268ms)\n✔ running timeout settles caller without releasing execution capacity (211.3338ms)\n✔ graceful shutdown drains startup, active, and queued work, and is idempotent (90.1569ms)\n✔ shutdown handles a crash while draining accepted work (141.3996ms)\n✔ explicit non-draining shutdown terminates uncooperative work (108.4433ms)\n✔ shutdown during startup cancels tasks without spawning replacements (51.1811ms)\n✔ bootstrap failure is bounded: broken.mjs (97.3559ms)\n✔ bootstrap failure is bounded: hanging-import.mjs (1011.4032ms)\n✔ bootstrap failure is bounded: missing.mjs (78.7842ms)\n✔ configuration and registry boundaries are checked (18.1087ms)\n✔ stress mixed concurrent outcomes preserve accounting and release listeners (141.8394ms)\n✔ scheduler policy is independent of worker transport (0.2642ms)\n✔ scheduler capacity and size count logical admission weight (0.1795ms)\n✔ construction compacts views, copies exact bits, and leaves source independent (4.8937ms)\n✔ construction rejects unsupported inputs and detached views (1.1924ms)\n✔ four simultaneous workers reuse one input, clone metadata, and transfer independent outputs (263.2842ms)\n✔ native SAB passthrough preserves offsets and aliases within cloned metadata (121.9507ms)\n✔ crash leaves shared bytes and queued task valid through worker replacement (230.2354ms)\n✔ shared input during queued abort preserves capacity and settles once (200.9359ms)\n✔ shared input during queued timeout preserves capacity and settles once (481.27ms)\n✔ shared input during running abort preserves capacity and settles once (153.5372ms)\n✔ shared input during running timeout preserves capacity and settles once (426.018ms)\n✔ shared startup queue drains gracefully and terminating shutdown preserves input (253.6849ms)\n✔ shared bytes never enter transfer lists; independent ordinary input can transfer (170.0357ms)\n✔ educational mutation violation loses an update; Atomics.add preserves both (203.5431ms)\n✔ empty, one, many, and batched streams deliver partition results (180.6236ms)\n✔ stream delivery uses completion order (154.1114ms)\n✔ slow consumer keeps produced plus in-flight results within capacity (323.7245ms)\n✔ the operation deadline includes slow consumer waiting (315.1995ms)\n✔ consumer break and throw cancel remaining work exactly once (100.2396ms)\n✔ producer failure preserves yielded values and rejects the stream (100.7222ms)\n✔ stream transfers output buffers and yields shared views natively (144.6348ms)\n✔ abort, timeout, crash, and non-draining shutdown reject iteration (266.2021ms)\n✔ graceful shutdown includes buffered result delivery (231.0943ms)\n✔ concurrent stream AsyncLocalStorage contexts remain isolated (138.7948ms)\n✔ stream coexists with ordinary and completion-only work (265.7848ms)\n✔ stream terminal paths remove abort listeners (107.5291ms)\n✔ invalid result capacity rejects through the iterator (27.9408ms)\n✔ clone remains default and user objects cannot spoof a transfer envelope (136.5185ms)\n✔ input and output transfers detach sender views while preserving data and offsets (151.0691ms)\n✔ input-only and output-only transfer choices are independent (113.6723ms)\n✔ zero-length and cross-realm ArrayBuffers transfer successfully (99.8807ms)\n✔ multiple buffers and duplicate references in a payload preserve aliasing (98.0485ms)\n✔ invalid transfer lists reject without poisoning workers or detaching valid entries (135.6347ms)\n✔ admission rejection does not move or reserve buffers (115.5646ms)\n✔ queued abort retains ownership and releases the reservation (101.5398ms)\n✔ queued timeout retains ownership and releases the reservation (190.2788ms)\n✔ queued input lists are snapshots and pending transfers reserve across runtimes (205.6321ms)\n✔ external detachment while queued fails dispatch, releases reservations, and preserves progress (108.1725ms)\n✔ running abort discards transferred output without reusing a busy slot (101.0525ms)\n✔ running timeout discards transferred output without reusing a busy slot (176.1986ms)\n✔ shutdown distinguishes queued ownership from dispatched ownership (191.2214ms)\n✔ crashes and task failures cannot restore transferred input ownership (173.8196ms)\n✔ input and output serialization failures leave workers reusable (78.1215ms)\n✔ abort inside a serialization getter cannot release an in-progress transfer reservation (100.0092ms)\n✔ stress transfers across four workers preserve bytes and terminal accounting (171.2979ms)\n✔ upper-bound wire fields are explicit, exclusive, and validated for batches (2.5188ms)\n✔ upper-bound kinds, subviews, zero, clone, and transfer preserve visible bytes (129.3742ms)\n✔ refund resumes admission before consumer yield and slow buffers retain actual credit (115.0043ms)\n✔ zero actual refunds all maximum but count capacity still blocks production (160.1485ms)\n✔ upper-bound violations fail compactly without a refund or successful payload (130.1691ms)\n✔ invalid, ambiguous, asynchronous, throwing, and impossible maxima fail before input (143.4325ms)\n✔ upper-bound declaration can submit ordinary work reentrantly (170.9271ms)\n✔ batches refund logical successes and stop on first or middle failure (194.0576ms)\n✔ queued and running cancellation preserve maximum until the correct terminal event (146.8355ms)\n✔ timeout before dispatch and while running never reconciles a discarded success (316.6318ms)\n✔ consumer break, throw, return, and iterator throw release buffered actual credit (174.7173ms)\n✔ crash, fatal restart exhaustion, and ordinary failure release without refund (299.265ms)\n✔ graceful and non-draining shutdown clean reconciled and unreconciled owners (223.9324ms)\n✔ a credit-blocked maximum does not starve another stream or ordinary work (81.3278ms)\n✔ non-draining shutdown discards reconciled buffered actuals without counting release as refund (78.7553ms)\nℹ tests 178\nℹ suites 0\nℹ pass 178\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 5762.8077\n",
+      "stderr": ""
+    },
+    {
+      "name": "invariant suite",
+      "args": [
+        "--test",
+        "--test-timeout=20000",
+        "packages/runtime/test/*.test.mjs"
+      ],
+      "elapsedMs": 5799.678400000001,
+      "code": 0,
+      "stdout": "✔ batch size one preserves v0.4 logical output and message semantics (369.1871ms)\n✔ multiple logical items retain order across reversed physical completion (295.5701ms)\n✔ batch stops after logical failure at item 0 (194.532ms)\n✔ batch stops after logical failure at item 1 (186.9433ms)\n✔ batch stops after logical failure at item 3 (208.0985ms)\n✔ shared and cloned inputs batch while transferred inputs reject before detachment (207.6378ms)\n✔ batched private outputs can transfer back together (147.9962ms)\n✔ combined output serialization failure rejects once and leaves replacement unnecessary (156.2929ms)\n✔ queued parent cancellation removes one weighted FIFO batch (203.1245ms)\n✔ abort during a batch settles callers but the full batch retains occupancy (188.605ms)\n✔ timeout during a batch settles callers but the full batch retains occupancy (241.5447ms)\n✔ worker crash during a batch fails without retry and replacement remains usable (327.8834ms)\n✔ malformed batch response fails its worker and operation safely (206.3443ms)\n✔ graceful shutdown drains ungenerated batches (135.6914ms)\n✔ non-draining shutdown cancels active and ungenerated batches (101.2297ms)\n✔ reentrant factory cannot steal a worker reserved for a batch (90.0794ms)\n✔ concurrent parents and ordinary work preserve logical and physical accounting (105.8804ms)\n✔ binary protocol fields validate single, batch, legacy, and failure messages (4.3158ms)\n✔ strict streams accept direct owned binary kinds, zero length, and subviews (392.7942ms)\n✔ clone, transfer, uneven declarations, and physical batching retain logical byte weights (224.5488ms)\n✔ count and byte credits compose and variable declarations wait for consumer release (274.921ms)\n✔ impossible and invalid declarations fail before factory or worker execution (281.3887ms)\n✔ worker rejects wrong, nested, shared, detached, over, and undersized results before success transport (191.6138ms)\n✔ queued cancellation releases immediately while running cancellation holds credit until execution ends (174.2621ms)\n✔ timeout, crash, and first batch failure clean every reservation exactly once (271.8488ms)\n✔ consumer failure and weighted head-of-line pressure do not leak or starve another stream (269.3307ms)\n✔ strict streams retain parent saturation and count-only streams remain available (141.3429ms)\n✔ graceful and terminating shutdown preserve reservation ownership (304.3161ms)\n✔ parallelFor handles empty, single, multiple, and batched ranges as Promise<void> (394.0363ms)\n✔ completion protocol ignores large and uncloneable worker values without output serialization (289.8005ms)\n✔ completion preserves exclusive input transfer rules (289.2638ms)\n✔ shared vector and matrix outputs use disjoint completion-only writes (352.0108ms)\n✔ first failure in a completion batch skips later items and leaves earlier effects (177.1881ms)\n✔ completion abort settles once while posted work retains occupancy (123.4633ms)\n✔ completion timeout settles once while posted work retains occupancy (267.3563ms)\n✔ completion operation capacity and ordinary queue admission remain bounded (236.3353ms)\n✔ completion worker crash fails once and replacement remains usable (269.0792ms)\n✔ graceful shutdown drains completion work and non-draining shutdown cancels it (304.8767ms)\n✔ operation AsyncResource preserves isolated AsyncLocalStorage stores for factories and continuations (119.5358ms)\n✔ operation async resources emit destroy and do not leak abort listeners (111.0925ms)\n✔ generic map covers empty, single, uneven, and negative ranges (451.6523ms)\n✔ map assembles logical element order across reversed block completion (174.2802ms)\n✔ map validates array and typed block cardinality and kind (199.6061ms)\n✔ typed map clones and transfers blocks without boxing the final output (316.3459ms)\n✔ generic object map preserves one object per element (185.35ms)\n✔ map propagates worker, serialization, cancellation, timeout, and crash failures (222.1964ms)\n✔ map drains graceful shutdown and rejects non-draining shutdown (296.4654ms)\n✔ map saturation, metrics, and AsyncLocalStorage reuse range invariants (221.6389ms)\n✔ matrix kernel agrees with independent reference on unequal signed entries (15.0036ms)\n✔ uneven matrix row partitions execute correctly across multiple workers (clone) (240.3931ms)\n✔ uneven matrix row partitions execute correctly across multiple workers (shared) (142.629ms)\n✔ stream diagnostics distinguish known direct backings from unknown results (441.9361ms)\n✔ multiple buffered views report payload bytes and explicitly alias-count (243.0677ms)\n✔ yield, transfer, cancellation, and failure release diagnostic retention (392.1791ms)\n✔ stream start remains eager and its deadline starts before consumption (288.9948ms)\n✔ stream remains single-consumer and an async processing pipeline cleans up on sink failure (200.8419ms)\n✔ seeded range properties cover every integer once without gaps or overlaps (80.359ms)\n✔ empty, singleton, awkward and randomized runtime ranges agree with independent coverage (655.1851ms)\n✔ invalid ranges/options/handles reject without parent or child admission (180.3429ms)\n✔ logical result order survives reversed completion order (341.1697ms)\n✔ ten million logical chunks generate only a worker-sized window and cancel lazily (214.3088ms)\n✔ saturated FIFO delays production, and active parent records have a finite bound (127.6103ms)\n✔ input factory reserves admission against reentrant ordinary work (119.7891ms)\n✔ shared common input and compact transferred inputs/outputs preserve ownership (207.4987ms)\n✔ worker exception identifies the failed partition and cancels queued siblings (130.4763ms)\n✔ failed parent discards late running sibling output without releasing its slot (116.2177ms)\n✔ factory and serialization failures stop production and leave the runtime usable (168.9258ms)\n✔ partition queued abort settles once and preserves worker occupancy (139.7047ms)\n✔ partition queued timeout settles once and preserves worker occupancy (298.9842ms)\n✔ partition running abort settles once and preserves worker occupancy (153.5597ms)\n✔ partition running timeout settles once and preserves worker occupancy (260.5503ms)\n✔ one parent deadline includes synchronous preparation and is not restarted per chunk (209.3247ms)\n✔ crashed partition fails once; unrelated operation and replacement retain shared input (296.0668ms)\n✔ restart exhaustion rejects all parent operations including those without children (116.8672ms)\n✔ graceful shutdown drains the entire accepted range including ungenerated chunks and startup (108.5364ms)\n✔ non-draining shutdown cancels running, queued and ungenerated partition work (152.4583ms)\n✔ reentrant cancellation and shutdown during factory/serialization preserve transfer rules (111.2577ms)\n✔ queued transfer reservation releases when a parent is cancelled (77.8322ms)\n✔ nested worker-created partitioning is explicitly rejected (109.4744ms)\n✔ many sequential and simultaneous operations preserve accounting and listener cleanup (210.6147ms)\n✔ deadline expires while saturation prevents any chunk generation (88.8347ms)\n✔ graceful shutdown initiated inside a factory finishes the remaining range (149.6801ms)\n✔ shutdown during startup cancels an accepted parent before generation (35.6253ms)\n✔ simultaneous sibling failures retain only the first parent outcome (166.9623ms)\n✔ abort/deadline/crash races with concurrent producers retain bounded admission and settlement (457.7511ms)\n✔ upper-bound reconciliation refunds immediately and yield releases actual credit (23.0672ms)\n✔ upper-bound zero and equal actuals reconcile independently in a batch (1.7938ms)\n✔ upper-bound cancellation races do not refund discarded successes (0.6822ms)\n✔ invalid upper-bound reconciliation cannot corrupt accounting; exact never refunds (1.4345ms)\n✔ result credits release queued cancellation immediately (1.3481ms)\n✔ result credits retain running cancellation until execution ends (0.6444ms)\n✔ result credits survive successful buffering until yield (0.4344ms)\n✔ result credits correlate batch items and cancel operations exactly once (0.4227ms)\n✔ result credits enforce capacity and release all physical owners (0.969ms)\n✔ executes before explicit readiness, reuses a worker, and clones input (244.2504ms)\n✔ CPU tasks execute simultaneously in four distinct isolates (172.0788ms)\n✔ FIFO queue, queued removal, and bounded admission (98.0835ms)\n✔ zero queue accepts only immediately idle capacity (138.3521ms)\n✔ task errors retain remote details and serialization failures preserve worker health (80.833ms)\n✔ worker exit 0 fails its task once and replaces the worker (278.4471ms)\n✔ worker exit 23 fails its task once and replaces the worker (175.6494ms)\n✔ invalid worker messages fail the occupied task and recover (209.5216ms)\n✔ uncaught error followed by exit counts once and recovers (251.6176ms)\n✔ abort listeners and timers are removed after successful and failed settlement (85.6082ms)\n✔ serialization getters may enqueue and throw without stranding the queue (61.967ms)\n✔ bounded crash replacement fails remaining work when budget is exhausted (64.4631ms)\n✔ queued deadlines remove bookkeeping; pre-abort never enters the queue (107.7673ms)\n✔ running abort settles caller without releasing execution capacity (93.6741ms)\n✔ running timeout settles caller without releasing execution capacity (177.5305ms)\n✔ graceful shutdown drains startup, active, and queued work, and is idempotent (81.2463ms)\n✔ shutdown handles a crash while draining accepted work (141.5017ms)\n✔ explicit non-draining shutdown terminates uncooperative work (78.2239ms)\n✔ shutdown during startup cancels tasks without spawning replacements (23.2833ms)\n✔ bootstrap failure is bounded: broken.mjs (75.1462ms)\n✔ bootstrap failure is bounded: hanging-import.mjs (1015.7016ms)\n✔ bootstrap failure is bounded: missing.mjs (70.7961ms)\n✔ configuration and registry boundaries are checked (21.196ms)\n✔ stress mixed concurrent outcomes preserve accounting and release listeners (324.8936ms)\n✔ scheduler policy is independent of worker transport (0.4435ms)\n✔ scheduler capacity and size count logical admission weight (0.3367ms)\n✔ construction compacts views, copies exact bits, and leaves source independent (11.3292ms)\n✔ construction rejects unsupported inputs and detached views (1.0893ms)\n✔ four simultaneous workers reuse one input, clone metadata, and transfer independent outputs (233.869ms)\n✔ native SAB passthrough preserves offsets and aliases within cloned metadata (119.4813ms)\n✔ crash leaves shared bytes and queued task valid through worker replacement (334.7786ms)\n✔ shared input during queued abort preserves capacity and settles once (161.1732ms)\n✔ shared input during queued timeout preserves capacity and settles once (441.7176ms)\n✔ shared input during running abort preserves capacity and settles once (95.2787ms)\n✔ shared input during running timeout preserves capacity and settles once (415.8551ms)\n✔ shared startup queue drains gracefully and terminating shutdown preserves input (252.8209ms)\n✔ shared bytes never enter transfer lists; independent ordinary input can transfer (113.7062ms)\n✔ educational mutation violation loses an update; Atomics.add preserves both (139.3694ms)\n✔ empty, one, many, and batched streams deliver partition results (190.3014ms)\n✔ stream delivery uses completion order (158.2193ms)\n✔ slow consumer keeps produced plus in-flight results within capacity (330.8674ms)\n✔ the operation deadline includes slow consumer waiting (286.1553ms)\n✔ consumer break and throw cancel remaining work exactly once (103.1178ms)\n✔ producer failure preserves yielded values and rejects the stream (99.2796ms)\n✔ stream transfers output buffers and yields shared views natively (114.4891ms)\n✔ abort, timeout, crash, and non-draining shutdown reject iteration (252.8855ms)\n✔ graceful shutdown includes buffered result delivery (178.9282ms)\n✔ concurrent stream AsyncLocalStorage contexts remain isolated (134.9719ms)\n✔ stream coexists with ordinary and completion-only work (262.4805ms)\n✔ stream terminal paths remove abort listeners (125.9083ms)\n✔ invalid result capacity rejects through the iterator (47.2454ms)\n✔ clone remains default and user objects cannot spoof a transfer envelope (127.6915ms)\n✔ input and output transfers detach sender views while preserving data and offsets (93.5439ms)\n✔ input-only and output-only transfer choices are independent (134.6703ms)\n✔ zero-length and cross-realm ArrayBuffers transfer successfully (93.2777ms)\n✔ multiple buffers and duplicate references in a payload preserve aliasing (79.3186ms)\n✔ invalid transfer lists reject without poisoning workers or detaching valid entries (104.4764ms)\n✔ admission rejection does not move or reserve buffers (97.7444ms)\n✔ queued abort retains ownership and releases the reservation (106.2595ms)\n✔ queued timeout retains ownership and releases the reservation (112.9965ms)\n✔ queued input lists are snapshots and pending transfers reserve across runtimes (126.8211ms)\n✔ external detachment while queued fails dispatch, releases reservations, and preserves progress (113.1144ms)\n✔ running abort discards transferred output without reusing a busy slot (111.4438ms)\n✔ running timeout discards transferred output without reusing a busy slot (253.1779ms)\n✔ shutdown distinguishes queued ownership from dispatched ownership (161.8608ms)\n✔ crashes and task failures cannot restore transferred input ownership (252.9276ms)\n✔ input and output serialization failures leave workers reusable (90.1988ms)\n✔ abort inside a serialization getter cannot release an in-progress transfer reservation (132.1543ms)\n✔ stress transfers across four workers preserve bytes and terminal accounting (193.9622ms)\n✔ upper-bound wire fields are explicit, exclusive, and validated for batches (2.6293ms)\n✔ upper-bound kinds, subviews, zero, clone, and transfer preserve visible bytes (108.7266ms)\n✔ refund resumes admission before consumer yield and slow buffers retain actual credit (111.6188ms)\n✔ zero actual refunds all maximum but count capacity still blocks production (114.3208ms)\n✔ upper-bound violations fail compactly without a refund or successful payload (109.2067ms)\n✔ invalid, ambiguous, asynchronous, throwing, and impossible maxima fail before input (108.4339ms)\n✔ upper-bound declaration can submit ordinary work reentrantly (147.0041ms)\n✔ batches refund logical successes and stop on first or middle failure (128.7179ms)\n✔ queued and running cancellation preserve maximum until the correct terminal event (173.3549ms)\n✔ timeout before dispatch and while running never reconciles a discarded success (375.4266ms)\n✔ consumer break, throw, return, and iterator throw release buffered actual credit (226.1161ms)\n✔ crash, fatal restart exhaustion, and ordinary failure release without refund (434.9436ms)\n✔ graceful and non-draining shutdown clean reconciled and unreconciled owners (168.6313ms)\n✔ a credit-blocked maximum does not starve another stream or ordinary work (80.0036ms)\n✔ non-draining shutdown discards reconciled buffered actuals without counting release as refund (94.1919ms)\nℹ tests 178\nℹ suites 0\nℹ pass 178\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 5748.1261\n",
+      "stderr": ""
+    },
+    {
+      "name": "ten fresh-process stress rounds",
+      "args": [
+        "scripts/stress.mjs"
+      ],
+      "elapsedMs": 61228.6401,
+      "code": 0,
+      "stdout": "Stress round 1/10 passed\nStress round 2/10 passed\nStress round 3/10 passed\nStress round 4/10 passed\nStress round 5/10 passed\nStress round 6/10 passed\nStress round 7/10 passed\nStress round 8/10 passed\nStress round 9/10 passed\nStress round 10/10 passed\n",
+      "stderr": ""
+    },
+    {
+      "name": "final 30-second soak",
+      "args": [
+        "scripts/reservation-soak.mjs",
+        "--mode=quick"
+      ],
+      "elapsedMs": 31140.425400000007,
+      "code": 0,
+      "stdout": "Reservation soak passed 630 iterations in 30954 ms\n┌─────────────────────────────┬────────┐\n│ (index)                     │ Values │\n├─────────────────────────────┼────────┤\n│ success:clone:fixed         │ 21     │\n│ cancellation:buffered       │ 17     │\n│ timeout:queue               │ 21     │\n│ crash:batch-4:item-3        │ 21     │\n│ abandonment:return          │ 27     │\n│ upper-bound:crash:batch-2   │ 7      │\n│ shutdown:buffered           │ 21     │\n│ success:transfer:fixed      │ 26     │\n│ cancellation:queued         │ 9      │\n│ timeout:execution           │ 26     │\n│ crash:batch-4:item-1        │ 16     │\n│ abandonment:break           │ 29     │\n│ upper-bound:timeout:batch-2 │ 2      │\n│ shutdown:graceful           │ 19     │\n│ success:clone:callback      │ 22     │\n│ upper-bound:none:batch-4    │ 12     │\n│ shutdown:non-drain-running  │ 22     │\n│ success:transfer:callback   │ 21     │\n│ cancellation:pre-abort      │ 15     │\n│ crash:batch-1:item-0        │ 37     │\n│ abandonment:throw           │ 16     │\n│ upper-bound:abort:batch-1   │ 12     │\n│ shutdown:crash              │ 28     │\n│ cancellation:credit-wait    │ 15     │\n│ cancellation:running        │ 10     │\n│ timeout:buffer              │ 23     │\n│ upper-bound:none:batch-1    │ 13     │\n│ upper-bound:timeout:batch-4 │ 5      │\n│ cancellation:consumer-wait  │ 13     │\n│ upper-bound:none:batch-2    │ 11     │\n│ crash:batch-4:item-0        │ 16     │\n│ abandonment:iterator-throw  │ 18     │\n│ upper-bound:crash:batch-4   │ 7      │\n│ timeout:consumer            │ 20     │\n│ cancellation:after-yield    │ 11     │\n│ upper-bound:abort:batch-2   │ 9      │\n│ upper-bound:crash:batch-1   │ 7      │\n│ upper-bound:abort:batch-4   │ 2      │\n│ upper-bound:timeout:batch-1 │ 3      │\n└─────────────────────────────┴────────┘\n",
+      "stderr": ""
+    }
+  ],
+  "diffCheck": "",
+  "historicalEvidence": [
+    {
+      "path": "benchmarks/results/binary-fairness-v0.9.json",
+      "sha256": "1ea21af7e3feb7e6ba13ca2ef91a0393f4a308de9db72b0ad065f12afab851d9"
+    },
+    {
+      "path": "benchmarks/results/binary-results-v0.9.json",
+      "sha256": "21d1429896b807b3c797cb9fa62d346aa520db24990615115fa8a9a6f270b1a9"
+    },
+    {
+      "path": "benchmarks/results/completion-fairness-v0.6.json",
+      "sha256": "dde6fc4a75e32e08fffc1903d1cbe09ba97dbd3bf7a100795430d626b59cab89"
+    },
+    {
+      "path": "benchmarks/results/completion-only-v0.6.json",
+      "sha256": "3ff1dd2c9b8870109c8ed8f52ccfd1a2ed4d0c6d640743600b697396f5a6acd2"
+    },
+    {
+      "path": "benchmarks/results/cpu-initial.json",
+      "sha256": "0a4a00aa9e49df39e07d5579178686941f039845e8a650eee8399810d0b44e94"
+    },
+    {
+      "path": "benchmarks/results/cpu-regression-v0.3.json",
+      "sha256": "66de47681d979edfcd7eb7b8a4ed254529987fcc90fb463670e83cdc78711b51"
+    },
+    {
+      "path": "benchmarks/results/cpu-regression-v0.4.json",
+      "sha256": "f5622ada07ba62acece62757b806a3de6998ceebeb15cd4c6e8c9a6465ef618d"
+    },
+    {
+      "path": "benchmarks/results/cpu-regression-v0.5.json",
+      "sha256": "b5c37305a91e3bf97e5b3cc9faba1ae82a3ddc9f3fb9d761ce421459c54bd267"
+    },
+    {
+      "path": "benchmarks/results/cpu-v0.2-local.json",
+      "sha256": "56f08e828c37e4351fed114fa3fa530b82a15359d2c8106f8e52cfb260a031c7"
+    },
+    {
+      "path": "benchmarks/results/cpu-v0.2.json",
+      "sha256": "99fcd166293b90bda31e6efd9f36d43c4e80a23bb99136c1100088d0aa35f26e"
+    },
+    {
+      "path": "benchmarks/results/cpu-v0.3.json",
+      "sha256": "66e09453263cbb49070b7c9f306b133ae597108aa09528f963d08ee65769831b"
+    },
+    {
+      "path": "benchmarks/results/cpu.json",
+      "sha256": "eed0f9a1371f579b6a2da9ea8dfde3ad52b325b4b21a56ba8609619c603a6295"
+    },
+    {
+      "path": "benchmarks/results/cross-platform-v0.11-fedora-ryzen3300u-node22.json",
+      "sha256": "4bb39bb3548f1c8a0ff83b79012c9c0ae3b9b98060e5a1217de19868803636f2"
+    },
+    {
+      "path": "benchmarks/results/cross-platform-v0.11-fedora-ryzen3300u-node22.metadata.json",
+      "sha256": "4f9a213ec0bddc655f8a04ff48d13783fe13df963047bff3c2fa92ea1a373efc"
+    },
+    {
+      "path": "benchmarks/results/cross-platform-v0.11-fedora-ryzen3300u-node22.supplement.json",
+      "sha256": "0c2c97578c50df053e7f0525bd72f107533842a9fb82a0a75b2014137878f231"
+    },
+    {
+      "path": "benchmarks/results/cross-platform-v0.11-fedora-ryzen3300u-node22.supplement.metadata.json",
+      "sha256": "4e17e1658acf7161d66314ce6492bf554b6eb4b814b6456c69cca0aecd123827"
+    },
+    {
+      "path": "benchmarks/results/cross-platform-v0.11-fedora-ryzen3300u-node24.json",
+      "sha256": "058429e927a20e7d15805cb66451f0702f8fcfe14d4564840354bcd59ea13c7b"
+    },
+    {
+      "path": "benchmarks/results/cross-platform-v0.11-fedora-ryzen3300u-node24.metadata.json",
+      "sha256": "bd3257ca6bd40c8941a9ba5c023b83eec2a0f206932642de7ebb01575fcba998"
+    },
+    {
+      "path": "benchmarks/results/cross-platform-v0.11-fedora-ryzen3300u-node24.supplement.json",
+      "sha256": "bb03b0715c4b6f6359e661664bd75e6de4ec0612c43d54a49a5cc4cc9848b140"
+    },
+    {
+      "path": "benchmarks/results/cross-platform-v0.11-fedora-ryzen3300u-node24.supplement.metadata.json",
+      "sha256": "ba9bfc6fd74ba71e5b62821b43c1ef1a90a473831bbae964e6ad7e239cdc2971"
+    },
+    {
+      "path": "benchmarks/results/cross-platform-v0.11-windows-i3-10100f-node22.json",
+      "sha256": "c99fca995e47534c5dac0d93fabfe5df34eb459c1421fce5cef84bca4f56d88d"
+    },
+    {
+      "path": "benchmarks/results/cross-platform-v0.11-windows-i3-10100f-node22.metadata.json",
+      "sha256": "07f055cefa823c7dab4e71ea78f873eac1897ac2e6e5f825f9941571c5c619bc"
+    },
+    {
+      "path": "benchmarks/results/cross-platform-v0.11-windows-i3-10100f-node24.json",
+      "sha256": "31d8d4781180dff05aa05fabe308e3243b504ed6f8b86aef01908217d6caaa10"
+    },
+    {
+      "path": "benchmarks/results/cross-platform-v0.11-windows-i3-10100f-node24.metadata.json",
+      "sha256": "6200b83dfb4b7d7212d061968c9a1bc4f479c6c63d13c82594a084b9b656122f"
+    },
+    {
+      "path": "benchmarks/results/dispatch-efficiency-v0.5.json",
+      "sha256": "3576c316f3a43cab1678edd44021984d29560c491a620ea37149ffd7425cc696"
+    },
+    {
+      "path": "benchmarks/results/dispatch-fairness-v0.5.json",
+      "sha256": "0d4d1ee28d1af0743ae02abbfd4a76aff1da0b68fd2db80ac45d321b0a3f727c"
+    },
+    {
+      "path": "benchmarks/results/dispatch-partition-v0.4.json",
+      "sha256": "745800cda8b569ec872ad7931abebce3678dac701fac9b8b4023d3fe0f23b1bb"
+    },
+    {
+      "path": "benchmarks/results/dispatch-profile-v0.5.json",
+      "sha256": "f550026045711e072652bba337ca60a1f9b4901ea5d2246ffba3b850a002155a"
+    },
+    {
+      "path": "benchmarks/results/element-map-v0.8.json",
+      "sha256": "84667733d77b6d640aa4334a127bac566077e72df7d71256ef84dbeaf31ce653"
+    },
+    {
+      "path": "benchmarks/results/map-fairness-v0.8.json",
+      "sha256": "acf9369f300bb61792f48aef7bd8b257fc16c9a896b907d6952d1f7c0ed3adda"
+    },
+    {
+      "path": "benchmarks/results/map-pipeline-v0.8.json",
+      "sha256": "551f6e79c652b8c2e3985c5025f0380e9c2027ad23967144ee488fa2feb9b741"
+    },
+    {
+      "path": "benchmarks/results/matrix-clone-v0.2.json",
+      "sha256": "21ad3f281b01a73d91ff0388aeeb02f7225395c9ec7cba7f917ffa7887cca193"
+    },
+    {
+      "path": "benchmarks/results/matrix-clone-v0.3.json",
+      "sha256": "eb55143dd9ba67c90c6cf5311836a1dae1f743e91ac62fc51bb65aade8ecab18"
+    },
+    {
+      "path": "benchmarks/results/matrix-partition-v0.4.json",
+      "sha256": "200117376bcc8a8b8a36a8b0aa4061a9872506c7b63ec3dda8af7542aef461f2"
+    },
+    {
+      "path": "benchmarks/results/matrix-shared-v0.3.json",
+      "sha256": "7306152bb718cf56a655e65f7135d61692975d433b6ba2b49b6b3d6f8ea5e287"
+    },
+    {
+      "path": "benchmarks/results/matrix-transfer-v0.2.json",
+      "sha256": "de70b0ad43a7eebb71caa63bd8d44d33014574fe5b405d0eb9271c7be8d34cbc"
+    },
+    {
+      "path": "benchmarks/results/matrix-transfer-v0.3.json",
+      "sha256": "0f9c44fb145fd603789620a8817f02344ecac15aaf99377602cff863a07c3430"
+    },
+    {
+      "path": "benchmarks/results/matrix-v0.3.json",
+      "sha256": "b6d3b595a2c5adff4f7148ea2fc687ab2ce5c85badd63c688ccdf74dce204020"
+    },
+    {
+      "path": "benchmarks/results/matrix.json",
+      "sha256": "71c92c529da18e58a75943fd7c9622f25c8fc866f0835b435ada85b0859afef6"
+    },
+    {
+      "path": "benchmarks/results/piscina-v0.3.json",
+      "sha256": "c21aa905638252bcebf2a82896bbd9ffb1b1086aa5c8cb10f47bf12ef6791425"
+    },
+    {
+      "path": "benchmarks/results/range-partition-v0.4.json",
+      "sha256": "6d68c9da75ac9f6cbcec16e85db713b612302ae01706aa50af5d8c7ba35656d3"
+    },
+    {
+      "path": "benchmarks/results/reservation-performance-v0.10.json",
+      "sha256": "2d1108d920f6ae6f89f8a49c732c37e739116b38a9f0fab5ae68923303cae430"
+    },
+    {
+      "path": "benchmarks/results/reservation-pipeline-v0.10.json",
+      "sha256": "fa362c60dd35ac94846e186810732f7d1246e2a742b37eeae87a6011e51fc445"
+    },
+    {
+      "path": "benchmarks/results/reservation-soak-forced-gc-v0.10.json",
+      "sha256": "cc90469ed662a42990f393a66480442a92d26a2c6e7bc9332f16e5df9532cc98"
+    },
+    {
+      "path": "benchmarks/results/reservation-soak-v0.10.json",
+      "sha256": "3423bc636a646e40d92341bb9a58aa566e221f846cc19ea84e26571329b0d099"
+    },
+    {
+      "path": "benchmarks/results/reservation-soak-v0.11.json",
+      "sha256": "13288569c5a682bb1133d66b49a1aaa8abcb1aae788496acb0b6fac31228220e"
+    },
+    {
+      "path": "benchmarks/results/result-streaming-v0.7.json",
+      "sha256": "1dbc6b4f34ec8f4766249088601f1cae2d26f97ed28a4d2ac1c763a75262e45d"
+    },
+    {
+      "path": "benchmarks/results/runtime-architecture-v0.11.json",
+      "sha256": "e8b97916f77818a3a5e4dcd0752ea811238b7a372f8a44a8d3e8b3218a62be3e"
+    },
+    {
+      "path": "benchmarks/results/runtime-regression-v0.10.json",
+      "sha256": "ae003dc82e9e171ee0ac0fccf50a9f701ae5798f0c8aa10ef40f6e727dfd7888"
+    },
+    {
+      "path": "benchmarks/results/runtime-regression-v0.6.json",
+      "sha256": "d3ede383b565375359b9cd6e32855e775685365f64fa27c21d23d4f65fc3e966"
+    },
+    {
+      "path": "benchmarks/results/runtime-regression-v0.7.json",
+      "sha256": "bb3f98c7f6c6983cb09b0d0c35dd6a03a7110280ddb524b166cc4964469e450e"
+    },
+    {
+      "path": "benchmarks/results/runtime-regression-v0.8.json",
+      "sha256": "6c00d187c1eda74d934aa9befea149f9d3a2855aa9a287554010e86824f1bc3c"
+    },
+    {
+      "path": "benchmarks/results/runtime-regression-v0.9.json",
+      "sha256": "6edff3b9bf48d8364569a2ee9165054212a9f4d952d9f0aa838cc1c4fcddf881"
+    },
+    {
+      "path": "benchmarks/results/shared-v0.3.json",
+      "sha256": "5afe52bb66c997c017c9e3625cd21a7fc519a60d9e60b24e81487d0ce796f0c2"
+    },
+    {
+      "path": "benchmarks/results/skew-partition-v0.4.json",
+      "sha256": "977a9ae51795b8be0cc64c304d22a569c5b6ca4dd2c08c8fe84d84d3b117eae1"
+    },
+    {
+      "path": "benchmarks/results/stream-fairness-v0.7.json",
+      "sha256": "ead3608769d499aa1d7f2d7fdcf6333171257aacf2fd53591f83fee4698a0c23"
+    },
+    {
+      "path": "benchmarks/results/transfer-v0.2.json",
+      "sha256": "da141b32b7f93d476dac953d19164622e644b4014b41399ec97cd461bacd1a50"
+    },
+    {
+      "path": "benchmarks/results/transfer-v0.3.json",
+      "sha256": "cbed90757915e5cadbc208a5f4af75cbb0d2f09765629e7f15df1bd8b4b92a34"
+    },
+    {
+      "path": "docs/adr/0017-binary-result-reservations.md",
+      "sha256": "ff56a34cab50315b2c67bee80c93b79642c9334de74aeea578c7603cb2a60d74"
+    },
+    {
+      "path": "docs/adr/0018-runtime-core-decomposition.md",
+      "sha256": "c3124fe8272d33cd8e8b8c78533d479a6faa0c58927bc4fede3526bcbd408f25"
+    },
+    {
+      "path": "docs/benchmarks-v0.1.md",
+      "sha256": "b120a02ce71bb6e65835b3df002bcebcc1dedacdbf4b69bc2145286d8d52e63a"
+    },
+    {
+      "path": "docs/benchmarks-v0.10.md",
+      "sha256": "b966ba3286fd43e3d6399b19eb05e16235d22736753ca54db6dc2ed253af4d6b"
+    },
+    {
+      "path": "docs/benchmarks-v0.11.md",
+      "sha256": "2846d0a6192c4d03baa96d801b8ee8cd0120c33896875ce1d88c153b7df57723"
+    },
+    {
+      "path": "docs/benchmarks-v0.2.md",
+      "sha256": "29ea9944f3da667210a8f298a9d8bd72438739726d9339b7f44cf451a01741b4"
+    },
+    {
+      "path": "docs/benchmarks-v0.3.md",
+      "sha256": "659e68343ab7059fd31e1936d6578b8088760d795b7c80d981cb2059abfba6b1"
+    },
+    {
+      "path": "docs/benchmarks-v0.4.md",
+      "sha256": "2e2ff50fbbda95ebe4dcfc038a1c58c3872902fd42b780de2c232613bfd991ab"
+    },
+    {
+      "path": "docs/benchmarks-v0.5.md",
+      "sha256": "7c8becc4dec12e3e8453d1698138f4ff1025a7bafed81103d477d14c7837b0df"
+    },
+    {
+      "path": "docs/benchmarks-v0.6.md",
+      "sha256": "86924ec7d41924659c31fff67cabb1ff9b153cbd0ce01dc786ca90383a344361"
+    },
+    {
+      "path": "docs/benchmarks-v0.7.md",
+      "sha256": "2ba826d3d9c7257ee74f4fef1fad43934f99265d808b88ae8ebeb45b3fee7568"
+    },
+    {
+      "path": "docs/benchmarks-v0.8.md",
+      "sha256": "5b677bdee49021047c60a233d7abedf5287fb606c4d35afe406776289f5e8e0f"
+    },
+    {
+      "path": "docs/benchmarks-v0.9.md",
+      "sha256": "b1ee2597717343a1da8c000983d059e28b9053822f35fcd75dbd69213d088af9"
+    },
+    {
+      "path": "docs/cross-platform-v0.11.md",
+      "sha256": "1169093273218776bc8d7093dd3f35c44ac5decc04696a7a09c9aaaa908cd14e"
+    },
+    {
+      "path": "docs/proposal-v0.10.md",
+      "sha256": "a6b18da0bcf0752eb9b916573f63f48eb81e65a5fd73d264a7f06277c3d2007b"
+    },
+    {
+      "path": "docs/proposal-v0.11.md",
+      "sha256": "45470c66279a5c09cdf5e65b424b4e2bdc586333046dadd22891a34da10b15f4"
+    },
+    {
+      "path": "docs/proposal-v0.3.md",
+      "sha256": "3c8f2afc5f011a2a4fbccf72a8c2f5b32f3fc7edd3bedff577b380b2cd86400e"
+    },
+    {
+      "path": "docs/proposal-v0.4.md",
+      "sha256": "e66115ef817fa198edad13b2bd949c407c2d25db08471de9d25529a53914b1d9"
+    },
+    {
+      "path": "docs/proposal-v0.5.md",
+      "sha256": "173584953587a5b24a386e6d7474770811d2ecdce30b8abb4f95267c8be4590b"
+    },
+    {
+      "path": "docs/proposal-v0.6.md",
+      "sha256": "ca2a6d6bdbac7c6c0a9dcd86728a920ea67ac27ea00a74b0f8da86aa181f40c8"
+    },
+    {
+      "path": "docs/proposal-v0.7.md",
+      "sha256": "54cdf089f2da6269ade6aa5b866d5b41611f70ed02b017d2dc25587a6f4c51c9"
+    },
+    {
+      "path": "docs/proposal-v0.8.md",
+      "sha256": "15edc4da215407e71555a434e975e5b3310f902d004f9e742592beb5a760d8c8"
+    },
+    {
+      "path": "docs/proposal-v0.9.md",
+      "sha256": "75c8b0a242ca00e78bd3943cfccf3b23a838b44aa2e0804aa156a77f06e5de56"
+    },
+    {
+      "path": "scripts/cross-platform-v011/binary.mjs",
+      "sha256": "ca1e93a3e99d58a982312ea20b699d765bae2b5779cb7b10987f7bf85ace4717"
+    },
+    {
+      "path": "scripts/cross-platform-v011/environment.mjs",
+      "sha256": "95baf1c1b210e05ac1c4074c4cfbc1feb14578e75370379ba53f63cc3e587d01"
+    },
+    {
+      "path": "scripts/cross-platform-v011/report.mjs",
+      "sha256": "167b542ab3bc80402ce1f339401aa30126c0016f7c3e1300c5b3e69e1b7b3611"
+    },
+    {
+      "path": "scripts/cross-platform-v011/run.mjs",
+      "sha256": "7e9e8b68681fce8f5b38eda4fda50d9d951ae4062674dc203ca8afb426354e45"
+    },
+    {
+      "path": "scripts/cross-platform-v011/supplement.mjs",
+      "sha256": "5062e1d35e9a44c7b565e56d44b4d60b5f510a7301f612e47dad7fa270e6cc87"
+    }
+  ],
+  "runtimeSourceSha256": {
+    "packages/runtime/src/dispatch/dispatcher.ts": "a448344e4977d60338c0b503c92b49d67d9bccfe0c08c101ca3d376593ac3ada",
+    "packages/runtime/src/errors/index.ts": "2f1458c63366be67919f51866acd7e1a9966300166c39f164c481913d0b1f4e7",
+    "packages/runtime/src/index.ts": "96d3697fde71fc4a46943c52f5556c1b63227f2b792650c14cf29bfd073cef44",
+    "packages/runtime/src/internal/integer.ts": "c1d5f34cd7a4d6aa228910e0a7e7f7929e21bea0f84e231d5984a3b7e7d51b6c",
+    "packages/runtime/src/partition/binary.ts": "20e4ff84ea39912befa189a5a3e5f57739e249d3954c3d7aea6cfa45e1b97120",
+    "packages/runtime/src/partition/coordinator.ts": "3afae72cfa583b5c04b8645a09af3dcf603139f1b4268204bd35627f2f185cde",
+    "packages/runtime/src/partition/operation.ts": "e5ec55abcb8a90fca7df99c7b7ade39c5ae2fa2358efd1a11e5edc8b438384e1",
+    "packages/runtime/src/partition/range.ts": "c985cb95b03c2c339f18f1cae44ca7f77eca7eb2908afe946f11b71c724a1489",
+    "packages/runtime/src/partition/stream.ts": "09d2dcb73771334c0a4fb9647c6234d59acdef43e3170045d8c8e810a7017566",
+    "packages/runtime/src/pool/pool.ts": "880be0c7764e184bf3e8ccfee8fa63bf3c2f26e81d40aab5e2cdb94827849ec5",
+    "packages/runtime/src/results/credit.ts": "acc35c91bb5bfc48e95356d466377c0ad42ef97a2f5c765b25ef9898a5fc078f",
+    "packages/runtime/src/runtime.ts": "53e0013365563a2235bca5d082a753996846529d42efcf9bb5378c81e1d26e81",
+    "packages/runtime/src/scheduler/fifo.ts": "caa0307b7ce3b71d412ae9b432ad90cd946eed209958d88a1d6f9a13d481e014",
+    "packages/runtime/src/tasks/coordinator.ts": "05b6f044c538a438827e8ab7c16071ac04aeb89b12122c8fc48f2dd8239767d7",
+    "packages/runtime/src/tasks/registry.ts": "b0698736068769a2b7ab2b8c1cbf2179650f7b41701e82ab4dccf8e8c8254eca",
+    "packages/runtime/src/tasks/shared.ts": "d3a6b371f5b20657bf47d6b84f6c7d7bd4cfec0f0395b6bade2ac828ee5a3ca5",
+    "packages/runtime/src/tasks/task.ts": "92eb849cc4b2921c347656edabf6a813b323e9295c46c7255dddc89330f820f5",
+    "packages/runtime/src/tasks/transfer.ts": "9de35965f11f40ab7697ca8e5439af634fe8122829c357c3b36f310dbfd278ac",
+    "packages/runtime/src/telemetry/metrics.ts": "031d1994dd4fec40d50b265f4e59c00dd9348d089d507ed87019bb1fef7b088e",
+    "packages/runtime/src/telemetry/profile.ts": "831b42554f3dcb74a45ae42bdfca5811eab921d8c248986ca1859af26f9496f7",
+    "packages/runtime/src/telemetry/runtime.ts": "de144702cc694650fb5d7d50ff76109a6cfe9ef5ef3aecc3825a9a3e911fe6e7",
+    "packages/runtime/src/types/index.ts": "7a252af8bb57fe42ac43f015a73ee111afd932725da039ffd77c36140c7b35fa",
+    "packages/runtime/src/workers/bootstrap.ts": "f19fbfb8f0a27d1e3e97cc7599bdfc8922d7502557af9a71c4bf2e9cf0c6d2e9",
+    "packages/runtime/src/workers/protocol.ts": "d8f66b337c21563d0c510b2bc72ae1db3a70d065da22d2374583d1bd8d1f5d90",
+    "packages/runtime/src/workers/worker.ts": "715f1583dcabc07b4e9b8288a89b29f7a6ccb1671834f11b56f1b0e681b4809d"
+  },
+  "soak": {
+    "version": "0.12.0",
+    "timestamp": "2026-10-01T20:14:13.571Z",
+    "environment": {
+      "machineLabel": "Miskovy",
+      "cpuModel": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz",
+      "logicalCpuCount": 8,
+      "availableParallelism": 8,
+      "physicalCoreCount": null,
+      "totalMemoryBytes": 17037594624,
+      "platform": "win32",
+      "osType": "Windows_NT",
+      "release": "10.0.19045",
+      "architecture": "x64",
+      "node": "v24.21.0",
+      "v8": "13.6.233.17-node.53",
+      "pjsCommit": "8fcd0fd9e9e3a6987198fce80a338b02c076b0d7",
+      "worktreeDirty": true,
+      "power": "Power Scheme GUID: a1841308-3541-4fab-bc81-f71556f20b4a  (Power saver)",
+      "settings": {
+        "mode": "quick",
+        "durationMs": 30000,
+        "maximumIterations": 9007199254740991,
+        "workers": 4,
+        "resultBytes": 16384,
+        "countCapacity": 4,
+        "byteCapacity": 32768,
+        "sampleIntervalMs": 1000,
+        "seed": 269033510,
+        "forcedGc": false
+      }
+    },
+    "elapsedMs": 30954.2839,
+    "iterations": 630,
+    "scenarioCounts": {
+      "success:clone:fixed": 21,
+      "cancellation:buffered": 17,
+      "timeout:queue": 21,
+      "crash:batch-4:item-3": 21,
+      "abandonment:return": 27,
+      "upper-bound:crash:batch-2": 7,
+      "shutdown:buffered": 21,
+      "success:transfer:fixed": 26,
+      "cancellation:queued": 9,
+      "timeout:execution": 26,
+      "crash:batch-4:item-1": 16,
+      "abandonment:break": 29,
+      "upper-bound:timeout:batch-2": 2,
+      "shutdown:graceful": 19,
+      "success:clone:callback": 22,
+      "upper-bound:none:batch-4": 12,
+      "shutdown:non-drain-running": 22,
+      "success:transfer:callback": 21,
+      "cancellation:pre-abort": 15,
+      "crash:batch-1:item-0": 37,
+      "abandonment:throw": 16,
+      "upper-bound:abort:batch-1": 12,
+      "shutdown:crash": 28,
+      "cancellation:credit-wait": 15,
+      "cancellation:running": 10,
+      "timeout:buffer": 23,
+      "upper-bound:none:batch-1": 13,
+      "upper-bound:timeout:batch-4": 5,
+      "cancellation:consumer-wait": 13,
+      "upper-bound:none:batch-2": 11,
+      "crash:batch-4:item-0": 16,
+      "abandonment:iterator-throw": 18,
+      "upper-bound:crash:batch-4": 7,
+      "timeout:consumer": 20,
+      "cancellation:after-yield": 11,
+      "upper-bound:abort:batch-2": 9,
+      "upper-bound:crash:batch-1": 7,
+      "upper-bound:abort:batch-4": 2,
+      "upper-bound:timeout:batch-1": 3
+    },
+    "samples": [
+      {
+        "elapsedMs": 11.151700000000005,
+        "iteration": 1,
+        "scenario": "success:clone:fixed",
+        "memory": {
+          "rss": 110788608,
+          "heapTotal": 11837440,
+          "heapUsed": 7891488,
+          "external": 2904882,
+          "arrayBuffers": 274723
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 0,
+          "restarts": 0,
+          "threadIds": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 1076.2631,
+        "iteration": 21,
+        "scenario": "shutdown:non-drain-running",
+        "memory": {
+          "rss": 154468352,
+          "heapTotal": 13672448,
+          "heapUsed": 8391400,
+          "external": 3414369,
+          "arrayBuffers": 537363
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 4,
+          "restarts": 4,
+          "threadIds": [
+            5,
+            6,
+            11,
+            16
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 2135.9521,
+        "iteration": 49,
+        "scenario": "shutdown:crash",
+        "memory": {
+          "rss": 160448512,
+          "heapTotal": 18128896,
+          "heapUsed": 9518312,
+          "external": 4201008,
+          "arrayBuffers": 963522
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 8,
+          "restarts": 8,
+          "threadIds": [
+            21,
+            27,
+            32,
+            38
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 3185.7870000000003,
+        "iteration": 70,
+        "scenario": "shutdown:graceful",
+        "memory": {
+          "rss": 164536320,
+          "heapTotal": 18653184,
+          "heapUsed": 10641856,
+          "external": 4921906,
+          "arrayBuffers": 1356746
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 12,
+          "restarts": 12,
+          "threadIds": [
+            44,
+            50,
+            51,
+            57
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 4334.8668,
+        "iteration": 98,
+        "scenario": "shutdown:graceful",
+        "memory": {
+          "rss": 163958784,
+          "heapTotal": 18128896,
+          "heapUsed": 9609160,
+          "external": 3330729,
+          "arrayBuffers": 406403
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 18,
+          "restarts": 18,
+          "threadIds": [
+            68,
+            73,
+            74,
+            79
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 5377.9359,
+        "iteration": 126,
+        "scenario": "shutdown:crash",
+        "memory": {
+          "rss": 165752832,
+          "heapTotal": 18391040,
+          "heapUsed": 8651336,
+          "external": 4050778,
+          "arrayBuffers": 849644
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 22,
+          "restarts": 22,
+          "threadIds": [
+            84,
+            89,
+            94,
+            100
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 6524.2902,
+        "iteration": 154,
+        "scenario": "shutdown:non-drain-running",
+        "memory": {
+          "rss": 165748736,
+          "heapTotal": 18653184,
+          "heapUsed": 10914488,
+          "external": 4946546,
+          "arrayBuffers": 1302916
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 28,
+          "restarts": 28,
+          "threadIds": [
+            112,
+            117,
+            118,
+            123
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 7639.0163,
+        "iteration": 175,
+        "scenario": "shutdown:crash",
+        "memory": {
+          "rss": 166338560,
+          "heapTotal": 19177472,
+          "heapUsed": 12100464,
+          "external": 5696650,
+          "arrayBuffers": 1844441
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 32,
+          "restarts": 32,
+          "threadIds": [
+            128,
+            129,
+            134,
+            139
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 8649.6609,
+        "iteration": 196,
+        "scenario": "shutdown:crash",
+        "memory": {
+          "rss": 172285952,
+          "heapTotal": 27566080,
+          "heapUsed": 8098608,
+          "external": 2838102,
+          "arrayBuffers": 176399
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 35,
+          "restarts": 35,
+          "threadIds": [
+            139,
+            145,
+            150,
+            155
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 9868.9195,
+        "iteration": 222,
+        "scenario": "abandonment:return",
+        "memory": {
+          "rss": 174465024,
+          "heapTotal": 27566080,
+          "heapUsed": 12515952,
+          "external": 4042077,
+          "arrayBuffers": 686972
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 40,
+          "restarts": 40,
+          "threadIds": [
+            162,
+            167,
+            172,
+            178
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 10940.5051,
+        "iteration": 238,
+        "scenario": "shutdown:buffered",
+        "memory": {
+          "rss": 174944256,
+          "heapTotal": 27566080,
+          "heapUsed": 9376432,
+          "external": 4140451,
+          "arrayBuffers": 736161
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 42,
+          "restarts": 42,
+          "threadIds": [
+            172,
+            178,
+            183,
+            189
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 12122.9273,
+        "iteration": 259,
+        "scenario": "shutdown:graceful",
+        "memory": {
+          "rss": 175325184,
+          "heapTotal": 27566080,
+          "heapUsed": 12756760,
+          "external": 4976684,
+          "arrayBuffers": 1014961
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 46,
+          "restarts": 46,
+          "threadIds": [
+            194,
+            200,
+            201,
+            206
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 13346.1995,
+        "iteration": 278,
+        "scenario": "abandonment:return",
+        "memory": {
+          "rss": 176406528,
+          "heapTotal": 27566080,
+          "heapUsed": 10832672,
+          "external": 5465161,
+          "arrayBuffers": 1328656
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 49,
+          "restarts": 49,
+          "threadIds": [
+            206,
+            211,
+            216,
+            221
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 14349.1518,
+        "iteration": 297,
+        "scenario": "timeout:buffer",
+        "memory": {
+          "rss": 178814976,
+          "heapTotal": 27566080,
+          "heapUsed": 14257000,
+          "external": 6206931,
+          "arrayBuffers": 1644329
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 52,
+          "restarts": 52,
+          "threadIds": [
+            221,
+            226,
+            227,
+            232
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 15381.0198,
+        "iteration": 315,
+        "scenario": "shutdown:graceful",
+        "memory": {
+          "rss": 178270208,
+          "heapTotal": 27566080,
+          "heapUsed": 12225680,
+          "external": 6575179,
+          "arrayBuffers": 1922833
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 56,
+          "restarts": 56,
+          "threadIds": [
+            238,
+            243,
+            249,
+            250
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 16407.5926,
+        "iteration": 342,
+        "scenario": "upper-bound:none:batch-4",
+        "memory": {
+          "rss": 180113408,
+          "heapTotal": 28090368,
+          "heapUsed": 11089912,
+          "external": 7224719,
+          "arrayBuffers": 2316272
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 61,
+          "restarts": 61,
+          "threadIds": [
+            260,
+            265,
+            266,
+            271
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 17493.5201,
+        "iteration": 357,
+        "scenario": "shutdown:buffered",
+        "memory": {
+          "rss": 156540928,
+          "heapTotal": 10002432,
+          "heapUsed": 8519832,
+          "external": 2838128,
+          "arrayBuffers": 176394
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 63,
+          "restarts": 63,
+          "threadIds": [
+            266,
+            271,
+            276,
+            281
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 18565.1259,
+        "iteration": 378,
+        "scenario": "shutdown:non-drain-running",
+        "memory": {
+          "rss": 159809536,
+          "heapTotal": 11313152,
+          "heapUsed": 8915344,
+          "external": 3431552,
+          "arrayBuffers": 506962
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 66,
+          "restarts": 66,
+          "threadIds": [
+            281,
+            286,
+            292,
+            298
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 19568.8237,
+        "iteration": 402,
+        "scenario": "timeout:buffer",
+        "memory": {
+          "rss": 164003840,
+          "heapTotal": 13934592,
+          "heapUsed": 9796080,
+          "external": 4114362,
+          "arrayBuffers": 1057151
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 71,
+          "restarts": 71,
+          "threadIds": [
+            304,
+            310,
+            311,
+            316
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 20586.7454,
+        "iteration": 420,
+        "scenario": "shutdown:buffered",
+        "memory": {
+          "rss": 164982784,
+          "heapTotal": 14196736,
+          "heapUsed": 10262904,
+          "external": 4640791,
+          "arrayBuffers": 1415621
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 74,
+          "restarts": 74,
+          "threadIds": [
+            316,
+            322,
+            328,
+            333
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 21616.4111,
+        "iteration": 440,
+        "scenario": "upper-bound:crash:batch-1",
+        "memory": {
+          "rss": 163401728,
+          "heapTotal": 14458880,
+          "heapUsed": 10877000,
+          "external": 5199480,
+          "arrayBuffers": 1804650
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 79,
+          "restarts": 79,
+          "threadIds": [
+            338,
+            345,
+            350,
+            351
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 22799.5936,
+        "iteration": 462,
+        "scenario": "shutdown:non-drain-running",
+        "memory": {
+          "rss": 170770432,
+          "heapTotal": 19177472,
+          "heapUsed": 11856904,
+          "external": 5894947,
+          "arrayBuffers": 2353570
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 83,
+          "restarts": 83,
+          "threadIds": [
+            356,
+            357,
+            362,
+            367
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 23839.7334,
+        "iteration": 495,
+        "scenario": "abandonment:iterator-throw",
+        "memory": {
+          "rss": 170795008,
+          "heapTotal": 19963904,
+          "heapUsed": 11322504,
+          "external": 3592899,
+          "arrayBuffers": 439226
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 89,
+          "restarts": 89,
+          "threadIds": [
+            379,
+            385,
+            390,
+            395
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 25044.5275,
+        "iteration": 523,
+        "scenario": "abandonment:iterator-throw",
+        "memory": {
+          "rss": 172380160,
+          "heapTotal": 19963904,
+          "heapUsed": 10139888,
+          "external": 4260797,
+          "arrayBuffers": 674971
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 94,
+          "restarts": 94,
+          "threadIds": [
+            402,
+            407,
+            412,
+            417
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 26054.515,
+        "iteration": 544,
+        "scenario": "abandonment:iterator-throw",
+        "memory": {
+          "rss": 173096960,
+          "heapTotal": 19963904,
+          "heapUsed": 10917104,
+          "external": 5089412,
+          "arrayBuffers": 1101307
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 97,
+          "restarts": 97,
+          "threadIds": [
+            417,
+            422,
+            428,
+            433
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 27073.986,
+        "iteration": 567,
+        "scenario": "shutdown:crash",
+        "memory": {
+          "rss": 174563328,
+          "heapTotal": 19963904,
+          "heapUsed": 12049736,
+          "external": 5735142,
+          "arrayBuffers": 1507503
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 101,
+          "restarts": 101,
+          "threadIds": [
+            439,
+            440,
+            445,
+            450
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 28124.9685,
+        "iteration": 592,
+        "scenario": "crash:batch-4:item-1",
+        "memory": {
+          "rss": 170287104,
+          "heapTotal": 28352512,
+          "heapUsed": 7110576,
+          "external": 6394799,
+          "arrayBuffers": 143631
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 105,
+          "restarts": 105,
+          "threadIds": [
+            456,
+            461,
+            466,
+            472
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 29177.7714,
+        "iteration": 615,
+        "scenario": "upper-bound:abort:batch-2",
+        "memory": {
+          "rss": 180129792,
+          "heapTotal": 28352512,
+          "heapUsed": 10511128,
+          "external": 3703841,
+          "arrayBuffers": 544901
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 109,
+          "restarts": 109,
+          "threadIds": [
+            473,
+            478,
+            483,
+            488
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      },
+      {
+        "elapsedMs": 30021.3723,
+        "iteration": 630,
+        "scenario": "final-quiescent",
+        "memory": {
+          "rss": 181579776,
+          "heapTotal": 28352512,
+          "heapUsed": 13032680,
+          "external": 4239599,
+          "arrayBuffers": 829901
+        },
+        "workers": {
+          "total": 4,
+          "busy": 0,
+          "starting": 0,
+          "failures": 111,
+          "restarts": 111,
+          "threadIds": [
+            483,
+            488,
+            493,
+            499
+          ]
+        },
+        "tasksPending": 0,
+        "operationsPending": 0,
+        "reservedResultBytes": 0,
+        "reservations": 0,
+        "executions": 0,
+        "resources": {
+          "PipeWrap": 2,
+          "MessagePort": 4
+        }
+      }
+    ],
+    "final": {
+      "state": "stopped",
+      "currentReservedResultBytes": 0,
+      "reservations": 0,
+      "executions": 0,
+      "creditOperations": 0,
+      "unreconciledResultBytes": 0,
+      "reconciledResultBytes": 0,
+      "refundMetrics": {
+        "produced": 1302,
+        "yielded": 1205,
+        "peakBuffered": 4,
+        "peakKnownBufferedPayloadBytes": 40226,
+        "peakUnknownBufferedResults": 0,
+        "currentReservedResultBytes": 0,
+        "peakReservedResultBytes": 65536,
+        "resultByteReservationWaits": 1098,
+        "resultByteReservationRejected": 0,
+        "binaryResultContractFailures": 0,
+        "upperBoundContractFailures": 0,
+        "upperBoundResultsReconciled": 854,
+        "resultByteRefunds": 335,
+        "refundedResultBytes": 656927,
+        "buffered": 0,
+        "knownBufferedPayloadBytes": 0,
+        "unknownBufferedResults": 0
+      },
+      "tasksPending": 0,
+      "operationsPending": 0,
+      "workerFailures": 111,
+      "workerRestarts": 111
+    }
+  },
+  "status": "passed",
+  "completedAt": "2026-10-01T20:14:18.931Z"
+}

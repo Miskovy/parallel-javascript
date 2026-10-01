@@ -1,0 +1,841 @@
+{
+  "version": "0.12.0",
+  "timestamp": "2026-10-01T20:07:49.316Z",
+  "environment": {
+    "machineLabel": "Miskovy",
+    "cpuModel": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz",
+    "logicalCpuCount": 8,
+    "availableParallelism": 8,
+    "physicalCoreCount": null,
+    "totalMemoryBytes": 17037594624,
+    "platform": "win32",
+    "osType": "Windows_NT",
+    "release": "10.0.19045",
+    "architecture": "x64",
+    "node": "v24.21.0",
+    "v8": "13.6.233.17-node.53",
+    "pjsCommit": "8fcd0fd9e9e3a6987198fce80a338b02c076b0d7",
+    "worktreeDirty": true,
+    "power": "Power Scheme GUID: a1841308-3541-4fab-bc81-f71556f20b4a  (Power saver)",
+    "settings": {}
+  },
+  "methodology": "existing internal stage sink plus benchmark-instance reconciliation timer; warmups, balanced order; overlapping stages are not additive; use separate uninstrumented matrix for performance",
+  "results": [
+    {
+      "trial": 0,
+      "mode": "exact",
+      "bytes": 4096,
+      "maximum": 4096,
+      "wallMs": 117.63459999999998,
+      "reconciliationCalls": 0,
+      "reconciliationMs": 0,
+      "stages": {
+        "descriptorCreation": {
+          "calls": 2048,
+          "totalMs": 0.3502999999977874
+        },
+        "factory": {
+          "calls": 2048,
+          "totalMs": 1.4481999999976551
+        },
+        "childAdmission": {
+          "calls": 2048,
+          "totalMs": 17.093499999999267
+        },
+        "hostPostMessage": {
+          "calls": 2048,
+          "totalMs": 14.151600000001622
+        },
+        "workerIngress": {
+          "calls": 2048,
+          "totalMs": 9.567399999999338
+        },
+        "workerOutputPreparation": {
+          "calls": 2048,
+          "totalMs": 6.5379000000009455
+        },
+        "workerResultTransport": {
+          "calls": 2048,
+          "totalMs": 338.5481000000003
+        },
+        "parentCollection": {
+          "calls": 2048,
+          "totalMs": 2.7013999999995804
+        },
+        "hostResultSettlement": {
+          "calls": 2048,
+          "totalMs": 5.589699999998857
+        },
+        "parentSettlement": {
+          "calls": 1,
+          "totalMs": 0.015800000000012915
+        }
+      }
+    },
+    {
+      "trial": 0,
+      "mode": "upper",
+      "bytes": 4096,
+      "maximum": 4096,
+      "wallMs": 120.84559999999999,
+      "reconciliationCalls": 2048,
+      "reconciliationMs": 0.7476999999989857,
+      "stages": {
+        "descriptorCreation": {
+          "calls": 2048,
+          "totalMs": 0.3578000000003385
+        },
+        "factory": {
+          "calls": 2048,
+          "totalMs": 1.4467999999992571
+        },
+        "childAdmission": {
+          "calls": 2048,
+          "totalMs": 17.939500000003136
+        },
+        "hostPostMessage": {
+          "calls": 2048,
+          "totalMs": 15.078400000002148
+        },
+        "workerIngress": {
+          "calls": 2048,
+          "totalMs": 8.905000000003838
+        },
+        "workerOutputPreparation": {
+          "calls": 2048,
+          "totalMs": 5.852899999999863
+        },
+        "workerResultTransport": {
+          "calls": 2048,
+          "totalMs": 353.28540000000004
+        },
+        "parentCollection": {
+          "calls": 2048,
+          "totalMs": 2.610100000000898
+        },
+        "hostResultSettlement": {
+          "calls": 2048,
+          "totalMs": 7.198800000003871
+        },
+        "parentSettlement": {
+          "calls": 1,
+          "totalMs": 0.015600000000063119
+        }
+      }
+    },
+    {
+      "trial": 1,
+      "mode": "upper",
+      "bytes": 4096,
+      "maximum": 4096,
+      "wallMs": 117.1164,
+      "reconciliationCalls": 2048,
+      "reconciliationMs": 0.710800000000404,
+      "stages": {
+        "descriptorCreation": {
+          "calls": 2048,
+          "totalMs": 0.3254000000003998
+        },
+        "factory": {
+          "calls": 2048,
+          "totalMs": 1.4271999999986065
+        },
+        "childAdmission": {
+          "calls": 2048,
+          "totalMs": 16.79929999999763
+        },
+        "hostPostMessage": {
+          "calls": 2048,
+          "totalMs": 14.33130000000051
+        },
+        "workerIngress": {
+          "calls": 2048,
+          "totalMs": 9.137600000003317
+        },
+        "workerOutputPreparation": {
+          "calls": 2048,
+          "totalMs": 5.789499999999975
+        },
+        "workerResultTransport": {
+          "calls": 2048,
+          "totalMs": 334.05230000000006
+        },
+        "parentCollection": {
+          "calls": 2048,
+          "totalMs": 2.451100000001361
+        },
+        "hostResultSettlement": {
+          "calls": 2048,
+          "totalMs": 6.831200000003719
+        },
+        "parentSettlement": {
+          "calls": 1,
+          "totalMs": 0.02189999999995962
+        }
+      }
+    },
+    {
+      "trial": 1,
+      "mode": "exact",
+      "bytes": 4096,
+      "maximum": 4096,
+      "wallMs": 128.79169999999988,
+      "reconciliationCalls": 0,
+      "reconciliationMs": 0,
+      "stages": {
+        "descriptorCreation": {
+          "calls": 2048,
+          "totalMs": 0.38440000000593955
+        },
+        "factory": {
+          "calls": 2048,
+          "totalMs": 0.843400000004408
+        },
+        "childAdmission": {
+          "calls": 2048,
+          "totalMs": 19.61300000000108
+        },
+        "hostPostMessage": {
+          "calls": 2048,
+          "totalMs": 15.817599999998492
+        },
+        "workerIngress": {
+          "calls": 2048,
+          "totalMs": 9.151099999998337
+        },
+        "workerOutputPreparation": {
+          "calls": 2048,
+          "totalMs": 5.642499999998904
+        },
+        "workerResultTransport": {
+          "calls": 2048,
+          "totalMs": 376.7548000000005
+        },
+        "parentCollection": {
+          "calls": 2048,
+          "totalMs": 2.538800000002425
+        },
+        "hostResultSettlement": {
+          "calls": 2048,
+          "totalMs": 6.117299999995339
+        },
+        "parentSettlement": {
+          "calls": 1,
+          "totalMs": 0.06740000000013424
+        }
+      }
+    },
+    {
+      "trial": 2,
+      "mode": "exact",
+      "bytes": 4096,
+      "maximum": 4096,
+      "wallMs": 125.01499999999987,
+      "reconciliationCalls": 0,
+      "reconciliationMs": 0,
+      "stages": {
+        "descriptorCreation": {
+          "calls": 2048,
+          "totalMs": 0.3947000000018761
+        },
+        "factory": {
+          "calls": 2048,
+          "totalMs": 0.7141000000026452
+        },
+        "childAdmission": {
+          "calls": 2048,
+          "totalMs": 20.350600000001577
+        },
+        "hostPostMessage": {
+          "calls": 2048,
+          "totalMs": 15.284199999995053
+        },
+        "workerIngress": {
+          "calls": 2048,
+          "totalMs": 8.957000000002154
+        },
+        "workerOutputPreparation": {
+          "calls": 2048,
+          "totalMs": 5.456500000005917
+        },
+        "workerResultTransport": {
+          "calls": 2048,
+          "totalMs": 369.99809999999985
+        },
+        "parentCollection": {
+          "calls": 2048,
+          "totalMs": 1.8164000000003853
+        },
+        "hostResultSettlement": {
+          "calls": 2048,
+          "totalMs": 4.548600000004171
+        },
+        "parentSettlement": {
+          "calls": 1,
+          "totalMs": 0.016800000000102955
+        }
+      }
+    },
+    {
+      "trial": 2,
+      "mode": "upper",
+      "bytes": 4096,
+      "maximum": 4096,
+      "wallMs": 105.53919999999994,
+      "reconciliationCalls": 2048,
+      "reconciliationMs": 0.2805000000059863,
+      "stages": {
+        "descriptorCreation": {
+          "calls": 2048,
+          "totalMs": 0.29669999999941865
+        },
+        "factory": {
+          "calls": 2048,
+          "totalMs": 0.5612000000039643
+        },
+        "childAdmission": {
+          "calls": 2048,
+          "totalMs": 15.702900000001137
+        },
+        "hostPostMessage": {
+          "calls": 2048,
+          "totalMs": 13.737300000002278
+        },
+        "workerIngress": {
+          "calls": 2048,
+          "totalMs": 8.088999999995849
+        },
+        "workerOutputPreparation": {
+          "calls": 2048,
+          "totalMs": 4.958100000005288
+        },
+        "workerResultTransport": {
+          "calls": 2048,
+          "totalMs": 309.0600999999996
+        },
+        "parentCollection": {
+          "calls": 2048,
+          "totalMs": 1.2104000000067572
+        },
+        "hostResultSettlement": {
+          "calls": 2048,
+          "totalMs": 3.797099999997954
+        },
+        "parentSettlement": {
+          "calls": 1,
+          "totalMs": 0.024400000000014188
+        }
+      }
+    },
+    {
+      "trial": 3,
+      "mode": "upper",
+      "bytes": 4096,
+      "maximum": 4096,
+      "wallMs": 105.4188999999999,
+      "reconciliationCalls": 2048,
+      "reconciliationMs": 0.31959999999298816,
+      "stages": {
+        "descriptorCreation": {
+          "calls": 2048,
+          "totalMs": 0.317400000000589
+        },
+        "factory": {
+          "calls": 2048,
+          "totalMs": 0.6440999999999804
+        },
+        "childAdmission": {
+          "calls": 2048,
+          "totalMs": 16.126699999996163
+        },
+        "hostPostMessage": {
+          "calls": 2048,
+          "totalMs": 14.294500000003609
+        },
+        "workerIngress": {
+          "calls": 2048,
+          "totalMs": 8.685799999994288
+        },
+        "workerOutputPreparation": {
+          "calls": 2048,
+          "totalMs": 5.071799999998348
+        },
+        "workerResultTransport": {
+          "calls": 2048,
+          "totalMs": 301.0265999999997
+        },
+        "parentCollection": {
+          "calls": 2048,
+          "totalMs": 1.3196999999956915
+        },
+        "hostResultSettlement": {
+          "calls": 2048,
+          "totalMs": 3.960299999993822
+        },
+        "parentSettlement": {
+          "calls": 1,
+          "totalMs": 0.08929999999986649
+        }
+      }
+    },
+    {
+      "trial": 3,
+      "mode": "exact",
+      "bytes": 4096,
+      "maximum": 4096,
+      "wallMs": 94.36170000000016,
+      "reconciliationCalls": 0,
+      "reconciliationMs": 0,
+      "stages": {
+        "descriptorCreation": {
+          "calls": 2048,
+          "totalMs": 0.28579999999988104
+        },
+        "factory": {
+          "calls": 2048,
+          "totalMs": 0.4821000000058575
+        },
+        "childAdmission": {
+          "calls": 2048,
+          "totalMs": 14.471899999993639
+        },
+        "hostPostMessage": {
+          "calls": 2048,
+          "totalMs": 12.730999999998858
+        },
+        "workerIngress": {
+          "calls": 2048,
+          "totalMs": 8.317699999998695
+        },
+        "workerOutputPreparation": {
+          "calls": 2048,
+          "totalMs": 4.717499999996335
+        },
+        "workerResultTransport": {
+          "calls": 2048,
+          "totalMs": 269.88650000000035
+        },
+        "parentCollection": {
+          "calls": 2048,
+          "totalMs": 1.2346000000000004
+        },
+        "hostResultSettlement": {
+          "calls": 2048,
+          "totalMs": 3.245199999992792
+        },
+        "parentSettlement": {
+          "calls": 1,
+          "totalMs": 0.03459999999995489
+        }
+      }
+    },
+    {
+      "trial": 0,
+      "mode": "exact",
+      "bytes": 32768,
+      "maximum": 524288,
+      "wallMs": 99.42809999999986,
+      "reconciliationCalls": 0,
+      "reconciliationMs": 0,
+      "stages": {
+        "descriptorCreation": {
+          "calls": 2048,
+          "totalMs": 0.30780000000163454
+        },
+        "factory": {
+          "calls": 2048,
+          "totalMs": 0.5114000000087344
+        },
+        "childAdmission": {
+          "calls": 2048,
+          "totalMs": 15.192999999997937
+        },
+        "hostPostMessage": {
+          "calls": 2048,
+          "totalMs": 13.496900000001688
+        },
+        "workerIngress": {
+          "calls": 2048,
+          "totalMs": 8.726800000005596
+        },
+        "workerOutputPreparation": {
+          "calls": 2048,
+          "totalMs": 5.525399999996807
+        },
+        "workerResultTransport": {
+          "calls": 2048,
+          "totalMs": 250.20759999999976
+        },
+        "parentCollection": {
+          "calls": 2048,
+          "totalMs": 1.2947000000010576
+        },
+        "hostResultSettlement": {
+          "calls": 2048,
+          "totalMs": 3.4705999999991946
+        },
+        "parentSettlement": {
+          "calls": 1,
+          "totalMs": 0.009000000000014552
+        }
+      }
+    },
+    {
+      "trial": 0,
+      "mode": "upper",
+      "bytes": 32768,
+      "maximum": 524288,
+      "wallMs": 114.21759999999995,
+      "reconciliationCalls": 2048,
+      "reconciliationMs": 0.748599999993985,
+      "stages": {
+        "descriptorCreation": {
+          "calls": 2048,
+          "totalMs": 0.3287999999981821
+        },
+        "factory": {
+          "calls": 2048,
+          "totalMs": 0.5450999999968644
+        },
+        "childAdmission": {
+          "calls": 2048,
+          "totalMs": 16.281999999993104
+        },
+        "hostPostMessage": {
+          "calls": 2048,
+          "totalMs": 15.419300000002522
+        },
+        "workerIngress": {
+          "calls": 2048,
+          "totalMs": 9.353099999995266
+        },
+        "workerOutputPreparation": {
+          "calls": 2048,
+          "totalMs": 5.907300000001669
+        },
+        "workerResultTransport": {
+          "calls": 2048,
+          "totalMs": 292.40430000000015
+        },
+        "parentCollection": {
+          "calls": 2048,
+          "totalMs": 1.381400000003623
+        },
+        "hostResultSettlement": {
+          "calls": 2048,
+          "totalMs": 5.414300000007643
+        },
+        "parentSettlement": {
+          "calls": 1,
+          "totalMs": 0.008900000000039654
+        }
+      }
+    },
+    {
+      "trial": 1,
+      "mode": "upper",
+      "bytes": 32768,
+      "maximum": 524288,
+      "wallMs": 117.60609999999997,
+      "reconciliationCalls": 2048,
+      "reconciliationMs": 1.0302000000024236,
+      "stages": {
+        "descriptorCreation": {
+          "calls": 2048,
+          "totalMs": 0.4621000000031472
+        },
+        "factory": {
+          "calls": 2048,
+          "totalMs": 0.5517999999958647
+        },
+        "childAdmission": {
+          "calls": 2048,
+          "totalMs": 16.985400000002073
+        },
+        "hostPostMessage": {
+          "calls": 2048,
+          "totalMs": 15.564300000003414
+        },
+        "workerIngress": {
+          "calls": 2048,
+          "totalMs": 9.174099999997452
+        },
+        "workerOutputPreparation": {
+          "calls": 2048,
+          "totalMs": 6.097200000007888
+        },
+        "workerResultTransport": {
+          "calls": 2048,
+          "totalMs": 306.20089999999914
+        },
+        "parentCollection": {
+          "calls": 2048,
+          "totalMs": 2.5108999999952175
+        },
+        "hostResultSettlement": {
+          "calls": 2048,
+          "totalMs": 7.320000000004939
+        },
+        "parentSettlement": {
+          "calls": 1,
+          "totalMs": 0.01569999999992433
+        }
+      }
+    },
+    {
+      "trial": 1,
+      "mode": "exact",
+      "bytes": 32768,
+      "maximum": 524288,
+      "wallMs": 120.53860000000009,
+      "reconciliationCalls": 0,
+      "reconciliationMs": 0,
+      "stages": {
+        "descriptorCreation": {
+          "calls": 2048,
+          "totalMs": 0.37220000000252185
+        },
+        "factory": {
+          "calls": 2048,
+          "totalMs": 0.5543999999949847
+        },
+        "childAdmission": {
+          "calls": 2048,
+          "totalMs": 17.57649999999967
+        },
+        "hostPostMessage": {
+          "calls": 2048,
+          "totalMs": 15.36660000000802
+        },
+        "workerIngress": {
+          "calls": 2048,
+          "totalMs": 9.479100000010249
+        },
+        "workerOutputPreparation": {
+          "calls": 2048,
+          "totalMs": 6.023599999999078
+        },
+        "workerResultTransport": {
+          "calls": 2048,
+          "totalMs": 317.7749999999993
+        },
+        "parentCollection": {
+          "calls": 2048,
+          "totalMs": 1.9170000000046912
+        },
+        "hostResultSettlement": {
+          "calls": 2048,
+          "totalMs": 5.07509999998797
+        },
+        "parentSettlement": {
+          "calls": 1,
+          "totalMs": 0.008100000000013097
+        }
+      }
+    },
+    {
+      "trial": 2,
+      "mode": "exact",
+      "bytes": 32768,
+      "maximum": 524288,
+      "wallMs": 110.78880000000026,
+      "reconciliationCalls": 0,
+      "reconciliationMs": 0,
+      "stages": {
+        "descriptorCreation": {
+          "calls": 2048,
+          "totalMs": 0.3238000000073953
+        },
+        "factory": {
+          "calls": 2048,
+          "totalMs": 0.5297999999984313
+        },
+        "childAdmission": {
+          "calls": 2048,
+          "totalMs": 16.826000000004115
+        },
+        "hostPostMessage": {
+          "calls": 2048,
+          "totalMs": 14.514500000007047
+        },
+        "workerIngress": {
+          "calls": 2048,
+          "totalMs": 9.020799999991596
+        },
+        "workerOutputPreparation": {
+          "calls": 2048,
+          "totalMs": 5.586900000017067
+        },
+        "workerResultTransport": {
+          "calls": 2048,
+          "totalMs": 286.6449000000004
+        },
+        "parentCollection": {
+          "calls": 2048,
+          "totalMs": 1.8027000000070075
+        },
+        "hostResultSettlement": {
+          "calls": 2048,
+          "totalMs": 4.770099999993818
+        },
+        "parentSettlement": {
+          "calls": 1,
+          "totalMs": 0.008399999999710417
+        }
+      }
+    },
+    {
+      "trial": 2,
+      "mode": "upper",
+      "bytes": 32768,
+      "maximum": 524288,
+      "wallMs": 113.82540000000017,
+      "reconciliationCalls": 2048,
+      "reconciliationMs": 0.4828999999958796,
+      "stages": {
+        "descriptorCreation": {
+          "calls": 2048,
+          "totalMs": 0.32570000000850996
+        },
+        "factory": {
+          "calls": 2048,
+          "totalMs": 0.4840999999896667
+        },
+        "childAdmission": {
+          "calls": 2048,
+          "totalMs": 17.343599999998787
+        },
+        "hostPostMessage": {
+          "calls": 2048,
+          "totalMs": 15.38920000000735
+        },
+        "workerIngress": {
+          "calls": 2048,
+          "totalMs": 8.636500000007345
+        },
+        "workerOutputPreparation": {
+          "calls": 2048,
+          "totalMs": 5.360400000002755
+        },
+        "workerResultTransport": {
+          "calls": 2048,
+          "totalMs": 303.3414999999999
+        },
+        "parentCollection": {
+          "calls": 2048,
+          "totalMs": 1.792400000003454
+        },
+        "hostResultSettlement": {
+          "calls": 2048,
+          "totalMs": 5.641999999998461
+        },
+        "parentSettlement": {
+          "calls": 1,
+          "totalMs": 0.008400000000165164
+        }
+      }
+    },
+    {
+      "trial": 3,
+      "mode": "upper",
+      "bytes": 32768,
+      "maximum": 524288,
+      "wallMs": 117.32759999999962,
+      "reconciliationCalls": 2048,
+      "reconciliationMs": 0.502000000001317,
+      "stages": {
+        "descriptorCreation": {
+          "calls": 2048,
+          "totalMs": 0.3389999999940301
+        },
+        "factory": {
+          "calls": 2048,
+          "totalMs": 0.5235999999936212
+        },
+        "childAdmission": {
+          "calls": 2048,
+          "totalMs": 18.03180000000384
+        },
+        "hostPostMessage": {
+          "calls": 2048,
+          "totalMs": 15.520999999988817
+        },
+        "workerIngress": {
+          "calls": 2048,
+          "totalMs": 8.9253000000067
+        },
+        "workerOutputPreparation": {
+          "calls": 2048,
+          "totalMs": 5.525999999998476
+        },
+        "workerResultTransport": {
+          "calls": 2048,
+          "totalMs": 308.8384999999999
+        },
+        "parentCollection": {
+          "calls": 2048,
+          "totalMs": 1.6546999999827676
+        },
+        "hostResultSettlement": {
+          "calls": 2048,
+          "totalMs": 5.6321000000193635
+        },
+        "parentSettlement": {
+          "calls": 1,
+          "totalMs": 0.008499999999912689
+        }
+      }
+    },
+    {
+      "trial": 3,
+      "mode": "exact",
+      "bytes": 32768,
+      "maximum": 524288,
+      "wallMs": 113.07139999999981,
+      "reconciliationCalls": 0,
+      "reconciliationMs": 0,
+      "stages": {
+        "descriptorCreation": {
+          "calls": 2048,
+          "totalMs": 0.36049999999704596
+        },
+        "factory": {
+          "calls": 2048,
+          "totalMs": 0.550599999998667
+        },
+        "childAdmission": {
+          "calls": 2048,
+          "totalMs": 17.70589999999447
+        },
+        "hostPostMessage": {
+          "calls": 2048,
+          "totalMs": 14.681199999987712
+        },
+        "workerIngress": {
+          "calls": 2048,
+          "totalMs": 8.40559999998959
+        },
+        "workerOutputPreparation": {
+          "calls": 2048,
+          "totalMs": 5.511800000004314
+        },
+        "workerResultTransport": {
+          "calls": 2048,
+          "totalMs": 301.50739999999985
+        },
+        "parentCollection": {
+          "calls": 2048,
+          "totalMs": 1.4653000000080283
+        },
+        "hostResultSettlement": {
+          "calls": 2048,
+          "totalMs": 4.162699999991673
+        },
+        "parentSettlement": {
+          "calls": 1,
+          "totalMs": 0.011899999999968713
+        }
+      }
+    }
+  ]
+}

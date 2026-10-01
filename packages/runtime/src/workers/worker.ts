@@ -13,6 +13,7 @@ import type {
   BootstrapData,
   ExecutionResultMessage,
   HostMessage,
+  UpperBoundResultByteContract,
 } from './protocol.js';
 
 export interface WorkerCallbacks {
@@ -90,6 +91,7 @@ export class PjsWorker {
     profile = false,
     completionOnly = false,
     expectedResultBytes?: number,
+    resultByteContract?: UpperBoundResultByteContract,
   ): void {
     if (this.state.status !== 'idle')
       throw new PjsWorkerError('Worker is not idle', {
@@ -114,6 +116,7 @@ export class PjsWorker {
             ...(expectedResultBytes === undefined
               ? {}
               : { expectedResultBytes }),
+            ...(resultByteContract === undefined ? {} : { resultByteContract }),
           } satisfies HostMessage,
           transferList,
         );
@@ -128,6 +131,7 @@ export class PjsWorker {
             ...(expectedResultBytes === undefined
               ? {}
               : { expectedResultBytes }),
+            ...(resultByteContract === undefined ? {} : { resultByteContract }),
           } satisfies HostMessage,
           transferList,
         );

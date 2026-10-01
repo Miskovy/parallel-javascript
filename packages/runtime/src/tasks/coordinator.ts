@@ -216,20 +216,27 @@ export class TaskCoordinator {
         ...(child?.expectedResultBytes === undefined
           ? {}
           : { expectedResultBytes: child.expectedResultBytes }),
+        ...(child?.resultByteContract === undefined
+          ? {}
+          : { resultByteContract: child.resultByteContract }),
         releaseTransfers,
         admittedAt: performance.now(),
         resolve: (output) => resolve(output as Output),
         reject,
         cleanup: () => {},
       };
-      if (child?.expectedResultBytes !== undefined) {
+      if (
+        child &&
+        (child.expectedResultBytes !== undefined || child.resultByteContract)
+      ) {
         try {
           this.resultCredits.reserve(
             pending.id,
             child.operation,
             child.partition.index,
-            child.expectedResultBytes,
+            child.expectedResultBytes ?? child.resultByteContract!.bytes,
             this.parents.context(child),
+            child.resultByteContract?.mode,
           );
         } catch (cause) {
           releaseTransfers();
@@ -382,13 +389,25 @@ export class TaskCoordinator {
   ): void {
     this.metrics.executed(message.executionMs);
     if (message.type === 'failure' && message.kind === 'binaryContract')
-      this.resultCredits.recordContractFailure();
+      this.resultCredits.recordContractFailure(message.binaryContract?.mode);
     const task = this.tasks.get(message.taskId);
     // Late results after cancellation/deadline free the worker without settling twice.
     if (!task) return;
-    if (message.type === 'success')
+    if (message.type === 'success') {
+      if (task.resultByteContract) {
+        // A deadline may have expired before its timer callback ran. Expire the
+        // parent before reconciling a result that can no longer be delivered.
+        if (task.child && !this.parents.canSubmit(task.child)) return;
+        try {
+          this.resultCredits.reconcile(task.id, message.actualResultBytes);
+        } catch (error) {
+          this.resultCredits.recordContractFailure('upper-bound');
+          this.settle(task, 'failed', error as Error);
+          return;
+        }
+      }
       this.settle(task, 'completed', undefined, message.output);
-    else if (message.type === 'completed') this.settle(task, 'completed');
+    } else if (message.type === 'completed') this.settle(task, 'completed');
     else {
       const context = { taskId: task.id, workerId: worker.id };
       const error =

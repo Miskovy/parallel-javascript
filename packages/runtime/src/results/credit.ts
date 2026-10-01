@@ -1,4 +1,9 @@
-import { PjsResultCapacityError } from '../errors/index.js';
+import {
+  PjsBinaryResultContractError,
+  PjsResultCapacityError,
+} from '../errors/index.js';
+
+export type ResultByteMode = 'exact' | 'upper-bound';
 
 export interface ResultCreditOperation {
   readonly id: string;
@@ -17,6 +22,9 @@ interface ResultReservation {
   readonly operation: ResultCreditOperation;
   readonly partitionIndex: number;
   readonly bytes: number;
+  readonly mode: ResultByteMode;
+  creditedBytes: number;
+  reconciled: boolean;
   dispatched: boolean;
   executionDone: boolean;
   callerSettled: boolean;
@@ -30,7 +38,7 @@ interface OperationCredits {
 const invariantChecksEnabled =
   process.env.PJS_DEBUG_RESERVATION_INVARIANTS === '1';
 
-/** Owns exact binary-result credit from admission through physical termination/yield. */
+/** Owns binary-result credit, reconciliation, and physical termination/yield. */
 export class ResultCreditManager {
   private readonly reservations = new Map<string, ResultReservation>();
   private readonly executions = new Map<string, string[]>();
@@ -43,6 +51,10 @@ export class ResultCreditManager {
   private resultByteReservationWaits = 0;
   private resultByteReservationRejected = 0;
   private binaryResultContractFailures = 0;
+  private upperBoundContractFailures = 0;
+  private upperBoundResultsReconciled = 0;
+  private resultByteRefunds = 0;
+  private refundedResultBytes = 0;
 
   canReserve(operation: ResultCreditOperation, bytes: number): boolean {
     return bytes <= operation.resultByteCapacity! - this.reserved(operation);
@@ -65,6 +77,7 @@ export class ResultCreditManager {
     partitionIndex: number,
     bytes: number,
     context: ResultCreditContext,
+    mode: ResultByteMode = 'exact',
   ): void {
     if (
       operation.resultByteCapacity === undefined ||
@@ -95,6 +108,9 @@ export class ResultCreditManager {
       operation,
       partitionIndex,
       bytes,
+      mode,
+      creditedBytes: bytes,
+      reconciled: false,
       dispatched: false,
       executionDone: false,
       callerSettled: false,
@@ -127,6 +143,39 @@ export class ResultCreditManager {
     if (!reservation.dispatched || reservation.executionDone)
       this.release(taskId);
     else this.assertInvariants('settle-running');
+  }
+
+  /** Reconcile deliverable success before stream retention or direct delivery. */
+  reconcile(taskId: string, actualBytes: number | undefined): void {
+    const reservation = this.reservations.get(taskId);
+    if (
+      !reservation ||
+      reservation.callerSettled ||
+      reservation.mode === 'exact' ||
+      reservation.reconciled
+    )
+      return;
+    if (
+      !reservation.dispatched ||
+      !Number.isSafeInteger(actualBytes) ||
+      actualBytes! < 0 ||
+      actualBytes! > reservation.bytes
+    )
+      throw new PjsBinaryResultContractError(
+        'Invalid upper-bound successful result size',
+        { taskId, declaredBytes: reservation.bytes },
+      );
+    const refund = reservation.creditedBytes - actualBytes!;
+    reservation.creditedBytes = actualBytes!;
+    reservation.reconciled = true;
+    this.operations.get(reservation.operation)!.bytes -= refund;
+    this.currentReservedResultBytes -= refund;
+    this.upperBoundResultsReconciled++;
+    if (refund > 0) {
+      this.resultByteRefunds++;
+      this.refundedResultBytes += refund;
+    }
+    this.assertInvariants('reconcile');
   }
 
   markExecutionEnded(correlationId: string): void {
@@ -175,8 +224,9 @@ export class ResultCreditManager {
     this.resultByteReservationRejected++;
   }
 
-  recordContractFailure(): void {
+  recordContractFailure(mode?: ResultByteMode): void {
     this.binaryResultContractFailures++;
+    if (mode === 'upper-bound') this.upperBoundContractFailures++;
   }
 
   snapshot() {
@@ -186,6 +236,10 @@ export class ResultCreditManager {
       resultByteReservationWaits: this.resultByteReservationWaits,
       resultByteReservationRejected: this.resultByteReservationRejected,
       binaryResultContractFailures: this.binaryResultContractFailures,
+      upperBoundContractFailures: this.upperBoundContractFailures,
+      upperBoundResultsReconciled: this.upperBoundResultsReconciled,
+      resultByteRefunds: this.resultByteRefunds,
+      refundedResultBytes: this.refundedResultBytes,
     };
   }
 
@@ -198,6 +252,19 @@ export class ResultCreditManager {
     };
   }
 
+  /** @internal Sample credit composition without retaining historical owners. */
+  creditDiagnostics() {
+    // Exact reservations never reconcile and remain in the unreconciled total.
+    let unreconciledResultBytes = 0;
+    let reconciledResultBytes = 0;
+    for (const reservation of this.reservations.values()) {
+      if (reservation.reconciled)
+        reconciledResultBytes += reservation.creditedBytes;
+      else unreconciledResultBytes += reservation.creditedBytes;
+    }
+    return { unreconciledResultBytes, reconciledResultBytes };
+  }
+
   private release(taskId: string, checkInvariants = true): void {
     const reservation = this.reservations.get(taskId);
     if (!reservation) return;
@@ -206,11 +273,11 @@ export class ResultCreditManager {
     if (credits) {
       if (credits.taskByPartition.get(reservation.partitionIndex) === taskId)
         credits.taskByPartition.delete(reservation.partitionIndex);
-      credits.bytes -= reservation.bytes;
+      credits.bytes -= reservation.creditedBytes;
       if (credits.taskByPartition.size === 0)
         this.operations.delete(reservation.operation);
     }
-    this.currentReservedResultBytes -= reservation.bytes;
+    this.currentReservedResultBytes -= reservation.creditedBytes;
     if (checkInvariants) this.assertInvariants('release');
   }
 
@@ -247,6 +314,15 @@ export class ResultCreditManager {
         fail(`reservation key ${taskId} disagrees with record task ID`);
       if (!Number.isSafeInteger(reservation.bytes) || reservation.bytes < 0)
         fail(`reservation ${taskId} has invalid byte count`);
+      if (
+        !Number.isSafeInteger(reservation.creditedBytes) ||
+        reservation.creditedBytes < 0 ||
+        reservation.creditedBytes > reservation.bytes ||
+        ((!reservation.reconciled || reservation.mode === 'exact') &&
+          reservation.creditedBytes !== reservation.bytes) ||
+        (reservation.reconciled && !reservation.dispatched)
+      )
+        fail(`reservation ${taskId} has invalid reconciled credit`);
       const credits = this.operations.get(reservation.operation);
       if (credits?.taskByPartition.get(reservation.partitionIndex) !== taskId)
         fail(`reservation ${taskId} has no matching partition mapping`);
@@ -255,7 +331,7 @@ export class ResultCreditManager {
           fail(`dispatched reservation ${taskId} has no execution correlation`);
       } else if (correlated.has(taskId))
         fail(`inactive reservation ${taskId} retains execution correlation`);
-      reservationBytes += reservation.bytes;
+      reservationBytes += reservation.creditedBytes;
       if (!Number.isSafeInteger(reservationBytes))
         fail('reservation byte sum exceeds safe integer range');
     }
@@ -273,6 +349,7 @@ export class ResultCreditManager {
         credits.bytes > operation.resultByteCapacity
       )
         fail(`operation ${operation.id} exceeds its result byte capacity`);
+      let partitionBytes = 0;
       for (const [partitionIndex, taskId] of credits.taskByPartition) {
         const reservation = this.reservations.get(taskId);
         if (
@@ -283,7 +360,10 @@ export class ResultCreditManager {
           fail(
             `operation ${operation.id} has stale partition ${partitionIndex}`,
           );
+        partitionBytes += reservation!.creditedBytes;
       }
+      if (partitionBytes !== credits.bytes)
+        fail(`operation ${operation.id} disagrees with its reservation sum`);
       operationBytes += credits.bytes;
       if (!Number.isSafeInteger(operationBytes))
         fail('operation byte sum exceeds safe integer range');

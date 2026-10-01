@@ -62,9 +62,18 @@ function workerProfile(
     : undefined;
 }
 
-function validateBinaryResult(output: unknown, declaredBytes: number): void {
+function validateBinaryResult(
+  output: unknown,
+  declaredBytes: number,
+  mode: 'exact' | 'upper-bound' = 'exact',
+): number {
   const inspected = inspectBinaryResult(output);
-  if (inspected.problem || inspected.bytes !== declaredBytes) {
+  if (
+    inspected.problem ||
+    (mode === 'exact'
+      ? inspected.bytes !== declaredBytes
+      : inspected.bytes! > declaredBytes)
+  ) {
     const detail = inspected.problem
       ? inspected.problem === 'shared'
         ? 'uses SharedArrayBuffer backing'
@@ -73,7 +82,7 @@ function validateBinaryResult(output: unknown, declaredBytes: number): void {
           : 'is not a direct binary value'
       : `contains ${inspected.bytes} visible bytes`;
     throw new PjsBinaryResultContractError(
-      `Binary result ${detail}; expected exactly ${declaredBytes} visible bytes`,
+      `Binary result ${detail}; expected ${mode === 'exact' ? 'exactly' : 'at most'} ${declaredBytes} visible bytes`,
       {
         declaredBytes,
         ...(inspected.bytes === undefined
@@ -83,6 +92,7 @@ function validateBinaryResult(output: unknown, declaredBytes: number): void {
       },
     );
   }
+  return inspected.bytes!;
 }
 
 function binaryFailure(
@@ -140,6 +150,13 @@ async function handle(value: unknown): Promise<void> {
       const result = transferOutput(output);
       if (value.expectedResultBytes !== undefined)
         validateBinaryResult(result.value, value.expectedResultBytes);
+      const actualResultBytes = value.resultByteContract
+        ? validateBinaryResult(
+            result.value,
+            value.resultByteContract.bytes,
+            value.resultByteContract.mode,
+          )
+        : undefined;
       const outputPreparationMs = value.profile
         ? performance.now() - preparationStarted
         : 0;
@@ -149,6 +166,7 @@ async function handle(value: unknown): Promise<void> {
             type: 'success',
             taskId: value.taskId,
             output: result.value,
+            ...(actualResultBytes === undefined ? {} : { actualResultBytes }),
             executionMs,
             profile: workerProfile(
               value.profile,
@@ -164,6 +182,7 @@ async function handle(value: unknown): Promise<void> {
             type: 'success',
             taskId: value.taskId,
             output: result.value,
+            ...(actualResultBytes === undefined ? {} : { actualResultBytes }),
             executionMs,
           },
           result.transferList,
@@ -177,7 +196,14 @@ async function handle(value: unknown): Promise<void> {
             ? 'binaryContract'
             : 'serialization',
         ...(cause instanceof PjsBinaryResultContractError
-          ? { binaryContract: binaryFailure(cause) }
+          ? {
+              binaryContract: {
+                ...binaryFailure(cause),
+                ...(value.resultByteContract
+                  ? { mode: value.resultByteContract.mode }
+                  : {}),
+              },
+            }
           : {}),
         error: serializeError(cause),
         executionMs,
@@ -238,12 +264,20 @@ async function executeBatch(
         const result = transferOutput(output);
         if (item.expectedResultBytes !== undefined)
           validateBinaryResult(result.value, item.expectedResultBytes);
+        const actualResultBytes = item.resultByteContract
+          ? validateBinaryResult(
+              result.value,
+              item.resultByteContract.bytes,
+              item.resultByteContract.mode,
+            )
+          : undefined;
         outputPreparationMs += performance.now() - preparationStarted;
         transferList.push(...result.transferList);
         items.push({
           type: 'success',
           taskId: item.taskId,
           output: result.value,
+          ...(actualResultBytes === undefined ? {} : { actualResultBytes }),
           executionMs,
         });
       } catch (cause) {
@@ -255,7 +289,14 @@ async function executeBatch(
               ? 'binaryContract'
               : 'serialization',
           ...(cause instanceof PjsBinaryResultContractError
-            ? { binaryContract: binaryFailure(cause) }
+            ? {
+                binaryContract: {
+                  ...binaryFailure(cause),
+                  ...(item.resultByteContract
+                    ? { mode: item.resultByteContract.mode }
+                    : {}),
+                },
+              }
             : {}),
           error: serializeError(cause),
           executionMs,

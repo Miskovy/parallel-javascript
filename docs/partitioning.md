@@ -240,6 +240,43 @@ deadlock.
 
 ## Failure, cancellation, deadlines and shutdown
 
+v0.12 additionally supports explicit upper bounds:
+
+```ts
+for await (const { output } of runtime.streamRange(
+  encodeBlock,
+  { start: 0, end: source.length, grainSize: 256 * 1024 },
+  (partition) => ({ input: { partition, source } }),
+  {
+    // Value/count RLE uses at most two output bytes per input byte.
+    experimentalMaxResultBytes: (partition) =>
+      2 * (partition.end - partition.start),
+    experimentalMaxReservedResultBytes: 4 * 1024 * 1024,
+    experimentalMaxBufferedResults: 16,
+  },
+)) {
+  await writeBlock(output);
+}
+```
+
+Use `experimentalMaxResultBytes` for `actual <= maximum`. Keep
+`experimentalResultBytes` for `actual === declared`; smaller exact outputs still
+fail. Both declarations together fail. The maximum callback follows the same
+synchronous, cached, pre-factory rules as exact declarations. A maximum exceeding
+capacity fails before input construction.
+
+The worker measures live direct binary visible bytes before successful transport.
+Unused maximum credit refunds on host receipt before stream push. Buffered actual
+bytes stay charged until delivery, including zero-byte logical results that still
+use count credit. Batches preserve separate contracts per item. Conservative
+maxima may reduce concurrency before results arrive; no estimation is automatic.
+`upperBoundResultsReconciled`, `resultByteRefunds` (positive slack),
+`refundedResultBytes`, and `upperBoundContractFailures` supplement existing
+`streamResults` counters. Refund differs from terminal release. Current reserved
+bytes mean currently occupied credit. [The proposal](proposal-v0.12.md) specifies
+the response ordering and invariants; [the report](benchmarks-v0.12.md) records
+the measured tradeoffs.
+
 The parent succeeds only after every required child completes. A worker executes
 batch items in logical order and stops after the first item failure. Earlier
 items may have completed; later items are reported skipped and never invoked.

@@ -18,6 +18,11 @@ export interface BatchInput {
   taskId: string;
   input: unknown;
   expectedResultBytes?: number;
+  resultByteContract?: UpperBoundResultByteContract;
+}
+export interface UpperBoundResultByteContract {
+  mode: 'upper-bound';
+  bytes: number;
 }
 export type HostMessage =
   | {
@@ -28,6 +33,7 @@ export type HostMessage =
       profile?: boolean;
       completionOnly?: boolean;
       expectedResultBytes?: number;
+      resultByteContract?: UpperBoundResultByteContract;
     }
   | {
       type: 'executeBatch';
@@ -43,6 +49,7 @@ export type TaskResultMessage =
       type: 'success';
       taskId: string;
       output: unknown;
+      actualResultBytes?: number;
       executionMs: number;
       profile?: InternalWorkerProfile;
     }
@@ -62,7 +69,13 @@ export type TaskResultMessage =
       profile?: InternalWorkerProfile;
     };
 export type BatchItemResult =
-  | { type: 'success'; taskId: string; output: unknown; executionMs: number }
+  | {
+      type: 'success';
+      taskId: string;
+      output: unknown;
+      executionMs: number;
+      actualResultBytes?: number;
+    }
   | { type: 'completed'; taskId: string; executionMs: number }
   | {
       type: 'failure';
@@ -81,6 +94,7 @@ export interface BatchResultMessage {
   profile?: InternalWorkerProfile;
 }
 export interface BinaryContractFailure {
+  mode?: 'upper-bound';
   declaredBytes: number;
   actualBytes?: number;
   actualType: string;
@@ -122,6 +136,7 @@ function safeBytes(value: unknown): value is number {
 function binaryContract(value: unknown): value is BinaryContractFailure {
   return (
     record(value) &&
+    (value.mode === undefined || value.mode === 'upper-bound') &&
     safeBytes(value.declaredBytes) &&
     (value.actualBytes === undefined || safeBytes(value.actualBytes)) &&
     typeof value.actualType === 'string'
@@ -143,7 +158,10 @@ function result(value: unknown): value is BatchItemResult {
   )
     return false;
   return (
-    (value.type === 'success' && 'output' in value) ||
+    (value.type === 'success' &&
+      'output' in value &&
+      (value.actualResultBytes === undefined ||
+        safeBytes(value.actualResultBytes))) ||
     value.type === 'completed' ||
     (value.type === 'failure' && error(value.error) && failureKind(value))
   );
@@ -185,7 +203,11 @@ export function isWorkerMessage(value: unknown): value is WorkerMessage {
   )
     return false;
   return (
-    (value.type === 'success' && 'output' in value && profile(value.profile)) ||
+    (value.type === 'success' &&
+      'output' in value &&
+      profile(value.profile) &&
+      (value.actualResultBytes === undefined ||
+        safeBytes(value.actualResultBytes))) ||
     (value.type === 'completed' && profile(value.profile)) ||
     (value.type === 'failure' &&
       error(value.error) &&
@@ -201,8 +223,7 @@ export function isHostMessage(value: unknown): value is HostMessage {
     (value.profile === undefined || typeof value.profile === 'boolean') &&
     (value.completionOnly === undefined ||
       typeof value.completionOnly === 'boolean') &&
-    (value.expectedResultBytes === undefined ||
-      safeBytes(value.expectedResultBytes));
+    validResultDeclaration(value);
   if (value.type === 'execute')
     return common && typeof value.taskId === 'string' && 'input' in value;
   if (value.type !== 'executeBatch' || !common) return false;
@@ -218,14 +239,26 @@ export function isHostMessage(value: unknown): value is HostMessage {
       !record(item) ||
       typeof item.taskId !== 'string' ||
       !('input' in item) ||
-      (item.expectedResultBytes !== undefined &&
-        !safeBytes(item.expectedResultBytes)) ||
+      !validResultDeclaration(item) ||
       ids.has(item.taskId)
     )
       return false;
     ids.add(item.taskId);
   }
   return true;
+}
+function validResultDeclaration(value: Record<string, unknown>): boolean {
+  if (value.resultByteContract !== undefined)
+    return (
+      value.expectedResultBytes === undefined &&
+      record(value.resultByteContract) &&
+      value.resultByteContract.mode === 'upper-bound' &&
+      safeBytes(value.resultByteContract.bytes)
+    );
+  return (
+    value.expectedResultBytes === undefined ||
+    safeBytes(value.expectedResultBytes)
+  );
 }
 export function serializeError(value: unknown): SerializedError {
   // User code can throw any value, including objects with throwing accessors.

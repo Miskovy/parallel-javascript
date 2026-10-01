@@ -1,5 +1,6 @@
 import type { TaskSnapshot } from '../types/index.js';
 import type { PartitionChild } from '../partition/operation.js';
+import type { UpperBoundResultByteContract } from '../workers/protocol.js';
 
 export interface ScheduledTask {
   readonly id: string;
@@ -15,6 +16,7 @@ export interface PendingTask extends ScheduledTask {
   input: unknown;
   transferList: ArrayBuffer[];
   expectedResultBytes?: number;
+  resultByteContract?: UpperBoundResultByteContract;
   releaseTransfers: () => void;
   admittedAt: number;
   resolve: (output: unknown) => void;

@@ -265,6 +265,9 @@ export class ExecutionDispatcher {
             ...(item.expectedResultBytes === undefined
               ? {}
               : { expectedResultBytes: item.expectedResultBytes }),
+            ...(item.resultByteContract === undefined
+              ? {}
+              : { resultByteContract: item.resultByteContract }),
           })),
           task.child?.operation.resultMode === 'discard',
         );
@@ -277,6 +280,7 @@ export class ExecutionDispatcher {
           Boolean(task.child && internalProfilingEnabled()),
           task.child?.operation.resultMode === 'discard',
           task.expectedResultBytes,
+          task.resultByteContract,
         );
       this.resultCredits.markDispatched(
         task.id,
