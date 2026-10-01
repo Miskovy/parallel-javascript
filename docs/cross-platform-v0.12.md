@@ -4,6 +4,10 @@ This is a separate campaign for upper-bound semantics. The v0.11 Fedora and
 Windows JSON and report are preserved. Local implementation evidence belongs to
 the [v0.12 report](benchmarks-v0.12.md); this document does not claim unrun cells.
 
+The completed implementation reference is
+`18f0c87e7b7920179403bbc396afabced6bb06c4`. The commands below pin that committed
+source, independently of later report or campaign updates.
+
 Use `scripts/cross-platform-v012/run.mjs` only with an explicit committed v0.12
 source hash. It extracts that commit into a fresh temporary archive, installs
 locked dependencies, records source/lock/archive hashes and machine metadata,
@@ -18,8 +22,8 @@ not repeat unrelated v0.11 CPU/matrix/Piscina campaigns. Same-machine v0.11/v0.1
 regression controls remain a separately interleaved local experiment.
 
 ```sh
-node scripts/cross-platform-v012/run.mjs --commit COMMITTED_V012_HASH --mode reduced --label fedora-ryzen3300u --node /path/to/node22 --npm /path/to/npm-cli.js
-node scripts/cross-platform-v012/run.mjs --commit COMMITTED_V012_HASH --mode full --label windows-i3-10100f --node /path/to/node24 --npm /path/to/npm-cli.js
+node scripts/cross-platform-v012/run.mjs --commit 18f0c87e7b7920179403bbc396afabced6bb06c4 --mode reduced --label fedora-ryzen3300u --node /path/to/node22 --npm /path/to/npm-cli.js
+node scripts/cross-platform-v012/run.mjs --commit 18f0c87e7b7920179403bbc396afabced6bb06c4 --mode full --label windows-i3-10100f --node /path/to/node24 --npm /path/to/npm-cli.js
 ```
 
 Repeat for Node 22.13+ and Node 24 on each actual machine; use a new `--output`
