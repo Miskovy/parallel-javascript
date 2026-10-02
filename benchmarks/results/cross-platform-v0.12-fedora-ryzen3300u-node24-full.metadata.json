@@ -1,0 +1,1897 @@
+{
+  "campaignFile": "cross-platform-v0.12-fedora-ryzen3300u-node24-full.json",
+  "sourceCommit": "18f0c87e7b7920179403bbc396afabced6bb06c4",
+  "controllerCommit": "f5f461fa379451f41223f188c23d6f63f09f6e35",
+  "mode": "full",
+  "label": "fedora-ryzen3300u",
+  "captureMethod": "Read-only companion observer; prepared campaign runner and reference source unchanged",
+  "environment": {
+    "timestamp": "2026-10-02T08:54:50.894Z",
+    "hostname": "fedora",
+    "os": "Linux",
+    "osVersion": "#1 SMP PREEMPT_DYNAMIC Wed Mar 25 18:23:49 UTC 2026",
+    "osRelease": "6.19.10-300.fc44.x86_64",
+    "kernel": "6.19.10-300.fc44.x86_64",
+    "architecture": "x64",
+    "platform": "linux",
+    "cpuModel": "AMD Ryzen 3 PRO 3300U w/ Radeon Vega Mobile Gfx",
+    "logicalCpuCount": 4,
+    "availableParallelism": 4,
+    "memoryTotalBytes": 7715655680,
+    "nodeVersion": "v24.21.0",
+    "v8Version": "13.6.233.17-node.53",
+    "versions": {
+      "node": "24.21.0",
+      "acorn": "8.18.0",
+      "ada": "4.0.0",
+      "amaro": "1.1.11",
+      "ares": "1.34.8",
+      "brotli": "1.2.0",
+      "cldr": "48.0",
+      "icu": "78.3",
+      "llhttp": "9.4.3",
+      "merve": "1.2.2",
+      "modules": "137",
+      "napi": "10",
+      "nbytes": "0.1.4",
+      "ncrypto": "0.0.1",
+      "nghttp2": "1.70.0",
+      "nghttp3": "",
+      "ngtcp2": "",
+      "openssl": "3.5.8",
+      "simdjson": "4.6.7",
+      "simdutf": "6.4.0",
+      "sqlite": "3.53.4",
+      "tz": "2026c",
+      "undici": "7.29.1",
+      "unicode": "17.0",
+      "uv": "1.52.1",
+      "uvwasi": "0.0.23",
+      "v8": "13.6.233.17-node.53",
+      "zlib": "1.3.2.1-motley-8002e91",
+      "zstd": "1.5.7"
+    },
+    "nodeExecutable": "/home/miskovy/.nvm/versions/node/v24.21.0/bin/node",
+    "osReleaseFile": "NAME=\"Fedora Linux\"\nVERSION=\"44 (KDE Plasma Desktop Edition)\"\nRELEASE_TYPE=stable\nID=fedora\nVERSION_ID=44\nVERSION_CODENAME=\"\"\nPRETTY_NAME=\"Fedora Linux 44 (KDE Plasma Desktop Edition)\"\nANSI_COLOR=\"0;38;2;60;110;180\"\nLOGO=fedora-logo-icon\nCPE_NAME=\"cpe:/o:fedoraproject:fedora:44\"\nDEFAULT_HOSTNAME=\"fedora\"\nHOME_URL=\"https://fedoraproject.org/\"\nDOCUMENTATION_URL=\"https://docs.fedoraproject.org/en-US/fedora/f44/\"\nSUPPORT_URL=\"https://ask.fedoraproject.org/\"\nBUG_REPORT_URL=\"https://bugzilla.redhat.com/\"\nREDHAT_BUGZILLA_PRODUCT=\"Fedora\"\nREDHAT_BUGZILLA_PRODUCT_VERSION=44\nREDHAT_SUPPORT_PRODUCT=\"Fedora\"\nREDHAT_SUPPORT_PRODUCT_VERSION=44\nSUPPORT_END=2027-05-19\nVARIANT=\"KDE Plasma Desktop Edition\"\nVARIANT_ID=kde",
+    "cpuTopology": "{\n   \"lscpu\": [\n      {\n         \"field\": \"Architecture:\",\n         \"data\": \"x86_64\"\n      },{\n         \"field\": \"CPU op-mode(s):\",\n         \"data\": \"32-bit, 64-bit\"\n      },{\n         \"field\": \"Address sizes:\",\n         \"data\": \"43 bits physical, 48 bits virtual\"\n      },{\n         \"field\": \"Byte Order:\",\n         \"data\": \"Little Endian\"\n      },{\n         \"field\": \"CPU(s):\",\n         \"data\": \"4\"\n      },{\n         \"field\": \"On-line CPU(s) list:\",\n         \"data\": \"0-3\"\n      },{\n         \"field\": \"Vendor ID:\",\n         \"data\": \"AuthenticAMD\"\n      },{\n         \"field\": \"Model name:\",\n         \"data\": \"AMD Ryzen 3 PRO 3300U w/ Radeon Vega Mobile Gfx\"\n      },{\n         \"field\": \"CPU family:\",\n         \"data\": \"23\"\n      },{\n         \"field\": \"Model:\",\n         \"data\": \"24\"\n      },{\n         \"field\": \"Thread(s) per core:\",\n         \"data\": \"1\"\n      },{\n         \"field\": \"Core(s) per socket:\",\n         \"data\": \"4\"\n      },{\n         \"field\": \"Socket(s):\",\n         \"data\": \"1\"\n      },{\n         \"field\": \"Stepping:\",\n         \"data\": \"1\"\n      },{\n         \"field\": \"Frequency boost:\",\n         \"data\": \"enabled\"\n      },{\n         \"field\": \"CPU(s) scaling MHz:\",\n         \"data\": \"106%\"\n      },{\n         \"field\": \"CPU max MHz:\",\n         \"data\": \"2100.0000\"\n      },{\n         \"field\": \"CPU min MHz:\",\n         \"data\": \"1400.0000\"\n      },{\n         \"field\": \"BogoMIPS:\",\n         \"data\": \"4191.91\"\n      },{\n         \"field\": \"Flags:\",\n         \"data\": \"fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl nonstop_tsc cpuid extd_apicid aperfmperf rapl pni pclmulqdq monitor ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw skinit wdt tce topoext perfctr_core perfctr_nb bpext perfctr_llc mwaitx cpb hw_pstate ssbd ibpb vmmcall fsgsbase bmi1 avx2 smep bmi2 rdseed adx smap clflushopt sha_ni xsaveopt xsavec xgetbv1 clzero xsaveerptr arat npt lbrv svm_lock nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold avic v_vmsave_vmload vgif overflow_recov succor smca sev sev_es\"\n      },{\n         \"field\": \"Virtualization:\",\n         \"data\": \"AMD-V\"\n      },{\n         \"field\": \"L1d cache:\",\n         \"data\": \"128 KiB (4 instances)\"\n      },{\n         \"field\": \"L1i cache:\",\n         \"data\": \"256 KiB (4 instances)\"\n      },{\n         \"field\": \"L2 cache:\",\n         \"data\": \"2 MiB (4 instances)\"\n      },{\n         \"field\": \"L3 cache:\",\n         \"data\": \"4 MiB (1 instance)\"\n      },{\n         \"field\": \"NUMA node(s):\",\n         \"data\": \"1\"\n      },{\n         \"field\": \"NUMA node0 CPU(s):\",\n         \"data\": \"0-3\"\n      },{\n         \"field\": \"Vulnerability Gather data sampling:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Ghostwrite:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Indirect target selection:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Itlb multihit:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability L1tf:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Mds:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Meltdown:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Mmio stale data:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Old microcode:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Reg file data sampling:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Retbleed:\",\n         \"data\": \"Mitigation; untrained return thunk; SMT disabled\"\n      },{\n         \"field\": \"Vulnerability Spec rstack overflow:\",\n         \"data\": \"Mitigation; SMT disabled\"\n      },{\n         \"field\": \"Vulnerability Spec store bypass:\",\n         \"data\": \"Mitigation; Speculative Store Bypass disabled via prctl\"\n      },{\n         \"field\": \"Vulnerability Spectre v1:\",\n         \"data\": \"Mitigation; usercopy/swapgs barriers and __user pointer sanitization\"\n      },{\n         \"field\": \"Vulnerability Spectre v2:\",\n         \"data\": \"Mitigation; Retpolines; IBPB conditional; STIBP disabled; RSB filling; PBRSB-eIBRS Not affected; BHI Not affected\"\n      },{\n         \"field\": \"Vulnerability Srbds:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Tsa:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Tsx async abort:\",\n         \"data\": \"Not affected\"\n      },{\n         \"field\": \"Vulnerability Vmscape:\",\n         \"data\": \"Mitigation; IBPB before exit to userspace\"\n      }\n   ]\n}",
+    "context": {
+      "timestamp": "2026-10-02T08:54:50.909Z",
+      "uptimeSeconds": 262502.81,
+      "loadAverage": [
+        1.79,
+        1.24,
+        1.32
+      ],
+      "freeMemoryBytes": 2481516544,
+      "cpuMHz": [
+        3179,
+        2254,
+        2299,
+        2525
+      ],
+      "powerSource": "AC",
+      "powerProfile": null,
+      "batteries": [
+        {
+          "name": "BAT0",
+          "type": "Battery",
+          "online": null,
+          "status": "Charging",
+          "capacityPercent": "99"
+        }
+      ],
+      "cpuFrequency": [
+        {
+          "cpu": "cpu0",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "2328763",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu1",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "1397203",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu2",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "3493306",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu3",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "2328862",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        }
+      ],
+      "temperatures": [
+        {
+          "type": "acpitz",
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "49000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "0"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "40000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "45000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "31000"
+        },
+        {
+          "type": "iwlwifi_1",
+          "milliCelsius": "43000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "49000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "0"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "40000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "45000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "31000"
+        },
+        {
+          "type": "amdgpu",
+          "label": "edge",
+          "milliCelsius": "49000"
+        },
+        {
+          "type": "k10temp",
+          "label": "Tctl",
+          "milliCelsius": "49500"
+        },
+        {
+          "type": "iwlwifi_1",
+          "label": null,
+          "milliCelsius": "43000"
+        }
+      ],
+      "powerSupplies": [
+        {
+          "name": "AC",
+          "type": "Mains",
+          "online": "1",
+          "status": null,
+          "capacityPercent": null
+        },
+        {
+          "name": "BAT0",
+          "type": "Battery",
+          "online": null,
+          "status": "Charging",
+          "capacityPercent": "99"
+        }
+      ],
+      "memoryInfo": "MemTotal:        7534820 kB\nMemFree:          548676 kB\nMemAvailable:    2423184 kB\nBuffers:             540 kB\nCached:          2032512 kB\nSwapCached:         3996 kB\nActive:          2041772 kB\nInactive:        1810012 kB\nActive(anon):    1467012 kB\nInactive(anon):   551736 kB\nActive(file):     574760 kB\nInactive(file):  1258276 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        3416260 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              1152 kB\nWriteback:             0 kB\nAnonPages:       1816704 kB\nMapped:           570980 kB\nShmem:            200464 kB\nKReclaimable:     344800 kB\nSlab:             652576 kB\nSReclaimable:     344800 kB\nSUnreclaim:       307776 kB\nKernelStack:       20352 kB\nPageTables:        88936 kB\nSecPageTables:      3676 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   25667632 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      116664 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5086924 kB\nDirectMap2M:     2709504 kB\nDirectMap1G:     1048576 kB",
+      "backgroundProcesses": [
+        "PID COMMAND         %CPU %MEM",
+        " 146966 ps               100  0.0",
+        " 146955 MainThread      50.0  0.7",
+        " 146954 rtk             18.7  0.0",
+        "   1966 kwin_wayland     0.9  0.8",
+        " 132428 brave            0.4  6.2",
+        " 143671 kworker/u16:5-g  0.3  0.0",
+        "  99903 code             0.3  0.7",
+        " 139220 kworker/u16:25-  0.3  0.0"
+      ]
+    }
+  },
+  "npmCli": "/home/miskovy/.nvm/versions/node/v24.21.0/lib/node_modules/npm/bin/npm-cli.js",
+  "npmVersion": "11.19.0",
+  "lockfileSha256": "9197e42d8e3ccd4375b6ede97193408d76e5f5033ec64534cfc2abeabccf9cdd",
+  "argv": [
+    "scripts/cross-platform-v012/run.mjs",
+    "--commit",
+    "18f0c87e7b7920179403bbc396afabced6bb06c4",
+    "--mode",
+    "full",
+    "--label",
+    "fedora-ryzen3300u",
+    "--node",
+    "/home/miskovy/.nvm/versions/node/v24.21.0/bin/node",
+    "--npm",
+    "/home/miskovy/.nvm/versions/node/v24.21.0/lib/node_modules/npm/bin/npm-cli.js"
+  ],
+  "powerEnvironmentValue": "AC",
+  "contextSamples": [
+    {
+      "phase": "before-campaign",
+      "timestamp": "2026-10-02T08:54:50.909Z",
+      "uptimeSeconds": 262502.81,
+      "loadAverage": [
+        1.79,
+        1.24,
+        1.32
+      ],
+      "freeMemoryBytes": 2481516544,
+      "cpuMHz": [
+        3179,
+        2254,
+        2299,
+        2525
+      ],
+      "powerSource": "AC",
+      "powerProfile": null,
+      "batteries": [
+        {
+          "name": "BAT0",
+          "type": "Battery",
+          "online": null,
+          "status": "Charging",
+          "capacityPercent": "99"
+        }
+      ],
+      "cpuFrequency": [
+        {
+          "cpu": "cpu0",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "2328763",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu1",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "1397203",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu2",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "3493306",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu3",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "2328862",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        }
+      ],
+      "temperatures": [
+        {
+          "type": "acpitz",
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "49000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "0"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "40000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "45000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "31000"
+        },
+        {
+          "type": "iwlwifi_1",
+          "milliCelsius": "43000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "49000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "0"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "40000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "45000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "31000"
+        },
+        {
+          "type": "amdgpu",
+          "label": "edge",
+          "milliCelsius": "49000"
+        },
+        {
+          "type": "k10temp",
+          "label": "Tctl",
+          "milliCelsius": "49500"
+        },
+        {
+          "type": "iwlwifi_1",
+          "label": null,
+          "milliCelsius": "43000"
+        }
+      ],
+      "powerSupplies": [
+        {
+          "name": "AC",
+          "type": "Mains",
+          "online": "1",
+          "status": null,
+          "capacityPercent": null
+        },
+        {
+          "name": "BAT0",
+          "type": "Battery",
+          "online": null,
+          "status": "Charging",
+          "capacityPercent": "99"
+        }
+      ],
+      "memoryInfo": "MemTotal:        7534820 kB\nMemFree:          548676 kB\nMemAvailable:    2423184 kB\nBuffers:             540 kB\nCached:          2032512 kB\nSwapCached:         3996 kB\nActive:          2041772 kB\nInactive:        1810012 kB\nActive(anon):    1467012 kB\nInactive(anon):   551736 kB\nActive(file):     574760 kB\nInactive(file):  1258276 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        3416260 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              1152 kB\nWriteback:             0 kB\nAnonPages:       1816704 kB\nMapped:           570980 kB\nShmem:            200464 kB\nKReclaimable:     344800 kB\nSlab:             652576 kB\nSReclaimable:     344800 kB\nSUnreclaim:       307776 kB\nKernelStack:       20352 kB\nPageTables:        88936 kB\nSecPageTables:      3676 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   25667632 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      116664 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5086924 kB\nDirectMap2M:     2709504 kB\nDirectMap1G:     1048576 kB",
+      "backgroundProcesses": [
+        "PID COMMAND         %CPU %MEM",
+        " 146966 ps               100  0.0",
+        " 146955 MainThread      50.0  0.7",
+        " 146954 rtk             18.7  0.0",
+        "   1966 kwin_wayland     0.9  0.8",
+        " 132428 brave            0.4  6.2",
+        " 143671 kworker/u16:5-g  0.3  0.0",
+        "  99903 code             0.3  0.7",
+        " 139220 kworker/u16:25-  0.3  0.0"
+      ]
+    },
+    {
+      "phase": "campaign-running",
+      "timestamp": "2026-10-02T08:55:21.105Z",
+      "uptimeSeconds": 262533,
+      "loadAverage": [
+        3.34,
+        1.64,
+        1.45
+      ],
+      "freeMemoryBytes": 2030510080,
+      "cpuMHz": [
+        3217,
+        2145,
+        3218,
+        3212
+      ],
+      "powerSource": "AC",
+      "powerProfile": null,
+      "batteries": [
+        {
+          "name": "BAT0",
+          "type": "Battery",
+          "online": null,
+          "status": "Full",
+          "capacityPercent": "100"
+        }
+      ],
+      "cpuFrequency": [
+        {
+          "cpu": "cpu0",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "3168799",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu1",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "3146955",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu2",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "3168872",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu3",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "1810814",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        }
+      ],
+      "temperatures": [
+        {
+          "type": "acpitz",
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "66000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "0"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "41000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "46000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "31000"
+        },
+        {
+          "type": "iwlwifi_1",
+          "milliCelsius": "40000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "66000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "0"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "41000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "46000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "31000"
+        },
+        {
+          "type": "amdgpu",
+          "label": "edge",
+          "milliCelsius": "68000"
+        },
+        {
+          "type": "k10temp",
+          "label": "Tctl",
+          "milliCelsius": "68750"
+        },
+        {
+          "type": "iwlwifi_1",
+          "label": null,
+          "milliCelsius": "40000"
+        }
+      ],
+      "powerSupplies": [
+        {
+          "name": "AC",
+          "type": "Mains",
+          "online": "1",
+          "status": null,
+          "capacityPercent": null
+        },
+        {
+          "name": "BAT0",
+          "type": "Battery",
+          "online": null,
+          "status": "Full",
+          "capacityPercent": "100"
+        }
+      ],
+      "memoryInfo": "MemTotal:        7534820 kB\nMemFree:          305064 kB\nMemAvailable:    1982920 kB\nBuffers:             540 kB\nCached:          1955908 kB\nSwapCached:         3760 kB\nActive:          2268260 kB\nInactive:        1641392 kB\nActive(anon):    1580584 kB\nInactive(anon):   692688 kB\nActive(file):     687676 kB\nInactive(file):   948704 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        3398112 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:               684 kB\nWriteback:             0 kB\nAnonPages:       1951172 kB\nMapped:           559060 kB\nShmem:            320540 kB\nKReclaimable:     344804 kB\nSlab:             658300 kB\nSReclaimable:     344804 kB\nSUnreclaim:       313496 kB\nKernelStack:       21024 kB\nPageTables:        94912 kB\nSecPageTables:      3668 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   26150532 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      116680 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5086924 kB\nDirectMap2M:     2709504 kB\nDirectMap1G:     1048576 kB",
+      "backgroundProcesses": [
+        "PID COMMAND         %CPU %MEM",
+        " 148012 MainThread       143  1.4",
+        " 148083 MainThread       100  0.9",
+        " 148077 MainThread      84.2  0.9",
+        " 147712 MainThread       3.1  0.7",
+        "   1966 kwin_wayland     0.9  0.9",
+        " 146984 MainThread       0.7  0.9",
+        " 132428 brave            0.4  6.1",
+        "  99903 code             0.3  0.7"
+      ]
+    },
+    {
+      "phase": "campaign-running",
+      "timestamp": "2026-10-02T08:55:51.108Z",
+      "uptimeSeconds": 262563.01,
+      "loadAverage": [
+        3.43,
+        1.82,
+        1.51
+      ],
+      "freeMemoryBytes": 2111885312,
+      "cpuMHz": [
+        2109,
+        2617,
+        2015,
+        2159
+      ],
+      "powerSource": "AC",
+      "powerProfile": null,
+      "batteries": [
+        {
+          "name": "BAT0",
+          "type": "Battery",
+          "online": null,
+          "status": "Full",
+          "capacityPercent": "100"
+        }
+      ],
+      "cpuFrequency": [
+        {
+          "cpu": "cpu0",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "3339424",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu1",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "2312163",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu2",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "3463153",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu3",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "2795561",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        }
+      ],
+      "temperatures": [
+        {
+          "type": "acpitz",
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "65000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "0"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "42000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "47000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "31000"
+        },
+        {
+          "type": "iwlwifi_1",
+          "milliCelsius": "43000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "65000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "0"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "42000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "47000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "31000"
+        },
+        {
+          "type": "amdgpu",
+          "label": "edge",
+          "milliCelsius": "66000"
+        },
+        {
+          "type": "k10temp",
+          "label": "Tctl",
+          "milliCelsius": "66500"
+        },
+        {
+          "type": "iwlwifi_1",
+          "label": null,
+          "milliCelsius": "43000"
+        }
+      ],
+      "powerSupplies": [
+        {
+          "name": "AC",
+          "type": "Mains",
+          "online": "1",
+          "status": null,
+          "capacityPercent": null
+        },
+        {
+          "name": "BAT0",
+          "type": "Battery",
+          "online": null,
+          "status": "Full",
+          "capacityPercent": "100"
+        }
+      ],
+      "memoryInfo": "MemTotal:        7534820 kB\nMemFree:          335520 kB\nMemAvailable:    2062388 kB\nBuffers:             540 kB\nCached:          2004924 kB\nSwapCached:         3760 kB\nActive:          2326776 kB\nInactive:        1648616 kB\nActive(anon):    1599028 kB\nInactive(anon):   690972 kB\nActive(file):     727748 kB\nInactive(file):   957644 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        3398828 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              2212 kB\nWriteback:             0 kB\nAnonPages:       1968072 kB\nMapped:           560116 kB\nShmem:            320544 kB\nKReclaimable:     344804 kB\nSlab:             657248 kB\nSReclaimable:     344804 kB\nSUnreclaim:       312444 kB\nKernelStack:       20608 kB\nPageTables:        94976 kB\nSecPageTables:      3668 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   26057976 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      116248 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5086924 kB\nDirectMap2M:     2709504 kB\nDirectMap1G:     1048576 kB",
+      "backgroundProcesses": [
+        "PID COMMAND         %CPU %MEM",
+        " 148172 MainThread       219  2.8",
+        "   1966 kwin_wayland     0.9  0.9",
+        " 132428 brave            0.4  6.1",
+        " 146984 MainThread       0.3  0.9",
+        "  99903 code             0.3  0.7",
+        " 100186 code             0.3  4.4",
+        " 139220 kworker/u16:25-  0.3  0.0",
+        " 143671 kworker/u16:5-b  0.3  0.0"
+      ]
+    },
+    {
+      "phase": "campaign-running",
+      "timestamp": "2026-10-02T08:56:21.109Z",
+      "uptimeSeconds": 262593.01,
+      "loadAverage": [
+        4.12,
+        2.15,
+        1.64
+      ],
+      "freeMemoryBytes": 2018963456,
+      "cpuMHz": [
+        3091,
+        3048,
+        3094,
+        3080
+      ],
+      "powerSource": "AC",
+      "powerProfile": null,
+      "batteries": [
+        {
+          "name": "BAT0",
+          "type": "Battery",
+          "online": null,
+          "status": "Full",
+          "capacityPercent": "100"
+        }
+      ],
+      "cpuFrequency": [
+        {
+          "cpu": "cpu0",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "3092829",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu1",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "3080657",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu2",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "3094084",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu3",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "3087233",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        }
+      ],
+      "temperatures": [
+        {
+          "type": "acpitz",
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "71000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "0"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "43000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "49000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "31000"
+        },
+        {
+          "type": "iwlwifi_1",
+          "milliCelsius": "43000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "71000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "0"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "43000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "49000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "31000"
+        },
+        {
+          "type": "amdgpu",
+          "label": "edge",
+          "milliCelsius": "72000"
+        },
+        {
+          "type": "k10temp",
+          "label": "Tctl",
+          "milliCelsius": "72250"
+        },
+        {
+          "type": "iwlwifi_1",
+          "label": null,
+          "milliCelsius": "43000"
+        }
+      ],
+      "powerSupplies": [
+        {
+          "name": "AC",
+          "type": "Mains",
+          "online": "1",
+          "status": null,
+          "capacityPercent": null
+        },
+        {
+          "name": "BAT0",
+          "type": "Battery",
+          "online": null,
+          "status": "Full",
+          "capacityPercent": "100"
+        }
+      ],
+      "memoryInfo": "MemTotal:        7534820 kB\nMemFree:          146184 kB\nMemAvailable:    1972436 kB\nBuffers:             540 kB\nCached:          2104288 kB\nSwapCached:         5752 kB\nActive:          2494628 kB\nInactive:        1629680 kB\nActive(anon):    1669412 kB\nInactive(anon):   670120 kB\nActive(file):     825216 kB\nInactive(file):   959560 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        3413848 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              3888 kB\nWriteback:             0 kB\nAnonPages:       2015568 kB\nMapped:           577884 kB\nShmem:            320524 kB\nKReclaimable:     344804 kB\nSlab:             657256 kB\nSReclaimable:     344804 kB\nSUnreclaim:       312452 kB\nKernelStack:       21048 kB\nPageTables:        98040 kB\nSecPageTables:      3668 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   26305516 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      116760 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5086924 kB\nDirectMap2M:     2709504 kB\nDirectMap1G:     1048576 kB",
+      "backgroundProcesses": [
+        "PID COMMAND         %CPU %MEM",
+        " 150495 MainThread       129  1.5",
+        " 150494 MainThread       118  1.4",
+        " 150496 MainThread       108  1.4",
+        " 150536 ps              50.0  0.0",
+        " 150488 MainThread      11.1  0.7",
+        "   1966 kwin_wayland     0.9  0.9",
+        " 132428 brave            0.4  6.1",
+        "  99903 code             0.3  0.7"
+      ]
+    },
+    {
+      "phase": "campaign-running",
+      "timestamp": "2026-10-02T08:56:51.115Z",
+      "uptimeSeconds": 262623.01,
+      "loadAverage": [
+        5.64,
+        2.73,
+        1.85
+      ],
+      "freeMemoryBytes": 2034577408,
+      "cpuMHz": [
+        3316,
+        1327,
+        3318,
+        3318
+      ],
+      "powerSource": "AC",
+      "powerProfile": null,
+      "batteries": [
+        {
+          "name": "BAT0",
+          "type": "Battery",
+          "online": null,
+          "status": "Full",
+          "capacityPercent": "100"
+        }
+      ],
+      "cpuFrequency": [
+        {
+          "cpu": "cpu0",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "3058280",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu1",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "2984617",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu2",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "3068570",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu3",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "3048857",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        }
+      ],
+      "temperatures": [
+        {
+          "type": "acpitz",
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "73000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "0"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "44000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "51000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "iwlwifi_1",
+          "milliCelsius": "42000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "73000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "0"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "44000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "51000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "amdgpu",
+          "label": "edge",
+          "milliCelsius": "74000"
+        },
+        {
+          "type": "k10temp",
+          "label": "Tctl",
+          "milliCelsius": "74375"
+        },
+        {
+          "type": "iwlwifi_1",
+          "label": null,
+          "milliCelsius": "42000"
+        }
+      ],
+      "powerSupplies": [
+        {
+          "name": "AC",
+          "type": "Mains",
+          "online": "1",
+          "status": null,
+          "capacityPercent": null
+        },
+        {
+          "name": "BAT0",
+          "type": "Battery",
+          "online": null,
+          "status": "Full",
+          "capacityPercent": "100"
+        }
+      ],
+      "memoryInfo": "MemTotal:        7534820 kB\nMemFree:          146376 kB\nMemAvailable:    1986892 kB\nBuffers:             540 kB\nCached:          2119028 kB\nSwapCached:         5728 kB\nActive:          1645736 kB\nInactive:        2474872 kB\nActive(anon):    1192424 kB\nInactive(anon):  1130344 kB\nActive(file):     453312 kB\nInactive(file):  1344528 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        3397308 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              1068 kB\nWriteback:             0 kB\nAnonPages:       1996944 kB\nMapped:           577988 kB\nShmem:            322208 kB\nKReclaimable:     346004 kB\nSlab:             658720 kB\nSReclaimable:     346004 kB\nSUnreclaim:       312716 kB\nKernelStack:       21024 kB\nPageTables:        97632 kB\nSecPageTables:      3668 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   26284056 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      116664 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5086924 kB\nDirectMap2M:     2709504 kB\nDirectMap1G:     1048576 kB",
+      "backgroundProcesses": [
+        "PID COMMAND         %CPU %MEM",
+        " 152081 MainThread       148  1.4",
+        " 152153 MainThread       140  1.4",
+        " 152139 MainThread      74.6  1.1",
+        " 152179 ps              50.0  0.0",
+        " 151985 MainThread       4.2  0.7",
+        "   1966 kwin_wayland     0.9  0.9",
+        " 132428 brave            0.5  6.2",
+        "  99903 code             0.3  0.7"
+      ]
+    },
+    {
+      "phase": "campaign-running",
+      "timestamp": "2026-10-02T08:57:21.119Z",
+      "uptimeSeconds": 262653.02,
+      "loadAverage": [
+        7.28,
+        3.42,
+        2.11
+      ],
+      "freeMemoryBytes": 2048634880,
+      "cpuMHz": [
+        2422,
+        2474,
+        3053,
+        2403
+      ],
+      "powerSource": "AC",
+      "powerProfile": null,
+      "batteries": [
+        {
+          "name": "BAT0",
+          "type": "Battery",
+          "online": null,
+          "status": "Full",
+          "capacityPercent": "100"
+        }
+      ],
+      "cpuFrequency": [
+        {
+          "cpu": "cpu0",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "3068509",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu1",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "3060095",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu2",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "3069088",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu3",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "3066892",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        }
+      ],
+      "temperatures": [
+        {
+          "type": "acpitz",
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "74000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "0"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "45000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "52000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "iwlwifi_1",
+          "milliCelsius": "42000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "74000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "0"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "45000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "52000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "amdgpu",
+          "label": "edge",
+          "milliCelsius": "74000"
+        },
+        {
+          "type": "k10temp",
+          "label": "Tctl",
+          "milliCelsius": "74875"
+        },
+        {
+          "type": "iwlwifi_1",
+          "label": null,
+          "milliCelsius": "42000"
+        }
+      ],
+      "powerSupplies": [
+        {
+          "name": "AC",
+          "type": "Mains",
+          "online": "1",
+          "status": null,
+          "capacityPercent": null
+        },
+        {
+          "name": "BAT0",
+          "type": "Battery",
+          "online": null,
+          "status": "Full",
+          "capacityPercent": "100"
+        }
+      ],
+      "memoryInfo": "MemTotal:        7534820 kB\nMemFree:          195804 kB\nMemAvailable:    2016416 kB\nBuffers:             540 kB\nCached:          2099136 kB\nSwapCached:         5728 kB\nActive:          1551540 kB\nInactive:        2571624 kB\nActive(anon):    1213964 kB\nInactive(anon):  1131264 kB\nActive(file):     337576 kB\nInactive(file):  1440360 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        3399284 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:             19368 kB\nWriteback:             0 kB\nAnonPages:       2019648 kB\nMapped:           570468 kB\nShmem:            322220 kB\nKReclaimable:     346004 kB\nSlab:             658596 kB\nSReclaimable:     346004 kB\nSUnreclaim:       312592 kB\nKernelStack:       21136 kB\nPageTables:        98940 kB\nSecPageTables:      3668 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   26307904 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      116792 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5086924 kB\nDirectMap2M:     2709504 kB\nDirectMap1G:     1048576 kB",
+      "backgroundProcesses": [
+        "PID COMMAND         %CPU %MEM",
+        " 153669 MainThread       202  1.5",
+        " 153532 MainThread       119  1.8",
+        " 153701 ps               100  0.0",
+        " 153573 MainThread      82.3  1.3",
+        " 153374 MainThread       3.6  0.7",
+        "   1966 kwin_wayland     0.9  0.8",
+        " 132428 brave            0.5  6.1",
+        "  99903 code             0.3  0.7"
+      ]
+    },
+    {
+      "phase": "campaign-running",
+      "timestamp": "2026-10-02T08:57:51.121Z",
+      "uptimeSeconds": 262683.02,
+      "loadAverage": [
+        6.68,
+        3.64,
+        2.22
+      ],
+      "freeMemoryBytes": 1677570048,
+      "cpuMHz": [
+        2642,
+        2644,
+        1322,
+        2637
+      ],
+      "powerSource": "AC",
+      "powerProfile": null,
+      "batteries": [
+        {
+          "name": "BAT0",
+          "type": "Battery",
+          "online": null,
+          "status": "Full",
+          "capacityPercent": "100"
+        }
+      ],
+      "cpuFrequency": [
+        {
+          "cpu": "cpu0",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "2328578",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu1",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "1367368",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu2",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "3493248",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu3",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "1397213",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        }
+      ],
+      "temperatures": [
+        {
+          "type": "acpitz",
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "72000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "0"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "46000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "52000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "iwlwifi_1",
+          "milliCelsius": "43000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "72000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "0"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "46000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "52000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "amdgpu",
+          "label": "edge",
+          "milliCelsius": "69000"
+        },
+        {
+          "type": "k10temp",
+          "label": "Tctl",
+          "milliCelsius": "69750"
+        },
+        {
+          "type": "iwlwifi_1",
+          "label": null,
+          "milliCelsius": "43000"
+        }
+      ],
+      "powerSupplies": [
+        {
+          "name": "AC",
+          "type": "Mains",
+          "online": "1",
+          "status": null,
+          "capacityPercent": null
+        },
+        {
+          "name": "BAT0",
+          "type": "Battery",
+          "online": null,
+          "status": "Full",
+          "capacityPercent": "100"
+        }
+      ],
+      "memoryInfo": "MemTotal:        7534820 kB\nMemFree:          205212 kB\nMemAvailable:    1638252 kB\nBuffers:             540 kB\nCached:          1693304 kB\nSwapCached:         5536 kB\nActive:           850584 kB\nInactive:        3237328 kB\nActive(anon):     599356 kB\nInactive(anon):  2097484 kB\nActive(file):     251228 kB\nInactive(file):  1139844 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        3325824 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              2016 kB\nWriteback:             0 kB\nAnonPages:       2390240 kB\nMapped:           494008 kB\nShmem:            303216 kB\nKReclaimable:     345296 kB\nSlab:             657392 kB\nSReclaimable:     345296 kB\nSUnreclaim:       312096 kB\nKernelStack:       20704 kB\nPageTables:        96148 kB\nSecPageTables:      3676 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   26733600 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      116360 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5086924 kB\nDirectMap2M:     2709504 kB\nDirectMap1G:     1048576 kB",
+      "backgroundProcesses": [
+        "PID COMMAND         %CPU %MEM",
+        " 153832 MainThread       208  9.4",
+        " 154188 ps               100  0.0",
+        "   1966 kwin_wayland     0.9  0.8",
+        " 132428 brave            0.5  6.0",
+        "  99903 code             0.3  0.6",
+        " 100186 code             0.3  4.3",
+        " 139220 kworker/u16:25-  0.3  0.0",
+        " 143671 kworker/u16:5-i  0.2  0.0"
+      ]
+    },
+    {
+      "phase": "campaign-running",
+      "timestamp": "2026-10-02T08:58:21.129Z",
+      "uptimeSeconds": 262713.03,
+      "loadAverage": [
+        6.44,
+        3.86,
+        2.34
+      ],
+      "freeMemoryBytes": 1679773696,
+      "cpuMHz": [
+        3063,
+        2991,
+        2239,
+        3049
+      ],
+      "powerSource": "AC",
+      "powerProfile": null,
+      "batteries": [
+        {
+          "name": "BAT0",
+          "type": "Battery",
+          "online": null,
+          "status": "Full",
+          "capacityPercent": "100"
+        }
+      ],
+      "cpuFrequency": [
+        {
+          "cpu": "cpu0",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "3060149",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu1",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "3064823",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu2",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "3027269",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu3",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "3052243",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        }
+      ],
+      "temperatures": [
+        {
+          "type": "acpitz",
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "73000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "0"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "46000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "52000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "iwlwifi_1",
+          "milliCelsius": "44000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "73000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "0"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "46000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "52000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "amdgpu",
+          "label": "edge",
+          "milliCelsius": "72000"
+        },
+        {
+          "type": "k10temp",
+          "label": "Tctl",
+          "milliCelsius": "72375"
+        },
+        {
+          "type": "iwlwifi_1",
+          "label": null,
+          "milliCelsius": "44000"
+        }
+      ],
+      "powerSupplies": [
+        {
+          "name": "AC",
+          "type": "Mains",
+          "online": "1",
+          "status": null,
+          "capacityPercent": null
+        },
+        {
+          "name": "BAT0",
+          "type": "Battery",
+          "online": null,
+          "status": "Full",
+          "capacityPercent": "100"
+        }
+      ],
+      "memoryInfo": "MemTotal:        7534820 kB\nMemFree:          136032 kB\nMemAvailable:    1640244 kB\nBuffers:             540 kB\nCached:          1765472 kB\nSwapCached:         5400 kB\nActive:           988104 kB\nInactive:        3181964 kB\nActive(anon):     631020 kB\nInactive(anon):  2076804 kB\nActive(file):     357084 kB\nInactive(file):  1105160 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        3333364 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              1732 kB\nWriteback:             0 kB\nAnonPages:       2400404 kB\nMapped:           507260 kB\nShmem:            304248 kB\nKReclaimable:     345296 kB\nSlab:             657512 kB\nSReclaimable:     345296 kB\nSUnreclaim:       312216 kB\nKernelStack:       20576 kB\nPageTables:        98020 kB\nSecPageTables:      3676 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   26684392 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      116280 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5086924 kB\nDirectMap2M:     2709504 kB\nDirectMap1G:     1048576 kB",
+      "backgroundProcesses": [
+        "PID COMMAND         %CPU %MEM",
+        " 153832 MainThread       226  9.3",
+        "   1966 kwin_wayland     0.9  0.8",
+        " 132428 brave            0.5  6.1",
+        "  99903 code             0.3  0.6",
+        " 100186 code             0.3  4.3",
+        " 139220 kworker/u16:25-  0.3  0.0",
+        " 143671 kworker/u16:5-f  0.2  0.0",
+        "  99942 code             0.2  3.4"
+      ]
+    },
+    {
+      "phase": "campaign-running",
+      "timestamp": "2026-10-02T08:58:51.134Z",
+      "uptimeSeconds": 262743.03,
+      "loadAverage": [
+        5.31,
+        3.82,
+        2.37
+      ],
+      "freeMemoryBytes": 1696468992,
+      "cpuMHz": [
+        1434,
+        2422,
+        2913,
+        1187
+      ],
+      "powerSource": "AC",
+      "powerProfile": null,
+      "batteries": [
+        {
+          "name": "BAT0",
+          "type": "Battery",
+          "online": null,
+          "status": "Full",
+          "capacityPercent": "100"
+        }
+      ],
+      "cpuFrequency": [
+        {
+          "cpu": "cpu0",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "2328596",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu1",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "2148864",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu2",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "1386200",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu3",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "3493251",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        }
+      ],
+      "temperatures": [
+        {
+          "type": "acpitz",
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "72000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "0"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "46000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "52000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "iwlwifi_1",
+          "milliCelsius": "44000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "72000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "0"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "46000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "52000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "amdgpu",
+          "label": "edge",
+          "milliCelsius": "71000"
+        },
+        {
+          "type": "k10temp",
+          "label": "Tctl",
+          "milliCelsius": "71125"
+        },
+        {
+          "type": "iwlwifi_1",
+          "label": null,
+          "milliCelsius": "44000"
+        }
+      ],
+      "powerSupplies": [
+        {
+          "name": "AC",
+          "type": "Mains",
+          "online": "1",
+          "status": null,
+          "capacityPercent": null
+        },
+        {
+          "name": "BAT0",
+          "type": "Battery",
+          "online": null,
+          "status": "Full",
+          "capacityPercent": "100"
+        }
+      ],
+      "memoryInfo": "MemTotal:        7534820 kB\nMemFree:          252376 kB\nMemAvailable:    1656708 kB\nBuffers:             540 kB\nCached:          1665628 kB\nSwapCached:         5568 kB\nActive:          1013600 kB\nInactive:        3046484 kB\nActive(anon):     636056 kB\nInactive(anon):  2061664 kB\nActive(file):     377544 kB\nInactive(file):   984820 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        3337560 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              1604 kB\nWriteback:             0 kB\nAnonPages:       2390044 kB\nMapped:           501532 kB\nShmem:            304284 kB\nKReclaimable:     345296 kB\nSlab:             657484 kB\nSReclaimable:     345296 kB\nSUnreclaim:       312188 kB\nKernelStack:       20544 kB\nPageTables:        98084 kB\nSecPageTables:      3676 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   26659984 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      116216 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5086924 kB\nDirectMap2M:     2709504 kB\nDirectMap1G:     1048576 kB",
+      "backgroundProcesses": [
+        "PID COMMAND         %CPU %MEM",
+        " 153832 MainThread       226  9.3",
+        " 154980 ps               100  0.0",
+        "   1966 kwin_wayland     0.9  0.8",
+        " 132428 brave            0.5  6.0",
+        "  99903 code             0.3  0.6",
+        " 100186 code             0.3  4.3",
+        " 139220 kworker/u16:25-  0.2  0.0",
+        "  99942 code             0.2  3.4"
+      ]
+    },
+    {
+      "phase": "after-campaign",
+      "timestamp": "2026-10-02T08:59:01.275Z",
+      "uptimeSeconds": 262753.17,
+      "loadAverage": [
+        5.81,
+        3.97,
+        2.44
+      ],
+      "freeMemoryBytes": 2138673152,
+      "cpuMHz": [
+        2328,
+        2328,
+        2794,
+        3491
+      ],
+      "powerSource": "AC",
+      "powerProfile": null,
+      "batteries": [
+        {
+          "name": "BAT0",
+          "type": "Battery",
+          "online": null,
+          "status": "Full",
+          "capacityPercent": "100"
+        }
+      ],
+      "cpuFrequency": [
+        {
+          "cpu": "cpu0",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "2328653",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu1",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "1396860",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu2",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "2329448",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        },
+        {
+          "cpu": "cpu3",
+          "governor": "schedutil",
+          "driver": "acpi-cpufreq",
+          "currentKHz": "3493247",
+          "minimumKHz": "1400000",
+          "maximumKHz": "2100000"
+        }
+      ],
+      "temperatures": [
+        {
+          "type": "acpitz",
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "71000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "0"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "46000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "52000"
+        },
+        {
+          "type": "acpitz",
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "iwlwifi_1",
+          "milliCelsius": "46000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "71000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "0"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "46000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "52000"
+        },
+        {
+          "type": "acpitz",
+          "label": null,
+          "milliCelsius": "30000"
+        },
+        {
+          "type": "amdgpu",
+          "label": "edge",
+          "milliCelsius": "71000"
+        },
+        {
+          "type": "k10temp",
+          "label": "Tctl",
+          "milliCelsius": "71625"
+        },
+        {
+          "type": "iwlwifi_1",
+          "label": null,
+          "milliCelsius": "46000"
+        }
+      ],
+      "powerSupplies": [
+        {
+          "name": "AC",
+          "type": "Mains",
+          "online": "1",
+          "status": null,
+          "capacityPercent": null
+        },
+        {
+          "name": "BAT0",
+          "type": "Battery",
+          "online": null,
+          "status": "Full",
+          "capacityPercent": "100"
+        }
+      ],
+      "memoryInfo": "MemTotal:        7534820 kB\nMemFree:          675032 kB\nMemAvailable:    2088548 kB\nBuffers:             540 kB\nCached:          1674960 kB\nSwapCached:         5568 kB\nActive:           874380 kB\nInactive:        2523236 kB\nActive(anon):     495108 kB\nInactive(anon):  1530960 kB\nActive(file):     379272 kB\nInactive(file):   992276 kB\nUnevictable:         116 kB\nMlocked:             116 kB\nSwapTotal:       7534588 kB\nSwapFree:        3338104 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              2188 kB\nWriteback:           148 kB\nAnonPages:       1717808 kB\nMapped:           498284 kB\nShmem:            304416 kB\nKReclaimable:     345296 kB\nSlab:             657544 kB\nSReclaimable:     345296 kB\nSUnreclaim:       312248 kB\nKernelStack:       20296 kB\nPageTables:        89836 kB\nSecPageTables:      3676 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11301996 kB\nCommitted_AS:   25754544 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      116056 kB\nVmallocChunk:          0 kB\nPercpu:             4336 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:               0 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:     5086924 kB\nDirectMap2M:     2709504 kB\nDirectMap1G:     1048576 kB",
+      "backgroundProcesses": [
+        "PID COMMAND         %CPU %MEM",
+        "   1966 kwin_wayland     0.9  0.8",
+        " 132428 brave            0.5  6.0",
+        "  99903 code             0.3  0.6",
+        " 100186 code             0.3  4.3",
+        " 139220 kworker/u16:25-  0.2  0.0",
+        "  99942 code             0.2  3.4",
+        " 143671 kworker/u16:5-b  0.2  0.0",
+        "   2165 plasmashell      0.1  1.8"
+      ]
+    }
+  ],
+  "completedAt": "2026-10-02T08:59:01.311Z",
+  "processResult": {
+    "code": 0,
+    "signal": null
+  },
+  "campaignFileSha256": "b7dcd5297fe71846d457e8635c50b580a47a69a0bc177d7819ee25fe3575e512"
+}
