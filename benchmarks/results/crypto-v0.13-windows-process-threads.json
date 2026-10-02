@@ -1,0 +1,3539 @@
+{
+  "method": "Read-only Get-Process Threads.Count in a persistent PowerShell observer",
+  "intervalMs": 250,
+  "scope": "Whole process; cell boundaries include startup, both warmups, retained trials and validation. Sampled peaks can miss brief threads. Observer has scheduling cost.",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "benchmarks/real-world/crypto/run.mjs",
+    "--profile=reproduce",
+    "--output=benchmarks/results/crypto-v0.13-windows-node24-reproduce.json"
+  ],
+  "events": [
+    {
+      "timestampMs": 1790957412234,
+      "line": "RUN scrypt-pjs-s0-c16-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957418262,
+      "line": "OK 1/43 scrypt-pjs-s0-c16-w1-clone-b1-l1-pure 24.3 ops/s"
+    },
+    {
+      "timestampMs": 1790957418270,
+      "line": "RUN sha-sha256-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957420225,
+      "line": "OK 2/43 sha-sha256-serial-s1024-c1-w0-clone-b1-l1-pure 173171.1 ops/s"
+    },
+    {
+      "timestampMs": 1790957420226,
+      "line": "RUN sha-sha256-pjs-s1024-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957422766,
+      "line": "OK 3/43 sha-sha256-pjs-s1024-c16-w4-shared-b1-l1-pure 17605.1 ops/s"
+    },
+    {
+      "timestampMs": 1790957422772,
+      "line": "RUN sha-sha256-pjs-s1048576-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957425905,
+      "line": "OK 4/43 sha-sha256-pjs-s1048576-c16-w4-transfer-b1-l1-pure 1163.6 ops/s"
+    },
+    {
+      "timestampMs": 1790957425912,
+      "line": "RUN scrypt-pjs-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957429563,
+      "line": "OK 5/43 scrypt-pjs-s0-c16-w4-clone-b1-l1-pure 68.4 ops/s"
+    },
+    {
+      "timestampMs": 1790957429569,
+      "line": "RUN aes-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957433521,
+      "line": "OK 6/43 aes-pjs-s1024-c16-w4-clone-b1-l1-pure 6167.8 ops/s"
+    },
+    {
+      "timestampMs": 1790957433549,
+      "line": "RUN sha-sha256-pjs-s8388608-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957437756,
+      "line": "OK 7/43 sha-sha256-pjs-s8388608-c16-w4-clone-b1-l1-pure 104.4 ops/s"
+    },
+    {
+      "timestampMs": 1790957437775,
+      "line": "RUN scrypt-pjs-s0-c16-w2-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957442109,
+      "line": "OK 8/43 scrypt-pjs-s0-c16-w2-clone-b1-l1-pure 35.1 ops/s"
+    },
+    {
+      "timestampMs": 1790957442115,
+      "line": "RUN sha-sha256-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957445108,
+      "line": "OK 9/43 sha-sha256-pjs-s1024-c16-w4-clone-b1-l1-pure 15905.9 ops/s"
+    },
+    {
+      "timestampMs": 1790957445114,
+      "line": "RUN argon2-native-s0-c4-w0-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957449129,
+      "line": "OK 10/43 argon2-native-s0-c4-w0-clone-b1-l4-pure 13.4 ops/s"
+    },
+    {
+      "timestampMs": 1790957449132,
+      "line": "RUN argon2-pjs-s0-c4-w4-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957453262,
+      "line": "OK 11/43 argon2-pjs-s0-c4-w4-clone-b1-l4-pure 14.1 ops/s"
+    },
+    {
+      "timestampMs": 1790957453269,
+      "line": "RUN scrypt-pjs-s0-c16-w8-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957456858,
+      "line": "OK 12/43 scrypt-pjs-s0-c16-w8-clone-b1-l1-pure 88.4 ops/s"
+    },
+    {
+      "timestampMs": 1790957456871,
+      "line": "RUN sha-sha256-raw-s1048576-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957459819,
+      "line": "OK 13/43 sha-sha256-raw-s1048576-c16-w4-shared-b1-l1-pure 1107.4 ops/s"
+    },
+    {
+      "timestampMs": 1790957459825,
+      "line": "RUN argon2-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957464637,
+      "line": "OK 14/43 argon2-pjs-s0-c4-w4-clone-b1-l1-pure 12.7 ops/s"
+    },
+    {
+      "timestampMs": 1790957464645,
+      "line": "RUN sha-sha256-pjs-s1048576-c8-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957467596,
+      "line": "OK 15/43 sha-sha256-pjs-s1048576-c8-w4-shared-b1-l1-pure 1265.7 ops/s"
+    },
+    {
+      "timestampMs": 1790957467608,
+      "line": "RUN scrypt-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957470859,
+      "line": "OK 16/43 scrypt-native-s0-c4-w0-clone-b1-l1-pure 65.0 ops/s"
+    },
+    {
+      "timestampMs": 1790957470862,
+      "line": "RUN scrypt-raw-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957474465,
+      "line": "OK 17/43 scrypt-raw-s0-c16-w4-clone-b1-l1-pure 64.3 ops/s"
+    },
+    {
+      "timestampMs": 1790957474478,
+      "line": "RUN sha-sha256-raw-s1024-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957476968,
+      "line": "OK 18/43 sha-sha256-raw-s1024-c16-w4-shared-b1-l1-pure 29537.6 ops/s"
+    },
+    {
+      "timestampMs": 1790957476980,
+      "line": "RUN idle-serial-s0-c1-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957480280,
+      "line": "OK 19/43 idle-serial-s0-c1-w0-clone-b1-l1-contention idle ops/s"
+    },
+    {
+      "timestampMs": 1790957480283,
+      "line": "RUN scrypt-native-s0-c16-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957483733,
+      "line": "OK 20/43 scrypt-native-s0-c16-w0-clone-b1-l1-contention 62.0 ops/s"
+    },
+    {
+      "timestampMs": 1790957483737,
+      "line": "RUN scrypt-pjs-s0-c16-w2-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957487791,
+      "line": "OK 21/43 scrypt-pjs-s0-c16-w2-clone-b1-l1-contention 42.0 ops/s"
+    },
+    {
+      "timestampMs": 1790957487797,
+      "line": "RUN scrypt-native-s0-c16-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957491296,
+      "line": "OK 22/43 scrypt-native-s0-c16-w0-clone-b1-l1-pure 70.5 ops/s"
+    },
+    {
+      "timestampMs": 1790957491301,
+      "line": "RUN sha-sha256-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957494259,
+      "line": "OK 23/43 sha-sha256-serial-s1048576-c1-w0-clone-b1-l1-pure 443.5 ops/s"
+    },
+    {
+      "timestampMs": 1790957494272,
+      "line": "RUN sha-sha256-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957497261,
+      "line": "OK 24/43 sha-sha256-pjs-s1048576-c16-w4-clone-b1-l1-pure 870.5 ops/s"
+    },
+    {
+      "timestampMs": 1790957497316,
+      "line": "RUN sha-sha256-pjs-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957501368,
+      "line": "OK 25/43 sha-sha256-pjs-s8388608-c16-w4-shared-b1-l1-pure 134.3 ops/s"
+    },
+    {
+      "timestampMs": 1790957501422,
+      "line": "RUN argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957509235,
+      "line": "OK 26/43 argon2-pjs-s0-c4-w1-clone-b1-l1-pure 5.6 ops/s"
+    },
+    {
+      "timestampMs": 1790957509242,
+      "line": "RUN sha-sha256-serial-s8388608-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957513511,
+      "line": "OK 27/43 sha-sha256-serial-s8388608-c1-w0-clone-b1-l1-pure 54.4 ops/s"
+    },
+    {
+      "timestampMs": 1790957513517,
+      "line": "RUN scrypt-pjs-s0-c4-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957517236,
+      "line": "OK 28/43 scrypt-pjs-s0-c4-w4-clone-b1-l1-contention 61.8 ops/s"
+    },
+    {
+      "timestampMs": 1790957517252,
+      "line": "RUN aes-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957523088,
+      "line": "OK 29/43 aes-pjs-s1048576-c16-w4-clone-b1-l1-pure 379.8 ops/s"
+    },
+    {
+      "timestampMs": 1790957523113,
+      "line": "RUN aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957531684,
+      "line": "OK 30/43 aes-serial-s1024-c1-w0-clone-b1-l1-pure 17001.3 ops/s"
+    },
+    {
+      "timestampMs": 1790957531695,
+      "line": "RUN sha-sha256-pjs-s1048576-c1-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957535072,
+      "line": "OK 31/43 sha-sha256-pjs-s1048576-c1-w4-shared-b1-l1-pure 339.4 ops/s"
+    },
+    {
+      "timestampMs": 1790957535084,
+      "line": "RUN argon2-pjs-s0-c4-w1-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957540281,
+      "line": "OK 32/43 argon2-pjs-s0-c4-w1-clone-b1-l4-pure 8.0 ops/s"
+    },
+    {
+      "timestampMs": 1790957540289,
+      "line": "RUN scrypt-pjs-s0-c16-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957543852,
+      "line": "OK 33/43 scrypt-pjs-s0-c16-w4-clone-b1-l1-contention 58.2 ops/s"
+    },
+    {
+      "timestampMs": 1790957543863,
+      "line": "RUN scrypt-pjs-s0-c16-w1-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957550580,
+      "line": "OK 34/43 scrypt-pjs-s0-c16-w1-clone-b1-l1-contention 21.1 ops/s"
+    },
+    {
+      "timestampMs": 1790957550589,
+      "line": "RUN sha-sha256-pjs-s1024-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957553185,
+      "line": "OK 35/43 sha-sha256-pjs-s1024-c16-w4-transfer-b1-l1-pure 12957.1 ops/s"
+    },
+    {
+      "timestampMs": 1790957553197,
+      "line": "RUN aes-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957557786,
+      "line": "OK 36/43 aes-serial-s1048576-c1-w0-clone-b1-l1-pure 641.4 ops/s"
+    },
+    {
+      "timestampMs": 1790957557795,
+      "line": "RUN scrypt-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957561152,
+      "line": "OK 37/43 scrypt-pjs-s0-c4-w4-clone-b1-l1-pure 67.3 ops/s"
+    },
+    {
+      "timestampMs": 1790957561164,
+      "line": "RUN sha-sha256-pjs-s1048576-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957564121,
+      "line": "OK 38/43 sha-sha256-pjs-s1048576-c16-w4-shared-b1-l1-pure 1183.2 ops/s"
+    },
+    {
+      "timestampMs": 1790957564137,
+      "line": "RUN argon2-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957568609,
+      "line": "OK 39/43 argon2-native-s0-c4-w0-clone-b1-l1-pure 14.0 ops/s"
+    },
+    {
+      "timestampMs": 1790957568618,
+      "line": "RUN sha-sha256-raw-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957572610,
+      "line": "OK 40/43 sha-sha256-raw-s8388608-c16-w4-shared-b1-l1-pure 140.7 ops/s"
+    },
+    {
+      "timestampMs": 1790957572660,
+      "line": "RUN sha-sha256-pjs-s1048576-c4-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957575352,
+      "line": "OK 41/43 sha-sha256-pjs-s1048576-c4-w4-shared-b1-l1-pure 1048.3 ops/s"
+    },
+    {
+      "timestampMs": 1790957575368,
+      "line": "RUN sha-sha256-pjs-s8388608-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957578729,
+      "line": "OK 42/43 sha-sha256-pjs-s8388608-c16-w4-transfer-b1-l1-pure 141.5 ops/s"
+    },
+    {
+      "timestampMs": 1790957578746,
+      "line": "RUN scrypt-native-s0-c4-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957582047,
+      "line": "OK 43/43 scrypt-native-s0-c4-w0-clone-b1-l1-contention 71.4 ops/s"
+    }
+  ],
+  "samples": [
+    {
+      "timestampMs": 1790957410983,
+      "threads": 17,
+      "cell": null
+    },
+    {
+      "timestampMs": 1790957411381,
+      "threads": 17,
+      "cell": null
+    },
+    {
+      "timestampMs": 1790957411648,
+      "threads": 17,
+      "cell": null
+    },
+    {
+      "timestampMs": 1790957411914,
+      "threads": 17,
+      "cell": null
+    },
+    {
+      "timestampMs": 1790957412183,
+      "threads": 17,
+      "cell": null
+    },
+    {
+      "timestampMs": 1790957412454,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957412726,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957412996,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957413266,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957413536,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957413809,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957414074,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957414347,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957414615,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957414883,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957415154,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957415414,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957415715,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957415980,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957416250,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957416517,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957416786,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957417055,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957417322,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957417588,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957417852,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957418121,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957418431,
+      "threads": 17,
+      "cell": "sha-sha256-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957418693,
+      "threads": 17,
+      "cell": "sha-sha256-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957418958,
+      "threads": 17,
+      "cell": "sha-sha256-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957419221,
+      "threads": 17,
+      "cell": "sha-sha256-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957419488,
+      "threads": 17,
+      "cell": "sha-sha256-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957419754,
+      "threads": 17,
+      "cell": "sha-sha256-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957420023,
+      "threads": 17,
+      "cell": "sha-sha256-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957420290,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957420558,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957420834,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957421103,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957421371,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957421639,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957421907,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957422175,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957422445,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957422719,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957422995,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957423255,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957423513,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957423786,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957424054,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957424324,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957424593,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957424862,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957425132,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957425404,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957425671,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957425944,
+      "threads": 21,
+      "cell": "scrypt-pjs-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957426212,
+      "threads": 21,
+      "cell": "scrypt-pjs-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957426481,
+      "threads": 21,
+      "cell": "scrypt-pjs-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957426750,
+      "threads": 21,
+      "cell": "scrypt-pjs-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957427019,
+      "threads": 21,
+      "cell": "scrypt-pjs-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957427286,
+      "threads": 21,
+      "cell": "scrypt-pjs-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957427556,
+      "threads": 21,
+      "cell": "scrypt-pjs-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957427839,
+      "threads": 21,
+      "cell": "scrypt-pjs-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957428106,
+      "threads": 21,
+      "cell": "scrypt-pjs-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957428384,
+      "threads": 21,
+      "cell": "scrypt-pjs-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957428644,
+      "threads": 21,
+      "cell": "scrypt-pjs-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957428913,
+      "threads": 21,
+      "cell": "scrypt-pjs-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957429186,
+      "threads": 21,
+      "cell": "scrypt-pjs-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957429455,
+      "threads": 21,
+      "cell": "scrypt-pjs-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957429723,
+      "threads": 21,
+      "cell": "aes-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957429990,
+      "threads": 21,
+      "cell": "aes-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957430264,
+      "threads": 21,
+      "cell": "aes-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957430532,
+      "threads": 21,
+      "cell": "aes-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957430801,
+      "threads": 21,
+      "cell": "aes-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957431067,
+      "threads": 21,
+      "cell": "aes-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957431344,
+      "threads": 21,
+      "cell": "aes-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957431605,
+      "threads": 21,
+      "cell": "aes-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957431883,
+      "threads": 21,
+      "cell": "aes-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957432149,
+      "threads": 21,
+      "cell": "aes-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957432416,
+      "threads": 21,
+      "cell": "aes-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957432680,
+      "threads": 21,
+      "cell": "aes-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957432950,
+      "threads": 21,
+      "cell": "aes-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957433212,
+      "threads": 21,
+      "cell": "aes-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957433479,
+      "threads": 21,
+      "cell": "aes-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957433749,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957434019,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957434285,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957434556,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957434826,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957435101,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957435367,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957435636,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957435908,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957436173,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957436453,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957436715,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957436985,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957437251,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957437521,
+      "threads": 21,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957437788,
+      "threads": 19,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957438065,
+      "threads": 19,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957438332,
+      "threads": 19,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957438601,
+      "threads": 19,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957438872,
+      "threads": 19,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957439140,
+      "threads": 19,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957439412,
+      "threads": 19,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957439680,
+      "threads": 19,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957439952,
+      "threads": 17,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957440220,
+      "threads": 17,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957440492,
+      "threads": 17,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957440761,
+      "threads": 17,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957441030,
+      "threads": 17,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957441301,
+      "threads": 17,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957441567,
+      "threads": 17,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957441838,
+      "threads": 17,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957442112,
+      "threads": 15,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957442378,
+      "threads": 19,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957442645,
+      "threads": 19,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957442925,
+      "threads": 19,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957443189,
+      "threads": 19,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957443457,
+      "threads": 19,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957443727,
+      "threads": 19,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957443993,
+      "threads": 19,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957444267,
+      "threads": 19,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957444538,
+      "threads": 19,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957444803,
+      "threads": 19,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957445073,
+      "threads": 19,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957445357,
+      "threads": 28,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957445653,
+      "threads": 28,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957445936,
+      "threads": 19,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957446197,
+      "threads": 15,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957446475,
+      "threads": 15,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957446758,
+      "threads": 25,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957447023,
+      "threads": 19,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957447320,
+      "threads": 30,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957447592,
+      "threads": 15,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957447868,
+      "threads": 28,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957448132,
+      "threads": 15,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957448419,
+      "threads": 27,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957448685,
+      "threads": 15,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957448959,
+      "threads": 25,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957449230,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957449515,
+      "threads": 34,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957449793,
+      "threads": 26,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957450084,
+      "threads": 27,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957450354,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957450628,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957450920,
+      "threads": 32,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957451199,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957451473,
+      "threads": 31,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957451753,
+      "threads": 23,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957452033,
+      "threads": 29,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957452307,
+      "threads": 23,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957452595,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957452902,
+      "threads": 29,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957453172,
+      "threads": 20,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957453449,
+      "threads": 23,
+      "cell": "scrypt-pjs-s0-c16-w8-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957453719,
+      "threads": 23,
+      "cell": "scrypt-pjs-s0-c16-w8-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957454000,
+      "threads": 23,
+      "cell": "scrypt-pjs-s0-c16-w8-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957454284,
+      "threads": 23,
+      "cell": "scrypt-pjs-s0-c16-w8-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957454550,
+      "threads": 23,
+      "cell": "scrypt-pjs-s0-c16-w8-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957454825,
+      "threads": 23,
+      "cell": "scrypt-pjs-s0-c16-w8-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957455085,
+      "threads": 23,
+      "cell": "scrypt-pjs-s0-c16-w8-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957455364,
+      "threads": 23,
+      "cell": "scrypt-pjs-s0-c16-w8-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957455659,
+      "threads": 23,
+      "cell": "scrypt-pjs-s0-c16-w8-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957455929,
+      "threads": 23,
+      "cell": "scrypt-pjs-s0-c16-w8-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957456207,
+      "threads": 23,
+      "cell": "scrypt-pjs-s0-c16-w8-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957456481,
+      "threads": 23,
+      "cell": "scrypt-pjs-s0-c16-w8-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957456760,
+      "threads": 23,
+      "cell": "scrypt-pjs-s0-c16-w8-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957457021,
+      "threads": 19,
+      "cell": "sha-sha256-raw-s1048576-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957457287,
+      "threads": 19,
+      "cell": "sha-sha256-raw-s1048576-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957457553,
+      "threads": 19,
+      "cell": "sha-sha256-raw-s1048576-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957457825,
+      "threads": 19,
+      "cell": "sha-sha256-raw-s1048576-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957458096,
+      "threads": 19,
+      "cell": "sha-sha256-raw-s1048576-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957458366,
+      "threads": 19,
+      "cell": "sha-sha256-raw-s1048576-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957458633,
+      "threads": 19,
+      "cell": "sha-sha256-raw-s1048576-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957458902,
+      "threads": 19,
+      "cell": "sha-sha256-raw-s1048576-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957459171,
+      "threads": 19,
+      "cell": "sha-sha256-raw-s1048576-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957459443,
+      "threads": 19,
+      "cell": "sha-sha256-raw-s1048576-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957459714,
+      "threads": 19,
+      "cell": "sha-sha256-raw-s1048576-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957459983,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957460259,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957460535,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957460805,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957461070,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957461339,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957461611,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957461883,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957462154,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957462420,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957462688,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957462961,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957463225,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957463493,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957463768,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957464039,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957464307,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957464584,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957464861,
+      "threads": 19,
+      "cell": "sha-sha256-pjs-s1048576-c8-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957465135,
+      "threads": 19,
+      "cell": "sha-sha256-pjs-s1048576-c8-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957465404,
+      "threads": 19,
+      "cell": "sha-sha256-pjs-s1048576-c8-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957465674,
+      "threads": 19,
+      "cell": "sha-sha256-pjs-s1048576-c8-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957465948,
+      "threads": 19,
+      "cell": "sha-sha256-pjs-s1048576-c8-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957466216,
+      "threads": 19,
+      "cell": "sha-sha256-pjs-s1048576-c8-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957466484,
+      "threads": 19,
+      "cell": "sha-sha256-pjs-s1048576-c8-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957466755,
+      "threads": 19,
+      "cell": "sha-sha256-pjs-s1048576-c8-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957467024,
+      "threads": 19,
+      "cell": "sha-sha256-pjs-s1048576-c8-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957467297,
+      "threads": 19,
+      "cell": "sha-sha256-pjs-s1048576-c8-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957467565,
+      "threads": 19,
+      "cell": "sha-sha256-pjs-s1048576-c8-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957467831,
+      "threads": 15,
+      "cell": "scrypt-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957468106,
+      "threads": 15,
+      "cell": "scrypt-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957468374,
+      "threads": 15,
+      "cell": "scrypt-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957468640,
+      "threads": 15,
+      "cell": "scrypt-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957468911,
+      "threads": 15,
+      "cell": "scrypt-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957469178,
+      "threads": 15,
+      "cell": "scrypt-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957469449,
+      "threads": 15,
+      "cell": "scrypt-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957469722,
+      "threads": 15,
+      "cell": "scrypt-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957469990,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957470261,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957470529,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957470797,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957471064,
+      "threads": 18,
+      "cell": "scrypt-raw-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957471331,
+      "threads": 18,
+      "cell": "scrypt-raw-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957471604,
+      "threads": 18,
+      "cell": "scrypt-raw-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957471882,
+      "threads": 18,
+      "cell": "scrypt-raw-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957472146,
+      "threads": 18,
+      "cell": "scrypt-raw-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957472416,
+      "threads": 18,
+      "cell": "scrypt-raw-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957472685,
+      "threads": 18,
+      "cell": "scrypt-raw-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957472955,
+      "threads": 18,
+      "cell": "scrypt-raw-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957473224,
+      "threads": 18,
+      "cell": "scrypt-raw-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957473493,
+      "threads": 18,
+      "cell": "scrypt-raw-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957473764,
+      "threads": 18,
+      "cell": "scrypt-raw-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957474034,
+      "threads": 18,
+      "cell": "scrypt-raw-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957474314,
+      "threads": 18,
+      "cell": "scrypt-raw-s0-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957474592,
+      "threads": 18,
+      "cell": "sha-sha256-raw-s1024-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957474861,
+      "threads": 18,
+      "cell": "sha-sha256-raw-s1024-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957475137,
+      "threads": 18,
+      "cell": "sha-sha256-raw-s1024-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957475417,
+      "threads": 18,
+      "cell": "sha-sha256-raw-s1024-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957475688,
+      "threads": 18,
+      "cell": "sha-sha256-raw-s1024-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957475959,
+      "threads": 18,
+      "cell": "sha-sha256-raw-s1024-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957476229,
+      "threads": 18,
+      "cell": "sha-sha256-raw-s1024-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957476499,
+      "threads": 18,
+      "cell": "sha-sha256-raw-s1024-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957476773,
+      "threads": 18,
+      "cell": "sha-sha256-raw-s1024-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957477047,
+      "threads": 14,
+      "cell": "idle-serial-s0-c1-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957477313,
+      "threads": 14,
+      "cell": "idle-serial-s0-c1-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957477581,
+      "threads": 14,
+      "cell": "idle-serial-s0-c1-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957477849,
+      "threads": 14,
+      "cell": "idle-serial-s0-c1-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957478118,
+      "threads": 14,
+      "cell": "idle-serial-s0-c1-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957478388,
+      "threads": 14,
+      "cell": "idle-serial-s0-c1-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957478655,
+      "threads": 14,
+      "cell": "idle-serial-s0-c1-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957478922,
+      "threads": 14,
+      "cell": "idle-serial-s0-c1-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957479190,
+      "threads": 14,
+      "cell": "idle-serial-s0-c1-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957479465,
+      "threads": 14,
+      "cell": "idle-serial-s0-c1-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957479728,
+      "threads": 14,
+      "cell": "idle-serial-s0-c1-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957479995,
+      "threads": 14,
+      "cell": "idle-serial-s0-c1-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957480263,
+      "threads": 14,
+      "cell": "idle-serial-s0-c1-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957480537,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c16-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957480803,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c16-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957481077,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c16-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957481353,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c16-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957481619,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c16-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957481887,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c16-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957482156,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c16-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957482427,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c16-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957482700,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c16-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957482973,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c16-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957483238,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c16-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957483510,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c16-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957483783,
+      "threads": 16,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957484058,
+      "threads": 16,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957484319,
+      "threads": 16,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957484587,
+      "threads": 16,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957484892,
+      "threads": 16,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957485158,
+      "threads": 16,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957485426,
+      "threads": 16,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957485697,
+      "threads": 16,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957485969,
+      "threads": 16,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957486236,
+      "threads": 16,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957486505,
+      "threads": 16,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957486777,
+      "threads": 16,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957487047,
+      "threads": 16,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957487319,
+      "threads": 16,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957487603,
+      "threads": 16,
+      "cell": "scrypt-pjs-s0-c16-w2-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957487873,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c16-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957488142,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c16-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957488412,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c16-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957488683,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c16-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957488954,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c16-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957489222,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c16-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957489490,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c16-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957489760,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c16-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957490030,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c16-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957490299,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c16-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957490573,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c16-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957490838,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c16-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957491109,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c16-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957491376,
+      "threads": 14,
+      "cell": "sha-sha256-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957491646,
+      "threads": 14,
+      "cell": "sha-sha256-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957491916,
+      "threads": 14,
+      "cell": "sha-sha256-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957492184,
+      "threads": 14,
+      "cell": "sha-sha256-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957492456,
+      "threads": 14,
+      "cell": "sha-sha256-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957492724,
+      "threads": 14,
+      "cell": "sha-sha256-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957492979,
+      "threads": 14,
+      "cell": "sha-sha256-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957493234,
+      "threads": 14,
+      "cell": "sha-sha256-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957493508,
+      "threads": 14,
+      "cell": "sha-sha256-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957493776,
+      "threads": 14,
+      "cell": "sha-sha256-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957494031,
+      "threads": 14,
+      "cell": "sha-sha256-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957494289,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957494559,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957494829,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957495099,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957495364,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957495636,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957495913,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957496182,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957496450,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957496721,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957496995,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957497262,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957497532,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957497789,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957498062,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957498330,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957498597,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957498869,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957499127,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957499396,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957499666,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957499937,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957500211,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957500482,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957500761,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957501019,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957501290,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957501556,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957501830,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957502099,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957502365,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957502633,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957502903,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957503171,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957503436,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957503703,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957503970,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957504236,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957504504,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957504773,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957505040,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957505307,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957505577,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957505840,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957506105,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957506373,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957506629,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957506901,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957507170,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957507438,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957507707,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957507973,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957508243,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957508508,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957508775,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957509045,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957509310,
+      "threads": 14,
+      "cell": "sha-sha256-serial-s8388608-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957509580,
+      "threads": 14,
+      "cell": "sha-sha256-serial-s8388608-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957509847,
+      "threads": 14,
+      "cell": "sha-sha256-serial-s8388608-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957510114,
+      "threads": 14,
+      "cell": "sha-sha256-serial-s8388608-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957510384,
+      "threads": 14,
+      "cell": "sha-sha256-serial-s8388608-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957510653,
+      "threads": 14,
+      "cell": "sha-sha256-serial-s8388608-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957510921,
+      "threads": 14,
+      "cell": "sha-sha256-serial-s8388608-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957511190,
+      "threads": 14,
+      "cell": "sha-sha256-serial-s8388608-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957511458,
+      "threads": 14,
+      "cell": "sha-sha256-serial-s8388608-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957511726,
+      "threads": 14,
+      "cell": "sha-sha256-serial-s8388608-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957511992,
+      "threads": 14,
+      "cell": "sha-sha256-serial-s8388608-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957512278,
+      "threads": 14,
+      "cell": "sha-sha256-serial-s8388608-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957512549,
+      "threads": 14,
+      "cell": "sha-sha256-serial-s8388608-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957512816,
+      "threads": 14,
+      "cell": "sha-sha256-serial-s8388608-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957513083,
+      "threads": 14,
+      "cell": "sha-sha256-serial-s8388608-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957513347,
+      "threads": 14,
+      "cell": "sha-sha256-serial-s8388608-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957513619,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c4-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957513891,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c4-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957514156,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c4-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957514427,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c4-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957514699,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c4-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957514970,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c4-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957515245,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c4-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957515513,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c4-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957515782,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c4-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957516053,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c4-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957516326,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c4-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957516595,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c4-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957516899,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c4-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957517168,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c4-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957517437,
+      "threads": 18,
+      "cell": "aes-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957517711,
+      "threads": 18,
+      "cell": "aes-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957517980,
+      "threads": 18,
+      "cell": "aes-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957518245,
+      "threads": 18,
+      "cell": "aes-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957518532,
+      "threads": 18,
+      "cell": "aes-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957518804,
+      "threads": 18,
+      "cell": "aes-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957519075,
+      "threads": 18,
+      "cell": "aes-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957519359,
+      "threads": 18,
+      "cell": "aes-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957519624,
+      "threads": 18,
+      "cell": "aes-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957519895,
+      "threads": 18,
+      "cell": "aes-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957520162,
+      "threads": 18,
+      "cell": "aes-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957520429,
+      "threads": 18,
+      "cell": "aes-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957520704,
+      "threads": 18,
+      "cell": "aes-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957520978,
+      "threads": 18,
+      "cell": "aes-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957521242,
+      "threads": 18,
+      "cell": "aes-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957521507,
+      "threads": 18,
+      "cell": "aes-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957521778,
+      "threads": 18,
+      "cell": "aes-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957522048,
+      "threads": 18,
+      "cell": "aes-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957522317,
+      "threads": 18,
+      "cell": "aes-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957522591,
+      "threads": 18,
+      "cell": "aes-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957522857,
+      "threads": 18,
+      "cell": "aes-pjs-s1048576-c16-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957523127,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957523399,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957523668,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957523937,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957524204,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957524470,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957524737,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957525002,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957525267,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957525533,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957525794,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957526067,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957526329,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957526593,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957526860,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957527124,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957527394,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957527659,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957527929,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957528206,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957528468,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957528742,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957529010,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957529277,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957529544,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957529812,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957530082,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957530352,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957530621,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957530888,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957531159,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957531424,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957531692,
+      "threads": 14,
+      "cell": "aes-serial-s1024-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957531960,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s1048576-c1-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957532224,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s1048576-c1-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957532488,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s1048576-c1-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957532752,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s1048576-c1-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957533020,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s1048576-c1-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957533289,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s1048576-c1-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957533558,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s1048576-c1-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957533828,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s1048576-c1-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957534093,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s1048576-c1-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957534365,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s1048576-c1-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957534633,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s1048576-c1-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957534899,
+      "threads": 18,
+      "cell": "sha-sha256-pjs-s1048576-c1-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957535169,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957535442,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957535708,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957535979,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957536245,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957536516,
+      "threads": 18,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957536790,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957537064,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957537328,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957537599,
+      "threads": 18,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957537873,
+      "threads": 16,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957538163,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957538438,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957538713,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957538999,
+      "threads": 16,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957539288,
+      "threads": 19,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957539571,
+      "threads": 16,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957539836,
+      "threads": 15,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957540110,
+      "threads": 18,
+      "cell": "argon2-pjs-s0-c4-w1-clone-b1-l4-pure"
+    },
+    {
+      "timestampMs": 1790957540376,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957540643,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957540915,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957541185,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957541454,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957541723,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957541991,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957542262,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957542534,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957542804,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957543068,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957543338,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957543612,
+      "threads": 18,
+      "cell": "scrypt-pjs-s0-c16-w4-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957543882,
+      "threads": 14,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957544149,
+      "threads": 14,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957544416,
+      "threads": 14,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957544684,
+      "threads": 14,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957544954,
+      "threads": 14,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957545223,
+      "threads": 14,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957545490,
+      "threads": 14,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957545757,
+      "threads": 14,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957546030,
+      "threads": 14,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957546298,
+      "threads": 14,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957546565,
+      "threads": 14,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957546833,
+      "threads": 14,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957547088,
+      "threads": 14,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957547360,
+      "threads": 14,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957547632,
+      "threads": 14,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957547902,
+      "threads": 14,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957548170,
+      "threads": 14,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957548444,
+      "threads": 14,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957548715,
+      "threads": 14,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957548984,
+      "threads": 14,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957549254,
+      "threads": 14,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957549524,
+      "threads": 14,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957549796,
+      "threads": 14,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957550067,
+      "threads": 14,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957550337,
+      "threads": 14,
+      "cell": "scrypt-pjs-s0-c16-w1-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957550616,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957550884,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957551153,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957551421,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957551691,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957551959,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957552230,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957552499,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957552775,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957553043,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1024-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957553315,
+      "threads": 13,
+      "cell": "aes-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957553583,
+      "threads": 13,
+      "cell": "aes-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957553861,
+      "threads": 13,
+      "cell": "aes-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957554127,
+      "threads": 13,
+      "cell": "aes-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957554394,
+      "threads": 13,
+      "cell": "aes-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957554664,
+      "threads": 13,
+      "cell": "aes-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957554936,
+      "threads": 13,
+      "cell": "aes-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957555208,
+      "threads": 13,
+      "cell": "aes-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957555478,
+      "threads": 13,
+      "cell": "aes-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957555748,
+      "threads": 13,
+      "cell": "aes-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957556016,
+      "threads": 13,
+      "cell": "aes-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957556285,
+      "threads": 13,
+      "cell": "aes-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957556558,
+      "threads": 13,
+      "cell": "aes-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957556827,
+      "threads": 13,
+      "cell": "aes-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957557096,
+      "threads": 13,
+      "cell": "aes-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957557367,
+      "threads": 13,
+      "cell": "aes-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957557637,
+      "threads": 13,
+      "cell": "aes-serial-s1048576-c1-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957557912,
+      "threads": 17,
+      "cell": "scrypt-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957558181,
+      "threads": 17,
+      "cell": "scrypt-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957558448,
+      "threads": 17,
+      "cell": "scrypt-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957558718,
+      "threads": 17,
+      "cell": "scrypt-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957558987,
+      "threads": 17,
+      "cell": "scrypt-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957559261,
+      "threads": 17,
+      "cell": "scrypt-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957559530,
+      "threads": 17,
+      "cell": "scrypt-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957559795,
+      "threads": 17,
+      "cell": "scrypt-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957560065,
+      "threads": 17,
+      "cell": "scrypt-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957560337,
+      "threads": 17,
+      "cell": "scrypt-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957560615,
+      "threads": 17,
+      "cell": "scrypt-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957560882,
+      "threads": 17,
+      "cell": "scrypt-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957561150,
+      "threads": 17,
+      "cell": "scrypt-pjs-s0-c4-w4-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957561420,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957561692,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957561964,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957562234,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957562499,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957562769,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957563041,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957563316,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957563582,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957563850,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957564118,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1048576-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957564394,
+      "threads": 13,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957564659,
+      "threads": 13,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957564921,
+      "threads": 13,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957565187,
+      "threads": 13,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957565455,
+      "threads": 13,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957565728,
+      "threads": 13,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957565999,
+      "threads": 13,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957566271,
+      "threads": 13,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957566536,
+      "threads": 13,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957566807,
+      "threads": 13,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957567078,
+      "threads": 13,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957567355,
+      "threads": 13,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957567620,
+      "threads": 13,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957567894,
+      "threads": 13,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957568161,
+      "threads": 13,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957568434,
+      "threads": 13,
+      "cell": "argon2-native-s0-c4-w0-clone-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957568703,
+      "threads": 17,
+      "cell": "sha-sha256-raw-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957568974,
+      "threads": 17,
+      "cell": "sha-sha256-raw-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957569248,
+      "threads": 17,
+      "cell": "sha-sha256-raw-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957569519,
+      "threads": 17,
+      "cell": "sha-sha256-raw-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957569786,
+      "threads": 17,
+      "cell": "sha-sha256-raw-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957570058,
+      "threads": 17,
+      "cell": "sha-sha256-raw-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957570317,
+      "threads": 17,
+      "cell": "sha-sha256-raw-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957570587,
+      "threads": 17,
+      "cell": "sha-sha256-raw-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957570856,
+      "threads": 17,
+      "cell": "sha-sha256-raw-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957571126,
+      "threads": 17,
+      "cell": "sha-sha256-raw-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957571389,
+      "threads": 17,
+      "cell": "sha-sha256-raw-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957571654,
+      "threads": 17,
+      "cell": "sha-sha256-raw-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957571924,
+      "threads": 17,
+      "cell": "sha-sha256-raw-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957572194,
+      "threads": 17,
+      "cell": "sha-sha256-raw-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957572463,
+      "threads": 17,
+      "cell": "sha-sha256-raw-s8388608-c16-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957572738,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1048576-c4-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957573006,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1048576-c4-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957573279,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1048576-c4-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957573551,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1048576-c4-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957573821,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1048576-c4-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957574089,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1048576-c4-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957574359,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1048576-c4-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957574615,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1048576-c4-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957574890,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1048576-c4-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957575158,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s1048576-c4-w4-shared-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957575427,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957575698,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957575971,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957576265,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957576528,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957576798,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957577071,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957577342,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957577612,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957577880,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957578156,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957578425,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957578693,
+      "threads": 17,
+      "cell": "sha-sha256-pjs-s8388608-c16-w4-transfer-b1-l1-pure"
+    },
+    {
+      "timestampMs": 1790957578965,
+      "threads": 13,
+      "cell": "scrypt-native-s0-c4-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957579236,
+      "threads": 13,
+      "cell": "scrypt-native-s0-c4-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957579510,
+      "threads": 13,
+      "cell": "scrypt-native-s0-c4-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957579781,
+      "threads": 13,
+      "cell": "scrypt-native-s0-c4-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957580048,
+      "threads": 13,
+      "cell": "scrypt-native-s0-c4-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957580303,
+      "threads": 13,
+      "cell": "scrypt-native-s0-c4-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957580580,
+      "threads": 13,
+      "cell": "scrypt-native-s0-c4-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957580849,
+      "threads": 13,
+      "cell": "scrypt-native-s0-c4-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957581116,
+      "threads": 13,
+      "cell": "scrypt-native-s0-c4-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957581388,
+      "threads": 13,
+      "cell": "scrypt-native-s0-c4-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957581658,
+      "threads": 13,
+      "cell": "scrypt-native-s0-c4-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957581930,
+      "threads": 13,
+      "cell": "scrypt-native-s0-c4-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957582198,
+      "threads": 14,
+      "cell": "scrypt-native-s0-c4-w0-clone-b1-l1-contention"
+    },
+    {
+      "timestampMs": 1790957582468,
+      "threads": 13,
+      "cell": "scrypt-native-s0-c4-w0-clone-b1-l1-contention"
+    }
+  ],
+  "result": {
+    "code": 0,
+    "signal": null
+  },
+  "observerErrors": ""
+}
