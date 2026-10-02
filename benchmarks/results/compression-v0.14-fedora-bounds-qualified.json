@@ -1,0 +1,4685 @@
+{
+  "clientDate": "2026-10-02",
+  "node": "v24.13.1",
+  "zlib": "1.3.1.zlib-ng",
+  "codecQualification": {
+    "codec": {
+      "family": "zlib-ng",
+      "version": "1.3.1.zlib-ng",
+      "implementationVersion": "2.3.3",
+      "build": "fedora44-x86_64-compat-no-new-strategies",
+      "contract": "zlib-ng-no-quick-raw-v1"
+    },
+    "library": {
+      "path": "/usr/lib64/libz.so.1.3.1.zlib-ng",
+      "packageIdentity": "zlib-ng-compat 2.3.3 3.fc44 x86_64",
+      "sha256": "bbde8faec092a7c67b8bd76bbba4a826e61b05c171b97004ce6b308c5a090351"
+    },
+    "header": {
+      "path": "/usr/include/zlib.h",
+      "packageIdentity": "zlib-ng-compat-devel 2.3.3 3.fc44 x86_64",
+      "sha256": "8bc935aeb8909d05fe58f9286a0fe2c674a41638c374786ee888485ab5ff4409"
+    },
+    "nodeLibrary": "/usr/lib64/libnode.so.137",
+    "nodeSharedZlib": true,
+    "nodeSymbolsImported": true,
+    "compiler": "gcc (GCC) 16.1.1 20260515 (Red Hat 16.1.1-2)\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+    "compileCommand": [
+      "gcc",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "/home/miskovy/Documents/pjs/benchmarks/real-world/compression/native-bound.c",
+      "-o",
+      "/tmp/pjs-codec-qualification-9HRSNf/native-bound",
+      "-ldl"
+    ],
+    "helperCommand": [
+      "/tmp/pjs-codec-qualification-9HRSNf/native-bound",
+      "/usr/lib64/libz.so.1.3.1.zlib-ng",
+      "0",
+      "1",
+      "2",
+      "3",
+      "7",
+      "8",
+      "9",
+      "15",
+      "16",
+      "17",
+      "63",
+      "64",
+      "65",
+      "127",
+      "128",
+      "255",
+      "256",
+      "1023",
+      "1024",
+      "1025",
+      "4095",
+      "4096",
+      "4097",
+      "16383",
+      "16384",
+      "16385",
+      "65535",
+      "65536",
+      "65537",
+      "262143",
+      "262144",
+      "262145",
+      "1048575",
+      "1048576",
+      "1048577",
+      "4194304",
+      "8388608"
+    ],
+    "helperSourceSha256": "03ce67b197a0015661a424060109fd1722774500c962e9e9fc63ca0d6840f51e",
+    "helperLinkage": "linux-vdso.so.1 (0x00007f27c7575000)\n\tlibc.so.6 => /lib64/libc.so.6 (0x00007f27c735a000)\n\t/lib64/ld-linux-x86-64.so.2 (0x00007f27c7577000)",
+    "native": {
+      "headerVersion": "1.3.1.zlib-ng",
+      "libraryVersion": "1.3.1.zlib-ng",
+      "libraryPath": "/usr/lib64/libz.so.1.3.1.zlib-ng",
+      "streamSize": 112,
+      "rows": [
+        {
+          "inputBytes": 0,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 7
+        },
+        {
+          "inputBytes": 0,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 7
+        },
+        {
+          "inputBytes": 0,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 7
+        },
+        {
+          "inputBytes": 0,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 13
+        },
+        {
+          "inputBytes": 0,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 13
+        },
+        {
+          "inputBytes": 0,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 13
+        },
+        {
+          "inputBytes": 0,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 25
+        },
+        {
+          "inputBytes": 0,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 25
+        },
+        {
+          "inputBytes": 0,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 25
+        },
+        {
+          "inputBytes": 1,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 8
+        },
+        {
+          "inputBytes": 1,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 8
+        },
+        {
+          "inputBytes": 1,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 8
+        },
+        {
+          "inputBytes": 1,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 14
+        },
+        {
+          "inputBytes": 1,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 14
+        },
+        {
+          "inputBytes": 1,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 14
+        },
+        {
+          "inputBytes": 1,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 26
+        },
+        {
+          "inputBytes": 1,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 26
+        },
+        {
+          "inputBytes": 1,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 26
+        },
+        {
+          "inputBytes": 2,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 9
+        },
+        {
+          "inputBytes": 2,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 9
+        },
+        {
+          "inputBytes": 2,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 9
+        },
+        {
+          "inputBytes": 2,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 15
+        },
+        {
+          "inputBytes": 2,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 15
+        },
+        {
+          "inputBytes": 2,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 15
+        },
+        {
+          "inputBytes": 2,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 27
+        },
+        {
+          "inputBytes": 2,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 27
+        },
+        {
+          "inputBytes": 2,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 27
+        },
+        {
+          "inputBytes": 3,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 10
+        },
+        {
+          "inputBytes": 3,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 10
+        },
+        {
+          "inputBytes": 3,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 10
+        },
+        {
+          "inputBytes": 3,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 16
+        },
+        {
+          "inputBytes": 3,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 16
+        },
+        {
+          "inputBytes": 3,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 16
+        },
+        {
+          "inputBytes": 3,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 28
+        },
+        {
+          "inputBytes": 3,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 28
+        },
+        {
+          "inputBytes": 3,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 28
+        },
+        {
+          "inputBytes": 7,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 14
+        },
+        {
+          "inputBytes": 7,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 14
+        },
+        {
+          "inputBytes": 7,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 14
+        },
+        {
+          "inputBytes": 7,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 20
+        },
+        {
+          "inputBytes": 7,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 20
+        },
+        {
+          "inputBytes": 7,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 20
+        },
+        {
+          "inputBytes": 7,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 32
+        },
+        {
+          "inputBytes": 7,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 32
+        },
+        {
+          "inputBytes": 7,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 32
+        },
+        {
+          "inputBytes": 8,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 15
+        },
+        {
+          "inputBytes": 8,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 15
+        },
+        {
+          "inputBytes": 8,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 15
+        },
+        {
+          "inputBytes": 8,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 21
+        },
+        {
+          "inputBytes": 8,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 21
+        },
+        {
+          "inputBytes": 8,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 21
+        },
+        {
+          "inputBytes": 8,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 33
+        },
+        {
+          "inputBytes": 8,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 33
+        },
+        {
+          "inputBytes": 8,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 33
+        },
+        {
+          "inputBytes": 9,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 16
+        },
+        {
+          "inputBytes": 9,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 16
+        },
+        {
+          "inputBytes": 9,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 16
+        },
+        {
+          "inputBytes": 9,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 22
+        },
+        {
+          "inputBytes": 9,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 22
+        },
+        {
+          "inputBytes": 9,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 22
+        },
+        {
+          "inputBytes": 9,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 34
+        },
+        {
+          "inputBytes": 9,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 34
+        },
+        {
+          "inputBytes": 9,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 34
+        },
+        {
+          "inputBytes": 15,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 22
+        },
+        {
+          "inputBytes": 15,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 22
+        },
+        {
+          "inputBytes": 15,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 22
+        },
+        {
+          "inputBytes": 15,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 28
+        },
+        {
+          "inputBytes": 15,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 28
+        },
+        {
+          "inputBytes": 15,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 28
+        },
+        {
+          "inputBytes": 15,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 40
+        },
+        {
+          "inputBytes": 15,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 40
+        },
+        {
+          "inputBytes": 15,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 40
+        },
+        {
+          "inputBytes": 16,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 24
+        },
+        {
+          "inputBytes": 16,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 24
+        },
+        {
+          "inputBytes": 16,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 24
+        },
+        {
+          "inputBytes": 16,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 30
+        },
+        {
+          "inputBytes": 16,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 30
+        },
+        {
+          "inputBytes": 16,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 30
+        },
+        {
+          "inputBytes": 16,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 42
+        },
+        {
+          "inputBytes": 16,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 42
+        },
+        {
+          "inputBytes": 16,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 42
+        },
+        {
+          "inputBytes": 17,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 25
+        },
+        {
+          "inputBytes": 17,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 25
+        },
+        {
+          "inputBytes": 17,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 25
+        },
+        {
+          "inputBytes": 17,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 31
+        },
+        {
+          "inputBytes": 17,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 31
+        },
+        {
+          "inputBytes": 17,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 31
+        },
+        {
+          "inputBytes": 17,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 43
+        },
+        {
+          "inputBytes": 17,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 43
+        },
+        {
+          "inputBytes": 17,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 43
+        },
+        {
+          "inputBytes": 63,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 73
+        },
+        {
+          "inputBytes": 63,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 73
+        },
+        {
+          "inputBytes": 63,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 73
+        },
+        {
+          "inputBytes": 63,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 79
+        },
+        {
+          "inputBytes": 63,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 79
+        },
+        {
+          "inputBytes": 63,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 79
+        },
+        {
+          "inputBytes": 63,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 91
+        },
+        {
+          "inputBytes": 63,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 91
+        },
+        {
+          "inputBytes": 63,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 91
+        },
+        {
+          "inputBytes": 64,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 75
+        },
+        {
+          "inputBytes": 64,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 75
+        },
+        {
+          "inputBytes": 64,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 75
+        },
+        {
+          "inputBytes": 64,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 81
+        },
+        {
+          "inputBytes": 64,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 81
+        },
+        {
+          "inputBytes": 64,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 81
+        },
+        {
+          "inputBytes": 64,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 93
+        },
+        {
+          "inputBytes": 64,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 93
+        },
+        {
+          "inputBytes": 64,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 93
+        },
+        {
+          "inputBytes": 65,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 76
+        },
+        {
+          "inputBytes": 65,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 76
+        },
+        {
+          "inputBytes": 65,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 76
+        },
+        {
+          "inputBytes": 65,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 82
+        },
+        {
+          "inputBytes": 65,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 82
+        },
+        {
+          "inputBytes": 65,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 82
+        },
+        {
+          "inputBytes": 65,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 94
+        },
+        {
+          "inputBytes": 65,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 94
+        },
+        {
+          "inputBytes": 65,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 94
+        },
+        {
+          "inputBytes": 127,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 141
+        },
+        {
+          "inputBytes": 127,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 141
+        },
+        {
+          "inputBytes": 127,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 141
+        },
+        {
+          "inputBytes": 127,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 147
+        },
+        {
+          "inputBytes": 127,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 147
+        },
+        {
+          "inputBytes": 127,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 147
+        },
+        {
+          "inputBytes": 127,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 159
+        },
+        {
+          "inputBytes": 127,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 159
+        },
+        {
+          "inputBytes": 127,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 159
+        },
+        {
+          "inputBytes": 128,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 143
+        },
+        {
+          "inputBytes": 128,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 143
+        },
+        {
+          "inputBytes": 128,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 143
+        },
+        {
+          "inputBytes": 128,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 149
+        },
+        {
+          "inputBytes": 128,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 149
+        },
+        {
+          "inputBytes": 128,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 149
+        },
+        {
+          "inputBytes": 128,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 161
+        },
+        {
+          "inputBytes": 128,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 161
+        },
+        {
+          "inputBytes": 128,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 161
+        },
+        {
+          "inputBytes": 255,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 277
+        },
+        {
+          "inputBytes": 255,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 277
+        },
+        {
+          "inputBytes": 255,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 277
+        },
+        {
+          "inputBytes": 255,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 283
+        },
+        {
+          "inputBytes": 255,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 283
+        },
+        {
+          "inputBytes": 255,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 283
+        },
+        {
+          "inputBytes": 255,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 295
+        },
+        {
+          "inputBytes": 255,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 295
+        },
+        {
+          "inputBytes": 255,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 295
+        },
+        {
+          "inputBytes": 256,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 279
+        },
+        {
+          "inputBytes": 256,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 279
+        },
+        {
+          "inputBytes": 256,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 279
+        },
+        {
+          "inputBytes": 256,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 285
+        },
+        {
+          "inputBytes": 256,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 285
+        },
+        {
+          "inputBytes": 256,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 285
+        },
+        {
+          "inputBytes": 256,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 297
+        },
+        {
+          "inputBytes": 256,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 297
+        },
+        {
+          "inputBytes": 256,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 297
+        },
+        {
+          "inputBytes": 1023,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 1093
+        },
+        {
+          "inputBytes": 1023,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 1093
+        },
+        {
+          "inputBytes": 1023,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 1093
+        },
+        {
+          "inputBytes": 1023,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 1099
+        },
+        {
+          "inputBytes": 1023,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 1099
+        },
+        {
+          "inputBytes": 1023,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 1099
+        },
+        {
+          "inputBytes": 1023,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 1111
+        },
+        {
+          "inputBytes": 1023,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 1111
+        },
+        {
+          "inputBytes": 1023,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 1111
+        },
+        {
+          "inputBytes": 1024,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 1095
+        },
+        {
+          "inputBytes": 1024,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 1095
+        },
+        {
+          "inputBytes": 1024,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 1095
+        },
+        {
+          "inputBytes": 1024,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 1101
+        },
+        {
+          "inputBytes": 1024,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 1101
+        },
+        {
+          "inputBytes": 1024,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 1101
+        },
+        {
+          "inputBytes": 1024,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 1113
+        },
+        {
+          "inputBytes": 1024,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 1113
+        },
+        {
+          "inputBytes": 1024,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 1113
+        },
+        {
+          "inputBytes": 1025,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 1096
+        },
+        {
+          "inputBytes": 1025,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 1096
+        },
+        {
+          "inputBytes": 1025,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 1096
+        },
+        {
+          "inputBytes": 1025,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 1102
+        },
+        {
+          "inputBytes": 1025,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 1102
+        },
+        {
+          "inputBytes": 1025,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 1102
+        },
+        {
+          "inputBytes": 1025,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 1114
+        },
+        {
+          "inputBytes": 1025,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 1114
+        },
+        {
+          "inputBytes": 1025,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 1114
+        },
+        {
+          "inputBytes": 4095,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 4357
+        },
+        {
+          "inputBytes": 4095,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 4357
+        },
+        {
+          "inputBytes": 4095,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 4357
+        },
+        {
+          "inputBytes": 4095,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 4363
+        },
+        {
+          "inputBytes": 4095,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 4363
+        },
+        {
+          "inputBytes": 4095,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 4363
+        },
+        {
+          "inputBytes": 4095,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 4375
+        },
+        {
+          "inputBytes": 4095,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 4375
+        },
+        {
+          "inputBytes": 4095,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 4375
+        },
+        {
+          "inputBytes": 4096,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 4359
+        },
+        {
+          "inputBytes": 4096,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 4359
+        },
+        {
+          "inputBytes": 4096,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 4359
+        },
+        {
+          "inputBytes": 4096,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 4365
+        },
+        {
+          "inputBytes": 4096,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 4365
+        },
+        {
+          "inputBytes": 4096,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 4365
+        },
+        {
+          "inputBytes": 4096,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 4377
+        },
+        {
+          "inputBytes": 4096,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 4377
+        },
+        {
+          "inputBytes": 4096,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 4377
+        },
+        {
+          "inputBytes": 4097,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 4360
+        },
+        {
+          "inputBytes": 4097,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 4360
+        },
+        {
+          "inputBytes": 4097,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 4360
+        },
+        {
+          "inputBytes": 4097,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 4366
+        },
+        {
+          "inputBytes": 4097,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 4366
+        },
+        {
+          "inputBytes": 4097,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 4366
+        },
+        {
+          "inputBytes": 4097,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 4378
+        },
+        {
+          "inputBytes": 4097,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 4378
+        },
+        {
+          "inputBytes": 4097,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 4378
+        },
+        {
+          "inputBytes": 16383,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 17413
+        },
+        {
+          "inputBytes": 16383,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 17413
+        },
+        {
+          "inputBytes": 16383,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 17413
+        },
+        {
+          "inputBytes": 16383,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 17419
+        },
+        {
+          "inputBytes": 16383,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 17419
+        },
+        {
+          "inputBytes": 16383,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 17419
+        },
+        {
+          "inputBytes": 16383,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 17431
+        },
+        {
+          "inputBytes": 16383,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 17431
+        },
+        {
+          "inputBytes": 16383,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 17431
+        },
+        {
+          "inputBytes": 16384,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 17415
+        },
+        {
+          "inputBytes": 16384,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 17415
+        },
+        {
+          "inputBytes": 16384,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 17415
+        },
+        {
+          "inputBytes": 16384,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 17421
+        },
+        {
+          "inputBytes": 16384,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 17421
+        },
+        {
+          "inputBytes": 16384,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 17421
+        },
+        {
+          "inputBytes": 16384,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 17433
+        },
+        {
+          "inputBytes": 16384,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 17433
+        },
+        {
+          "inputBytes": 16384,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 17433
+        },
+        {
+          "inputBytes": 16385,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 17416
+        },
+        {
+          "inputBytes": 16385,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 17416
+        },
+        {
+          "inputBytes": 16385,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 17416
+        },
+        {
+          "inputBytes": 16385,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 17422
+        },
+        {
+          "inputBytes": 16385,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 17422
+        },
+        {
+          "inputBytes": 16385,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 17422
+        },
+        {
+          "inputBytes": 16385,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 17434
+        },
+        {
+          "inputBytes": 16385,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 17434
+        },
+        {
+          "inputBytes": 16385,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 17434
+        },
+        {
+          "inputBytes": 65535,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 69637
+        },
+        {
+          "inputBytes": 65535,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 69637
+        },
+        {
+          "inputBytes": 65535,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 69637
+        },
+        {
+          "inputBytes": 65535,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 69643
+        },
+        {
+          "inputBytes": 65535,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 69643
+        },
+        {
+          "inputBytes": 65535,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 69643
+        },
+        {
+          "inputBytes": 65535,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 69655
+        },
+        {
+          "inputBytes": 65535,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 69655
+        },
+        {
+          "inputBytes": 65535,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 69655
+        },
+        {
+          "inputBytes": 65536,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 69639
+        },
+        {
+          "inputBytes": 65536,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 69639
+        },
+        {
+          "inputBytes": 65536,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 69639
+        },
+        {
+          "inputBytes": 65536,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 69645
+        },
+        {
+          "inputBytes": 65536,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 69645
+        },
+        {
+          "inputBytes": 65536,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 69645
+        },
+        {
+          "inputBytes": 65536,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 69657
+        },
+        {
+          "inputBytes": 65536,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 69657
+        },
+        {
+          "inputBytes": 65536,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 69657
+        },
+        {
+          "inputBytes": 65537,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 69640
+        },
+        {
+          "inputBytes": 65537,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 69640
+        },
+        {
+          "inputBytes": 65537,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 69640
+        },
+        {
+          "inputBytes": 65537,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 69646
+        },
+        {
+          "inputBytes": 65537,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 69646
+        },
+        {
+          "inputBytes": 65537,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 69646
+        },
+        {
+          "inputBytes": 65537,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 69658
+        },
+        {
+          "inputBytes": 65537,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 69658
+        },
+        {
+          "inputBytes": 65537,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 69658
+        },
+        {
+          "inputBytes": 262143,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 278533
+        },
+        {
+          "inputBytes": 262143,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 278533
+        },
+        {
+          "inputBytes": 262143,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 278533
+        },
+        {
+          "inputBytes": 262143,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 278539
+        },
+        {
+          "inputBytes": 262143,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 278539
+        },
+        {
+          "inputBytes": 262143,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 278539
+        },
+        {
+          "inputBytes": 262143,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 278551
+        },
+        {
+          "inputBytes": 262143,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 278551
+        },
+        {
+          "inputBytes": 262143,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 278551
+        },
+        {
+          "inputBytes": 262144,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 278535
+        },
+        {
+          "inputBytes": 262144,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 278535
+        },
+        {
+          "inputBytes": 262144,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 278535
+        },
+        {
+          "inputBytes": 262144,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 278541
+        },
+        {
+          "inputBytes": 262144,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 278541
+        },
+        {
+          "inputBytes": 262144,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 278541
+        },
+        {
+          "inputBytes": 262144,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 278553
+        },
+        {
+          "inputBytes": 262144,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 278553
+        },
+        {
+          "inputBytes": 262144,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 278553
+        },
+        {
+          "inputBytes": 262145,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 278536
+        },
+        {
+          "inputBytes": 262145,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 278536
+        },
+        {
+          "inputBytes": 262145,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 278536
+        },
+        {
+          "inputBytes": 262145,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 278542
+        },
+        {
+          "inputBytes": 262145,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 278542
+        },
+        {
+          "inputBytes": 262145,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 278542
+        },
+        {
+          "inputBytes": 262145,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 278554
+        },
+        {
+          "inputBytes": 262145,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 278554
+        },
+        {
+          "inputBytes": 262145,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 278554
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 1114117
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 1114117
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 1114117
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 1114123
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 1114123
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 1114123
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 1114135
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 1114135
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 1114135
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 1114119
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 1114119
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 1114119
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 1114125
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 1114125
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 1114125
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 1114137
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 1114137
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 1114137
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 1114120
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 1114120
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 1114120
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 1114126
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 1114126
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 1114126
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 1114138
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 1114138
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 1114138
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 4456455
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 4456455
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 4456455
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 4456461
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 4456461
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 4456461
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 4456473
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 4456473
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 4456473
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 8912903
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 8912903
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 8912903
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 8912909
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 8912909
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 8912909
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 8912921
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 8912921
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 8912921
+        }
+      ]
+    }
+  },
+  "options": {
+    "level": 6,
+    "windowBits": 15,
+    "memLevel": 8,
+    "strategy": 0,
+    "flush": 0,
+    "finishFlush": 4
+  },
+  "harness": {
+    "benchmarks/real-world/compression/bounds.mjs": "8572c9b7c01cc813ca46048a68a1bea1b35c3fc1a28551913085244278070341",
+    "benchmarks/real-world/compression/codec.mjs": "c5ed5f1c0719203024ebc5ef03caa40a361d27defb5c73777d5a2c6d2dd0ebc3",
+    "benchmarks/real-world/compression/core.mjs": "9106a1d638d91698fe4c897d714faa5552204a341aa15905f4a6c2988b54111e",
+    "benchmarks/real-world/compression/executors.mjs": "cdbb8805ea8e59fc58490eecf665bf5de24bec33ca0b5a2db31e273c86703f03",
+    "benchmarks/real-world/compression/harness.test.mjs": "edc868e8777bda5ae59657be8938cee8f7a6abdd4544aceb220ca60e345f7a3d",
+    "benchmarks/real-world/compression/lifecycle.mjs": "1055276dc66af1d693457b50d04ec33eb80660a336f0b0e6f9417e5082dba7c3",
+    "benchmarks/real-world/compression/matrix.mjs": "38ef81a71094f743b8442cdef177b9c2e2b8c93fcb7e2d043b0d729e3591da23",
+    "benchmarks/real-world/compression/native-bound.c": "03ce67b197a0015661a424060109fd1722774500c962e9e9fc63ca0d6840f51e",
+    "benchmarks/real-world/compression/native-bound.mjs": "0ba19200993c3f898949ffba0caa730404e958602633a2559cd7982c54df804e",
+    "benchmarks/real-world/compression/native-diagnostic.mjs": "10f0544faf73cbe3c9d1d7f7c1f84c42dac90370544c74dd1b84802d82dddb1e",
+    "benchmarks/real-world/compression/raw-worker.mjs": "beeeb5125695ac8b9b685f5ec99e0bdb08705bfed3b7f8c1bfa96f649eb01827",
+    "benchmarks/real-world/compression/README.md": "214fb09dd48227a738a3789428e9b85cb833e62126f9ca037c5aee6a6d10212b",
+    "benchmarks/real-world/compression/report.mjs": "71c5fb4969fddf8a148404cfce22a98eb502c4757df49803f6379f1eac5f0d91",
+    "benchmarks/real-world/compression/run.mjs": "7502f495589e330ba62093ba7afdd508db84a35f035c2c824c9fdf41e8755267",
+    "benchmarks/real-world/compression/task.mjs": "5f5b3445c8ad9c5b3d12b150918c3f9d74fc73336290b344d2935a5726c8630d"
+  },
+  "complete": true,
+  "results": [
+    {
+      "bytes": 0,
+      "level": 1,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 2,
+      "maximum": 7
+    },
+    {
+      "bytes": 0,
+      "level": 1,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 2,
+      "maximum": 7
+    },
+    {
+      "bytes": 0,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 2,
+      "maximum": 7
+    },
+    {
+      "bytes": 0,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 2,
+      "maximum": 7
+    },
+    {
+      "bytes": 0,
+      "level": 1,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 2,
+      "maximum": 7
+    },
+    {
+      "bytes": 0,
+      "level": 6,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 2,
+      "maximum": 7
+    },
+    {
+      "bytes": 0,
+      "level": 6,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 2,
+      "maximum": 7
+    },
+    {
+      "bytes": 0,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 2,
+      "maximum": 7
+    },
+    {
+      "bytes": 0,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 2,
+      "maximum": 7
+    },
+    {
+      "bytes": 0,
+      "level": 6,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 2,
+      "maximum": 7
+    },
+    {
+      "bytes": 0,
+      "level": 9,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 2,
+      "maximum": 7
+    },
+    {
+      "bytes": 0,
+      "level": 9,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 2,
+      "maximum": 7
+    },
+    {
+      "bytes": 0,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 2,
+      "maximum": 7
+    },
+    {
+      "bytes": 0,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 2,
+      "maximum": 7
+    },
+    {
+      "bytes": 0,
+      "level": 9,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 2,
+      "maximum": 7
+    },
+    {
+      "bytes": 1,
+      "level": 1,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 3,
+      "maximum": 8
+    },
+    {
+      "bytes": 1,
+      "level": 1,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 3,
+      "maximum": 8
+    },
+    {
+      "bytes": 1,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 3,
+      "maximum": 8
+    },
+    {
+      "bytes": 1,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 3,
+      "maximum": 8
+    },
+    {
+      "bytes": 1,
+      "level": 1,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 3,
+      "maximum": 8
+    },
+    {
+      "bytes": 1,
+      "level": 6,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 3,
+      "maximum": 8
+    },
+    {
+      "bytes": 1,
+      "level": 6,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 3,
+      "maximum": 8
+    },
+    {
+      "bytes": 1,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 3,
+      "maximum": 8
+    },
+    {
+      "bytes": 1,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 3,
+      "maximum": 8
+    },
+    {
+      "bytes": 1,
+      "level": 6,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 3,
+      "maximum": 8
+    },
+    {
+      "bytes": 1,
+      "level": 9,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 3,
+      "maximum": 8
+    },
+    {
+      "bytes": 1,
+      "level": 9,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 3,
+      "maximum": 8
+    },
+    {
+      "bytes": 1,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 3,
+      "maximum": 8
+    },
+    {
+      "bytes": 1,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 3,
+      "maximum": 8
+    },
+    {
+      "bytes": 1,
+      "level": 9,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 3,
+      "maximum": 8
+    },
+    {
+      "bytes": 2,
+      "level": 1,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 4,
+      "maximum": 9
+    },
+    {
+      "bytes": 2,
+      "level": 1,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 4,
+      "maximum": 9
+    },
+    {
+      "bytes": 2,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 4,
+      "maximum": 9
+    },
+    {
+      "bytes": 2,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 4,
+      "maximum": 9
+    },
+    {
+      "bytes": 2,
+      "level": 1,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 4,
+      "maximum": 9
+    },
+    {
+      "bytes": 2,
+      "level": 6,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 4,
+      "maximum": 9
+    },
+    {
+      "bytes": 2,
+      "level": 6,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 4,
+      "maximum": 9
+    },
+    {
+      "bytes": 2,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 4,
+      "maximum": 9
+    },
+    {
+      "bytes": 2,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 4,
+      "maximum": 9
+    },
+    {
+      "bytes": 2,
+      "level": 6,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 4,
+      "maximum": 9
+    },
+    {
+      "bytes": 2,
+      "level": 9,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 4,
+      "maximum": 9
+    },
+    {
+      "bytes": 2,
+      "level": 9,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 4,
+      "maximum": 9
+    },
+    {
+      "bytes": 2,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 4,
+      "maximum": 9
+    },
+    {
+      "bytes": 2,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 4,
+      "maximum": 9
+    },
+    {
+      "bytes": 2,
+      "level": 9,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 4,
+      "maximum": 9
+    },
+    {
+      "bytes": 3,
+      "level": 1,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 5,
+      "maximum": 10
+    },
+    {
+      "bytes": 3,
+      "level": 1,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 5,
+      "maximum": 10
+    },
+    {
+      "bytes": 3,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 5,
+      "maximum": 10
+    },
+    {
+      "bytes": 3,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 5,
+      "maximum": 10
+    },
+    {
+      "bytes": 3,
+      "level": 1,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 5,
+      "maximum": 10
+    },
+    {
+      "bytes": 3,
+      "level": 6,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 5,
+      "maximum": 10
+    },
+    {
+      "bytes": 3,
+      "level": 6,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 5,
+      "maximum": 10
+    },
+    {
+      "bytes": 3,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 5,
+      "maximum": 10
+    },
+    {
+      "bytes": 3,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 5,
+      "maximum": 10
+    },
+    {
+      "bytes": 3,
+      "level": 6,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 5,
+      "maximum": 10
+    },
+    {
+      "bytes": 3,
+      "level": 9,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 5,
+      "maximum": 10
+    },
+    {
+      "bytes": 3,
+      "level": 9,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 5,
+      "maximum": 10
+    },
+    {
+      "bytes": 3,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 5,
+      "maximum": 10
+    },
+    {
+      "bytes": 3,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 5,
+      "maximum": 10
+    },
+    {
+      "bytes": 3,
+      "level": 9,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 5,
+      "maximum": 10
+    },
+    {
+      "bytes": 7,
+      "level": 1,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 9,
+      "maximum": 14
+    },
+    {
+      "bytes": 7,
+      "level": 1,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 9,
+      "maximum": 14
+    },
+    {
+      "bytes": 7,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 9,
+      "maximum": 14
+    },
+    {
+      "bytes": 7,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 9,
+      "maximum": 14
+    },
+    {
+      "bytes": 7,
+      "level": 1,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 9,
+      "maximum": 14
+    },
+    {
+      "bytes": 7,
+      "level": 6,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 9,
+      "maximum": 14
+    },
+    {
+      "bytes": 7,
+      "level": 6,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 9,
+      "maximum": 14
+    },
+    {
+      "bytes": 7,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 9,
+      "maximum": 14
+    },
+    {
+      "bytes": 7,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 9,
+      "maximum": 14
+    },
+    {
+      "bytes": 7,
+      "level": 6,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 9,
+      "maximum": 14
+    },
+    {
+      "bytes": 7,
+      "level": 9,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 9,
+      "maximum": 14
+    },
+    {
+      "bytes": 7,
+      "level": 9,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 9,
+      "maximum": 14
+    },
+    {
+      "bytes": 7,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 9,
+      "maximum": 14
+    },
+    {
+      "bytes": 7,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 9,
+      "maximum": 14
+    },
+    {
+      "bytes": 7,
+      "level": 9,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 9,
+      "maximum": 14
+    },
+    {
+      "bytes": 127,
+      "level": 1,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 86,
+      "maximum": 141
+    },
+    {
+      "bytes": 127,
+      "level": 1,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 102,
+      "maximum": 141
+    },
+    {
+      "bytes": 127,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 132,
+      "maximum": 141
+    },
+    {
+      "bytes": 127,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 132,
+      "maximum": 141
+    },
+    {
+      "bytes": 127,
+      "level": 1,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 132,
+      "maximum": 141
+    },
+    {
+      "bytes": 127,
+      "level": 6,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 86,
+      "maximum": 141
+    },
+    {
+      "bytes": 127,
+      "level": 6,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 102,
+      "maximum": 141
+    },
+    {
+      "bytes": 127,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 132,
+      "maximum": 141
+    },
+    {
+      "bytes": 127,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 132,
+      "maximum": 141
+    },
+    {
+      "bytes": 127,
+      "level": 6,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 132,
+      "maximum": 141
+    },
+    {
+      "bytes": 127,
+      "level": 9,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 86,
+      "maximum": 141
+    },
+    {
+      "bytes": 127,
+      "level": 9,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 103,
+      "maximum": 141
+    },
+    {
+      "bytes": 127,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 132,
+      "maximum": 141
+    },
+    {
+      "bytes": 127,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 132,
+      "maximum": 141
+    },
+    {
+      "bytes": 127,
+      "level": 9,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 132,
+      "maximum": 141
+    },
+    {
+      "bytes": 128,
+      "level": 1,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 86,
+      "maximum": 143
+    },
+    {
+      "bytes": 128,
+      "level": 1,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 103,
+      "maximum": 143
+    },
+    {
+      "bytes": 128,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 133,
+      "maximum": 143
+    },
+    {
+      "bytes": 128,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 133,
+      "maximum": 143
+    },
+    {
+      "bytes": 128,
+      "level": 1,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 133,
+      "maximum": 143
+    },
+    {
+      "bytes": 128,
+      "level": 6,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 86,
+      "maximum": 143
+    },
+    {
+      "bytes": 128,
+      "level": 6,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 103,
+      "maximum": 143
+    },
+    {
+      "bytes": 128,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 133,
+      "maximum": 143
+    },
+    {
+      "bytes": 128,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 133,
+      "maximum": 143
+    },
+    {
+      "bytes": 128,
+      "level": 6,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 133,
+      "maximum": 143
+    },
+    {
+      "bytes": 128,
+      "level": 9,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 86,
+      "maximum": 143
+    },
+    {
+      "bytes": 128,
+      "level": 9,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 103,
+      "maximum": 143
+    },
+    {
+      "bytes": 128,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 133,
+      "maximum": 143
+    },
+    {
+      "bytes": 128,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 133,
+      "maximum": 143
+    },
+    {
+      "bytes": 128,
+      "level": 9,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 133,
+      "maximum": 143
+    },
+    {
+      "bytes": 255,
+      "level": 1,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 87,
+      "maximum": 277
+    },
+    {
+      "bytes": 255,
+      "level": 1,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 142,
+      "maximum": 277
+    },
+    {
+      "bytes": 255,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 260,
+      "maximum": 277
+    },
+    {
+      "bytes": 255,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 260,
+      "maximum": 277
+    },
+    {
+      "bytes": 255,
+      "level": 1,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 260,
+      "maximum": 277
+    },
+    {
+      "bytes": 255,
+      "level": 6,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 87,
+      "maximum": 277
+    },
+    {
+      "bytes": 255,
+      "level": 6,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 142,
+      "maximum": 277
+    },
+    {
+      "bytes": 255,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 260,
+      "maximum": 277
+    },
+    {
+      "bytes": 255,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 260,
+      "maximum": 277
+    },
+    {
+      "bytes": 255,
+      "level": 6,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 260,
+      "maximum": 277
+    },
+    {
+      "bytes": 255,
+      "level": 9,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 86,
+      "maximum": 277
+    },
+    {
+      "bytes": 255,
+      "level": 9,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 144,
+      "maximum": 277
+    },
+    {
+      "bytes": 255,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 260,
+      "maximum": 277
+    },
+    {
+      "bytes": 255,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 260,
+      "maximum": 277
+    },
+    {
+      "bytes": 255,
+      "level": 9,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 260,
+      "maximum": 277
+    },
+    {
+      "bytes": 256,
+      "level": 1,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 87,
+      "maximum": 279
+    },
+    {
+      "bytes": 256,
+      "level": 1,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 143,
+      "maximum": 279
+    },
+    {
+      "bytes": 256,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 261,
+      "maximum": 279
+    },
+    {
+      "bytes": 256,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 261,
+      "maximum": 279
+    },
+    {
+      "bytes": 256,
+      "level": 1,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 261,
+      "maximum": 279
+    },
+    {
+      "bytes": 256,
+      "level": 6,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 87,
+      "maximum": 279
+    },
+    {
+      "bytes": 256,
+      "level": 6,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 143,
+      "maximum": 279
+    },
+    {
+      "bytes": 256,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 261,
+      "maximum": 279
+    },
+    {
+      "bytes": 256,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 261,
+      "maximum": 279
+    },
+    {
+      "bytes": 256,
+      "level": 6,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 261,
+      "maximum": 279
+    },
+    {
+      "bytes": 256,
+      "level": 9,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 86,
+      "maximum": 279
+    },
+    {
+      "bytes": 256,
+      "level": 9,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 144,
+      "maximum": 279
+    },
+    {
+      "bytes": 256,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 261,
+      "maximum": 279
+    },
+    {
+      "bytes": 256,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 261,
+      "maximum": 279
+    },
+    {
+      "bytes": 256,
+      "level": 9,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 261,
+      "maximum": 279
+    },
+    {
+      "bytes": 1023,
+      "level": 1,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 95,
+      "maximum": 1093
+    },
+    {
+      "bytes": 1023,
+      "level": 1,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 362,
+      "maximum": 1093
+    },
+    {
+      "bytes": 1023,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 1028,
+      "maximum": 1093
+    },
+    {
+      "bytes": 1023,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 1028,
+      "maximum": 1093
+    },
+    {
+      "bytes": 1023,
+      "level": 1,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 1028,
+      "maximum": 1093
+    },
+    {
+      "bytes": 1023,
+      "level": 6,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 92,
+      "maximum": 1093
+    },
+    {
+      "bytes": 1023,
+      "level": 6,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 346,
+      "maximum": 1093
+    },
+    {
+      "bytes": 1023,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 1028,
+      "maximum": 1093
+    },
+    {
+      "bytes": 1023,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 1028,
+      "maximum": 1093
+    },
+    {
+      "bytes": 1023,
+      "level": 6,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 1028,
+      "maximum": 1093
+    },
+    {
+      "bytes": 1023,
+      "level": 9,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 92,
+      "maximum": 1093
+    },
+    {
+      "bytes": 1023,
+      "level": 9,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 351,
+      "maximum": 1093
+    },
+    {
+      "bytes": 1023,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 1028,
+      "maximum": 1093
+    },
+    {
+      "bytes": 1023,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 1028,
+      "maximum": 1093
+    },
+    {
+      "bytes": 1023,
+      "level": 9,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 1028,
+      "maximum": 1093
+    },
+    {
+      "bytes": 1024,
+      "level": 1,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 95,
+      "maximum": 1095
+    },
+    {
+      "bytes": 1024,
+      "level": 1,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 363,
+      "maximum": 1095
+    },
+    {
+      "bytes": 1024,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 1029,
+      "maximum": 1095
+    },
+    {
+      "bytes": 1024,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 1029,
+      "maximum": 1095
+    },
+    {
+      "bytes": 1024,
+      "level": 1,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 1029,
+      "maximum": 1095
+    },
+    {
+      "bytes": 1024,
+      "level": 6,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 92,
+      "maximum": 1095
+    },
+    {
+      "bytes": 1024,
+      "level": 6,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 347,
+      "maximum": 1095
+    },
+    {
+      "bytes": 1024,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 1029,
+      "maximum": 1095
+    },
+    {
+      "bytes": 1024,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 1029,
+      "maximum": 1095
+    },
+    {
+      "bytes": 1024,
+      "level": 6,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 1029,
+      "maximum": 1095
+    },
+    {
+      "bytes": 1024,
+      "level": 9,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 92,
+      "maximum": 1095
+    },
+    {
+      "bytes": 1024,
+      "level": 9,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 351,
+      "maximum": 1095
+    },
+    {
+      "bytes": 1024,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 1029,
+      "maximum": 1095
+    },
+    {
+      "bytes": 1024,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 1029,
+      "maximum": 1095
+    },
+    {
+      "bytes": 1024,
+      "level": 9,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 1029,
+      "maximum": 1095
+    },
+    {
+      "bytes": 4095,
+      "level": 1,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 124,
+      "maximum": 4357
+    },
+    {
+      "bytes": 4095,
+      "level": 1,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 1184,
+      "maximum": 4357
+    },
+    {
+      "bytes": 4095,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 4100,
+      "maximum": 4357
+    },
+    {
+      "bytes": 4095,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 4100,
+      "maximum": 4357
+    },
+    {
+      "bytes": 4095,
+      "level": 1,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 4100,
+      "maximum": 4357
+    },
+    {
+      "bytes": 4095,
+      "level": 6,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 109,
+      "maximum": 4357
+    },
+    {
+      "bytes": 4095,
+      "level": 6,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 1071,
+      "maximum": 4357
+    },
+    {
+      "bytes": 4095,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 4100,
+      "maximum": 4357
+    },
+    {
+      "bytes": 4095,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 4100,
+      "maximum": 4357
+    },
+    {
+      "bytes": 4095,
+      "level": 6,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 4100,
+      "maximum": 4357
+    },
+    {
+      "bytes": 4095,
+      "level": 9,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 109,
+      "maximum": 4357
+    },
+    {
+      "bytes": 4095,
+      "level": 9,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 1128,
+      "maximum": 4357
+    },
+    {
+      "bytes": 4095,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 4100,
+      "maximum": 4357
+    },
+    {
+      "bytes": 4095,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 4100,
+      "maximum": 4357
+    },
+    {
+      "bytes": 4095,
+      "level": 9,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 4100,
+      "maximum": 4357
+    },
+    {
+      "bytes": 4096,
+      "level": 1,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 124,
+      "maximum": 4359
+    },
+    {
+      "bytes": 4096,
+      "level": 1,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 1185,
+      "maximum": 4359
+    },
+    {
+      "bytes": 4096,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 4101,
+      "maximum": 4359
+    },
+    {
+      "bytes": 4096,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 4101,
+      "maximum": 4359
+    },
+    {
+      "bytes": 4096,
+      "level": 1,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 4101,
+      "maximum": 4359
+    },
+    {
+      "bytes": 4096,
+      "level": 6,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 109,
+      "maximum": 4359
+    },
+    {
+      "bytes": 4096,
+      "level": 6,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 1072,
+      "maximum": 4359
+    },
+    {
+      "bytes": 4096,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 4101,
+      "maximum": 4359
+    },
+    {
+      "bytes": 4096,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 4101,
+      "maximum": 4359
+    },
+    {
+      "bytes": 4096,
+      "level": 6,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 4101,
+      "maximum": 4359
+    },
+    {
+      "bytes": 4096,
+      "level": 9,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 109,
+      "maximum": 4359
+    },
+    {
+      "bytes": 4096,
+      "level": 9,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 1129,
+      "maximum": 4359
+    },
+    {
+      "bytes": 4096,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 4101,
+      "maximum": 4359
+    },
+    {
+      "bytes": 4096,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 4101,
+      "maximum": 4359
+    },
+    {
+      "bytes": 4096,
+      "level": 9,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 4101,
+      "maximum": 4359
+    },
+    {
+      "bytes": 16383,
+      "level": 1,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 218,
+      "maximum": 17413
+    },
+    {
+      "bytes": 16383,
+      "level": 1,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 4626,
+      "maximum": 17413
+    },
+    {
+      "bytes": 16383,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 16390,
+      "maximum": 17413
+    },
+    {
+      "bytes": 16383,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 16390,
+      "maximum": 17413
+    },
+    {
+      "bytes": 16383,
+      "level": 1,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 16390,
+      "maximum": 17413
+    },
+    {
+      "bytes": 16383,
+      "level": 6,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 153,
+      "maximum": 17413
+    },
+    {
+      "bytes": 16383,
+      "level": 6,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 3987,
+      "maximum": 17413
+    },
+    {
+      "bytes": 16383,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 16388,
+      "maximum": 17413
+    },
+    {
+      "bytes": 16383,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 16388,
+      "maximum": 17413
+    },
+    {
+      "bytes": 16383,
+      "level": 6,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 16388,
+      "maximum": 17413
+    },
+    {
+      "bytes": 16383,
+      "level": 9,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 153,
+      "maximum": 17413
+    },
+    {
+      "bytes": 16383,
+      "level": 9,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 4301,
+      "maximum": 17413
+    },
+    {
+      "bytes": 16383,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 16388,
+      "maximum": 17413
+    },
+    {
+      "bytes": 16383,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 16388,
+      "maximum": 17413
+    },
+    {
+      "bytes": 16383,
+      "level": 9,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 16388,
+      "maximum": 17413
+    },
+    {
+      "bytes": 16384,
+      "level": 1,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 218,
+      "maximum": 17415
+    },
+    {
+      "bytes": 16384,
+      "level": 1,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 4624,
+      "maximum": 17415
+    },
+    {
+      "bytes": 16384,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 16391,
+      "maximum": 17415
+    },
+    {
+      "bytes": 16384,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 16391,
+      "maximum": 17415
+    },
+    {
+      "bytes": 16384,
+      "level": 1,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 16391,
+      "maximum": 17415
+    },
+    {
+      "bytes": 16384,
+      "level": 6,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 153,
+      "maximum": 17415
+    },
+    {
+      "bytes": 16384,
+      "level": 6,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 3987,
+      "maximum": 17415
+    },
+    {
+      "bytes": 16384,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 16391,
+      "maximum": 17415
+    },
+    {
+      "bytes": 16384,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 16391,
+      "maximum": 17415
+    },
+    {
+      "bytes": 16384,
+      "level": 6,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 16391,
+      "maximum": 17415
+    },
+    {
+      "bytes": 16384,
+      "level": 9,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 153,
+      "maximum": 17415
+    },
+    {
+      "bytes": 16384,
+      "level": 9,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 4301,
+      "maximum": 17415
+    },
+    {
+      "bytes": 16384,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 16389,
+      "maximum": 17415
+    },
+    {
+      "bytes": 16384,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 16389,
+      "maximum": 17415
+    },
+    {
+      "bytes": 16384,
+      "level": 9,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 16389,
+      "maximum": 17415
+    },
+    {
+      "bytes": 65535,
+      "level": 1,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 551,
+      "maximum": 69637
+    },
+    {
+      "bytes": 65535,
+      "level": 1,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 18622,
+      "maximum": 69637
+    },
+    {
+      "bytes": 65535,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 65557,
+      "maximum": 69637
+    },
+    {
+      "bytes": 65535,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 65557,
+      "maximum": 69637
+    },
+    {
+      "bytes": 65535,
+      "level": 1,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 65557,
+      "maximum": 69637
+    },
+    {
+      "bytes": 65535,
+      "level": 6,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 320,
+      "maximum": 69637
+    },
+    {
+      "bytes": 65535,
+      "level": 6,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 15741,
+      "maximum": 69637
+    },
+    {
+      "bytes": 65535,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 65557,
+      "maximum": 69637
+    },
+    {
+      "bytes": 65535,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 65557,
+      "maximum": 69637
+    },
+    {
+      "bytes": 65535,
+      "level": 6,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 65557,
+      "maximum": 69637
+    },
+    {
+      "bytes": 65535,
+      "level": 9,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 320,
+      "maximum": 69637
+    },
+    {
+      "bytes": 65535,
+      "level": 9,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 16651,
+      "maximum": 69637
+    },
+    {
+      "bytes": 65535,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 65555,
+      "maximum": 69637
+    },
+    {
+      "bytes": 65535,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 65555,
+      "maximum": 69637
+    },
+    {
+      "bytes": 65535,
+      "level": 9,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 65555,
+      "maximum": 69637
+    },
+    {
+      "bytes": 65536,
+      "level": 1,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 551,
+      "maximum": 69639
+    },
+    {
+      "bytes": 65536,
+      "level": 1,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 18622,
+      "maximum": 69639
+    },
+    {
+      "bytes": 65536,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 65558,
+      "maximum": 69639
+    },
+    {
+      "bytes": 65536,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 65558,
+      "maximum": 69639
+    },
+    {
+      "bytes": 65536,
+      "level": 1,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 65558,
+      "maximum": 69639
+    },
+    {
+      "bytes": 65536,
+      "level": 6,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 320,
+      "maximum": 69639
+    },
+    {
+      "bytes": 65536,
+      "level": 6,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 15741,
+      "maximum": 69639
+    },
+    {
+      "bytes": 65536,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 65558,
+      "maximum": 69639
+    },
+    {
+      "bytes": 65536,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 65558,
+      "maximum": 69639
+    },
+    {
+      "bytes": 65536,
+      "level": 6,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 65558,
+      "maximum": 69639
+    },
+    {
+      "bytes": 65536,
+      "level": 9,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 320,
+      "maximum": 69639
+    },
+    {
+      "bytes": 65536,
+      "level": 9,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 16651,
+      "maximum": 69639
+    },
+    {
+      "bytes": 65536,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 65556,
+      "maximum": 69639
+    },
+    {
+      "bytes": 65536,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 65556,
+      "maximum": 69639
+    },
+    {
+      "bytes": 65536,
+      "level": 9,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 65556,
+      "maximum": 69639
+    },
+    {
+      "bytes": 262144,
+      "level": 1,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 1885,
+      "maximum": 278535
+    },
+    {
+      "bytes": 262144,
+      "level": 1,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 74020,
+      "maximum": 278535
+    },
+    {
+      "bytes": 262144,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 262227,
+      "maximum": 278535
+    },
+    {
+      "bytes": 262144,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 262227,
+      "maximum": 278535
+    },
+    {
+      "bytes": 262144,
+      "level": 1,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 262226,
+      "maximum": 278535
+    },
+    {
+      "bytes": 262144,
+      "level": 6,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 987,
+      "maximum": 278535
+    },
+    {
+      "bytes": 262144,
+      "level": 6,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 61933,
+      "maximum": 278535
+    },
+    {
+      "bytes": 262144,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 262227,
+      "maximum": 278535
+    },
+    {
+      "bytes": 262144,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 262227,
+      "maximum": 278535
+    },
+    {
+      "bytes": 262144,
+      "level": 6,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 262226,
+      "maximum": 278535
+    },
+    {
+      "bytes": 262144,
+      "level": 9,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 986,
+      "maximum": 278535
+    },
+    {
+      "bytes": 262144,
+      "level": 9,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 64702,
+      "maximum": 278535
+    },
+    {
+      "bytes": 262144,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 262224,
+      "maximum": 278535
+    },
+    {
+      "bytes": 262144,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 262224,
+      "maximum": 278535
+    },
+    {
+      "bytes": 262144,
+      "level": 9,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 262224,
+      "maximum": 278535
+    },
+    {
+      "bytes": 1048576,
+      "level": 1,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 7218,
+      "maximum": 1114119
+    },
+    {
+      "bytes": 1048576,
+      "level": 1,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 294578,
+      "maximum": 1114119
+    },
+    {
+      "bytes": 1048576,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 1048901,
+      "maximum": 1114119
+    },
+    {
+      "bytes": 1048576,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 1048901,
+      "maximum": 1114119
+    },
+    {
+      "bytes": 1048576,
+      "level": 1,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 1048901,
+      "maximum": 1114119
+    },
+    {
+      "bytes": 1048576,
+      "level": 6,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 3653,
+      "maximum": 1114119
+    },
+    {
+      "bytes": 1048576,
+      "level": 6,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 245904,
+      "maximum": 1114119
+    },
+    {
+      "bytes": 1048576,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 1048901,
+      "maximum": 1114119
+    },
+    {
+      "bytes": 1048576,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 1048901,
+      "maximum": 1114119
+    },
+    {
+      "bytes": 1048576,
+      "level": 6,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 1048901,
+      "maximum": 1114119
+    },
+    {
+      "bytes": 1048576,
+      "level": 9,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 3653,
+      "maximum": 1114119
+    },
+    {
+      "bytes": 1048576,
+      "level": 9,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 256117,
+      "maximum": 1114119
+    },
+    {
+      "bytes": 1048576,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 1048896,
+      "maximum": 1114119
+    },
+    {
+      "bytes": 1048576,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 1048896,
+      "maximum": 1114119
+    },
+    {
+      "bytes": 1048576,
+      "level": 9,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 1048896,
+      "maximum": 1114119
+    },
+    {
+      "bytes": 4194304,
+      "level": 1,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 28556,
+      "maximum": 4456455
+    },
+    {
+      "bytes": 4194304,
+      "level": 1,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 1168395,
+      "maximum": 4456455
+    },
+    {
+      "bytes": 4194304,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 4195589,
+      "maximum": 4456455
+    },
+    {
+      "bytes": 4194304,
+      "level": 1,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 4195589,
+      "maximum": 4456455
+    },
+    {
+      "bytes": 4194304,
+      "level": 1,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 4195589,
+      "maximum": 4456455
+    },
+    {
+      "bytes": 4194304,
+      "level": 6,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 14322,
+      "maximum": 4456455
+    },
+    {
+      "bytes": 4194304,
+      "level": 6,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 970188,
+      "maximum": 4456455
+    },
+    {
+      "bytes": 4194304,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 4195589,
+      "maximum": 4456455
+    },
+    {
+      "bytes": 4194304,
+      "level": 6,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 4195589,
+      "maximum": 4456455
+    },
+    {
+      "bytes": 4194304,
+      "level": 6,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 4195589,
+      "maximum": 4456455
+    },
+    {
+      "bytes": 4194304,
+      "level": 9,
+      "kind": "high",
+      "seed": 1592594996,
+      "actual": 14322,
+      "maximum": 4456455
+    },
+    {
+      "bytes": 4194304,
+      "level": 9,
+      "kind": "moderate",
+      "seed": 1592594996,
+      "actual": 1011116,
+      "maximum": 4456455
+    },
+    {
+      "bytes": 4194304,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1,
+      "actual": 4195584,
+      "maximum": 4456455
+    },
+    {
+      "bytes": 4194304,
+      "level": 9,
+      "kind": "poor",
+      "seed": 1592594996,
+      "actual": 4195584,
+      "maximum": 4456455
+    },
+    {
+      "bytes": 4194304,
+      "level": 9,
+      "kind": "poor",
+      "seed": 4294967295,
+      "actual": 4195584,
+      "maximum": 4456455
+    },
+    {
+      "bytes": 1024,
+      "level": 1,
+      "pattern": "ramp",
+      "actual": 281,
+      "maximum": 1095
+    },
+    {
+      "bytes": 1024,
+      "level": 1,
+      "pattern": "alternating",
+      "actual": 19,
+      "maximum": 1095
+    },
+    {
+      "bytes": 1024,
+      "level": 6,
+      "pattern": "ramp",
+      "actual": 280,
+      "maximum": 1095
+    },
+    {
+      "bytes": 1024,
+      "level": 6,
+      "pattern": "alternating",
+      "actual": 24,
+      "maximum": 1095
+    },
+    {
+      "bytes": 1024,
+      "level": 9,
+      "pattern": "ramp",
+      "actual": 280,
+      "maximum": 1095
+    },
+    {
+      "bytes": 1024,
+      "level": 9,
+      "pattern": "alternating",
+      "actual": 18,
+      "maximum": 1095
+    },
+    {
+      "bytes": 65536,
+      "level": 1,
+      "pattern": "ramp",
+      "actual": 851,
+      "maximum": 69639
+    },
+    {
+      "bytes": 65536,
+      "level": 1,
+      "pattern": "alternating",
+      "actual": 771,
+      "maximum": 69639
+    },
+    {
+      "bytes": 65536,
+      "level": 6,
+      "pattern": "ramp",
+      "actual": 579,
+      "maximum": 69639
+    },
+    {
+      "bytes": 65536,
+      "level": 6,
+      "pattern": "alternating",
+      "actual": 897,
+      "maximum": 69639
+    },
+    {
+      "bytes": 65536,
+      "level": 9,
+      "pattern": "ramp",
+      "actual": 579,
+      "maximum": 69639
+    },
+    {
+      "bytes": 65536,
+      "level": 9,
+      "pattern": "alternating",
+      "actual": 769,
+      "maximum": 69639
+    },
+    {
+      "bytes": 1048576,
+      "level": 1,
+      "pattern": "ramp",
+      "actual": 8145,
+      "maximum": 1114119
+    },
+    {
+      "bytes": 1048576,
+      "level": 1,
+      "pattern": "alternating",
+      "actual": 11740,
+      "maximum": 1114119
+    },
+    {
+      "bytes": 1048576,
+      "level": 6,
+      "pattern": "ramp",
+      "actual": 4390,
+      "maximum": 1114119
+    },
+    {
+      "bytes": 1048576,
+      "level": 6,
+      "pattern": "alternating",
+      "actual": 13778,
+      "maximum": 1114119
+    },
+    {
+      "bytes": 1048576,
+      "level": 9,
+      "pattern": "ramp",
+      "actual": 4390,
+      "maximum": 1114119
+    },
+    {
+      "bytes": 1048576,
+      "level": 9,
+      "pattern": "alternating",
+      "actual": 11754,
+      "maximum": 1114119
+    },
+    {
+      "bytes": 4194304,
+      "level": 1,
+      "pattern": "ramp",
+      "actual": 31529,
+      "maximum": 4456455
+    },
+    {
+      "bytes": 4194304,
+      "level": 1,
+      "pattern": "alternating",
+      "actual": 46867,
+      "maximum": 4456455
+    },
+    {
+      "bytes": 4194304,
+      "level": 6,
+      "pattern": "ramp",
+      "actual": 16595,
+      "maximum": 4456455
+    },
+    {
+      "bytes": 4194304,
+      "level": 6,
+      "pattern": "alternating",
+      "actual": 55060,
+      "maximum": 4456455
+    },
+    {
+      "bytes": 4194304,
+      "level": 9,
+      "pattern": "ramp",
+      "actual": 16595,
+      "maximum": 4456455
+    },
+    {
+      "bytes": 4194304,
+      "level": 9,
+      "pattern": "alternating",
+      "actual": 46928,
+      "maximum": 4456455
+    }
+  ]
+}

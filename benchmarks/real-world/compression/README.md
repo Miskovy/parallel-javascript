@@ -20,6 +20,19 @@ run it on Fedora with a new platform filename after reading the Windows report.
 `memory` selects six slow-sink cells, each requiring a separate process for
 attribution. Never run timing campaigns concurrently.
 
+Before any zlib-ng campaign, the codec guard verifies the exact qualified Fedora
+RPM/header/library and asks that same library for native bounds. It uses an
+installed C compiler for a temporary research helper; it installs nothing and
+adds no runtime dependency. Unknown codecs/builds fail closed. The
+[bound note](../../../docs/research/v0.14-compression-bounds.md) distinguishes the
+unchanged stock/Motley maximum from Fedora's `N + floor(N/16) + 7` maximum.
+Record explicit qualification evidence with a new filename:
+
+```sh
+node benchmarks/real-world/compression/native-diagnostic.mjs benchmarks/results/compression-v0.14-fedora-native-bound-diagnostic.json
+node benchmarks/real-world/compression/bounds.mjs benchmarks/results/compression-v0.14-fedora-bounds-qualified.json
+```
+
 ## Equivalent work and output protocol
 
 All four primary models process identical independent raw-deflate blocks with

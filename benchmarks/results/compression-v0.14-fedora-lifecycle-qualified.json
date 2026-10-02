@@ -1,0 +1,3706 @@
+{
+  "clientDate": "2026-10-02",
+  "node": "v24.13.1",
+  "codecQualification": {
+    "codec": {
+      "family": "zlib-ng",
+      "version": "1.3.1.zlib-ng",
+      "implementationVersion": "2.3.3",
+      "build": "fedora44-x86_64-compat-no-new-strategies",
+      "contract": "zlib-ng-no-quick-raw-v1"
+    },
+    "library": {
+      "path": "/usr/lib64/libz.so.1.3.1.zlib-ng",
+      "packageIdentity": "zlib-ng-compat 2.3.3 3.fc44 x86_64",
+      "sha256": "bbde8faec092a7c67b8bd76bbba4a826e61b05c171b97004ce6b308c5a090351"
+    },
+    "header": {
+      "path": "/usr/include/zlib.h",
+      "packageIdentity": "zlib-ng-compat-devel 2.3.3 3.fc44 x86_64",
+      "sha256": "8bc935aeb8909d05fe58f9286a0fe2c674a41638c374786ee888485ab5ff4409"
+    },
+    "nodeLibrary": "/usr/lib64/libnode.so.137",
+    "nodeSharedZlib": true,
+    "nodeSymbolsImported": true,
+    "compiler": "gcc (GCC) 16.1.1 20260515 (Red Hat 16.1.1-2)\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+    "compileCommand": [
+      "gcc",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "/home/miskovy/Documents/pjs/benchmarks/real-world/compression/native-bound.c",
+      "-o",
+      "/tmp/pjs-codec-qualification-lle7CG/native-bound",
+      "-ldl"
+    ],
+    "helperCommand": [
+      "/tmp/pjs-codec-qualification-lle7CG/native-bound",
+      "/usr/lib64/libz.so.1.3.1.zlib-ng",
+      "0",
+      "1",
+      "2",
+      "3",
+      "7",
+      "8",
+      "9",
+      "15",
+      "16",
+      "17",
+      "63",
+      "64",
+      "65",
+      "127",
+      "128",
+      "255",
+      "256",
+      "1023",
+      "1024",
+      "1025",
+      "4095",
+      "4096",
+      "4097",
+      "16383",
+      "16384",
+      "16385",
+      "65535",
+      "65536",
+      "65537",
+      "262143",
+      "262144",
+      "262145",
+      "1048575",
+      "1048576",
+      "1048577",
+      "4194304",
+      "8388608"
+    ],
+    "helperSourceSha256": "03ce67b197a0015661a424060109fd1722774500c962e9e9fc63ca0d6840f51e",
+    "helperLinkage": "linux-vdso.so.1 (0x00007fb6baa2b000)\n\tlibc.so.6 => /lib64/libc.so.6 (0x00007fb6ba810000)\n\t/lib64/ld-linux-x86-64.so.2 (0x00007fb6baa2d000)",
+    "native": {
+      "headerVersion": "1.3.1.zlib-ng",
+      "libraryVersion": "1.3.1.zlib-ng",
+      "libraryPath": "/usr/lib64/libz.so.1.3.1.zlib-ng",
+      "streamSize": 112,
+      "rows": [
+        {
+          "inputBytes": 0,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 7
+        },
+        {
+          "inputBytes": 0,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 7
+        },
+        {
+          "inputBytes": 0,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 7
+        },
+        {
+          "inputBytes": 0,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 13
+        },
+        {
+          "inputBytes": 0,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 13
+        },
+        {
+          "inputBytes": 0,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 13
+        },
+        {
+          "inputBytes": 0,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 25
+        },
+        {
+          "inputBytes": 0,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 25
+        },
+        {
+          "inputBytes": 0,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 25
+        },
+        {
+          "inputBytes": 1,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 8
+        },
+        {
+          "inputBytes": 1,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 8
+        },
+        {
+          "inputBytes": 1,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 8
+        },
+        {
+          "inputBytes": 1,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 14
+        },
+        {
+          "inputBytes": 1,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 14
+        },
+        {
+          "inputBytes": 1,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 14
+        },
+        {
+          "inputBytes": 1,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 26
+        },
+        {
+          "inputBytes": 1,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 26
+        },
+        {
+          "inputBytes": 1,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 26
+        },
+        {
+          "inputBytes": 2,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 9
+        },
+        {
+          "inputBytes": 2,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 9
+        },
+        {
+          "inputBytes": 2,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 9
+        },
+        {
+          "inputBytes": 2,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 15
+        },
+        {
+          "inputBytes": 2,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 15
+        },
+        {
+          "inputBytes": 2,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 15
+        },
+        {
+          "inputBytes": 2,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 27
+        },
+        {
+          "inputBytes": 2,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 27
+        },
+        {
+          "inputBytes": 2,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 27
+        },
+        {
+          "inputBytes": 3,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 10
+        },
+        {
+          "inputBytes": 3,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 10
+        },
+        {
+          "inputBytes": 3,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 10
+        },
+        {
+          "inputBytes": 3,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 16
+        },
+        {
+          "inputBytes": 3,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 16
+        },
+        {
+          "inputBytes": 3,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 16
+        },
+        {
+          "inputBytes": 3,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 28
+        },
+        {
+          "inputBytes": 3,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 28
+        },
+        {
+          "inputBytes": 3,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 28
+        },
+        {
+          "inputBytes": 7,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 14
+        },
+        {
+          "inputBytes": 7,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 14
+        },
+        {
+          "inputBytes": 7,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 14
+        },
+        {
+          "inputBytes": 7,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 20
+        },
+        {
+          "inputBytes": 7,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 20
+        },
+        {
+          "inputBytes": 7,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 20
+        },
+        {
+          "inputBytes": 7,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 32
+        },
+        {
+          "inputBytes": 7,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 32
+        },
+        {
+          "inputBytes": 7,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 32
+        },
+        {
+          "inputBytes": 8,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 15
+        },
+        {
+          "inputBytes": 8,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 15
+        },
+        {
+          "inputBytes": 8,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 15
+        },
+        {
+          "inputBytes": 8,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 21
+        },
+        {
+          "inputBytes": 8,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 21
+        },
+        {
+          "inputBytes": 8,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 21
+        },
+        {
+          "inputBytes": 8,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 33
+        },
+        {
+          "inputBytes": 8,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 33
+        },
+        {
+          "inputBytes": 8,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 33
+        },
+        {
+          "inputBytes": 9,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 16
+        },
+        {
+          "inputBytes": 9,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 16
+        },
+        {
+          "inputBytes": 9,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 16
+        },
+        {
+          "inputBytes": 9,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 22
+        },
+        {
+          "inputBytes": 9,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 22
+        },
+        {
+          "inputBytes": 9,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 22
+        },
+        {
+          "inputBytes": 9,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 34
+        },
+        {
+          "inputBytes": 9,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 34
+        },
+        {
+          "inputBytes": 9,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 34
+        },
+        {
+          "inputBytes": 15,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 22
+        },
+        {
+          "inputBytes": 15,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 22
+        },
+        {
+          "inputBytes": 15,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 22
+        },
+        {
+          "inputBytes": 15,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 28
+        },
+        {
+          "inputBytes": 15,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 28
+        },
+        {
+          "inputBytes": 15,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 28
+        },
+        {
+          "inputBytes": 15,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 40
+        },
+        {
+          "inputBytes": 15,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 40
+        },
+        {
+          "inputBytes": 15,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 40
+        },
+        {
+          "inputBytes": 16,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 24
+        },
+        {
+          "inputBytes": 16,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 24
+        },
+        {
+          "inputBytes": 16,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 24
+        },
+        {
+          "inputBytes": 16,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 30
+        },
+        {
+          "inputBytes": 16,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 30
+        },
+        {
+          "inputBytes": 16,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 30
+        },
+        {
+          "inputBytes": 16,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 42
+        },
+        {
+          "inputBytes": 16,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 42
+        },
+        {
+          "inputBytes": 16,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 42
+        },
+        {
+          "inputBytes": 17,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 25
+        },
+        {
+          "inputBytes": 17,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 25
+        },
+        {
+          "inputBytes": 17,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 25
+        },
+        {
+          "inputBytes": 17,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 31
+        },
+        {
+          "inputBytes": 17,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 31
+        },
+        {
+          "inputBytes": 17,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 31
+        },
+        {
+          "inputBytes": 17,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 43
+        },
+        {
+          "inputBytes": 17,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 43
+        },
+        {
+          "inputBytes": 17,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 43
+        },
+        {
+          "inputBytes": 63,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 73
+        },
+        {
+          "inputBytes": 63,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 73
+        },
+        {
+          "inputBytes": 63,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 73
+        },
+        {
+          "inputBytes": 63,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 79
+        },
+        {
+          "inputBytes": 63,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 79
+        },
+        {
+          "inputBytes": 63,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 79
+        },
+        {
+          "inputBytes": 63,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 91
+        },
+        {
+          "inputBytes": 63,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 91
+        },
+        {
+          "inputBytes": 63,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 91
+        },
+        {
+          "inputBytes": 64,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 75
+        },
+        {
+          "inputBytes": 64,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 75
+        },
+        {
+          "inputBytes": 64,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 75
+        },
+        {
+          "inputBytes": 64,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 81
+        },
+        {
+          "inputBytes": 64,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 81
+        },
+        {
+          "inputBytes": 64,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 81
+        },
+        {
+          "inputBytes": 64,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 93
+        },
+        {
+          "inputBytes": 64,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 93
+        },
+        {
+          "inputBytes": 64,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 93
+        },
+        {
+          "inputBytes": 65,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 76
+        },
+        {
+          "inputBytes": 65,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 76
+        },
+        {
+          "inputBytes": 65,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 76
+        },
+        {
+          "inputBytes": 65,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 82
+        },
+        {
+          "inputBytes": 65,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 82
+        },
+        {
+          "inputBytes": 65,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 82
+        },
+        {
+          "inputBytes": 65,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 94
+        },
+        {
+          "inputBytes": 65,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 94
+        },
+        {
+          "inputBytes": 65,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 94
+        },
+        {
+          "inputBytes": 127,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 141
+        },
+        {
+          "inputBytes": 127,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 141
+        },
+        {
+          "inputBytes": 127,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 141
+        },
+        {
+          "inputBytes": 127,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 147
+        },
+        {
+          "inputBytes": 127,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 147
+        },
+        {
+          "inputBytes": 127,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 147
+        },
+        {
+          "inputBytes": 127,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 159
+        },
+        {
+          "inputBytes": 127,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 159
+        },
+        {
+          "inputBytes": 127,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 159
+        },
+        {
+          "inputBytes": 128,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 143
+        },
+        {
+          "inputBytes": 128,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 143
+        },
+        {
+          "inputBytes": 128,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 143
+        },
+        {
+          "inputBytes": 128,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 149
+        },
+        {
+          "inputBytes": 128,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 149
+        },
+        {
+          "inputBytes": 128,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 149
+        },
+        {
+          "inputBytes": 128,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 161
+        },
+        {
+          "inputBytes": 128,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 161
+        },
+        {
+          "inputBytes": 128,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 161
+        },
+        {
+          "inputBytes": 255,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 277
+        },
+        {
+          "inputBytes": 255,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 277
+        },
+        {
+          "inputBytes": 255,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 277
+        },
+        {
+          "inputBytes": 255,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 283
+        },
+        {
+          "inputBytes": 255,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 283
+        },
+        {
+          "inputBytes": 255,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 283
+        },
+        {
+          "inputBytes": 255,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 295
+        },
+        {
+          "inputBytes": 255,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 295
+        },
+        {
+          "inputBytes": 255,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 295
+        },
+        {
+          "inputBytes": 256,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 279
+        },
+        {
+          "inputBytes": 256,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 279
+        },
+        {
+          "inputBytes": 256,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 279
+        },
+        {
+          "inputBytes": 256,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 285
+        },
+        {
+          "inputBytes": 256,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 285
+        },
+        {
+          "inputBytes": 256,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 285
+        },
+        {
+          "inputBytes": 256,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 297
+        },
+        {
+          "inputBytes": 256,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 297
+        },
+        {
+          "inputBytes": 256,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 297
+        },
+        {
+          "inputBytes": 1023,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 1093
+        },
+        {
+          "inputBytes": 1023,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 1093
+        },
+        {
+          "inputBytes": 1023,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 1093
+        },
+        {
+          "inputBytes": 1023,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 1099
+        },
+        {
+          "inputBytes": 1023,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 1099
+        },
+        {
+          "inputBytes": 1023,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 1099
+        },
+        {
+          "inputBytes": 1023,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 1111
+        },
+        {
+          "inputBytes": 1023,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 1111
+        },
+        {
+          "inputBytes": 1023,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 1111
+        },
+        {
+          "inputBytes": 1024,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 1095
+        },
+        {
+          "inputBytes": 1024,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 1095
+        },
+        {
+          "inputBytes": 1024,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 1095
+        },
+        {
+          "inputBytes": 1024,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 1101
+        },
+        {
+          "inputBytes": 1024,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 1101
+        },
+        {
+          "inputBytes": 1024,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 1101
+        },
+        {
+          "inputBytes": 1024,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 1113
+        },
+        {
+          "inputBytes": 1024,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 1113
+        },
+        {
+          "inputBytes": 1024,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 1113
+        },
+        {
+          "inputBytes": 1025,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 1096
+        },
+        {
+          "inputBytes": 1025,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 1096
+        },
+        {
+          "inputBytes": 1025,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 1096
+        },
+        {
+          "inputBytes": 1025,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 1102
+        },
+        {
+          "inputBytes": 1025,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 1102
+        },
+        {
+          "inputBytes": 1025,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 1102
+        },
+        {
+          "inputBytes": 1025,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 1114
+        },
+        {
+          "inputBytes": 1025,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 1114
+        },
+        {
+          "inputBytes": 1025,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 1114
+        },
+        {
+          "inputBytes": 4095,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 4357
+        },
+        {
+          "inputBytes": 4095,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 4357
+        },
+        {
+          "inputBytes": 4095,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 4357
+        },
+        {
+          "inputBytes": 4095,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 4363
+        },
+        {
+          "inputBytes": 4095,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 4363
+        },
+        {
+          "inputBytes": 4095,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 4363
+        },
+        {
+          "inputBytes": 4095,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 4375
+        },
+        {
+          "inputBytes": 4095,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 4375
+        },
+        {
+          "inputBytes": 4095,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 4375
+        },
+        {
+          "inputBytes": 4096,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 4359
+        },
+        {
+          "inputBytes": 4096,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 4359
+        },
+        {
+          "inputBytes": 4096,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 4359
+        },
+        {
+          "inputBytes": 4096,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 4365
+        },
+        {
+          "inputBytes": 4096,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 4365
+        },
+        {
+          "inputBytes": 4096,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 4365
+        },
+        {
+          "inputBytes": 4096,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 4377
+        },
+        {
+          "inputBytes": 4096,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 4377
+        },
+        {
+          "inputBytes": 4096,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 4377
+        },
+        {
+          "inputBytes": 4097,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 4360
+        },
+        {
+          "inputBytes": 4097,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 4360
+        },
+        {
+          "inputBytes": 4097,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 4360
+        },
+        {
+          "inputBytes": 4097,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 4366
+        },
+        {
+          "inputBytes": 4097,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 4366
+        },
+        {
+          "inputBytes": 4097,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 4366
+        },
+        {
+          "inputBytes": 4097,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 4378
+        },
+        {
+          "inputBytes": 4097,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 4378
+        },
+        {
+          "inputBytes": 4097,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 4378
+        },
+        {
+          "inputBytes": 16383,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 17413
+        },
+        {
+          "inputBytes": 16383,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 17413
+        },
+        {
+          "inputBytes": 16383,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 17413
+        },
+        {
+          "inputBytes": 16383,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 17419
+        },
+        {
+          "inputBytes": 16383,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 17419
+        },
+        {
+          "inputBytes": 16383,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 17419
+        },
+        {
+          "inputBytes": 16383,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 17431
+        },
+        {
+          "inputBytes": 16383,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 17431
+        },
+        {
+          "inputBytes": 16383,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 17431
+        },
+        {
+          "inputBytes": 16384,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 17415
+        },
+        {
+          "inputBytes": 16384,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 17415
+        },
+        {
+          "inputBytes": 16384,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 17415
+        },
+        {
+          "inputBytes": 16384,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 17421
+        },
+        {
+          "inputBytes": 16384,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 17421
+        },
+        {
+          "inputBytes": 16384,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 17421
+        },
+        {
+          "inputBytes": 16384,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 17433
+        },
+        {
+          "inputBytes": 16384,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 17433
+        },
+        {
+          "inputBytes": 16384,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 17433
+        },
+        {
+          "inputBytes": 16385,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 17416
+        },
+        {
+          "inputBytes": 16385,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 17416
+        },
+        {
+          "inputBytes": 16385,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 17416
+        },
+        {
+          "inputBytes": 16385,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 17422
+        },
+        {
+          "inputBytes": 16385,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 17422
+        },
+        {
+          "inputBytes": 16385,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 17422
+        },
+        {
+          "inputBytes": 16385,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 17434
+        },
+        {
+          "inputBytes": 16385,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 17434
+        },
+        {
+          "inputBytes": 16385,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 17434
+        },
+        {
+          "inputBytes": 65535,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 69637
+        },
+        {
+          "inputBytes": 65535,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 69637
+        },
+        {
+          "inputBytes": 65535,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 69637
+        },
+        {
+          "inputBytes": 65535,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 69643
+        },
+        {
+          "inputBytes": 65535,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 69643
+        },
+        {
+          "inputBytes": 65535,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 69643
+        },
+        {
+          "inputBytes": 65535,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 69655
+        },
+        {
+          "inputBytes": 65535,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 69655
+        },
+        {
+          "inputBytes": 65535,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 69655
+        },
+        {
+          "inputBytes": 65536,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 69639
+        },
+        {
+          "inputBytes": 65536,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 69639
+        },
+        {
+          "inputBytes": 65536,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 69639
+        },
+        {
+          "inputBytes": 65536,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 69645
+        },
+        {
+          "inputBytes": 65536,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 69645
+        },
+        {
+          "inputBytes": 65536,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 69645
+        },
+        {
+          "inputBytes": 65536,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 69657
+        },
+        {
+          "inputBytes": 65536,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 69657
+        },
+        {
+          "inputBytes": 65536,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 69657
+        },
+        {
+          "inputBytes": 65537,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 69640
+        },
+        {
+          "inputBytes": 65537,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 69640
+        },
+        {
+          "inputBytes": 65537,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 69640
+        },
+        {
+          "inputBytes": 65537,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 69646
+        },
+        {
+          "inputBytes": 65537,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 69646
+        },
+        {
+          "inputBytes": 65537,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 69646
+        },
+        {
+          "inputBytes": 65537,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 69658
+        },
+        {
+          "inputBytes": 65537,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 69658
+        },
+        {
+          "inputBytes": 65537,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 69658
+        },
+        {
+          "inputBytes": 262143,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 278533
+        },
+        {
+          "inputBytes": 262143,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 278533
+        },
+        {
+          "inputBytes": 262143,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 278533
+        },
+        {
+          "inputBytes": 262143,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 278539
+        },
+        {
+          "inputBytes": 262143,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 278539
+        },
+        {
+          "inputBytes": 262143,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 278539
+        },
+        {
+          "inputBytes": 262143,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 278551
+        },
+        {
+          "inputBytes": 262143,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 278551
+        },
+        {
+          "inputBytes": 262143,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 278551
+        },
+        {
+          "inputBytes": 262144,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 278535
+        },
+        {
+          "inputBytes": 262144,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 278535
+        },
+        {
+          "inputBytes": 262144,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 278535
+        },
+        {
+          "inputBytes": 262144,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 278541
+        },
+        {
+          "inputBytes": 262144,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 278541
+        },
+        {
+          "inputBytes": 262144,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 278541
+        },
+        {
+          "inputBytes": 262144,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 278553
+        },
+        {
+          "inputBytes": 262144,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 278553
+        },
+        {
+          "inputBytes": 262144,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 278553
+        },
+        {
+          "inputBytes": 262145,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 278536
+        },
+        {
+          "inputBytes": 262145,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 278536
+        },
+        {
+          "inputBytes": 262145,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 278536
+        },
+        {
+          "inputBytes": 262145,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 278542
+        },
+        {
+          "inputBytes": 262145,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 278542
+        },
+        {
+          "inputBytes": 262145,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 278542
+        },
+        {
+          "inputBytes": 262145,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 278554
+        },
+        {
+          "inputBytes": 262145,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 278554
+        },
+        {
+          "inputBytes": 262145,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 278554
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 1114117
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 1114117
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 1114117
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 1114123
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 1114123
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 1114123
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 1114135
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 1114135
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 1114135
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 1114119
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 1114119
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 1114119
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 1114125
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 1114125
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 1114125
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 1114137
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 1114137
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 1114137
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 1114120
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 1114120
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 1114120
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 1114126
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 1114126
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 1114126
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 1114138
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 1114138
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 1114138
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 4456455
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 4456455
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 4456455
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 4456461
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 4456461
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 4456461
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 4456473
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 4456473
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 4456473
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 8912903
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 8912903
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 8912903
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 8912909
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 8912909
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 8912909
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 8912921
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 8912921
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 8912921
+        }
+      ]
+    }
+  },
+  "runtimeHashes": {
+    "packages/runtime/src/dispatch/dispatcher.ts": "a448344e4977d60338c0b503c92b49d67d9bccfe0c08c101ca3d376593ac3ada",
+    "packages/runtime/src/errors/index.ts": "2f1458c63366be67919f51866acd7e1a9966300166c39f164c481913d0b1f4e7",
+    "packages/runtime/src/index.ts": "96d3697fde71fc4a46943c52f5556c1b63227f2b792650c14cf29bfd073cef44",
+    "packages/runtime/src/internal/integer.ts": "c1d5f34cd7a4d6aa228910e0a7e7f7929e21bea0f84e231d5984a3b7e7d51b6c",
+    "packages/runtime/src/partition/binary.ts": "20e4ff84ea39912befa189a5a3e5f57739e249d3954c3d7aea6cfa45e1b97120",
+    "packages/runtime/src/partition/coordinator.ts": "3afae72cfa583b5c04b8645a09af3dcf603139f1b4268204bd35627f2f185cde",
+    "packages/runtime/src/partition/operation.ts": "e5ec55abcb8a90fca7df99c7b7ade39c5ae2fa2358efd1a11e5edc8b438384e1",
+    "packages/runtime/src/partition/range.ts": "c985cb95b03c2c339f18f1cae44ca7f77eca7eb2908afe946f11b71c724a1489",
+    "packages/runtime/src/partition/stream.ts": "09d2dcb73771334c0a4fb9647c6234d59acdef43e3170045d8c8e810a7017566",
+    "packages/runtime/src/pool/pool.ts": "880be0c7764e184bf3e8ccfee8fa63bf3c2f26e81d40aab5e2cdb94827849ec5",
+    "packages/runtime/src/results/credit.ts": "acc35c91bb5bfc48e95356d466377c0ad42ef97a2f5c765b25ef9898a5fc078f",
+    "packages/runtime/src/runtime.ts": "53e0013365563a2235bca5d082a753996846529d42efcf9bb5378c81e1d26e81",
+    "packages/runtime/src/scheduler/fifo.ts": "caa0307b7ce3b71d412ae9b432ad90cd946eed209958d88a1d6f9a13d481e014",
+    "packages/runtime/src/tasks/coordinator.ts": "05b6f044c538a438827e8ab7c16071ac04aeb89b12122c8fc48f2dd8239767d7",
+    "packages/runtime/src/tasks/registry.ts": "b0698736068769a2b7ab2b8c1cbf2179650f7b41701e82ab4dccf8e8c8254eca",
+    "packages/runtime/src/tasks/shared.ts": "d3a6b371f5b20657bf47d6b84f6c7d7bd4cfec0f0395b6bade2ac828ee5a3ca5",
+    "packages/runtime/src/tasks/task.ts": "92eb849cc4b2921c347656edabf6a813b323e9295c46c7255dddc89330f820f5",
+    "packages/runtime/src/tasks/transfer.ts": "9de35965f11f40ab7697ca8e5439af634fe8122829c357c3b36f310dbfd278ac",
+    "packages/runtime/src/telemetry/metrics.ts": "031d1994dd4fec40d50b265f4e59c00dd9348d089d507ed87019bb1fef7b088e",
+    "packages/runtime/src/telemetry/profile.ts": "831b42554f3dcb74a45ae42bdfca5811eab921d8c248986ca1859af26f9496f7",
+    "packages/runtime/src/telemetry/runtime.ts": "de144702cc694650fb5d7d50ff76109a6cfe9ef5ef3aecc3825a9a3e911fe6e7",
+    "packages/runtime/src/types/index.ts": "7a252af8bb57fe42ac43f015a73ee111afd932725da039ffd77c36140c7b35fa",
+    "packages/runtime/src/workers/bootstrap.ts": "f19fbfb8f0a27d1e3e97cc7599bdfc8922d7502557af9a71c4bf2e9cf0c6d2e9",
+    "packages/runtime/src/workers/protocol.ts": "d8f66b337c21563d0c510b2bc72ae1db3a70d065da22d2374583d1bd8d1f5d90",
+    "packages/runtime/src/workers/worker.ts": "715f1583dcabc07b4e9b8288a89b29f7a6ccb1671834f11b56f1b0e681b4809d"
+  },
+  "complete": true,
+  "results": [
+    {
+      "mode": "abort",
+      "active": {
+        "stats": {
+          "state": "running",
+          "workers": {
+            "total": 2,
+            "busy": 2,
+            "idle": 0,
+            "starting": 0,
+            "failures": 0,
+            "restarts": 0,
+            "details": [
+              {
+                "id": 1,
+                "threadId": 1,
+                "status": "busy",
+                "completedTasks": 0,
+                "failedTasks": 0,
+                "totalExecutionTimeMs": 0,
+                "currentTaskId": "bc7549e4-d8f5-4d5b-96fd-0ed8886149fc"
+              },
+              {
+                "id": 2,
+                "threadId": 2,
+                "status": "busy",
+                "completedTasks": 0,
+                "failedTasks": 0,
+                "totalExecutionTimeMs": 0,
+                "currentTaskId": "13b34a5f-fef5-409d-a1d1-38f5fa69b525"
+              }
+            ]
+          },
+          "queue": {
+            "size": 0,
+            "capacity": 128
+          },
+          "tasks": {
+            "accepted": 2,
+            "rejected": 0,
+            "pending": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 2,
+            "timedOut": 0
+          },
+          "timing": {
+            "averageQueueMs": 0.46724899999998115,
+            "averageExecutionMs": 0,
+            "averageTotalMs": 7.258047999999974,
+            "queueSamples": 2,
+            "executionSamples": 0,
+            "settledSamples": 2
+          },
+          "operations": {
+            "accepted": 1,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 1,
+            "timedOut": 0,
+            "pending": 0,
+            "capacity": 130,
+            "collecting": {
+              "accepted": 0,
+              "rejected": 0,
+              "completed": 0,
+              "failed": 0,
+              "cancelled": 0,
+              "timedOut": 0,
+              "pending": 0
+            },
+            "completion": {
+              "accepted": 0,
+              "rejected": 0,
+              "completed": 0,
+              "failed": 0,
+              "cancelled": 0,
+              "timedOut": 0,
+              "pending": 0
+            },
+            "streaming": {
+              "accepted": 1,
+              "rejected": 0,
+              "completed": 0,
+              "failed": 0,
+              "cancelled": 1,
+              "timedOut": 0,
+              "pending": 0
+            },
+            "mapping": {
+              "accepted": 0,
+              "rejected": 0,
+              "completed": 0,
+              "failed": 0,
+              "cancelled": 0,
+              "timedOut": 0,
+              "pending": 0
+            }
+          },
+          "streams": {
+            "accepted": 1,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 1,
+            "timedOut": 0,
+            "pending": 0
+          },
+          "streamResults": {
+            "produced": 0,
+            "yielded": 0,
+            "peakBuffered": 0,
+            "peakKnownBufferedPayloadBytes": 0,
+            "peakUnknownBufferedResults": 0,
+            "currentReservedResultBytes": 2228238,
+            "peakReservedResultBytes": 2228238,
+            "resultByteReservationWaits": 0,
+            "resultByteReservationRejected": 0,
+            "binaryResultContractFailures": 0,
+            "upperBoundContractFailures": 0,
+            "upperBoundResultsReconciled": 0,
+            "resultByteRefunds": 0,
+            "refundedResultBytes": 0,
+            "buffered": 0,
+            "knownBufferedPayloadBytes": 0,
+            "unknownBufferedResults": 0
+          },
+          "maps": {
+            "accepted": 0,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 0,
+            "timedOut": 0,
+            "pending": 0
+          },
+          "mapResults": {
+            "blocks": 0,
+            "elements": 0,
+            "assemblyMs": 0
+          },
+          "partitions": {
+            "generated": 2,
+            "admitted": 2,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 2
+          },
+          "dispatch": {
+            "executeMessages": 2,
+            "resultMessages": 0,
+            "batchedExecuteMessages": 0,
+            "logicalTasks": 2,
+            "logicalPartitions": 2,
+            "averageLogicalTasksPerExecute": 1
+          },
+          "activeOperations": [],
+          "activeTasks": []
+        },
+        "credits": {
+          "reservations": 2,
+          "executions": 2,
+          "operations": 1
+        }
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      },
+      "refunds": 0
+    },
+    {
+      "mode": "consumer-break",
+      "active": {
+        "stats": {
+          "state": "running",
+          "workers": {
+            "total": 2,
+            "busy": 2,
+            "idle": 0,
+            "starting": 0,
+            "failures": 0,
+            "restarts": 0,
+            "details": [
+              {
+                "id": 1,
+                "threadId": 3,
+                "status": "busy",
+                "completedTasks": 1,
+                "failedTasks": 0,
+                "totalExecutionTimeMs": 24.68624299999999,
+                "currentTaskId": "b09d7499-00f8-447b-a47c-839c20aa67f7"
+              },
+              {
+                "id": 2,
+                "threadId": 4,
+                "status": "busy",
+                "completedTasks": 0,
+                "failedTasks": 0,
+                "totalExecutionTimeMs": 0,
+                "currentTaskId": "a2dbd9b8-8349-4f75-a632-b923dba0409f"
+              }
+            ]
+          },
+          "queue": {
+            "size": 0,
+            "capacity": 128
+          },
+          "tasks": {
+            "accepted": 3,
+            "rejected": 0,
+            "pending": 0,
+            "completed": 1,
+            "failed": 0,
+            "cancelled": 2,
+            "timedOut": 0
+          },
+          "timing": {
+            "averageQueueMs": 0.10369366666664821,
+            "averageExecutionMs": 24.68624299999999,
+            "averageTotalMs": 20.865487666666656,
+            "queueSamples": 3,
+            "executionSamples": 1,
+            "settledSamples": 3
+          },
+          "operations": {
+            "accepted": 1,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 1,
+            "timedOut": 0,
+            "pending": 0,
+            "capacity": 130,
+            "collecting": {
+              "accepted": 0,
+              "rejected": 0,
+              "completed": 0,
+              "failed": 0,
+              "cancelled": 0,
+              "timedOut": 0,
+              "pending": 0
+            },
+            "completion": {
+              "accepted": 0,
+              "rejected": 0,
+              "completed": 0,
+              "failed": 0,
+              "cancelled": 0,
+              "timedOut": 0,
+              "pending": 0
+            },
+            "streaming": {
+              "accepted": 1,
+              "rejected": 0,
+              "completed": 0,
+              "failed": 0,
+              "cancelled": 1,
+              "timedOut": 0,
+              "pending": 0
+            },
+            "mapping": {
+              "accepted": 0,
+              "rejected": 0,
+              "completed": 0,
+              "failed": 0,
+              "cancelled": 0,
+              "timedOut": 0,
+              "pending": 0
+            }
+          },
+          "streams": {
+            "accepted": 1,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 1,
+            "timedOut": 0,
+            "pending": 0
+          },
+          "streamResults": {
+            "produced": 1,
+            "yielded": 1,
+            "peakBuffered": 0,
+            "peakKnownBufferedPayloadBytes": 0,
+            "peakUnknownBufferedResults": 0,
+            "currentReservedResultBytes": 2228238,
+            "peakReservedResultBytes": 2228238,
+            "resultByteReservationWaits": 0,
+            "resultByteReservationRejected": 0,
+            "binaryResultContractFailures": 0,
+            "upperBoundContractFailures": 0,
+            "upperBoundResultsReconciled": 1,
+            "resultByteRefunds": 1,
+            "refundedResultBytes": 65218,
+            "buffered": 0,
+            "knownBufferedPayloadBytes": 0,
+            "unknownBufferedResults": 0
+          },
+          "maps": {
+            "accepted": 0,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 0,
+            "timedOut": 0,
+            "pending": 0
+          },
+          "mapResults": {
+            "blocks": 0,
+            "elements": 0,
+            "assemblyMs": 0
+          },
+          "partitions": {
+            "generated": 3,
+            "admitted": 3,
+            "completed": 1,
+            "failed": 0,
+            "cancelled": 2
+          },
+          "dispatch": {
+            "executeMessages": 3,
+            "resultMessages": 1,
+            "batchedExecuteMessages": 0,
+            "logicalTasks": 3,
+            "logicalPartitions": 3,
+            "averageLogicalTasksPerExecute": 1
+          },
+          "activeOperations": [],
+          "activeTasks": []
+        },
+        "credits": {
+          "reservations": 2,
+          "executions": 2,
+          "operations": 1
+        }
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "mode": "crash",
+      "workers": {
+        "total": 2,
+        "busy": 0,
+        "idle": 2,
+        "starting": 0,
+        "failures": 1,
+        "restarts": 1,
+        "details": [
+          {
+            "id": 2,
+            "threadId": 6,
+            "status": "idle",
+            "completedTasks": 2,
+            "failedTasks": 0,
+            "totalExecutionTimeMs": 49.07745299999988
+          },
+          {
+            "id": 3,
+            "threadId": 7,
+            "status": "idle",
+            "completedTasks": 0,
+            "failedTasks": 0,
+            "totalExecutionTimeMs": 0
+          }
+        ]
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "mode": "upper-contract",
+      "stats": {
+        "state": "running",
+        "workers": {
+          "total": 2,
+          "busy": 0,
+          "idle": 2,
+          "starting": 0,
+          "failures": 0,
+          "restarts": 0,
+          "details": [
+            {
+              "id": 1,
+              "threadId": 8,
+              "status": "idle",
+              "completedTasks": 0,
+              "failedTasks": 1,
+              "totalExecutionTimeMs": 25.27106600000002
+            },
+            {
+              "id": 2,
+              "threadId": 9,
+              "status": "idle",
+              "completedTasks": 0,
+              "failedTasks": 0,
+              "totalExecutionTimeMs": 0
+            }
+          ]
+        },
+        "queue": {
+          "size": 0,
+          "capacity": 128
+        },
+        "tasks": {
+          "accepted": 1,
+          "rejected": 0,
+          "pending": 0,
+          "completed": 0,
+          "failed": 1,
+          "cancelled": 0,
+          "timedOut": 0
+        },
+        "timing": {
+          "averageQueueMs": 0.07914800000003197,
+          "averageExecutionMs": 25.27106600000002,
+          "averageTotalMs": 29.996396000000004,
+          "queueSamples": 1,
+          "executionSamples": 1,
+          "settledSamples": 1
+        },
+        "operations": {
+          "accepted": 1,
+          "rejected": 0,
+          "completed": 0,
+          "failed": 1,
+          "cancelled": 0,
+          "timedOut": 0,
+          "pending": 0,
+          "capacity": 130,
+          "collecting": {
+            "accepted": 0,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 0,
+            "timedOut": 0,
+            "pending": 0
+          },
+          "completion": {
+            "accepted": 0,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 0,
+            "timedOut": 0,
+            "pending": 0
+          },
+          "streaming": {
+            "accepted": 1,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 1,
+            "cancelled": 0,
+            "timedOut": 0,
+            "pending": 0
+          },
+          "mapping": {
+            "accepted": 0,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 0,
+            "timedOut": 0,
+            "pending": 0
+          }
+        },
+        "streams": {
+          "accepted": 1,
+          "rejected": 0,
+          "completed": 0,
+          "failed": 1,
+          "cancelled": 0,
+          "timedOut": 0,
+          "pending": 0
+        },
+        "streamResults": {
+          "produced": 0,
+          "yielded": 0,
+          "peakBuffered": 0,
+          "peakKnownBufferedPayloadBytes": 0,
+          "peakUnknownBufferedResults": 0,
+          "currentReservedResultBytes": 0,
+          "peakReservedResultBytes": 1048900,
+          "resultByteReservationWaits": 0,
+          "resultByteReservationRejected": 0,
+          "binaryResultContractFailures": 1,
+          "upperBoundContractFailures": 1,
+          "upperBoundResultsReconciled": 0,
+          "resultByteRefunds": 0,
+          "refundedResultBytes": 0,
+          "buffered": 0,
+          "knownBufferedPayloadBytes": 0,
+          "unknownBufferedResults": 0
+        },
+        "maps": {
+          "accepted": 0,
+          "rejected": 0,
+          "completed": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "timedOut": 0,
+          "pending": 0
+        },
+        "mapResults": {
+          "blocks": 0,
+          "elements": 0,
+          "assemblyMs": 0
+        },
+        "partitions": {
+          "generated": 1,
+          "admitted": 1,
+          "completed": 0,
+          "failed": 1,
+          "cancelled": 0
+        },
+        "dispatch": {
+          "executeMessages": 1,
+          "resultMessages": 1,
+          "batchedExecuteMessages": 0,
+          "logicalTasks": 1,
+          "logicalPartitions": 1,
+          "averageLogicalTasksPerExecute": 1
+        },
+        "activeOperations": [],
+        "activeTasks": []
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "mode": "exact-contract",
+      "stats": {
+        "state": "running",
+        "workers": {
+          "total": 2,
+          "busy": 0,
+          "idle": 2,
+          "starting": 0,
+          "failures": 0,
+          "restarts": 0,
+          "details": [
+            {
+              "id": 1,
+              "threadId": 10,
+              "status": "idle",
+              "completedTasks": 0,
+              "failedTasks": 1,
+              "totalExecutionTimeMs": 2.9674509999999827
+            },
+            {
+              "id": 2,
+              "threadId": 11,
+              "status": "idle",
+              "completedTasks": 0,
+              "failedTasks": 0,
+              "totalExecutionTimeMs": 0
+            }
+          ]
+        },
+        "queue": {
+          "size": 0,
+          "capacity": 128
+        },
+        "tasks": {
+          "accepted": 1,
+          "rejected": 0,
+          "pending": 0,
+          "completed": 0,
+          "failed": 1,
+          "cancelled": 0,
+          "timedOut": 0
+        },
+        "timing": {
+          "averageQueueMs": 0.08463800000004085,
+          "averageExecutionMs": 2.9674509999999827,
+          "averageTotalMs": 5.473510000000033,
+          "queueSamples": 1,
+          "executionSamples": 1,
+          "settledSamples": 1
+        },
+        "operations": {
+          "accepted": 1,
+          "rejected": 0,
+          "completed": 0,
+          "failed": 1,
+          "cancelled": 0,
+          "timedOut": 0,
+          "pending": 0,
+          "capacity": 130,
+          "collecting": {
+            "accepted": 0,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 0,
+            "timedOut": 0,
+            "pending": 0
+          },
+          "completion": {
+            "accepted": 0,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 0,
+            "timedOut": 0,
+            "pending": 0
+          },
+          "streaming": {
+            "accepted": 1,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 1,
+            "cancelled": 0,
+            "timedOut": 0,
+            "pending": 0
+          },
+          "mapping": {
+            "accepted": 0,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 0,
+            "timedOut": 0,
+            "pending": 0
+          }
+        },
+        "streams": {
+          "accepted": 1,
+          "rejected": 0,
+          "completed": 0,
+          "failed": 1,
+          "cancelled": 0,
+          "timedOut": 0,
+          "pending": 0
+        },
+        "streamResults": {
+          "produced": 0,
+          "yielded": 0,
+          "peakBuffered": 0,
+          "peakKnownBufferedPayloadBytes": 0,
+          "peakUnknownBufferedResults": 0,
+          "currentReservedResultBytes": 0,
+          "peakReservedResultBytes": 1048575,
+          "resultByteReservationWaits": 0,
+          "resultByteReservationRejected": 0,
+          "binaryResultContractFailures": 1,
+          "upperBoundContractFailures": 0,
+          "upperBoundResultsReconciled": 0,
+          "resultByteRefunds": 0,
+          "refundedResultBytes": 0,
+          "buffered": 0,
+          "knownBufferedPayloadBytes": 0,
+          "unknownBufferedResults": 0
+        },
+        "maps": {
+          "accepted": 0,
+          "rejected": 0,
+          "completed": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "timedOut": 0,
+          "pending": 0
+        },
+        "mapResults": {
+          "blocks": 0,
+          "elements": 0,
+          "assemblyMs": 0
+        },
+        "partitions": {
+          "generated": 1,
+          "admitted": 1,
+          "completed": 0,
+          "failed": 1,
+          "cancelled": 0
+        },
+        "dispatch": {
+          "executeMessages": 1,
+          "resultMessages": 1,
+          "batchedExecuteMessages": 0,
+          "logicalTasks": 1,
+          "logicalPartitions": 1,
+          "averageLogicalTasksPerExecute": 1
+        },
+        "activeOperations": [],
+        "activeTasks": []
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "mode": "queued-abort",
+      "active": {
+        "stats": {
+          "state": "running",
+          "workers": {
+            "total": 2,
+            "busy": 2,
+            "idle": 0,
+            "starting": 0,
+            "failures": 0,
+            "restarts": 0,
+            "details": [
+              {
+                "id": 1,
+                "threadId": 12,
+                "status": "busy",
+                "completedTasks": 0,
+                "failedTasks": 0,
+                "totalExecutionTimeMs": 0,
+                "currentTaskId": "4240c65b-e21b-4bbe-94f5-af14b2558291"
+              },
+              {
+                "id": 2,
+                "threadId": 13,
+                "status": "busy",
+                "completedTasks": 0,
+                "failedTasks": 0,
+                "totalExecutionTimeMs": 0,
+                "currentTaskId": "c9b1f0b6-dcc7-43f0-8769-c4a5532900ee"
+              }
+            ]
+          },
+          "queue": {
+            "size": 0,
+            "capacity": 128
+          },
+          "tasks": {
+            "accepted": 4,
+            "rejected": 0,
+            "pending": 2,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 2,
+            "timedOut": 0
+          },
+          "timing": {
+            "averageQueueMs": 0.022091499999987718,
+            "averageExecutionMs": 0,
+            "averageTotalMs": 0.6906414999999697,
+            "queueSamples": 2,
+            "executionSamples": 0,
+            "settledSamples": 2
+          },
+          "operations": {
+            "accepted": 1,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 1,
+            "timedOut": 0,
+            "pending": 0,
+            "capacity": 130,
+            "collecting": {
+              "accepted": 0,
+              "rejected": 0,
+              "completed": 0,
+              "failed": 0,
+              "cancelled": 0,
+              "timedOut": 0,
+              "pending": 0
+            },
+            "completion": {
+              "accepted": 0,
+              "rejected": 0,
+              "completed": 0,
+              "failed": 0,
+              "cancelled": 0,
+              "timedOut": 0,
+              "pending": 0
+            },
+            "streaming": {
+              "accepted": 1,
+              "rejected": 0,
+              "completed": 0,
+              "failed": 0,
+              "cancelled": 1,
+              "timedOut": 0,
+              "pending": 0
+            },
+            "mapping": {
+              "accepted": 0,
+              "rejected": 0,
+              "completed": 0,
+              "failed": 0,
+              "cancelled": 0,
+              "timedOut": 0,
+              "pending": 0
+            }
+          },
+          "streams": {
+            "accepted": 1,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 1,
+            "timedOut": 0,
+            "pending": 0
+          },
+          "streamResults": {
+            "produced": 0,
+            "yielded": 0,
+            "peakBuffered": 0,
+            "peakKnownBufferedPayloadBytes": 0,
+            "peakUnknownBufferedResults": 0,
+            "currentReservedResultBytes": 0,
+            "peakReservedResultBytes": 2228238,
+            "resultByteReservationWaits": 0,
+            "resultByteReservationRejected": 0,
+            "binaryResultContractFailures": 0,
+            "upperBoundContractFailures": 0,
+            "upperBoundResultsReconciled": 0,
+            "resultByteRefunds": 0,
+            "refundedResultBytes": 0,
+            "buffered": 0,
+            "knownBufferedPayloadBytes": 0,
+            "unknownBufferedResults": 0
+          },
+          "maps": {
+            "accepted": 0,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 0,
+            "timedOut": 0,
+            "pending": 0
+          },
+          "mapResults": {
+            "blocks": 0,
+            "elements": 0,
+            "assemblyMs": 0
+          },
+          "partitions": {
+            "generated": 2,
+            "admitted": 2,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 2
+          },
+          "dispatch": {
+            "executeMessages": 2,
+            "resultMessages": 0,
+            "batchedExecuteMessages": 0,
+            "logicalTasks": 2,
+            "logicalPartitions": 0,
+            "averageLogicalTasksPerExecute": 1
+          },
+          "activeOperations": [],
+          "activeTasks": [
+            {
+              "id": "4240c65b-e21b-4bbe-94f5-af14b2558291",
+              "taskName": "compression-research",
+              "status": "scheduled",
+              "createdAt": 1790973313711,
+              "queuedAt": 1790973313712,
+              "scheduledAt": 1790973313712,
+              "workerId": 1
+            },
+            {
+              "id": "c9b1f0b6-dcc7-43f0-8769-c4a5532900ee",
+              "taskName": "compression-research",
+              "status": "scheduled",
+              "createdAt": 1790973313712,
+              "queuedAt": 1790973313712,
+              "scheduledAt": 1790973313712,
+              "workerId": 2
+            }
+          ]
+        },
+        "credits": {
+          "reservations": 0,
+          "executions": 0,
+          "operations": 0
+        }
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    }
+  ],
+  "prefill": [
+    {
+      "trial": 0,
+      "kind": "high",
+      "credit": "upper",
+      "prefillMs": 1342.1407239999999,
+      "producedBeforeYield": 32,
+      "bufferedActualBytes": 116900,
+      "reservedBytes": 116900,
+      "refundedBytes": 35534908,
+      "reservationWaits": 30,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 116900
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 0,
+      "kind": "high",
+      "credit": "held",
+      "prefillMs": 62.48186900000019,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 7306,
+      "reservedBytes": 2228238,
+      "refundedBytes": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2228238,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 0,
+      "kind": "poor",
+      "credit": "upper",
+      "prefillMs": 82.80761499999971,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 2097802,
+      "reservedBytes": 2097802,
+      "refundedBytes": 130436,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 2097802
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 0,
+      "kind": "poor",
+      "credit": "held",
+      "prefillMs": 88.61871599999995,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 2097802,
+      "reservedBytes": 2228238,
+      "refundedBytes": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2228238,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 1,
+      "kind": "high",
+      "credit": "held",
+      "prefillMs": 60.230468000000656,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 7306,
+      "reservedBytes": 2228238,
+      "refundedBytes": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2228238,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 1,
+      "kind": "high",
+      "credit": "upper",
+      "prefillMs": 1334.7715479999997,
+      "producedBeforeYield": 32,
+      "bufferedActualBytes": 116900,
+      "reservedBytes": 116900,
+      "refundedBytes": 35534908,
+      "reservationWaits": 30,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 116900
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 1,
+      "kind": "poor",
+      "credit": "held",
+      "prefillMs": 82.2739160000001,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 2097802,
+      "reservedBytes": 2228238,
+      "refundedBytes": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2228238,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 1,
+      "kind": "poor",
+      "credit": "upper",
+      "prefillMs": 80.1376990000008,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 2097802,
+      "reservedBytes": 2097802,
+      "refundedBytes": 130436,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 2097802
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 2,
+      "kind": "high",
+      "credit": "upper",
+      "prefillMs": 1415.2367000000013,
+      "producedBeforeYield": 32,
+      "bufferedActualBytes": 116900,
+      "reservedBytes": 116900,
+      "refundedBytes": 35534908,
+      "reservationWaits": 30,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 116900
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 2,
+      "kind": "high",
+      "credit": "held",
+      "prefillMs": 59.93520499999977,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 7306,
+      "reservedBytes": 2228238,
+      "refundedBytes": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2228238,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 2,
+      "kind": "poor",
+      "credit": "upper",
+      "prefillMs": 89.24671999999919,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 2097802,
+      "reservedBytes": 2097802,
+      "refundedBytes": 130436,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 2097802
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 2,
+      "kind": "poor",
+      "credit": "held",
+      "prefillMs": 84.95307799999864,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 2097802,
+      "reservedBytes": 2228238,
+      "refundedBytes": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2228238,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 3,
+      "kind": "high",
+      "credit": "held",
+      "prefillMs": 59.518245999999635,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 7306,
+      "reservedBytes": 2228238,
+      "refundedBytes": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2228238,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 3,
+      "kind": "high",
+      "credit": "upper",
+      "prefillMs": 1340.8053959999997,
+      "producedBeforeYield": 32,
+      "bufferedActualBytes": 116900,
+      "reservedBytes": 116900,
+      "refundedBytes": 35534908,
+      "reservationWaits": 30,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 116900
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 3,
+      "kind": "poor",
+      "credit": "held",
+      "prefillMs": 81.0566289999988,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 2097802,
+      "reservedBytes": 2228238,
+      "refundedBytes": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2228238,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 3,
+      "kind": "poor",
+      "credit": "upper",
+      "prefillMs": 79.35789099999965,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 2097802,
+      "reservedBytes": 2097802,
+      "refundedBytes": 130436,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 2097802
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 4,
+      "kind": "high",
+      "credit": "upper",
+      "prefillMs": 1431.925521000001,
+      "producedBeforeYield": 32,
+      "bufferedActualBytes": 116900,
+      "reservedBytes": 116900,
+      "refundedBytes": 35534908,
+      "reservationWaits": 30,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 116900
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 4,
+      "kind": "high",
+      "credit": "held",
+      "prefillMs": 60.74383800000214,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 7306,
+      "reservedBytes": 2228238,
+      "refundedBytes": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2228238,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 4,
+      "kind": "poor",
+      "credit": "upper",
+      "prefillMs": 83.41890799999965,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 2097802,
+      "reservedBytes": 2097802,
+      "refundedBytes": 130436,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 2097802
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 4,
+      "kind": "poor",
+      "credit": "held",
+      "prefillMs": 83.95733499999915,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 2097802,
+      "reservedBytes": 2228238,
+      "refundedBytes": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2228238,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 5,
+      "kind": "high",
+      "credit": "held",
+      "prefillMs": 60.162711000000854,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 7306,
+      "reservedBytes": 2228238,
+      "refundedBytes": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2228238,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 5,
+      "kind": "high",
+      "credit": "upper",
+      "prefillMs": 1342.607226,
+      "producedBeforeYield": 32,
+      "bufferedActualBytes": 116900,
+      "reservedBytes": 116900,
+      "refundedBytes": 35534908,
+      "reservationWaits": 30,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 116900
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 5,
+      "kind": "poor",
+      "credit": "held",
+      "prefillMs": 78.28340099999696,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 2097802,
+      "reservedBytes": 2228238,
+      "refundedBytes": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2228238,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 5,
+      "kind": "poor",
+      "credit": "upper",
+      "prefillMs": 86.55163900000116,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 2097802,
+      "reservedBytes": 2097802,
+      "refundedBytes": 130436,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 2097802
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    }
+  ]
+}

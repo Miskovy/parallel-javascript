@@ -10,6 +10,7 @@ import { sharedReadonly } from '@pjs/runtime';
 import { matrix } from '../benchmarks/real-world/compression/matrix.mjs';
 import {
   bound,
+  codecQualification,
   corpus,
   MiB,
   options,
@@ -27,6 +28,7 @@ import {
 } from '../benchmarks/real-world/crypto/support.mjs';
 const output = process.argv[2];
 assert.ok(output);
+const qualification = codecQualification();
 await writeFile(output, '', { flag: 'wx' });
 const base = matrix('full').find((c) => c.group === 'queue');
 const configs = [
@@ -56,6 +58,7 @@ const report = {
   clientDate: '2026-10-02',
   profile: 'supplement',
   environment: { ...environment(), zlib: process.versions.zlib },
+  codecQualification: qualification,
   methodology:
     'Correctly funded worker-count control (one safe maximum per worker); 64-MiB queue control supplies at least 64 jobs even without calibration repetitions. Main matrix is preserved with its finite-work/capacity limitations.',
   runtimeBefore: sourceHashes(),

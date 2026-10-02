@@ -2,19 +2,13 @@ import assert from 'node:assert/strict';
 import { Buffer } from 'node:buffer';
 import { constants, deflateRawSync, inflateRawSync } from 'node:zlib';
 import { freemem, totalmem } from 'node:os';
+import { compressionBound, qualifyCodec } from './codec.mjs';
+import { probeInstalledCodec } from './native-bound.mjs';
 
 export const MiB = 1024 ** 2;
 export const seed = 0x5eed1234;
-export function bound(n) {
-  if (!Number.isSafeInteger(n) || n < 0) throw new RangeError('invalid length');
-  const bytes =
-    n +
-    Math.floor(n / 4096) +
-    Math.floor(n / 16384) +
-    Math.floor(n / 33554432) +
-    7;
-  if (!Number.isSafeInteger(bytes)) throw new RangeError('bound overflow');
-  return bytes;
+export function bound(n, codec = checkZlib()) {
+  return compressionBound({ codec, inputBytes: n });
 }
 export function options(level = 6) {
   return {
@@ -125,18 +119,27 @@ export function reconstruct(records, bytes) {
   assert.equal(end, bytes);
   return result;
 }
-export function preflight(config, repetitions = 4) {
+export function preflight(config, repetitions = 4, codec = checkZlib()) {
   const estimate =
     3 * config.bytes +
-    repetitions * bound(config.bytes) +
+    repetitions * bound(config.bytes, codec) +
     config.workers * (40 * MiB + 2 * config.grain + MiB);
   const limit = Math.min(freemem() / 2, totalmem() / 4);
   return { estimateBytes: estimate, limitBytes: limit, safe: estimate < limit };
 }
+let qualification;
 export function checkZlib() {
-  assert.match(
-    process.versions.zlib,
-    /^1\.3\.(1(?:$|[-.])|2\.1(?:$|[-.]))/,
-    'inspect this zlib version before enabling the bound',
-  );
+  if (!qualification) {
+    if (process.versions.zlib === '1.3.1.zlib-ng')
+      qualification = probeInstalledCodec();
+    else
+      qualification = {
+        codec: qualifyCodec({ version: process.versions.zlib }),
+      };
+  }
+  return qualification.codec;
+}
+export function codecQualification() {
+  checkZlib();
+  return qualification;
 }

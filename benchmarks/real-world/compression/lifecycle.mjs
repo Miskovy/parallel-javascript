@@ -4,7 +4,7 @@ import { performance } from 'node:perf_hooks';
 import { setTimeout as delay } from 'node:timers/promises';
 import { inflateRawSync, deflateRawSync } from 'node:zlib';
 import { executor } from './executors.mjs';
-import { bound, corpus, MiB, options } from './core.mjs';
+import { bound, codecQualification, corpus, MiB, options } from './core.mjs';
 import { terminal } from './run.mjs';
 import { sourceHashes } from '../crypto/support.mjs';
 async function until(predicate) {
@@ -291,6 +291,7 @@ await writeFile(
     {
       clientDate: '2026-10-02',
       node: process.version,
+      codecQualification: codecQualification(),
       runtimeHashes: sourceHashes(),
       complete: true,
       results,

@@ -61,5 +61,5 @@ if (
   process.argv[1]?.endsWith('compression\\report.mjs')
 ) {
   const report = JSON.parse(await readFile(process.argv[2], 'utf8'));
-  await writeFile(process.argv[3], render(report));
+  await writeFile(process.argv[3], render(report), { flag: 'wx' });
 }

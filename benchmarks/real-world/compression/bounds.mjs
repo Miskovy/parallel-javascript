@@ -1,7 +1,14 @@
 import assert from 'node:assert/strict';
 import { writeFile } from 'node:fs/promises';
 import { deflateRawSync, inflateRawSync } from 'node:zlib';
-import { bound, checkZlib, corpus, MiB, options } from './core.mjs';
+import {
+  bound,
+  checkZlib,
+  codecQualification,
+  corpus,
+  MiB,
+  options,
+} from './core.mjs';
 import { sourceHashes } from '../crypto/support.mjs';
 checkZlib();
 const results = [];
@@ -71,6 +78,7 @@ await writeFile(
       clientDate: '2026-10-02',
       node: process.version,
       zlib: process.versions.zlib,
+      codecQualification: codecQualification(),
       options: options(),
       harness: sourceHashes('benchmarks/real-world/compression'),
       complete: true,

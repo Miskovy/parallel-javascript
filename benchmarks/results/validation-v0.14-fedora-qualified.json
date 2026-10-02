@@ -1,0 +1,4254 @@
+{
+  "milestone": "0.14",
+  "clientDate": "2026-10-02",
+  "timezone": "Africa/Cairo",
+  "base": "890a1fc780271cb0859ea706d5ab27477596a111",
+  "runtimeCommit": "18f0c87e7b7920179403bbc396afabced6bb06c4",
+  "success": true,
+  "qualificationDecision": "QUALIFIED",
+  "finalDecision": "Outcome B with codec/platform caveats",
+  "v014Closed": true,
+  "nextMilestoneStarted": false,
+  "checks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "durationMs": 1198,
+      "output": "\n> pjs-workspace@0.12.0 build\n> tsc -p packages/runtime/tsconfig.json\n\n"
+    },
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "durationMs": 11731,
+      "output": "\n> pjs-workspace@0.12.0 test\n> npm run build && npm run test:types && node --test --test-timeout=20000 packages/runtime/test/*.test.mjs\n\n\n> pjs-workspace@0.12.0 build\n> tsc -p packages/runtime/tsconfig.json\n\n\n> pjs-workspace@0.12.0 test:types\n> tsc -p packages/runtime/test/tsconfig.json\n\n\u2714 packages/runtime/test/batch.test.mjs (2956.800494ms)\n\u2714 packages/runtime/test/binary-result.test.mjs (1965.836943ms)\n\u2714 packages/runtime/test/completion.test.mjs (2357.999724ms)\n\u2714 packages/runtime/test/map.test.mjs (1906.954544ms)\n\u2714 packages/runtime/test/matrix.test.mjs (686.405785ms)\n\u2714 packages/runtime/test/memory-observability.test.mjs (1101.875191ms)\n\u2714 packages/runtime/test/partition.test.mjs (4696.869512ms)\n\u2714 packages/runtime/test/result-credit.test.mjs (240.733904ms)\n\u2714 packages/runtime/test/runtime.test.mjs (3724.41074ms)\n\u2714 packages/runtime/test/shared.test.mjs (2265.116252ms)\n\u2714 packages/runtime/test/stream.test.mjs (2537.206208ms)\n\u2714 packages/runtime/test/transfer.test.mjs (2402.541821ms)\n\u2714 packages/runtime/test/upper-bound-result.test.mjs (2377.308741ms)\n\u2139 tests 13\n\u2139 suites 0\n\u2139 pass 13\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 10187.232504\n"
+    },
+    {
+      "command": "npm run test:types",
+      "exitCode": 0,
+      "durationMs": 479,
+      "output": "\n> pjs-workspace@0.12.0 test:types\n> tsc -p packages/runtime/test/tsconfig.json\n\n"
+    },
+    {
+      "command": "npm run typecheck:compat",
+      "exitCode": 0,
+      "durationMs": 2160,
+      "output": "\n> pjs-workspace@0.12.0 typecheck:compat\n> tsc6 --noEmit -p packages/runtime/tsconfig.json\n\n"
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "durationMs": 4317,
+      "output": "\n> pjs-workspace@0.12.0 lint\n> eslint .\n\n"
+    },
+    {
+      "command": "npm run format:check",
+      "exitCode": 0,
+      "durationMs": 6925,
+      "output": "\n> pjs-workspace@0.12.0 format:check\n> prettier --check .\n\nChecking formatting...\nAll matched files use Prettier code style!\n"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "durationMs": 9,
+      "output": ""
+    },
+    {
+      "command": "node --test benchmarks/real-world/compression/harness.test.mjs",
+      "exitCode": 0,
+      "durationMs": 370,
+      "output": "\u2714 benchmarks/real-world/compression/harness.test.mjs (231.919573ms)\n\u2139 tests 1\n\u2139 suites 0\n\u2139 pass 1\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 246.438597\n"
+    },
+    {
+      "command": "node --test --test-isolation=none --test-timeout=20000 packages/runtime/test/batch.test.mjs packages/runtime/test/binary-result.test.mjs packages/runtime/test/completion.test.mjs packages/runtime/test/map.test.mjs packages/runtime/test/matrix.test.mjs packages/runtime/test/memory-observability.test.mjs packages/runtime/test/partition.test.mjs packages/runtime/test/result-credit.test.mjs packages/runtime/test/runtime.test.mjs packages/runtime/test/shared.test.mjs packages/runtime/test/stream.test.mjs packages/runtime/test/transfer.test.mjs packages/runtime/test/upper-bound-result.test.mjs",
+      "exitCode": 0,
+      "durationMs": 17808,
+      "output": "\u2714 batch size one preserves v0.4 logical output and message semantics (133.692989ms)\n\u2714 multiple logical items retain order across reversed physical completion (143.368418ms)\n\u2714 batch stops after logical failure at item 0 (77.82183ms)\n\u2714 batch stops after logical failure at item 1 (66.814683ms)\n\u2714 batch stops after logical failure at item 3 (66.754348ms)\n\u2714 shared and cloned inputs batch while transferred inputs reject before detachment (79.634708ms)\n\u2714 batched private outputs can transfer back together (77.875052ms)\n\u2714 combined output serialization failure rejects once and leaves replacement unnecessary (83.949773ms)\n\u2714 queued parent cancellation removes one weighted FIFO batch (74.395756ms)\n\u2714 abort during a batch settles callers but the full batch retains occupancy (71.047721ms)\n\u2714 timeout during a batch settles callers but the full batch retains occupancy (182.050565ms)\n\u2714 worker crash during a batch fails without retry and replacement remains usable (141.6757ms)\n\u2714 malformed batch response fails its worker and operation safely (136.214633ms)\n\u2714 graceful shutdown drains ungenerated batches (77.985594ms)\n\u2714 non-draining shutdown cancels active and ungenerated batches (66.775048ms)\n\u2714 reentrant factory cannot steal a worker reserved for a batch (76.408536ms)\n\u2714 concurrent parents and ordinary work preserve logical and physical accounting (86.70339ms)\n\u2714 binary protocol fields validate single, batch, legacy, and failure messages (1.267274ms)\n\u2714 strict streams accept direct owned binary kinds, zero length, and subviews (82.53173ms)\n\u2714 clone, transfer, uneven declarations, and physical batching retain logical byte weights (135.125179ms)\n\u2714 count and byte credits compose and variable declarations wait for consumer release (110.975091ms)\n\u2714 impossible and invalid declarations fail before factory or worker execution (71.689439ms)\n\u2714 worker rejects wrong, nested, shared, detached, over, and undersized results before success transport (74.703896ms)\n\u2714 queued cancellation releases immediately while running cancellation holds credit until execution ends (76.864238ms)\n\u2714 timeout, crash, and first batch failure clean every reservation exactly once (165.609454ms)\n\u2714 consumer failure and weighted head-of-line pressure do not leak or starve another stream (86.938921ms)\n\u2714 strict streams retain parent saturation and count-only streams remain available (76.1127ms)\n\u2714 graceful and terminating shutdown preserve reservation ownership (136.96075ms)\n\u2714 parallelFor handles empty, single, multiple, and batched ranges as Promise<void> (113.950873ms)\n\u2714 completion protocol ignores large and uncloneable worker values without output serialization (77.009335ms)\n\u2714 completion preserves exclusive input transfer rules (76.345195ms)\n\u2714 shared vector and matrix outputs use disjoint completion-only writes (114.947009ms)\n\u2714 first failure in a completion batch skips later items and leaves earlier effects (67.763779ms)\n\u2714 completion abort settles once while posted work retains occupancy (67.51859ms)\n\u2714 completion timeout settles once while posted work retains occupancy (178.158249ms)\n\u2714 completion operation capacity and ordinary queue admission remain bounded (79.3274ms)\n\u2714 completion worker crash fails once and replacement remains usable (144.111309ms)\n\u2714 graceful shutdown drains completion work and non-draining shutdown cancels it (153.834389ms)\n\u2714 operation AsyncResource preserves isolated AsyncLocalStorage stores for factories and continuations (88.357394ms)\n\u2714 operation async resources emit destroy and do not leak abort listeners (83.281724ms)\n\u2714 generic map covers empty, single, uneven, and negative ranges (116.578891ms)\n\u2714 map assembles logical element order across reversed block completion (104.85331ms)\n\u2714 map validates array and typed block cardinality and kind (109.409446ms)\n\u2714 typed map clones and transfers blocks without boxing the final output (106.159949ms)\n\u2714 generic object map preserves one object per element (102.144889ms)\n\u2714 map propagates worker, serialization, cancellation, timeout, and crash failures (104.677554ms)\n\u2714 map drains graceful shutdown and rejects non-draining shutdown (171.237029ms)\n\u2714 map saturation, metrics, and AsyncLocalStorage reuse range invariants (84.051347ms)\n\u2714 matrix kernel agrees with independent reference on unequal signed entries (3.571762ms)\n\u2714 uneven matrix row partitions execute correctly across multiple workers (clone) (86.2903ms)\n\u2714 uneven matrix row partitions execute correctly across multiple workers (shared) (81.442366ms)\n\u2714 stream diagnostics distinguish known direct backings from unknown results (84.898437ms)\n\u2714 multiple buffered views report payload bytes and explicitly alias-count (79.639447ms)\n\u2714 yield, transfer, cancellation, and failure release diagnostic retention (79.194786ms)\n\u2714 stream start remains eager and its deadline starts before consumption (159.745436ms)\n\u2714 stream remains single-consumer and an async processing pipeline cleans up on sink failure (77.891734ms)\n\u2714 seeded range properties cover every integer once without gaps or overlaps (23.035977ms)\n\u2714 empty, singleton, awkward and randomized runtime ranges agree with independent coverage (143.630889ms)\n\u2714 invalid ranges/options/handles reject without parent or child admission (69.459182ms)\n\u2714 logical result order survives reversed completion order (120.696757ms)\n\u2714 ten million logical chunks generate only a worker-sized window and cancel lazily (81.755134ms)\n\u2714 saturated FIFO delays production, and active parent records have a finite bound (85.321366ms)\n\u2714 input factory reserves admission against reentrant ordinary work (68.153244ms)\n\u2714 shared common input and compact transferred inputs/outputs preserve ownership (107.757436ms)\n\u2714 worker exception identifies the failed partition and cancels queued siblings (77.397989ms)\n\u2714 failed parent discards late running sibling output without releasing its slot (90.428816ms)\n\u2714 factory and serialization failures stop production and leave the runtime usable (87.714054ms)\n\u2714 partition queued abort settles once and preserves worker occupancy (70.069941ms)\n\u2714 partition queued timeout settles once and preserves worker occupancy (221.20724ms)\n\u2714 partition running abort settles once and preserves worker occupancy (75.828297ms)\n\u2714 partition running timeout settles once and preserves worker occupancy (223.950798ms)\n\u2714 one parent deadline includes synchronous preparation and is not restarted per chunk (160.970249ms)\n\u2714 crashed partition fails once; unrelated operation and replacement retain shared input (143.867442ms)\n\u2714 restart exhaustion rejects all parent operations including those without children (73.724922ms)\n\u2714 graceful shutdown drains the entire accepted range including ungenerated chunks and startup (76.814283ms)\n\u2714 non-draining shutdown cancels running, queued and ungenerated partition work (69.251495ms)\n\u2714 reentrant cancellation and shutdown during factory/serialization preserve transfer rules (69.79766ms)\n\u2714 queued transfer reservation releases when a parent is cancelled (72.612675ms)\n\u2714 nested worker-created partitioning is explicitly rejected (83.195259ms)\n\u2714 many sequential and simultaneous operations preserve accounting and listener cleanup (239.308527ms)\n\u2714 deadline expires while saturation prevents any chunk generation (90.751985ms)\n\u2714 graceful shutdown initiated inside a factory finishes the remaining range (83.006037ms)\n\u2714 shutdown during startup cancels an accepted parent before generation (6.524932ms)\n\u2714 simultaneous sibling failures retain only the first parent outcome (97.255877ms)\n\u2714 abort/deadline/crash races with concurrent producers retain bounded admission and settlement (357.924084ms)\n\u2714 upper-bound reconciliation refunds immediately and yield releases actual credit (0.667117ms)\n\u2714 upper-bound zero and equal actuals reconcile independently in a batch (0.544321ms)\n\u2714 upper-bound cancellation races do not refund discarded successes (0.432908ms)\n\u2714 invalid upper-bound reconciliation cannot corrupt accounting; exact never refunds (0.672406ms)\n\u2714 result credits release queued cancellation immediately (0.225632ms)\n\u2714 result credits retain running cancellation until execution ends (0.186046ms)\n\u2714 result credits survive successful buffering until yield (0.205102ms)\n\u2714 result credits correlate batch items and cancel operations exactly once (0.186547ms)\n\u2714 result credits enforce capacity and release all physical owners (0.299924ms)\n\u2714 executes before explicit readiness, reuses a worker, and clones input (55.716814ms)\n\u2714 CPU tasks execute simultaneously in four distinct isolates (102.549253ms)\n\u2714 FIFO queue, queued removal, and bounded admission (54.011893ms)\n\u2714 zero queue accepts only immediately idle capacity (76.710705ms)\n\u2714 task errors retain remote details and serialization failures preserve worker health (54.656034ms)\n\u2714 worker exit 0 fails its task once and replaces the worker (107.326902ms)\n\u2714 worker exit 23 fails its task once and replaces the worker (115.48632ms)\n\u2714 invalid worker messages fail the occupied task and recover (109.587887ms)\n\u2714 uncaught error followed by exit counts once and recovers (103.737876ms)\n\u2714 abort listeners and timers are removed after successful and failed settlement (50.812412ms)\n\u2714 serialization getters may enqueue and throw without stranding the queue (50.162439ms)\n\u2714 bounded crash replacement fails remaining work when budget is exhausted (58.93496ms)\n\u2714 queued deadlines remove bookkeeping; pre-abort never enters the queue (61.933827ms)\n\u2714 running abort settles caller without releasing execution capacity (65.558821ms)\n\u2714 running timeout settles caller without releasing execution capacity (169.206435ms)\n\u2714 graceful shutdown drains startup, active, and queued work, and is idempotent (64.274955ms)\n\u2714 shutdown handles a crash while draining accepted work (119.258116ms)\n\u2714 explicit non-draining shutdown terminates uncooperative work (53.44088ms)\n\u2714 shutdown during startup cancels tasks without spawning replacements (32.087442ms)\n\u2714 bootstrap failure is bounded: broken.mjs (51.902207ms)\n\u2714 bootstrap failure is bounded: hanging-import.mjs (1003.522997ms)\n\u2714 bootstrap failure is bounded: missing.mjs (52.819812ms)\n\u2714 configuration and registry boundaries are checked (9.231239ms)\n\u2714 stress mixed concurrent outcomes preserve accounting and release listeners (124.320149ms)\n\u2714 scheduler policy is independent of worker transport (0.233657ms)\n\u2714 scheduler capacity and size count logical admission weight (0.251932ms)\n\u2714 construction compacts views, copies exact bits, and leaves source independent (2.611586ms)\n\u2714 construction rejects unsupported inputs and detached views (0.695711ms)\n\u2714 four simultaneous workers reuse one input, clone metadata, and transfer independent outputs (113.303615ms)\n\u2714 native SAB passthrough preserves offsets and aliases within cloned metadata (75.737633ms)\n\u2714 crash leaves shared bytes and queued task valid through worker replacement (135.379816ms)\n\u2714 shared input during queued abort preserves capacity and settles once (67.745394ms)\n\u2714 shared input during queued timeout preserves capacity and settles once (365.462435ms)\n\u2714 shared input during running abort preserves capacity and settles once (75.893391ms)\n\u2714 shared input during running timeout preserves capacity and settles once (376.896967ms)\n\u2714 shared startup queue drains gracefully and terminating shutdown preserves input (139.824559ms)\n\u2714 shared bytes never enter transfer lists; independent ordinary input can transfer (71.718915ms)\n\u2714 educational mutation violation loses an update; Atomics.add preserves both (77.42486ms)\n\u2714 empty, one, many, and batched streams deliver partition results (117.461308ms)\n\u2714 stream delivery uses completion order (124.68677ms)\n\u2714 slow consumer keeps produced plus in-flight results within capacity (147.747675ms)\n\u2714 the operation deadline includes slow consumer waiting (265.086288ms)\n\u2714 consumer break and throw cancel remaining work exactly once (73.79129ms)\n\u2714 producer failure preserves yielded values and rejects the stream (75.421548ms)\n\u2714 stream transfers output buffers and yields shared views natively (105.199062ms)\n\u2714 abort, timeout, crash, and non-draining shutdown reject iteration (163.787128ms)\n\u2714 graceful shutdown includes buffered result delivery (127.554086ms)\n\u2714 concurrent stream AsyncLocalStorage contexts remain isolated (106.885538ms)\n\u2714 stream coexists with ordinary and completion-only work (111.788316ms)\n\u2714 stream terminal paths remove abort listeners (98.267592ms)\n\u2714 invalid result capacity rejects through the iterator (30.973692ms)\n\u2714 clone remains default and user objects cannot spoof a transfer envelope (82.374349ms)\n\u2714 input and output transfers detach sender views while preserving data and offsets (64.923296ms)\n\u2714 input-only and output-only transfer choices are independent (65.888251ms)\n\u2714 zero-length and cross-realm ArrayBuffers transfer successfully (66.65592ms)\n\u2714 multiple buffers and duplicate references in a payload preserve aliasing (64.81615ms)\n\u2714 invalid transfer lists reject without poisoning workers or detaching valid entries (67.172599ms)\n\u2714 admission rejection does not move or reserve buffers (64.823335ms)\n\u2714 queued abort retains ownership and releases the reservation (65.593799ms)\n\u2714 queued timeout retains ownership and releases the reservation (80.670389ms)\n\u2714 queued input lists are snapshots and pending transfers reserve across runtimes (84.082456ms)\n\u2714 external detachment while queued fails dispatch, releases reservations, and preserves progress (71.833234ms)\n\u2714 running abort discards transferred output without reusing a busy slot (71.292911ms)\n\u2714 running timeout discards transferred output without reusing a busy slot (170.802498ms)\n\u2714 shutdown distinguishes queued ownership from dispatched ownership (134.743289ms)\n\u2714 crashes and task failures cannot restore transferred input ownership (134.343414ms)\n\u2714 input and output serialization failures leave workers reusable (70.595546ms)\n\u2714 abort inside a serialization getter cannot release an in-progress transfer reservation (79.169989ms)\n\u2714 stress transfers across four workers preserve bytes and terminal accounting (138.028252ms)\n\u2714 upper-bound wire fields are explicit, exclusive, and validated for batches (0.623824ms)\n\u2714 upper-bound kinds, subviews, zero, clone, and transfer preserve visible bytes (84.558968ms)\n\u2714 refund resumes admission before consumer yield and slow buffers retain actual credit (74.618462ms)\n\u2714 zero actual refunds all maximum but count capacity still blocks production (83.813341ms)\n\u2714 upper-bound violations fail compactly without a refund or successful payload (74.403631ms)\n\u2714 invalid, ambiguous, asynchronous, throwing, and impossible maxima fail before input (82.295818ms)\n\u2714 upper-bound declaration can submit ordinary work reentrantly (84.817171ms)\n\u2714 batches refund logical successes and stop on first or middle failure (70.789297ms)\n\u2714 queued and running cancellation preserve maximum until the correct terminal event (70.983548ms)\n\u2714 timeout before dispatch and while running never reconciles a discarded success (282.279058ms)\n\u2714 consumer break, throw, return, and iterator throw release buffered actual credit (95.781986ms)\n\u2714 crash, fatal restart exhaustion, and ordinary failure release without refund (221.724039ms)\n\u2714 graceful and non-draining shutdown clean reconciled and unreconciled owners (143.540868ms)\n\u2714 a credit-blocked maximum does not starve another stream or ordinary work (82.630729ms)\n\u2714 non-draining shutdown discards reconciled buffered actuals without counting release as refund (72.992011ms)\n\u2139 tests 178\n\u2139 suites 0\n\u2139 pass 178\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 17658.069138\n"
+    },
+    {
+      "command": "node --test --test-isolation=none benchmarks/real-world/compression/harness.test.mjs",
+      "exitCode": 0,
+      "durationMs": 225,
+      "output": "\u2714 deterministic corpus, nontrivial entropy ordering and shared view (22.164259ms)\n\u2714 safe bound arithmetic handles boundaries and rejects overflow (0.510216ms)\n\u2714 codec identification separates stock, Motley, zlib-ng and unknown identifiers (0.187749ms)\n\u2714 qualification rejects unknown versions and zlib-ng without exact build provenance (0.584678ms)\n\u2714 zlib-ng suffix can never select the stock reservation contract (0.357935ms)\n\u2714 zlib-ng bound handles small division boundaries and all supported levels (0.896335ms)\n\u2714 codec formulas check exact safe-integer overflow without allocating input (1.141424ms)\n\u2714 bound contracts reject unsupported wrappers, parameters, dictionaries and flushes (1.47409ms)\n\u2714 independent shuffled blocks reconstruct exactly; reject gaps/duplicates/metadata (9.381356ms)\n\u2714 sample aggregation keeps slow observations and uses sample CV (0.613694ms)\n\u2714 matrix unique, fair primary models, natural exact inflate and safe preflight (7.640345ms)\n\u2714 report refuses partial, failed or missing-trial campaigns (1.294987ms)\n\u2139 tests 12\n\u2139 suites 0\n\u2139 pass 12\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 96.58349\n"
+    }
+  ],
+  "postCampaignEnvironment": [
+    {
+      "command": "lscpu",
+      "exitCode": 0,
+      "output": "Architecture:                            x86_64\nCPU op-mode(s):                          32-bit, 64-bit\nAddress sizes:                           43 bits physical, 48 bits virtual\nByte Order:                              Little Endian\nCPU(s):                                  4\nOn-line CPU(s) list:                     0-3\nVendor ID:                               AuthenticAMD\nModel name:                              AMD Ryzen 3 PRO 3300U w/ Radeon Vega Mobile Gfx\nCPU family:                              23\nModel:                                   24\nThread(s) per core:                      1\nCore(s) per socket:                      4\nSocket(s):                               1\nStepping:                                1\nFrequency boost:                         enabled\nCPU(s) scaling MHz:                      118%\nCPU max MHz:                             2100.0000\nCPU min MHz:                             1400.0000\nBogoMIPS:                                4191.91\nFlags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl nonstop_tsc cpuid extd_apicid aperfmperf rapl pni pclmulqdq monitor ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw skinit wdt tce topoext perfctr_core perfctr_nb bpext perfctr_llc mwaitx cpb hw_pstate ssbd ibpb vmmcall fsgsbase bmi1 avx2 smep bmi2 rdseed adx smap clflushopt sha_ni xsaveopt xsavec xgetbv1 clzero xsaveerptr arat npt lbrv svm_lock nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold avic v_vmsave_vmload vgif overflow_recov succor smca sev sev_es\nVirtualization:                          AMD-V\nL1d cache:                               128 KiB (4 instances)\nL1i cache:                               256 KiB (4 instances)\nL2 cache:                                2 MiB (4 instances)\nL3 cache:                                4 MiB (1 instance)\nNUMA node(s):                            1\nNUMA node0 CPU(s):                       0-3\nVulnerability Gather data sampling:      Not affected\nVulnerability Ghostwrite:                Not affected\nVulnerability Indirect target selection: Not affected\nVulnerability Itlb multihit:             Not affected\nVulnerability L1tf:                      Not affected\nVulnerability Mds:                       Not affected\nVulnerability Meltdown:                  Not affected\nVulnerability Mmio stale data:           Not affected\nVulnerability Old microcode:             Not affected\nVulnerability Reg file data sampling:    Not affected\nVulnerability Retbleed:                  Mitigation; untrained return thunk; SMT disabled\nVulnerability Spec rstack overflow:      Mitigation; SMT disabled\nVulnerability Spec store bypass:         Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:                Mitigation; Retpolines; IBPB conditional; STIBP disabled; RSB filling; PBRSB-eIBRS Not affected; BHI Not affected\nVulnerability Srbds:                     Not affected\nVulnerability Tsa:                       Not affected\nVulnerability Tsx async abort:           Not affected\nVulnerability Vmscape:                   Mitigation; IBPB before exit to userspace\n"
+    },
+    {
+      "command": "free -h",
+      "exitCode": 0,
+      "output": "               total        used        free      shared  buff/cache   available\nMem:           7.2Gi       4.3Gi       335Mi        52Mi       2.9Gi       2.9Gi\nSwap:          7.2Gi       3.7Gi       3.5Gi\n"
+    },
+    {
+      "command": "cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor /sys/class/power_supply/AC/online",
+      "exitCode": 0,
+      "output": "schedutil\n1\n"
+    },
+    {
+      "command": "git diff --exit-code 18f0c87e7b7920179403bbc396afabced6bb06c4 -- packages/runtime/src",
+      "exitCode": 0,
+      "output": ""
+    }
+  ],
+  "runtimeTests": 178,
+  "harnessTests": 12,
+  "codec": {
+    "codec": {
+      "family": "zlib-ng",
+      "version": "1.3.1.zlib-ng",
+      "implementationVersion": "2.3.3",
+      "build": "fedora44-x86_64-compat-no-new-strategies",
+      "contract": "zlib-ng-no-quick-raw-v1"
+    },
+    "library": {
+      "path": "/usr/lib64/libz.so.1.3.1.zlib-ng",
+      "packageIdentity": "zlib-ng-compat 2.3.3 3.fc44 x86_64",
+      "sha256": "bbde8faec092a7c67b8bd76bbba4a826e61b05c171b97004ce6b308c5a090351"
+    },
+    "header": {
+      "path": "/usr/include/zlib.h",
+      "packageIdentity": "zlib-ng-compat-devel 2.3.3 3.fc44 x86_64",
+      "sha256": "8bc935aeb8909d05fe58f9286a0fe2c674a41638c374786ee888485ab5ff4409"
+    },
+    "nodeLibrary": "/usr/lib64/libnode.so.137",
+    "nodeSharedZlib": true,
+    "nodeSymbolsImported": true,
+    "compiler": "gcc (GCC) 16.1.1 20260515 (Red Hat 16.1.1-2)\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+    "compileCommand": [
+      "gcc",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "/home/miskovy/Documents/pjs/benchmarks/real-world/compression/native-bound.c",
+      "-o",
+      "/tmp/pjs-codec-qualification-sgrRFP/native-bound",
+      "-ldl"
+    ],
+    "helperCommand": [
+      "/tmp/pjs-codec-qualification-sgrRFP/native-bound",
+      "/usr/lib64/libz.so.1.3.1.zlib-ng",
+      "0",
+      "1",
+      "2",
+      "3",
+      "7",
+      "8",
+      "9",
+      "15",
+      "16",
+      "17",
+      "63",
+      "64",
+      "65",
+      "127",
+      "128",
+      "255",
+      "256",
+      "1023",
+      "1024",
+      "1025",
+      "4095",
+      "4096",
+      "4097",
+      "16383",
+      "16384",
+      "16385",
+      "65535",
+      "65536",
+      "65537",
+      "262143",
+      "262144",
+      "262145",
+      "1048575",
+      "1048576",
+      "1048577",
+      "4194304",
+      "8388608"
+    ],
+    "helperSourceSha256": "03ce67b197a0015661a424060109fd1722774500c962e9e9fc63ca0d6840f51e",
+    "helperLinkage": "linux-vdso.so.1 (0x00007f53f5b1e000)\n\tlibc.so.6 => /lib64/libc.so.6 (0x00007f53f5903000)\n\t/lib64/ld-linux-x86-64.so.2 (0x00007f53f5b20000)",
+    "native": {
+      "headerVersion": "1.3.1.zlib-ng",
+      "libraryVersion": "1.3.1.zlib-ng",
+      "libraryPath": "/usr/lib64/libz.so.1.3.1.zlib-ng",
+      "streamSize": 112,
+      "rows": [
+        {
+          "inputBytes": 0,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 7
+        },
+        {
+          "inputBytes": 0,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 7
+        },
+        {
+          "inputBytes": 0,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 7
+        },
+        {
+          "inputBytes": 0,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 13
+        },
+        {
+          "inputBytes": 0,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 13
+        },
+        {
+          "inputBytes": 0,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 13
+        },
+        {
+          "inputBytes": 0,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 25
+        },
+        {
+          "inputBytes": 0,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 25
+        },
+        {
+          "inputBytes": 0,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 25
+        },
+        {
+          "inputBytes": 1,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 8
+        },
+        {
+          "inputBytes": 1,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 8
+        },
+        {
+          "inputBytes": 1,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 8
+        },
+        {
+          "inputBytes": 1,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 14
+        },
+        {
+          "inputBytes": 1,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 14
+        },
+        {
+          "inputBytes": 1,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 14
+        },
+        {
+          "inputBytes": 1,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 26
+        },
+        {
+          "inputBytes": 1,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 26
+        },
+        {
+          "inputBytes": 1,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 26
+        },
+        {
+          "inputBytes": 2,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 9
+        },
+        {
+          "inputBytes": 2,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 9
+        },
+        {
+          "inputBytes": 2,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 9
+        },
+        {
+          "inputBytes": 2,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 15
+        },
+        {
+          "inputBytes": 2,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 15
+        },
+        {
+          "inputBytes": 2,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 15
+        },
+        {
+          "inputBytes": 2,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 27
+        },
+        {
+          "inputBytes": 2,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 27
+        },
+        {
+          "inputBytes": 2,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 27
+        },
+        {
+          "inputBytes": 3,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 10
+        },
+        {
+          "inputBytes": 3,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 10
+        },
+        {
+          "inputBytes": 3,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 10
+        },
+        {
+          "inputBytes": 3,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 16
+        },
+        {
+          "inputBytes": 3,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 16
+        },
+        {
+          "inputBytes": 3,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 16
+        },
+        {
+          "inputBytes": 3,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 28
+        },
+        {
+          "inputBytes": 3,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 28
+        },
+        {
+          "inputBytes": 3,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 28
+        },
+        {
+          "inputBytes": 7,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 14
+        },
+        {
+          "inputBytes": 7,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 14
+        },
+        {
+          "inputBytes": 7,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 14
+        },
+        {
+          "inputBytes": 7,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 20
+        },
+        {
+          "inputBytes": 7,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 20
+        },
+        {
+          "inputBytes": 7,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 20
+        },
+        {
+          "inputBytes": 7,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 32
+        },
+        {
+          "inputBytes": 7,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 32
+        },
+        {
+          "inputBytes": 7,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 32
+        },
+        {
+          "inputBytes": 8,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 15
+        },
+        {
+          "inputBytes": 8,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 15
+        },
+        {
+          "inputBytes": 8,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 15
+        },
+        {
+          "inputBytes": 8,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 21
+        },
+        {
+          "inputBytes": 8,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 21
+        },
+        {
+          "inputBytes": 8,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 21
+        },
+        {
+          "inputBytes": 8,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 33
+        },
+        {
+          "inputBytes": 8,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 33
+        },
+        {
+          "inputBytes": 8,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 33
+        },
+        {
+          "inputBytes": 9,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 16
+        },
+        {
+          "inputBytes": 9,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 16
+        },
+        {
+          "inputBytes": 9,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 16
+        },
+        {
+          "inputBytes": 9,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 22
+        },
+        {
+          "inputBytes": 9,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 22
+        },
+        {
+          "inputBytes": 9,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 22
+        },
+        {
+          "inputBytes": 9,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 34
+        },
+        {
+          "inputBytes": 9,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 34
+        },
+        {
+          "inputBytes": 9,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 34
+        },
+        {
+          "inputBytes": 15,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 22
+        },
+        {
+          "inputBytes": 15,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 22
+        },
+        {
+          "inputBytes": 15,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 22
+        },
+        {
+          "inputBytes": 15,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 28
+        },
+        {
+          "inputBytes": 15,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 28
+        },
+        {
+          "inputBytes": 15,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 28
+        },
+        {
+          "inputBytes": 15,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 40
+        },
+        {
+          "inputBytes": 15,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 40
+        },
+        {
+          "inputBytes": 15,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 40
+        },
+        {
+          "inputBytes": 16,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 24
+        },
+        {
+          "inputBytes": 16,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 24
+        },
+        {
+          "inputBytes": 16,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 24
+        },
+        {
+          "inputBytes": 16,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 30
+        },
+        {
+          "inputBytes": 16,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 30
+        },
+        {
+          "inputBytes": 16,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 30
+        },
+        {
+          "inputBytes": 16,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 42
+        },
+        {
+          "inputBytes": 16,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 42
+        },
+        {
+          "inputBytes": 16,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 42
+        },
+        {
+          "inputBytes": 17,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 25
+        },
+        {
+          "inputBytes": 17,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 25
+        },
+        {
+          "inputBytes": 17,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 25
+        },
+        {
+          "inputBytes": 17,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 31
+        },
+        {
+          "inputBytes": 17,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 31
+        },
+        {
+          "inputBytes": 17,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 31
+        },
+        {
+          "inputBytes": 17,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 43
+        },
+        {
+          "inputBytes": 17,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 43
+        },
+        {
+          "inputBytes": 17,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 43
+        },
+        {
+          "inputBytes": 63,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 73
+        },
+        {
+          "inputBytes": 63,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 73
+        },
+        {
+          "inputBytes": 63,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 73
+        },
+        {
+          "inputBytes": 63,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 79
+        },
+        {
+          "inputBytes": 63,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 79
+        },
+        {
+          "inputBytes": 63,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 79
+        },
+        {
+          "inputBytes": 63,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 91
+        },
+        {
+          "inputBytes": 63,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 91
+        },
+        {
+          "inputBytes": 63,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 91
+        },
+        {
+          "inputBytes": 64,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 75
+        },
+        {
+          "inputBytes": 64,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 75
+        },
+        {
+          "inputBytes": 64,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 75
+        },
+        {
+          "inputBytes": 64,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 81
+        },
+        {
+          "inputBytes": 64,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 81
+        },
+        {
+          "inputBytes": 64,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 81
+        },
+        {
+          "inputBytes": 64,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 93
+        },
+        {
+          "inputBytes": 64,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 93
+        },
+        {
+          "inputBytes": 64,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 93
+        },
+        {
+          "inputBytes": 65,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 76
+        },
+        {
+          "inputBytes": 65,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 76
+        },
+        {
+          "inputBytes": 65,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 76
+        },
+        {
+          "inputBytes": 65,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 82
+        },
+        {
+          "inputBytes": 65,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 82
+        },
+        {
+          "inputBytes": 65,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 82
+        },
+        {
+          "inputBytes": 65,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 94
+        },
+        {
+          "inputBytes": 65,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 94
+        },
+        {
+          "inputBytes": 65,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 94
+        },
+        {
+          "inputBytes": 127,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 141
+        },
+        {
+          "inputBytes": 127,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 141
+        },
+        {
+          "inputBytes": 127,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 141
+        },
+        {
+          "inputBytes": 127,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 147
+        },
+        {
+          "inputBytes": 127,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 147
+        },
+        {
+          "inputBytes": 127,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 147
+        },
+        {
+          "inputBytes": 127,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 159
+        },
+        {
+          "inputBytes": 127,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 159
+        },
+        {
+          "inputBytes": 127,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 159
+        },
+        {
+          "inputBytes": 128,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 143
+        },
+        {
+          "inputBytes": 128,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 143
+        },
+        {
+          "inputBytes": 128,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 143
+        },
+        {
+          "inputBytes": 128,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 149
+        },
+        {
+          "inputBytes": 128,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 149
+        },
+        {
+          "inputBytes": 128,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 149
+        },
+        {
+          "inputBytes": 128,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 161
+        },
+        {
+          "inputBytes": 128,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 161
+        },
+        {
+          "inputBytes": 128,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 161
+        },
+        {
+          "inputBytes": 255,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 277
+        },
+        {
+          "inputBytes": 255,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 277
+        },
+        {
+          "inputBytes": 255,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 277
+        },
+        {
+          "inputBytes": 255,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 283
+        },
+        {
+          "inputBytes": 255,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 283
+        },
+        {
+          "inputBytes": 255,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 283
+        },
+        {
+          "inputBytes": 255,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 295
+        },
+        {
+          "inputBytes": 255,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 295
+        },
+        {
+          "inputBytes": 255,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 295
+        },
+        {
+          "inputBytes": 256,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 279
+        },
+        {
+          "inputBytes": 256,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 279
+        },
+        {
+          "inputBytes": 256,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 279
+        },
+        {
+          "inputBytes": 256,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 285
+        },
+        {
+          "inputBytes": 256,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 285
+        },
+        {
+          "inputBytes": 256,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 285
+        },
+        {
+          "inputBytes": 256,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 297
+        },
+        {
+          "inputBytes": 256,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 297
+        },
+        {
+          "inputBytes": 256,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 297
+        },
+        {
+          "inputBytes": 1023,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 1093
+        },
+        {
+          "inputBytes": 1023,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 1093
+        },
+        {
+          "inputBytes": 1023,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 1093
+        },
+        {
+          "inputBytes": 1023,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 1099
+        },
+        {
+          "inputBytes": 1023,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 1099
+        },
+        {
+          "inputBytes": 1023,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 1099
+        },
+        {
+          "inputBytes": 1023,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 1111
+        },
+        {
+          "inputBytes": 1023,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 1111
+        },
+        {
+          "inputBytes": 1023,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 1111
+        },
+        {
+          "inputBytes": 1024,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 1095
+        },
+        {
+          "inputBytes": 1024,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 1095
+        },
+        {
+          "inputBytes": 1024,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 1095
+        },
+        {
+          "inputBytes": 1024,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 1101
+        },
+        {
+          "inputBytes": 1024,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 1101
+        },
+        {
+          "inputBytes": 1024,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 1101
+        },
+        {
+          "inputBytes": 1024,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 1113
+        },
+        {
+          "inputBytes": 1024,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 1113
+        },
+        {
+          "inputBytes": 1024,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 1113
+        },
+        {
+          "inputBytes": 1025,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 1096
+        },
+        {
+          "inputBytes": 1025,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 1096
+        },
+        {
+          "inputBytes": 1025,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 1096
+        },
+        {
+          "inputBytes": 1025,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 1102
+        },
+        {
+          "inputBytes": 1025,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 1102
+        },
+        {
+          "inputBytes": 1025,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 1102
+        },
+        {
+          "inputBytes": 1025,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 1114
+        },
+        {
+          "inputBytes": 1025,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 1114
+        },
+        {
+          "inputBytes": 1025,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 1114
+        },
+        {
+          "inputBytes": 4095,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 4357
+        },
+        {
+          "inputBytes": 4095,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 4357
+        },
+        {
+          "inputBytes": 4095,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 4357
+        },
+        {
+          "inputBytes": 4095,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 4363
+        },
+        {
+          "inputBytes": 4095,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 4363
+        },
+        {
+          "inputBytes": 4095,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 4363
+        },
+        {
+          "inputBytes": 4095,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 4375
+        },
+        {
+          "inputBytes": 4095,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 4375
+        },
+        {
+          "inputBytes": 4095,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 4375
+        },
+        {
+          "inputBytes": 4096,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 4359
+        },
+        {
+          "inputBytes": 4096,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 4359
+        },
+        {
+          "inputBytes": 4096,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 4359
+        },
+        {
+          "inputBytes": 4096,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 4365
+        },
+        {
+          "inputBytes": 4096,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 4365
+        },
+        {
+          "inputBytes": 4096,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 4365
+        },
+        {
+          "inputBytes": 4096,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 4377
+        },
+        {
+          "inputBytes": 4096,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 4377
+        },
+        {
+          "inputBytes": 4096,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 4377
+        },
+        {
+          "inputBytes": 4097,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 4360
+        },
+        {
+          "inputBytes": 4097,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 4360
+        },
+        {
+          "inputBytes": 4097,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 4360
+        },
+        {
+          "inputBytes": 4097,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 4366
+        },
+        {
+          "inputBytes": 4097,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 4366
+        },
+        {
+          "inputBytes": 4097,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 4366
+        },
+        {
+          "inputBytes": 4097,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 4378
+        },
+        {
+          "inputBytes": 4097,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 4378
+        },
+        {
+          "inputBytes": 4097,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 4378
+        },
+        {
+          "inputBytes": 16383,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 17413
+        },
+        {
+          "inputBytes": 16383,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 17413
+        },
+        {
+          "inputBytes": 16383,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 17413
+        },
+        {
+          "inputBytes": 16383,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 17419
+        },
+        {
+          "inputBytes": 16383,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 17419
+        },
+        {
+          "inputBytes": 16383,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 17419
+        },
+        {
+          "inputBytes": 16383,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 17431
+        },
+        {
+          "inputBytes": 16383,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 17431
+        },
+        {
+          "inputBytes": 16383,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 17431
+        },
+        {
+          "inputBytes": 16384,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 17415
+        },
+        {
+          "inputBytes": 16384,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 17415
+        },
+        {
+          "inputBytes": 16384,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 17415
+        },
+        {
+          "inputBytes": 16384,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 17421
+        },
+        {
+          "inputBytes": 16384,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 17421
+        },
+        {
+          "inputBytes": 16384,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 17421
+        },
+        {
+          "inputBytes": 16384,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 17433
+        },
+        {
+          "inputBytes": 16384,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 17433
+        },
+        {
+          "inputBytes": 16384,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 17433
+        },
+        {
+          "inputBytes": 16385,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 17416
+        },
+        {
+          "inputBytes": 16385,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 17416
+        },
+        {
+          "inputBytes": 16385,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 17416
+        },
+        {
+          "inputBytes": 16385,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 17422
+        },
+        {
+          "inputBytes": 16385,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 17422
+        },
+        {
+          "inputBytes": 16385,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 17422
+        },
+        {
+          "inputBytes": 16385,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 17434
+        },
+        {
+          "inputBytes": 16385,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 17434
+        },
+        {
+          "inputBytes": 16385,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 17434
+        },
+        {
+          "inputBytes": 65535,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 69637
+        },
+        {
+          "inputBytes": 65535,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 69637
+        },
+        {
+          "inputBytes": 65535,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 69637
+        },
+        {
+          "inputBytes": 65535,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 69643
+        },
+        {
+          "inputBytes": 65535,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 69643
+        },
+        {
+          "inputBytes": 65535,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 69643
+        },
+        {
+          "inputBytes": 65535,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 69655
+        },
+        {
+          "inputBytes": 65535,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 69655
+        },
+        {
+          "inputBytes": 65535,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 69655
+        },
+        {
+          "inputBytes": 65536,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 69639
+        },
+        {
+          "inputBytes": 65536,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 69639
+        },
+        {
+          "inputBytes": 65536,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 69639
+        },
+        {
+          "inputBytes": 65536,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 69645
+        },
+        {
+          "inputBytes": 65536,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 69645
+        },
+        {
+          "inputBytes": 65536,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 69645
+        },
+        {
+          "inputBytes": 65536,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 69657
+        },
+        {
+          "inputBytes": 65536,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 69657
+        },
+        {
+          "inputBytes": 65536,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 69657
+        },
+        {
+          "inputBytes": 65537,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 69640
+        },
+        {
+          "inputBytes": 65537,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 69640
+        },
+        {
+          "inputBytes": 65537,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 69640
+        },
+        {
+          "inputBytes": 65537,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 69646
+        },
+        {
+          "inputBytes": 65537,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 69646
+        },
+        {
+          "inputBytes": 65537,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 69646
+        },
+        {
+          "inputBytes": 65537,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 69658
+        },
+        {
+          "inputBytes": 65537,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 69658
+        },
+        {
+          "inputBytes": 65537,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 69658
+        },
+        {
+          "inputBytes": 262143,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 278533
+        },
+        {
+          "inputBytes": 262143,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 278533
+        },
+        {
+          "inputBytes": 262143,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 278533
+        },
+        {
+          "inputBytes": 262143,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 278539
+        },
+        {
+          "inputBytes": 262143,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 278539
+        },
+        {
+          "inputBytes": 262143,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 278539
+        },
+        {
+          "inputBytes": 262143,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 278551
+        },
+        {
+          "inputBytes": 262143,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 278551
+        },
+        {
+          "inputBytes": 262143,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 278551
+        },
+        {
+          "inputBytes": 262144,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 278535
+        },
+        {
+          "inputBytes": 262144,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 278535
+        },
+        {
+          "inputBytes": 262144,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 278535
+        },
+        {
+          "inputBytes": 262144,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 278541
+        },
+        {
+          "inputBytes": 262144,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 278541
+        },
+        {
+          "inputBytes": 262144,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 278541
+        },
+        {
+          "inputBytes": 262144,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 278553
+        },
+        {
+          "inputBytes": 262144,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 278553
+        },
+        {
+          "inputBytes": 262144,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 278553
+        },
+        {
+          "inputBytes": 262145,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 278536
+        },
+        {
+          "inputBytes": 262145,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 278536
+        },
+        {
+          "inputBytes": 262145,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 278536
+        },
+        {
+          "inputBytes": 262145,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 278542
+        },
+        {
+          "inputBytes": 262145,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 278542
+        },
+        {
+          "inputBytes": 262145,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 278542
+        },
+        {
+          "inputBytes": 262145,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 278554
+        },
+        {
+          "inputBytes": 262145,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 278554
+        },
+        {
+          "inputBytes": 262145,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 278554
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 1114117
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 1114117
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 1114117
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 1114123
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 1114123
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 1114123
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 1114135
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 1114135
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 1114135
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 1114119
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 1114119
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 1114119
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 1114125
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 1114125
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 1114125
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 1114137
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 1114137
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 1114137
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 1114120
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 1114120
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 1114120
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 1114126
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 1114126
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 1114126
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 1114138
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 1114138
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 1114138
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 4456455
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 4456455
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 4456455
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 4456461
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 4456461
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 4456461
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 4456473
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 4456473
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 4456473
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 8912903
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 8912903
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 8912903
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 8912909
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 8912909
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 8912909
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 8912921
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 8912921
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 8912921
+        }
+      ]
+    }
+  },
+  "boundValidation": {
+    "fixtures": 324,
+    "nativeRawComparisons": 111,
+    "actualNativeDiagnosticRoundTrips": 333,
+    "nativeWrapperReferences": 222
+  },
+  "lifecycle": {
+    "cases": 6,
+    "prefillObservations": 24,
+    "allTerminalOwnershipZero": true,
+    "highNormalBeforeYield": [
+      32,
+      32,
+      32,
+      32,
+      32,
+      32
+    ],
+    "highHeldBeforeYield": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+    ],
+    "poorNormalBeforeYield": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+    ],
+    "poorHeldBeforeYield": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+    ]
+  },
+  "campaign": {
+    "mainCells": 70,
+    "supplementCells": 6,
+    "warmups": 152,
+    "retainedTrials": 456,
+    "skips": 0,
+    "allOutputsCorrect": true,
+    "allCountAndByteCapsValid": true,
+    "allCreditCompositionsValid": true,
+    "allTerminalOwnershipZero": true,
+    "parallelRoundTrips": 3,
+    "nativeCompressionAbort": true,
+    "freshMemory": "not measured; no comparative RSS claim"
+  },
+  "preservation": {
+    "runtimeSourceFiles": 25,
+    "runtimeSourcesEqualPinned": true,
+    "historicalResultFiles": 92,
+    "historicalResultsUnchanged": true,
+    "firstStoppedFedoraReportUnchanged": true,
+    "trackedFilesAtStart": 331,
+    "authorizedModifiedHistoricalFiles": 10,
+    "files": {
+      ".gitattributes": {
+        "before": "fd2ca94a1e98ee4609cd3f8338e973038819afe8d25760990149a5a7d46d9982",
+        "after": "fd2ca94a1e98ee4609cd3f8338e973038819afe8d25760990149a5a7d46d9982",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      ".gitignore": {
+        "before": "3903957389e10bc16d10e7d9070d49ae46a89dad8be6e5d2ea20bd70de15dd58",
+        "after": "3903957389e10bc16d10e7d9070d49ae46a89dad8be6e5d2ea20bd70de15dd58",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      ".prettierignore": {
+        "before": "9620b62a0b7a78387ea89f79b5897e217a4410ce5cf1e158c1edc7cadbd47466",
+        "after": "9620b62a0b7a78387ea89f79b5897e217a4410ce5cf1e158c1edc7cadbd47466",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      ".prettierrc.json": {
+        "before": "32dcd743a0ffca59a737c87abcfcc3f57a0cede5cedb6a8b1b68d32a3b6d4506",
+        "after": "32dcd743a0ffca59a737c87abcfcc3f57a0cede5cedb6a8b1b68d32a3b6d4506",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "LICENSE": {
+        "before": "7977502d5d3bdd267520de1cce1176142296dd2a0d00309206703c7bba990135",
+        "after": "7977502d5d3bdd267520de1cce1176142296dd2a0d00309206703c7bba990135",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "README.md": {
+        "before": "1d4677117abdb379fe0d7b90bb319412aca72d1e21adca4b197eadf0bfbf9fc0",
+        "after": "1d4677117abdb379fe0d7b90bb319412aca72d1e21adca4b197eadf0bfbf9fc0",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/README.md": {
+        "before": "5cc0954f707cb1d8a63df10ab15914273cccd6403b00db97cb37bbe63babb17f",
+        "after": "5cc0954f707cb1d8a63df10ab15914273cccd6403b00db97cb37bbe63babb17f",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/binary-results/README.md": {
+        "before": "54c7c2baaa27486b74fe2e9d5350e64a15370969d8a7a2d902e05579f99fd786",
+        "after": "54c7c2baaa27486b74fe2e9d5350e64a15370969d8a7a2d902e05579f99fd786",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/binary-results/fairness.mjs": {
+        "before": "cae99b356a7c64acbc99ee1b4a388be46b8601bd34a3161d32192d4db5f6c84f",
+        "after": "cae99b356a7c64acbc99ee1b4a388be46b8601bd34a3161d32192d4db5f6c84f",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/binary-results/measure.mjs": {
+        "before": "106e012623748c95150b9e6257a66441521cf0c20b83ff7b7c8d5fb909e195f9",
+        "after": "106e012623748c95150b9e6257a66441521cf0c20b83ff7b7c8d5fb909e195f9",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/binary-results/regression-measure.mjs": {
+        "before": "887f78d8129a28759bbb33f19acdae3aad8650ba6676b6abba0c522a236651c6",
+        "after": "887f78d8129a28759bbb33f19acdae3aad8650ba6676b6abba0c522a236651c6",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/binary-results/regression.mjs": {
+        "before": "1bdf7da71f53063f1b3bb221ddc4ebecdd0b9a017368d1076913a17e596301b7",
+        "after": "1bdf7da71f53063f1b3bb221ddc4ebecdd0b9a017368d1076913a17e596301b7",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/binary-results/run.mjs": {
+        "before": "7878a6162c8999567e496f6544df81d0a406d45632123619cd04754519df2bc9",
+        "after": "7878a6162c8999567e496f6544df81d0a406d45632123619cd04754519df2bc9",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/binary-results/task.mjs": {
+        "before": "773570f6f491527b626ca93ff992c2b01912cf53f63078968cf0b037d9c5aa99",
+        "after": "773570f6f491527b626ca93ff992c2b01912cf53f63078968cf0b037d9c5aa99",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/completion-only/README.md": {
+        "before": "0eb3fba65d4ce6d544c1f376730f1addfd48d69e19528911f390261bda167b0c",
+        "after": "0eb3fba65d4ce6d544c1f376730f1addfd48d69e19528911f390261bda167b0c",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/completion-only/fairness.mjs": {
+        "before": "c93d7acd6cf15b28d5d3b6c5bc5db1146592c6c3dcf6dc0dbaa877c7b2ddc293",
+        "after": "c93d7acd6cf15b28d5d3b6c5bc5db1146592c6c3dcf6dc0dbaa877c7b2ddc293",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/completion-only/measure.mjs": {
+        "before": "81a1fe17767e8d15207a8f43a80594caab484d9bf0ed6107aa480b4d017b00e9",
+        "after": "81a1fe17767e8d15207a8f43a80594caab484d9bf0ed6107aa480b4d017b00e9",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/completion-only/regression-measure.mjs": {
+        "before": "3e832c69c9dc82b4d46f13587551df686c32e455dec91edf317151c40245fcf0",
+        "after": "3e832c69c9dc82b4d46f13587551df686c32e455dec91edf317151c40245fcf0",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/completion-only/regression.mjs": {
+        "before": "c7e255260aa805f7b4405522a33715ddf9feab0e02de2227f310d5758f813308",
+        "after": "c7e255260aa805f7b4405522a33715ddf9feab0e02de2227f310d5758f813308",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/completion-only/run.mjs": {
+        "before": "e6ea847b1cfb59c5b4cc6f452d7acd9aca8b00199505992ddba9ced78792b508",
+        "after": "e6ea847b1cfb59c5b4cc6f452d7acd9aca8b00199505992ddba9ced78792b508",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/completion-only/task.mjs": {
+        "before": "c0b769dead0ba13e0a7a8d1f58b563ac78326e0ce85e9ab336bc975e1a02481f",
+        "after": "c0b769dead0ba13e0a7a8d1f58b563ac78326e0ce85e9ab336bc975e1a02481f",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/cpu-baseline/compare.mjs": {
+        "before": "5061b2fd17f4af1b6b1332b10b3630f4bee8df2e1017dd205285ef0501b492c0",
+        "after": "5061b2fd17f4af1b6b1332b10b3630f4bee8df2e1017dd205285ef0501b492c0",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/cpu-baseline/probe.mjs": {
+        "before": "f8b4bd0bbc27bf5cbff6bf3d052e746f035e00ff886bc3b18cb4c9bb0f38c44b",
+        "after": "f8b4bd0bbc27bf5cbff6bf3d052e746f035e00ff886bc3b18cb4c9bb0f38c44b",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/cpu-baseline/run.mjs": {
+        "before": "61b9b3f10bd1b78e20b0d147e16d73bc7a51003d4d881b9211568dd566fd8653",
+        "after": "61b9b3f10bd1b78e20b0d147e16d73bc7a51003d4d881b9211568dd566fd8653",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/dispatch-efficiency/README.md": {
+        "before": "7a623f3e8f4059ee08c20001831396b92b4fbf25a73b3f0c309324f0d3a78485",
+        "after": "7a623f3e8f4059ee08c20001831396b92b4fbf25a73b3f0c309324f0d3a78485",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/dispatch-efficiency/fairness.mjs": {
+        "before": "6adef8ff7c2033f2479a55721b5a6c3fa20e3542686f9235120552f2cf9f8c2a",
+        "after": "6adef8ff7c2033f2479a55721b5a6c3fa20e3542686f9235120552f2cf9f8c2a",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/dispatch-efficiency/kernel.mjs": {
+        "before": "9626e0fb785994eee7b6407073cfbd84b523187a64b052b280b854ef60c11a17",
+        "after": "9626e0fb785994eee7b6407073cfbd84b523187a64b052b280b854ef60c11a17",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/dispatch-efficiency/measure.mjs": {
+        "before": "cf94452e10d2d5d761cbd16801f195ae40dfecc1c3cedaabd8126e1c8614ba12",
+        "after": "cf94452e10d2d5d761cbd16801f195ae40dfecc1c3cedaabd8126e1c8614ba12",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/dispatch-efficiency/piscina-task.mjs": {
+        "before": "cda332fc4a8a82483ade6a16a5eccd0391a11aec8ad7afe3b1c059457970dbf4",
+        "after": "cda332fc4a8a82483ade6a16a5eccd0391a11aec8ad7afe3b1c059457970dbf4",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/dispatch-efficiency/pjs-task.mjs": {
+        "before": "37c62cc9bea13cf180a17af5523a9c7886ac9afa92520a670c69162145c71a16",
+        "after": "37c62cc9bea13cf180a17af5523a9c7886ac9afa92520a670c69162145c71a16",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/dispatch-efficiency/profile-child.mjs": {
+        "before": "9413217884e838f5dc5228ae6c0c70023d3321c8f6fbcb9157f6c4f0deaccffa",
+        "after": "9413217884e838f5dc5228ae6c0c70023d3321c8f6fbcb9157f6c4f0deaccffa",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/dispatch-efficiency/profile.mjs": {
+        "before": "d5a8d07bc58b86f4736559a7a896515fb75712195a65a01ed8fb67a08fc85054",
+        "after": "d5a8d07bc58b86f4736559a7a896515fb75712195a65a01ed8fb67a08fc85054",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/dispatch-efficiency/run.mjs": {
+        "before": "b7cd6494b780317de94c93ce9c9b39db0ebaf72b0d5fef748e3d24e82873ba71",
+        "after": "b7cd6494b780317de94c93ce9c9b39db0ebaf72b0d5fef748e3d24e82873ba71",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/environment.mjs": {
+        "before": "c4867d0a1476912bed9ca9077091b685967d59edb0d7e7644af5bafe28320a75",
+        "after": "c4867d0a1476912bed9ca9077091b685967d59edb0d7e7644af5bafe28320a75",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/harness.mjs": {
+        "before": "0d76869e82f126f868210386c21598640d229bc5d260ac1ce61652fadb304056",
+        "after": "0d76869e82f126f868210386c21598640d229bc5d260ac1ce61652fadb304056",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/mapping/README.md": {
+        "before": "7d8bf50cbf3acfe39347426900576726e0e5c63b8c1ddba1fc0082dbdcd3f8cc",
+        "after": "7d8bf50cbf3acfe39347426900576726e0e5c63b8c1ddba1fc0082dbdcd3f8cc",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/mapping/fairness.mjs": {
+        "before": "e79766d3c3f69f42d9552669cc84bbf813dfcf778d989382bfc281e423953e63",
+        "after": "e79766d3c3f69f42d9552669cc84bbf813dfcf778d989382bfc281e423953e63",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/mapping/measure.mjs": {
+        "before": "f4aa35ca8ff25a6ecf573996c58e7b5d6fd1705ccb2f514b2a439e03f20b37dc",
+        "after": "f4aa35ca8ff25a6ecf573996c58e7b5d6fd1705ccb2f514b2a439e03f20b37dc",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/mapping/pipeline-measure.mjs": {
+        "before": "36290ceb4234934b478f8d21b789158dd7634c88c6a2372eaddb05688ffd7174",
+        "after": "36290ceb4234934b478f8d21b789158dd7634c88c6a2372eaddb05688ffd7174",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/mapping/pipeline.mjs": {
+        "before": "f30557965552f3397e5197ec0e7700ad9e162d0357f936e642e4ddb7966f0475",
+        "after": "f30557965552f3397e5197ec0e7700ad9e162d0357f936e642e4ddb7966f0475",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/mapping/regression-measure.mjs": {
+        "before": "471e4cc09376ee9ced280a196cf822d9f5aa519dac7b8456dcbcc5275fb36bf5",
+        "after": "471e4cc09376ee9ced280a196cf822d9f5aa519dac7b8456dcbcc5275fb36bf5",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/mapping/regression.mjs": {
+        "before": "5bbdbc37976555aa51287205c0e8e92b96b828667d73e424b9327608cbe9c281",
+        "after": "5bbdbc37976555aa51287205c0e8e92b96b828667d73e424b9327608cbe9c281",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/mapping/run.mjs": {
+        "before": "84d674219838b8ea3d01175c590de57d0846a068fa624498fee2df14c7f971d8",
+        "after": "84d674219838b8ea3d01175c590de57d0846a068fa624498fee2df14c7f971d8",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/mapping/task.mjs": {
+        "before": "8ce6c23e87261cb2cb4518e466d7aceb6eda54e4ebf3a80b7c41b05f60eebd5d",
+        "after": "8ce6c23e87261cb2cb4518e466d7aceb6eda54e4ebf3a80b7c41b05f60eebd5d",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/matrix-multiplication/run.mjs": {
+        "before": "a25452266216aae857d2e8ea72d15e6c9d604c0bd2507404ecddb08a2fd32da2",
+        "after": "a25452266216aae857d2e8ea72d15e6c9d604c0bd2507404ecddb08a2fd32da2",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/matrix-multiplication/task.mjs": {
+        "before": "91fca609c5f366cbdd5b91d590a7fe78caa612c93619fa2befbf574bc4d57e6b",
+        "after": "91fca609c5f366cbdd5b91d590a7fe78caa612c93619fa2befbf574bc4d57e6b",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/measure.mjs": {
+        "before": "41ea5392d8416b470a560854d21fbdc33b640fe92bdd7a30ed1d8bf654f2c391",
+        "after": "41ea5392d8416b470a560854d21fbdc33b640fe92bdd7a30ed1d8bf654f2c391",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/partitioning/README.md": {
+        "before": "0a417c6cfd352e3b04bbdecfec16a62e8d90057bd404cf23d470e4316c5c0f86",
+        "after": "0a417c6cfd352e3b04bbdecfec16a62e8d90057bd404cf23d470e4316c5c0f86",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/partitioning/kernel.mjs": {
+        "before": "1460ce4da902f10f64c861b6ffc38dff6048180d9f604ef0b077a4f8e259bad8",
+        "after": "1460ce4da902f10f64c861b6ffc38dff6048180d9f604ef0b077a4f8e259bad8",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/partitioning/measure.mjs": {
+        "before": "e390fe22398ef022d46bb6296692dc6f1804176e27b059debf5d676c7bf14390",
+        "after": "e390fe22398ef022d46bb6296692dc6f1804176e27b059debf5d676c7bf14390",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/partitioning/piscina-task.mjs": {
+        "before": "1576afbf54bcf0d21ba96726f4845d263867b3900c69dba3cce6fae48d704ac0",
+        "after": "1576afbf54bcf0d21ba96726f4845d263867b3900c69dba3cce6fae48d704ac0",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/partitioning/pjs-task.mjs": {
+        "before": "6dfa823473c858b35448393b9c25bda50dc248b361d92672a05373de9c6c15e7",
+        "after": "6dfa823473c858b35448393b9c25bda50dc248b361d92672a05373de9c6c15e7",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/partitioning/run.mjs": {
+        "before": "c983246a5dcb796ed956b3d26cc1edf4c76f648b58b42839143af263eac1736c",
+        "after": "c983246a5dcb796ed956b3d26cc1edf4c76f648b58b42839143af263eac1736c",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/prime-search/task.mjs": {
+        "before": "71d83204652180db4c0e86bf294d790c582478ae592f8d94cdfdf8ee144a6c2a",
+        "after": "71d83204652180db4c0e86bf294d790c582478ae592f8d94cdfdf8ee144a6c2a",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/real-world/compression/README.md": {
+        "before": "38771d1afae67c2b9440c3051d87c65baf0401d3a65ed33fc57e791ff111e699",
+        "after": "214fb09dd48227a738a3789428e9b85cb833e62126f9ca037c5aee6a6d10212b",
+        "unchanged": false,
+        "authorizedChange": true
+      },
+      "benchmarks/real-world/compression/bounds.mjs": {
+        "before": "5b9026f0cd623515e7fe155bc69b847d23d648c2ab1d31ab1af05af16a85a9e9",
+        "after": "8572c9b7c01cc813ca46048a68a1bea1b35c3fc1a28551913085244278070341",
+        "unchanged": false,
+        "authorizedChange": true
+      },
+      "benchmarks/real-world/compression/core.mjs": {
+        "before": "5cd74cab84cad4a97fa858527a0e10d4afd65e294381c9bc354b4c393eb16adc",
+        "after": "9106a1d638d91698fe4c897d714faa5552204a341aa15905f4a6c2988b54111e",
+        "unchanged": false,
+        "authorizedChange": true
+      },
+      "benchmarks/real-world/compression/executors.mjs": {
+        "before": "cdbb8805ea8e59fc58490eecf665bf5de24bec33ca0b5a2db31e273c86703f03",
+        "after": "cdbb8805ea8e59fc58490eecf665bf5de24bec33ca0b5a2db31e273c86703f03",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/real-world/compression/harness.test.mjs": {
+        "before": "6fa2f9b74a17c12e03d98cf14bef48da7623423f829d62762c324866933554e5",
+        "after": "edc868e8777bda5ae59657be8938cee8f7a6abdd4544aceb220ca60e345f7a3d",
+        "unchanged": false,
+        "authorizedChange": true
+      },
+      "benchmarks/real-world/compression/lifecycle.mjs": {
+        "before": "f1cf49603462269d9c8b606fc114c01f372cb619f2c9cf634edd5039f06959a9",
+        "after": "1055276dc66af1d693457b50d04ec33eb80660a336f0b0e6f9417e5082dba7c3",
+        "unchanged": false,
+        "authorizedChange": true
+      },
+      "benchmarks/real-world/compression/matrix.mjs": {
+        "before": "38ef81a71094f743b8442cdef177b9c2e2b8c93fcb7e2d043b0d729e3591da23",
+        "after": "38ef81a71094f743b8442cdef177b9c2e2b8c93fcb7e2d043b0d729e3591da23",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/real-world/compression/raw-worker.mjs": {
+        "before": "beeeb5125695ac8b9b685f5ec99e0bdb08705bfed3b7f8c1bfa96f649eb01827",
+        "after": "beeeb5125695ac8b9b685f5ec99e0bdb08705bfed3b7f8c1bfa96f649eb01827",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/real-world/compression/report.mjs": {
+        "before": "0a35c1ba96cf8c0b2d2ff5f2130d1ab2747f38b0d0679cec4e7ec49556d142c6",
+        "after": "71c5fb4969fddf8a148404cfce22a98eb502c4757df49803f6379f1eac5f0d91",
+        "unchanged": false,
+        "authorizedChange": true
+      },
+      "benchmarks/real-world/compression/run.mjs": {
+        "before": "afa4e4739a8f535a36862b22f122ba8de6362ffcaa799c4020ab72acfbb372fa",
+        "after": "7502f495589e330ba62093ba7afdd508db84a35f035c2c824c9fdf41e8755267",
+        "unchanged": false,
+        "authorizedChange": true
+      },
+      "benchmarks/real-world/compression/task.mjs": {
+        "before": "5f5b3445c8ad9c5b3d12b150918c3f9d74fc73336290b344d2935a5726c8630d",
+        "after": "5f5b3445c8ad9c5b3d12b150918c3f9d74fc73336290b344d2935a5726c8630d",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/real-world/crypto/README.md": {
+        "before": "6620ef9215d20ff87bd79b757e28fb900015375b91e5e48d5f5092899d89e36a",
+        "after": "6620ef9215d20ff87bd79b757e28fb900015375b91e5e48d5f5092899d89e36a",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/real-world/crypto/argon2-probe.mjs": {
+        "before": "4f4236be3e34df803cb2a5174ed6537fbbc7d8c4d556878b4265a77fd30c3c0e",
+        "after": "4f4236be3e34df803cb2a5174ed6537fbbc7d8c4d556878b4265a77fd30c3c0e",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/real-world/crypto/executors.mjs": {
+        "before": "0ee6f39650bfb6a87e348cf3e9d1b5e79663f0b985f13521730c89307b1a1cfd",
+        "after": "0ee6f39650bfb6a87e348cf3e9d1b5e79663f0b985f13521730c89307b1a1cfd",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/real-world/crypto/harness.test.mjs": {
+        "before": "27d41643850bce39187c9ec70d951d0a3fcd6870f840966fbe8b24a9b81621aa",
+        "after": "27d41643850bce39187c9ec70d951d0a3fcd6870f840966fbe8b24a9b81621aa",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/real-world/crypto/matrix.mjs": {
+        "before": "200c81ff60b2412d60184e3f1906c9cb39eb364aaeb70cb6c80804df66c78675",
+        "after": "200c81ff60b2412d60184e3f1906c9cb39eb364aaeb70cb6c80804df66c78675",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/real-world/crypto/package-lock.json": {
+        "before": "98bb2643a7d21ff9c11deaf828bf7b92c3bb4b8f3e076a28dc398d553ac6a7e4",
+        "after": "98bb2643a7d21ff9c11deaf828bf7b92c3bb4b8f3e076a28dc398d553ac6a7e4",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/real-world/crypto/package.json": {
+        "before": "8f1d48ca04fcadf0b1cd62e7c246d685e1f216c18d1c42b9eefd87a272ea1489",
+        "after": "8f1d48ca04fcadf0b1cd62e7c246d685e1f216c18d1c42b9eefd87a272ea1489",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/real-world/crypto/raw-worker.mjs": {
+        "before": "9a6889624655ab6384f9d4164c8339e2771fec72a01718f3a656a9cdbe97da83",
+        "after": "9a6889624655ab6384f9d4164c8339e2771fec72a01718f3a656a9cdbe97da83",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/real-world/crypto/report.mjs": {
+        "before": "56735f469f7612ec7dc59e8b22a349125ee13ed870bafe3f1b2cf9cdb924199d",
+        "after": "56735f469f7612ec7dc59e8b22a349125ee13ed870bafe3f1b2cf9cdb924199d",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/real-world/crypto/run.mjs": {
+        "before": "e0f80580219f2201392f188ae3ffd8588ad93c9a462759d60c71c49961d84aa1",
+        "after": "e0f80580219f2201392f188ae3ffd8588ad93c9a462759d60c71c49961d84aa1",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/real-world/crypto/support.mjs": {
+        "before": "7d1f1590271d9cd5ebaebeabb1816a2687100fd21611436ed85858e381addb05",
+        "after": "7d1f1590271d9cd5ebaebeabb1816a2687100fd21611436ed85858e381addb05",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/real-world/crypto/task.mjs": {
+        "before": "f9b53093efbd6a12d61fed64eb7f0021012b40927973f96c2ef2e7696fc9736c",
+        "after": "f9b53093efbd6a12d61fed64eb7f0021012b40927973f96c2ef2e7696fc9736c",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/reservation-audit/README.md": {
+        "before": "ef8cc3113ffadc3d911bf982814777bbffbc4d4772efb026b054a3695e235b62",
+        "after": "ef8cc3113ffadc3d911bf982814777bbffbc4d4772efb026b054a3695e235b62",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/reservation-audit/measure.mjs": {
+        "before": "5476fe83d31ed602dabcdc1fba215eaf05f762b55651fd8d95e0e679ee4f4b01",
+        "after": "5476fe83d31ed602dabcdc1fba215eaf05f762b55651fd8d95e0e679ee4f4b01",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/reservation-audit/pipeline.mjs": {
+        "before": "ab44c62b6a6f2d47e9256cbc9b58fd3c930433635e98c7b909958e66a6ba8684",
+        "after": "ab44c62b6a6f2d47e9256cbc9b58fd3c930433635e98c7b909958e66a6ba8684",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/reservation-audit/regression-measure.mjs": {
+        "before": "5f38feeaadc3136a9ca4e14c22834b80078e5c95e993e5c144bee66461f24041",
+        "after": "5f38feeaadc3136a9ca4e14c22834b80078e5c95e993e5c144bee66461f24041",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/reservation-audit/regression.mjs": {
+        "before": "c82eb930b9f6d7653ef6d809086c6029b84171e5ce083cfa2e61049b809cda90",
+        "after": "c82eb930b9f6d7653ef6d809086c6029b84171e5ce083cfa2e61049b809cda90",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/reservation-audit/run.mjs": {
+        "before": "b007e76ec6a7a9c53b166b96607f1d6fc5f2e9463d8cfe57fcdd02eecf00ed5f",
+        "after": "b007e76ec6a7a9c53b166b96607f1d6fc5f2e9463d8cfe57fcdd02eecf00ed5f",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/reservation-audit/task.mjs": {
+        "before": "58208bbcb5d87922308638136a761d1e3ce06f5e2879392de7d4688ebef000e3",
+        "after": "58208bbcb5d87922308638136a761d1e3ce06f5e2879392de7d4688ebef000e3",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/binary-fairness-v0.9.json": {
+        "before": "1ea21af7e3feb7e6ba13ca2ef91a0393f4a308de9db72b0ad065f12afab851d9",
+        "after": "1ea21af7e3feb7e6ba13ca2ef91a0393f4a308de9db72b0ad065f12afab851d9",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/binary-results-v0.9.json": {
+        "before": "21d1429896b807b3c797cb9fa62d346aa520db24990615115fa8a9a6f270b1a9",
+        "after": "21d1429896b807b3c797cb9fa62d346aa520db24990615115fa8a9a6f270b1a9",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/completion-fairness-v0.6.json": {
+        "before": "dde6fc4a75e32e08fffc1903d1cbe09ba97dbd3bf7a100795430d626b59cab89",
+        "after": "dde6fc4a75e32e08fffc1903d1cbe09ba97dbd3bf7a100795430d626b59cab89",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/completion-only-v0.6.json": {
+        "before": "3ff1dd2c9b8870109c8ed8f52ccfd1a2ed4d0c6d640743600b697396f5a6acd2",
+        "after": "3ff1dd2c9b8870109c8ed8f52ccfd1a2ed4d0c6d640743600b697396f5a6acd2",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/compression-v0.14-bound-validation.json": {
+        "before": "d37596929292fae262884b98fc3d21003ad3500d118c1963e96373c536fc274b",
+        "after": "d37596929292fae262884b98fc3d21003ad3500d118c1963e96373c536fc274b",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/compression-v0.14-contention.json": {
+        "before": "ba3f31267eeb38e08a26a211c6dc63df1b906a088ba22264adc0a84ceb915780",
+        "after": "ba3f31267eeb38e08a26a211c6dc63df1b906a088ba22264adc0a84ceb915780",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/compression-v0.14-fedora-bounds.json": {
+        "before": "a9ca0751f8bd046ce92436f3b3c237e929f75a63b228e32a3efdda81fe21c4df",
+        "after": "a9ca0751f8bd046ce92436f3b3c237e929f75a63b228e32a3efdda81fe21c4df",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/compression-v0.14-fresh-memory.json": {
+        "before": "ac71391a7efbab41588f40063588354fefd9d2ab123b989d54f0cc1ae794a8b9",
+        "after": "ac71391a7efbab41588f40063588354fefd9d2ab123b989d54f0cc1ae794a8b9",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/compression-v0.14-lifecycle.json": {
+        "before": "5254dce7c469efb0ebd4bf6c782a58b826169f1babfe0f4a35aef26609182ae8",
+        "after": "5254dce7c469efb0ebd4bf6c782a58b826169f1babfe0f4a35aef26609182ae8",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/compression-v0.14-windows-node24.json": {
+        "before": "b15515ec629a46bbe722fb1a4f02be3e2821c4b25179b919c93d83044f66774b",
+        "after": "b15515ec629a46bbe722fb1a4f02be3e2821c4b25179b919c93d83044f66774b",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cpu-initial.json": {
+        "before": "0a4a00aa9e49df39e07d5579178686941f039845e8a650eee8399810d0b44e94",
+        "after": "0a4a00aa9e49df39e07d5579178686941f039845e8a650eee8399810d0b44e94",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cpu-regression-v0.3.json": {
+        "before": "66de47681d979edfcd7eb7b8a4ed254529987fcc90fb463670e83cdc78711b51",
+        "after": "66de47681d979edfcd7eb7b8a4ed254529987fcc90fb463670e83cdc78711b51",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cpu-regression-v0.4.json": {
+        "before": "f5622ada07ba62acece62757b806a3de6998ceebeb15cd4c6e8c9a6465ef618d",
+        "after": "f5622ada07ba62acece62757b806a3de6998ceebeb15cd4c6e8c9a6465ef618d",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cpu-regression-v0.5.json": {
+        "before": "b5c37305a91e3bf97e5b3cc9faba1ae82a3ddc9f3fb9d761ce421459c54bd267",
+        "after": "b5c37305a91e3bf97e5b3cc9faba1ae82a3ddc9f3fb9d761ce421459c54bd267",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cpu-v0.2-local.json": {
+        "before": "56f08e828c37e4351fed114fa3fa530b82a15359d2c8106f8e52cfb260a031c7",
+        "after": "56f08e828c37e4351fed114fa3fa530b82a15359d2c8106f8e52cfb260a031c7",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cpu-v0.2.json": {
+        "before": "99fcd166293b90bda31e6efd9f36d43c4e80a23bb99136c1100088d0aa35f26e",
+        "after": "99fcd166293b90bda31e6efd9f36d43c4e80a23bb99136c1100088d0aa35f26e",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cpu-v0.3.json": {
+        "before": "66e09453263cbb49070b7c9f306b133ae597108aa09528f963d08ee65769831b",
+        "after": "66e09453263cbb49070b7c9f306b133ae597108aa09528f963d08ee65769831b",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cpu.json": {
+        "before": "eed0f9a1371f579b6a2da9ea8dfde3ad52b325b4b21a56ba8609619c603a6295",
+        "after": "eed0f9a1371f579b6a2da9ea8dfde3ad52b325b4b21a56ba8609619c603a6295",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cross-platform-v0.11-fedora-ryzen3300u-node22.json": {
+        "before": "4bb39bb3548f1c8a0ff83b79012c9c0ae3b9b98060e5a1217de19868803636f2",
+        "after": "4bb39bb3548f1c8a0ff83b79012c9c0ae3b9b98060e5a1217de19868803636f2",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cross-platform-v0.11-fedora-ryzen3300u-node22.metadata.json": {
+        "before": "4f9a213ec0bddc655f8a04ff48d13783fe13df963047bff3c2fa92ea1a373efc",
+        "after": "4f9a213ec0bddc655f8a04ff48d13783fe13df963047bff3c2fa92ea1a373efc",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cross-platform-v0.11-fedora-ryzen3300u-node22.supplement.json": {
+        "before": "0c2c97578c50df053e7f0525bd72f107533842a9fb82a0a75b2014137878f231",
+        "after": "0c2c97578c50df053e7f0525bd72f107533842a9fb82a0a75b2014137878f231",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cross-platform-v0.11-fedora-ryzen3300u-node22.supplement.metadata.json": {
+        "before": "4e17e1658acf7161d66314ce6492bf554b6eb4b814b6456c69cca0aecd123827",
+        "after": "4e17e1658acf7161d66314ce6492bf554b6eb4b814b6456c69cca0aecd123827",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cross-platform-v0.11-fedora-ryzen3300u-node24.json": {
+        "before": "058429e927a20e7d15805cb66451f0702f8fcfe14d4564840354bcd59ea13c7b",
+        "after": "058429e927a20e7d15805cb66451f0702f8fcfe14d4564840354bcd59ea13c7b",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cross-platform-v0.11-fedora-ryzen3300u-node24.metadata.json": {
+        "before": "bd3257ca6bd40c8941a9ba5c023b83eec2a0f206932642de7ebb01575fcba998",
+        "after": "bd3257ca6bd40c8941a9ba5c023b83eec2a0f206932642de7ebb01575fcba998",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cross-platform-v0.11-fedora-ryzen3300u-node24.supplement.json": {
+        "before": "bb03b0715c4b6f6359e661664bd75e6de4ec0612c43d54a49a5cc4cc9848b140",
+        "after": "bb03b0715c4b6f6359e661664bd75e6de4ec0612c43d54a49a5cc4cc9848b140",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cross-platform-v0.11-fedora-ryzen3300u-node24.supplement.metadata.json": {
+        "before": "ba9bfc6fd74ba71e5b62821b43c1ef1a90a473831bbae964e6ad7e239cdc2971",
+        "after": "ba9bfc6fd74ba71e5b62821b43c1ef1a90a473831bbae964e6ad7e239cdc2971",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cross-platform-v0.11-windows-i3-10100f-node22.json": {
+        "before": "c99fca995e47534c5dac0d93fabfe5df34eb459c1421fce5cef84bca4f56d88d",
+        "after": "c99fca995e47534c5dac0d93fabfe5df34eb459c1421fce5cef84bca4f56d88d",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cross-platform-v0.11-windows-i3-10100f-node22.metadata.json": {
+        "before": "07f055cefa823c7dab4e71ea78f873eac1897ac2e6e5f825f9941571c5c619bc",
+        "after": "07f055cefa823c7dab4e71ea78f873eac1897ac2e6e5f825f9941571c5c619bc",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cross-platform-v0.11-windows-i3-10100f-node24.json": {
+        "before": "31d8d4781180dff05aa05fabe308e3243b504ed6f8b86aef01908217d6caaa10",
+        "after": "31d8d4781180dff05aa05fabe308e3243b504ed6f8b86aef01908217d6caaa10",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cross-platform-v0.11-windows-i3-10100f-node24.metadata.json": {
+        "before": "6200b83dfb4b7d7212d061968c9a1bc4f479c6c63d13c82594a084b9b656122f",
+        "after": "6200b83dfb4b7d7212d061968c9a1bc4f479c6c63d13c82594a084b9b656122f",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cross-platform-v0.12-fedora-ryzen3300u-node22-reduced.json": {
+        "before": "7b6db59afeb33634efd018a053b8bb72d8437382410229ab041cd7172d2cfbd0",
+        "after": "7b6db59afeb33634efd018a053b8bb72d8437382410229ab041cd7172d2cfbd0",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cross-platform-v0.12-fedora-ryzen3300u-node22-reduced.metadata.json": {
+        "before": "8288cbc4c04ac0770e6c51f9f832a1217cb3719d78f9cefea88919a510014cab",
+        "after": "8288cbc4c04ac0770e6c51f9f832a1217cb3719d78f9cefea88919a510014cab",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cross-platform-v0.12-fedora-ryzen3300u-node24-full.json": {
+        "before": "b7dcd5297fe71846d457e8635c50b580a47a69a0bc177d7819ee25fe3575e512",
+        "after": "b7dcd5297fe71846d457e8635c50b580a47a69a0bc177d7819ee25fe3575e512",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cross-platform-v0.12-fedora-ryzen3300u-node24-full.metadata.json": {
+        "before": "bbbb4e8febf1b7413fbd487967693be4e477b70f88db567d79e429036d697099",
+        "after": "bbbb4e8febf1b7413fbd487967693be4e477b70f88db567d79e429036d697099",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cross-platform-v0.12-windows-i3-10100f-node22-reduced.json": {
+        "before": "3179d2bb6a42612efc3093ac7b28ec9d460e41b82298d8f190436238460d8fe8",
+        "after": "3179d2bb6a42612efc3093ac7b28ec9d460e41b82298d8f190436238460d8fe8",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cross-platform-v0.12-windows-i3-10100f-node22-reduced.metadata.json": {
+        "before": "673f3d83bb68f346fa5ab07b1947ded29bbef10f8b10280a7ce3c3d757444bef",
+        "after": "673f3d83bb68f346fa5ab07b1947ded29bbef10f8b10280a7ce3c3d757444bef",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cross-platform-v0.12-windows-i3-10100f-node24-full.json": {
+        "before": "0bcfd519f554b3dc99c85f08b4f9451492f5d574d8c3c5772e058a0114bf4af1",
+        "after": "0bcfd519f554b3dc99c85f08b4f9451492f5d574d8c3c5772e058a0114bf4af1",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/cross-platform-v0.12-windows-i3-10100f-node24-full.metadata.json": {
+        "before": "76434046698708660d39521f0fbffb8491354819cbefe5e87676a5f26ac72e3c",
+        "after": "76434046698708660d39521f0fbffb8491354819cbefe5e87676a5f26ac72e3c",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/crypto-v0.13-argon2-native-confirm.json": {
+        "before": "2d7cb55bcbceb9756ab76ff98d9061217c9751da9931ef7e2c15346734366e68",
+        "after": "2d7cb55bcbceb9756ab76ff98d9061217c9751da9931ef7e2c15346734366e68",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/crypto-v0.13-argon2-pjs-confirm.json": {
+        "before": "d7cf92633ad3c9c40269e04311a4eb75ef10fb83b29487250e05af717bae73d6",
+        "after": "d7cf92633ad3c9c40269e04311a4eb75ef10fb83b29487250e05af717bae73d6",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/crypto-v0.13-fedora-node24.json": {
+        "before": "69d63574eeedeffb0bc9ff960e7edf2266815c4d298cd63416868328708f7e5e",
+        "after": "69d63574eeedeffb0bc9ff960e7edf2266815c4d298cd63416868328708f7e5e",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/crypto-v0.13-native-submission-probe.json": {
+        "before": "a9ec12f2b09bcf62915b4c3ed11d61da35605a157d28c9edcf5bdd879afc9a27",
+        "after": "a9ec12f2b09bcf62915b4c3ed11d61da35605a157d28c9edcf5bdd879afc9a27",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/crypto-v0.13-smoke.json": {
+        "before": "dfc15c091181321331df06bbf9da87c75f3c719dadcd01a0fb918d9b1ef93a16",
+        "after": "dfc15c091181321331df06bbf9da87c75f3c719dadcd01a0fb918d9b1ef93a16",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/crypto-v0.13-windows-bcrypt.json": {
+        "before": "29f5ce8915b5ecc1c29bf85dfc1ccdfff0094c836b159b56eea5046648c7f647",
+        "after": "29f5ce8915b5ecc1c29bf85dfc1ccdfff0094c836b159b56eea5046648c7f647",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/crypto-v0.13-windows-deep-concurrency.json": {
+        "before": "9f9076a0a516959753bdc96deed8ace6792981de67ef83fe68a6525d1ed7715f",
+        "after": "9f9076a0a516959753bdc96deed8ace6792981de67ef83fe68a6525d1ed7715f",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/crypto-v0.13-windows-native-submission-probe.json": {
+        "before": "af03e2179fba8ffc0470178d8b484ced48d2e1f2d47f36a6ae399be990e1a77d",
+        "after": "af03e2179fba8ffc0470178d8b484ced48d2e1f2d47f36a6ae399be990e1a77d",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/crypto-v0.13-windows-node24-reproduce.json": {
+        "before": "4fb0efda71256bdeefe917ceb57e96c5ada606eeb9b0cc47c55d63275ddd2e9b",
+        "after": "4fb0efda71256bdeefe917ceb57e96c5ada606eeb9b0cc47c55d63275ddd2e9b",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/crypto-v0.13-windows-process-threads.json": {
+        "before": "c64b9146dffe2d348af532ddb1622558c08234a6909175c782f07f3e7d0eae59",
+        "after": "c64b9146dffe2d348af532ddb1622558c08234a6909175c782f07f3e7d0eae59",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/dispatch-efficiency-v0.5.json": {
+        "before": "3576c316f3a43cab1678edd44021984d29560c491a620ea37149ffd7425cc696",
+        "after": "3576c316f3a43cab1678edd44021984d29560c491a620ea37149ffd7425cc696",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/dispatch-fairness-v0.5.json": {
+        "before": "0d4d1ee28d1af0743ae02abbfd4a76aff1da0b68fd2db80ac45d321b0a3f727c",
+        "after": "0d4d1ee28d1af0743ae02abbfd4a76aff1da0b68fd2db80ac45d321b0a3f727c",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/dispatch-partition-v0.4.json": {
+        "before": "745800cda8b569ec872ad7931abebce3678dac701fac9b8b4023d3fe0f23b1bb",
+        "after": "745800cda8b569ec872ad7931abebce3678dac701fac9b8b4023d3fe0f23b1bb",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/dispatch-profile-v0.5.json": {
+        "before": "f550026045711e072652bba337ca60a1f9b4901ea5d2246ffba3b850a002155a",
+        "after": "f550026045711e072652bba337ca60a1f9b4901ea5d2246ffba3b850a002155a",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/element-map-v0.8.json": {
+        "before": "84667733d77b6d640aa4334a127bac566077e72df7d71256ef84dbeaf31ce653",
+        "after": "84667733d77b6d640aa4334a127bac566077e72df7d71256ef84dbeaf31ce653",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/map-fairness-v0.8.json": {
+        "before": "acf9369f300bb61792f48aef7bd8b257fc16c9a896b907d6952d1f7c0ed3adda",
+        "after": "acf9369f300bb61792f48aef7bd8b257fc16c9a896b907d6952d1f7c0ed3adda",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/map-pipeline-v0.8.json": {
+        "before": "551f6e79c652b8c2e3985c5025f0380e9c2027ad23967144ee488fa2feb9b741",
+        "after": "551f6e79c652b8c2e3985c5025f0380e9c2027ad23967144ee488fa2feb9b741",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/matrix-clone-v0.2.json": {
+        "before": "21ad3f281b01a73d91ff0388aeeb02f7225395c9ec7cba7f917ffa7887cca193",
+        "after": "21ad3f281b01a73d91ff0388aeeb02f7225395c9ec7cba7f917ffa7887cca193",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/matrix-clone-v0.3.json": {
+        "before": "eb55143dd9ba67c90c6cf5311836a1dae1f743e91ac62fc51bb65aade8ecab18",
+        "after": "eb55143dd9ba67c90c6cf5311836a1dae1f743e91ac62fc51bb65aade8ecab18",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/matrix-partition-v0.4.json": {
+        "before": "200117376bcc8a8b8a36a8b0aa4061a9872506c7b63ec3dda8af7542aef461f2",
+        "after": "200117376bcc8a8b8a36a8b0aa4061a9872506c7b63ec3dda8af7542aef461f2",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/matrix-shared-v0.3.json": {
+        "before": "7306152bb718cf56a655e65f7135d61692975d433b6ba2b49b6b3d6f8ea5e287",
+        "after": "7306152bb718cf56a655e65f7135d61692975d433b6ba2b49b6b3d6f8ea5e287",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/matrix-transfer-v0.2.json": {
+        "before": "de70b0ad43a7eebb71caa63bd8d44d33014574fe5b405d0eb9271c7be8d34cbc",
+        "after": "de70b0ad43a7eebb71caa63bd8d44d33014574fe5b405d0eb9271c7be8d34cbc",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/matrix-transfer-v0.3.json": {
+        "before": "0f9c44fb145fd603789620a8817f02344ecac15aaf99377602cff863a07c3430",
+        "after": "0f9c44fb145fd603789620a8817f02344ecac15aaf99377602cff863a07c3430",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/matrix-v0.3.json": {
+        "before": "b6d3b595a2c5adff4f7148ea2fc687ab2ce5c85badd63c688ccdf74dce204020",
+        "after": "b6d3b595a2c5adff4f7148ea2fc687ab2ce5c85badd63c688ccdf74dce204020",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/matrix.json": {
+        "before": "71c92c529da18e58a75943fd7c9622f25c8fc866f0835b435ada85b0859afef6",
+        "after": "71c92c529da18e58a75943fd7c9622f25c8fc866f0835b435ada85b0859afef6",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/piscina-v0.3.json": {
+        "before": "c21aa905638252bcebf2a82896bbd9ffb1b1086aa5c8cb10f47bf12ef6791425",
+        "after": "c21aa905638252bcebf2a82896bbd9ffb1b1086aa5c8cb10f47bf12ef6791425",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/range-partition-v0.4.json": {
+        "before": "6d68c9da75ac9f6cbcec16e85db713b612302ae01706aa50af5d8c7ba35656d3",
+        "after": "6d68c9da75ac9f6cbcec16e85db713b612302ae01706aa50af5d8c7ba35656d3",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/refund-benefit-v0.12.json": {
+        "before": "65f8ac0aa7d2aed5789293be406197f32061975d2e5c792e1980951282eebe5e",
+        "after": "65f8ac0aa7d2aed5789293be406197f32061975d2e5c792e1980951282eebe5e",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/reservation-performance-v0.10.json": {
+        "before": "2d1108d920f6ae6f89f8a49c732c37e739116b38a9f0fab5ae68923303cae430",
+        "after": "2d1108d920f6ae6f89f8a49c732c37e739116b38a9f0fab5ae68923303cae430",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/reservation-pipeline-v0.10.json": {
+        "before": "fa362c60dd35ac94846e186810732f7d1246e2a742b37eeae87a6011e51fc445",
+        "after": "fa362c60dd35ac94846e186810732f7d1246e2a742b37eeae87a6011e51fc445",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/reservation-soak-forced-gc-v0.10.json": {
+        "before": "cc90469ed662a42990f393a66480442a92d26a2c6e7bc9332f16e5df9532cc98",
+        "after": "cc90469ed662a42990f393a66480442a92d26a2c6e7bc9332f16e5df9532cc98",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/reservation-soak-v0.10.json": {
+        "before": "3423bc636a646e40d92341bb9a58aa566e221f846cc19ea84e26571329b0d099",
+        "after": "3423bc636a646e40d92341bb9a58aa566e221f846cc19ea84e26571329b0d099",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/reservation-soak-v0.11.json": {
+        "before": "13288569c5a682bb1133d66b49a1aaa8abcb1aae788496acb0b6fac31228220e",
+        "after": "13288569c5a682bb1133d66b49a1aaa8abcb1aae788496acb0b6fac31228220e",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/reservation-soak-v0.12.json": {
+        "before": "dd1f301306fb218742af214ffe57f9c13eaa7f0ba9ed92d8a49001cb8ea8b0aa",
+        "after": "dd1f301306fb218742af214ffe57f9c13eaa7f0ba9ed92d8a49001cb8ea8b0aa",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/result-streaming-v0.7.json": {
+        "before": "1dbc6b4f34ec8f4766249088601f1cae2d26f97ed28a4d2ac1c763a75262e45d",
+        "after": "1dbc6b4f34ec8f4766249088601f1cae2d26f97ed28a4d2ac1c763a75262e45d",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/runtime-architecture-v0.11.json": {
+        "before": "e8b97916f77818a3a5e4dcd0752ea811238b7a372f8a44a8d3e8b3218a62be3e",
+        "after": "e8b97916f77818a3a5e4dcd0752ea811238b7a372f8a44a8d3e8b3218a62be3e",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/runtime-regression-v0.10.json": {
+        "before": "ae003dc82e9e171ee0ac0fccf50a9f701ae5798f0c8aa10ef40f6e727dfd7888",
+        "after": "ae003dc82e9e171ee0ac0fccf50a9f701ae5798f0c8aa10ef40f6e727dfd7888",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/runtime-regression-v0.12.json": {
+        "before": "6703da87c1e2a66515a564a206fc381bf169a3cd6449caa5d16f7542163b36d0",
+        "after": "6703da87c1e2a66515a564a206fc381bf169a3cd6449caa5d16f7542163b36d0",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/runtime-regression-v0.6.json": {
+        "before": "d3ede383b565375359b9cd6e32855e775685365f64fa27c21d23d4f65fc3e966",
+        "after": "d3ede383b565375359b9cd6e32855e775685365f64fa27c21d23d4f65fc3e966",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/runtime-regression-v0.7.json": {
+        "before": "bb3f98c7f6c6983cb09b0d0c35dd6a03a7110280ddb524b166cc4964469e450e",
+        "after": "bb3f98c7f6c6983cb09b0d0c35dd6a03a7110280ddb524b166cc4964469e450e",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/runtime-regression-v0.8.json": {
+        "before": "6c00d187c1eda74d934aa9befea149f9d3a2855aa9a287554010e86824f1bc3c",
+        "after": "6c00d187c1eda74d934aa9befea149f9d3a2855aa9a287554010e86824f1bc3c",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/runtime-regression-v0.9.json": {
+        "before": "6edff3b9bf48d8364569a2ee9165054212a9f4d952d9f0aa838cc1c4fcddf881",
+        "after": "6edff3b9bf48d8364569a2ee9165054212a9f4d952d9f0aa838cc1c4fcddf881",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/shared-v0.3.json": {
+        "before": "5afe52bb66c997c017c9e3625cd21a7fc519a60d9e60b24e81487d0ce796f0c2",
+        "after": "5afe52bb66c997c017c9e3625cd21a7fc519a60d9e60b24e81487d0ce796f0c2",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/skew-partition-v0.4.json": {
+        "before": "977a9ae51795b8be0cc64c304d22a569c5b6ca4dd2c08c8fe84d84d3b117eae1",
+        "after": "977a9ae51795b8be0cc64c304d22a569c5b6ca4dd2c08c8fe84d84d3b117eae1",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/stream-fairness-v0.7.json": {
+        "before": "ead3608769d499aa1d7f2d7fdcf6333171257aacf2fd53591f83fee4698a0c23",
+        "after": "ead3608769d499aa1d7f2d7fdcf6333171257aacf2fd53591f83fee4698a0c23",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/transfer-v0.2.json": {
+        "before": "da141b32b7f93d476dac953d19164622e644b4014b41399ec97cd461bacd1a50",
+        "after": "da141b32b7f93d476dac953d19164622e644b4014b41399ec97cd461bacd1a50",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/transfer-v0.3.json": {
+        "before": "cbed90757915e5cadbc208a5f4af75cbb0d2f09765629e7f15df1bd8b4b92a34",
+        "after": "cbed90757915e5cadbc208a5f4af75cbb0d2f09765629e7f15df1bd8b4b92a34",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/upper-bound-profile-v0.12.json": {
+        "before": "1882cbf41ff39ca9fc620764a65c2ec9fdbc42c48a1202307882b009670b8bfb",
+        "after": "1882cbf41ff39ca9fc620764a65c2ec9fdbc42c48a1202307882b009670b8bfb",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/upper-bound-results-v0.12.json": {
+        "before": "cd33530d62478ea9ecb62ece26bce9b4f57c9cede6bfb6a672c6934e61ad8e61",
+        "after": "cd33530d62478ea9ecb62ece26bce9b4f57c9cede6bfb6a672c6934e61ad8e61",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/validation-v0.12.json": {
+        "before": "d198adaa19d03e50a1b91fa5cfa1b6803b94569ea8efb8e92178b10a6a783b1e",
+        "after": "d198adaa19d03e50a1b91fa5cfa1b6803b94569ea8efb8e92178b10a6a783b1e",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/validation-v0.13-windows.json": {
+        "before": "f0eea5e49d6c1203cf135186b3af62a5c85c7c9c88bd8a52b2e991717929f238",
+        "after": "f0eea5e49d6c1203cf135186b3af62a5c85c7c9c88bd8a52b2e991717929f238",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/validation-v0.13.json": {
+        "before": "99040312af1d134e4a89963697b0d88015c165710b2177f78f0d626036570c9b",
+        "after": "99040312af1d134e4a89963697b0d88015c165710b2177f78f0d626036570c9b",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/validation-v0.14-fedora-qualification.json": {
+        "before": "cddc562a83ecc4583f3841502acc43d7c3df1c4877fadd3d6ab3d152bb3ef47c",
+        "after": "cddc562a83ecc4583f3841502acc43d7c3df1c4877fadd3d6ab3d152bb3ef47c",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/results/validation-v0.14.json": {
+        "before": "6a8164146f88e22a13b9f8f2a5619db13b89c6a74fee69a0ffe7abab5bb7e821",
+        "after": "6a8164146f88e22a13b9f8f2a5619db13b89c6a74fee69a0ffe7abab5bb7e821",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/runtime-architecture/compare.mjs": {
+        "before": "b0d9fa8ca40a55b6807a452b0ac891097a48dadc8d0dca020412d9c8ed4aac93",
+        "after": "b0d9fa8ca40a55b6807a452b0ac891097a48dadc8d0dca020412d9c8ed4aac93",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/runtime-architecture/measure.mjs": {
+        "before": "996ad0b031aa0f623818002875ba14a6425c3d7ca2c1c42971720b0d3d76d397",
+        "after": "996ad0b031aa0f623818002875ba14a6425c3d7ca2c1c42971720b0d3d76d397",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/runtime-architecture/task.mjs": {
+        "before": "7531e0381d06861b3560edd5669c91df3dfe991fb2ab0a3e6fde0307de20218c",
+        "after": "7531e0381d06861b3560edd5669c91df3dfe991fb2ab0a3e6fde0307de20218c",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/shared-memory/kernel.mjs": {
+        "before": "52d87ae751f13358f6dd136b2a8f60ace14b0c0f0c8a21de2b2e61066651e8ae",
+        "after": "52d87ae751f13358f6dd136b2a8f60ace14b0c0f0c8a21de2b2e61066651e8ae",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/shared-memory/measure.mjs": {
+        "before": "18ff6f2d98879393e089f99d3bae2f0efb601c08fd447f4560531da7fe574e5e",
+        "after": "18ff6f2d98879393e089f99d3bae2f0efb601c08fd447f4560531da7fe574e5e",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/shared-memory/piscina-task.mjs": {
+        "before": "a6bcbe9379eb896388881e5c54ba24b210dc510772e3c3819a2d32d5f3864255",
+        "after": "a6bcbe9379eb896388881e5c54ba24b210dc510772e3c3819a2d32d5f3864255",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/shared-memory/pjs-task.mjs": {
+        "before": "9599b21bf44703f5f34f5cb602cf2a5486e5b2b531dd18f9ec025dba6a2c88b9",
+        "after": "9599b21bf44703f5f34f5cb602cf2a5486e5b2b531dd18f9ec025dba6a2c88b9",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/shared-memory/run.mjs": {
+        "before": "3dda14f769801c436d78777d99e32ea57c50d832f0798b516e2a2873f6751bfb",
+        "after": "3dda14f769801c436d78777d99e32ea57c50d832f0798b516e2a2873f6751bfb",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/streaming/README.md": {
+        "before": "f717d84b1939bfc389e834497abdbb0aa90084988fce4df2223ceaa407dee6cc",
+        "after": "f717d84b1939bfc389e834497abdbb0aa90084988fce4df2223ceaa407dee6cc",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/streaming/fairness.mjs": {
+        "before": "4d9c66b5f234c9f79decade3ad273420ded273b878c24efbb23d760f73b9e9dc",
+        "after": "4d9c66b5f234c9f79decade3ad273420ded273b878c24efbb23d760f73b9e9dc",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/streaming/regression-measure.mjs": {
+        "before": "46ba31dad40f1cb82e461a1dedbeaec77b07540c1d2c8726a72da447f728e9d8",
+        "after": "46ba31dad40f1cb82e461a1dedbeaec77b07540c1d2c8726a72da447f728e9d8",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/streaming/regression.mjs": {
+        "before": "644f045c408bc4c5e91eb81670c13589ba0dca24fbe24275f584072e9be222dd",
+        "after": "644f045c408bc4c5e91eb81670c13589ba0dca24fbe24275f584072e9be222dd",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/streaming/run.mjs": {
+        "before": "67a86142337d76439d8f6847311116e080418a7eb2c9476904883ad001836303",
+        "after": "67a86142337d76439d8f6847311116e080418a7eb2c9476904883ad001836303",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/transfer/measure.mjs": {
+        "before": "4ba8d04aa57d21e78039a308f5f72c740eb2e9dc94b8a941285e9b75bbac7ab1",
+        "after": "4ba8d04aa57d21e78039a308f5f72c740eb2e9dc94b8a941285e9b75bbac7ab1",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/transfer/run.mjs": {
+        "before": "b6fc35a56a07c46a94765f22e10209e85c7c388aae6aa18138b22ab0f13b3b37",
+        "after": "b6fc35a56a07c46a94765f22e10209e85c7c388aae6aa18138b22ab0f13b3b37",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/transfer/tasks.mjs": {
+        "before": "0095d78d41b857b1478e30db50a512973ead4b04e33c003bbcbfc67b5a5ef3c3",
+        "after": "0095d78d41b857b1478e30db50a512973ead4b04e33c003bbcbfc67b5a5ef3c3",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/upper-bound-results/README.md": {
+        "before": "1a193a90f76f585373281520a682b321c113d320d5e6db5cc6841332da46b33a",
+        "after": "1a193a90f76f585373281520a682b321c113d320d5e6db5cc6841332da46b33a",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/upper-bound-results/profile.mjs": {
+        "before": "0a0dab470a09193aef6b21e00c0ab0c69dab94cf6159c0556d38ce5536121eb3",
+        "after": "0a0dab470a09193aef6b21e00c0ab0c69dab94cf6159c0556d38ce5536121eb3",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/upper-bound-results/refund.mjs": {
+        "before": "a883aa30463978717679faddab45dbd7b2545d404bd732b6cfae993d70ee53fc",
+        "after": "a883aa30463978717679faddab45dbd7b2545d404bd732b6cfae993d70ee53fc",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/upper-bound-results/regression.mjs": {
+        "before": "ddb7b797da53fc67c191a340097b596290efbad1d8ab588dc55808f42e3069f3",
+        "after": "ddb7b797da53fc67c191a340097b596290efbad1d8ab588dc55808f42e3069f3",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/upper-bound-results/report.mjs": {
+        "before": "0d55d7b61fee943956a95b44653f2d0b3221ce0648d65ec809606e0297bedaa9",
+        "after": "0d55d7b61fee943956a95b44653f2d0b3221ce0648d65ec809606e0297bedaa9",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/upper-bound-results/run.mjs": {
+        "before": "293e31c5070475a7a9b1a6b8fef7bbc3784ec3ceab7eb597b43957f69554ed18",
+        "after": "293e31c5070475a7a9b1a6b8fef7bbc3784ec3ceab7eb597b43957f69554ed18",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "benchmarks/upper-bound-results/task.mjs": {
+        "before": "e8e3b41a6857e7aa499d0dd1507e701f36859cfd8fc348b55ecc28acf7edb1b2",
+        "after": "e8e3b41a6857e7aa499d0dd1507e701f36859cfd8fc348b55ecc28acf7edb1b2",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/adr/0001-task-registration.md": {
+        "before": "c155dcf8d804ab1b933b7c2796e25c043568349fbfcca46b8475a77b42ae1b6a",
+        "after": "c155dcf8d804ab1b933b7c2796e25c043568349fbfcca46b8475a77b42ae1b6a",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/adr/0002-worker-pool-model.md": {
+        "before": "2f6fa4e608906e5d39b1dc5955154c8a9ab56fb696df9ce99bc15368349dab73",
+        "after": "2f6fa4e608906e5d39b1dc5955154c8a9ab56fb696df9ce99bc15368349dab73",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/adr/0003-scheduler-interface.md": {
+        "before": "87b2b06bfa24d5666284b9e6159814df13e98bd6fe6fb93d188682addc17436e",
+        "after": "87b2b06bfa24d5666284b9e6159814df13e98bd6fe6fb93d188682addc17436e",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/adr/0004-cancellation-and-deadlines.md": {
+        "before": "cc1f19223953e1385abad098c39b043f943813bcafdc0d221c74f0460fd3bb5d",
+        "after": "cc1f19223953e1385abad098c39b043f943813bcafdc0d221c74f0460fd3bb5d",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/adr/0005-transfer-ownership.md": {
+        "before": "92d832acda8d4a9548135b00b538e20f5c04a8f4078542540216f087e19400ed",
+        "after": "92d832acda8d4a9548135b00b538e20f5c04a8f4078542540216f087e19400ed",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/adr/0006-typescript7-toolchain.md": {
+        "before": "af790339e3c56a5449585fdef5b7032bfacb56026bcd92db960df2d43c6cb75c",
+        "after": "af790339e3c56a5449585fdef5b7032bfacb56026bcd92db960df2d43c6cb75c",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/adr/0007-shared-input-model.md": {
+        "before": "e824fe575a6843ace40f720d4eb4c325de479730fe76c7c924c5625cefc01141",
+        "after": "e824fe575a6843ace40f720d4eb4c325de479730fe76c7c924c5625cefc01141",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/adr/0008-runtime-owned-partitioning.md": {
+        "before": "66b3ea01bc1fbda694581881d1a661e9fa71a1f1eaff7b86d70e62683d33c145",
+        "after": "66b3ea01bc1fbda694581881d1a661e9fa71a1f1eaff7b86d70e62683d33c145",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/adr/0009-partition-admission-and-metrics.md": {
+        "before": "bd41ba358dd5a17e4bee039736c941796a184fc6cb621ba913c3c17283ac4796",
+        "after": "bd41ba358dd5a17e4bee039736c941796a184fc6cb621ba913c3c17283ac4796",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/adr/0010-dispatch-efficiency.md": {
+        "before": "3202372ca615149e084365b8471c4bf779a4fa2aaac097ac222a26ad649d88b2",
+        "after": "3202372ca615149e084365b8471c4bf779a4fa2aaac097ac222a26ad649d88b2",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/adr/0011-batched-partition-dispatch.md": {
+        "before": "4b08b80b39a1bc34410b8b81e57eb7ee96c9752b7f61eb574d332b4c65e7b3d2",
+        "after": "4b08b80b39a1bc34410b8b81e57eb7ee96c9752b7f61eb574d332b4c65e7b3d2",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/adr/0012-completion-only-operations.md": {
+        "before": "35130193251d8ec551a15d2df81c9b051e99ebc32af53edf74df5662b0f1fd1c",
+        "after": "35130193251d8ec551a15d2df81c9b051e99ebc32af53edf74df5662b0f1fd1c",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/adr/0013-async-resource-context.md": {
+        "before": "9334d5d04c44971a6b46cc07185da64f1811f5254434645d5b6c7aea98e776d7",
+        "after": "9334d5d04c44971a6b46cc07185da64f1811f5254434645d5b6c7aea98e776d7",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/adr/0014-streaming-result-semantics.md": {
+        "before": "ef6a7c18530ae77b60658d7fb2a97c939189628cbef4647d2fe6078111c5dde6",
+        "after": "ef6a7c18530ae77b60658d7fb2a97c939189628cbef4647d2fe6078111c5dde6",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/adr/0015-element-block-map-semantics.md": {
+        "before": "396f6cb86814efb0a1ccfd2926988dec6f7de85f27529e5e0fc85853e8bfb432",
+        "after": "396f6cb86814efb0a1ccfd2926988dec6f7de85f27529e5e0fc85853e8bfb432",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/adr/0016-result-memory-observability.md": {
+        "before": "1c460f7180f3e36e76253c805ce0a7e54e3cfcc507c58cf73e61307c7012c6b8",
+        "after": "1c460f7180f3e36e76253c805ce0a7e54e3cfcc507c58cf73e61307c7012c6b8",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/adr/0017-binary-result-reservations.md": {
+        "before": "ff56a34cab50315b2c67bee80c93b79642c9334de74aeea578c7603cb2a60d74",
+        "after": "ff56a34cab50315b2c67bee80c93b79642c9334de74aeea578c7603cb2a60d74",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/adr/0018-runtime-core-decomposition.md": {
+        "before": "c3124fe8272d33cd8e8b8c78533d479a6faa0c58927bc4fede3526bcbd408f25",
+        "after": "c3124fe8272d33cd8e8b8c78533d479a6faa0c58927bc4fede3526bcbd408f25",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/adr/0019-upper-bound-result-reservations.md": {
+        "before": "8f14941d26e40aedac2fe23ed5c0bc26dd790f6670b2bd926964d0363e9eaf24",
+        "after": "8f14941d26e40aedac2fe23ed5c0bc26dd790f6670b2bd926964d0363e9eaf24",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/architecture.md": {
+        "before": "a69061f4bd311c097b565c5c527d2b1d172b1b224ee52bbafa99f53da9aba35a",
+        "after": "a69061f4bd311c097b565c5c527d2b1d172b1b224ee52bbafa99f53da9aba35a",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/benchmarks-v0.1.md": {
+        "before": "b120a02ce71bb6e65835b3df002bcebcc1dedacdbf4b69bc2145286d8d52e63a",
+        "after": "b120a02ce71bb6e65835b3df002bcebcc1dedacdbf4b69bc2145286d8d52e63a",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/benchmarks-v0.10.md": {
+        "before": "b966ba3286fd43e3d6399b19eb05e16235d22736753ca54db6dc2ed253af4d6b",
+        "after": "b966ba3286fd43e3d6399b19eb05e16235d22736753ca54db6dc2ed253af4d6b",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/benchmarks-v0.11.md": {
+        "before": "2846d0a6192c4d03baa96d801b8ee8cd0120c33896875ce1d88c153b7df57723",
+        "after": "2846d0a6192c4d03baa96d801b8ee8cd0120c33896875ce1d88c153b7df57723",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/benchmarks-v0.12.md": {
+        "before": "92f652ac8f12c2f45cf92b7c8e458ce7972ff0a421f84a8313791415116f1177",
+        "after": "92f652ac8f12c2f45cf92b7c8e458ce7972ff0a421f84a8313791415116f1177",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/benchmarks-v0.13.md": {
+        "before": "8b8d5ce2186838545c0d4f2ec840f7a450a935d754da73d965f93fe38710d1e8",
+        "after": "8b8d5ce2186838545c0d4f2ec840f7a450a935d754da73d965f93fe38710d1e8",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/benchmarks-v0.14.md": {
+        "before": "8338ec10ebb2e05c2790258a307015c993e4f4ac6383ccdfcd7c5051777bb9d5",
+        "after": "8338ec10ebb2e05c2790258a307015c993e4f4ac6383ccdfcd7c5051777bb9d5",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/benchmarks-v0.2.md": {
+        "before": "29ea9944f3da667210a8f298a9d8bd72438739726d9339b7f44cf451a01741b4",
+        "after": "29ea9944f3da667210a8f298a9d8bd72438739726d9339b7f44cf451a01741b4",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/benchmarks-v0.3.md": {
+        "before": "659e68343ab7059fd31e1936d6578b8088760d795b7c80d981cb2059abfba6b1",
+        "after": "659e68343ab7059fd31e1936d6578b8088760d795b7c80d981cb2059abfba6b1",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/benchmarks-v0.4.md": {
+        "before": "2e2ff50fbbda95ebe4dcfc038a1c58c3872902fd42b780de2c232613bfd991ab",
+        "after": "2e2ff50fbbda95ebe4dcfc038a1c58c3872902fd42b780de2c232613bfd991ab",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/benchmarks-v0.5.md": {
+        "before": "7c8becc4dec12e3e8453d1698138f4ff1025a7bafed81103d477d14c7837b0df",
+        "after": "7c8becc4dec12e3e8453d1698138f4ff1025a7bafed81103d477d14c7837b0df",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/benchmarks-v0.6.md": {
+        "before": "86924ec7d41924659c31fff67cabb1ff9b153cbd0ce01dc786ca90383a344361",
+        "after": "86924ec7d41924659c31fff67cabb1ff9b153cbd0ce01dc786ca90383a344361",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/benchmarks-v0.7.md": {
+        "before": "2ba826d3d9c7257ee74f4fef1fad43934f99265d808b88ae8ebeb45b3fee7568",
+        "after": "2ba826d3d9c7257ee74f4fef1fad43934f99265d808b88ae8ebeb45b3fee7568",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/benchmarks-v0.8.md": {
+        "before": "5b677bdee49021047c60a233d7abedf5287fb606c4d35afe406776289f5e8e0f",
+        "after": "5b677bdee49021047c60a233d7abedf5287fb606c4d35afe406776289f5e8e0f",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/benchmarks-v0.9.md": {
+        "before": "b1ee2597717343a1da8c000983d059e28b9053822f35fcd75dbd69213d088af9",
+        "after": "b1ee2597717343a1da8c000983d059e28b9053822f35fcd75dbd69213d088af9",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/cross-platform-v0.11.md": {
+        "before": "1169093273218776bc8d7093dd3f35c44ac5decc04696a7a09c9aaaa908cd14e",
+        "after": "1169093273218776bc8d7093dd3f35c44ac5decc04696a7a09c9aaaa908cd14e",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/cross-platform-v0.12.md": {
+        "before": "9e470b088cf92890cda0f3ed3263dd86f337bf22383d61da531a8af6b211c374",
+        "after": "9e470b088cf92890cda0f3ed3263dd86f337bf22383d61da531a8af6b211c374",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/cross-platform-v0.13.md": {
+        "before": "94aaa86722d51bc1efe5e231bf3a7fcd4b39084e5b1294c4676f7616e17b9a30",
+        "after": "94aaa86722d51bc1efe5e231bf3a7fcd4b39084e5b1294c4676f7616e17b9a30",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/cross-platform-v0.14.md": {
+        "before": "dae5d398eb8a5aefd691586dccadbbba51b6cb8846cc72e53aa284f2777d130b",
+        "after": "07d968b0313a62b48f41b2f36fa5b81874f531c6f011fdc2b9c2d03ce5bed0f2",
+        "unchanged": false,
+        "authorizedChange": true
+      },
+      "docs/memory.md": {
+        "before": "adce479b97ab582c7463ac236f4386ca38548e90085f41d1be045b529357c26f",
+        "after": "adce479b97ab582c7463ac236f4386ca38548e90085f41d1be045b529357c26f",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/partitioning.md": {
+        "before": "e4d17f0287ae2f2715f06d524b140039d9fc1617af304d697beea26474dbac9f",
+        "after": "e4d17f0287ae2f2715f06d524b140039d9fc1617af304d697beea26474dbac9f",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/proposal-v0.10.md": {
+        "before": "a6b18da0bcf0752eb9b916573f63f48eb81e65a5fd73d264a7f06277c3d2007b",
+        "after": "a6b18da0bcf0752eb9b916573f63f48eb81e65a5fd73d264a7f06277c3d2007b",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/proposal-v0.11.md": {
+        "before": "45470c66279a5c09cdf5e65b424b4e2bdc586333046dadd22891a34da10b15f4",
+        "after": "45470c66279a5c09cdf5e65b424b4e2bdc586333046dadd22891a34da10b15f4",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/proposal-v0.12.md": {
+        "before": "b8b195726b8e8a69b98835ef718dad325dff42413b2c6ac3fa9c2b0ef9a5019b",
+        "after": "b8b195726b8e8a69b98835ef718dad325dff42413b2c6ac3fa9c2b0ef9a5019b",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/proposal-v0.13.md": {
+        "before": "2853a5c3644350800bbb1fd8f920851a8ba6f1baca031a5ccf463b1e0a304cc3",
+        "after": "2853a5c3644350800bbb1fd8f920851a8ba6f1baca031a5ccf463b1e0a304cc3",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/proposal-v0.14.md": {
+        "before": "1df897eeb0656fddad01c0425b1767d16e5c0263e1cc063ba2d7a45e154181cb",
+        "after": "1df897eeb0656fddad01c0425b1767d16e5c0263e1cc063ba2d7a45e154181cb",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/proposal-v0.3.md": {
+        "before": "3c8f2afc5f011a2a4fbccf72a8c2f5b32f3fc7edd3bedff577b380b2cd86400e",
+        "after": "3c8f2afc5f011a2a4fbccf72a8c2f5b32f3fc7edd3bedff577b380b2cd86400e",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/proposal-v0.4.md": {
+        "before": "e66115ef817fa198edad13b2bd949c407c2d25db08471de9d25529a53914b1d9",
+        "after": "e66115ef817fa198edad13b2bd949c407c2d25db08471de9d25529a53914b1d9",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/proposal-v0.5.md": {
+        "before": "173584953587a5b24a386e6d7474770811d2ecdce30b8abb4f95267c8be4590b",
+        "after": "173584953587a5b24a386e6d7474770811d2ecdce30b8abb4f95267c8be4590b",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/proposal-v0.6.md": {
+        "before": "ca2a6d6bdbac7c6c0a9dcd86728a920ea67ac27ea00a74b0f8da86aa181f40c8",
+        "after": "ca2a6d6bdbac7c6c0a9dcd86728a920ea67ac27ea00a74b0f8da86aa181f40c8",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/proposal-v0.7.md": {
+        "before": "54cdf089f2da6269ade6aa5b866d5b41611f70ed02b017d2dc25587a6f4c51c9",
+        "after": "54cdf089f2da6269ade6aa5b866d5b41611f70ed02b017d2dc25587a6f4c51c9",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/proposal-v0.8.md": {
+        "before": "15edc4da215407e71555a434e975e5b3310f902d004f9e742592beb5a760d8c8",
+        "after": "15edc4da215407e71555a434e975e5b3310f902d004f9e742592beb5a760d8c8",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/proposal-v0.9.md": {
+        "before": "75c8b0a242ca00e78bd3943cfccf3b23a838b44aa2e0804aa156a77f06e5de56",
+        "after": "75c8b0a242ca00e78bd3943cfccf3b23a838b44aa2e0804aa156a77f06e5de56",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/proposal.md": {
+        "before": "0ce7cc0f507e394cc770411e7be4367b9753739aab6ba5a1d47fab0a2ce0edc0",
+        "after": "0ce7cc0f507e394cc770411e7be4367b9753739aab6ba5a1d47fab0a2ce0edc0",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/research/runtime-landscape.md": {
+        "before": "568bab8876199bf4a94ee690fa2b56606e5f4aae5e6c96631899144ceab041a1",
+        "after": "568bab8876199bf4a94ee690fa2b56606e5f4aae5e6c96631899144ceab041a1",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/research/v0.13-crypto-measurements.md": {
+        "before": "e277c6f604d821cd5d039df96df2661cfb1ae24e3c1a6b2ea24644fa5c5ffece",
+        "after": "e277c6f604d821cd5d039df96df2661cfb1ae24e3c1a6b2ea24644fa5c5ffece",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/research/v0.13-runtime-pain-log.md": {
+        "before": "69a986658739beedc89f671458d06a6c032202f119732bba929abb1355e30f38",
+        "after": "69a986658739beedc89f671458d06a6c032202f119732bba929abb1355e30f38",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/research/v0.13-windows-measurements.md": {
+        "before": "efd1a86c1bc15048917571ae1a637c3fa942fd890f2ea0bbdded75a565d69ab1",
+        "after": "efd1a86c1bc15048917571ae1a637c3fa942fd890f2ea0bbdded75a565d69ab1",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/research/v0.14-compression-bounds.md": {
+        "before": "2c5c36fe68ca49994da4852cabeb9784c34d5100e70fed870c1d219aeb45418c",
+        "after": "f11e41ba0dbc6910b05e06786fb3ea87ea452e52d7de08000cb6c6a1fdeb0587",
+        "unchanged": false,
+        "authorizedChange": true
+      },
+      "docs/research/v0.14-compression-measurements.md": {
+        "before": "6e6ff9196d5ea34d9530f2d3a4ac324151dddb32ae1fdc746b9c596dcd684b92",
+        "after": "6e6ff9196d5ea34d9530f2d3a4ac324151dddb32ae1fdc746b9c596dcd684b92",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/research/v0.14-compression-supplement.md": {
+        "before": "39571190184c064d49088b6c44f8dfa5ca0aac190fb9bfa5d229ddc27095ba7a",
+        "after": "39571190184c064d49088b6c44f8dfa5ca0aac190fb9bfa5d229ddc27095ba7a",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/research/v0.14-fedora-qualification.md": {
+        "before": "6e1448adbc3756dc0b4f0ee94bc5cee1cf32d2294c46638a672874020e6a8136",
+        "after": "6e1448adbc3756dc0b4f0ee94bc5cee1cf32d2294c46638a672874020e6a8136",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/research/v0.14-runtime-pain-log.md": {
+        "before": "fb6f7f3828f95e9bfceeab0c4d686a96a07f3844311abd6c4e0abfac56d78b75",
+        "after": "fb6f7f3828f95e9bfceeab0c4d686a96a07f3844311abd6c4e0abfac56d78b75",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "docs/toolchain.md": {
+        "before": "be21fefa24f09b53645cb457e28e4591cefc42a2f625641cbc526f1c3c1d1ca6",
+        "after": "be21fefa24f09b53645cb457e28e4591cefc42a2f625641cbc526f1c3c1d1ca6",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "eslint.config.mjs": {
+        "before": "2c935ec7e9cc03bf7f9a2f533c97e4cf4b5870005b65872b7be1ec0cae006dcc",
+        "after": "2c935ec7e9cc03bf7f9a2f533c97e4cf4b5870005b65872b7be1ec0cae006dcc",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "examples/prime-search.mjs": {
+        "before": "a8405dd78e95cb14abc8b1606d5e6e8e6b34ead075ba185c555bb3faabd4dc5b",
+        "after": "a8405dd78e95cb14abc8b1606d5e6e8e6b34ead075ba185c555bb3faabd4dc5b",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "examples/transfer-task.mjs": {
+        "before": "f20181393bcfa2bddd7d1c12f320ccea8a4c820680466a63e18c6a755ecf56c9",
+        "after": "f20181393bcfa2bddd7d1c12f320ccea8a4c820680466a63e18c6a755ecf56c9",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "examples/transfer.mjs": {
+        "before": "5043480fb9ca025577e19336afba06c4e10a12574fdd0ad4f8a14760e35f4242",
+        "after": "5043480fb9ca025577e19336afba06c4e10a12574fdd0ad4f8a14760e35f4242",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "package-lock.json": {
+        "before": "9197e42d8e3ccd4375b6ede97193408d76e5f5033ec64534cfc2abeabccf9cdd",
+        "after": "9197e42d8e3ccd4375b6ede97193408d76e5f5033ec64534cfc2abeabccf9cdd",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "package.json": {
+        "before": "a71e04f9feeb452403af6f13d8cbc295353cedff190fafa7966acc22c146b68a",
+        "after": "a71e04f9feeb452403af6f13d8cbc295353cedff190fafa7966acc22c146b68a",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/package.json": {
+        "before": "8d14caf8437cb6ee8702f0b44c1eb060490aa8e8eb06ad778b45d53c72662cd1",
+        "after": "8d14caf8437cb6ee8702f0b44c1eb060490aa8e8eb06ad778b45d53c72662cd1",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/src/dispatch/dispatcher.ts": {
+        "before": "a448344e4977d60338c0b503c92b49d67d9bccfe0c08c101ca3d376593ac3ada",
+        "after": "a448344e4977d60338c0b503c92b49d67d9bccfe0c08c101ca3d376593ac3ada",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/src/errors/index.ts": {
+        "before": "2f1458c63366be67919f51866acd7e1a9966300166c39f164c481913d0b1f4e7",
+        "after": "2f1458c63366be67919f51866acd7e1a9966300166c39f164c481913d0b1f4e7",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/src/index.ts": {
+        "before": "96d3697fde71fc4a46943c52f5556c1b63227f2b792650c14cf29bfd073cef44",
+        "after": "96d3697fde71fc4a46943c52f5556c1b63227f2b792650c14cf29bfd073cef44",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/src/internal/integer.ts": {
+        "before": "c1d5f34cd7a4d6aa228910e0a7e7f7929e21bea0f84e231d5984a3b7e7d51b6c",
+        "after": "c1d5f34cd7a4d6aa228910e0a7e7f7929e21bea0f84e231d5984a3b7e7d51b6c",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/src/partition/binary.ts": {
+        "before": "20e4ff84ea39912befa189a5a3e5f57739e249d3954c3d7aea6cfa45e1b97120",
+        "after": "20e4ff84ea39912befa189a5a3e5f57739e249d3954c3d7aea6cfa45e1b97120",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/src/partition/coordinator.ts": {
+        "before": "3afae72cfa583b5c04b8645a09af3dcf603139f1b4268204bd35627f2f185cde",
+        "after": "3afae72cfa583b5c04b8645a09af3dcf603139f1b4268204bd35627f2f185cde",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/src/partition/operation.ts": {
+        "before": "e5ec55abcb8a90fca7df99c7b7ade39c5ae2fa2358efd1a11e5edc8b438384e1",
+        "after": "e5ec55abcb8a90fca7df99c7b7ade39c5ae2fa2358efd1a11e5edc8b438384e1",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/src/partition/range.ts": {
+        "before": "c985cb95b03c2c339f18f1cae44ca7f77eca7eb2908afe946f11b71c724a1489",
+        "after": "c985cb95b03c2c339f18f1cae44ca7f77eca7eb2908afe946f11b71c724a1489",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/src/partition/stream.ts": {
+        "before": "09d2dcb73771334c0a4fb9647c6234d59acdef43e3170045d8c8e810a7017566",
+        "after": "09d2dcb73771334c0a4fb9647c6234d59acdef43e3170045d8c8e810a7017566",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/src/pool/pool.ts": {
+        "before": "880be0c7764e184bf3e8ccfee8fa63bf3c2f26e81d40aab5e2cdb94827849ec5",
+        "after": "880be0c7764e184bf3e8ccfee8fa63bf3c2f26e81d40aab5e2cdb94827849ec5",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/src/results/credit.ts": {
+        "before": "acc35c91bb5bfc48e95356d466377c0ad42ef97a2f5c765b25ef9898a5fc078f",
+        "after": "acc35c91bb5bfc48e95356d466377c0ad42ef97a2f5c765b25ef9898a5fc078f",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/src/runtime.ts": {
+        "before": "53e0013365563a2235bca5d082a753996846529d42efcf9bb5378c81e1d26e81",
+        "after": "53e0013365563a2235bca5d082a753996846529d42efcf9bb5378c81e1d26e81",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/src/scheduler/fifo.ts": {
+        "before": "caa0307b7ce3b71d412ae9b432ad90cd946eed209958d88a1d6f9a13d481e014",
+        "after": "caa0307b7ce3b71d412ae9b432ad90cd946eed209958d88a1d6f9a13d481e014",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/src/tasks/coordinator.ts": {
+        "before": "05b6f044c538a438827e8ab7c16071ac04aeb89b12122c8fc48f2dd8239767d7",
+        "after": "05b6f044c538a438827e8ab7c16071ac04aeb89b12122c8fc48f2dd8239767d7",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/src/tasks/registry.ts": {
+        "before": "b0698736068769a2b7ab2b8c1cbf2179650f7b41701e82ab4dccf8e8c8254eca",
+        "after": "b0698736068769a2b7ab2b8c1cbf2179650f7b41701e82ab4dccf8e8c8254eca",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/src/tasks/shared.ts": {
+        "before": "d3a6b371f5b20657bf47d6b84f6c7d7bd4cfec0f0395b6bade2ac828ee5a3ca5",
+        "after": "d3a6b371f5b20657bf47d6b84f6c7d7bd4cfec0f0395b6bade2ac828ee5a3ca5",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/src/tasks/task.ts": {
+        "before": "92eb849cc4b2921c347656edabf6a813b323e9295c46c7255dddc89330f820f5",
+        "after": "92eb849cc4b2921c347656edabf6a813b323e9295c46c7255dddc89330f820f5",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/src/tasks/transfer.ts": {
+        "before": "9de35965f11f40ab7697ca8e5439af634fe8122829c357c3b36f310dbfd278ac",
+        "after": "9de35965f11f40ab7697ca8e5439af634fe8122829c357c3b36f310dbfd278ac",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/src/telemetry/metrics.ts": {
+        "before": "031d1994dd4fec40d50b265f4e59c00dd9348d089d507ed87019bb1fef7b088e",
+        "after": "031d1994dd4fec40d50b265f4e59c00dd9348d089d507ed87019bb1fef7b088e",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/src/telemetry/profile.ts": {
+        "before": "831b42554f3dcb74a45ae42bdfca5811eab921d8c248986ca1859af26f9496f7",
+        "after": "831b42554f3dcb74a45ae42bdfca5811eab921d8c248986ca1859af26f9496f7",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/src/telemetry/runtime.ts": {
+        "before": "de144702cc694650fb5d7d50ff76109a6cfe9ef5ef3aecc3825a9a3e911fe6e7",
+        "after": "de144702cc694650fb5d7d50ff76109a6cfe9ef5ef3aecc3825a9a3e911fe6e7",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/src/types/index.ts": {
+        "before": "7a252af8bb57fe42ac43f015a73ee111afd932725da039ffd77c36140c7b35fa",
+        "after": "7a252af8bb57fe42ac43f015a73ee111afd932725da039ffd77c36140c7b35fa",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/src/workers/bootstrap.ts": {
+        "before": "f19fbfb8f0a27d1e3e97cc7599bdfc8922d7502557af9a71c4bf2e9cf0c6d2e9",
+        "after": "f19fbfb8f0a27d1e3e97cc7599bdfc8922d7502557af9a71c4bf2e9cf0c6d2e9",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/src/workers/protocol.ts": {
+        "before": "d8f66b337c21563d0c510b2bc72ae1db3a70d065da22d2374583d1bd8d1f5d90",
+        "after": "d8f66b337c21563d0c510b2bc72ae1db3a70d065da22d2374583d1bd8d1f5d90",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/src/workers/worker.ts": {
+        "before": "715f1583dcabc07b4e9b8288a89b29f7a6ccb1671834f11b56f1b0e681b4809d",
+        "after": "715f1583dcabc07b4e9b8288a89b29f7a6ccb1671834f11b56f1b0e681b4809d",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/test/batch.test.mjs": {
+        "before": "684efad2d53714614bccfc43d83c16d0fea7a6dd18c03dc314dbb4643ba3830f",
+        "after": "684efad2d53714614bccfc43d83c16d0fea7a6dd18c03dc314dbb4643ba3830f",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/test/binary-result.test.mjs": {
+        "before": "ee9f54ca52fc96c3935683e7c79fb03acbc53034a8c0a36ce30c1c20a536ab43",
+        "after": "ee9f54ca52fc96c3935683e7c79fb03acbc53034a8c0a36ce30c1c20a536ab43",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/test/completion.test.mjs": {
+        "before": "beddbd7f82ad6c3a41fb0e7998e6ecb21a6be337771a4f9dedc27b4dfc6f2cad",
+        "after": "beddbd7f82ad6c3a41fb0e7998e6ecb21a6be337771a4f9dedc27b4dfc6f2cad",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/test/fixtures/broken.mjs": {
+        "before": "bd7e2480d5f6bc450d5f0024e5d8b78ce8bcbccc71b945660ba9106b94336087",
+        "after": "bd7e2480d5f6bc450d5f0024e5d8b78ce8bcbccc71b945660ba9106b94336087",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/test/fixtures/hanging-import.mjs": {
+        "before": "5b9a6689d226104b61ad384931f385be2931d0656894e55b2713273ea2a43b81",
+        "after": "5b9a6689d226104b61ad384931f385be2931d0656894e55b2713273ea2a43b81",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/test/fixtures/partition-tasks.mjs": {
+        "before": "add612a198f718ec19b4d2edacd0b0f3ebeb34c94affbae62f9a4ec1e348288c",
+        "after": "add612a198f718ec19b4d2edacd0b0f3ebeb34c94affbae62f9a4ec1e348288c",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/test/fixtures/shared-tasks.mjs": {
+        "before": "aa2d3f81da337e36c6297c741298701c2af535e2f21218b866a2ce5f413d9ad8",
+        "after": "aa2d3f81da337e36c6297c741298701c2af535e2f21218b866a2ce5f413d9ad8",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/test/fixtures/tasks.mjs": {
+        "before": "df49e8c964cd17f1be76b65c042bc986c78ba9927496c658636ce9a556d23be6",
+        "after": "df49e8c964cd17f1be76b65c042bc986c78ba9927496c658636ce9a556d23be6",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/test/fixtures/transfer-tasks.mjs": {
+        "before": "5e5e54a87956f0a54d1d979877034a7a2c85f311c2b3a160cac3aaea750159a7",
+        "after": "5e5e54a87956f0a54d1d979877034a7a2c85f311c2b3a160cac3aaea750159a7",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/test/map.test.mjs": {
+        "before": "cb45271cd7115fd6263142b51aa1cfeb321bb462dfe3ebe8cba288f15a5583bf",
+        "after": "cb45271cd7115fd6263142b51aa1cfeb321bb462dfe3ebe8cba288f15a5583bf",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/test/matrix.test.mjs": {
+        "before": "cf9a9ba12151f1ecb399636e1773a2b9f12239e4ac16c064f94d5e293216a4dd",
+        "after": "cf9a9ba12151f1ecb399636e1773a2b9f12239e4ac16c064f94d5e293216a4dd",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/test/memory-observability.test.mjs": {
+        "before": "abd94718006048402bd74b27c0b56da68cec043c45a45dee0f9e6086df41575d",
+        "after": "abd94718006048402bd74b27c0b56da68cec043c45a45dee0f9e6086df41575d",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/test/partition.test.mjs": {
+        "before": "3c8cd8f875ce31d8091674324267772fd0891692129a16efcfc4a0be102b8bb0",
+        "after": "3c8cd8f875ce31d8091674324267772fd0891692129a16efcfc4a0be102b8bb0",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/test/result-credit.test.mjs": {
+        "before": "f6e13396c9ddf90f9010a413a6b333fd9dc1cc9e509c55110466592ae02bc471",
+        "after": "f6e13396c9ddf90f9010a413a6b333fd9dc1cc9e509c55110466592ae02bc471",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/test/runtime.test.mjs": {
+        "before": "2ca16d6c2a9634209e747caea86ce419cf56f856c813b63249efb993530f7991",
+        "after": "2ca16d6c2a9634209e747caea86ce419cf56f856c813b63249efb993530f7991",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/test/shared.test.mjs": {
+        "before": "d04afa2bc7cdeeb3e20c8de39385b77263270e787a687f86e495fd72aebfe326",
+        "after": "d04afa2bc7cdeeb3e20c8de39385b77263270e787a687f86e495fd72aebfe326",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/test/stream.test.mjs": {
+        "before": "8d2e9caeec24510d9366d739224f042db3a04fcc37316c0be329cb553347c2b7",
+        "after": "8d2e9caeec24510d9366d739224f042db3a04fcc37316c0be329cb553347c2b7",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/test/transfer.test.mjs": {
+        "before": "348c0b13f9714748a06bb8beb20974f71c320664eb6e3a89fcc35b41d4c8216a",
+        "after": "348c0b13f9714748a06bb8beb20974f71c320664eb6e3a89fcc35b41d4c8216a",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/test/tsconfig.json": {
+        "before": "6f8c2ca79d1e31c62ef4173e118393d460a99c49462a96e551675fb5674bd690",
+        "after": "6f8c2ca79d1e31c62ef4173e118393d460a99c49462a96e551675fb5674bd690",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/test/types.test.ts": {
+        "before": "25dd86f819f5dd0c54f2dede6faaebc552dfb9b6c885f76062b987968a5ac989",
+        "after": "25dd86f819f5dd0c54f2dede6faaebc552dfb9b6c885f76062b987968a5ac989",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/test/upper-bound-result.test.mjs": {
+        "before": "ae364f4b50127cedfe3784f677519852fa8fe0e92bc97cc69c496eef6a9c291b",
+        "after": "ae364f4b50127cedfe3784f677519852fa8fe0e92bc97cc69c496eef6a9c291b",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "packages/runtime/tsconfig.json": {
+        "before": "b60926d0fc960d49f920218c75396faa65796212a96eba7ba05c4066bcafa5b8",
+        "after": "b60926d0fc960d49f920218c75396faa65796212a96eba7ba05c4066bcafa5b8",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "scripts/compression-memory-v014.mjs": {
+        "before": "d48d78c41945251ebecd562c9a1312056b94d59f20e0fdc194c9811497eb9244",
+        "after": "d48d78c41945251ebecd562c9a1312056b94d59f20e0fdc194c9811497eb9244",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "scripts/compression-supplement-v014.mjs": {
+        "before": "a8822090dd904840f5dfd3494d85fd65962ea0417fb5e3e4d8f3fc4bc30c1b7b",
+        "after": "4152f2546aaad1a47b32521e01a8c3db8819a18dee922d46d519392cdf533f8a",
+        "unchanged": false,
+        "authorizedChange": true
+      },
+      "scripts/cross-platform-v011/binary.mjs": {
+        "before": "ca1e93a3e99d58a982312ea20b699d765bae2b5779cb7b10987f7bf85ace4717",
+        "after": "ca1e93a3e99d58a982312ea20b699d765bae2b5779cb7b10987f7bf85ace4717",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "scripts/cross-platform-v011/environment.mjs": {
+        "before": "95baf1c1b210e05ac1c4074c4cfbc1feb14578e75370379ba53f63cc3e587d01",
+        "after": "95baf1c1b210e05ac1c4074c4cfbc1feb14578e75370379ba53f63cc3e587d01",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "scripts/cross-platform-v011/report.mjs": {
+        "before": "167b542ab3bc80402ce1f339401aa30126c0016f7c3e1300c5b3e69e1b7b3611",
+        "after": "167b542ab3bc80402ce1f339401aa30126c0016f7c3e1300c5b3e69e1b7b3611",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "scripts/cross-platform-v011/run.mjs": {
+        "before": "7e9e8b68681fce8f5b38eda4fda50d9d951ae4062674dc203ca8afb426354e45",
+        "after": "7e9e8b68681fce8f5b38eda4fda50d9d951ae4062674dc203ca8afb426354e45",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "scripts/cross-platform-v011/supplement.mjs": {
+        "before": "5062e1d35e9a44c7b565e56d44b4d60b5f510a7301f612e47dad7fa270e6cc87",
+        "after": "5062e1d35e9a44c7b565e56d44b4d60b5f510a7301f612e47dad7fa270e6cc87",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "scripts/cross-platform-v012/observe.mjs": {
+        "before": "6108ddd6d47ebda57d3ff6635f78a0edb33c0ce82d1371bd5197125329438a32",
+        "after": "6108ddd6d47ebda57d3ff6635f78a0edb33c0ce82d1371bd5197125329438a32",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "scripts/cross-platform-v012/report.mjs": {
+        "before": "5f974224258757c9d68925185b476f972d6eef28bd10c73f82ac43ed42c19ecb",
+        "after": "5f974224258757c9d68925185b476f972d6eef28bd10c73f82ac43ed42c19ecb",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "scripts/cross-platform-v012/run.mjs": {
+        "before": "5dfaf737bf420680820242e471c3896cb216cfd53e2ad9ff4bdb5b8e293c855b",
+        "after": "5dfaf737bf420680820242e471c3896cb216cfd53e2ad9ff4bdb5b8e293c855b",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "scripts/crypto-windows-observe.mjs": {
+        "before": "5870eae6025551f65dda04af069dd53e4547143f7c2ec4ed219bab311cb5b264",
+        "after": "5870eae6025551f65dda04af069dd53e4547143f7c2ec4ed219bab311cb5b264",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "scripts/reservation-soak.mjs": {
+        "before": "94bb0c1c65470a097e64e6ddb3378c10029acd1e739316f6e4d5b6a8428cdbc4",
+        "after": "94bb0c1c65470a097e64e6ddb3378c10029acd1e739316f6e4d5b6a8428cdbc4",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "scripts/stress.mjs": {
+        "before": "d409a484518a72d17eee1614a7b3a03f4fc021f075607b186dbd9828cf5ce884",
+        "after": "d409a484518a72d17eee1614a7b3a03f4fc021f075607b186dbd9828cf5ce884",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "scripts/validate-v012.mjs": {
+        "before": "116a820874b06e05b2facb6d80796591d03662e7eb81160910012b3d2cc48d0c",
+        "after": "116a820874b06e05b2facb6d80796591d03662e7eb81160910012b3d2cc48d0c",
+        "unchanged": true,
+        "authorizedChange": false
+      },
+      "scripts/validate-v014.mjs": {
+        "before": "18849cf76e65a197e2af7a926b37fb9154eaa5742007f4933f149fe824df84a9",
+        "after": "18849cf76e65a197e2af7a926b37fb9154eaa5742007f4933f149fe824df84a9",
+        "unchanged": true,
+        "authorizedChange": false
+      }
+    }
+  },
+  "artifactAndReportHashes": {
+    "benchmarks/results/compression-v0.14-fedora-native-bound-diagnostic.json": "ea854d650ecde06998b8767f70b1fd483c46feaca4fe5d43d3f922883b307b1a",
+    "benchmarks/results/compression-v0.14-fedora-bounds-qualified.json": "e60e1a100bca43ce4a44fc2f8a5b8869ce963890b27f58367c1dd778eb3cdd13",
+    "benchmarks/results/compression-v0.14-fedora-lifecycle-qualified.json": "c5163b55d7e4cf01845cb506e9a2d004517a73086259c04c9e88c2a651b33b1b",
+    "benchmarks/results/compression-v0.14-fedora-node24-reproduce.json": "02858e79c5fa798b2b3350328e49fca2008c1304f2be2edaece35b6091cda635",
+    "benchmarks/results/compression-v0.14-fedora-supplement.json": "3bdc95aa9333b9d1c7454e433d95f1945805ef6ce6abfb1c5e10c67def35031c",
+    "benchmarks/results/validation-v0.14-fedora-codec-qualified.json": "26e2d980d8750b11a20a7bee6ebf5c7c526c634d99c676f5b58c957ded5fd653",
+    "docs/research/v0.14-fedora-bound-qualification-continuation.md": "3e227f14c13675a520627d05512598b771284e04c26009ef1b94ccce3596d8c6",
+    "docs/research/v0.14-fedora-measurements.md": "fa55d9c5c9ff41bdf8df04c69ed0ee9368d6c897fb8e11234ffe9ac5db2a294a",
+    "docs/research/v0.14-fedora-supplement.md": "03ccff892a2a2930f5d4388e38bae629c4ac22376da3772aa280d6de974ec345",
+    "docs/cross-platform-v0.14.md": "07d968b0313a62b48f41b2f36fa5b81874f531c6f011fdc2b9c2d03ce5bed0f2",
+    "docs/research/v0.14-compression-bounds.md": "f11e41ba0dbc6910b05e06786fb3ea87ea452e52d7de08000cb6c6a1fdeb0587"
+  },
+  "guardNegativeCheck": {
+    "codec": "1.3.1.unqualified",
+    "result": "Rejected by runCampaign before artifact creation or execution"
+  },
+  "commitScope": "Research/qualification tooling, new Fedora evidence/reports and cross-platform conclusion; no runtime/API changes"
+}

@@ -1,0 +1,5311 @@
+{
+  "milestone": "0.14",
+  "clientDate": "2026-10-02",
+  "node": "v24.13.1",
+  "qualification": {
+    "codec": {
+      "family": "zlib-ng",
+      "version": "1.3.1.zlib-ng",
+      "implementationVersion": "2.3.3",
+      "build": "fedora44-x86_64-compat-no-new-strategies",
+      "contract": "zlib-ng-no-quick-raw-v1"
+    },
+    "library": {
+      "path": "/usr/lib64/libz.so.1.3.1.zlib-ng",
+      "packageIdentity": "zlib-ng-compat 2.3.3 3.fc44 x86_64",
+      "sha256": "bbde8faec092a7c67b8bd76bbba4a826e61b05c171b97004ce6b308c5a090351"
+    },
+    "header": {
+      "path": "/usr/include/zlib.h",
+      "packageIdentity": "zlib-ng-compat-devel 2.3.3 3.fc44 x86_64",
+      "sha256": "8bc935aeb8909d05fe58f9286a0fe2c674a41638c374786ee888485ab5ff4409"
+    },
+    "nodeLibrary": "/usr/lib64/libnode.so.137",
+    "nodeSharedZlib": true,
+    "nodeSymbolsImported": true,
+    "compiler": "gcc (GCC) 16.1.1 20260515 (Red Hat 16.1.1-2)\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+    "compileCommand": [
+      "gcc",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "/home/miskovy/Documents/pjs/benchmarks/real-world/compression/native-bound.c",
+      "-o",
+      "/tmp/pjs-codec-qualification-sgrRFP/native-bound",
+      "-ldl"
+    ],
+    "helperCommand": [
+      "/tmp/pjs-codec-qualification-sgrRFP/native-bound",
+      "/usr/lib64/libz.so.1.3.1.zlib-ng",
+      "0",
+      "1",
+      "2",
+      "3",
+      "7",
+      "8",
+      "9",
+      "15",
+      "16",
+      "17",
+      "63",
+      "64",
+      "65",
+      "127",
+      "128",
+      "255",
+      "256",
+      "1023",
+      "1024",
+      "1025",
+      "4095",
+      "4096",
+      "4097",
+      "16383",
+      "16384",
+      "16385",
+      "65535",
+      "65536",
+      "65537",
+      "262143",
+      "262144",
+      "262145",
+      "1048575",
+      "1048576",
+      "1048577",
+      "4194304",
+      "8388608"
+    ],
+    "helperSourceSha256": "03ce67b197a0015661a424060109fd1722774500c962e9e9fc63ca0d6840f51e",
+    "helperLinkage": "linux-vdso.so.1 (0x00007f53f5b1e000)\n\tlibc.so.6 => /lib64/libc.so.6 (0x00007f53f5903000)\n\t/lib64/ld-linux-x86-64.so.2 (0x00007f53f5b20000)",
+    "native": {
+      "headerVersion": "1.3.1.zlib-ng",
+      "libraryVersion": "1.3.1.zlib-ng",
+      "libraryPath": "/usr/lib64/libz.so.1.3.1.zlib-ng",
+      "streamSize": 112,
+      "rows": [
+        {
+          "inputBytes": 0,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 7
+        },
+        {
+          "inputBytes": 0,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 7
+        },
+        {
+          "inputBytes": 0,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 7
+        },
+        {
+          "inputBytes": 0,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 13
+        },
+        {
+          "inputBytes": 0,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 13
+        },
+        {
+          "inputBytes": 0,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 13
+        },
+        {
+          "inputBytes": 0,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 25
+        },
+        {
+          "inputBytes": 0,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 25
+        },
+        {
+          "inputBytes": 0,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 25
+        },
+        {
+          "inputBytes": 1,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 8
+        },
+        {
+          "inputBytes": 1,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 8
+        },
+        {
+          "inputBytes": 1,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 8
+        },
+        {
+          "inputBytes": 1,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 14
+        },
+        {
+          "inputBytes": 1,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 14
+        },
+        {
+          "inputBytes": 1,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 14
+        },
+        {
+          "inputBytes": 1,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 26
+        },
+        {
+          "inputBytes": 1,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 26
+        },
+        {
+          "inputBytes": 1,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 26
+        },
+        {
+          "inputBytes": 2,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 9
+        },
+        {
+          "inputBytes": 2,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 9
+        },
+        {
+          "inputBytes": 2,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 9
+        },
+        {
+          "inputBytes": 2,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 15
+        },
+        {
+          "inputBytes": 2,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 15
+        },
+        {
+          "inputBytes": 2,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 15
+        },
+        {
+          "inputBytes": 2,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 27
+        },
+        {
+          "inputBytes": 2,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 27
+        },
+        {
+          "inputBytes": 2,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 27
+        },
+        {
+          "inputBytes": 3,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 10
+        },
+        {
+          "inputBytes": 3,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 10
+        },
+        {
+          "inputBytes": 3,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 10
+        },
+        {
+          "inputBytes": 3,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 16
+        },
+        {
+          "inputBytes": 3,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 16
+        },
+        {
+          "inputBytes": 3,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 16
+        },
+        {
+          "inputBytes": 3,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 28
+        },
+        {
+          "inputBytes": 3,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 28
+        },
+        {
+          "inputBytes": 3,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 28
+        },
+        {
+          "inputBytes": 7,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 14
+        },
+        {
+          "inputBytes": 7,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 14
+        },
+        {
+          "inputBytes": 7,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 14
+        },
+        {
+          "inputBytes": 7,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 20
+        },
+        {
+          "inputBytes": 7,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 20
+        },
+        {
+          "inputBytes": 7,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 20
+        },
+        {
+          "inputBytes": 7,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 32
+        },
+        {
+          "inputBytes": 7,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 32
+        },
+        {
+          "inputBytes": 7,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 32
+        },
+        {
+          "inputBytes": 8,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 15
+        },
+        {
+          "inputBytes": 8,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 15
+        },
+        {
+          "inputBytes": 8,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 15
+        },
+        {
+          "inputBytes": 8,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 21
+        },
+        {
+          "inputBytes": 8,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 21
+        },
+        {
+          "inputBytes": 8,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 21
+        },
+        {
+          "inputBytes": 8,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 33
+        },
+        {
+          "inputBytes": 8,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 33
+        },
+        {
+          "inputBytes": 8,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 33
+        },
+        {
+          "inputBytes": 9,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 16
+        },
+        {
+          "inputBytes": 9,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 16
+        },
+        {
+          "inputBytes": 9,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 16
+        },
+        {
+          "inputBytes": 9,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 22
+        },
+        {
+          "inputBytes": 9,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 22
+        },
+        {
+          "inputBytes": 9,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 22
+        },
+        {
+          "inputBytes": 9,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 34
+        },
+        {
+          "inputBytes": 9,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 34
+        },
+        {
+          "inputBytes": 9,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 34
+        },
+        {
+          "inputBytes": 15,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 22
+        },
+        {
+          "inputBytes": 15,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 22
+        },
+        {
+          "inputBytes": 15,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 22
+        },
+        {
+          "inputBytes": 15,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 28
+        },
+        {
+          "inputBytes": 15,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 28
+        },
+        {
+          "inputBytes": 15,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 28
+        },
+        {
+          "inputBytes": 15,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 40
+        },
+        {
+          "inputBytes": 15,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 40
+        },
+        {
+          "inputBytes": 15,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 40
+        },
+        {
+          "inputBytes": 16,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 24
+        },
+        {
+          "inputBytes": 16,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 24
+        },
+        {
+          "inputBytes": 16,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 24
+        },
+        {
+          "inputBytes": 16,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 30
+        },
+        {
+          "inputBytes": 16,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 30
+        },
+        {
+          "inputBytes": 16,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 30
+        },
+        {
+          "inputBytes": 16,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 42
+        },
+        {
+          "inputBytes": 16,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 42
+        },
+        {
+          "inputBytes": 16,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 42
+        },
+        {
+          "inputBytes": 17,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 25
+        },
+        {
+          "inputBytes": 17,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 25
+        },
+        {
+          "inputBytes": 17,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 25
+        },
+        {
+          "inputBytes": 17,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 31
+        },
+        {
+          "inputBytes": 17,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 31
+        },
+        {
+          "inputBytes": 17,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 31
+        },
+        {
+          "inputBytes": 17,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 43
+        },
+        {
+          "inputBytes": 17,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 43
+        },
+        {
+          "inputBytes": 17,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 43
+        },
+        {
+          "inputBytes": 63,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 73
+        },
+        {
+          "inputBytes": 63,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 73
+        },
+        {
+          "inputBytes": 63,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 73
+        },
+        {
+          "inputBytes": 63,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 79
+        },
+        {
+          "inputBytes": 63,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 79
+        },
+        {
+          "inputBytes": 63,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 79
+        },
+        {
+          "inputBytes": 63,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 91
+        },
+        {
+          "inputBytes": 63,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 91
+        },
+        {
+          "inputBytes": 63,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 91
+        },
+        {
+          "inputBytes": 64,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 75
+        },
+        {
+          "inputBytes": 64,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 75
+        },
+        {
+          "inputBytes": 64,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 75
+        },
+        {
+          "inputBytes": 64,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 81
+        },
+        {
+          "inputBytes": 64,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 81
+        },
+        {
+          "inputBytes": 64,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 81
+        },
+        {
+          "inputBytes": 64,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 93
+        },
+        {
+          "inputBytes": 64,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 93
+        },
+        {
+          "inputBytes": 64,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 93
+        },
+        {
+          "inputBytes": 65,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 76
+        },
+        {
+          "inputBytes": 65,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 76
+        },
+        {
+          "inputBytes": 65,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 76
+        },
+        {
+          "inputBytes": 65,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 82
+        },
+        {
+          "inputBytes": 65,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 82
+        },
+        {
+          "inputBytes": 65,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 82
+        },
+        {
+          "inputBytes": 65,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 94
+        },
+        {
+          "inputBytes": 65,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 94
+        },
+        {
+          "inputBytes": 65,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 94
+        },
+        {
+          "inputBytes": 127,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 141
+        },
+        {
+          "inputBytes": 127,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 141
+        },
+        {
+          "inputBytes": 127,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 141
+        },
+        {
+          "inputBytes": 127,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 147
+        },
+        {
+          "inputBytes": 127,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 147
+        },
+        {
+          "inputBytes": 127,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 147
+        },
+        {
+          "inputBytes": 127,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 159
+        },
+        {
+          "inputBytes": 127,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 159
+        },
+        {
+          "inputBytes": 127,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 159
+        },
+        {
+          "inputBytes": 128,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 143
+        },
+        {
+          "inputBytes": 128,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 143
+        },
+        {
+          "inputBytes": 128,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 143
+        },
+        {
+          "inputBytes": 128,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 149
+        },
+        {
+          "inputBytes": 128,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 149
+        },
+        {
+          "inputBytes": 128,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 149
+        },
+        {
+          "inputBytes": 128,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 161
+        },
+        {
+          "inputBytes": 128,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 161
+        },
+        {
+          "inputBytes": 128,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 161
+        },
+        {
+          "inputBytes": 255,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 277
+        },
+        {
+          "inputBytes": 255,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 277
+        },
+        {
+          "inputBytes": 255,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 277
+        },
+        {
+          "inputBytes": 255,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 283
+        },
+        {
+          "inputBytes": 255,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 283
+        },
+        {
+          "inputBytes": 255,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 283
+        },
+        {
+          "inputBytes": 255,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 295
+        },
+        {
+          "inputBytes": 255,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 295
+        },
+        {
+          "inputBytes": 255,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 295
+        },
+        {
+          "inputBytes": 256,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 279
+        },
+        {
+          "inputBytes": 256,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 279
+        },
+        {
+          "inputBytes": 256,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 279
+        },
+        {
+          "inputBytes": 256,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 285
+        },
+        {
+          "inputBytes": 256,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 285
+        },
+        {
+          "inputBytes": 256,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 285
+        },
+        {
+          "inputBytes": 256,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 297
+        },
+        {
+          "inputBytes": 256,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 297
+        },
+        {
+          "inputBytes": 256,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 297
+        },
+        {
+          "inputBytes": 1023,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 1093
+        },
+        {
+          "inputBytes": 1023,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 1093
+        },
+        {
+          "inputBytes": 1023,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 1093
+        },
+        {
+          "inputBytes": 1023,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 1099
+        },
+        {
+          "inputBytes": 1023,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 1099
+        },
+        {
+          "inputBytes": 1023,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 1099
+        },
+        {
+          "inputBytes": 1023,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 1111
+        },
+        {
+          "inputBytes": 1023,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 1111
+        },
+        {
+          "inputBytes": 1023,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 1111
+        },
+        {
+          "inputBytes": 1024,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 1095
+        },
+        {
+          "inputBytes": 1024,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 1095
+        },
+        {
+          "inputBytes": 1024,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 1095
+        },
+        {
+          "inputBytes": 1024,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 1101
+        },
+        {
+          "inputBytes": 1024,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 1101
+        },
+        {
+          "inputBytes": 1024,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 1101
+        },
+        {
+          "inputBytes": 1024,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 1113
+        },
+        {
+          "inputBytes": 1024,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 1113
+        },
+        {
+          "inputBytes": 1024,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 1113
+        },
+        {
+          "inputBytes": 1025,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 1096
+        },
+        {
+          "inputBytes": 1025,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 1096
+        },
+        {
+          "inputBytes": 1025,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 1096
+        },
+        {
+          "inputBytes": 1025,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 1102
+        },
+        {
+          "inputBytes": 1025,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 1102
+        },
+        {
+          "inputBytes": 1025,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 1102
+        },
+        {
+          "inputBytes": 1025,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 1114
+        },
+        {
+          "inputBytes": 1025,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 1114
+        },
+        {
+          "inputBytes": 1025,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 1114
+        },
+        {
+          "inputBytes": 4095,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 4357
+        },
+        {
+          "inputBytes": 4095,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 4357
+        },
+        {
+          "inputBytes": 4095,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 4357
+        },
+        {
+          "inputBytes": 4095,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 4363
+        },
+        {
+          "inputBytes": 4095,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 4363
+        },
+        {
+          "inputBytes": 4095,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 4363
+        },
+        {
+          "inputBytes": 4095,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 4375
+        },
+        {
+          "inputBytes": 4095,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 4375
+        },
+        {
+          "inputBytes": 4095,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 4375
+        },
+        {
+          "inputBytes": 4096,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 4359
+        },
+        {
+          "inputBytes": 4096,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 4359
+        },
+        {
+          "inputBytes": 4096,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 4359
+        },
+        {
+          "inputBytes": 4096,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 4365
+        },
+        {
+          "inputBytes": 4096,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 4365
+        },
+        {
+          "inputBytes": 4096,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 4365
+        },
+        {
+          "inputBytes": 4096,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 4377
+        },
+        {
+          "inputBytes": 4096,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 4377
+        },
+        {
+          "inputBytes": 4096,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 4377
+        },
+        {
+          "inputBytes": 4097,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 4360
+        },
+        {
+          "inputBytes": 4097,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 4360
+        },
+        {
+          "inputBytes": 4097,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 4360
+        },
+        {
+          "inputBytes": 4097,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 4366
+        },
+        {
+          "inputBytes": 4097,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 4366
+        },
+        {
+          "inputBytes": 4097,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 4366
+        },
+        {
+          "inputBytes": 4097,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 4378
+        },
+        {
+          "inputBytes": 4097,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 4378
+        },
+        {
+          "inputBytes": 4097,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 4378
+        },
+        {
+          "inputBytes": 16383,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 17413
+        },
+        {
+          "inputBytes": 16383,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 17413
+        },
+        {
+          "inputBytes": 16383,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 17413
+        },
+        {
+          "inputBytes": 16383,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 17419
+        },
+        {
+          "inputBytes": 16383,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 17419
+        },
+        {
+          "inputBytes": 16383,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 17419
+        },
+        {
+          "inputBytes": 16383,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 17431
+        },
+        {
+          "inputBytes": 16383,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 17431
+        },
+        {
+          "inputBytes": 16383,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 17431
+        },
+        {
+          "inputBytes": 16384,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 17415
+        },
+        {
+          "inputBytes": 16384,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 17415
+        },
+        {
+          "inputBytes": 16384,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 17415
+        },
+        {
+          "inputBytes": 16384,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 17421
+        },
+        {
+          "inputBytes": 16384,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 17421
+        },
+        {
+          "inputBytes": 16384,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 17421
+        },
+        {
+          "inputBytes": 16384,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 17433
+        },
+        {
+          "inputBytes": 16384,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 17433
+        },
+        {
+          "inputBytes": 16384,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 17433
+        },
+        {
+          "inputBytes": 16385,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 17416
+        },
+        {
+          "inputBytes": 16385,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 17416
+        },
+        {
+          "inputBytes": 16385,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 17416
+        },
+        {
+          "inputBytes": 16385,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 17422
+        },
+        {
+          "inputBytes": 16385,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 17422
+        },
+        {
+          "inputBytes": 16385,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 17422
+        },
+        {
+          "inputBytes": 16385,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 17434
+        },
+        {
+          "inputBytes": 16385,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 17434
+        },
+        {
+          "inputBytes": 16385,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 17434
+        },
+        {
+          "inputBytes": 65535,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 69637
+        },
+        {
+          "inputBytes": 65535,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 69637
+        },
+        {
+          "inputBytes": 65535,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 69637
+        },
+        {
+          "inputBytes": 65535,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 69643
+        },
+        {
+          "inputBytes": 65535,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 69643
+        },
+        {
+          "inputBytes": 65535,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 69643
+        },
+        {
+          "inputBytes": 65535,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 69655
+        },
+        {
+          "inputBytes": 65535,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 69655
+        },
+        {
+          "inputBytes": 65535,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 69655
+        },
+        {
+          "inputBytes": 65536,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 69639
+        },
+        {
+          "inputBytes": 65536,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 69639
+        },
+        {
+          "inputBytes": 65536,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 69639
+        },
+        {
+          "inputBytes": 65536,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 69645
+        },
+        {
+          "inputBytes": 65536,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 69645
+        },
+        {
+          "inputBytes": 65536,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 69645
+        },
+        {
+          "inputBytes": 65536,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 69657
+        },
+        {
+          "inputBytes": 65536,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 69657
+        },
+        {
+          "inputBytes": 65536,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 69657
+        },
+        {
+          "inputBytes": 65537,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 69640
+        },
+        {
+          "inputBytes": 65537,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 69640
+        },
+        {
+          "inputBytes": 65537,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 69640
+        },
+        {
+          "inputBytes": 65537,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 69646
+        },
+        {
+          "inputBytes": 65537,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 69646
+        },
+        {
+          "inputBytes": 65537,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 69646
+        },
+        {
+          "inputBytes": 65537,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 69658
+        },
+        {
+          "inputBytes": 65537,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 69658
+        },
+        {
+          "inputBytes": 65537,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 69658
+        },
+        {
+          "inputBytes": 262143,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 278533
+        },
+        {
+          "inputBytes": 262143,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 278533
+        },
+        {
+          "inputBytes": 262143,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 278533
+        },
+        {
+          "inputBytes": 262143,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 278539
+        },
+        {
+          "inputBytes": 262143,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 278539
+        },
+        {
+          "inputBytes": 262143,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 278539
+        },
+        {
+          "inputBytes": 262143,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 278551
+        },
+        {
+          "inputBytes": 262143,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 278551
+        },
+        {
+          "inputBytes": 262143,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 278551
+        },
+        {
+          "inputBytes": 262144,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 278535
+        },
+        {
+          "inputBytes": 262144,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 278535
+        },
+        {
+          "inputBytes": 262144,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 278535
+        },
+        {
+          "inputBytes": 262144,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 278541
+        },
+        {
+          "inputBytes": 262144,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 278541
+        },
+        {
+          "inputBytes": 262144,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 278541
+        },
+        {
+          "inputBytes": 262144,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 278553
+        },
+        {
+          "inputBytes": 262144,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 278553
+        },
+        {
+          "inputBytes": 262144,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 278553
+        },
+        {
+          "inputBytes": 262145,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 278536
+        },
+        {
+          "inputBytes": 262145,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 278536
+        },
+        {
+          "inputBytes": 262145,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 278536
+        },
+        {
+          "inputBytes": 262145,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 278542
+        },
+        {
+          "inputBytes": 262145,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 278542
+        },
+        {
+          "inputBytes": 262145,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 278542
+        },
+        {
+          "inputBytes": 262145,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 278554
+        },
+        {
+          "inputBytes": 262145,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 278554
+        },
+        {
+          "inputBytes": 262145,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 278554
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 1114117
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 1114117
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 1114117
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 1114123
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 1114123
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 1114123
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 1114135
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 1114135
+        },
+        {
+          "inputBytes": 1048575,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 1114135
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 1114119
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 1114119
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 1114119
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 1114125
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 1114125
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 1114125
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 1114137
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 1114137
+        },
+        {
+          "inputBytes": 1048576,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 1114137
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 1114120
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 1114120
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 1114120
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 1114126
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 1114126
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 1114126
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 1114138
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 1114138
+        },
+        {
+          "inputBytes": 1048577,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 1114138
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 4456455
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 4456455
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 4456455
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 4456461
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 4456461
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 4456461
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 4456473
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 4456473
+        },
+        {
+          "inputBytes": 4194304,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 4456473
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 1,
+          "windowBits": -15,
+          "nativeBound": 8912903
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 6,
+          "windowBits": -15,
+          "nativeBound": 8912903
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 9,
+          "windowBits": -15,
+          "nativeBound": 8912903
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 1,
+          "windowBits": 15,
+          "nativeBound": 8912909
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 6,
+          "windowBits": 15,
+          "nativeBound": 8912909
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 9,
+          "windowBits": 15,
+          "nativeBound": 8912909
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 1,
+          "windowBits": 31,
+          "nativeBound": 8912921
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 6,
+          "windowBits": 31,
+          "nativeBound": 8912921
+        },
+        {
+          "inputBytes": 8388608,
+          "level": 9,
+          "windowBits": 31,
+          "nativeBound": 8912921
+        }
+      ]
+    }
+  },
+  "complete": true,
+  "rows": [
+    {
+      "inputBytes": 0,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 7,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 7,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 2,
+        "moderate": 2,
+        "poor": 2
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 0,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 7,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 7,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 2,
+        "moderate": 2,
+        "poor": 2
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 0,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 7,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 7,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 2,
+        "moderate": 2,
+        "poor": 2
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 1,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 8,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 8,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 3,
+        "moderate": 3,
+        "poor": 3
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 1,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 8,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 8,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 3,
+        "moderate": 3,
+        "poor": 3
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 1,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 8,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 8,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 3,
+        "moderate": 3,
+        "poor": 3
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 2,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 9,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 9,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 4,
+        "moderate": 4,
+        "poor": 4
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 2,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 9,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 9,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 4,
+        "moderate": 4,
+        "poor": 4
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 2,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 9,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 9,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 4,
+        "moderate": 4,
+        "poor": 4
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 3,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 10,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 10,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 5,
+        "moderate": 5,
+        "poor": 5
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 3,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 10,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 10,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 5,
+        "moderate": 5,
+        "poor": 5
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 3,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 10,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 10,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 5,
+        "moderate": 5,
+        "poor": 5
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 7,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 14,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 14,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 9,
+        "moderate": 9,
+        "poor": 9
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 7,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 14,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 14,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 9,
+        "moderate": 9,
+        "poor": 9
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 7,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 14,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 14,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 9,
+        "moderate": 9,
+        "poor": 9
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 8,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 15,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 15,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 10,
+        "moderate": 10,
+        "poor": 10
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 8,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 15,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 15,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 10,
+        "moderate": 10,
+        "poor": 10
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 8,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 15,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 15,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 10,
+        "moderate": 10,
+        "poor": 10
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 9,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 16,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 16,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 11,
+        "moderate": 11,
+        "poor": 11
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 9,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 16,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 16,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 11,
+        "moderate": 11,
+        "poor": 11
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 9,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 16,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 16,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 11,
+        "moderate": 11,
+        "poor": 11
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 15,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 22,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 22,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 17,
+        "moderate": 17,
+        "poor": 17
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 15,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 22,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 22,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 17,
+        "moderate": 17,
+        "poor": 17
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 15,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 22,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 22,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 17,
+        "moderate": 17,
+        "poor": 17
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 16,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 24,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 24,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 18,
+        "moderate": 18,
+        "poor": 18
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 16,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 24,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 24,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 18,
+        "moderate": 18,
+        "poor": 18
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 16,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 24,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 24,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 18,
+        "moderate": 18,
+        "poor": 18
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 17,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 25,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 25,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 19,
+        "moderate": 19,
+        "poor": 19
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 17,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 25,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 25,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 19,
+        "moderate": 19,
+        "poor": 19
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 17,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 25,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 25,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 19,
+        "moderate": 19,
+        "poor": 19
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 63,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 73,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 73,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 65,
+        "moderate": 64,
+        "poor": 68
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 63,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 73,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 73,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 65,
+        "moderate": 64,
+        "poor": 68
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 63,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 73,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 73,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 65,
+        "moderate": 63,
+        "poor": 68
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 64,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 75,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 75,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 66,
+        "moderate": 65,
+        "poor": 69
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 64,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 75,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 75,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 66,
+        "moderate": 65,
+        "poor": 69
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 64,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 75,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 75,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 66,
+        "moderate": 64,
+        "poor": 69
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 65,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 76,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 76,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 67,
+        "moderate": 65,
+        "poor": 70
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 65,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 76,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 76,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 67,
+        "moderate": 65,
+        "poor": 70
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 65,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 76,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 76,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 65,
+        "moderate": 65,
+        "poor": 70
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 127,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 141,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 141,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 86,
+        "moderate": 102,
+        "poor": 132
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 127,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 141,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 141,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 86,
+        "moderate": 102,
+        "poor": 132
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 127,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 141,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 141,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 86,
+        "moderate": 103,
+        "poor": 132
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 128,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 143,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 143,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 86,
+        "moderate": 103,
+        "poor": 133
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 128,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 143,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 143,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 86,
+        "moderate": 103,
+        "poor": 133
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 128,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 143,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 143,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 86,
+        "moderate": 103,
+        "poor": 133
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 255,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 277,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 277,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 87,
+        "moderate": 142,
+        "poor": 260
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 255,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 277,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 277,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 87,
+        "moderate": 142,
+        "poor": 260
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 255,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 277,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 277,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 86,
+        "moderate": 144,
+        "poor": 260
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 256,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 279,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 279,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 87,
+        "moderate": 143,
+        "poor": 261
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 256,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 279,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 279,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 87,
+        "moderate": 143,
+        "poor": 261
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 256,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 279,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 279,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 86,
+        "moderate": 144,
+        "poor": 261
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 1023,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 1093,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 1093,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 95,
+        "moderate": 362,
+        "poor": 1028
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 1023,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 1093,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 1093,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 92,
+        "moderate": 346,
+        "poor": 1028
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 1023,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 1093,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 1093,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 92,
+        "moderate": 351,
+        "poor": 1028
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 1024,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 1095,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 1095,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 95,
+        "moderate": 363,
+        "poor": 1029
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 1024,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 1095,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 1095,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 92,
+        "moderate": 347,
+        "poor": 1029
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 1024,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 1095,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 1095,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 92,
+        "moderate": 351,
+        "poor": 1029
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 1025,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 1096,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 1096,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 95,
+        "moderate": 364,
+        "poor": 1030
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 1025,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 1096,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 1096,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 92,
+        "moderate": 347,
+        "poor": 1030
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 1025,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 1096,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 1096,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 92,
+        "moderate": 352,
+        "poor": 1030
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 4095,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 4357,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 4357,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 124,
+        "moderate": 1184,
+        "poor": 4100
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 4095,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 4357,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 4357,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 109,
+        "moderate": 1071,
+        "poor": 4100
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 4095,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 4357,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 4357,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 109,
+        "moderate": 1128,
+        "poor": 4100
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 4096,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 4359,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 4359,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 124,
+        "moderate": 1185,
+        "poor": 4101
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 4096,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 4359,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 4359,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 109,
+        "moderate": 1072,
+        "poor": 4101
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 4096,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 4359,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 4359,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 109,
+        "moderate": 1129,
+        "poor": 4101
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 4097,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 4360,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 4360,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 124,
+        "moderate": 1186,
+        "poor": 4102
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 4097,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 4360,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 4360,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 109,
+        "moderate": 1072,
+        "poor": 4102
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 4097,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 4360,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 4360,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 109,
+        "moderate": 1130,
+        "poor": 4102
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 16383,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 17413,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 17413,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 218,
+        "moderate": 4626,
+        "poor": 16390
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 16383,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 17413,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 17413,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 153,
+        "moderate": 3987,
+        "poor": 16388
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 16383,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 17413,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 17413,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 153,
+        "moderate": 4301,
+        "poor": 16388
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 16384,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 17415,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 17415,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 218,
+        "moderate": 4624,
+        "poor": 16391
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 16384,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 17415,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 17415,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 153,
+        "moderate": 3987,
+        "poor": 16391
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 16384,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 17415,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 17415,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 153,
+        "moderate": 4301,
+        "poor": 16389
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 16385,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 17416,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 17416,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 218,
+        "moderate": 4626,
+        "poor": 16392
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 16385,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 17416,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 17416,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 153,
+        "moderate": 3986,
+        "poor": 16392
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 16385,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 17416,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 17416,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 153,
+        "moderate": 4300,
+        "poor": 16390
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 65535,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 69637,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 69637,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 551,
+        "moderate": 18622,
+        "poor": 65557
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 65535,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 69637,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 69637,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 320,
+        "moderate": 15741,
+        "poor": 65557
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 65535,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 69637,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 69637,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 320,
+        "moderate": 16651,
+        "poor": 65555
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 65536,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 69639,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 69639,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 551,
+        "moderate": 18622,
+        "poor": 65558
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 65536,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 69639,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 69639,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 320,
+        "moderate": 15741,
+        "poor": 65558
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 65536,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 69639,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 69639,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 320,
+        "moderate": 16651,
+        "poor": 65556
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 65537,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 69640,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 69640,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 551,
+        "moderate": 18622,
+        "poor": 65559
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 65537,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 69640,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 69640,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 320,
+        "moderate": 15741,
+        "poor": 65559
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 65537,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 69640,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 69640,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 320,
+        "moderate": 16651,
+        "poor": 65557
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 262143,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 278533,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 278533,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 1885,
+        "moderate": 74019,
+        "poor": 262226
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 262143,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 278533,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 278533,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 987,
+        "moderate": 61933,
+        "poor": 262226
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 262143,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 278533,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 278533,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 986,
+        "moderate": 64702,
+        "poor": 262223
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 262144,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 278535,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 278535,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 1885,
+        "moderate": 74020,
+        "poor": 262227
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 262144,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 278535,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 278535,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 987,
+        "moderate": 61933,
+        "poor": 262227
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 262144,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 278535,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 278535,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 986,
+        "moderate": 64702,
+        "poor": 262224
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 262145,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 278536,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 278536,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 1885,
+        "moderate": 74021,
+        "poor": 262228
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 262145,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 278536,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 278536,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 987,
+        "moderate": 61934,
+        "poor": 262228
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 262145,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 278536,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 278536,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 986,
+        "moderate": 64703,
+        "poor": 262225
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 1048575,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 1114117,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 1114117,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 7218,
+        "moderate": 294578,
+        "poor": 1048900
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 1048575,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 1114117,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 1114117,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 3653,
+        "moderate": 245904,
+        "poor": 1048900
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 1048575,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 1114117,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 1114117,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 3653,
+        "moderate": 256116,
+        "poor": 1048895
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 1048576,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 1114119,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 1114119,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 7218,
+        "moderate": 294578,
+        "poor": 1048901
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 1048576,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 1114119,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 1114119,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 3653,
+        "moderate": 245904,
+        "poor": 1048901
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 1048576,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 1114119,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 1114119,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 3653,
+        "moderate": 256117,
+        "poor": 1048896
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 1048577,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 1114120,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 1114120,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 7218,
+        "moderate": 294579,
+        "poor": 1048902
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 1048577,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 1114120,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 1114120,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 3653,
+        "moderate": 245905,
+        "poor": 1048902
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 1048577,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 1114120,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 1114120,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 3653,
+        "moderate": 256117,
+        "poor": 1048897
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 4194304,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 4456455,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 4456455,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 28556,
+        "moderate": 1168395,
+        "poor": 4195589
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 4194304,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 4456455,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 4456455,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 14322,
+        "moderate": 970188,
+        "poor": 4195589
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 4194304,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 4456455,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 4456455,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 14322,
+        "moderate": 1011116,
+        "poor": 4195584
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 8388608,
+      "level": 1,
+      "windowBits": -15,
+      "nativeBound": 8912903,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 1,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 8912903,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 57020,
+        "moderate": 2333701,
+        "poor": 8391173
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 8388608,
+      "level": 6,
+      "windowBits": -15,
+      "nativeBound": 8912903,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 6,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 8912903,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 28561,
+        "moderate": 1936298,
+        "poor": 8391173
+      },
+      "qualificationStatus": "qualified"
+    },
+    {
+      "inputBytes": 8388608,
+      "level": 9,
+      "windowBits": -15,
+      "nativeBound": 8912903,
+      "codec": {
+        "family": "zlib-ng",
+        "version": "1.3.1.zlib-ng",
+        "implementationVersion": "2.3.3",
+        "build": "fedora44-x86_64-compat-no-new-strategies",
+        "contract": "zlib-ng-no-quick-raw-v1"
+      },
+      "parameters": {
+        "level": 9,
+        "windowBits": 15,
+        "memLevel": 8,
+        "strategy": 0,
+        "flush": 0,
+        "finishFlush": 4
+      },
+      "benchmarkBound": 8912903,
+      "difference": 0,
+      "actualCompressedBytes": {
+        "high": 28561,
+        "moderate": 2017557,
+        "poor": 8391163
+      },
+      "qualificationStatus": "qualified"
+    }
+  ]
+}
