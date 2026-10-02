@@ -1,10 +1,10 @@
 {
   "name": "@pjs/runtime",
-  "version": "0.12.0",
+  "version": "0.15.0",
   "description": "Explicit CPU task runtime for Node.js",
   "type": "module",
   "engines": {
-    "node": ">=22.0.0"
+    "node": "^22.13.0 || ^24.0.0"
   },
   "exports": {
     ".": {
@@ -13,10 +13,26 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "types": "./dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Miskovy/pjs.git",
+    "directory": "packages/runtime"
+  },
+  "bugs": {
+    "url": "https://github.com/Miskovy/pjs/issues"
+  },
+  "keywords": [
+    "nodejs",
+    "worker-threads",
+    "parallel",
+    "cpu"
+  ]
 }

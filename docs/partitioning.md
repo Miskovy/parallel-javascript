@@ -1,5 +1,9 @@
 # Experimental numeric range operations
 
+For the current public contract and stability boundary, start with the
+[v0.15 user guide](guide/core-api.md) and [stability policy](stability.md).
+This detailed reference retains the experimental mechanics.
+
 v0.4 added `runtime.partitionRange(task, range, createInput, options?)`; v0.5
 added bounded transport batches; v0.6 added completion-only `parallelFor()`;
 v0.7 added bounded completion-order `streamRange()` over the same engine; v0.8

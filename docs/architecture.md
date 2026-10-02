@@ -1,6 +1,7 @@
 # Runtime architecture
 
-The [initial proposal](proposal.md) defines the public boundaries. The package
+The [v0.15 stability policy](stability.md) defines the public promise; the
+[initial proposal](proposal.md) records its origins. The package
 exports `PjsRuntime`, `PjsTaskRegistry`, `transfer`, `sharedReadonly`, public
 types, and errors. Pool, worker transport, FIFO implementation, coordinators,
 mutable records, telemetry, profiling hooks, and protocol remain internal.
@@ -182,6 +183,22 @@ Snapshots are copies. `operations` counts parent outcomes independently and expo
 
 Queue latency is monotonic acceptance-to-physical-dispatch time, including startup; every logical item in a batch receives a sample. Execution latency is measured per logical invocation inside a worker, excluding result posting. Total latency remains acceptance-to-caller settlement. Counts for each mean are exposed; an empty mean is zero with zero samples. Disabled-by-default internal benchmark hooks measure selected stages but are not exported and overlap, so their durations cannot be summed. One operation-level AsyncResource runs host factories and parent settlement in the caller's captured async scope and emits destroy on cleanup. Worker isolates do not inherit AsyncLocalStorage stores; only explicit task input crosses that boundary. See [ADR 0013](adr/0013-async-resource-context.md).
 
-## Next layers
+## Stabilization boundary
 
-Use the [v0.11 measurements](benchmarks-v0.11.md) to select the next milestone. The experimental range, completion, streaming, mapping, batching, and binary-credit options do not stabilize reduce or a parallel namespace. Arbitrary object graphs remain unsuitable for exact byte reservations. A variable-output RLE trace shows that honest exact declaration can duplicate codec work, but upper-bound refunds still need explicit slack, release, metric, and batching semantics. Cooperative cancellation needs a task context and polling semantics for synchronous kernels. Nested execution needs shared runtime capacity and dependency handling to prevent starvation/deadlock. Work stealing, adaptive chunking, affinity, NUMA, priorities, and global byte pools still lack supporting evidence. Ordinary Node async I/O stays outside CPU task scheduling.
+v0.15 retains all 25 runtime source files unchanged. Composition still constructs
+all subsystem owners before dispatcher.start can trigger callbacks. No scheduler,
+credit owner, pool or message protocol is replaced. The only root imports are the
+façade, registration, ownership helpers, public types and errors; registry.snapshot
+is a known unsupported public-member leak, documented in the inventory.
+
+The canonical user contracts now live in the [core guide](guide/core-api.md),
+[lifecycle guide](guide/lifecycle.md), [credit guide](guide/backpressure.md) and
+[metric glossary](guide/telemetry.md). The separate result-credit plane reserves
+before execution, reconciles upper-bound successful arrivals, and releases when
+PJS ownership ends. It does not manage process memory.
+
+No architectural regression requiring refactoring was found. Disabled internal
+profiling and opt-in reservation invariant scans remain research/test facilities;
+no benchmark imports or codec-specific behavior enter the production graph.
+Read the [readiness matrix](research/v0.15-v1-readiness.md) for the proposed stable
+core and release gates. Future execution features are not readiness blockers.

@@ -223,3 +223,58 @@ runtime.parallelMapRange(
   (partition) => ({ input: { partition } }),
   wrongTypedOptions,
 );
+
+// v0.15: common consumer options and missing negative combinations.
+const abort = new AbortController();
+const deadlineResult: Promise<Uint8Array> = runtime.run(task, data, {
+  signal: abort.signal,
+  timeout: 1000,
+});
+void deadlineResult;
+// @ts-expect-error AbortController is not an AbortSignal.
+runtime.run(task, data, { signal: abort });
+// @ts-expect-error Module registration requires a URL, not a path string.
+registry.register('path', './fixture.js');
+// @ts-expect-error Registration's output type is retained by run.
+const badResult: Promise<string> = runtime.run(task, data);
+void badResult;
+const stats: ReturnType<PjsRuntime['stats']> = runtime.stats();
+const queueSize: number = stats.queue.size;
+void queueSize;
+const shutdown: Promise<void> = runtime.shutdown({ drain: false });
+void shutdown;
+// @ts-expect-error Shutdown policy is a boolean.
+runtime.shutdown({ drain: 'false' });
+
+runtime.streamRange(task, range, () => ({ input: data }), {
+  // @ts-expect-error Capacity without either declaration cannot select byte mode.
+  experimentalMaxReservedResultBytes: 64,
+});
+// @ts-expect-error Explicit undefined does not mean omission for byte mode.
+runtime.streamRange(task, range, () => ({ input: data }), {
+  experimentalResultBytes: undefined,
+});
+const exactCallback: BinaryStreamRangeOptions = {
+  // @ts-expect-error An exact declaration must be synchronous too.
+  experimentalResultBytes: async () => 16,
+  experimentalMaxReservedResultBytes: 64,
+};
+void exactCallback;
+const typedEmpty: Promise<Float64Array<ArrayBuffer>> = runtime.parallelMapRange(
+  typedMapTask,
+  { start: 0, end: 0, grainSize: 1 },
+  (partition) => ({ input: { partition } }),
+  typedOptions,
+);
+void typedEmpty;
+const bigintTask = registry.register<
+  { partition: RangePartition },
+  BigInt64Array<ArrayBuffer>
+>('bigint-map', new URL('./fixture.js', import.meta.url));
+const bigints: Promise<BigInt64Array<ArrayBuffer>> = runtime.parallelMapRange(
+  bigintTask,
+  range,
+  (partition) => ({ input: { partition } }),
+  { experimentalOutputConstructor: BigInt64Array },
+);
+void bigints;

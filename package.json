@@ -1,14 +1,14 @@
 {
   "name": "pjs-workspace",
   "private": true,
-  "version": "0.12.0",
+  "version": "0.15.0",
   "license": "MIT",
   "type": "module",
   "workspaces": [
     "packages/*"
   ],
   "engines": {
-    "node": "^22.13.0 || >=24.0.0"
+    "node": "^22.13.0 || ^24.0.0"
   },
   "scripts": {
     "build": "tsc -p packages/runtime/tsconfig.json",
@@ -36,7 +36,11 @@
     "benchmark:reservation": "npm run build && node benchmarks/reservation-audit/run.mjs && node benchmarks/reservation-audit/pipeline.mjs",
     "benchmark:upper-bound": "npm run build && node benchmarks/upper-bound-results/run.mjs && node benchmarks/upper-bound-results/refund.mjs && node benchmarks/upper-bound-results/profile.mjs",
     "soak:reservations:smoke": "npm run build && node scripts/reservation-soak.mjs --mode=smoke",
-    "soak:reservations": "npm run build && node scripts/reservation-soak.mjs --mode=quick"
+    "soak:reservations": "npm run build && node scripts/reservation-soak.mjs --mode=quick",
+    "test:contracts": "npm run build && node scripts/test-contracts.mjs",
+    "test:package": "npm run build && node scripts/package-smoke.mjs",
+    "test:docs": "node scripts/check-docs.mjs",
+    "example:basic": "npm run build && node examples/basic-run.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

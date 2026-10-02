@@ -1,5 +1,9 @@
 # Clone, transfer, and reusable shared input
 
+For the current public contract and stability boundary, start with the
+[v0.15 user guide](guide/memory-ownership.md) and [stability policy](stability.md).
+This detailed reference retains the experimental mechanics.
+
 v0.11 preserves the v0.10 memory contract. The refactor moves exact binary
 result-credit state into `ResultCreditManager` and task input transfer claims
 into `TaskCoordinator`; it does not change clone, transfer, shared backing,
