@@ -1,0 +1,1325 @@
+{
+  "milestone": "0.14",
+  "clientDate": "2026-10-02",
+  "node": "v24.21.0",
+  "zlib": "1.3.2.1-motley-8002e91",
+  "base": "d9e259ef2ee14a11e05b57fb7621295aa67958c9",
+  "runtimeCommit": "18f0c87e7b7920179403bbc396afabced6bb06c4",
+  "checks": [
+    {
+      "command": "npm test (prerequisite run, includes build and test:types)",
+      "exitCode": 0,
+      "output": "\r\n> pjs-workspace@0.12.0 test\r\n> npm run build && npm run test:types && node --test --test-timeout=20000 packages/runtime/test/*.test.mjs\r\n\r\n\r\n> pjs-workspace@0.12.0 build\r\n> tsc -p packages/runtime/tsconfig.json\r\n\r\n\r\n> pjs-workspace@0.12.0 test:types\r\n> tsc -p packages/runtime/test/tsconfig.json\r\n\r\n✔ batch size one preserves v0.4 logical output and message semantics (686.2024ms)\r\n✔ multiple logical items retain order across reversed physical completion (467.0034ms)\r\n✔ batch stops after logical failure at item 0 (307.6103ms)\r\n✔ batch stops after logical failure at item 1 (463.1812ms)\r\n✔ batch stops after logical failure at item 3 (278.6421ms)\r\n✔ shared and cloned inputs batch while transferred inputs reject before detachment (325.5005ms)\r\n✔ batched private outputs can transfer back together (360.8766ms)\r\n✔ combined output serialization failure rejects once and leaves replacement unnecessary (357.6705ms)\r\n✔ queued parent cancellation removes one weighted FIFO batch (275.1587ms)\r\n✔ abort during a batch settles callers but the full batch retains occupancy (270.6655ms)\r\n✔ timeout during a batch settles callers but the full batch retains occupancy (398.7425ms)\r\n✔ worker crash during a batch fails without retry and replacement remains usable (726.635ms)\r\n✔ malformed batch response fails its worker and operation safely (551.3851ms)\r\n✔ graceful shutdown drains ungenerated batches (271.6015ms)\r\n✔ non-draining shutdown cancels active and ungenerated batches (212.3776ms)\r\n✔ reentrant factory cannot steal a worker reserved for a batch (218.9085ms)\r\n✔ concurrent parents and ordinary work preserve logical and physical accounting (317.0768ms)\r\n✔ binary protocol fields validate single, batch, legacy, and failure messages (62.374ms)\r\n✔ strict streams accept direct owned binary kinds, zero length, and subviews (766.1717ms)\r\n✔ clone, transfer, uneven declarations, and physical batching retain logical byte weights (522.1516ms)\r\n✔ count and byte credits compose and variable declarations wait for consumer release (349.2648ms)\r\n✔ impossible and invalid declarations fail before factory or worker execution (380.4992ms)\r\n✔ worker rejects wrong, nested, shared, detached, over, and undersized results before success transport (216.752ms)\r\n✔ queued cancellation releases immediately while running cancellation holds credit until execution ends (423.9319ms)\r\n✔ timeout, crash, and first batch failure clean every reservation exactly once (600.92ms)\r\n✔ consumer failure and weighted head-of-line pressure do not leak or starve another stream (236.8356ms)\r\n✔ strict streams retain parent saturation and count-only streams remain available (324.8034ms)\r\n✔ graceful and terminating shutdown preserve reservation ownership (471.4095ms)\r\n✔ parallelFor handles empty, single, multiple, and batched ranges as Promise<void> (671.8225ms)\r\n✔ completion protocol ignores large and uncloneable worker values without output serialization (331.1758ms)\r\n✔ completion preserves exclusive input transfer rules (274.5284ms)\r\n✔ shared vector and matrix outputs use disjoint completion-only writes (316.2043ms)\r\n✔ first failure in a completion batch skips later items and leaves earlier effects (267.4305ms)\r\n✔ completion abort settles once while posted work retains occupancy (342.5783ms)\r\n✔ completion timeout settles once while posted work retains occupancy (502.694ms)\r\n✔ completion operation capacity and ordinary queue admission remain bounded (219.5265ms)\r\n✔ completion worker crash fails once and replacement remains usable (585.2735ms)\r\n✔ graceful shutdown drains completion work and non-draining shutdown cancels it (473.3431ms)\r\n✔ operation AsyncResource preserves isolated AsyncLocalStorage stores for factories and continuations (465.0014ms)\r\n✔ operation async resources emit destroy and do not leak abort listeners (400.756ms)\r\n✔ generic map covers empty, single, uneven, and negative ranges (629.424ms)\r\n✔ map assembles logical element order across reversed block completion (410.7541ms)\r\n✔ map validates array and typed block cardinality and kind (526.4812ms)\r\n✔ typed map clones and transfers blocks without boxing the final output (265.4448ms)\r\n✔ generic object map preserves one object per element (273.1943ms)\r\n✔ map propagates worker, serialization, cancellation, timeout, and crash failures (355.9043ms)\r\n✔ map drains graceful shutdown and rejects non-draining shutdown (632.353ms)\r\n✔ map saturation, metrics, and AsyncLocalStorage reuse range invariants (314.0728ms)\r\n✔ matrix kernel agrees with independent reference on unequal signed entries (4.5765ms)\r\n✔ uneven matrix row partitions execute correctly across multiple workers (clone) (512.9809ms)\r\n✔ uneven matrix row partitions execute correctly across multiple workers (shared) (282.463ms)\r\n✔ stream diagnostics distinguish known direct backings from unknown results (777.7571ms)\r\n✔ multiple buffered views report payload bytes and explicitly alias-count (530.7638ms)\r\n✔ yield, transfer, cancellation, and failure release diagnostic retention (343.1919ms)\r\n✔ stream start remains eager and its deadline starts before consumption (382.169ms)\r\n✔ stream remains single-consumer and an async processing pipeline cleans up on sink failure (365.7341ms)\r\n✔ seeded range properties cover every integer once without gaps or overlaps (71.2485ms)\r\n✔ empty, singleton, awkward and randomized runtime ranges agree with independent coverage (2128.1102ms)\r\n✔ invalid ranges/options/handles reject without parent or child admission (236.3243ms)\r\n✔ logical result order survives reversed completion order (343.7645ms)\r\n✔ ten million logical chunks generate only a worker-sized window and cancel lazily (315.0513ms)\r\n✔ saturated FIFO delays production, and active parent records have a finite bound (231.495ms)\r\n✔ input factory reserves admission against reentrant ordinary work (283.7552ms)\r\n✔ shared common input and compact transferred inputs/outputs preserve ownership (350.7861ms)\r\n✔ worker exception identifies the failed partition and cancels queued siblings (498.9827ms)\r\n✔ failed parent discards late running sibling output without releasing its slot (327.1301ms)\r\n✔ factory and serialization failures stop production and leave the runtime usable (452.2307ms)\r\n✔ partition queued abort settles once and preserves worker occupancy (314.6431ms)\r\n✔ partition queued timeout settles once and preserves worker occupancy (366.2144ms)\r\n✔ partition running abort settles once and preserves worker occupancy (227.7351ms)\r\n✔ partition running timeout settles once and preserves worker occupancy (484.327ms)\r\n✔ one parent deadline includes synchronous preparation and is not restarted per chunk (456.5703ms)\r\n✔ crashed partition fails once; unrelated operation and replacement retain shared input (536.7342ms)\r\n✔ restart exhaustion rejects all parent operations including those without children (153.3833ms)\r\n✔ graceful shutdown drains the entire accepted range including ungenerated chunks and startup (285.1127ms)\r\n✔ non-draining shutdown cancels running, queued and ungenerated partition work (163.3676ms)\r\n✔ reentrant cancellation and shutdown during factory/serialization preserve transfer rules (202.1193ms)\r\n✔ queued transfer reservation releases when a parent is cancelled (191.3684ms)\r\n✔ nested worker-created partitioning is explicitly rejected (194.3165ms)\r\n✔ many sequential and simultaneous operations preserve accounting and listener cleanup (403.9274ms)\r\n✔ deadline expires while saturation prevents any chunk generation (229.2315ms)\r\n✔ graceful shutdown initiated inside a factory finishes the remaining range (201.807ms)\r\n✔ shutdown during startup cancels an accepted parent before generation (26.5215ms)\r\n✔ simultaneous sibling failures retain only the first parent outcome (170.1284ms)\r\n✔ abort/deadline/crash races with concurrent producers retain bounded admission and settlement (789.9966ms)\r\n✔ upper-bound reconciliation refunds immediately and yield releases actual credit (5.9227ms)\r\n✔ upper-bound zero and equal actuals reconcile independently in a batch (1.7509ms)\r\n✔ upper-bound cancellation races do not refund discarded successes (1.2941ms)\r\n✔ invalid upper-bound reconciliation cannot corrupt accounting; exact never refunds (1.3952ms)\r\n✔ result credits release queued cancellation immediately (0.5026ms)\r\n✔ result credits retain running cancellation until execution ends (0.444ms)\r\n✔ result credits survive successful buffering until yield (0.4412ms)\r\n✔ result credits correlate batch items and cancel operations exactly once (2.1274ms)\r\n✔ result credits enforce capacity and release all physical owners (0.9851ms)\r\n✔ executes before explicit readiness, reuses a worker, and clones input (235.0893ms)\r\n✔ CPU tasks execute simultaneously in four distinct isolates (277.1474ms)\r\n✔ FIFO queue, queued removal, and bounded admission (373.2007ms)\r\n✔ zero queue accepts only immediately idle capacity (266.6133ms)\r\n✔ task errors retain remote details and serialization failures preserve worker health (358.9628ms)\r\n✔ worker exit 0 fails its task once and replaces the worker (385.6208ms)\r\n✔ worker exit 23 fails its task once and replaces the worker (494.3648ms)\r\n✔ invalid worker messages fail the occupied task and recover (364.1754ms)\r\n✔ uncaught error followed by exit counts once and recovers (386.6158ms)\r\n✔ abort listeners and timers are removed after successful and failed settlement (277.241ms)\r\n✔ serialization getters may enqueue and throw without stranding the queue (166.0581ms)\r\n✔ bounded crash replacement fails remaining work when budget is exhausted (201.4513ms)\r\n✔ queued deadlines remove bookkeeping; pre-abort never enters the queue (165.3824ms)\r\n✔ running abort settles caller without releasing execution capacity (153.1165ms)\r\n✔ running timeout settles caller without releasing execution capacity (308.2994ms)\r\n✔ graceful shutdown drains startup, active, and queued work, and is idempotent (193.1868ms)\r\n✔ shutdown handles a crash while draining accepted work (283.9936ms)\r\n✔ explicit non-draining shutdown terminates uncooperative work (209.1092ms)\r\n✔ shutdown during startup cancels tasks without spawning replacements (137.4776ms)\r\n✔ bootstrap failure is bounded: broken.mjs (159.7297ms)\r\n✔ bootstrap failure is bounded: hanging-import.mjs (1020.5637ms)\r\n✔ bootstrap failure is bounded: missing.mjs (101.3793ms)\r\n✔ configuration and registry boundaries are checked (18.8827ms)\r\n✔ stress mixed concurrent outcomes preserve accounting and release listeners (329.9859ms)\r\n✔ scheduler policy is independent of worker transport (0.4671ms)\r\n✔ scheduler capacity and size count logical admission weight (0.2715ms)\r\n✔ construction compacts views, copies exact bits, and leaves source independent (4.9113ms)\r\n✔ construction rejects unsupported inputs and detached views (1.605ms)\r\n✔ four simultaneous workers reuse one input, clone metadata, and transfer independent outputs (379.5192ms)\r\n✔ native SAB passthrough preserves offsets and aliases within cloned metadata (205.6298ms)\r\n✔ crash leaves shared bytes and queued task valid through worker replacement (623.2164ms)\r\n✔ shared input during queued abort preserves capacity and settles once (330.8043ms)\r\n✔ shared input during queued timeout preserves capacity and settles once (716.3367ms)\r\n✔ shared input during running abort preserves capacity and settles once (271.4357ms)\r\n✔ shared input during running timeout preserves capacity and settles once (585.7207ms)\r\n✔ shared startup queue drains gracefully and terminating shutdown preserves input (538.3195ms)\r\n✔ shared bytes never enter transfer lists; independent ordinary input can transfer (229.3818ms)\r\n✔ educational mutation violation loses an update; Atomics.add preserves both (396.4792ms)\r\n✔ empty, one, many, and batched streams deliver partition results (468.9208ms)\r\n✔ stream delivery uses completion order (262.5228ms)\r\n✔ slow consumer keeps produced plus in-flight results within capacity (473.8403ms)\r\n✔ the operation deadline includes slow consumer waiting (542.2111ms)\r\n✔ consumer break and throw cancel remaining work exactly once (197.2984ms)\r\n✔ producer failure preserves yielded values and rejects the stream (202.0338ms)\r\n✔ stream transfers output buffers and yields shared views natively (365.0041ms)\r\n✔ abort, timeout, crash, and non-draining shutdown reject iteration (531.5394ms)\r\n✔ graceful shutdown includes buffered result delivery (415.1034ms)\r\n✔ concurrent stream AsyncLocalStorage contexts remain isolated (229.9917ms)\r\n✔ stream coexists with ordinary and completion-only work (308.9468ms)\r\n✔ stream terminal paths remove abort listeners (282.8797ms)\r\n✔ invalid result capacity rejects through the iterator (36.1797ms)\r\n✔ clone remains default and user objects cannot spoof a transfer envelope (277.9684ms)\r\n✔ input and output transfers detach sender views while preserving data and offsets (284.4322ms)\r\n✔ input-only and output-only transfer choices are independent (325.9078ms)\r\n✔ zero-length and cross-realm ArrayBuffers transfer successfully (236.5374ms)\r\n✔ multiple buffers and duplicate references in a payload preserve aliasing (214.2423ms)\r\n✔ invalid transfer lists reject without poisoning workers or detaching valid entries (193.6525ms)\r\n✔ admission rejection does not move or reserve buffers (230.9132ms)\r\n✔ queued abort retains ownership and releases the reservation (203.1602ms)\r\n✔ queued timeout retains ownership and releases the reservation (310.586ms)\r\n✔ queued input lists are snapshots and pending transfers reserve across runtimes (335.7654ms)\r\n✔ external detachment while queued fails dispatch, releases reservations, and preserves progress (270.7268ms)\r\n✔ running abort discards transferred output without reusing a busy slot (168.3312ms)\r\n✔ running timeout discards transferred output without reusing a busy slot (374.0509ms)\r\n✔ shutdown distinguishes queued ownership from dispatched ownership (398.9325ms)\r\n✔ crashes and task failures cannot restore transferred input ownership (387.0703ms)\r\n✔ input and output serialization failures leave workers reusable (207.2259ms)\r\n✔ abort inside a serialization getter cannot release an in-progress transfer reservation (210.7281ms)\r\n✔ stress transfers across four workers preserve bytes and terminal accounting (269.0347ms)\r\n✔ upper-bound wire fields are explicit, exclusive, and validated for batches (2.8384ms)\r\n✔ upper-bound kinds, subviews, zero, clone, and transfer preserve visible bytes (304.219ms)\r\n✔ refund resumes admission before consumer yield and slow buffers retain actual credit (190.4219ms)\r\n✔ zero actual refunds all maximum but count capacity still blocks production (250.7519ms)\r\n✔ upper-bound violations fail compactly without a refund or successful payload (240.2609ms)\r\n✔ invalid, ambiguous, asynchronous, throwing, and impossible maxima fail before input (278.5576ms)\r\n✔ upper-bound declaration can submit ordinary work reentrantly (204.0653ms)\r\n✔ batches refund logical successes and stop on first or middle failure (256.5213ms)\r\n✔ queued and running cancellation preserve maximum until the correct terminal event (392.8247ms)\r\n✔ timeout before dispatch and while running never reconciles a discarded success (494.4292ms)\r\n✔ consumer break, throw, return, and iterator throw release buffered actual credit (343.782ms)\r\n✔ crash, fatal restart exhaustion, and ordinary failure release without refund (540.8643ms)\r\n✔ graceful and non-draining shutdown clean reconciled and unreconciled owners (372.3169ms)\r\n✔ a credit-blocked maximum does not starve another stream or ordinary work (194.3353ms)\r\n✔ non-draining shutdown discards reconciled buffered actuals without counting release as refund (225.1433ms)\r\nℹ tests 178\r\nℹ suites 0\r\nℹ pass 178\r\nℹ fail 0\r\nℹ cancelled 0\r\nℹ skipped 0\r\nℹ todo 0\r\nℹ duration_ms 11124.9758\r\n"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "durationMs": 1249,
+      "output": "\n> pjs-workspace@0.12.0 build\n> tsc -p packages/runtime/tsconfig.json\n\n"
+    },
+    {
+      "command": "npm run test:types",
+      "exitCode": 0,
+      "durationMs": 472,
+      "output": "\n> pjs-workspace@0.12.0 test:types\n> tsc -p packages/runtime/test/tsconfig.json\n\n"
+    },
+    {
+      "command": "npm run typecheck:compat",
+      "exitCode": 0,
+      "durationMs": 1938,
+      "output": "\n> pjs-workspace@0.12.0 typecheck:compat\n> tsc6 --noEmit -p packages/runtime/tsconfig.json\n\n"
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "durationMs": 5857,
+      "output": "\n> pjs-workspace@0.12.0 lint\n> eslint .\n\n"
+    },
+    {
+      "command": "npm run format:check",
+      "exitCode": 0,
+      "durationMs": 6870,
+      "output": "\n> pjs-workspace@0.12.0 format:check\n> prettier --check .\n\nChecking formatting...\nAll matched files use Prettier code style!\n"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "durationMs": 32,
+      "output": ""
+    },
+    {
+      "command": "harness tests",
+      "exitCode": 0,
+      "durationMs": 198,
+      "output": "✔ deterministic corpus, nontrivial entropy ordering and shared view (14.7809ms)\n✔ safe bound arithmetic handles boundaries and rejects overflow (0.2449ms)\n✔ independent shuffled blocks reconstruct exactly; reject gaps/duplicates/metadata (9.9737ms)\n✔ sample aggregation keeps slow observations and uses sample CV (0.5677ms)\n✔ matrix unique, fair primary models, natural exact inflate and safe preflight (2.7675ms)\n✔ report refuses partial, failed or missing-trial campaigns (0.7765ms)\nℹ tests 6\nℹ suites 0\nℹ pass 6\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 137.8437\n"
+    },
+    {
+      "command": "runtime pinned source equality",
+      "exitCode": 0,
+      "durationMs": 33,
+      "output": ""
+    }
+  ],
+  "success": true,
+  "processorObservation": {
+    "Name": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz",
+    "NumberOfCores": 4,
+    "NumberOfLogicalProcessors": 8
+  },
+  "npm": "11.19.0",
+  "historical": {
+    ".gitattributes": {
+      "gitBlob": "0547a9a5015ad49e40c63bc62857e000325c8f79",
+      "sha256": "fd2ca94a1e98ee4609cd3f8338e973038819afe8d25760990149a5a7d46d9982"
+    },
+    ".gitignore": {
+      "gitBlob": "c75e06f965327ad73ff6106949db97f3656ec369",
+      "sha256": "3903957389e10bc16d10e7d9070d49ae46a89dad8be6e5d2ea20bd70de15dd58"
+    },
+    ".prettierignore": {
+      "gitBlob": "16af0eef4bf6ff852647865bfe929f5481529e86",
+      "sha256": "9620b62a0b7a78387ea89f79b5897e217a4410ce5cf1e158c1edc7cadbd47466"
+    },
+    ".prettierrc.json": {
+      "gitBlob": "6452287da5a7961dc81179e53ab8ca7742123d7f",
+      "sha256": "32dcd743a0ffca59a737c87abcfcc3f57a0cede5cedb6a8b1b68d32a3b6d4506"
+    },
+    "LICENSE": {
+      "gitBlob": "c666eda5246586403bcc97b35fd9d88671349557",
+      "sha256": "7977502d5d3bdd267520de1cce1176142296dd2a0d00309206703c7bba990135"
+    },
+    "README.md": {
+      "gitBlob": "5da87af1bdfd1e06f4c13b64d1fde8e64821620f",
+      "sha256": "1d4677117abdb379fe0d7b90bb319412aca72d1e21adca4b197eadf0bfbf9fc0"
+    },
+    "benchmarks/README.md": {
+      "gitBlob": "ed5722db8d90a2e09632dbf11106c88bdd0b85f0",
+      "sha256": "5cc0954f707cb1d8a63df10ab15914273cccd6403b00db97cb37bbe63babb17f"
+    },
+    "benchmarks/binary-results/README.md": {
+      "gitBlob": "46202ae43fa11ace81249234db7c4975079fdb68",
+      "sha256": "54c7c2baaa27486b74fe2e9d5350e64a15370969d8a7a2d902e05579f99fd786"
+    },
+    "benchmarks/binary-results/fairness.mjs": {
+      "gitBlob": "b234214070c51bf0dc296d2289b489ae3d65ace4",
+      "sha256": "cae99b356a7c64acbc99ee1b4a388be46b8601bd34a3161d32192d4db5f6c84f"
+    },
+    "benchmarks/binary-results/measure.mjs": {
+      "gitBlob": "379c8e357ba6609e44520f7e7dd9e924217fd0cf",
+      "sha256": "106e012623748c95150b9e6257a66441521cf0c20b83ff7b7c8d5fb909e195f9"
+    },
+    "benchmarks/binary-results/regression-measure.mjs": {
+      "gitBlob": "d3a96c05bed59de11888ff922717c860d4a42404",
+      "sha256": "887f78d8129a28759bbb33f19acdae3aad8650ba6676b6abba0c522a236651c6"
+    },
+    "benchmarks/binary-results/regression.mjs": {
+      "gitBlob": "0c417b5e46762532063701d48903dd7f80bd1e8c",
+      "sha256": "1bdf7da71f53063f1b3bb221ddc4ebecdd0b9a017368d1076913a17e596301b7"
+    },
+    "benchmarks/binary-results/run.mjs": {
+      "gitBlob": "56d9b4dc0b6e415715f2b5fe9263a9febc7e12ba",
+      "sha256": "7878a6162c8999567e496f6544df81d0a406d45632123619cd04754519df2bc9"
+    },
+    "benchmarks/binary-results/task.mjs": {
+      "gitBlob": "7fa4427d31772609ceb8189e0162b9842e330a01",
+      "sha256": "773570f6f491527b626ca93ff992c2b01912cf53f63078968cf0b037d9c5aa99"
+    },
+    "benchmarks/completion-only/README.md": {
+      "gitBlob": "d3b759308a0e504cc710cf2105f07c65d47a37a2",
+      "sha256": "0eb3fba65d4ce6d544c1f376730f1addfd48d69e19528911f390261bda167b0c"
+    },
+    "benchmarks/completion-only/fairness.mjs": {
+      "gitBlob": "eb12f4391524fce135e45c7e531d2ff299cb64ad",
+      "sha256": "c93d7acd6cf15b28d5d3b6c5bc5db1146592c6c3dcf6dc0dbaa877c7b2ddc293"
+    },
+    "benchmarks/completion-only/measure.mjs": {
+      "gitBlob": "fcbd7ae5fdc9992e7c5540d0bf909683063cb799",
+      "sha256": "81a1fe17767e8d15207a8f43a80594caab484d9bf0ed6107aa480b4d017b00e9"
+    },
+    "benchmarks/completion-only/regression-measure.mjs": {
+      "gitBlob": "858321b1e452dc9e5ba7f952e3b17c40bde38f5b",
+      "sha256": "3e832c69c9dc82b4d46f13587551df686c32e455dec91edf317151c40245fcf0"
+    },
+    "benchmarks/completion-only/regression.mjs": {
+      "gitBlob": "7f9e6da6bb798c90692df142b44722409deb3160",
+      "sha256": "c7e255260aa805f7b4405522a33715ddf9feab0e02de2227f310d5758f813308"
+    },
+    "benchmarks/completion-only/run.mjs": {
+      "gitBlob": "8395b091b79517ecde6db91d07d08ac35ee82a7c",
+      "sha256": "e6ea847b1cfb59c5b4cc6f452d7acd9aca8b00199505992ddba9ced78792b508"
+    },
+    "benchmarks/completion-only/task.mjs": {
+      "gitBlob": "1e2c7e08a070860709aea53dfbce5f103b167e31",
+      "sha256": "c0b769dead0ba13e0a7a8d1f58b563ac78326e0ce85e9ab336bc975e1a02481f"
+    },
+    "benchmarks/cpu-baseline/compare.mjs": {
+      "gitBlob": "a73de54905ae1e462f77c00c119297f658552964",
+      "sha256": "5061b2fd17f4af1b6b1332b10b3630f4bee8df2e1017dd205285ef0501b492c0"
+    },
+    "benchmarks/cpu-baseline/probe.mjs": {
+      "gitBlob": "b6f88cc0e14083ce58c40aeee3a1bba24ff90d11",
+      "sha256": "f8b4bd0bbc27bf5cbff6bf3d052e746f035e00ff886bc3b18cb4c9bb0f38c44b"
+    },
+    "benchmarks/cpu-baseline/run.mjs": {
+      "gitBlob": "f3c62205a2c78625ed649f4d742d8503deffa45c",
+      "sha256": "61b9b3f10bd1b78e20b0d147e16d73bc7a51003d4d881b9211568dd566fd8653"
+    },
+    "benchmarks/dispatch-efficiency/README.md": {
+      "gitBlob": "30f3d3b179ffb577b341bb16132166a34519c39e",
+      "sha256": "7a623f3e8f4059ee08c20001831396b92b4fbf25a73b3f0c309324f0d3a78485"
+    },
+    "benchmarks/dispatch-efficiency/fairness.mjs": {
+      "gitBlob": "e5d9c7f2f9f7241770aa16df4c658bb94779838c",
+      "sha256": "6adef8ff7c2033f2479a55721b5a6c3fa20e3542686f9235120552f2cf9f8c2a"
+    },
+    "benchmarks/dispatch-efficiency/kernel.mjs": {
+      "gitBlob": "1ce5f3c39d8089e5d705f64921fb5da7d55271be",
+      "sha256": "9626e0fb785994eee7b6407073cfbd84b523187a64b052b280b854ef60c11a17"
+    },
+    "benchmarks/dispatch-efficiency/measure.mjs": {
+      "gitBlob": "9202fefe2466933a00c74c09092d55e21fd3291b",
+      "sha256": "cf94452e10d2d5d761cbd16801f195ae40dfecc1c3cedaabd8126e1c8614ba12"
+    },
+    "benchmarks/dispatch-efficiency/piscina-task.mjs": {
+      "gitBlob": "fa63d09d316036f66a0aded19e7ed71b78a7059e",
+      "sha256": "cda332fc4a8a82483ade6a16a5eccd0391a11aec8ad7afe3b1c059457970dbf4"
+    },
+    "benchmarks/dispatch-efficiency/pjs-task.mjs": {
+      "gitBlob": "e234a5507ac40ada4a9ef38a926aa86908e3dd90",
+      "sha256": "37c62cc9bea13cf180a17af5523a9c7886ac9afa92520a670c69162145c71a16"
+    },
+    "benchmarks/dispatch-efficiency/profile-child.mjs": {
+      "gitBlob": "4297663624c875f00f3ab30c03338b3c2132b26a",
+      "sha256": "9413217884e838f5dc5228ae6c0c70023d3321c8f6fbcb9157f6c4f0deaccffa"
+    },
+    "benchmarks/dispatch-efficiency/profile.mjs": {
+      "gitBlob": "37176d6e838a9d7c27b18f1d3d95ab5d9bd1f199",
+      "sha256": "d5a8d07bc58b86f4736559a7a896515fb75712195a65a01ed8fb67a08fc85054"
+    },
+    "benchmarks/dispatch-efficiency/run.mjs": {
+      "gitBlob": "23949b19b5b06e7564efe6e3ee27df9959eeaf86",
+      "sha256": "b7cd6494b780317de94c93ce9c9b39db0ebaf72b0d5fef748e3d24e82873ba71"
+    },
+    "benchmarks/environment.mjs": {
+      "gitBlob": "280d087654249e7f22c248b41e6851fd4bec82f4",
+      "sha256": "c4867d0a1476912bed9ca9077091b685967d59edb0d7e7644af5bafe28320a75"
+    },
+    "benchmarks/harness.mjs": {
+      "gitBlob": "34b2c966b2f048e128eb57a4b07a12915589bf9a",
+      "sha256": "0d76869e82f126f868210386c21598640d229bc5d260ac1ce61652fadb304056"
+    },
+    "benchmarks/mapping/README.md": {
+      "gitBlob": "166b4f36a4a9cb5cfb54845f94b3c7def829e085",
+      "sha256": "7d8bf50cbf3acfe39347426900576726e0e5c63b8c1ddba1fc0082dbdcd3f8cc"
+    },
+    "benchmarks/mapping/fairness.mjs": {
+      "gitBlob": "6158deedae8c02bfd78f85ff33af7ff1ee9c5463",
+      "sha256": "e79766d3c3f69f42d9552669cc84bbf813dfcf778d989382bfc281e423953e63"
+    },
+    "benchmarks/mapping/measure.mjs": {
+      "gitBlob": "55d0a1a5a41ebabc64b2f10b6e2e2e1b67786cb4",
+      "sha256": "f4aa35ca8ff25a6ecf573996c58e7b5d6fd1705ccb2f514b2a439e03f20b37dc"
+    },
+    "benchmarks/mapping/pipeline-measure.mjs": {
+      "gitBlob": "5e4c24ab51246eb18a488fa3dc4e06e6033c6fe3",
+      "sha256": "36290ceb4234934b478f8d21b789158dd7634c88c6a2372eaddb05688ffd7174"
+    },
+    "benchmarks/mapping/pipeline.mjs": {
+      "gitBlob": "f5407a4a34a4fef36a39205c1245f055e91ad4f5",
+      "sha256": "f30557965552f3397e5197ec0e7700ad9e162d0357f936e642e4ddb7966f0475"
+    },
+    "benchmarks/mapping/regression-measure.mjs": {
+      "gitBlob": "525fe5cc0d88642c4a63c927301e04fabe2f3411",
+      "sha256": "471e4cc09376ee9ced280a196cf822d9f5aa519dac7b8456dcbcc5275fb36bf5"
+    },
+    "benchmarks/mapping/regression.mjs": {
+      "gitBlob": "63738f8cdd229b0d6ee71a3e0dc1e127104a11a5",
+      "sha256": "5bbdbc37976555aa51287205c0e8e92b96b828667d73e424b9327608cbe9c281"
+    },
+    "benchmarks/mapping/run.mjs": {
+      "gitBlob": "dcd8c583bb0b8c8b2b2f9c97e99d917a64a99f68",
+      "sha256": "84d674219838b8ea3d01175c590de57d0846a068fa624498fee2df14c7f971d8"
+    },
+    "benchmarks/mapping/task.mjs": {
+      "gitBlob": "5bbb12591c626cb02ddaebef218435c7afb1e037",
+      "sha256": "8ce6c23e87261cb2cb4518e466d7aceb6eda54e4ebf3a80b7c41b05f60eebd5d"
+    },
+    "benchmarks/matrix-multiplication/run.mjs": {
+      "gitBlob": "fb34a62bbac27e8a9baea9d843b06fac0bc7b8bc",
+      "sha256": "a25452266216aae857d2e8ea72d15e6c9d604c0bd2507404ecddb08a2fd32da2"
+    },
+    "benchmarks/matrix-multiplication/task.mjs": {
+      "gitBlob": "ffc01bf722bfcdb1b8d9b97ea89106eef59b6e92",
+      "sha256": "91fca609c5f366cbdd5b91d590a7fe78caa612c93619fa2befbf574bc4d57e6b"
+    },
+    "benchmarks/measure.mjs": {
+      "gitBlob": "1832c7a7875b7ed646c6859b272220c11a63c97f",
+      "sha256": "41ea5392d8416b470a560854d21fbdc33b640fe92bdd7a30ed1d8bf654f2c391"
+    },
+    "benchmarks/partitioning/README.md": {
+      "gitBlob": "f6627ec53ae12937272fbce6df757c36fc523fcf",
+      "sha256": "0a417c6cfd352e3b04bbdecfec16a62e8d90057bd404cf23d470e4316c5c0f86"
+    },
+    "benchmarks/partitioning/kernel.mjs": {
+      "gitBlob": "7f73124ab089c31503dbe0efa52ddd3b40f27f14",
+      "sha256": "1460ce4da902f10f64c861b6ffc38dff6048180d9f604ef0b077a4f8e259bad8"
+    },
+    "benchmarks/partitioning/measure.mjs": {
+      "gitBlob": "36419e24b234fa18aebcb79691b148ecc628931c",
+      "sha256": "e390fe22398ef022d46bb6296692dc6f1804176e27b059debf5d676c7bf14390"
+    },
+    "benchmarks/partitioning/piscina-task.mjs": {
+      "gitBlob": "79ee41dd32c4e62f923e9ab9d3f9f7e01312b4d6",
+      "sha256": "1576afbf54bcf0d21ba96726f4845d263867b3900c69dba3cce6fae48d704ac0"
+    },
+    "benchmarks/partitioning/pjs-task.mjs": {
+      "gitBlob": "162adb4cf3d2d7d407b25a5e36aa6ff9155c3559",
+      "sha256": "6dfa823473c858b35448393b9c25bda50dc248b361d92672a05373de9c6c15e7"
+    },
+    "benchmarks/partitioning/run.mjs": {
+      "gitBlob": "157b32dc5b9059bc6fae70491462439b500608ff",
+      "sha256": "c983246a5dcb796ed956b3d26cc1edf4c76f648b58b42839143af263eac1736c"
+    },
+    "benchmarks/prime-search/task.mjs": {
+      "gitBlob": "69b9aad1b84e2c9f7b778a9fc1c1b6ca3c49a8e2",
+      "sha256": "71d83204652180db4c0e86bf294d790c582478ae592f8d94cdfdf8ee144a6c2a"
+    },
+    "benchmarks/real-world/crypto/README.md": {
+      "gitBlob": "944ed56dc492da30b61013eed22d2ad28e0710de",
+      "sha256": "6620ef9215d20ff87bd79b757e28fb900015375b91e5e48d5f5092899d89e36a"
+    },
+    "benchmarks/real-world/crypto/argon2-probe.mjs": {
+      "gitBlob": "ff4fff2df5e33510d21a8c6d2421af6ee1b47a48",
+      "sha256": "4f4236be3e34df803cb2a5174ed6537fbbc7d8c4d556878b4265a77fd30c3c0e"
+    },
+    "benchmarks/real-world/crypto/executors.mjs": {
+      "gitBlob": "07d2c3d51bb1f58246495826ba8cf4a677f740b2",
+      "sha256": "0ee6f39650bfb6a87e348cf3e9d1b5e79663f0b985f13521730c89307b1a1cfd"
+    },
+    "benchmarks/real-world/crypto/harness.test.mjs": {
+      "gitBlob": "9c75108fbeddb9cc93c9624a8c1facc64b6f4966",
+      "sha256": "27d41643850bce39187c9ec70d951d0a3fcd6870f840966fbe8b24a9b81621aa"
+    },
+    "benchmarks/real-world/crypto/matrix.mjs": {
+      "gitBlob": "032f1371bf6c4da7de399c63399b2fe5846f32c2",
+      "sha256": "200c81ff60b2412d60184e3f1906c9cb39eb364aaeb70cb6c80804df66c78675"
+    },
+    "benchmarks/real-world/crypto/package-lock.json": {
+      "gitBlob": "60031f3a2998eea10c2b2fd431375f5f9f6315f8",
+      "sha256": "98bb2643a7d21ff9c11deaf828bf7b92c3bb4b8f3e076a28dc398d553ac6a7e4"
+    },
+    "benchmarks/real-world/crypto/package.json": {
+      "gitBlob": "de6a7e6cac223c2d9e79901fb9772dfbee96e019",
+      "sha256": "8f1d48ca04fcadf0b1cd62e7c246d685e1f216c18d1c42b9eefd87a272ea1489"
+    },
+    "benchmarks/real-world/crypto/raw-worker.mjs": {
+      "gitBlob": "62d05300e058de6a4247425fc1dd6031913375d8",
+      "sha256": "9a6889624655ab6384f9d4164c8339e2771fec72a01718f3a656a9cdbe97da83"
+    },
+    "benchmarks/real-world/crypto/report.mjs": {
+      "gitBlob": "1528ccd22f8dc0a03e180bc5046c0b15001687ed",
+      "sha256": "56735f469f7612ec7dc59e8b22a349125ee13ed870bafe3f1b2cf9cdb924199d"
+    },
+    "benchmarks/real-world/crypto/run.mjs": {
+      "gitBlob": "0b54d160d37b0b4960afdeb73f23685ba91fb3ec",
+      "sha256": "e0f80580219f2201392f188ae3ffd8588ad93c9a462759d60c71c49961d84aa1"
+    },
+    "benchmarks/real-world/crypto/support.mjs": {
+      "gitBlob": "fd5bb7e0c09efe1a7e8161c3fa955936fd951d82",
+      "sha256": "7d1f1590271d9cd5ebaebeabb1816a2687100fd21611436ed85858e381addb05"
+    },
+    "benchmarks/real-world/crypto/task.mjs": {
+      "gitBlob": "54a1cceed6543959e3708dc63cdb09670c9ede41",
+      "sha256": "f9b53093efbd6a12d61fed64eb7f0021012b40927973f96c2ef2e7696fc9736c"
+    },
+    "benchmarks/reservation-audit/README.md": {
+      "gitBlob": "32799e0e2b1ef1241e4d9e449eb12254e68fbe6d",
+      "sha256": "ef8cc3113ffadc3d911bf982814777bbffbc4d4772efb026b054a3695e235b62"
+    },
+    "benchmarks/reservation-audit/measure.mjs": {
+      "gitBlob": "ba96658dbe8d67cd6e17d17d9d2fc24db07b832b",
+      "sha256": "5476fe83d31ed602dabcdc1fba215eaf05f762b55651fd8d95e0e679ee4f4b01"
+    },
+    "benchmarks/reservation-audit/pipeline.mjs": {
+      "gitBlob": "39181a298b4d6e64e1445d80660e4ecdcb888f61",
+      "sha256": "ab44c62b6a6f2d47e9256cbc9b58fd3c930433635e98c7b909958e66a6ba8684"
+    },
+    "benchmarks/reservation-audit/regression-measure.mjs": {
+      "gitBlob": "40df07ae969889d8c138155eaa608549e275ba9d",
+      "sha256": "5f38feeaadc3136a9ca4e14c22834b80078e5c95e993e5c144bee66461f24041"
+    },
+    "benchmarks/reservation-audit/regression.mjs": {
+      "gitBlob": "d909536faf9d36e483eca9da69964503583e1aa2",
+      "sha256": "c82eb930b9f6d7653ef6d809086c6029b84171e5ce083cfa2e61049b809cda90"
+    },
+    "benchmarks/reservation-audit/run.mjs": {
+      "gitBlob": "b93c48d936183008bcec7cfd2422a1a09a3386bf",
+      "sha256": "b007e76ec6a7a9c53b166b96607f1d6fc5f2e9463d8cfe57fcdd02eecf00ed5f"
+    },
+    "benchmarks/reservation-audit/task.mjs": {
+      "gitBlob": "4597d205458a919eb3dfc68f2e91e093db5475f3",
+      "sha256": "58208bbcb5d87922308638136a761d1e3ce06f5e2879392de7d4688ebef000e3"
+    },
+    "benchmarks/results/binary-fairness-v0.9.json": {
+      "gitBlob": "4ea7808692c1d3e078a4a32df65d110da7385736",
+      "sha256": "1ea21af7e3feb7e6ba13ca2ef91a0393f4a308de9db72b0ad065f12afab851d9"
+    },
+    "benchmarks/results/binary-results-v0.9.json": {
+      "gitBlob": "5c028725b67861181dbabeae471620640338a953",
+      "sha256": "21d1429896b807b3c797cb9fa62d346aa520db24990615115fa8a9a6f270b1a9"
+    },
+    "benchmarks/results/completion-fairness-v0.6.json": {
+      "gitBlob": "7b44a2322b629a7d23a92ab82f252368bd26369c",
+      "sha256": "dde6fc4a75e32e08fffc1903d1cbe09ba97dbd3bf7a100795430d626b59cab89"
+    },
+    "benchmarks/results/completion-only-v0.6.json": {
+      "gitBlob": "904e9d9be7bafbfa42e754602be4276cd7c3dedb",
+      "sha256": "3ff1dd2c9b8870109c8ed8f52ccfd1a2ed4d0c6d640743600b697396f5a6acd2"
+    },
+    "benchmarks/results/cpu-initial.json": {
+      "gitBlob": "f1de5d5770c10b9f7ad53a00fec37d67f4e08920",
+      "sha256": "0a4a00aa9e49df39e07d5579178686941f039845e8a650eee8399810d0b44e94"
+    },
+    "benchmarks/results/cpu-regression-v0.3.json": {
+      "gitBlob": "69afa1b0529e78ebe82a26c7dbcb43eea93a4fca",
+      "sha256": "66de47681d979edfcd7eb7b8a4ed254529987fcc90fb463670e83cdc78711b51"
+    },
+    "benchmarks/results/cpu-regression-v0.4.json": {
+      "gitBlob": "26830e5ebb971e8e4b62e7f02e63e3bb7dc655be",
+      "sha256": "f5622ada07ba62acece62757b806a3de6998ceebeb15cd4c6e8c9a6465ef618d"
+    },
+    "benchmarks/results/cpu-regression-v0.5.json": {
+      "gitBlob": "368f1cf9c1f182a8d9188dbeb2845822f035c536",
+      "sha256": "b5c37305a91e3bf97e5b3cc9faba1ae82a3ddc9f3fb9d761ce421459c54bd267"
+    },
+    "benchmarks/results/cpu-v0.2-local.json": {
+      "gitBlob": "e9a1319790e87410f16040434c67f39602c69dbc",
+      "sha256": "56f08e828c37e4351fed114fa3fa530b82a15359d2c8106f8e52cfb260a031c7"
+    },
+    "benchmarks/results/cpu-v0.2.json": {
+      "gitBlob": "0eac5a9eab41958f2525455f049e167e52cec9ca",
+      "sha256": "99fcd166293b90bda31e6efd9f36d43c4e80a23bb99136c1100088d0aa35f26e"
+    },
+    "benchmarks/results/cpu-v0.3.json": {
+      "gitBlob": "47706d91cf9d88bd4674e74a96b9fc949a2afad3",
+      "sha256": "66e09453263cbb49070b7c9f306b133ae597108aa09528f963d08ee65769831b"
+    },
+    "benchmarks/results/cpu.json": {
+      "gitBlob": "64ef11cb0f3a4b0c979bec3edc15003d7980a9fc",
+      "sha256": "eed0f9a1371f579b6a2da9ea8dfde3ad52b325b4b21a56ba8609619c603a6295"
+    },
+    "benchmarks/results/cross-platform-v0.11-fedora-ryzen3300u-node22.json": {
+      "gitBlob": "422b19cccb87677750b461c295d0cdc6353bf252",
+      "sha256": "4bb39bb3548f1c8a0ff83b79012c9c0ae3b9b98060e5a1217de19868803636f2"
+    },
+    "benchmarks/results/cross-platform-v0.11-fedora-ryzen3300u-node22.metadata.json": {
+      "gitBlob": "39af0928cacd92f0604301c0b623a0ee9c63cca8",
+      "sha256": "4f9a213ec0bddc655f8a04ff48d13783fe13df963047bff3c2fa92ea1a373efc"
+    },
+    "benchmarks/results/cross-platform-v0.11-fedora-ryzen3300u-node22.supplement.json": {
+      "gitBlob": "09088042dfc6ccc94d7e65dd37e7106c36bee6c9",
+      "sha256": "0c2c97578c50df053e7f0525bd72f107533842a9fb82a0a75b2014137878f231"
+    },
+    "benchmarks/results/cross-platform-v0.11-fedora-ryzen3300u-node22.supplement.metadata.json": {
+      "gitBlob": "5057d18007b9fa4ac148fe5300891d73482b3d58",
+      "sha256": "4e17e1658acf7161d66314ce6492bf554b6eb4b814b6456c69cca0aecd123827"
+    },
+    "benchmarks/results/cross-platform-v0.11-fedora-ryzen3300u-node24.json": {
+      "gitBlob": "a50803ba180caffb14f4a84ff2a8320d898ccfaf",
+      "sha256": "058429e927a20e7d15805cb66451f0702f8fcfe14d4564840354bcd59ea13c7b"
+    },
+    "benchmarks/results/cross-platform-v0.11-fedora-ryzen3300u-node24.metadata.json": {
+      "gitBlob": "bb49aa9493d62c182ccf125220651d42be640e33",
+      "sha256": "bd3257ca6bd40c8941a9ba5c023b83eec2a0f206932642de7ebb01575fcba998"
+    },
+    "benchmarks/results/cross-platform-v0.11-fedora-ryzen3300u-node24.supplement.json": {
+      "gitBlob": "2a012e957a7fcfc5165fbddbcdc82ce1a2530223",
+      "sha256": "bb03b0715c4b6f6359e661664bd75e6de4ec0612c43d54a49a5cc4cc9848b140"
+    },
+    "benchmarks/results/cross-platform-v0.11-fedora-ryzen3300u-node24.supplement.metadata.json": {
+      "gitBlob": "f848e0df2d22ca174f1a4f47db115cc939cb4eb1",
+      "sha256": "ba9bfc6fd74ba71e5b62821b43c1ef1a90a473831bbae964e6ad7e239cdc2971"
+    },
+    "benchmarks/results/cross-platform-v0.11-windows-i3-10100f-node22.json": {
+      "gitBlob": "ee4cfb6ea42e2cf43dc51871b0a302ad5bd1450d",
+      "sha256": "c99fca995e47534c5dac0d93fabfe5df34eb459c1421fce5cef84bca4f56d88d"
+    },
+    "benchmarks/results/cross-platform-v0.11-windows-i3-10100f-node22.metadata.json": {
+      "gitBlob": "822c6faf82b9dfb4d93ac883c0f384506dab81dd",
+      "sha256": "07f055cefa823c7dab4e71ea78f873eac1897ac2e6e5f825f9941571c5c619bc"
+    },
+    "benchmarks/results/cross-platform-v0.11-windows-i3-10100f-node24.json": {
+      "gitBlob": "3a72078b9500c412fa376619db12f24cdefa8a48",
+      "sha256": "31d8d4781180dff05aa05fabe308e3243b504ed6f8b86aef01908217d6caaa10"
+    },
+    "benchmarks/results/cross-platform-v0.11-windows-i3-10100f-node24.metadata.json": {
+      "gitBlob": "3b1d4f88da9d1c5cd8f23333aaa7d927f724c804",
+      "sha256": "6200b83dfb4b7d7212d061968c9a1bc4f479c6c63d13c82594a084b9b656122f"
+    },
+    "benchmarks/results/cross-platform-v0.12-fedora-ryzen3300u-node22-reduced.json": {
+      "gitBlob": "258731d998e77c448cf1bbcfabcd5495e2594e6f",
+      "sha256": "7b6db59afeb33634efd018a053b8bb72d8437382410229ab041cd7172d2cfbd0"
+    },
+    "benchmarks/results/cross-platform-v0.12-fedora-ryzen3300u-node22-reduced.metadata.json": {
+      "gitBlob": "223d2c43b9ba36d40ff335fa02c2d768c913d625",
+      "sha256": "8288cbc4c04ac0770e6c51f9f832a1217cb3719d78f9cefea88919a510014cab"
+    },
+    "benchmarks/results/cross-platform-v0.12-fedora-ryzen3300u-node24-full.json": {
+      "gitBlob": "1d7c56795083283327f92311e5b616f89721894f",
+      "sha256": "b7dcd5297fe71846d457e8635c50b580a47a69a0bc177d7819ee25fe3575e512"
+    },
+    "benchmarks/results/cross-platform-v0.12-fedora-ryzen3300u-node24-full.metadata.json": {
+      "gitBlob": "8d50e8f9e1439bcab3ec17af4c66d2b728be01d8",
+      "sha256": "bbbb4e8febf1b7413fbd487967693be4e477b70f88db567d79e429036d697099"
+    },
+    "benchmarks/results/cross-platform-v0.12-windows-i3-10100f-node22-reduced.json": {
+      "gitBlob": "6e1a0122231892a23fd2f366d3250efb2b651f64",
+      "sha256": "3179d2bb6a42612efc3093ac7b28ec9d460e41b82298d8f190436238460d8fe8"
+    },
+    "benchmarks/results/cross-platform-v0.12-windows-i3-10100f-node22-reduced.metadata.json": {
+      "gitBlob": "b8f153a44449b1ea386bfb76127e457bbc0abcd0",
+      "sha256": "673f3d83bb68f346fa5ab07b1947ded29bbef10f8b10280a7ce3c3d757444bef"
+    },
+    "benchmarks/results/cross-platform-v0.12-windows-i3-10100f-node24-full.json": {
+      "gitBlob": "f53bd53268baf9f4c4c79d699f800c97a6f53603",
+      "sha256": "0bcfd519f554b3dc99c85f08b4f9451492f5d574d8c3c5772e058a0114bf4af1"
+    },
+    "benchmarks/results/cross-platform-v0.12-windows-i3-10100f-node24-full.metadata.json": {
+      "gitBlob": "3d08a467400e2bf99aff4acc69d9b91b83a33523",
+      "sha256": "76434046698708660d39521f0fbffb8491354819cbefe5e87676a5f26ac72e3c"
+    },
+    "benchmarks/results/crypto-v0.13-argon2-native-confirm.json": {
+      "gitBlob": "515d3fd30af5169529aecf1a253e754ff14ae36f",
+      "sha256": "2d7cb55bcbceb9756ab76ff98d9061217c9751da9931ef7e2c15346734366e68"
+    },
+    "benchmarks/results/crypto-v0.13-argon2-pjs-confirm.json": {
+      "gitBlob": "d3a6d07c04ab65eefed556c3bf05901acd2eda8a",
+      "sha256": "d7cf92633ad3c9c40269e04311a4eb75ef10fb83b29487250e05af717bae73d6"
+    },
+    "benchmarks/results/crypto-v0.13-fedora-node24.json": {
+      "gitBlob": "85f6728b2d8e3afa1b1732f139a926836e2d7646",
+      "sha256": "69d63574eeedeffb0bc9ff960e7edf2266815c4d298cd63416868328708f7e5e"
+    },
+    "benchmarks/results/crypto-v0.13-native-submission-probe.json": {
+      "gitBlob": "8da84228a374d77bec81e929d04b37467cd833f9",
+      "sha256": "a9ec12f2b09bcf62915b4c3ed11d61da35605a157d28c9edcf5bdd879afc9a27"
+    },
+    "benchmarks/results/crypto-v0.13-smoke.json": {
+      "gitBlob": "7d0ae06b2e7155d25614e600beb0b0dc33a6691b",
+      "sha256": "dfc15c091181321331df06bbf9da87c75f3c719dadcd01a0fb918d9b1ef93a16"
+    },
+    "benchmarks/results/crypto-v0.13-windows-bcrypt.json": {
+      "gitBlob": "314a0143e5f87dae377c8c59c33c1e0747108d28",
+      "sha256": "29f5ce8915b5ecc1c29bf85dfc1ccdfff0094c836b159b56eea5046648c7f647"
+    },
+    "benchmarks/results/crypto-v0.13-windows-deep-concurrency.json": {
+      "gitBlob": "91a3014d06ff06b21579319f6149485fce279477",
+      "sha256": "9f9076a0a516959753bdc96deed8ace6792981de67ef83fe68a6525d1ed7715f"
+    },
+    "benchmarks/results/crypto-v0.13-windows-native-submission-probe.json": {
+      "gitBlob": "bf0d141f4d6ba3fd2ba91c4ae79ab5457ef24733",
+      "sha256": "af03e2179fba8ffc0470178d8b484ced48d2e1f2d47f36a6ae399be990e1a77d"
+    },
+    "benchmarks/results/crypto-v0.13-windows-node24-reproduce.json": {
+      "gitBlob": "10a4cf23ebc1c99c04e4c2a0c893200469ceca1b",
+      "sha256": "4fb0efda71256bdeefe917ceb57e96c5ada606eeb9b0cc47c55d63275ddd2e9b"
+    },
+    "benchmarks/results/crypto-v0.13-windows-process-threads.json": {
+      "gitBlob": "da9bd0f6f30180a8605cef71e9c93a3ca8e7a9a3",
+      "sha256": "c64b9146dffe2d348af532ddb1622558c08234a6909175c782f07f3e7d0eae59"
+    },
+    "benchmarks/results/dispatch-efficiency-v0.5.json": {
+      "gitBlob": "393bb4f7ce16e89d70668a427d59e36f93e31cd9",
+      "sha256": "3576c316f3a43cab1678edd44021984d29560c491a620ea37149ffd7425cc696"
+    },
+    "benchmarks/results/dispatch-fairness-v0.5.json": {
+      "gitBlob": "34a906e03dfda5dedb1437926a8e41030421aa1d",
+      "sha256": "0d4d1ee28d1af0743ae02abbfd4a76aff1da0b68fd2db80ac45d321b0a3f727c"
+    },
+    "benchmarks/results/dispatch-partition-v0.4.json": {
+      "gitBlob": "9311e614eebc204219ed0be03560d00f039c13ff",
+      "sha256": "745800cda8b569ec872ad7931abebce3678dac701fac9b8b4023d3fe0f23b1bb"
+    },
+    "benchmarks/results/dispatch-profile-v0.5.json": {
+      "gitBlob": "7f0823eef6e49a9c83ea3ded7d3d770d8364aed9",
+      "sha256": "f550026045711e072652bba337ca60a1f9b4901ea5d2246ffba3b850a002155a"
+    },
+    "benchmarks/results/element-map-v0.8.json": {
+      "gitBlob": "1a31490ed0b256c554f0c829d5d0da401c079059",
+      "sha256": "84667733d77b6d640aa4334a127bac566077e72df7d71256ef84dbeaf31ce653"
+    },
+    "benchmarks/results/map-fairness-v0.8.json": {
+      "gitBlob": "f554bd83f9646c0563658a8811b6560a10487078",
+      "sha256": "acf9369f300bb61792f48aef7bd8b257fc16c9a896b907d6952d1f7c0ed3adda"
+    },
+    "benchmarks/results/map-pipeline-v0.8.json": {
+      "gitBlob": "37e8b064d4f960d7684e431b56487733aeaaf532",
+      "sha256": "551f6e79c652b8c2e3985c5025f0380e9c2027ad23967144ee488fa2feb9b741"
+    },
+    "benchmarks/results/matrix-clone-v0.2.json": {
+      "gitBlob": "e5787ac4a384315cf0295ff7c7df290b5986ed48",
+      "sha256": "21ad3f281b01a73d91ff0388aeeb02f7225395c9ec7cba7f917ffa7887cca193"
+    },
+    "benchmarks/results/matrix-clone-v0.3.json": {
+      "gitBlob": "3843aba42769668003c9356643040791d1ab9334",
+      "sha256": "eb55143dd9ba67c90c6cf5311836a1dae1f743e91ac62fc51bb65aade8ecab18"
+    },
+    "benchmarks/results/matrix-partition-v0.4.json": {
+      "gitBlob": "a100d6b8ba0b77c74c88f250758d4cc2ca6e349e",
+      "sha256": "200117376bcc8a8b8a36a8b0aa4061a9872506c7b63ec3dda8af7542aef461f2"
+    },
+    "benchmarks/results/matrix-shared-v0.3.json": {
+      "gitBlob": "e11a66aa63c593c2f6945e86d43a74afbe40d898",
+      "sha256": "7306152bb718cf56a655e65f7135d61692975d433b6ba2b49b6b3d6f8ea5e287"
+    },
+    "benchmarks/results/matrix-transfer-v0.2.json": {
+      "gitBlob": "585b716c7c4740ce9e3a423ae6adf269bd0deff7",
+      "sha256": "de70b0ad43a7eebb71caa63bd8d44d33014574fe5b405d0eb9271c7be8d34cbc"
+    },
+    "benchmarks/results/matrix-transfer-v0.3.json": {
+      "gitBlob": "a0fa6c8d450ec618138d4bef430ed33e2ddda101",
+      "sha256": "0f9c44fb145fd603789620a8817f02344ecac15aaf99377602cff863a07c3430"
+    },
+    "benchmarks/results/matrix-v0.3.json": {
+      "gitBlob": "cb8ed0c2441bf7578aa44fedcb7cbdec90d0fd72",
+      "sha256": "b6d3b595a2c5adff4f7148ea2fc687ab2ce5c85badd63c688ccdf74dce204020"
+    },
+    "benchmarks/results/matrix.json": {
+      "gitBlob": "00a50ef6fb2594fb24e0678ccaecc4d1d2eb2509",
+      "sha256": "71c92c529da18e58a75943fd7c9622f25c8fc866f0835b435ada85b0859afef6"
+    },
+    "benchmarks/results/piscina-v0.3.json": {
+      "gitBlob": "25f21c4abfb88ee663d1fe08f8ff57b79520b781",
+      "sha256": "c21aa905638252bcebf2a82896bbd9ffb1b1086aa5c8cb10f47bf12ef6791425"
+    },
+    "benchmarks/results/range-partition-v0.4.json": {
+      "gitBlob": "c0f3ae2de66ff134ad70555dbad9e2055214094a",
+      "sha256": "6d68c9da75ac9f6cbcec16e85db713b612302ae01706aa50af5d8c7ba35656d3"
+    },
+    "benchmarks/results/refund-benefit-v0.12.json": {
+      "gitBlob": "c42e0245eeb0e307185fa556a69fe82e18533f18",
+      "sha256": "65f8ac0aa7d2aed5789293be406197f32061975d2e5c792e1980951282eebe5e"
+    },
+    "benchmarks/results/reservation-performance-v0.10.json": {
+      "gitBlob": "3d3af9f080ca59aac3632f7d7b5f3fbef4451e2d",
+      "sha256": "2d1108d920f6ae6f89f8a49c732c37e739116b38a9f0fab5ae68923303cae430"
+    },
+    "benchmarks/results/reservation-pipeline-v0.10.json": {
+      "gitBlob": "849d61aefd1547b9384a0998fdc523204613f54e",
+      "sha256": "fa362c60dd35ac94846e186810732f7d1246e2a742b37eeae87a6011e51fc445"
+    },
+    "benchmarks/results/reservation-soak-forced-gc-v0.10.json": {
+      "gitBlob": "695c8bcb494c2961c3fd63cdf7fbde85d643e66c",
+      "sha256": "cc90469ed662a42990f393a66480442a92d26a2c6e7bc9332f16e5df9532cc98"
+    },
+    "benchmarks/results/reservation-soak-v0.10.json": {
+      "gitBlob": "57226cb8d6489edc515faff3946417887f552e82",
+      "sha256": "3423bc636a646e40d92341bb9a58aa566e221f846cc19ea84e26571329b0d099"
+    },
+    "benchmarks/results/reservation-soak-v0.11.json": {
+      "gitBlob": "95e71d7962835690ec97496abfda142537d78ddf",
+      "sha256": "13288569c5a682bb1133d66b49a1aaa8abcb1aae788496acb0b6fac31228220e"
+    },
+    "benchmarks/results/reservation-soak-v0.12.json": {
+      "gitBlob": "94b1c805c685ba98e984838f64d1c323cd260631",
+      "sha256": "dd1f301306fb218742af214ffe57f9c13eaa7f0ba9ed92d8a49001cb8ea8b0aa"
+    },
+    "benchmarks/results/result-streaming-v0.7.json": {
+      "gitBlob": "c935e87d8d8314999946d993ac6e166964895b11",
+      "sha256": "1dbc6b4f34ec8f4766249088601f1cae2d26f97ed28a4d2ac1c763a75262e45d"
+    },
+    "benchmarks/results/runtime-architecture-v0.11.json": {
+      "gitBlob": "3b1fe0a3fcd91e055a9c41f15d3a9b878cd70ace",
+      "sha256": "e8b97916f77818a3a5e4dcd0752ea811238b7a372f8a44a8d3e8b3218a62be3e"
+    },
+    "benchmarks/results/runtime-regression-v0.10.json": {
+      "gitBlob": "f95a1b3a993df7af666835b10a2114af8a1bb432",
+      "sha256": "ae003dc82e9e171ee0ac0fccf50a9f701ae5798f0c8aa10ef40f6e727dfd7888"
+    },
+    "benchmarks/results/runtime-regression-v0.12.json": {
+      "gitBlob": "751d95f9258b4c34b0b24ee07023d3c0c6f640c3",
+      "sha256": "6703da87c1e2a66515a564a206fc381bf169a3cd6449caa5d16f7542163b36d0"
+    },
+    "benchmarks/results/runtime-regression-v0.6.json": {
+      "gitBlob": "70627e15c3dcf07a1a76f761acdb1313133e4506",
+      "sha256": "d3ede383b565375359b9cd6e32855e775685365f64fa27c21d23d4f65fc3e966"
+    },
+    "benchmarks/results/runtime-regression-v0.7.json": {
+      "gitBlob": "0a5d23b6b0f755fe0910935785e2cb1eb9fdab72",
+      "sha256": "bb3f98c7f6c6983cb09b0d0c35dd6a03a7110280ddb524b166cc4964469e450e"
+    },
+    "benchmarks/results/runtime-regression-v0.8.json": {
+      "gitBlob": "8a1a3e72e31fbfa7abbb94fb831fff508cdee283",
+      "sha256": "6c00d187c1eda74d934aa9befea149f9d3a2855aa9a287554010e86824f1bc3c"
+    },
+    "benchmarks/results/runtime-regression-v0.9.json": {
+      "gitBlob": "e0be9f42a2ce605298e492a8e5e668640844d585",
+      "sha256": "6edff3b9bf48d8364569a2ee9165054212a9f4d952d9f0aa838cc1c4fcddf881"
+    },
+    "benchmarks/results/shared-v0.3.json": {
+      "gitBlob": "f4abda725ee8012dd4709e98a673f74813025a89",
+      "sha256": "5afe52bb66c997c017c9e3625cd21a7fc519a60d9e60b24e81487d0ce796f0c2"
+    },
+    "benchmarks/results/skew-partition-v0.4.json": {
+      "gitBlob": "e08570657d6c42a81e2f118cd8326d6ee011ad52",
+      "sha256": "977a9ae51795b8be0cc64c304d22a569c5b6ca4dd2c08c8fe84d84d3b117eae1"
+    },
+    "benchmarks/results/stream-fairness-v0.7.json": {
+      "gitBlob": "fd17ffebdd0b96828ddf6ff7d9fbd957b3e902ed",
+      "sha256": "ead3608769d499aa1d7f2d7fdcf6333171257aacf2fd53591f83fee4698a0c23"
+    },
+    "benchmarks/results/transfer-v0.2.json": {
+      "gitBlob": "5cdf5b5b57fcc1ae966107438fc7e08e628ef000",
+      "sha256": "da141b32b7f93d476dac953d19164622e644b4014b41399ec97cd461bacd1a50"
+    },
+    "benchmarks/results/transfer-v0.3.json": {
+      "gitBlob": "51694353b0b58447940d2128dc9554bae59b4219",
+      "sha256": "cbed90757915e5cadbc208a5f4af75cbb0d2f09765629e7f15df1bd8b4b92a34"
+    },
+    "benchmarks/results/upper-bound-profile-v0.12.json": {
+      "gitBlob": "2204724f6b11f53434084d2dd07bd47af9c66063",
+      "sha256": "1882cbf41ff39ca9fc620764a65c2ec9fdbc42c48a1202307882b009670b8bfb"
+    },
+    "benchmarks/results/upper-bound-results-v0.12.json": {
+      "gitBlob": "dc2f494b101d7186f3a2941dca5c81ba9fda3b00",
+      "sha256": "cd33530d62478ea9ecb62ece26bce9b4f57c9cede6bfb6a672c6934e61ad8e61"
+    },
+    "benchmarks/results/validation-v0.12.json": {
+      "gitBlob": "b26570f023df667757755bd209ee48879ae6a707",
+      "sha256": "d198adaa19d03e50a1b91fa5cfa1b6803b94569ea8efb8e92178b10a6a783b1e"
+    },
+    "benchmarks/results/validation-v0.13-windows.json": {
+      "gitBlob": "e7e6e3c0f05ee3e9e943193f38381699cd823923",
+      "sha256": "f0eea5e49d6c1203cf135186b3af62a5c85c7c9c88bd8a52b2e991717929f238"
+    },
+    "benchmarks/results/validation-v0.13.json": {
+      "gitBlob": "a4e86556a555aeffe3cd756c8b30dd0011c32cde",
+      "sha256": "99040312af1d134e4a89963697b0d88015c165710b2177f78f0d626036570c9b"
+    },
+    "benchmarks/runtime-architecture/compare.mjs": {
+      "gitBlob": "d63805d9f3a870b3d3a07fb60b5a63d0bed9be75",
+      "sha256": "b0d9fa8ca40a55b6807a452b0ac891097a48dadc8d0dca020412d9c8ed4aac93"
+    },
+    "benchmarks/runtime-architecture/measure.mjs": {
+      "gitBlob": "49130aa3fbd91d18cf15d00a6b00c045f5a5d974",
+      "sha256": "996ad0b031aa0f623818002875ba14a6425c3d7ca2c1c42971720b0d3d76d397"
+    },
+    "benchmarks/runtime-architecture/task.mjs": {
+      "gitBlob": "b11cd312a0aa6e945ebd5a793eaf8e6aef1618f2",
+      "sha256": "7531e0381d06861b3560edd5669c91df3dfe991fb2ab0a3e6fde0307de20218c"
+    },
+    "benchmarks/shared-memory/kernel.mjs": {
+      "gitBlob": "98d23b15723b705d317accb4a346dc4a64cc5c58",
+      "sha256": "52d87ae751f13358f6dd136b2a8f60ace14b0c0f0c8a21de2b2e61066651e8ae"
+    },
+    "benchmarks/shared-memory/measure.mjs": {
+      "gitBlob": "0da6ff1e2bfa2fc3ea6deeebb6e9ee95899de0fe",
+      "sha256": "18ff6f2d98879393e089f99d3bae2f0efb601c08fd447f4560531da7fe574e5e"
+    },
+    "benchmarks/shared-memory/piscina-task.mjs": {
+      "gitBlob": "7f4f5b812f093e1f593ec2fbb8a5491c03b93654",
+      "sha256": "a6bcbe9379eb896388881e5c54ba24b210dc510772e3c3819a2d32d5f3864255"
+    },
+    "benchmarks/shared-memory/pjs-task.mjs": {
+      "gitBlob": "cd768895266ec3cffaf9f54c5c1bdb78ca859ad8",
+      "sha256": "9599b21bf44703f5f34f5cb602cf2a5486e5b2b531dd18f9ec025dba6a2c88b9"
+    },
+    "benchmarks/shared-memory/run.mjs": {
+      "gitBlob": "cbd39a7f08459965be299de6ca2c2c716d604b9c",
+      "sha256": "3dda14f769801c436d78777d99e32ea57c50d832f0798b516e2a2873f6751bfb"
+    },
+    "benchmarks/streaming/README.md": {
+      "gitBlob": "6304ac3c5d057c6c8dfc4ad9bfef10481f27f59e",
+      "sha256": "f717d84b1939bfc389e834497abdbb0aa90084988fce4df2223ceaa407dee6cc"
+    },
+    "benchmarks/streaming/fairness.mjs": {
+      "gitBlob": "5ae3888261e287cb4f2711a7f89a8adb9501837b",
+      "sha256": "4d9c66b5f234c9f79decade3ad273420ded273b878c24efbb23d760f73b9e9dc"
+    },
+    "benchmarks/streaming/regression-measure.mjs": {
+      "gitBlob": "af88b8889e48094887f0e85aafe7c2e130e7f25a",
+      "sha256": "46ba31dad40f1cb82e461a1dedbeaec77b07540c1d2c8726a72da447f728e9d8"
+    },
+    "benchmarks/streaming/regression.mjs": {
+      "gitBlob": "1cbda2a038f9e5f48d71d0c69052e8ff85df0d7a",
+      "sha256": "644f045c408bc4c5e91eb81670c13589ba0dca24fbe24275f584072e9be222dd"
+    },
+    "benchmarks/streaming/run.mjs": {
+      "gitBlob": "f66627d0fbc69e13f8449fd6e0b8fd8b923f5776",
+      "sha256": "67a86142337d76439d8f6847311116e080418a7eb2c9476904883ad001836303"
+    },
+    "benchmarks/transfer/measure.mjs": {
+      "gitBlob": "42001207a5149458df918df2534becb0609898a5",
+      "sha256": "4ba8d04aa57d21e78039a308f5f72c740eb2e9dc94b8a941285e9b75bbac7ab1"
+    },
+    "benchmarks/transfer/run.mjs": {
+      "gitBlob": "6bba33db59851239b82d1552837ddea769d8d339",
+      "sha256": "b6fc35a56a07c46a94765f22e10209e85c7c388aae6aa18138b22ab0f13b3b37"
+    },
+    "benchmarks/transfer/tasks.mjs": {
+      "gitBlob": "cc68adeace0ed766d2dce2ae874a97a90bafe616",
+      "sha256": "0095d78d41b857b1478e30db50a512973ead4b04e33c003bbcbfc67b5a5ef3c3"
+    },
+    "benchmarks/upper-bound-results/README.md": {
+      "gitBlob": "79cae39feb3c3ba77b8d961a00562d9951092f35",
+      "sha256": "1a193a90f76f585373281520a682b321c113d320d5e6db5cc6841332da46b33a"
+    },
+    "benchmarks/upper-bound-results/profile.mjs": {
+      "gitBlob": "2f5d638badcb53b54b7e1f6062c08da8991332ad",
+      "sha256": "0a0dab470a09193aef6b21e00c0ab0c69dab94cf6159c0556d38ce5536121eb3"
+    },
+    "benchmarks/upper-bound-results/refund.mjs": {
+      "gitBlob": "e59b7272de53296810abc929bd2601fc7d851924",
+      "sha256": "a883aa30463978717679faddab45dbd7b2545d404bd732b6cfae993d70ee53fc"
+    },
+    "benchmarks/upper-bound-results/regression.mjs": {
+      "gitBlob": "799da8c86354ed5ea99574733963e04e95d4d7cf",
+      "sha256": "ddb7b797da53fc67c191a340097b596290efbad1d8ab588dc55808f42e3069f3"
+    },
+    "benchmarks/upper-bound-results/report.mjs": {
+      "gitBlob": "eae981f6090541b31fd0fefdcf689cf5735dba1d",
+      "sha256": "0d55d7b61fee943956a95b44653f2d0b3221ce0648d65ec809606e0297bedaa9"
+    },
+    "benchmarks/upper-bound-results/run.mjs": {
+      "gitBlob": "32034b4f9f6b1772558646a5d5d738e8c29d3c06",
+      "sha256": "293e31c5070475a7a9b1a6b8fef7bbc3784ec3ceab7eb597b43957f69554ed18"
+    },
+    "benchmarks/upper-bound-results/task.mjs": {
+      "gitBlob": "5d0182a01fc7e7fce4cd8f62aa2bb2620b15e239",
+      "sha256": "e8e3b41a6857e7aa499d0dd1507e701f36859cfd8fc348b55ecc28acf7edb1b2"
+    },
+    "docs/adr/0001-task-registration.md": {
+      "gitBlob": "2a0443f364c68c436b5fe3ff389bc2f9632b3b37",
+      "sha256": "c155dcf8d804ab1b933b7c2796e25c043568349fbfcca46b8475a77b42ae1b6a"
+    },
+    "docs/adr/0002-worker-pool-model.md": {
+      "gitBlob": "2119faa0a6ecc4a4dc763c19e12c242878caa723",
+      "sha256": "2f6fa4e608906e5d39b1dc5955154c8a9ab56fb696df9ce99bc15368349dab73"
+    },
+    "docs/adr/0003-scheduler-interface.md": {
+      "gitBlob": "0796e82ad44fc9b46cd34fce2f358bb246fc957f",
+      "sha256": "87b2b06bfa24d5666284b9e6159814df13e98bd6fe6fb93d188682addc17436e"
+    },
+    "docs/adr/0004-cancellation-and-deadlines.md": {
+      "gitBlob": "b6f7d1783396f133af14a2ef50dc28b0034d5e8f",
+      "sha256": "cc1f19223953e1385abad098c39b043f943813bcafdc0d221c74f0460fd3bb5d"
+    },
+    "docs/adr/0005-transfer-ownership.md": {
+      "gitBlob": "063948ad9606cc5827457b0538b55bd51609d605",
+      "sha256": "92d832acda8d4a9548135b00b538e20f5c04a8f4078542540216f087e19400ed"
+    },
+    "docs/adr/0006-typescript7-toolchain.md": {
+      "gitBlob": "37bdbb7f82fed57f1531e572706e3973cea9703a",
+      "sha256": "af790339e3c56a5449585fdef5b7032bfacb56026bcd92db960df2d43c6cb75c"
+    },
+    "docs/adr/0007-shared-input-model.md": {
+      "gitBlob": "fa3d2c3a869648ae2dc34eccdc1d3cdabb0004fd",
+      "sha256": "e824fe575a6843ace40f720d4eb4c325de479730fe76c7c924c5625cefc01141"
+    },
+    "docs/adr/0008-runtime-owned-partitioning.md": {
+      "gitBlob": "397084e6563e5c7bd83077c18efb884ad7df0c62",
+      "sha256": "66b3ea01bc1fbda694581881d1a661e9fa71a1f1eaff7b86d70e62683d33c145"
+    },
+    "docs/adr/0009-partition-admission-and-metrics.md": {
+      "gitBlob": "19adb6bd786112b0d8deaf569c82db488cd4d18a",
+      "sha256": "bd41ba358dd5a17e4bee039736c941796a184fc6cb621ba913c3c17283ac4796"
+    },
+    "docs/adr/0010-dispatch-efficiency.md": {
+      "gitBlob": "eaa413b7266ba0eae1c6bbf28903fa46c2b3aa11",
+      "sha256": "3202372ca615149e084365b8471c4bf779a4fa2aaac097ac222a26ad649d88b2"
+    },
+    "docs/adr/0011-batched-partition-dispatch.md": {
+      "gitBlob": "91de9d4e8b20ff8ee447890c7c961b72e990765b",
+      "sha256": "4b08b80b39a1bc34410b8b81e57eb7ee96c9752b7f61eb574d332b4c65e7b3d2"
+    },
+    "docs/adr/0012-completion-only-operations.md": {
+      "gitBlob": "8dd70063b08dee262663233825fef3c1779b0ead",
+      "sha256": "35130193251d8ec551a15d2df81c9b051e99ebc32af53edf74df5662b0f1fd1c"
+    },
+    "docs/adr/0013-async-resource-context.md": {
+      "gitBlob": "917c0ee4d63e977401b8f3fef61e96ccf2c27a23",
+      "sha256": "9334d5d04c44971a6b46cc07185da64f1811f5254434645d5b6c7aea98e776d7"
+    },
+    "docs/adr/0014-streaming-result-semantics.md": {
+      "gitBlob": "2772694b5e9be2178340dc953f7ff39eea521280",
+      "sha256": "ef6a7c18530ae77b60658d7fb2a97c939189628cbef4647d2fe6078111c5dde6"
+    },
+    "docs/adr/0015-element-block-map-semantics.md": {
+      "gitBlob": "1534caf1f56b7b66b86cbec4a4b52a829dba102e",
+      "sha256": "396f6cb86814efb0a1ccfd2926988dec6f7de85f27529e5e0fc85853e8bfb432"
+    },
+    "docs/adr/0016-result-memory-observability.md": {
+      "gitBlob": "d1c9e7c8deea9a81c2d63c2324548d34fad821c5",
+      "sha256": "1c460f7180f3e36e76253c805ce0a7e54e3cfcc507c58cf73e61307c7012c6b8"
+    },
+    "docs/adr/0017-binary-result-reservations.md": {
+      "gitBlob": "1b5edcb393646333220308ebb1a74efb332a61b4",
+      "sha256": "ff56a34cab50315b2c67bee80c93b79642c9334de74aeea578c7603cb2a60d74"
+    },
+    "docs/adr/0018-runtime-core-decomposition.md": {
+      "gitBlob": "12b4f3d5afe719c37d71bc20a29f539e796c122e",
+      "sha256": "c3124fe8272d33cd8e8b8c78533d479a6faa0c58927bc4fede3526bcbd408f25"
+    },
+    "docs/adr/0019-upper-bound-result-reservations.md": {
+      "gitBlob": "14b3adf733abe650cd23c22870cb3ca5e183ab18",
+      "sha256": "8f14941d26e40aedac2fe23ed5c0bc26dd790f6670b2bd926964d0363e9eaf24"
+    },
+    "docs/architecture.md": {
+      "gitBlob": "f252e07908d853c5a97c512957d43c7b867c5471",
+      "sha256": "a69061f4bd311c097b565c5c527d2b1d172b1b224ee52bbafa99f53da9aba35a"
+    },
+    "docs/benchmarks-v0.1.md": {
+      "gitBlob": "5780a10d25c46aef4c7794714aa81c4df87f86f4",
+      "sha256": "b120a02ce71bb6e65835b3df002bcebcc1dedacdbf4b69bc2145286d8d52e63a"
+    },
+    "docs/benchmarks-v0.10.md": {
+      "gitBlob": "368e950a3493aaceb6266dbaec65b49a97ec99c9",
+      "sha256": "b966ba3286fd43e3d6399b19eb05e16235d22736753ca54db6dc2ed253af4d6b"
+    },
+    "docs/benchmarks-v0.11.md": {
+      "gitBlob": "719946f3e2ec40048a0ebb0d96283e1bc71d7cc0",
+      "sha256": "2846d0a6192c4d03baa96d801b8ee8cd0120c33896875ce1d88c153b7df57723"
+    },
+    "docs/benchmarks-v0.12.md": {
+      "gitBlob": "7317e820adaffa02e20f02c72f5dd701481c7d87",
+      "sha256": "92f652ac8f12c2f45cf92b7c8e458ce7972ff0a421f84a8313791415116f1177"
+    },
+    "docs/benchmarks-v0.13.md": {
+      "gitBlob": "a5e810dcac6cd51097af6663b4f95593e24d2561",
+      "sha256": "8b8d5ce2186838545c0d4f2ec840f7a450a935d754da73d965f93fe38710d1e8"
+    },
+    "docs/benchmarks-v0.2.md": {
+      "gitBlob": "0797674f6e24e96985cc8493ee4a5741e8db3015",
+      "sha256": "29ea9944f3da667210a8f298a9d8bd72438739726d9339b7f44cf451a01741b4"
+    },
+    "docs/benchmarks-v0.3.md": {
+      "gitBlob": "86e9ea77b81fe28d6e3a5ba45620ae79b9e581c1",
+      "sha256": "659e68343ab7059fd31e1936d6578b8088760d795b7c80d981cb2059abfba6b1"
+    },
+    "docs/benchmarks-v0.4.md": {
+      "gitBlob": "b6fd17affb527929826f516957133390ccdb4a88",
+      "sha256": "2e2ff50fbbda95ebe4dcfc038a1c58c3872902fd42b780de2c232613bfd991ab"
+    },
+    "docs/benchmarks-v0.5.md": {
+      "gitBlob": "25d8eeb61a2b2b8a0712e7dc38047e7cca590127",
+      "sha256": "7c8becc4dec12e3e8453d1698138f4ff1025a7bafed81103d477d14c7837b0df"
+    },
+    "docs/benchmarks-v0.6.md": {
+      "gitBlob": "6ffe57c157491ef0d17fe9426f808a5f17911ae5",
+      "sha256": "86924ec7d41924659c31fff67cabb1ff9b153cbd0ce01dc786ca90383a344361"
+    },
+    "docs/benchmarks-v0.7.md": {
+      "gitBlob": "c9829d3b9fc7e0d85fdea4eb97a615b229a3095a",
+      "sha256": "2ba826d3d9c7257ee74f4fef1fad43934f99265d808b88ae8ebeb45b3fee7568"
+    },
+    "docs/benchmarks-v0.8.md": {
+      "gitBlob": "fdbc62a3f9e7ad3556565c3d054d1d07db0978c1",
+      "sha256": "5b677bdee49021047c60a233d7abedf5287fb606c4d35afe406776289f5e8e0f"
+    },
+    "docs/benchmarks-v0.9.md": {
+      "gitBlob": "aea021e10fe0c4c55bfb81481dfd7f8d51fe9d31",
+      "sha256": "b1ee2597717343a1da8c000983d059e28b9053822f35fcd75dbd69213d088af9"
+    },
+    "docs/cross-platform-v0.11.md": {
+      "gitBlob": "21a304a28abf762eb15c00788c8b7d4c91adebd0",
+      "sha256": "1169093273218776bc8d7093dd3f35c44ac5decc04696a7a09c9aaaa908cd14e"
+    },
+    "docs/cross-platform-v0.12.md": {
+      "gitBlob": "800d1dd886b3f83fcd9d09a812fedbfb003d6cee",
+      "sha256": "9e470b088cf92890cda0f3ed3263dd86f337bf22383d61da531a8af6b211c374"
+    },
+    "docs/cross-platform-v0.13.md": {
+      "gitBlob": "454112ee84c2c454efd61e1319d5aedc255137a7",
+      "sha256": "94aaa86722d51bc1efe5e231bf3a7fcd4b39084e5b1294c4676f7616e17b9a30"
+    },
+    "docs/memory.md": {
+      "gitBlob": "dbd3e95e34cfb72d378f1610df680f9af436e1ed",
+      "sha256": "adce479b97ab582c7463ac236f4386ca38548e90085f41d1be045b529357c26f"
+    },
+    "docs/partitioning.md": {
+      "gitBlob": "d894883c8315be43c8d73483cacb108b87c084fc",
+      "sha256": "e4d17f0287ae2f2715f06d524b140039d9fc1617af304d697beea26474dbac9f"
+    },
+    "docs/proposal-v0.10.md": {
+      "gitBlob": "c217004c50b3ab6dfde67ecc06cc414cdf55cef9",
+      "sha256": "a6b18da0bcf0752eb9b916573f63f48eb81e65a5fd73d264a7f06277c3d2007b"
+    },
+    "docs/proposal-v0.11.md": {
+      "gitBlob": "0f6c2f39d991a1bc1440d36a6e0cc68a75913101",
+      "sha256": "45470c66279a5c09cdf5e65b424b4e2bdc586333046dadd22891a34da10b15f4"
+    },
+    "docs/proposal-v0.12.md": {
+      "gitBlob": "3a3fd399a6f837c516f8e0cc9f3d7247cf17b5ea",
+      "sha256": "b8b195726b8e8a69b98835ef718dad325dff42413b2c6ac3fa9c2b0ef9a5019b"
+    },
+    "docs/proposal-v0.13.md": {
+      "gitBlob": "ae448984963da65a5be5cdb58afb90a21edae9d3",
+      "sha256": "2853a5c3644350800bbb1fd8f920851a8ba6f1baca031a5ccf463b1e0a304cc3"
+    },
+    "docs/proposal-v0.3.md": {
+      "gitBlob": "aef6c56c70d035a71a3baaa78111febf0c8539a3",
+      "sha256": "3c8f2afc5f011a2a4fbccf72a8c2f5b32f3fc7edd3bedff577b380b2cd86400e"
+    },
+    "docs/proposal-v0.4.md": {
+      "gitBlob": "da9e0d1e897a95d07bb2bae309afc86084cca5eb",
+      "sha256": "e66115ef817fa198edad13b2bd949c407c2d25db08471de9d25529a53914b1d9"
+    },
+    "docs/proposal-v0.5.md": {
+      "gitBlob": "fe9fdc9d799f6c76fa64a05a78a3d1fa7a544d3b",
+      "sha256": "173584953587a5b24a386e6d7474770811d2ecdce30b8abb4f95267c8be4590b"
+    },
+    "docs/proposal-v0.6.md": {
+      "gitBlob": "9288d456b6e2af5ebd6927f45cf0d4051f63395c",
+      "sha256": "ca2a6d6bdbac7c6c0a9dcd86728a920ea67ac27ea00a74b0f8da86aa181f40c8"
+    },
+    "docs/proposal-v0.7.md": {
+      "gitBlob": "833b5c1322f692093f8e7e9b2cdd6906a5919dab",
+      "sha256": "54cdf089f2da6269ade6aa5b866d5b41611f70ed02b017d2dc25587a6f4c51c9"
+    },
+    "docs/proposal-v0.8.md": {
+      "gitBlob": "ed4d1275e9a56d9a488916ad8e70e334643d0c28",
+      "sha256": "15edc4da215407e71555a434e975e5b3310f902d004f9e742592beb5a760d8c8"
+    },
+    "docs/proposal-v0.9.md": {
+      "gitBlob": "dad51443547cff2addef4296d913dcc73fd1a9a1",
+      "sha256": "75c8b0a242ca00e78bd3943cfccf3b23a838b44aa2e0804aa156a77f06e5de56"
+    },
+    "docs/proposal.md": {
+      "gitBlob": "40d36c03ed4cae6cc42fc2369a456e52acd6e083",
+      "sha256": "0ce7cc0f507e394cc770411e7be4367b9753739aab6ba5a1d47fab0a2ce0edc0"
+    },
+    "docs/research/runtime-landscape.md": {
+      "gitBlob": "5dd1e9627bee836d87bc6f4261032626c3bfd739",
+      "sha256": "568bab8876199bf4a94ee690fa2b56606e5f4aae5e6c96631899144ceab041a1"
+    },
+    "docs/research/v0.13-crypto-measurements.md": {
+      "gitBlob": "7f6fc3fdf778563cc43a27af347f0e16d42ec85a",
+      "sha256": "e277c6f604d821cd5d039df96df2661cfb1ae24e3c1a6b2ea24644fa5c5ffece"
+    },
+    "docs/research/v0.13-runtime-pain-log.md": {
+      "gitBlob": "86d857e80873ac10c5eae1fc88196e0c731f7015",
+      "sha256": "69a986658739beedc89f671458d06a6c032202f119732bba929abb1355e30f38"
+    },
+    "docs/research/v0.13-windows-measurements.md": {
+      "gitBlob": "ec9427aa39ff1fce473113ee0058667fad846b0b",
+      "sha256": "efd1a86c1bc15048917571ae1a637c3fa942fd890f2ea0bbdded75a565d69ab1"
+    },
+    "docs/toolchain.md": {
+      "gitBlob": "be6afba2a15a3d96878ea5f5b8088f4ff1b8c14d",
+      "sha256": "be21fefa24f09b53645cb457e28e4591cefc42a2f625641cbc526f1c3c1d1ca6"
+    },
+    "eslint.config.mjs": {
+      "gitBlob": "00133744da42f8d00b5165f1576d4b60c9b32327",
+      "sha256": "2c935ec7e9cc03bf7f9a2f533c97e4cf4b5870005b65872b7be1ec0cae006dcc"
+    },
+    "examples/prime-search.mjs": {
+      "gitBlob": "5217dcee523327c2c97d260558cacaa993b493f8",
+      "sha256": "a8405dd78e95cb14abc8b1606d5e6e8e6b34ead075ba185c555bb3faabd4dc5b"
+    },
+    "examples/transfer-task.mjs": {
+      "gitBlob": "515bef65dbaea70c524d4d6bb86b60d6c8db9ef9",
+      "sha256": "f20181393bcfa2bddd7d1c12f320ccea8a4c820680466a63e18c6a755ecf56c9"
+    },
+    "examples/transfer.mjs": {
+      "gitBlob": "41bc496328dfce4509f892c70d457bf66c6afe70",
+      "sha256": "5043480fb9ca025577e19336afba06c4e10a12574fdd0ad4f8a14760e35f4242"
+    },
+    "package-lock.json": {
+      "gitBlob": "c182146609008ea1670795e43288ac47b6ab1355",
+      "sha256": "9197e42d8e3ccd4375b6ede97193408d76e5f5033ec64534cfc2abeabccf9cdd"
+    },
+    "package.json": {
+      "gitBlob": "d2a3b38214c782628dfa2cf20c9aaf0b7baf3742",
+      "sha256": "a71e04f9feeb452403af6f13d8cbc295353cedff190fafa7966acc22c146b68a"
+    },
+    "packages/runtime/package.json": {
+      "gitBlob": "3ac8d490eec049e63717fa4595ce19f770fd3d8d",
+      "sha256": "8d14caf8437cb6ee8702f0b44c1eb060490aa8e8eb06ad778b45d53c72662cd1"
+    },
+    "packages/runtime/src/dispatch/dispatcher.ts": {
+      "gitBlob": "ada78d4f8660c3dc0fe23712cb691ce05a4b30e9",
+      "sha256": "a448344e4977d60338c0b503c92b49d67d9bccfe0c08c101ca3d376593ac3ada"
+    },
+    "packages/runtime/src/errors/index.ts": {
+      "gitBlob": "f08825d30d49601a32d6eae58abfadec76fec2ab",
+      "sha256": "2f1458c63366be67919f51866acd7e1a9966300166c39f164c481913d0b1f4e7"
+    },
+    "packages/runtime/src/index.ts": {
+      "gitBlob": "126056d6b0f94cde4681c87809d45e322c11da86",
+      "sha256": "96d3697fde71fc4a46943c52f5556c1b63227f2b792650c14cf29bfd073cef44"
+    },
+    "packages/runtime/src/internal/integer.ts": {
+      "gitBlob": "33b09c26911866654e8368400126a86e58d10cee",
+      "sha256": "c1d5f34cd7a4d6aa228910e0a7e7f7929e21bea0f84e231d5984a3b7e7d51b6c"
+    },
+    "packages/runtime/src/partition/binary.ts": {
+      "gitBlob": "6b0538eb00664a13d9a0e315c206f6f0bc304b41",
+      "sha256": "20e4ff84ea39912befa189a5a3e5f57739e249d3954c3d7aea6cfa45e1b97120"
+    },
+    "packages/runtime/src/partition/coordinator.ts": {
+      "gitBlob": "5a124a4e9f4b3b73d8ca89cc0d5b485699c5266b",
+      "sha256": "3afae72cfa583b5c04b8645a09af3dcf603139f1b4268204bd35627f2f185cde"
+    },
+    "packages/runtime/src/partition/operation.ts": {
+      "gitBlob": "12ee5f69ac128a3307e8bfc78dad5b67bb03090c",
+      "sha256": "e5ec55abcb8a90fca7df99c7b7ade39c5ae2fa2358efd1a11e5edc8b438384e1"
+    },
+    "packages/runtime/src/partition/range.ts": {
+      "gitBlob": "a0eb27b09d628d5ad37a752fbe3addca24d2ea56",
+      "sha256": "c985cb95b03c2c339f18f1cae44ca7f77eca7eb2908afe946f11b71c724a1489"
+    },
+    "packages/runtime/src/partition/stream.ts": {
+      "gitBlob": "013fcafd8e4c8b87393f7f31e533b52add36d7c4",
+      "sha256": "09d2dcb73771334c0a4fb9647c6234d59acdef43e3170045d8c8e810a7017566"
+    },
+    "packages/runtime/src/pool/pool.ts": {
+      "gitBlob": "da7435bae7839bc48d021d3f36f9f21311e1526f",
+      "sha256": "880be0c7764e184bf3e8ccfee8fa63bf3c2f26e81d40aab5e2cdb94827849ec5"
+    },
+    "packages/runtime/src/results/credit.ts": {
+      "gitBlob": "638989abf1f2bee2aca3ff89d0cddb39b9ae2d89",
+      "sha256": "acc35c91bb5bfc48e95356d466377c0ad42ef97a2f5c765b25ef9898a5fc078f"
+    },
+    "packages/runtime/src/runtime.ts": {
+      "gitBlob": "39c44c6ba16c2b82fbb34b5237fb1dc7d157fac4",
+      "sha256": "53e0013365563a2235bca5d082a753996846529d42efcf9bb5378c81e1d26e81"
+    },
+    "packages/runtime/src/scheduler/fifo.ts": {
+      "gitBlob": "d08a20c77397f2d646b9fa3e4fa7de27344d8a00",
+      "sha256": "caa0307b7ce3b71d412ae9b432ad90cd946eed209958d88a1d6f9a13d481e014"
+    },
+    "packages/runtime/src/tasks/coordinator.ts": {
+      "gitBlob": "659590a423ac9881daf478813b43b80b063fdda2",
+      "sha256": "05b6f044c538a438827e8ab7c16071ac04aeb89b12122c8fc48f2dd8239767d7"
+    },
+    "packages/runtime/src/tasks/registry.ts": {
+      "gitBlob": "2331f30664e0b3333260c45cbafcbbf06c11c0b9",
+      "sha256": "b0698736068769a2b7ab2b8c1cbf2179650f7b41701e82ab4dccf8e8c8254eca"
+    },
+    "packages/runtime/src/tasks/shared.ts": {
+      "gitBlob": "74dfe0dd8a9e9c975007e4cdf8900849535a0f05",
+      "sha256": "d3a6b371f5b20657bf47d6b84f6c7d7bd4cfec0f0395b6bade2ac828ee5a3ca5"
+    },
+    "packages/runtime/src/tasks/task.ts": {
+      "gitBlob": "2355e6194949c10616876aed018e9bae08689890",
+      "sha256": "92eb849cc4b2921c347656edabf6a813b323e9295c46c7255dddc89330f820f5"
+    },
+    "packages/runtime/src/tasks/transfer.ts": {
+      "gitBlob": "4a8430dbf48a39b596454f1d2bef51ddf0d529d1",
+      "sha256": "9de35965f11f40ab7697ca8e5439af634fe8122829c357c3b36f310dbfd278ac"
+    },
+    "packages/runtime/src/telemetry/metrics.ts": {
+      "gitBlob": "8a5d2b247b999e77d6c776004af1f5abf289eaf3",
+      "sha256": "031d1994dd4fec40d50b265f4e59c00dd9348d089d507ed87019bb1fef7b088e"
+    },
+    "packages/runtime/src/telemetry/profile.ts": {
+      "gitBlob": "199816dbf99fb5a5e9b5b62dfad7ed03f1d9619a",
+      "sha256": "831b42554f3dcb74a45ae42bdfca5811eab921d8c248986ca1859af26f9496f7"
+    },
+    "packages/runtime/src/telemetry/runtime.ts": {
+      "gitBlob": "d0247664c1b614f617365250e2eaedefae8a8b54",
+      "sha256": "de144702cc694650fb5d7d50ff76109a6cfe9ef5ef3aecc3825a9a3e911fe6e7"
+    },
+    "packages/runtime/src/types/index.ts": {
+      "gitBlob": "3897997b01ca88747330f73c8673969dcba24e42",
+      "sha256": "7a252af8bb57fe42ac43f015a73ee111afd932725da039ffd77c36140c7b35fa"
+    },
+    "packages/runtime/src/workers/bootstrap.ts": {
+      "gitBlob": "90611ad59f95d3952c39f68d8288837a6ed86795",
+      "sha256": "f19fbfb8f0a27d1e3e97cc7599bdfc8922d7502557af9a71c4bf2e9cf0c6d2e9"
+    },
+    "packages/runtime/src/workers/protocol.ts": {
+      "gitBlob": "89b299bd492cba3a0cd47762260fdb9e8db0772b",
+      "sha256": "d8f66b337c21563d0c510b2bc72ae1db3a70d065da22d2374583d1bd8d1f5d90"
+    },
+    "packages/runtime/src/workers/worker.ts": {
+      "gitBlob": "f31cd42d9f94e3b60842e897ccc8230126c20e0f",
+      "sha256": "715f1583dcabc07b4e9b8288a89b29f7a6ccb1671834f11b56f1b0e681b4809d"
+    },
+    "packages/runtime/test/batch.test.mjs": {
+      "gitBlob": "9aec01b1d8d2130511fcc75b6facd5423fc09c65",
+      "sha256": "684efad2d53714614bccfc43d83c16d0fea7a6dd18c03dc314dbb4643ba3830f"
+    },
+    "packages/runtime/test/binary-result.test.mjs": {
+      "gitBlob": "26d9a240d45571c88447d1d05d0648afe5befea9",
+      "sha256": "ee9f54ca52fc96c3935683e7c79fb03acbc53034a8c0a36ce30c1c20a536ab43"
+    },
+    "packages/runtime/test/completion.test.mjs": {
+      "gitBlob": "d7d68076bff49481b251e958070da3bc81efc3d0",
+      "sha256": "beddbd7f82ad6c3a41fb0e7998e6ecb21a6be337771a4f9dedc27b4dfc6f2cad"
+    },
+    "packages/runtime/test/fixtures/broken.mjs": {
+      "gitBlob": "2645f0108b1a393e94af0a54b2a4153a94fde29a",
+      "sha256": "bd7e2480d5f6bc450d5f0024e5d8b78ce8bcbccc71b945660ba9106b94336087"
+    },
+    "packages/runtime/test/fixtures/hanging-import.mjs": {
+      "gitBlob": "160a0ee3759e110a899d416fe7ebe79351b966f7",
+      "sha256": "5b9a6689d226104b61ad384931f385be2931d0656894e55b2713273ea2a43b81"
+    },
+    "packages/runtime/test/fixtures/partition-tasks.mjs": {
+      "gitBlob": "c74021e0290407f84ebf209d3b7ccf8129f1b635",
+      "sha256": "add612a198f718ec19b4d2edacd0b0f3ebeb34c94affbae62f9a4ec1e348288c"
+    },
+    "packages/runtime/test/fixtures/shared-tasks.mjs": {
+      "gitBlob": "f5916d7cba97a172568a34e59cd62ba97104323b",
+      "sha256": "aa2d3f81da337e36c6297c741298701c2af535e2f21218b866a2ce5f413d9ad8"
+    },
+    "packages/runtime/test/fixtures/tasks.mjs": {
+      "gitBlob": "d951c7a070a210a388db4f9bb0f40d04d91e2adc",
+      "sha256": "df49e8c964cd17f1be76b65c042bc986c78ba9927496c658636ce9a556d23be6"
+    },
+    "packages/runtime/test/fixtures/transfer-tasks.mjs": {
+      "gitBlob": "9e039715c495e39feeb63dfbf1b8594252ce2786",
+      "sha256": "5e5e54a87956f0a54d1d979877034a7a2c85f311c2b3a160cac3aaea750159a7"
+    },
+    "packages/runtime/test/map.test.mjs": {
+      "gitBlob": "d51dfaeeab0f124ad0db496d2348ba539d745a07",
+      "sha256": "cb45271cd7115fd6263142b51aa1cfeb321bb462dfe3ebe8cba288f15a5583bf"
+    },
+    "packages/runtime/test/matrix.test.mjs": {
+      "gitBlob": "31df704bfcb4be4af62eaf74a444376626acf1b7",
+      "sha256": "cf9a9ba12151f1ecb399636e1773a2b9f12239e4ac16c064f94d5e293216a4dd"
+    },
+    "packages/runtime/test/memory-observability.test.mjs": {
+      "gitBlob": "82630901f6c5e9b09d95b71bf5659db257c653d4",
+      "sha256": "abd94718006048402bd74b27c0b56da68cec043c45a45dee0f9e6086df41575d"
+    },
+    "packages/runtime/test/partition.test.mjs": {
+      "gitBlob": "6d9bc137a6f0d9a55c4fac93edb8c024c74a6d84",
+      "sha256": "3c8cd8f875ce31d8091674324267772fd0891692129a16efcfc4a0be102b8bb0"
+    },
+    "packages/runtime/test/result-credit.test.mjs": {
+      "gitBlob": "d0252223dbabe0983d9beb49b267fa40b184f1c4",
+      "sha256": "f6e13396c9ddf90f9010a413a6b333fd9dc1cc9e509c55110466592ae02bc471"
+    },
+    "packages/runtime/test/runtime.test.mjs": {
+      "gitBlob": "e6a5f06399f5aac12aa9d0be50eb24e2e5ca7635",
+      "sha256": "2ca16d6c2a9634209e747caea86ce419cf56f856c813b63249efb993530f7991"
+    },
+    "packages/runtime/test/shared.test.mjs": {
+      "gitBlob": "6537cea1ac418c51eac25548873649115c703064",
+      "sha256": "d04afa2bc7cdeeb3e20c8de39385b77263270e787a687f86e495fd72aebfe326"
+    },
+    "packages/runtime/test/stream.test.mjs": {
+      "gitBlob": "d05260adc4e3085f378692d1ef8ead83d86dc7fc",
+      "sha256": "8d2e9caeec24510d9366d739224f042db3a04fcc37316c0be329cb553347c2b7"
+    },
+    "packages/runtime/test/transfer.test.mjs": {
+      "gitBlob": "b3a59b5e8f2443c064533341bfa7891dd4826d4b",
+      "sha256": "348c0b13f9714748a06bb8beb20974f71c320664eb6e3a89fcc35b41d4c8216a"
+    },
+    "packages/runtime/test/tsconfig.json": {
+      "gitBlob": "f14ac0cefef60e9f97a37602cbf08f7846d39e31",
+      "sha256": "6f8c2ca79d1e31c62ef4173e118393d460a99c49462a96e551675fb5674bd690"
+    },
+    "packages/runtime/test/types.test.ts": {
+      "gitBlob": "0d9fa0cd3c71e80264ed327a6fbfc51e7d98b048",
+      "sha256": "25dd86f819f5dd0c54f2dede6faaebc552dfb9b6c885f76062b987968a5ac989"
+    },
+    "packages/runtime/test/upper-bound-result.test.mjs": {
+      "gitBlob": "e4bf38a698d3d5708be889ff82f630cfacb73bef",
+      "sha256": "ae364f4b50127cedfe3784f677519852fa8fe0e92bc97cc69c496eef6a9c291b"
+    },
+    "packages/runtime/tsconfig.json": {
+      "gitBlob": "bace472142d200126bba1dcc5cf7d187b157cefe",
+      "sha256": "b60926d0fc960d49f920218c75396faa65796212a96eba7ba05c4066bcafa5b8"
+    },
+    "scripts/cross-platform-v011/binary.mjs": {
+      "gitBlob": "dda6c4993b89bfb7b097c504ef49a228c1f5485e",
+      "sha256": "ca1e93a3e99d58a982312ea20b699d765bae2b5779cb7b10987f7bf85ace4717"
+    },
+    "scripts/cross-platform-v011/environment.mjs": {
+      "gitBlob": "9fee78d8a93bf4a8017c8ba77f6b8ac1d5f68cb4",
+      "sha256": "95baf1c1b210e05ac1c4074c4cfbc1feb14578e75370379ba53f63cc3e587d01"
+    },
+    "scripts/cross-platform-v011/report.mjs": {
+      "gitBlob": "0b0dc825959b263ecef90bd8807fa458800a1895",
+      "sha256": "167b542ab3bc80402ce1f339401aa30126c0016f7c3e1300c5b3e69e1b7b3611"
+    },
+    "scripts/cross-platform-v011/run.mjs": {
+      "gitBlob": "9065054e08b0a290de90be8c38a713784d749a1f",
+      "sha256": "7e9e8b68681fce8f5b38eda4fda50d9d951ae4062674dc203ca8afb426354e45"
+    },
+    "scripts/cross-platform-v011/supplement.mjs": {
+      "gitBlob": "12ce5696e04bf686cb5808196cb925988c3ca5ff",
+      "sha256": "5062e1d35e9a44c7b565e56d44b4d60b5f510a7301f612e47dad7fa270e6cc87"
+    },
+    "scripts/cross-platform-v012/observe.mjs": {
+      "gitBlob": "107a427da8877e53ac212169eca657dc515e59b3",
+      "sha256": "6108ddd6d47ebda57d3ff6635f78a0edb33c0ce82d1371bd5197125329438a32"
+    },
+    "scripts/cross-platform-v012/report.mjs": {
+      "gitBlob": "0e2b94c66113776ad47fd18e4ca67d3a1f083994",
+      "sha256": "5f974224258757c9d68925185b476f972d6eef28bd10c73f82ac43ed42c19ecb"
+    },
+    "scripts/cross-platform-v012/run.mjs": {
+      "gitBlob": "0a99805d1c569d0ef1c5098f74e034d529fe602c",
+      "sha256": "5dfaf737bf420680820242e471c3896cb216cfd53e2ad9ff4bdb5b8e293c855b"
+    },
+    "scripts/crypto-windows-observe.mjs": {
+      "gitBlob": "780358c35f4061021d7d567569f09ca74309290e",
+      "sha256": "5870eae6025551f65dda04af069dd53e4547143f7c2ec4ed219bab311cb5b264"
+    },
+    "scripts/reservation-soak.mjs": {
+      "gitBlob": "20ba58b2348251359f1353f010abcc97e82d8428",
+      "sha256": "94bb0c1c65470a097e64e6ddb3378c10029acd1e739316f6e4d5b6a8428cdbc4"
+    },
+    "scripts/stress.mjs": {
+      "gitBlob": "8d7c498a21f88262bf12d6be71599170c39d7c8e",
+      "sha256": "d409a484518a72d17eee1614a7b3a03f4fc021f075607b186dbd9828cf5ce884"
+    },
+    "scripts/validate-v012.mjs": {
+      "gitBlob": "d6f3c20a90efb9ae3c7429b1020019bf5879064b",
+      "sha256": "116a820874b06e05b2facb6d80796591d03662e7eb81160910012b3d2cc48d0c"
+    }
+  },
+  "runtimeHashes": {
+    "packages/runtime/src/dispatch/dispatcher.ts": "a448344e4977d60338c0b503c92b49d67d9bccfe0c08c101ca3d376593ac3ada",
+    "packages/runtime/src/errors/index.ts": "2f1458c63366be67919f51866acd7e1a9966300166c39f164c481913d0b1f4e7",
+    "packages/runtime/src/index.ts": "96d3697fde71fc4a46943c52f5556c1b63227f2b792650c14cf29bfd073cef44",
+    "packages/runtime/src/internal/integer.ts": "c1d5f34cd7a4d6aa228910e0a7e7f7929e21bea0f84e231d5984a3b7e7d51b6c",
+    "packages/runtime/src/partition/binary.ts": "20e4ff84ea39912befa189a5a3e5f57739e249d3954c3d7aea6cfa45e1b97120",
+    "packages/runtime/src/partition/coordinator.ts": "3afae72cfa583b5c04b8645a09af3dcf603139f1b4268204bd35627f2f185cde",
+    "packages/runtime/src/partition/operation.ts": "e5ec55abcb8a90fca7df99c7b7ade39c5ae2fa2358efd1a11e5edc8b438384e1",
+    "packages/runtime/src/partition/range.ts": "c985cb95b03c2c339f18f1cae44ca7f77eca7eb2908afe946f11b71c724a1489",
+    "packages/runtime/src/partition/stream.ts": "09d2dcb73771334c0a4fb9647c6234d59acdef43e3170045d8c8e810a7017566",
+    "packages/runtime/src/pool/pool.ts": "880be0c7764e184bf3e8ccfee8fa63bf3c2f26e81d40aab5e2cdb94827849ec5",
+    "packages/runtime/src/results/credit.ts": "acc35c91bb5bfc48e95356d466377c0ad42ef97a2f5c765b25ef9898a5fc078f",
+    "packages/runtime/src/runtime.ts": "53e0013365563a2235bca5d082a753996846529d42efcf9bb5378c81e1d26e81",
+    "packages/runtime/src/scheduler/fifo.ts": "caa0307b7ce3b71d412ae9b432ad90cd946eed209958d88a1d6f9a13d481e014",
+    "packages/runtime/src/tasks/coordinator.ts": "05b6f044c538a438827e8ab7c16071ac04aeb89b12122c8fc48f2dd8239767d7",
+    "packages/runtime/src/tasks/registry.ts": "b0698736068769a2b7ab2b8c1cbf2179650f7b41701e82ab4dccf8e8c8254eca",
+    "packages/runtime/src/tasks/shared.ts": "d3a6b371f5b20657bf47d6b84f6c7d7bd4cfec0f0395b6bade2ac828ee5a3ca5",
+    "packages/runtime/src/tasks/task.ts": "92eb849cc4b2921c347656edabf6a813b323e9295c46c7255dddc89330f820f5",
+    "packages/runtime/src/tasks/transfer.ts": "9de35965f11f40ab7697ca8e5439af634fe8122829c357c3b36f310dbfd278ac",
+    "packages/runtime/src/telemetry/metrics.ts": "031d1994dd4fec40d50b265f4e59c00dd9348d089d507ed87019bb1fef7b088e",
+    "packages/runtime/src/telemetry/profile.ts": "831b42554f3dcb74a45ae42bdfca5811eab921d8c248986ca1859af26f9496f7",
+    "packages/runtime/src/telemetry/runtime.ts": "de144702cc694650fb5d7d50ff76109a6cfe9ef5ef3aecc3825a9a3e911fe6e7",
+    "packages/runtime/src/types/index.ts": "7a252af8bb57fe42ac43f015a73ee111afd932725da039ffd77c36140c7b35fa",
+    "packages/runtime/src/workers/bootstrap.ts": "f19fbfb8f0a27d1e3e97cc7599bdfc8922d7502557af9a71c4bf2e9cf0c6d2e9",
+    "packages/runtime/src/workers/protocol.ts": "d8f66b337c21563d0c510b2bc72ae1db3a70d065da22d2374583d1bd8d1f5d90",
+    "packages/runtime/src/workers/worker.ts": "715f1583dcabc07b4e9b8288a89b29f7a6ccb1671834f11b56f1b0e681b4809d"
+  },
+  "campaign": {
+    "cells": 162,
+    "trials": 972,
+    "warmups": 324
+  },
+  "supplement": {
+    "cells": 7,
+    "trials": 42,
+    "parallelRoundTrips": 3,
+    "nativeCompressionAbort": true
+  },
+  "freshMemory": {
+    "processes": 6,
+    "trials": 36
+  },
+  "artifactHashes": {
+    "compression-v0.14-windows-node24.json": "b15515ec629a46bbe722fb1a4f02be3e2821c4b25179b919c93d83044f66774b",
+    "compression-v0.14-bound-validation.json": "d37596929292fae262884b98fc3d21003ad3500d118c1963e96373c536fc274b",
+    "compression-v0.14-lifecycle.json": "5254dce7c469efb0ebd4bf6c782a58b826169f1babfe0f4a35aef26609182ae8",
+    "compression-v0.14-contention.json": "ba3f31267eeb38e08a26a211c6dc63df1b906a088ba22264adc0a84ceb915780",
+    "compression-v0.14-fresh-memory.json": "ac71391a7efbab41588f40063588354fefd9d2ab123b989d54f0cc1ae794a8b9"
+  }
+}

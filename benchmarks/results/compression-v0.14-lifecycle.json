@@ -1,0 +1,1622 @@
+{
+  "clientDate": "2026-10-02",
+  "node": "v24.21.0",
+  "runtimeHashes": {
+    "packages/runtime/src/dispatch/dispatcher.ts": "a448344e4977d60338c0b503c92b49d67d9bccfe0c08c101ca3d376593ac3ada",
+    "packages/runtime/src/errors/index.ts": "2f1458c63366be67919f51866acd7e1a9966300166c39f164c481913d0b1f4e7",
+    "packages/runtime/src/index.ts": "96d3697fde71fc4a46943c52f5556c1b63227f2b792650c14cf29bfd073cef44",
+    "packages/runtime/src/internal/integer.ts": "c1d5f34cd7a4d6aa228910e0a7e7f7929e21bea0f84e231d5984a3b7e7d51b6c",
+    "packages/runtime/src/partition/binary.ts": "20e4ff84ea39912befa189a5a3e5f57739e249d3954c3d7aea6cfa45e1b97120",
+    "packages/runtime/src/partition/coordinator.ts": "3afae72cfa583b5c04b8645a09af3dcf603139f1b4268204bd35627f2f185cde",
+    "packages/runtime/src/partition/operation.ts": "e5ec55abcb8a90fca7df99c7b7ade39c5ae2fa2358efd1a11e5edc8b438384e1",
+    "packages/runtime/src/partition/range.ts": "c985cb95b03c2c339f18f1cae44ca7f77eca7eb2908afe946f11b71c724a1489",
+    "packages/runtime/src/partition/stream.ts": "09d2dcb73771334c0a4fb9647c6234d59acdef43e3170045d8c8e810a7017566",
+    "packages/runtime/src/pool/pool.ts": "880be0c7764e184bf3e8ccfee8fa63bf3c2f26e81d40aab5e2cdb94827849ec5",
+    "packages/runtime/src/results/credit.ts": "acc35c91bb5bfc48e95356d466377c0ad42ef97a2f5c765b25ef9898a5fc078f",
+    "packages/runtime/src/runtime.ts": "53e0013365563a2235bca5d082a753996846529d42efcf9bb5378c81e1d26e81",
+    "packages/runtime/src/scheduler/fifo.ts": "caa0307b7ce3b71d412ae9b432ad90cd946eed209958d88a1d6f9a13d481e014",
+    "packages/runtime/src/tasks/coordinator.ts": "05b6f044c538a438827e8ab7c16071ac04aeb89b12122c8fc48f2dd8239767d7",
+    "packages/runtime/src/tasks/registry.ts": "b0698736068769a2b7ab2b8c1cbf2179650f7b41701e82ab4dccf8e8c8254eca",
+    "packages/runtime/src/tasks/shared.ts": "d3a6b371f5b20657bf47d6b84f6c7d7bd4cfec0f0395b6bade2ac828ee5a3ca5",
+    "packages/runtime/src/tasks/task.ts": "92eb849cc4b2921c347656edabf6a813b323e9295c46c7255dddc89330f820f5",
+    "packages/runtime/src/tasks/transfer.ts": "9de35965f11f40ab7697ca8e5439af634fe8122829c357c3b36f310dbfd278ac",
+    "packages/runtime/src/telemetry/metrics.ts": "031d1994dd4fec40d50b265f4e59c00dd9348d089d507ed87019bb1fef7b088e",
+    "packages/runtime/src/telemetry/profile.ts": "831b42554f3dcb74a45ae42bdfca5811eab921d8c248986ca1859af26f9496f7",
+    "packages/runtime/src/telemetry/runtime.ts": "de144702cc694650fb5d7d50ff76109a6cfe9ef5ef3aecc3825a9a3e911fe6e7",
+    "packages/runtime/src/types/index.ts": "7a252af8bb57fe42ac43f015a73ee111afd932725da039ffd77c36140c7b35fa",
+    "packages/runtime/src/workers/bootstrap.ts": "f19fbfb8f0a27d1e3e97cc7599bdfc8922d7502557af9a71c4bf2e9cf0c6d2e9",
+    "packages/runtime/src/workers/protocol.ts": "d8f66b337c21563d0c510b2bc72ae1db3a70d065da22d2374583d1bd8d1f5d90",
+    "packages/runtime/src/workers/worker.ts": "715f1583dcabc07b4e9b8288a89b29f7a6ccb1671834f11b56f1b0e681b4809d"
+  },
+  "complete": true,
+  "results": [
+    {
+      "mode": "abort",
+      "active": {
+        "stats": {
+          "state": "running",
+          "workers": {
+            "total": 2,
+            "busy": 2,
+            "idle": 0,
+            "starting": 0,
+            "failures": 0,
+            "restarts": 0,
+            "details": [
+              {
+                "id": 1,
+                "threadId": 1,
+                "status": "busy",
+                "completedTasks": 0,
+                "failedTasks": 0,
+                "totalExecutionTimeMs": 0,
+                "currentTaskId": "c2afab26-4c70-4707-b8de-9c400b28ad1e"
+              },
+              {
+                "id": 2,
+                "threadId": 2,
+                "status": "busy",
+                "completedTasks": 0,
+                "failedTasks": 0,
+                "totalExecutionTimeMs": 0,
+                "currentTaskId": "043567cc-e1ef-4319-9a13-64dd09bb7bde"
+              }
+            ]
+          },
+          "queue": {
+            "size": 0,
+            "capacity": 128
+          },
+          "tasks": {
+            "accepted": 2,
+            "rejected": 0,
+            "pending": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 2,
+            "timedOut": 0
+          },
+          "timing": {
+            "averageQueueMs": 0.33355000000000246,
+            "averageExecutionMs": 0,
+            "averageTotalMs": 16.374499999999983,
+            "queueSamples": 2,
+            "executionSamples": 0,
+            "settledSamples": 2
+          },
+          "operations": {
+            "accepted": 1,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 1,
+            "timedOut": 0,
+            "pending": 0,
+            "capacity": 130,
+            "collecting": {
+              "accepted": 0,
+              "rejected": 0,
+              "completed": 0,
+              "failed": 0,
+              "cancelled": 0,
+              "timedOut": 0,
+              "pending": 0
+            },
+            "completion": {
+              "accepted": 0,
+              "rejected": 0,
+              "completed": 0,
+              "failed": 0,
+              "cancelled": 0,
+              "timedOut": 0,
+              "pending": 0
+            },
+            "streaming": {
+              "accepted": 1,
+              "rejected": 0,
+              "completed": 0,
+              "failed": 0,
+              "cancelled": 1,
+              "timedOut": 0,
+              "pending": 0
+            },
+            "mapping": {
+              "accepted": 0,
+              "rejected": 0,
+              "completed": 0,
+              "failed": 0,
+              "cancelled": 0,
+              "timedOut": 0,
+              "pending": 0
+            }
+          },
+          "streams": {
+            "accepted": 1,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 1,
+            "timedOut": 0,
+            "pending": 0
+          },
+          "streamResults": {
+            "produced": 0,
+            "yielded": 0,
+            "peakBuffered": 0,
+            "peakKnownBufferedPayloadBytes": 0,
+            "peakUnknownBufferedResults": 0,
+            "currentReservedResultBytes": 2097806,
+            "peakReservedResultBytes": 2097806,
+            "resultByteReservationWaits": 0,
+            "resultByteReservationRejected": 0,
+            "binaryResultContractFailures": 0,
+            "upperBoundContractFailures": 0,
+            "upperBoundResultsReconciled": 0,
+            "resultByteRefunds": 0,
+            "refundedResultBytes": 0,
+            "buffered": 0,
+            "knownBufferedPayloadBytes": 0,
+            "unknownBufferedResults": 0
+          },
+          "maps": {
+            "accepted": 0,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 0,
+            "timedOut": 0,
+            "pending": 0
+          },
+          "mapResults": {
+            "blocks": 0,
+            "elements": 0,
+            "assemblyMs": 0
+          },
+          "partitions": {
+            "generated": 2,
+            "admitted": 2,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 2
+          },
+          "dispatch": {
+            "executeMessages": 2,
+            "resultMessages": 0,
+            "batchedExecuteMessages": 0,
+            "logicalTasks": 2,
+            "logicalPartitions": 2,
+            "averageLogicalTasksPerExecute": 1
+          },
+          "activeOperations": [],
+          "activeTasks": []
+        },
+        "credits": {
+          "reservations": 2,
+          "executions": 2,
+          "operations": 1
+        }
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      },
+      "refunds": 0
+    },
+    {
+      "mode": "consumer-break",
+      "active": {
+        "stats": {
+          "state": "running",
+          "workers": {
+            "total": 2,
+            "busy": 2,
+            "idle": 0,
+            "starting": 0,
+            "failures": 0,
+            "restarts": 0,
+            "details": [
+              {
+                "id": 1,
+                "threadId": 3,
+                "status": "busy",
+                "completedTasks": 1,
+                "failedTasks": 0,
+                "totalExecutionTimeMs": 50.68889999999999,
+                "currentTaskId": "f98605f2-c847-43a1-a99e-fd74471764a1"
+              },
+              {
+                "id": 2,
+                "threadId": 4,
+                "status": "busy",
+                "completedTasks": 0,
+                "failedTasks": 0,
+                "totalExecutionTimeMs": 0,
+                "currentTaskId": "5fb61bf1-1193-4d0a-8328-ce769303da9a"
+              }
+            ]
+          },
+          "queue": {
+            "size": 0,
+            "capacity": 128
+          },
+          "tasks": {
+            "accepted": 3,
+            "rejected": 0,
+            "pending": 0,
+            "completed": 1,
+            "failed": 0,
+            "cancelled": 2,
+            "timedOut": 0
+          },
+          "timing": {
+            "averageQueueMs": 0.5550666666667136,
+            "averageExecutionMs": 50.68889999999999,
+            "averageTotalMs": 44.67326666666671,
+            "queueSamples": 3,
+            "executionSamples": 1,
+            "settledSamples": 3
+          },
+          "operations": {
+            "accepted": 1,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 1,
+            "timedOut": 0,
+            "pending": 0,
+            "capacity": 130,
+            "collecting": {
+              "accepted": 0,
+              "rejected": 0,
+              "completed": 0,
+              "failed": 0,
+              "cancelled": 0,
+              "timedOut": 0,
+              "pending": 0
+            },
+            "completion": {
+              "accepted": 0,
+              "rejected": 0,
+              "completed": 0,
+              "failed": 0,
+              "cancelled": 0,
+              "timedOut": 0,
+              "pending": 0
+            },
+            "streaming": {
+              "accepted": 1,
+              "rejected": 0,
+              "completed": 0,
+              "failed": 0,
+              "cancelled": 1,
+              "timedOut": 0,
+              "pending": 0
+            },
+            "mapping": {
+              "accepted": 0,
+              "rejected": 0,
+              "completed": 0,
+              "failed": 0,
+              "cancelled": 0,
+              "timedOut": 0,
+              "pending": 0
+            }
+          },
+          "streams": {
+            "accepted": 1,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 1,
+            "timedOut": 0,
+            "pending": 0
+          },
+          "streamResults": {
+            "produced": 1,
+            "yielded": 1,
+            "peakBuffered": 0,
+            "peakKnownBufferedPayloadBytes": 0,
+            "peakUnknownBufferedResults": 0,
+            "currentReservedResultBytes": 2097806,
+            "peakReservedResultBytes": 2097806,
+            "resultByteReservationWaits": 0,
+            "resultByteReservationRejected": 0,
+            "binaryResultContractFailures": 0,
+            "upperBoundContractFailures": 0,
+            "upperBoundResultsReconciled": 1,
+            "resultByteRefunds": 1,
+            "refundedResultBytes": 2,
+            "buffered": 0,
+            "knownBufferedPayloadBytes": 0,
+            "unknownBufferedResults": 0
+          },
+          "maps": {
+            "accepted": 0,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 0,
+            "timedOut": 0,
+            "pending": 0
+          },
+          "mapResults": {
+            "blocks": 0,
+            "elements": 0,
+            "assemblyMs": 0
+          },
+          "partitions": {
+            "generated": 3,
+            "admitted": 3,
+            "completed": 1,
+            "failed": 0,
+            "cancelled": 2
+          },
+          "dispatch": {
+            "executeMessages": 3,
+            "resultMessages": 1,
+            "batchedExecuteMessages": 0,
+            "logicalTasks": 3,
+            "logicalPartitions": 3,
+            "averageLogicalTasksPerExecute": 1
+          },
+          "activeOperations": [],
+          "activeTasks": []
+        },
+        "credits": {
+          "reservations": 2,
+          "executions": 2,
+          "operations": 1
+        }
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "mode": "crash",
+      "workers": {
+        "total": 2,
+        "busy": 0,
+        "idle": 2,
+        "starting": 0,
+        "failures": 1,
+        "restarts": 1,
+        "details": [
+          {
+            "id": 2,
+            "threadId": 6,
+            "status": "idle",
+            "completedTasks": 2,
+            "failedTasks": 0,
+            "totalExecutionTimeMs": 118.36139999999989
+          },
+          {
+            "id": 3,
+            "threadId": 7,
+            "status": "idle",
+            "completedTasks": 0,
+            "failedTasks": 0,
+            "totalExecutionTimeMs": 0
+          }
+        ]
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "mode": "upper-contract",
+      "stats": {
+        "state": "running",
+        "workers": {
+          "total": 2,
+          "busy": 0,
+          "idle": 2,
+          "starting": 0,
+          "failures": 0,
+          "restarts": 0,
+          "details": [
+            {
+              "id": 1,
+              "threadId": 8,
+              "status": "idle",
+              "completedTasks": 0,
+              "failedTasks": 1,
+              "totalExecutionTimeMs": 53.14869999999996
+            },
+            {
+              "id": 2,
+              "threadId": 9,
+              "status": "idle",
+              "completedTasks": 0,
+              "failedTasks": 0,
+              "totalExecutionTimeMs": 0
+            }
+          ]
+        },
+        "queue": {
+          "size": 0,
+          "capacity": 128
+        },
+        "tasks": {
+          "accepted": 1,
+          "rejected": 0,
+          "pending": 0,
+          "completed": 0,
+          "failed": 1,
+          "cancelled": 0,
+          "timedOut": 0
+        },
+        "timing": {
+          "averageQueueMs": 0.1528000000000702,
+          "averageExecutionMs": 53.14869999999996,
+          "averageTotalMs": 66.49930000000018,
+          "queueSamples": 1,
+          "executionSamples": 1,
+          "settledSamples": 1
+        },
+        "operations": {
+          "accepted": 1,
+          "rejected": 0,
+          "completed": 0,
+          "failed": 1,
+          "cancelled": 0,
+          "timedOut": 0,
+          "pending": 0,
+          "capacity": 130,
+          "collecting": {
+            "accepted": 0,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 0,
+            "timedOut": 0,
+            "pending": 0
+          },
+          "completion": {
+            "accepted": 0,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 0,
+            "timedOut": 0,
+            "pending": 0
+          },
+          "streaming": {
+            "accepted": 1,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 1,
+            "cancelled": 0,
+            "timedOut": 0,
+            "pending": 0
+          },
+          "mapping": {
+            "accepted": 0,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 0,
+            "timedOut": 0,
+            "pending": 0
+          }
+        },
+        "streams": {
+          "accepted": 1,
+          "rejected": 0,
+          "completed": 0,
+          "failed": 1,
+          "cancelled": 0,
+          "timedOut": 0,
+          "pending": 0
+        },
+        "streamResults": {
+          "produced": 0,
+          "yielded": 0,
+          "peakBuffered": 0,
+          "peakKnownBufferedPayloadBytes": 0,
+          "peakUnknownBufferedResults": 0,
+          "currentReservedResultBytes": 0,
+          "peakReservedResultBytes": 1048900,
+          "resultByteReservationWaits": 0,
+          "resultByteReservationRejected": 0,
+          "binaryResultContractFailures": 1,
+          "upperBoundContractFailures": 1,
+          "upperBoundResultsReconciled": 0,
+          "resultByteRefunds": 0,
+          "refundedResultBytes": 0,
+          "buffered": 0,
+          "knownBufferedPayloadBytes": 0,
+          "unknownBufferedResults": 0
+        },
+        "maps": {
+          "accepted": 0,
+          "rejected": 0,
+          "completed": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "timedOut": 0,
+          "pending": 0
+        },
+        "mapResults": {
+          "blocks": 0,
+          "elements": 0,
+          "assemblyMs": 0
+        },
+        "partitions": {
+          "generated": 1,
+          "admitted": 1,
+          "completed": 0,
+          "failed": 1,
+          "cancelled": 0
+        },
+        "dispatch": {
+          "executeMessages": 1,
+          "resultMessages": 1,
+          "batchedExecuteMessages": 0,
+          "logicalTasks": 1,
+          "logicalPartitions": 1,
+          "averageLogicalTasksPerExecute": 1
+        },
+        "activeOperations": [],
+        "activeTasks": []
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "mode": "exact-contract",
+      "stats": {
+        "state": "running",
+        "workers": {
+          "total": 2,
+          "busy": 0,
+          "idle": 2,
+          "starting": 0,
+          "failures": 0,
+          "restarts": 0,
+          "details": [
+            {
+              "id": 1,
+              "threadId": 10,
+              "status": "idle",
+              "completedTasks": 0,
+              "failedTasks": 1,
+              "totalExecutionTimeMs": 4.175099999999929
+            },
+            {
+              "id": 2,
+              "threadId": 11,
+              "status": "idle",
+              "completedTasks": 0,
+              "failedTasks": 0,
+              "totalExecutionTimeMs": 0
+            }
+          ]
+        },
+        "queue": {
+          "size": 0,
+          "capacity": 128
+        },
+        "tasks": {
+          "accepted": 1,
+          "rejected": 0,
+          "pending": 0,
+          "completed": 0,
+          "failed": 1,
+          "cancelled": 0,
+          "timedOut": 0
+        },
+        "timing": {
+          "averageQueueMs": 0.10020000000008622,
+          "averageExecutionMs": 4.175099999999929,
+          "averageTotalMs": 6.824299999999994,
+          "queueSamples": 1,
+          "executionSamples": 1,
+          "settledSamples": 1
+        },
+        "operations": {
+          "accepted": 1,
+          "rejected": 0,
+          "completed": 0,
+          "failed": 1,
+          "cancelled": 0,
+          "timedOut": 0,
+          "pending": 0,
+          "capacity": 130,
+          "collecting": {
+            "accepted": 0,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 0,
+            "timedOut": 0,
+            "pending": 0
+          },
+          "completion": {
+            "accepted": 0,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 0,
+            "timedOut": 0,
+            "pending": 0
+          },
+          "streaming": {
+            "accepted": 1,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 1,
+            "cancelled": 0,
+            "timedOut": 0,
+            "pending": 0
+          },
+          "mapping": {
+            "accepted": 0,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 0,
+            "timedOut": 0,
+            "pending": 0
+          }
+        },
+        "streams": {
+          "accepted": 1,
+          "rejected": 0,
+          "completed": 0,
+          "failed": 1,
+          "cancelled": 0,
+          "timedOut": 0,
+          "pending": 0
+        },
+        "streamResults": {
+          "produced": 0,
+          "yielded": 0,
+          "peakBuffered": 0,
+          "peakKnownBufferedPayloadBytes": 0,
+          "peakUnknownBufferedResults": 0,
+          "currentReservedResultBytes": 0,
+          "peakReservedResultBytes": 1048575,
+          "resultByteReservationWaits": 0,
+          "resultByteReservationRejected": 0,
+          "binaryResultContractFailures": 1,
+          "upperBoundContractFailures": 0,
+          "upperBoundResultsReconciled": 0,
+          "resultByteRefunds": 0,
+          "refundedResultBytes": 0,
+          "buffered": 0,
+          "knownBufferedPayloadBytes": 0,
+          "unknownBufferedResults": 0
+        },
+        "maps": {
+          "accepted": 0,
+          "rejected": 0,
+          "completed": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "timedOut": 0,
+          "pending": 0
+        },
+        "mapResults": {
+          "blocks": 0,
+          "elements": 0,
+          "assemblyMs": 0
+        },
+        "partitions": {
+          "generated": 1,
+          "admitted": 1,
+          "completed": 0,
+          "failed": 1,
+          "cancelled": 0
+        },
+        "dispatch": {
+          "executeMessages": 1,
+          "resultMessages": 1,
+          "batchedExecuteMessages": 0,
+          "logicalTasks": 1,
+          "logicalPartitions": 1,
+          "averageLogicalTasksPerExecute": 1
+        },
+        "activeOperations": [],
+        "activeTasks": []
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "mode": "queued-abort",
+      "active": {
+        "stats": {
+          "state": "running",
+          "workers": {
+            "total": 2,
+            "busy": 2,
+            "idle": 0,
+            "starting": 0,
+            "failures": 0,
+            "restarts": 0,
+            "details": [
+              {
+                "id": 1,
+                "threadId": 12,
+                "status": "busy",
+                "completedTasks": 0,
+                "failedTasks": 0,
+                "totalExecutionTimeMs": 0,
+                "currentTaskId": "1ad95c43-0667-410c-9c60-3570130f8b3c"
+              },
+              {
+                "id": 2,
+                "threadId": 13,
+                "status": "busy",
+                "completedTasks": 0,
+                "failedTasks": 0,
+                "totalExecutionTimeMs": 0,
+                "currentTaskId": "bc62448e-2242-4d6a-ab52-98559ab6c8eb"
+              }
+            ]
+          },
+          "queue": {
+            "size": 0,
+            "capacity": 128
+          },
+          "tasks": {
+            "accepted": 4,
+            "rejected": 0,
+            "pending": 2,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 2,
+            "timedOut": 0
+          },
+          "timing": {
+            "averageQueueMs": 0.015149999999948704,
+            "averageExecutionMs": 0,
+            "averageTotalMs": 1.0700500000000375,
+            "queueSamples": 2,
+            "executionSamples": 0,
+            "settledSamples": 2
+          },
+          "operations": {
+            "accepted": 1,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 1,
+            "timedOut": 0,
+            "pending": 0,
+            "capacity": 130,
+            "collecting": {
+              "accepted": 0,
+              "rejected": 0,
+              "completed": 0,
+              "failed": 0,
+              "cancelled": 0,
+              "timedOut": 0,
+              "pending": 0
+            },
+            "completion": {
+              "accepted": 0,
+              "rejected": 0,
+              "completed": 0,
+              "failed": 0,
+              "cancelled": 0,
+              "timedOut": 0,
+              "pending": 0
+            },
+            "streaming": {
+              "accepted": 1,
+              "rejected": 0,
+              "completed": 0,
+              "failed": 0,
+              "cancelled": 1,
+              "timedOut": 0,
+              "pending": 0
+            },
+            "mapping": {
+              "accepted": 0,
+              "rejected": 0,
+              "completed": 0,
+              "failed": 0,
+              "cancelled": 0,
+              "timedOut": 0,
+              "pending": 0
+            }
+          },
+          "streams": {
+            "accepted": 1,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 1,
+            "timedOut": 0,
+            "pending": 0
+          },
+          "streamResults": {
+            "produced": 0,
+            "yielded": 0,
+            "peakBuffered": 0,
+            "peakKnownBufferedPayloadBytes": 0,
+            "peakUnknownBufferedResults": 0,
+            "currentReservedResultBytes": 0,
+            "peakReservedResultBytes": 2097806,
+            "resultByteReservationWaits": 0,
+            "resultByteReservationRejected": 0,
+            "binaryResultContractFailures": 0,
+            "upperBoundContractFailures": 0,
+            "upperBoundResultsReconciled": 0,
+            "resultByteRefunds": 0,
+            "refundedResultBytes": 0,
+            "buffered": 0,
+            "knownBufferedPayloadBytes": 0,
+            "unknownBufferedResults": 0
+          },
+          "maps": {
+            "accepted": 0,
+            "rejected": 0,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 0,
+            "timedOut": 0,
+            "pending": 0
+          },
+          "mapResults": {
+            "blocks": 0,
+            "elements": 0,
+            "assemblyMs": 0
+          },
+          "partitions": {
+            "generated": 2,
+            "admitted": 2,
+            "completed": 0,
+            "failed": 0,
+            "cancelled": 2
+          },
+          "dispatch": {
+            "executeMessages": 2,
+            "resultMessages": 0,
+            "batchedExecuteMessages": 0,
+            "logicalTasks": 2,
+            "logicalPartitions": 0,
+            "averageLogicalTasksPerExecute": 1
+          },
+          "activeOperations": [],
+          "activeTasks": [
+            {
+              "id": "1ad95c43-0667-410c-9c60-3570130f8b3c",
+              "taskName": "compression-research",
+              "status": "scheduled",
+              "createdAt": 1790960394328,
+              "queuedAt": 1790960394328,
+              "scheduledAt": 1790960394328,
+              "workerId": 1
+            },
+            {
+              "id": "bc62448e-2242-4d6a-ab52-98559ab6c8eb",
+              "taskName": "compression-research",
+              "status": "scheduled",
+              "createdAt": 1790960394329,
+              "queuedAt": 1790960394329,
+              "scheduledAt": 1790960394329,
+              "workerId": 2
+            }
+          ]
+        },
+        "credits": {
+          "reservations": 0,
+          "executions": 0,
+          "operations": 0
+        }
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    }
+  ],
+  "prefill": [
+    {
+      "trial": 0,
+      "kind": "high",
+      "credit": "upper",
+      "prefillMs": 2071.0692999999997,
+      "producedBeforeYield": 32,
+      "bufferedActualBytes": 116900,
+      "reservedBytes": 116900,
+      "refundedBytes": 33447996,
+      "reservationWaits": 30,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 116900
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 0,
+      "kind": "high",
+      "credit": "held",
+      "prefillMs": 104.58109999999942,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 7306,
+      "reservedBytes": 2097806,
+      "refundedBytes": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2097806,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 0,
+      "kind": "poor",
+      "credit": "upper",
+      "prefillMs": 160.41020000000026,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 2097802,
+      "reservedBytes": 2097802,
+      "refundedBytes": 4,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 2097802
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 0,
+      "kind": "poor",
+      "credit": "held",
+      "prefillMs": 133.66200000000026,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 2097802,
+      "reservedBytes": 2097806,
+      "refundedBytes": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2097806,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 1,
+      "kind": "high",
+      "credit": "held",
+      "prefillMs": 119.79980000000069,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 7306,
+      "reservedBytes": 2097806,
+      "refundedBytes": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2097806,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 1,
+      "kind": "high",
+      "credit": "upper",
+      "prefillMs": 1822.3220000000001,
+      "producedBeforeYield": 32,
+      "bufferedActualBytes": 116900,
+      "reservedBytes": 116900,
+      "refundedBytes": 33447996,
+      "reservationWaits": 30,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 116900
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 1,
+      "kind": "poor",
+      "credit": "held",
+      "prefillMs": 133.78100000000086,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 2097802,
+      "reservedBytes": 2097806,
+      "refundedBytes": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2097806,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 1,
+      "kind": "poor",
+      "credit": "upper",
+      "prefillMs": 122.6948999999986,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 2097802,
+      "reservedBytes": 2097802,
+      "refundedBytes": 4,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 2097802
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 2,
+      "kind": "high",
+      "credit": "upper",
+      "prefillMs": 2041.5174000000006,
+      "producedBeforeYield": 32,
+      "bufferedActualBytes": 116900,
+      "reservedBytes": 116900,
+      "refundedBytes": 33447996,
+      "reservationWaits": 30,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 116900
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 2,
+      "kind": "high",
+      "credit": "held",
+      "prefillMs": 129.26870000000054,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 7306,
+      "reservedBytes": 2097806,
+      "refundedBytes": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2097806,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 2,
+      "kind": "poor",
+      "credit": "upper",
+      "prefillMs": 132.01160000000164,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 2097802,
+      "reservedBytes": 2097802,
+      "refundedBytes": 4,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 2097802
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 2,
+      "kind": "poor",
+      "credit": "held",
+      "prefillMs": 147.6890999999996,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 2097802,
+      "reservedBytes": 2097806,
+      "refundedBytes": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2097806,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 3,
+      "kind": "high",
+      "credit": "held",
+      "prefillMs": 96.98289999999906,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 7306,
+      "reservedBytes": 2097806,
+      "refundedBytes": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2097806,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 3,
+      "kind": "high",
+      "credit": "upper",
+      "prefillMs": 1321.4823000000033,
+      "producedBeforeYield": 32,
+      "bufferedActualBytes": 116900,
+      "reservedBytes": 116900,
+      "refundedBytes": 33447996,
+      "reservationWaits": 30,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 116900
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 3,
+      "kind": "poor",
+      "credit": "held",
+      "prefillMs": 109.59590000000026,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 2097802,
+      "reservedBytes": 2097806,
+      "refundedBytes": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2097806,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 3,
+      "kind": "poor",
+      "credit": "upper",
+      "prefillMs": 97.5480000000025,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 2097802,
+      "reservedBytes": 2097802,
+      "refundedBytes": 4,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 2097802
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 4,
+      "kind": "high",
+      "credit": "upper",
+      "prefillMs": 1168.9006999999983,
+      "producedBeforeYield": 32,
+      "bufferedActualBytes": 116900,
+      "reservedBytes": 116900,
+      "refundedBytes": 33447996,
+      "reservationWaits": 30,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 116900
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 4,
+      "kind": "high",
+      "credit": "held",
+      "prefillMs": 69.28289999999834,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 7306,
+      "reservedBytes": 2097806,
+      "refundedBytes": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2097806,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 4,
+      "kind": "poor",
+      "credit": "upper",
+      "prefillMs": 83.55619999999908,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 2097802,
+      "reservedBytes": 2097802,
+      "refundedBytes": 4,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 2097802
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 4,
+      "kind": "poor",
+      "credit": "held",
+      "prefillMs": 77.92030000000523,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 2097802,
+      "reservedBytes": 2097806,
+      "refundedBytes": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2097806,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 5,
+      "kind": "high",
+      "credit": "held",
+      "prefillMs": 87.53609999999753,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 7306,
+      "reservedBytes": 2097806,
+      "refundedBytes": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2097806,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 5,
+      "kind": "high",
+      "credit": "upper",
+      "prefillMs": 1174.2007999999987,
+      "producedBeforeYield": 32,
+      "bufferedActualBytes": 116900,
+      "reservedBytes": 116900,
+      "refundedBytes": 33447996,
+      "reservationWaits": 30,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 116900
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 5,
+      "kind": "poor",
+      "credit": "held",
+      "prefillMs": 90.25200000000041,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 2097802,
+      "reservedBytes": 2097806,
+      "refundedBytes": 0,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 2097806,
+        "reconciledResultBytes": 0
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    },
+    {
+      "trial": 5,
+      "kind": "poor",
+      "credit": "upper",
+      "prefillMs": 107.39549999999872,
+      "producedBeforeYield": 2,
+      "bufferedActualBytes": 2097802,
+      "reservedBytes": 2097802,
+      "refundedBytes": 4,
+      "reservationWaits": 1,
+      "credits": {
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 2097802
+      },
+      "terminal": {
+        "tasks": 0,
+        "pendingOperations": 0,
+        "busy": 0,
+        "reservations": 0,
+        "executions": 0,
+        "operations": 0,
+        "unreconciledResultBytes": 0,
+        "reconciledResultBytes": 0,
+        "reservedBytes": 0,
+        "buffered": 0
+      }
+    }
+  ]
+}
