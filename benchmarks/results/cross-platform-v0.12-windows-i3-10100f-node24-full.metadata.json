@@ -1,0 +1,617 @@
+{
+  "campaignFile": "E:\\Miskovy\\Work\\pjs\\pjs\\benchmarks\\results\\cross-platform-v0.12-windows-i3-10100f-node24-full.json",
+  "sourceCommit": "18f0c87e7b7920179403bbc396afabced6bb06c4",
+  "controllerCommit": "d8c982ea98ae8dbc76c0bfab78a8200b3d7cda7d",
+  "mode": "full",
+  "label": "windows-i3-10100f",
+  "captureMethod": "Read-only companion observer; prepared campaign runner and reference source unchanged",
+  "environment": {
+    "timestamp": "2026-10-02T12:04:19.898Z",
+    "hostname": "Miskovy",
+    "os": "Windows_NT",
+    "osVersion": "Windows 10 Pro",
+    "osRelease": "10.0.19045",
+    "kernel": "10.0.19045",
+    "architecture": "x64",
+    "platform": "win32",
+    "cpuModel": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz",
+    "logicalCpuCount": 8,
+    "availableParallelism": 8,
+    "memoryTotalBytes": 17037594624,
+    "nodeVersion": "v24.21.0",
+    "v8Version": "13.6.233.17-node.53",
+    "versions": {
+      "node": "24.21.0",
+      "acorn": "8.18.0",
+      "ada": "4.0.0",
+      "amaro": "1.1.11",
+      "ares": "1.34.8",
+      "brotli": "1.2.0",
+      "cldr": "48.0",
+      "icu": "78.3",
+      "llhttp": "9.4.3",
+      "merve": "1.2.2",
+      "modules": "137",
+      "napi": "10",
+      "nbytes": "0.1.4",
+      "ncrypto": "0.0.1",
+      "nghttp2": "1.70.0",
+      "nghttp3": "",
+      "ngtcp2": "",
+      "openssl": "3.5.8",
+      "simdjson": "4.6.7",
+      "simdutf": "6.4.0",
+      "sqlite": "3.53.4",
+      "tz": "2026c",
+      "undici": "7.29.1",
+      "unicode": "17.0",
+      "uv": "1.52.1",
+      "uvwasi": "0.0.23",
+      "v8": "13.6.233.17-node.53",
+      "zlib": "1.3.2.1-motley-8002e91",
+      "zstd": "1.5.7"
+    },
+    "nodeExecutable": "C:\\Program Files\\nodejs\\node.exe",
+    "osReleaseFile": null,
+    "cpuTopology": null,
+    "context": {
+      "timestamp": "2026-10-02T12:04:19.902Z",
+      "uptimeSeconds": 12614.531,
+      "loadAverage": null,
+      "freeMemoryBytes": 7908151296,
+      "cpuMHz": [
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600
+      ],
+      "powerSource": "unavailable",
+      "powerProfile": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+      "batteries": [],
+      "cpuFrequency": [],
+      "temperatures": [],
+      "windows": {
+        "os": "Microsoft Windows 10 Pro",
+        "version": "10.0.19045",
+        "freePhysicalMemoryKiB": 7696476,
+        "cpuLoadPercent": [
+          18
+        ],
+        "processors": [
+          {
+            "Name": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz",
+            "NumberOfCores": 4,
+            "NumberOfLogicalProcessors": 8
+          }
+        ],
+        "batteries": []
+      }
+    }
+  },
+  "npmCli": "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+  "npmVersion": "11.19.0",
+  "argv": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "E:\\Miskovy\\Work\\pjs\\pjs\\scripts\\cross-platform-v012\\run.mjs",
+    "--commit",
+    "18f0c87e7b7920179403bbc396afabced6bb06c4",
+    "--mode",
+    "full",
+    "--node",
+    "C:\\Program Files\\nodejs\\node.exe",
+    "--npm",
+    "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+    "--label",
+    "windows-i3-10100f",
+    "--output",
+    "E:\\Miskovy\\Work\\pjs\\pjs\\benchmarks\\results"
+  ],
+  "powerEnvironmentValue": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+  "contextSamples": [
+    {
+      "phase": "before",
+      "timestamp": "2026-10-02T12:04:19.902Z",
+      "uptimeSeconds": 12614.531,
+      "loadAverage": null,
+      "freeMemoryBytes": 7908151296,
+      "cpuMHz": [
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600
+      ],
+      "powerSource": "unavailable",
+      "powerProfile": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+      "batteries": [],
+      "cpuFrequency": [],
+      "temperatures": [],
+      "windows": {
+        "os": "Microsoft Windows 10 Pro",
+        "version": "10.0.19045",
+        "freePhysicalMemoryKiB": 7696476,
+        "cpuLoadPercent": [
+          18
+        ],
+        "processors": [
+          {
+            "Name": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz",
+            "NumberOfCores": 4,
+            "NumberOfLogicalProcessors": 8
+          }
+        ],
+        "batteries": []
+      }
+    },
+    {
+      "phase": "periodic",
+      "timestamp": "2026-10-02T12:04:54.627Z",
+      "uptimeSeconds": 12649.265,
+      "loadAverage": null,
+      "freeMemoryBytes": 8259407872,
+      "cpuMHz": [
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600
+      ],
+      "powerSource": "unavailable",
+      "powerProfile": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+      "batteries": [],
+      "cpuFrequency": [],
+      "temperatures": [],
+      "windows": {
+        "os": "Microsoft Windows 10 Pro",
+        "version": "10.0.19045",
+        "freePhysicalMemoryKiB": 8045024,
+        "cpuLoadPercent": [
+          8
+        ],
+        "processors": [
+          {
+            "Name": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz",
+            "NumberOfCores": 4,
+            "NumberOfLogicalProcessors": 8
+          }
+        ],
+        "batteries": []
+      }
+    },
+    {
+      "phase": "periodic",
+      "timestamp": "2026-10-02T12:05:24.641Z",
+      "uptimeSeconds": 12679.281,
+      "loadAverage": null,
+      "freeMemoryBytes": 8471244800,
+      "cpuMHz": [
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600
+      ],
+      "powerSource": "unavailable",
+      "powerProfile": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+      "batteries": [],
+      "cpuFrequency": [],
+      "temperatures": [],
+      "windows": {
+        "os": "Microsoft Windows 10 Pro",
+        "version": "10.0.19045",
+        "freePhysicalMemoryKiB": 8168664,
+        "cpuLoadPercent": [
+          23
+        ],
+        "processors": [
+          {
+            "Name": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz",
+            "NumberOfCores": 4,
+            "NumberOfLogicalProcessors": 8
+          }
+        ],
+        "batteries": []
+      }
+    },
+    {
+      "phase": "periodic",
+      "timestamp": "2026-10-02T12:05:54.656Z",
+      "uptimeSeconds": 12709.296,
+      "loadAverage": null,
+      "freeMemoryBytes": 7761080320,
+      "cpuMHz": [
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600
+      ],
+      "powerSource": "unavailable",
+      "powerProfile": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+      "batteries": [],
+      "cpuFrequency": [],
+      "temperatures": [],
+      "windows": {
+        "os": "Microsoft Windows 10 Pro",
+        "version": "10.0.19045",
+        "freePhysicalMemoryKiB": 7543764,
+        "cpuLoadPercent": [
+          32
+        ],
+        "processors": [
+          {
+            "Name": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz",
+            "NumberOfCores": 4,
+            "NumberOfLogicalProcessors": 8
+          }
+        ],
+        "batteries": []
+      }
+    },
+    {
+      "phase": "periodic",
+      "timestamp": "2026-10-02T12:06:24.656Z",
+      "uptimeSeconds": 12739.296,
+      "loadAverage": null,
+      "freeMemoryBytes": 7698186240,
+      "cpuMHz": [
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600
+      ],
+      "powerSource": "unavailable",
+      "powerProfile": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+      "batteries": [],
+      "cpuFrequency": [],
+      "temperatures": [],
+      "windows": {
+        "os": "Microsoft Windows 10 Pro",
+        "version": "10.0.19045",
+        "freePhysicalMemoryKiB": 7440904,
+        "cpuLoadPercent": [
+          100
+        ],
+        "processors": [
+          {
+            "Name": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz",
+            "NumberOfCores": 4,
+            "NumberOfLogicalProcessors": 8
+          }
+        ],
+        "batteries": []
+      }
+    },
+    {
+      "phase": "periodic",
+      "timestamp": "2026-10-02T12:06:54.656Z",
+      "uptimeSeconds": 12769.296,
+      "loadAverage": null,
+      "freeMemoryBytes": 7989403648,
+      "cpuMHz": [
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600
+      ],
+      "powerSource": "unavailable",
+      "powerProfile": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+      "batteries": [],
+      "cpuFrequency": [],
+      "temperatures": [],
+      "windows": {
+        "os": "Microsoft Windows 10 Pro",
+        "version": "10.0.19045",
+        "freePhysicalMemoryKiB": 7780212,
+        "cpuLoadPercent": [
+          53
+        ],
+        "processors": [
+          {
+            "Name": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz",
+            "NumberOfCores": 4,
+            "NumberOfLogicalProcessors": 8
+          }
+        ],
+        "batteries": []
+      }
+    },
+    {
+      "phase": "periodic",
+      "timestamp": "2026-10-02T12:07:24.662Z",
+      "uptimeSeconds": 12799.296,
+      "loadAverage": null,
+      "freeMemoryBytes": 7463362560,
+      "cpuMHz": [
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600
+      ],
+      "powerSource": "unavailable",
+      "powerProfile": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+      "batteries": [],
+      "cpuFrequency": [],
+      "temperatures": [],
+      "windows": {
+        "os": "Microsoft Windows 10 Pro",
+        "version": "10.0.19045",
+        "freePhysicalMemoryKiB": 7241916,
+        "cpuLoadPercent": [
+          97
+        ],
+        "processors": [
+          {
+            "Name": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz",
+            "NumberOfCores": 4,
+            "NumberOfLogicalProcessors": 8
+          }
+        ],
+        "batteries": []
+      }
+    },
+    {
+      "phase": "periodic",
+      "timestamp": "2026-10-02T12:07:54.669Z",
+      "uptimeSeconds": 12829.296,
+      "loadAverage": null,
+      "freeMemoryBytes": 7699828736,
+      "cpuMHz": [
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600
+      ],
+      "powerSource": "unavailable",
+      "powerProfile": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+      "batteries": [],
+      "cpuFrequency": [],
+      "temperatures": [],
+      "windows": {
+        "os": "Microsoft Windows 10 Pro",
+        "version": "10.0.19045",
+        "freePhysicalMemoryKiB": 7538204,
+        "cpuLoadPercent": [
+          100
+        ],
+        "processors": [
+          {
+            "Name": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz",
+            "NumberOfCores": 4,
+            "NumberOfLogicalProcessors": 8
+          }
+        ],
+        "batteries": []
+      }
+    },
+    {
+      "phase": "periodic",
+      "timestamp": "2026-10-02T12:08:24.673Z",
+      "uptimeSeconds": 12859.312,
+      "loadAverage": null,
+      "freeMemoryBytes": 7890067456,
+      "cpuMHz": [
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600
+      ],
+      "powerSource": "unavailable",
+      "powerProfile": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+      "batteries": [],
+      "cpuFrequency": [],
+      "temperatures": [],
+      "windows": {
+        "os": "Microsoft Windows 10 Pro",
+        "version": "10.0.19045",
+        "freePhysicalMemoryKiB": 7508548,
+        "cpuLoadPercent": [
+          65
+        ],
+        "processors": [
+          {
+            "Name": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz",
+            "NumberOfCores": 4,
+            "NumberOfLogicalProcessors": 8
+          }
+        ],
+        "batteries": []
+      }
+    },
+    {
+      "phase": "periodic",
+      "timestamp": "2026-10-02T12:08:54.684Z",
+      "uptimeSeconds": 12889.312,
+      "loadAverage": null,
+      "freeMemoryBytes": 7822372864,
+      "cpuMHz": [
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600
+      ],
+      "powerSource": "unavailable",
+      "powerProfile": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+      "batteries": [],
+      "cpuFrequency": [],
+      "temperatures": [],
+      "windows": {
+        "os": "Microsoft Windows 10 Pro",
+        "version": "10.0.19045",
+        "freePhysicalMemoryKiB": 7457264,
+        "cpuLoadPercent": [
+          51
+        ],
+        "processors": [
+          {
+            "Name": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz",
+            "NumberOfCores": 4,
+            "NumberOfLogicalProcessors": 8
+          }
+        ],
+        "batteries": []
+      }
+    },
+    {
+      "phase": "periodic",
+      "timestamp": "2026-10-02T12:09:24.687Z",
+      "uptimeSeconds": 12919.328,
+      "loadAverage": null,
+      "freeMemoryBytes": 7538028544,
+      "cpuMHz": [
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600
+      ],
+      "powerSource": "unavailable",
+      "powerProfile": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+      "batteries": [],
+      "cpuFrequency": [],
+      "temperatures": [],
+      "windows": {
+        "os": "Microsoft Windows 10 Pro",
+        "version": "10.0.19045",
+        "freePhysicalMemoryKiB": 7562276,
+        "cpuLoadPercent": [
+          50
+        ],
+        "processors": [
+          {
+            "Name": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz",
+            "NumberOfCores": 4,
+            "NumberOfLogicalProcessors": 8
+          }
+        ],
+        "batteries": []
+      }
+    },
+    {
+      "phase": "periodic",
+      "timestamp": "2026-10-02T12:09:54.696Z",
+      "uptimeSeconds": 12949.328,
+      "loadAverage": null,
+      "freeMemoryBytes": 7623720960,
+      "cpuMHz": [
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600
+      ],
+      "powerSource": "unavailable",
+      "powerProfile": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+      "batteries": [],
+      "cpuFrequency": [],
+      "temperatures": [],
+      "windows": {
+        "os": "Microsoft Windows 10 Pro",
+        "version": "10.0.19045",
+        "freePhysicalMemoryKiB": 7411924,
+        "cpuLoadPercent": [
+          40
+        ],
+        "processors": [
+          {
+            "Name": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz",
+            "NumberOfCores": 4,
+            "NumberOfLogicalProcessors": 8
+          }
+        ],
+        "batteries": []
+      }
+    },
+    {
+      "phase": "after",
+      "timestamp": "2026-10-02T12:10:23.523Z",
+      "uptimeSeconds": 12978.156,
+      "loadAverage": null,
+      "freeMemoryBytes": 8318443520,
+      "cpuMHz": [
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600,
+        3600
+      ],
+      "powerSource": "unavailable",
+      "powerProfile": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+      "batteries": [],
+      "cpuFrequency": [],
+      "temperatures": [],
+      "windows": {
+        "os": "Microsoft Windows 10 Pro",
+        "version": "10.0.19045",
+        "freePhysicalMemoryKiB": 8096776,
+        "cpuLoadPercent": [
+          18
+        ],
+        "processors": [
+          {
+            "Name": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz",
+            "NumberOfCores": 4,
+            "NumberOfLogicalProcessors": 8
+          }
+        ],
+        "batteries": []
+      }
+    }
+  ],
+  "processResult": {
+    "code": 0,
+    "signal": null
+  },
+  "completedAt": "2026-10-02T12:10:25.056Z",
+  "lockfileSha256": "9197e42d8e3ccd4375b6ede97193408d76e5f5033ec64534cfc2abeabccf9cdd",
+  "campaignFileSha256": "0bcfd519f554b3dc99c85f08b4f9451492f5d574d8c3c5772e058a0114bf4af1"
+}
