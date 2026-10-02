@@ -1,0 +1,1261 @@
+{
+  "schema": 1,
+  "milestone": "v0.13",
+  "profile": "full",
+  "environment": {
+    "machineLabel": "fedora",
+    "cpuModel": "AMD Ryzen 3 PRO 3300U w/ Radeon Vega Mobile Gfx",
+    "logicalCpuCount": 4,
+    "availableParallelism": 4,
+    "physicalCoreCount": 4,
+    "totalMemoryBytes": 7715655680,
+    "platform": "linux",
+    "osType": "Linux",
+    "release": "6.19.10-300.fc44.x86_64",
+    "architecture": "x64",
+    "node": "v24.13.1",
+    "v8": "13.6.233.17-node.40",
+    "pjsCommit": "4fc6cd31648ef7527c08ffda9af008499dc2bd32",
+    "worktreeDirty": true,
+    "power": "unknown",
+    "settings": {},
+    "openssl": "3.5.7",
+    "npm": "",
+    "osDescription": "NAME=\"Fedora Linux\"\nVERSION=\"44 (KDE Plasma Desktop Edition)\"\nRELEASE_TYPE=stable\nID=fedora\nVERSION_ID=44\nVERSION_CODENAME=\"\"\nPRETTY_NAME=\"Fedora Linux 44 (KDE Plasma Desktop Edition)\"\nANSI_COLOR=\"0;38;2;60;110;180\"\nLOGO=fedora-logo-icon\nCPE_NAME=\"cpe:/o:fedoraproject:fedora:44\"\nDEFAULT_HOSTNAME=\"fedora\"\nHOME_URL=\"https://fedoraproject.org/\"\nDOCUMENTATION_URL=\"https://docs.fedoraproject.org/en-US/fedora/f44/\"\nSUPPORT_URL=\"https://ask.fedoraproject.org/\"\nBUG_REPORT_URL=\"https://bugzilla.redhat.com/\"\nREDHAT_BUGZILLA_PRODUCT=\"Fedora\"\nREDHAT_BUGZILLA_PRODUCT_VERSION=44\nREDHAT_SUPPORT_PRODUCT=\"Fedora\"\nREDHAT_SUPPORT_PRODUCT_VERSION=44\nSUPPORT_END=2027-05-19\nVARIANT=\"KDE Plasma Desktop Edition\"\nVARIANT_ID=kde\n",
+    "powerObserved": null,
+    "governor": "schedutil",
+    "uvThreadpoolSize": "default (4)",
+    "freeMemoryBytes": 3701407744,
+    "loadAverage": [
+      2.74,
+      2.54,
+      1.79
+    ],
+    "clientCampaignDate": "2026-10-02",
+    "timestampFromHost": "2026-10-02T14:34:10.358Z"
+  },
+  "implementationCommit": "18f0c87e7b7920179403bbc396afabced6bb06c4",
+  "runtimeMatchesImplementation": true,
+  "runtimeBefore": {
+    "packages/runtime/src/dispatch/dispatcher.ts": "a448344e4977d60338c0b503c92b49d67d9bccfe0c08c101ca3d376593ac3ada",
+    "packages/runtime/src/errors/index.ts": "2f1458c63366be67919f51866acd7e1a9966300166c39f164c481913d0b1f4e7",
+    "packages/runtime/src/index.ts": "96d3697fde71fc4a46943c52f5556c1b63227f2b792650c14cf29bfd073cef44",
+    "packages/runtime/src/internal/integer.ts": "c1d5f34cd7a4d6aa228910e0a7e7f7929e21bea0f84e231d5984a3b7e7d51b6c",
+    "packages/runtime/src/partition/binary.ts": "20e4ff84ea39912befa189a5a3e5f57739e249d3954c3d7aea6cfa45e1b97120",
+    "packages/runtime/src/partition/coordinator.ts": "3afae72cfa583b5c04b8645a09af3dcf603139f1b4268204bd35627f2f185cde",
+    "packages/runtime/src/partition/operation.ts": "e5ec55abcb8a90fca7df99c7b7ade39c5ae2fa2358efd1a11e5edc8b438384e1",
+    "packages/runtime/src/partition/range.ts": "c985cb95b03c2c339f18f1cae44ca7f77eca7eb2908afe946f11b71c724a1489",
+    "packages/runtime/src/partition/stream.ts": "09d2dcb73771334c0a4fb9647c6234d59acdef43e3170045d8c8e810a7017566",
+    "packages/runtime/src/pool/pool.ts": "880be0c7764e184bf3e8ccfee8fa63bf3c2f26e81d40aab5e2cdb94827849ec5",
+    "packages/runtime/src/results/credit.ts": "acc35c91bb5bfc48e95356d466377c0ad42ef97a2f5c765b25ef9898a5fc078f",
+    "packages/runtime/src/runtime.ts": "53e0013365563a2235bca5d082a753996846529d42efcf9bb5378c81e1d26e81",
+    "packages/runtime/src/scheduler/fifo.ts": "caa0307b7ce3b71d412ae9b432ad90cd946eed209958d88a1d6f9a13d481e014",
+    "packages/runtime/src/tasks/coordinator.ts": "05b6f044c538a438827e8ab7c16071ac04aeb89b12122c8fc48f2dd8239767d7",
+    "packages/runtime/src/tasks/registry.ts": "b0698736068769a2b7ab2b8c1cbf2179650f7b41701e82ab4dccf8e8c8254eca",
+    "packages/runtime/src/tasks/shared.ts": "d3a6b371f5b20657bf47d6b84f6c7d7bd4cfec0f0395b6bade2ac828ee5a3ca5",
+    "packages/runtime/src/tasks/task.ts": "92eb849cc4b2921c347656edabf6a813b323e9295c46c7255dddc89330f820f5",
+    "packages/runtime/src/tasks/transfer.ts": "9de35965f11f40ab7697ca8e5439af634fe8122829c357c3b36f310dbfd278ac",
+    "packages/runtime/src/telemetry/metrics.ts": "031d1994dd4fec40d50b265f4e59c00dd9348d089d507ed87019bb1fef7b088e",
+    "packages/runtime/src/telemetry/profile.ts": "831b42554f3dcb74a45ae42bdfca5811eab921d8c248986ca1859af26f9496f7",
+    "packages/runtime/src/telemetry/runtime.ts": "de144702cc694650fb5d7d50ff76109a6cfe9ef5ef3aecc3825a9a3e911fe6e7",
+    "packages/runtime/src/types/index.ts": "7a252af8bb57fe42ac43f015a73ee111afd932725da039ffd77c36140c7b35fa",
+    "packages/runtime/src/workers/bootstrap.ts": "f19fbfb8f0a27d1e3e97cc7599bdfc8922d7502557af9a71c4bf2e9cf0c6d2e9",
+    "packages/runtime/src/workers/protocol.ts": "d8f66b337c21563d0c510b2bc72ae1db3a70d065da22d2374583d1bd8d1f5d90",
+    "packages/runtime/src/workers/worker.ts": "715f1583dcabc07b4e9b8288a89b29f7a6ccb1671834f11b56f1b0e681b4809d"
+  },
+  "harnessHashes": {
+    "benchmarks/real-world/crypto/executors.mjs": "0ee6f39650bfb6a87e348cf3e9d1b5e79663f0b985f13521730c89307b1a1cfd",
+    "benchmarks/real-world/crypto/harness.test.mjs": "ce85914e1fe96d4b6428a0682e9430a798de405de32a0b978e679ab8319b93a4",
+    "benchmarks/real-world/crypto/matrix.mjs": "200c81ff60b2412d60184e3f1906c9cb39eb364aaeb70cb6c80804df66c78675",
+    "benchmarks/real-world/crypto/package-lock.json": "98bb2643a7d21ff9c11deaf828bf7b92c3bb4b8f3e076a28dc398d553ac6a7e4",
+    "benchmarks/real-world/crypto/package.json": "8f1d48ca04fcadf0b1cd62e7c246d685e1f216c18d1c42b9eefd87a272ea1489",
+    "benchmarks/real-world/crypto/raw-worker.mjs": "9a6889624655ab6384f9d4164c8339e2771fec72a01718f3a656a9cdbe97da83",
+    "benchmarks/real-world/crypto/README.md": "a107b40e1958066d7cf08fa1982742d608399cea16d47764e0442fbd73dcf443",
+    "benchmarks/real-world/crypto/report.mjs": "08d5a60378294079a47e6d9d72b85f8e84436e94137e50c134d8536938a568cb",
+    "benchmarks/real-world/crypto/run.mjs": "e0f80580219f2201392f188ae3ffd8588ad93c9a462759d60c71c49961d84aa1",
+    "benchmarks/real-world/crypto/support.mjs": "7d1f1590271d9cd5ebaebeabb1816a2687100fd21611436ed85858e381addb05",
+    "benchmarks/real-world/crypto/task.mjs": "f9b53093efbd6a12d61fed64eb7f0021012b40927973f96c2ef2e7696fc9736c"
+  },
+  "parameters": {
+    "scrypt": {
+      "N": 16384,
+      "r": 8,
+      "p": 1,
+      "maxmem": 67108864
+    },
+    "argon2id": {
+      "memory": 65536,
+      "passes": 3,
+      "tagLength": 32
+    },
+    "bcryptCost": 10,
+    "password": "synthetic benchmark-only password",
+    "saltBytes": 16,
+    "derivedBytes": 32,
+    "aes": {
+      "algorithm": "aes-256-gcm",
+      "keyBytes": 32,
+      "ivBytes": 12,
+      "tagBytes": 16
+    }
+  },
+  "protocol": {
+    "warmups": 2,
+    "retainedTrials": 6,
+    "targetMs": 350,
+    "maxQueue": 256,
+    "probeIntervalMs": 10,
+    "order": "deterministic shuffled cells (seed 130); sequential trials per warm pool",
+    "memory": "reject estimates above min(50% currently free RAM, 25% total RAM); 128 MiB AES retained-output cap",
+    "latency": "closed-loop job latency; batching counts operations separately",
+    "queueQuantiles": "unavailable: public PJS statistics provide means only",
+    "memoryScope": "RSS process-wide; heap/external/arrayBuffers main isolate only; 10 ms sampled peak is a lower bound",
+    "contextSwitchScope": "process.resourceUsage deltas, platform-dependent",
+    "transfer": "input ownership moves to worker and back on every job; input allocation outside timing",
+    "aes": "encryption and ciphertext+tag return timed; decrypt and tamper checks outside timing"
+  },
+  "cells": [
+    {
+      "config": {
+        "workers": 4,
+        "concurrency": 4,
+        "size": 0,
+        "ownership": "clone",
+        "batch": 1,
+        "lanes": 1,
+        "contention": false,
+        "kind": "argon2",
+        "model": "pjs",
+        "id": "argon2-pjs-s0-c4-w4-clone-b1-l1-pure"
+      },
+      "estimatedBytes": 570425344,
+      "memoryBudgetBytes": 1850726400,
+      "startupMs": 173.56317,
+      "warmups": [
+        {
+          "count": 4,
+          "operations": 4,
+          "wallMs": 598.6561609999999,
+          "opsPerSecond": 6.681631728834744,
+          "latencyMs": {
+            "count": 4,
+            "min": 513.9765625,
+            "p50": 518.108154296875,
+            "p90": 596.360107421875,
+            "p95": 596.360107421875,
+            "p99": 596.360107421875,
+            "max": 596.360107421875,
+            "mean": 546.3091430664062,
+            "cv": 0.07054361064035988
+          },
+          "admissionToBodyMs": {
+            "count": 4,
+            "min": 0.93701171875,
+            "p50": 0.9609375,
+            "p90": 2.80908203125,
+            "p95": 2.80908203125,
+            "p99": 2.80908203125,
+            "max": 2.80908203125,
+            "mean": 1.846435546875,
+            "cv": 0.5620074167031522
+          },
+          "executionMs": {
+            "count": 4,
+            "min": 509.80517578125,
+            "p50": 516.22705078125,
+            "p90": 595.043212890625,
+            "p95": 595.043212890625,
+            "p99": 595.043212890625,
+            "max": 595.043212890625,
+            "mean": 543.6633911132812,
+            "cv": 0.07231739848915267
+          },
+          "queueMs": {
+            "p50": null,
+            "p95": null,
+            "p99": null,
+            "mean": 0.05762075000001232
+          },
+          "runtimeExecutionMeanMs": 543.9073225000001,
+          "cpuPercent": 325.37491917668586,
+          "cpuMicroseconds": {
+            "user": 1699191,
+            "system": 248686
+          },
+          "eventLoopUtilization": {
+            "idle": 565.493241,
+            "active": 33.260632996436584,
+            "utilization": 0.05554975832462761
+          },
+          "eventLoopDelayMs": {
+            "mean": 10.576554666666667,
+            "max": 14.426111,
+            "p95": 12.107775,
+            "p99": 13.795327
+          },
+          "timerDelayMs": {
+            "count": 57,
+            "min": 0,
+            "p50": 0.48211200000014287,
+            "p90": 1.5442950000001474,
+            "p95": 2.18802299999993,
+            "p99": 4.491207000000031,
+            "max": 4.491207000000031,
+            "mean": 0.709354350877192,
+            "cv": 1.1869127464347533
+          },
+          "filesystemLatencyMs": null,
+          "memoryBefore": {
+            "rss": 119279616,
+            "heapTotal": 15220736,
+            "heapUsed": 7848816,
+            "external": 2500186,
+            "arrayBuffers": 77310
+          },
+          "memoryAfter": {
+            "rss": 119795712,
+            "heapTotal": 15220736,
+            "heapUsed": 8471816,
+            "external": 2502250,
+            "arrayBuffers": 77326
+          },
+          "sampledPeakMemory": {
+            "rss": 388136960,
+            "heapTotal": 15220736,
+            "heapUsed": 8482792,
+            "external": 2502250,
+            "arrayBuffers": 77326
+          },
+          "processLifetimeMaxRssKiB": 379040,
+          "processThreads": {
+            "before": 15,
+            "sampledPeak": 15
+          },
+          "contextSwitches": {
+            "voluntary": 90,
+            "involuntary": 630
+          },
+          "sampledWorkerBusyFraction": 0.8793103448275862,
+          "taskBodyOccupancy": 0.9081396409670982,
+          "observedQueueMax": 0,
+          "loadAverage": [
+            2.74,
+            2.54,
+            1.79
+          ],
+          "errors": 0,
+          "validated": true,
+          "validationMs": 1.3041269999998804
+        },
+        {
+          "count": 4,
+          "operations": 4,
+          "wallMs": 560.1228959999999,
+          "opsPerSecond": 7.141289935771526,
+          "latencyMs": {
+            "count": 4,
+            "min": 540.201416015625,
+            "p50": 544.529296875,
+            "p90": 559.52490234375,
+            "p95": 559.52490234375,
+            "p99": 559.52490234375,
+            "max": 559.52490234375,
+            "mean": 549.216552734375,
+            "cv": 0.01562845754399124
+          },
+          "admissionToBodyMs": {
+            "count": 4,
+            "min": 0.2294921875,
+            "p50": 0.27490234375,
+            "p90": 1.611572265625,
+            "p95": 1.611572265625,
+            "p99": 1.611572265625,
+            "max": 1.611572265625,
+            "mean": 0.64190673828125,
+            "cv": 1.018075059850743
+          },
+          "executionMs": {
+            "count": 4,
+            "min": 538.904296875,
+            "p50": 543.052978515625,
+            "p90": 557.54541015625,
+            "p95": 557.54541015625,
+            "p99": 557.54541015625,
+            "max": 557.54541015625,
+            "mean": 547.591064453125,
+            "cv": 0.01512680633680326
+          },
+          "queueMs": {
+            "p50": null,
+            "p95": null,
+            "p99": null,
+            "mean": 0.01219800000012583
+          },
+          "runtimeExecutionMeanMs": 547.6964025000001,
+          "cpuPercent": 353.4063710189773,
+          "cpuMicroseconds": {
+            "user": 1723773,
+            "system": 255737
+          },
+          "eventLoopUtilization": {
+            "idle": 529.9064139999999,
+            "active": 30.267817998622604,
+            "utilization": 0.054032863829939666
+          },
+          "eventLoopDelayMs": {
+            "mean": 10.569045333333333,
+            "max": 14.286847,
+            "p95": 11.722751,
+            "p99": 12.189695
+          },
+          "timerDelayMs": {
+            "count": 54,
+            "min": 0,
+            "p50": 0.5235700000002907,
+            "p90": 1.476778999999624,
+            "p95": 1.5020669999998972,
+            "p99": 3.7898650000001908,
+            "max": 3.7898650000001908,
+            "mean": 0.6498885555555616,
+            "cv": 0.9734151632621719
+          },
+          "filesystemLatencyMs": null,
+          "memoryBefore": {
+            "rss": 120090624,
+            "heapTotal": 15482880,
+            "heapUsed": 8763384,
+            "external": 2502330,
+            "arrayBuffers": 77374
+          },
+          "memoryAfter": {
+            "rss": 120672256,
+            "heapTotal": 15482880,
+            "heapUsed": 9271512,
+            "external": 2502330,
+            "arrayBuffers": 77374
+          },
+          "sampledPeakMemory": {
+            "rss": 388812800,
+            "heapTotal": 15482880,
+            "heapUsed": 9184464,
+            "external": 2502330,
+            "arrayBuffers": 77374
+          },
+          "processLifetimeMaxRssKiB": 379700,
+          "processThreads": {
+            "before": 15,
+            "sampledPeak": 15
+          },
+          "contextSwitches": {
+            "voluntary": 99,
+            "involuntary": 579
+          },
+          "sampledWorkerBusyFraction": 0.9318181818181818,
+          "taskBodyOccupancy": 0.9776266393743797,
+          "observedQueueMax": 0,
+          "loadAverage": [
+            2.74,
+            2.54,
+            1.79
+          ],
+          "errors": 0,
+          "validated": true,
+          "validationMs": 0.32015099999989616
+        }
+      ],
+      "trials": [
+        {
+          "count": 4,
+          "operations": 4,
+          "wallMs": 560.7253990000004,
+          "opsPerSecond": 7.133616574411671,
+          "latencyMs": {
+            "count": 4,
+            "min": 526.219970703125,
+            "p50": 529.53955078125,
+            "p90": 560.188232421875,
+            "p95": 560.188232421875,
+            "p99": 560.188232421875,
+            "max": 560.188232421875,
+            "mean": 540.3101806640625,
+            "cv": 0.02895968133206854
+          },
+          "admissionToBodyMs": {
+            "count": 4,
+            "min": 0.3046875,
+            "p50": 0.368408203125,
+            "p90": 1.629638671875,
+            "p95": 1.629638671875,
+            "p99": 1.629638671875,
+            "max": 1.629638671875,
+            "mean": 0.78533935546875,
+            "cv": 0.7782074061553735
+          },
+          "executionMs": {
+            "count": 4,
+            "min": 525.314697265625,
+            "p50": 528.763916015625,
+            "p90": 558.254638671875,
+            "p95": 558.254638671875,
+            "p99": 558.254638671875,
+            "max": 558.254638671875,
+            "mean": 539.107421875,
+            "cv": 0.028105393902640913
+          },
+          "queueMs": {
+            "p50": null,
+            "p95": null,
+            "p99": null,
+            "mean": 0.01223300000015115
+          },
+          "runtimeExecutionMeanMs": 539.1701237499999,
+          "cpuPercent": 351.8214091100943,
+          "cpuMicroseconds": {
+            "user": 1713726,
+            "system": 259026
+          },
+          "eventLoopUtilization": {
+            "idle": 530.7377489999999,
+            "active": 30.03734400410758,
+            "utilization": 0.05356397667948417
+          },
+          "eventLoopDelayMs": {
+            "mean": 10.655396226415094,
+            "max": 13.336575,
+            "p95": 12.124159,
+            "p99": 13.131775
+          },
+          "timerDelayMs": {
+            "count": 53,
+            "min": 0,
+            "p50": 0.5594139999998333,
+            "p90": 1.7073709999999664,
+            "p95": 2.3474850000002334,
+            "p99": 3.3614400000001297,
+            "max": 3.3614400000001297,
+            "mean": 0.7468758113207703,
+            "cv": 0.9950895291590625
+          },
+          "filesystemLatencyMs": null,
+          "memoryBefore": {
+            "rss": 121020416,
+            "heapTotal": 15482880,
+            "heapUsed": 9257016,
+            "external": 2502410,
+            "arrayBuffers": 77422
+          },
+          "memoryAfter": {
+            "rss": 121815040,
+            "heapTotal": 15745024,
+            "heapUsed": 9864824,
+            "external": 2502410,
+            "arrayBuffers": 77422
+          },
+          "sampledPeakMemory": {
+            "rss": 390160384,
+            "heapTotal": 15745024,
+            "heapUsed": 9875440,
+            "external": 2502410,
+            "arrayBuffers": 77422
+          },
+          "processLifetimeMaxRssKiB": 381016,
+          "processThreads": {
+            "before": 15,
+            "sampledPeak": 15
+          },
+          "contextSwitches": {
+            "voluntary": 94,
+            "involuntary": 743
+          },
+          "sampledWorkerBusyFraction": 0.9259259259259259,
+          "taskBodyOccupancy": 0.9614464100189613,
+          "observedQueueMax": 0,
+          "loadAverage": [
+            3.08,
+            2.61,
+            1.81
+          ],
+          "errors": 0,
+          "validated": true,
+          "validationMs": 0.32677400000011403
+        },
+        {
+          "count": 4,
+          "operations": 4,
+          "wallMs": 573.4010410000001,
+          "opsPerSecond": 6.9759203663531535,
+          "latencyMs": {
+            "count": 4,
+            "min": 532.77880859375,
+            "p50": 537.77392578125,
+            "p90": 573.135498046875,
+            "p95": 573.135498046875,
+            "p99": 573.135498046875,
+            "max": 573.135498046875,
+            "mean": 550.843505859375,
+            "cv": 0.034321197593825147
+          },
+          "admissionToBodyMs": {
+            "count": 4,
+            "min": 0.211669921875,
+            "p50": 0.28173828125,
+            "p90": 1.506103515625,
+            "p95": 1.506103515625,
+            "p99": 1.506103515625,
+            "max": 1.506103515625,
+            "mean": 0.5849609375,
+            "cv": 1.0536486104702072
+          },
+          "executionMs": {
+            "count": 4,
+            "min": 532.12646484375,
+            "p50": 537.006103515625,
+            "p90": 572.532470703125,
+            "p95": 572.532470703125,
+            "p99": 572.532470703125,
+            "max": 572.532470703125,
+            "mean": 549.8673706054688,
+            "cv": 0.03413416582998016
+          },
+          "queueMs": {
+            "p50": null,
+            "p95": null,
+            "p99": null,
+            "mean": 0.014547499999935098
+          },
+          "runtimeExecutionMeanMs": 549.9291227499998,
+          "cpuPercent": 343.46606636174556,
+          "cpuMicroseconds": {
+            "user": 1715847,
+            "system": 253591
+          },
+          "eventLoopUtilization": {
+            "idle": 537.2167959999999,
+            "active": 36.24285500079782,
+            "utilization": 0.0632003575797304
+          },
+          "eventLoopDelayMs": {
+            "mean": 10.502218472727273,
+            "max": 12.566527,
+            "p95": 11.419647,
+            "p99": 12.083199
+          },
+          "timerDelayMs": {
+            "count": 55,
+            "min": 0,
+            "p50": 0.5044809999999416,
+            "p90": 1.1585599999998522,
+            "p95": 1.3599079999994501,
+            "p99": 2.5939470000002984,
+            "max": 2.5939470000002984,
+            "mean": 0.5741988909090816,
+            "cv": 0.7877760485754934
+          },
+          "filesystemLatencyMs": null,
+          "memoryBefore": {
+            "rss": 122232832,
+            "heapTotal": 15745024,
+            "heapUsed": 9989176,
+            "external": 2521334,
+            "arrayBuffers": 96314
+          },
+          "memoryAfter": {
+            "rss": 122753024,
+            "heapTotal": 16269312,
+            "heapUsed": 7732512,
+            "external": 2521334,
+            "arrayBuffers": 24955
+          },
+          "sampledPeakMemory": {
+            "rss": 391188480,
+            "heapTotal": 16269312,
+            "heapUsed": 10097528,
+            "external": 2521334,
+            "arrayBuffers": 96314
+          },
+          "processLifetimeMaxRssKiB": 382020,
+          "processThreads": {
+            "before": 15,
+            "sampledPeak": 15
+          },
+          "contextSwitches": {
+            "voluntary": 107,
+            "involuntary": 635
+          },
+          "sampledWorkerBusyFraction": 0.9241071428571429,
+          "taskBodyOccupancy": 0.9589577473499367,
+          "observedQueueMax": 0,
+          "loadAverage": [
+            3.08,
+            2.61,
+            1.81
+          ],
+          "errors": 0,
+          "validated": true,
+          "validationMs": 0.26495800000066083
+        },
+        {
+          "count": 4,
+          "operations": 4,
+          "wallMs": 557.8108929999999,
+          "opsPerSecond": 7.170889005926962,
+          "latencyMs": {
+            "count": 4,
+            "min": 505.560791015625,
+            "p50": 531.5205078125,
+            "p90": 557.591064453125,
+            "p95": 557.591064453125,
+            "p99": 557.591064453125,
+            "max": 557.591064453125,
+            "mean": 537.3614501953125,
+            "cv": 0.04504630956086458
+          },
+          "admissionToBodyMs": {
+            "count": 4,
+            "min": 0.269775390625,
+            "p50": 0.337890625,
+            "p90": 1.558349609375,
+            "p95": 1.558349609375,
+            "p99": 1.558349609375,
+            "max": 1.558349609375,
+            "mean": 0.64007568359375,
+            "cv": 0.9597233357191348
+          },
+          "executionMs": {
+            "count": 4,
+            "min": 504.6103515625,
+            "p50": 530.55859375,
+            "p90": 555.799072265625,
+            "p95": 555.799072265625,
+            "p99": 555.799072265625,
+            "max": 555.799072265625,
+            "mean": 536.2809448242188,
+            "cv": 0.04485921350259026
+          },
+          "queueMs": {
+            "p50": null,
+            "p95": null,
+            "p99": null,
+            "mean": 0.0065147500001785374
+          },
+          "runtimeExecutionMeanMs": 536.3374027499999,
+          "cpuPercent": 352.0922636410402,
+          "cpuMicroseconds": {
+            "user": 1714068,
+            "system": 249941
+          },
+          "eventLoopUtilization": {
+            "idle": 523.8791980000001,
+            "active": 34.008900001480015,
+            "utilization": 0.060960074472479225
+          },
+          "eventLoopDelayMs": {
+            "mean": 10.564820528301887,
+            "max": 13.049855,
+            "p95": 12.558335,
+            "p99": 12.967935
+          },
+          "timerDelayMs": {
+            "count": 53,
+            "min": 0,
+            "p50": 0.5063239999999496,
+            "p90": 1.6493019999998069,
+            "p95": 2.62537599999996,
+            "p99": 2.99679500000002,
+            "max": 2.99679500000002,
+            "mean": 0.6712688301886717,
+            "cv": 1.0797735285775256
+          },
+          "filesystemLatencyMs": null,
+          "memoryBefore": {
+            "rss": 122769408,
+            "heapTotal": 16531456,
+            "heapUsed": 7869872,
+            "external": 2472305,
+            "arrayBuffers": 47381
+          },
+          "memoryAfter": {
+            "rss": 122830848,
+            "heapTotal": 16531456,
+            "heapUsed": 8424496,
+            "external": 2472305,
+            "arrayBuffers": 47381
+          },
+          "sampledPeakMemory": {
+            "rss": 391266304,
+            "heapTotal": 16531456,
+            "heapUsed": 8435008,
+            "external": 2472305,
+            "arrayBuffers": 47381
+          },
+          "processLifetimeMaxRssKiB": 382096,
+          "processThreads": {
+            "before": 15,
+            "sampledPeak": 15
+          },
+          "contextSwitches": {
+            "voluntary": 102,
+            "involuntary": 607
+          },
+          "sampledWorkerBusyFraction": 0.9305555555555556,
+          "taskBodyOccupancy": 0.9614027828320285,
+          "observedQueueMax": 0,
+          "loadAverage": [
+            3.08,
+            2.61,
+            1.81
+          ],
+          "errors": 0,
+          "validated": true,
+          "validationMs": 0.36796200000026147
+        },
+        {
+          "count": 4,
+          "operations": 4,
+          "wallMs": 587.4245660000006,
+          "opsPerSecond": 6.809384951735225,
+          "latencyMs": {
+            "count": 4,
+            "min": 505.305908203125,
+            "p50": 523.01220703125,
+            "p90": 587.40087890625,
+            "p95": 587.40087890625,
+            "p99": 587.40087890625,
+            "max": 587.40087890625,
+            "mean": 535.5352783203125,
+            "cv": 0.06683867863811252
+          },
+          "admissionToBodyMs": {
+            "count": 4,
+            "min": 0.233154296875,
+            "p50": 0.243408203125,
+            "p90": 1.101806640625,
+            "p95": 1.101806640625,
+            "p99": 1.101806640625,
+            "max": 1.101806640625,
+            "mean": 0.46044921875,
+            "cv": 0.9289979747229509
+          },
+          "executionMs": {
+            "count": 4,
+            "min": 503.791259765625,
+            "p50": 521.54296875,
+            "p90": 586.83642578125,
+            "p95": 586.83642578125,
+            "p99": 586.83642578125,
+            "max": 586.83642578125,
+            "mean": 534.5319213867188,
+            "cv": 0.06765102603297167
+          },
+          "queueMs": {
+            "p50": null,
+            "p95": null,
+            "p99": null,
+            "mean": 0.006196750000299289
+          },
+          "runtimeExecutionMeanMs": 534.59130375,
+          "cpuPercent": 333.7299993000289,
+          "cpuMicroseconds": {
+            "user": 1716335,
+            "system": 244077
+          },
+          "eventLoopUtilization": {
+            "idle": 558.8996100000004,
+            "active": 28.58011000390252,
+            "utilization": 0.048648675061860255
+          },
+          "eventLoopDelayMs": {
+            "mean": 10.529938285714286,
+            "max": 13.099007,
+            "p95": 12.124159,
+            "p99": 12.738559
+          },
+          "timerDelayMs": {
+            "count": 56,
+            "min": 0,
+            "p50": 0.47823200000038923,
+            "p90": 1.4230370000004768,
+            "p95": 2.033545000000231,
+            "p99": 3.040907999999945,
+            "max": 3.040907999999945,
+            "mean": 0.6004416428571793,
+            "cv": 0.9574490890250201
+          },
+          "filesystemLatencyMs": null,
+          "memoryBefore": {
+            "rss": 122839040,
+            "heapTotal": 16531456,
+            "heapUsed": 8565128,
+            "external": 2498289,
+            "arrayBuffers": 73333
+          },
+          "memoryAfter": {
+            "rss": 122871808,
+            "heapTotal": 16531456,
+            "heapUsed": 9130184,
+            "external": 2498289,
+            "arrayBuffers": 73333
+          },
+          "sampledPeakMemory": {
+            "rss": 391303168,
+            "heapTotal": 16531456,
+            "heapUsed": 9140448,
+            "external": 2498289,
+            "arrayBuffers": 73333
+          },
+          "processLifetimeMaxRssKiB": 382132,
+          "processThreads": {
+            "before": 15,
+            "sampledPeak": 15
+          },
+          "contextSwitches": {
+            "voluntary": 91,
+            "involuntary": 556
+          },
+          "sampledWorkerBusyFraction": 0.8771929824561403,
+          "taskBodyOccupancy": 0.9099584054282098,
+          "observedQueueMax": 0,
+          "loadAverage": [
+            3.08,
+            2.61,
+            1.81
+          ],
+          "errors": 0,
+          "validated": true,
+          "validationMs": 0.39403000000038446
+        },
+        {
+          "count": 4,
+          "operations": 4,
+          "wallMs": 564.1752029999998,
+          "opsPerSecond": 7.089996119521052,
+          "latencyMs": {
+            "count": 4,
+            "min": 500.774169921875,
+            "p50": 524.464111328125,
+            "p90": 564.1416015625,
+            "p95": 564.1416015625,
+            "p99": 564.1416015625,
+            "max": 564.1416015625,
+            "mean": 536.71875,
+            "cv": 0.05512242625544471
+          },
+          "admissionToBodyMs": {
+            "count": 4,
+            "min": 0.294921875,
+            "p50": 0.330078125,
+            "p90": 0.44091796875,
+            "p95": 0.44091796875,
+            "p99": 0.44091796875,
+            "max": 0.44091796875,
+            "mean": 0.3563232421875,
+            "cv": 0.17469587223080973
+          },
+          "executionMs": {
+            "count": 4,
+            "min": 500.10400390625,
+            "p50": 523.9033203125,
+            "p90": 563.439697265625,
+            "p95": 563.439697265625,
+            "p99": 563.439697265625,
+            "max": 563.439697265625,
+            "mean": 536.0535888671875,
+            "cv": 0.05511932322961553
+          },
+          "queueMs": {
+            "p50": null,
+            "p95": null,
+            "p99": null,
+            "mean": 0.008819000000130472
+          },
+          "runtimeExecutionMeanMs": 536.1046925,
+          "cpuPercent": 347.58936400825837,
+          "cpuMicroseconds": {
+            "user": 1708379,
+            "system": 252634
+          },
+          "eventLoopUtilization": {
+            "idle": 530.0446649999994,
+            "active": 34.16353999956664,
+            "utilization": 0.06055129949695239
+          },
+          "eventLoopDelayMs": {
+            "mean": 10.445879854545456,
+            "max": 13.017087,
+            "p95": 12.279807,
+            "p99": 12.640255
+          },
+          "timerDelayMs": {
+            "count": 55,
+            "min": 0,
+            "p50": 0.4985500000002503,
+            "p90": 1.018938000000162,
+            "p95": 1.9531429999997272,
+            "p99": 3.0384329999997135,
+            "max": 3.0384329999997135,
+            "mean": 0.5506844363636364,
+            "cv": 1.0811139596043071
+          },
+          "filesystemLatencyMs": null,
+          "memoryBefore": {
+            "rss": 123142144,
+            "heapTotal": 16531456,
+            "heapUsed": 9267960,
+            "external": 2527790,
+            "arrayBuffers": 102802
+          },
+          "memoryAfter": {
+            "rss": 123871232,
+            "heapTotal": 16531456,
+            "heapUsed": 9808952,
+            "external": 2527790,
+            "arrayBuffers": 102802
+          },
+          "sampledPeakMemory": {
+            "rss": 392212480,
+            "heapTotal": 16531456,
+            "heapUsed": 9827504,
+            "external": 2527790,
+            "arrayBuffers": 102802
+          },
+          "processLifetimeMaxRssKiB": 383020,
+          "processThreads": {
+            "before": 15,
+            "sampledPeak": 15
+          },
+          "contextSwitches": {
+            "voluntary": 93,
+            "involuntary": 635
+          },
+          "sampledWorkerBusyFraction": 0.9107142857142857,
+          "taskBodyOccupancy": 0.9501544662309231,
+          "observedQueueMax": 0,
+          "loadAverage": [
+            3.08,
+            2.61,
+            1.81
+          ],
+          "errors": 0,
+          "validated": true,
+          "validationMs": 0.27409499999976106
+        },
+        {
+          "count": 4,
+          "operations": 4,
+          "wallMs": 571.6699579999995,
+          "opsPerSecond": 6.997044263081608,
+          "latencyMs": {
+            "count": 4,
+            "min": 501.30712890625,
+            "p50": 555.19189453125,
+            "p90": 571.632080078125,
+            "p95": 571.632080078125,
+            "p99": 571.632080078125,
+            "max": 571.632080078125,
+            "mean": 548.9910888671875,
+            "cv": 0.05930311488443876
+          },
+          "admissionToBodyMs": {
+            "count": 4,
+            "min": 0.228271484375,
+            "p50": 0.24658203125,
+            "p90": 1.247802734375,
+            "p95": 1.247802734375,
+            "p99": 1.247802734375,
+            "max": 1.247802734375,
+            "mean": 0.5753173828125,
+            "cv": 0.8279943238633476
+          },
+          "executionMs": {
+            "count": 4,
+            "min": 499.8974609375,
+            "p50": 553.359619140625,
+            "p90": 571.146728515625,
+            "p95": 571.146728515625,
+            "p99": 571.146728515625,
+            "max": 571.146728515625,
+            "mean": 547.8551025390625,
+            "cv": 0.05998453949048334
+          },
+          "queueMs": {
+            "p50": null,
+            "p95": null,
+            "p99": null,
+            "mean": 0.006968249999999898
+          },
+          "runtimeExecutionMeanMs": 547.9136177499995,
+          "cpuPercent": 346.0218561983629,
+          "cpuMicroseconds": {
+            "user": 1730329,
+            "system": 247774
+          },
+          "eventLoopUtilization": {
+            "idle": 539.1147199999996,
+            "active": 32.58719799849314,
+            "utilization": 0.05700033001914654
+          },
+          "eventLoopDelayMs": {
+            "mean": 10.4820736,
+            "max": 14.221311,
+            "p95": 11.632639,
+            "p99": 11.821055
+          },
+          "timerDelayMs": {
+            "count": 55,
+            "min": 0,
+            "p50": 0.5345380000007935,
+            "p90": 1.0466099999994185,
+            "p95": 1.090222000000722,
+            "p99": 1.7224699999987934,
+            "max": 1.7224699999987934,
+            "mean": 0.5551638727272472,
+            "cv": 0.6422055047232829
+          },
+          "filesystemLatencyMs": null,
+          "memoryBefore": {
+            "rss": 124280832,
+            "heapTotal": 16531456,
+            "heapUsed": 10419904,
+            "external": 2560798,
+            "arrayBuffers": 135778
+          },
+          "memoryAfter": {
+            "rss": 125018112,
+            "heapTotal": 16531456,
+            "heapUsed": 10521616,
+            "external": 2560798,
+            "arrayBuffers": 135778
+          },
+          "sampledPeakMemory": {
+            "rss": 393347072,
+            "heapTotal": 16531456,
+            "heapUsed": 10522504,
+            "external": 2560798,
+            "arrayBuffers": 135778
+          },
+          "processLifetimeMaxRssKiB": 384128,
+          "processThreads": {
+            "before": 15,
+            "sampledPeak": 15
+          },
+          "contextSwitches": {
+            "voluntary": 91,
+            "involuntary": 708
+          },
+          "sampledWorkerBusyFraction": 0.9241071428571429,
+          "taskBodyOccupancy": 0.9583416005552333,
+          "observedQueueMax": 0,
+          "loadAverage": [
+            3.23,
+            2.65,
+            1.83
+          ],
+          "errors": 0,
+          "validated": true,
+          "validationMs": 0.24132299999837414
+        }
+      ],
+      "throughput": {
+        "count": 6,
+        "min": 6.809384951735225,
+        "p50": 6.997044263081608,
+        "p90": 7.170889005926962,
+        "p95": 7.170889005926962,
+        "p99": 7.170889005926962,
+        "max": 7.170889005926962,
+        "mean": 7.029475213504945,
+        "cv": 0.018750644247591302
+      }
+    }
+  ],
+  "skips": [],
+  "complete": true,
+  "backpressure": {
+    "offered": 16,
+    "workers": 1,
+    "maxQueue": 2,
+    "accepted": 3,
+    "rejected": 13,
+    "wallMs": 289.90050899999915,
+    "observedQueue": {
+      "size": 2,
+      "capacity": 2
+    },
+    "final": {
+      "state": "running",
+      "workers": {
+        "total": 1,
+        "busy": 0,
+        "idle": 1,
+        "starting": 0,
+        "failures": 0,
+        "restarts": 0,
+        "details": [
+          {
+            "id": 1,
+            "threadId": 5,
+            "status": "idle",
+            "completedTasks": 3,
+            "failedTasks": 0,
+            "totalExecutionTimeMs": 144.67377500000293
+          }
+        ]
+      },
+      "queue": {
+        "size": 0,
+        "capacity": 2
+      },
+      "tasks": {
+        "accepted": 3,
+        "rejected": 13,
+        "pending": 0,
+        "completed": 3,
+        "failed": 0,
+        "cancelled": 0,
+        "timedOut": 0
+      },
+      "timing": {
+        "averageQueueMs": 52.14228366666733,
+        "averageExecutionMs": 48.22459166666764,
+        "averageTotalMs": 101.00356866666698,
+        "queueSamples": 3,
+        "executionSamples": 3,
+        "settledSamples": 3
+      },
+      "operations": {
+        "accepted": 0,
+        "rejected": 0,
+        "completed": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "timedOut": 0,
+        "pending": 0,
+        "capacity": 3,
+        "collecting": {
+          "accepted": 0,
+          "rejected": 0,
+          "completed": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "timedOut": 0,
+          "pending": 0
+        },
+        "completion": {
+          "accepted": 0,
+          "rejected": 0,
+          "completed": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "timedOut": 0,
+          "pending": 0
+        },
+        "streaming": {
+          "accepted": 0,
+          "rejected": 0,
+          "completed": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "timedOut": 0,
+          "pending": 0
+        },
+        "mapping": {
+          "accepted": 0,
+          "rejected": 0,
+          "completed": 0,
+          "failed": 0,
+          "cancelled": 0,
+          "timedOut": 0,
+          "pending": 0
+        }
+      },
+      "streams": {
+        "accepted": 0,
+        "rejected": 0,
+        "completed": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "timedOut": 0,
+        "pending": 0
+      },
+      "streamResults": {
+        "produced": 0,
+        "yielded": 0,
+        "peakBuffered": 0,
+        "peakKnownBufferedPayloadBytes": 0,
+        "peakUnknownBufferedResults": 0,
+        "currentReservedResultBytes": 0,
+        "peakReservedResultBytes": 0,
+        "resultByteReservationWaits": 0,
+        "resultByteReservationRejected": 0,
+        "binaryResultContractFailures": 0,
+        "upperBoundContractFailures": 0,
+        "upperBoundResultsReconciled": 0,
+        "resultByteRefunds": 0,
+        "refundedResultBytes": 0,
+        "buffered": 0,
+        "knownBufferedPayloadBytes": 0,
+        "unknownBufferedResults": 0
+      },
+      "maps": {
+        "accepted": 0,
+        "rejected": 0,
+        "completed": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "timedOut": 0,
+        "pending": 0
+      },
+      "mapResults": {
+        "blocks": 0,
+        "elements": 0,
+        "assemblyMs": 0
+      },
+      "partitions": {
+        "generated": 0,
+        "admitted": 0,
+        "completed": 0,
+        "failed": 0,
+        "cancelled": 0
+      },
+      "dispatch": {
+        "executeMessages": 3,
+        "resultMessages": 3,
+        "batchedExecuteMessages": 0,
+        "logicalTasks": 3,
+        "logicalPartitions": 0,
+        "averageLogicalTasksPerExecute": 1
+      },
+      "activeOperations": [],
+      "activeTasks": []
+    },
+    "validated": true
+  },
+  "runtimeAfter": {
+    "packages/runtime/src/dispatch/dispatcher.ts": "a448344e4977d60338c0b503c92b49d67d9bccfe0c08c101ca3d376593ac3ada",
+    "packages/runtime/src/errors/index.ts": "2f1458c63366be67919f51866acd7e1a9966300166c39f164c481913d0b1f4e7",
+    "packages/runtime/src/index.ts": "96d3697fde71fc4a46943c52f5556c1b63227f2b792650c14cf29bfd073cef44",
+    "packages/runtime/src/internal/integer.ts": "c1d5f34cd7a4d6aa228910e0a7e7f7929e21bea0f84e231d5984a3b7e7d51b6c",
+    "packages/runtime/src/partition/binary.ts": "20e4ff84ea39912befa189a5a3e5f57739e249d3954c3d7aea6cfa45e1b97120",
+    "packages/runtime/src/partition/coordinator.ts": "3afae72cfa583b5c04b8645a09af3dcf603139f1b4268204bd35627f2f185cde",
+    "packages/runtime/src/partition/operation.ts": "e5ec55abcb8a90fca7df99c7b7ade39c5ae2fa2358efd1a11e5edc8b438384e1",
+    "packages/runtime/src/partition/range.ts": "c985cb95b03c2c339f18f1cae44ca7f77eca7eb2908afe946f11b71c724a1489",
+    "packages/runtime/src/partition/stream.ts": "09d2dcb73771334c0a4fb9647c6234d59acdef43e3170045d8c8e810a7017566",
+    "packages/runtime/src/pool/pool.ts": "880be0c7764e184bf3e8ccfee8fa63bf3c2f26e81d40aab5e2cdb94827849ec5",
+    "packages/runtime/src/results/credit.ts": "acc35c91bb5bfc48e95356d466377c0ad42ef97a2f5c765b25ef9898a5fc078f",
+    "packages/runtime/src/runtime.ts": "53e0013365563a2235bca5d082a753996846529d42efcf9bb5378c81e1d26e81",
+    "packages/runtime/src/scheduler/fifo.ts": "caa0307b7ce3b71d412ae9b432ad90cd946eed209958d88a1d6f9a13d481e014",
+    "packages/runtime/src/tasks/coordinator.ts": "05b6f044c538a438827e8ab7c16071ac04aeb89b12122c8fc48f2dd8239767d7",
+    "packages/runtime/src/tasks/registry.ts": "b0698736068769a2b7ab2b8c1cbf2179650f7b41701e82ab4dccf8e8c8254eca",
+    "packages/runtime/src/tasks/shared.ts": "d3a6b371f5b20657bf47d6b84f6c7d7bd4cfec0f0395b6bade2ac828ee5a3ca5",
+    "packages/runtime/src/tasks/task.ts": "92eb849cc4b2921c347656edabf6a813b323e9295c46c7255dddc89330f820f5",
+    "packages/runtime/src/tasks/transfer.ts": "9de35965f11f40ab7697ca8e5439af634fe8122829c357c3b36f310dbfd278ac",
+    "packages/runtime/src/telemetry/metrics.ts": "031d1994dd4fec40d50b265f4e59c00dd9348d089d507ed87019bb1fef7b088e",
+    "packages/runtime/src/telemetry/profile.ts": "831b42554f3dcb74a45ae42bdfca5811eab921d8c248986ca1859af26f9496f7",
+    "packages/runtime/src/telemetry/runtime.ts": "de144702cc694650fb5d7d50ff76109a6cfe9ef5ef3aecc3825a9a3e911fe6e7",
+    "packages/runtime/src/types/index.ts": "7a252af8bb57fe42ac43f015a73ee111afd932725da039ffd77c36140c7b35fa",
+    "packages/runtime/src/workers/bootstrap.ts": "f19fbfb8f0a27d1e3e97cc7599bdfc8922d7502557af9a71c4bf2e9cf0c6d2e9",
+    "packages/runtime/src/workers/protocol.ts": "d8f66b337c21563d0c510b2bc72ae1db3a70d065da22d2374583d1bd8d1f5d90",
+    "packages/runtime/src/workers/worker.ts": "715f1583dcabc07b4e9b8288a89b29f7a6ccb1671834f11b56f1b0e681b4809d"
+  },
+  "runtimeUnchanged": true
+}

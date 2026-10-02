@@ -1,0 +1,123 @@
+{
+  "milestone": "v0.13",
+  "npmVersionSupplement": "11.8.0",
+  "npmVersionEvidence": "rtk proxy bash -c npm --version; raw nested npm query returned empty",
+  "checks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "durationSeconds": 0.688,
+      "output": "\n> pjs-workspace@0.12.0 build\n> tsc -p packages/runtime/tsconfig.json\n\n"
+    },
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "durationSeconds": 12.265,
+      "output": "\n> pjs-workspace@0.12.0 test\n> npm run build && npm run test:types && node --test --test-timeout=20000 packages/runtime/test/*.test.mjs\n\n\n> pjs-workspace@0.12.0 build\n> tsc -p packages/runtime/tsconfig.json\n\n\n> pjs-workspace@0.12.0 test:types\n> tsc -p packages/runtime/test/tsconfig.json\n\n\u2714 packages/runtime/test/batch.test.mjs (3022.231322ms)\n\u2714 packages/runtime/test/binary-result.test.mjs (2203.357243ms)\n\u2714 packages/runtime/test/completion.test.mjs (2520.029304ms)\n\u2714 packages/runtime/test/map.test.mjs (1840.244066ms)\n\u2714 packages/runtime/test/matrix.test.mjs (690.105052ms)\n\u2714 packages/runtime/test/memory-observability.test.mjs (1088.304718ms)\n\u2714 packages/runtime/test/partition.test.mjs (4665.22722ms)\n\u2714 packages/runtime/test/result-credit.test.mjs (215.005629ms)\n\u2714 packages/runtime/test/runtime.test.mjs (3916.94829ms)\n\u2714 packages/runtime/test/shared.test.mjs (2275.322026ms)\n\u2714 packages/runtime/test/stream.test.mjs (2653.973786ms)\n\u2714 packages/runtime/test/transfer.test.mjs (2780.195604ms)\n\u2714 packages/runtime/test/upper-bound-result.test.mjs (2691.54329ms)\n\u2139 tests 13\n\u2139 suites 0\n\u2139 pass 13\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 10739.429562\n"
+    },
+    {
+      "command": "npm run test:types",
+      "exitCode": 0,
+      "durationSeconds": 0.524,
+      "output": "\n> pjs-workspace@0.12.0 test:types\n> tsc -p packages/runtime/test/tsconfig.json\n\n"
+    },
+    {
+      "command": "npm run typecheck:compat",
+      "exitCode": 0,
+      "durationSeconds": 2.216,
+      "output": "\n> pjs-workspace@0.12.0 typecheck:compat\n> tsc6 --noEmit -p packages/runtime/tsconfig.json\n\n"
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "durationSeconds": 4.085,
+      "output": "\n> pjs-workspace@0.12.0 lint\n> eslint .\n\n"
+    },
+    {
+      "command": "node --test benchmarks/real-world/crypto/harness.test.mjs",
+      "exitCode": 0,
+      "durationSeconds": 0.522,
+      "output": "\u2714 benchmarks/real-world/crypto/harness.test.mjs (386.290404ms)\n\u2139 tests 1\n\u2139 suites 0\n\u2139 pass 1\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 402.263503\n"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "durationSeconds": 0.048,
+      "output": ""
+    },
+    {
+      "command": "git diff --exit-code 18f0c87e7b7920179403bbc396afabced6bb06c4 -- packages/runtime/src",
+      "exitCode": 0,
+      "durationSeconds": 0.004,
+      "output": ""
+    },
+    {
+      "command": "git diff --exit-code HEAD -- benchmarks/results",
+      "exitCode": 0,
+      "durationSeconds": 0.047,
+      "output": ""
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "durationSeconds": 3.738,
+      "output": "\n> pjs-workspace@0.12.0 lint\n> eslint .\n\n"
+    },
+    {
+      "command": "npm run format:check",
+      "exitCode": 0,
+      "durationSeconds": 5.644,
+      "output": "\n> pjs-workspace@0.12.0 format:check\n> prettier --check .\n\nChecking formatting...\nAll matched files use Prettier code style!\n"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "durationSeconds": 0.04,
+      "output": ""
+    }
+  ],
+  "runtimeSourceHashes": {
+    "packages/runtime/src/dispatch/dispatcher.ts": "a448344e4977d60338c0b503c92b49d67d9bccfe0c08c101ca3d376593ac3ada",
+    "packages/runtime/src/errors/index.ts": "2f1458c63366be67919f51866acd7e1a9966300166c39f164c481913d0b1f4e7",
+    "packages/runtime/src/index.ts": "96d3697fde71fc4a46943c52f5556c1b63227f2b792650c14cf29bfd073cef44",
+    "packages/runtime/src/internal/integer.ts": "c1d5f34cd7a4d6aa228910e0a7e7f7929e21bea0f84e231d5984a3b7e7d51b6c",
+    "packages/runtime/src/partition/binary.ts": "20e4ff84ea39912befa189a5a3e5f57739e249d3954c3d7aea6cfa45e1b97120",
+    "packages/runtime/src/partition/coordinator.ts": "3afae72cfa583b5c04b8645a09af3dcf603139f1b4268204bd35627f2f185cde",
+    "packages/runtime/src/partition/operation.ts": "e5ec55abcb8a90fca7df99c7b7ade39c5ae2fa2358efd1a11e5edc8b438384e1",
+    "packages/runtime/src/partition/range.ts": "c985cb95b03c2c339f18f1cae44ca7f77eca7eb2908afe946f11b71c724a1489",
+    "packages/runtime/src/partition/stream.ts": "09d2dcb73771334c0a4fb9647c6234d59acdef43e3170045d8c8e810a7017566",
+    "packages/runtime/src/pool/pool.ts": "880be0c7764e184bf3e8ccfee8fa63bf3c2f26e81d40aab5e2cdb94827849ec5",
+    "packages/runtime/src/results/credit.ts": "acc35c91bb5bfc48e95356d466377c0ad42ef97a2f5c765b25ef9898a5fc078f",
+    "packages/runtime/src/runtime.ts": "53e0013365563a2235bca5d082a753996846529d42efcf9bb5378c81e1d26e81",
+    "packages/runtime/src/scheduler/fifo.ts": "caa0307b7ce3b71d412ae9b432ad90cd946eed209958d88a1d6f9a13d481e014",
+    "packages/runtime/src/tasks/coordinator.ts": "05b6f044c538a438827e8ab7c16071ac04aeb89b12122c8fc48f2dd8239767d7",
+    "packages/runtime/src/tasks/registry.ts": "b0698736068769a2b7ab2b8c1cbf2179650f7b41701e82ab4dccf8e8c8254eca",
+    "packages/runtime/src/tasks/shared.ts": "d3a6b371f5b20657bf47d6b84f6c7d7bd4cfec0f0395b6bade2ac828ee5a3ca5",
+    "packages/runtime/src/tasks/task.ts": "92eb849cc4b2921c347656edabf6a813b323e9295c46c7255dddc89330f820f5",
+    "packages/runtime/src/tasks/transfer.ts": "9de35965f11f40ab7697ca8e5439af634fe8122829c357c3b36f310dbfd278ac",
+    "packages/runtime/src/telemetry/metrics.ts": "031d1994dd4fec40d50b265f4e59c00dd9348d089d507ed87019bb1fef7b088e",
+    "packages/runtime/src/telemetry/profile.ts": "831b42554f3dcb74a45ae42bdfca5811eab921d8c248986ca1859af26f9496f7",
+    "packages/runtime/src/telemetry/runtime.ts": "de144702cc694650fb5d7d50ff76109a6cfe9ef5ef3aecc3825a9a3e911fe6e7",
+    "packages/runtime/src/types/index.ts": "7a252af8bb57fe42ac43f015a73ee111afd932725da039ffd77c36140c7b35fa",
+    "packages/runtime/src/workers/bootstrap.ts": "f19fbfb8f0a27d1e3e97cc7599bdfc8922d7502557af9a71c4bf2e9cf0c6d2e9",
+    "packages/runtime/src/workers/protocol.ts": "d8f66b337c21563d0c510b2bc72ae1db3a70d065da22d2374583d1bd8d1f5d90",
+    "packages/runtime/src/workers/worker.ts": "715f1583dcabc07b4e9b8288a89b29f7a6ccb1671834f11b56f1b0e681b4809d"
+  },
+  "runtimeSourceUnchanged": true,
+  "measuredHarnessFilesStillMatch": {
+    "benchmarks/real-world/crypto/executors.mjs": true,
+    "benchmarks/real-world/crypto/matrix.mjs": true,
+    "benchmarks/real-world/crypto/raw-worker.mjs": true,
+    "benchmarks/real-world/crypto/run.mjs": true,
+    "benchmarks/real-world/crypto/support.mjs": true,
+    "benchmarks/real-world/crypto/task.mjs": true
+  },
+  "retainedArtifacts": {
+    "benchmarks/results/crypto-v0.13-argon2-native-confirm.json": "2d7cb55bcbceb9756ab76ff98d9061217c9751da9931ef7e2c15346734366e68",
+    "benchmarks/results/crypto-v0.13-argon2-pjs-confirm.json": "d7cf92633ad3c9c40269e04311a4eb75ef10fb83b29487250e05af717bae73d6",
+    "benchmarks/results/crypto-v0.13-fedora-node24.json": "69d63574eeedeffb0bc9ff960e7edf2266815c4d298cd63416868328708f7e5e",
+    "benchmarks/results/crypto-v0.13-native-submission-probe.json": "a9ec12f2b09bcf62915b4c3ed11d61da35605a157d28c9edcf5bdd879afc9a27",
+    "benchmarks/results/crypto-v0.13-smoke.json": "dfc15c091181321331df06bbf9da87c75f3c719dadcd01a0fb918d9b1ef93a16"
+  },
+  "complete": true
+}
