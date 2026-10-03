@@ -1,6 +1,6 @@
 {
   "name": "@pjs/runtime",
-  "version": "0.15.0",
+  "version": "1.0.0-rc.1",
   "description": "Explicit CPU task runtime for Node.js",
   "type": "module",
   "engines": {

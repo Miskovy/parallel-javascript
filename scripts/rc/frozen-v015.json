@@ -1,0 +1,285 @@
+{
+  "release": "v0.15.0",
+  "commit": "58a3ce056d8ef9b7cf6991a37fcc7fcffc018e7c",
+  "tagObject": "a145e20cddc0444e4108b806497f6ba7523271c6",
+  "namedExports": [
+    {
+      "name": "BinaryStreamRangeOptions",
+      "kind": "type",
+      "module": "./partition/range.js"
+    },
+    {
+      "name": "PartitionInput",
+      "kind": "type",
+      "module": "./partition/range.js"
+    },
+    {
+      "name": "PartitionOptions",
+      "kind": "type",
+      "module": "./partition/range.js"
+    },
+    {
+      "name": "PartitionRange",
+      "kind": "type",
+      "module": "./partition/range.js"
+    },
+    {
+      "name": "PjsBinaryResult",
+      "kind": "type",
+      "module": "./partition/range.js"
+    },
+    {
+      "name": "PjsBinaryResultContractError",
+      "kind": "value",
+      "module": "./errors/index.js"
+    },
+    {
+      "name": "PjsCancelledError",
+      "kind": "value",
+      "module": "./errors/index.js"
+    },
+    {
+      "name": "PjsError",
+      "kind": "value",
+      "module": "./errors/index.js"
+    },
+    {
+      "name": "PjsMapContractError",
+      "kind": "value",
+      "module": "./errors/index.js"
+    },
+    {
+      "name": "PjsQueueFullError",
+      "kind": "value",
+      "module": "./errors/index.js"
+    },
+    {
+      "name": "PjsResultCapacityError",
+      "kind": "value",
+      "module": "./errors/index.js"
+    },
+    {
+      "name": "PjsRuntime",
+      "kind": "value",
+      "module": "./runtime.js"
+    },
+    {
+      "name": "PjsRuntimeOptions",
+      "kind": "type",
+      "module": "./runtime.js"
+    },
+    {
+      "name": "PjsRuntimeStateError",
+      "kind": "value",
+      "module": "./errors/index.js"
+    },
+    {
+      "name": "PjsSerializationError",
+      "kind": "value",
+      "module": "./errors/index.js"
+    },
+    {
+      "name": "PjsTask",
+      "kind": "type",
+      "module": "./tasks/registry.js"
+    },
+    {
+      "name": "PjsTaskError",
+      "kind": "value",
+      "module": "./errors/index.js"
+    },
+    {
+      "name": "PjsTaskRegistrationError",
+      "kind": "value",
+      "module": "./errors/index.js"
+    },
+    {
+      "name": "PjsTaskRegistry",
+      "kind": "value",
+      "module": "./tasks/registry.js"
+    },
+    {
+      "name": "PjsTimeoutError",
+      "kind": "value",
+      "module": "./errors/index.js"
+    },
+    {
+      "name": "PjsTransfer",
+      "kind": "type",
+      "module": "./tasks/transfer.js"
+    },
+    {
+      "name": "PjsTypedArray",
+      "kind": "type",
+      "module": "./partition/range.js"
+    },
+    {
+      "name": "PjsTypedArrayConstructor",
+      "kind": "type",
+      "module": "./partition/range.js"
+    },
+    {
+      "name": "PjsWorkerError",
+      "kind": "value",
+      "module": "./errors/index.js"
+    },
+    {
+      "name": "RangePartition",
+      "kind": "type",
+      "module": "./partition/range.js"
+    },
+    {
+      "name": "RunOptions",
+      "kind": "type",
+      "module": "./types/index.js"
+    },
+    {
+      "name": "RuntimeState",
+      "kind": "type",
+      "module": "./types/index.js"
+    },
+    {
+      "name": "sharedReadonly",
+      "kind": "value",
+      "module": "./tasks/shared.js"
+    },
+    {
+      "name": "ShutdownOptions",
+      "kind": "type",
+      "module": "./types/index.js"
+    },
+    {
+      "name": "StreamRangeOptions",
+      "kind": "type",
+      "module": "./partition/range.js"
+    },
+    {
+      "name": "StreamRangeResult",
+      "kind": "type",
+      "module": "./partition/stream.js"
+    },
+    {
+      "name": "TaskSnapshot",
+      "kind": "type",
+      "module": "./types/index.js"
+    },
+    {
+      "name": "TaskStatus",
+      "kind": "type",
+      "module": "./types/index.js"
+    },
+    {
+      "name": "transfer",
+      "kind": "value",
+      "module": "./tasks/transfer.js"
+    },
+    {
+      "name": "TypedMapRangeOptions",
+      "kind": "type",
+      "module": "./partition/range.js"
+    },
+    {
+      "name": "UpperBoundBinaryStreamRangeOptions",
+      "kind": "type",
+      "module": "./partition/range.js"
+    },
+    {
+      "name": "WorkerState",
+      "kind": "type",
+      "module": "./types/index.js"
+    },
+    {
+      "name": "WorkerStatus",
+      "kind": "type",
+      "module": "./types/index.js"
+    }
+  ],
+  "runtimeValues": [
+    "PjsBinaryResultContractError",
+    "PjsCancelledError",
+    "PjsError",
+    "PjsMapContractError",
+    "PjsQueueFullError",
+    "PjsResultCapacityError",
+    "PjsRuntime",
+    "PjsRuntimeStateError",
+    "PjsSerializationError",
+    "PjsTaskError",
+    "PjsTaskRegistrationError",
+    "PjsTaskRegistry",
+    "PjsTimeoutError",
+    "PjsWorkerError",
+    "sharedReadonly",
+    "transfer"
+  ],
+  "runtimeSource": {
+    "packages/runtime/src/dispatch/dispatcher.ts": "a448344e4977d60338c0b503c92b49d67d9bccfe0c08c101ca3d376593ac3ada",
+    "packages/runtime/src/errors/index.ts": "2f1458c63366be67919f51866acd7e1a9966300166c39f164c481913d0b1f4e7",
+    "packages/runtime/src/index.ts": "96d3697fde71fc4a46943c52f5556c1b63227f2b792650c14cf29bfd073cef44",
+    "packages/runtime/src/internal/integer.ts": "c1d5f34cd7a4d6aa228910e0a7e7f7929e21bea0f84e231d5984a3b7e7d51b6c",
+    "packages/runtime/src/partition/binary.ts": "20e4ff84ea39912befa189a5a3e5f57739e249d3954c3d7aea6cfa45e1b97120",
+    "packages/runtime/src/partition/coordinator.ts": "3afae72cfa583b5c04b8645a09af3dcf603139f1b4268204bd35627f2f185cde",
+    "packages/runtime/src/partition/operation.ts": "e5ec55abcb8a90fca7df99c7b7ade39c5ae2fa2358efd1a11e5edc8b438384e1",
+    "packages/runtime/src/partition/range.ts": "c985cb95b03c2c339f18f1cae44ca7f77eca7eb2908afe946f11b71c724a1489",
+    "packages/runtime/src/partition/stream.ts": "09d2dcb73771334c0a4fb9647c6234d59acdef43e3170045d8c8e810a7017566",
+    "packages/runtime/src/pool/pool.ts": "880be0c7764e184bf3e8ccfee8fa63bf3c2f26e81d40aab5e2cdb94827849ec5",
+    "packages/runtime/src/results/credit.ts": "acc35c91bb5bfc48e95356d466377c0ad42ef97a2f5c765b25ef9898a5fc078f",
+    "packages/runtime/src/runtime.ts": "53e0013365563a2235bca5d082a753996846529d42efcf9bb5378c81e1d26e81",
+    "packages/runtime/src/scheduler/fifo.ts": "caa0307b7ce3b71d412ae9b432ad90cd946eed209958d88a1d6f9a13d481e014",
+    "packages/runtime/src/tasks/coordinator.ts": "05b6f044c538a438827e8ab7c16071ac04aeb89b12122c8fc48f2dd8239767d7",
+    "packages/runtime/src/tasks/registry.ts": "b0698736068769a2b7ab2b8c1cbf2179650f7b41701e82ab4dccf8e8c8254eca",
+    "packages/runtime/src/tasks/shared.ts": "d3a6b371f5b20657bf47d6b84f6c7d7bd4cfec0f0395b6bade2ac828ee5a3ca5",
+    "packages/runtime/src/tasks/task.ts": "92eb849cc4b2921c347656edabf6a813b323e9295c46c7255dddc89330f820f5",
+    "packages/runtime/src/tasks/transfer.ts": "9de35965f11f40ab7697ca8e5439af634fe8122829c357c3b36f310dbfd278ac",
+    "packages/runtime/src/telemetry/metrics.ts": "031d1994dd4fec40d50b265f4e59c00dd9348d089d507ed87019bb1fef7b088e",
+    "packages/runtime/src/telemetry/profile.ts": "831b42554f3dcb74a45ae42bdfca5811eab921d8c248986ca1859af26f9496f7",
+    "packages/runtime/src/telemetry/runtime.ts": "de144702cc694650fb5d7d50ff76109a6cfe9ef5ef3aecc3825a9a3e911fe6e7",
+    "packages/runtime/src/types/index.ts": "7a252af8bb57fe42ac43f015a73ee111afd932725da039ffd77c36140c7b35fa",
+    "packages/runtime/src/workers/bootstrap.ts": "f19fbfb8f0a27d1e3e97cc7599bdfc8922d7502557af9a71c4bf2e9cf0c6d2e9",
+    "packages/runtime/src/workers/protocol.ts": "d8f66b337c21563d0c510b2bc72ae1db3a70d065da22d2374583d1bd8d1f5d90",
+    "packages/runtime/src/workers/worker.ts": "715f1583dcabc07b4e9b8288a89b29f7a6ccb1671834f11b56f1b0e681b4809d"
+  },
+  "declarations": {
+    "dist/dispatch/dispatcher.d.ts": "552add49f8d99f8326625efbcd77e3d61f2e0fdd3171ec60463bd589c9b0a9bc",
+    "dist/errors/index.d.ts": "df8fd877222f102de55bd5c7f196c4c83e964e63bf9009154a85c8d4a5621169",
+    "dist/index.d.ts": "3aadd11f6520083f9bc0e1a3851e20b0e0634ccde052e1880662cd38a65f0d3a",
+    "dist/internal/integer.d.ts": "5753b8818139e38ce3cca56a5c4418392ff80f87aab5e6cb913f6fbc8f63663d",
+    "dist/partition/binary.d.ts": "db4cbdfe0dd5aa5b61813e58a8e3b657815382fe9491f78819e7af1521dbdd8a",
+    "dist/partition/coordinator.d.ts": "6d61d06b0e45e5e33270b599c77a7b28fdfc1cfc2c9433c2f2b3271bf20acaaf",
+    "dist/partition/operation.d.ts": "9e4c247a072107b8465e771289c6ae36c4e3142ceb230fda4fedd70fa9380300",
+    "dist/partition/range.d.ts": "24de172906fa1f90673c2735e703582751ba5618d62e7dfc1bdc91720052ed7c",
+    "dist/partition/stream.d.ts": "403ca6dcd4446b387d7268bed07a231b5bc11ecc5772c7f26891848cb7b4d4b9",
+    "dist/pool/pool.d.ts": "d31a2faa1762592f1991540b64ce8556238bd13e496d39426a406216b2fe8c54",
+    "dist/results/credit.d.ts": "4a35c19e40ff2a13e6bac348504b5edb1546a5db86da7df2c5320ce0ffd62888",
+    "dist/runtime.d.ts": "675741db711bec63d726cdb966fc3f0ec1b115f8a60151c92140e3357ba1a199",
+    "dist/scheduler/fifo.d.ts": "746ea23fe020bad0f3a0b644f47fd39142b9f58ab61b48cde15151ce184bc7e5",
+    "dist/tasks/coordinator.d.ts": "1501d014de6b2d5847f1738dd0e624de41791f5ac25f0345d3b4ee26e5a7d1c9",
+    "dist/tasks/registry.d.ts": "89b758e58a2a6c9cbcf76b0f7128cb4545cb0510de2305a4eac577c72b5b97b7",
+    "dist/tasks/shared.d.ts": "2b5f60e704be1d1b71ab9bc708e01801dbb7517b30fcb588139b98ac3b171b15",
+    "dist/tasks/task.d.ts": "83b24fdfe30b37157943ce81fb8504472fb2ab9be95831fbc1e5705e585d947b",
+    "dist/tasks/transfer.d.ts": "58c9722e65a602a64207adcc3cdc2453ad0082c806fe930a6ced1387e660de27",
+    "dist/telemetry/metrics.d.ts": "7145c8861d7e0e90ffa522d535cec3dc8431f4b9a43c5ebfc944d37af2560e74",
+    "dist/telemetry/profile.d.ts": "81b3fd387783a87ad070694511582ce17835186a931b80e3604d50fda7403f52",
+    "dist/telemetry/runtime.d.ts": "77d38666f7654f3da9467f65ce8dce515cd24e999cf9007233ce530b485a9b10",
+    "dist/types/index.d.ts": "fa8fcf8975ee527da1d1c0ac1d96420b5eaa1b19eb7aca6234cd5f9cec279dea",
+    "dist/workers/bootstrap.d.ts": "089fbfd7f9aada2383c495bbddcbf2d09578b973df7790d71e455bd6b6f5c04d",
+    "dist/workers/protocol.d.ts": "6872b8f302e35449b5d8f512a3910d6bd5d86779023a6f3e93dbb7f0dbad90e9",
+    "dist/workers/worker.d.ts": "1f9715b226fbbb644d06b8f1bf5a166115864aa88a0cc1607eb12996438b22f6"
+  },
+  "manifest": {
+    "name": "@pjs/runtime",
+    "type": "module",
+    "engines": {
+      "node": "^22.13.0 || ^24.0.0"
+    },
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "types": "./dist/index.d.ts",
+    "files": ["dist", "src"],
+    "dependencies": {}
+  }
+}

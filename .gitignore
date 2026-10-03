@@ -11,6 +11,7 @@ coverage/
 *.heapprofile
 *.heapsnapshot
 benchmarks/results/local/
+.node-tools/
 
 # Local environment files; sanitized templates may be committed
 .env

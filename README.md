@@ -4,7 +4,9 @@ PJS runs explicitly registered CPU work in persistent Node workers, with bounded
 admission and explicit memory ownership. Your application keeps its event loop
 for I/O; PJS provides a separate compute plane. There are no runtime dependencies.
 
-**v0.15 is a stabilization milestone, not a stable 1.0 release.**
+**v1.0.0-rc.1 hardening is in progress; release awaits both-platform qualification.**
+[RC readiness](docs/research/v1-rc1-readiness.md) records the release gates and
+platform boundaries. The immutable v0.15.0 release remains available.
 [API stability](docs/stability.md) distinguishes core candidates, supported
 ownership helpers, experimental range APIs and diagnostic statistics.
 
@@ -22,7 +24,7 @@ npm pack --workspace @pjs/runtime --pack-destination /tmp
 Then, in your ESM application, install the resulting artifact:
 
 ```sh
-npm install /tmp/pjs-runtime-0.15.0.tgz
+npm install /tmp/pjs-runtime-1.0.0-rc.1.tgz
 ```
 
 Replace `/tmp` with an absolute temporary directory on your system (for example

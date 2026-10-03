@@ -1,7 +1,7 @@
 {
   "name": "pjs-workspace",
   "private": true,
-  "version": "0.15.0",
+  "version": "1.0.0-rc.1",
   "license": "MIT",
   "type": "module",
   "workspaces": [
@@ -40,7 +40,13 @@
     "test:contracts": "npm run build && node scripts/test-contracts.mjs",
     "test:package": "npm run build && node scripts/package-smoke.mjs",
     "test:docs": "node scripts/check-docs.mjs",
-    "example:basic": "npm run build && node examples/basic-run.mjs"
+    "example:basic": "npm run build && node examples/basic-run.mjs",
+    "test:rc:api": "npm run build && node scripts/rc/api-freeze.mjs",
+    "test:rc:package": "npm run build && node scripts/rc/package.mjs",
+    "soak:rc:smoke": "npm run build && node scripts/rc/soak.mjs --profile=smoke",
+    "soak:rc": "npm run build && node scripts/rc/soak.mjs --profile=standard",
+    "rc:qualify": "node scripts/rc/qualify.mjs",
+    "rc:repro": "node scripts/rc/repro.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

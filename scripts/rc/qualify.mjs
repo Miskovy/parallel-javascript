@@ -1,0 +1,188 @@
+import assert from 'node:assert/strict';
+import { execFileSync, spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { performance } from 'node:perf_hooks';
+
+const root = fileURLToPath(new URL('../../', import.meta.url));
+const arg = (name, fallback) =>
+  process.argv
+    .find((a) => a.startsWith(`--${name}=`))
+    ?.slice(name.length + 3) ?? fallback;
+const output = arg('output');
+assert.ok(output, 'Specify a NEW --output=file.json');
+const absoluteOutput = resolve(output);
+mkdirSync(dirname(absoluteOutput), { recursive: true });
+writeFileSync(absoluteOutput, '', { flag: 'wx' });
+const npmCli = arg('npm-cli', process.env.npm_execpath);
+assert.ok(npmCli, 'Supply --npm-cli=path or run via npm');
+const profile = arg('profile', 'standard');
+assert.ok(['smoke', 'standard', 'extended'].includes(profile));
+const scratch = absoluteOutput + '.parts';
+mkdirSync(scratch, { recursive: true });
+const git = (...args) =>
+  execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim();
+const hash = (path) =>
+  createHash('sha256')
+    .update(readFileSync(join(root, path)))
+    .digest('hex');
+const sourceFiles = git('ls-files', 'packages/runtime/src').split('\n');
+const historicalFiles = git('ls-files', 'benchmarks/results', 'docs/research')
+  .split('\n')
+  .filter((p) => p && !/v1(?:[.-]|\/)/.test(p));
+const report = {
+  schema: 1,
+  kind: 'Exact-Node RC qualification',
+  sourceCommit: git('rev-parse', 'HEAD'),
+  startingStatus: git('status', '--short'),
+  node: process.version,
+  nodeExecutable: process.execPath,
+  versions: process.versions,
+  npmCli,
+  npm: execFileSync(process.execPath, [npmCli, '--version'], {
+    encoding: 'utf8',
+  }).trim(),
+  platform: process.platform,
+  arch: process.arch,
+  profile,
+  checks: [],
+  preservation: {
+    sourceBefore: Object.fromEntries(sourceFiles.map((p) => [p, hash(p)])),
+    historicalBefore: Object.fromEntries(
+      historicalFiles.map((p) => [p, hash(p)]),
+    ),
+    tagObjectBefore: git('rev-parse', 'v0.15.0'),
+  },
+  passed: false,
+};
+const save = () =>
+  writeFileSync(absoluteOutput, JSON.stringify(report, null, 2) + '\n');
+save();
+function run(label, args, executable = process.execPath) {
+  console.log('START ' + label);
+  const start = performance.now();
+  const r = spawnSync(executable, args, {
+    cwd: root,
+    encoding: 'utf8',
+    timeout: 900000,
+    maxBuffer: 24 * 1024 ** 2,
+    env: {
+      ...process.env,
+      PJS_CONTRACT_REPORT: join(scratch, 'contracts.json'),
+    },
+  });
+  report.checks.push({
+    label,
+    command: [executable, ...args],
+    exitCode: r.status,
+    error: r.error?.message ?? null,
+    durationMs: performance.now() - start,
+    output: (r.stdout ?? '') + (r.stderr ?? ''),
+  });
+  save();
+  assert.ifError(r.error);
+  assert.equal(r.status, 0, `${label}: ${report.checks.at(-1).output}`);
+  console.log('END ' + label + ' 0');
+  return r.stdout;
+}
+try {
+  run('build', [
+    'node_modules/@typescript/native/bin/tsc',
+    '-p',
+    'packages/runtime/tsconfig.json',
+  ]);
+  run('test:types', [
+    'node_modules/@typescript/native/bin/tsc',
+    '-p',
+    'packages/runtime/test/tsconfig.json',
+  ]);
+  run('typecheck:compat', [
+    'node_modules/typescript/bin/tsc6',
+    '--noEmit',
+    '-p',
+    'packages/runtime/tsconfig.json',
+  ]);
+  const tests = readdirSync(join(root, 'packages/runtime/test'))
+    .filter((p) => p.endsWith('.test.mjs'))
+    .sort()
+    .map((p) => 'packages/runtime/test/' + p);
+  run('runtime node:test', ['--test', '--test-timeout=20000', ...tests]);
+  run('independent individual contract counts', ['scripts/test-contracts.mjs']);
+  report.contracts = JSON.parse(readFileSync(join(scratch, 'contracts.json')));
+  assert.equal(report.contracts.totals.tests, 184);
+  assert.equal(report.contracts.totals.pass, 184);
+  assert.equal(report.contracts.totals.fail, 0);
+  assert.equal(report.contracts.totals.skipped, 0);
+  run('lint', ['node_modules/eslint/bin/eslint.js', '.']);
+  run('format:check', [
+    'node_modules/prettier/bin/prettier.cjs',
+    '--check',
+    '.',
+  ]);
+  run('documentation links', ['scripts/check-docs.mjs']);
+  run('diff --check', ['diff', '--check'], 'git');
+  report.apiFreeze = JSON.parse(
+    run('v0.15 public source/declaration/export freeze', [
+      'scripts/rc/api-freeze.mjs',
+    ]),
+  );
+  run('existing CPU example', ['examples/prime-search.mjs']);
+  const packageOutput = join(scratch, 'package.json');
+  run(
+    'actual package, separate installed consumers, errors, examples and natural exit',
+    [
+      'scripts/rc/package.mjs',
+      `--npm-cli=${npmCli}`,
+      `--output=${packageOutput}`,
+      `--pack-dir=${join(scratch, 'packed')}`,
+    ],
+  );
+  report.package = JSON.parse(readFileSync(packageOutput));
+  assert.equal(report.package.passed, true);
+  const soakOutput = join(scratch, 'soak.json');
+  run(`RC ${profile} soak`, [
+    'scripts/rc/soak.mjs',
+    `--profile=${profile}`,
+    `--output=${soakOutput}`,
+  ]);
+  report.soak = JSON.parse(readFileSync(soakOutput));
+  assert.equal(report.soak.passed, true);
+  report.preservation.sourceAfter = Object.fromEntries(
+    sourceFiles.map((p) => [p, hash(p)]),
+  );
+  report.preservation.historicalAfter = Object.fromEntries(
+    historicalFiles.map((p) => [p, hash(p)]),
+  );
+  report.preservation.tagObjectAfter = git('rev-parse', 'v0.15.0');
+  assert.deepEqual(
+    report.preservation.sourceAfter,
+    report.preservation.sourceBefore,
+  );
+  assert.deepEqual(
+    report.preservation.historicalAfter,
+    report.preservation.historicalBefore,
+  );
+  assert.equal(
+    report.preservation.tagObjectAfter,
+    report.preservation.tagObjectBefore,
+  );
+  report.passed = true;
+  save();
+  console.log(
+    JSON.stringify({
+      passed: true,
+      node: process.version,
+      sourceCommit: report.sourceCommit,
+      tests: 184,
+      exports: 38,
+      profile,
+      operations: report.soak.operationCounts,
+    }),
+  );
+} catch (error) {
+  report.failure = error.stack;
+  save();
+  throw error;
+}
