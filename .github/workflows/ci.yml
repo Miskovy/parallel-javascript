@@ -20,6 +20,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify frozen v0.15 baseline
+        run: |
+          git rev-parse --verify "refs/tags/v0.15.0^{commit}"
+          git rev-parse v0.15.0
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
