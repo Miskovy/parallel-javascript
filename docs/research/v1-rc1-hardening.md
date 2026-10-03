@@ -1,36 +1,116 @@
-# v1 RC1 hardening report
+# PJS V1.0.0-RC.1 HARDENING REPORT
 
-Source preparation from released v0.15.0 commit
-`58a3ce056d8ef9b7cf6991a37fcc7fcffc018e7c`, initially clean Windows checkout.
-v0.15.0 tag/release remain immutable. All baseline gates pass, including 184
-individually counted runtime tests and actual package consumers/examples.
+**Decision B: Windows PASS; RC BLOCKED pending fresh Linux qualification.**
+No runtime defect was observed. This is the required one-OS handoff, not
+authorization to tag a Windows-only RC. [Readiness](v1-rc1-readiness.md) and the
+[exact Linux handoff](v1-rc1-linux-handoff.md) describe the remaining release gates.
 
-The [proposal](../proposal-v1.0.0-rc.1.md) preceded implementation. New bounded
-contract tooling targets repetition, deterministic failure injection and lifecycle
-pressure, not new features. No runtime source, public type, option, export or
-semantic change. New tooling corrects its own npm path resolution for external
-directories; this is not a runtime defect. Exact candidate source and fresh
-qualification evidence will be recorded after its commit.
+| Requested field                      | Result                                                                                                                                                         |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| STARTING RELEASE                     | v0.15.0, unchanged annotated tag and GitHub prerelease                                                                                                         |
+| STARTING COMMIT                      | `58a3ce056d8ef9b7cf6991a37fcc7fcffc018e7c`                                                                                                                     |
+| WORKING TREE                         | Initially clean; candidate committed; this follow-up contains evidence/reports only                                                                            |
+| HOST                                 | Windows 10 Pro 10.0.19045 build 19045, x64; i3-10100F, 4 physical/8 logical CPUs; 17,037,594,624 bytes RAM                                                     |
+| NODE MATRIX                          | 22.13.0 / 22.23.3 / 24.21.0, explicit executables; default 24.21.0 unchanged                                                                                   |
+| NODE 22.13.x RESULT                  | Earliest boundary 22.13.0 PASS: full exact-candidate gates, package, installed consumers, standard soak                                                        |
+| NODE 24 RESULT                       | 24.21.0 PASS; same gates plus clean extended reproduction                                                                                                      |
+| PUBLIC EXPORT DIFF                   | Zero; 38 symbols: 16 values, 22 types; 25 source/declaration files identical                                                                                   |
+| STABILITY SURFACE                    | Preserve v0.15 core candidates, specialized ownership, experimental ranges/options, diagnostic stats and unsupported internal composition                      |
+| BASELINE VALIDATION                  | build, npm test, test:types, typecheck:compat, lint, format:check, diff check, docs, contracts, package and CPU example PASS before changes                    |
+| RUNTIME TEST COUNT                   | 184/184 individual tests on each Node; zero failed/cancelled/skipped; unchanged test count                                                                     |
+| CONTRACT TESTS                       | Independent direct-file counts plus full node:test; new scenario checks protect repetition/pressure without inflating unit count                               |
+| LIFECYCLE SOAK                       | Three standard runs, one clean extended, one independent standard GC control; all PASS                                                                         |
+| OPERATIONS EXECUTED                  | 70,017 accepted logical tasks; each standard 7,903, extended 38,405; installed smoke additionally repeated                                                     |
+| QUEUED CANCELLATION                  | Body never starts; buffer remains attached; ownership claim reusable                                                                                           |
+| ACTIVE CANCELLATION                  | Caller settles while worker stays occupied; late results ignored, no early reuse                                                                               |
+| TIMEOUTS                             | Queued, physically running and consumer-delivery waiting scenarios PASS                                                                                        |
+| ABORTSIGNAL CLEANUP                  | getEventListeners verifies zero remaining abort listeners; no suppressed warnings                                                                              |
+| WORKER CRASHES                       | Controlled worker process exits, simultaneous two-worker storm and exhausted restart budget PASS                                                               |
+| WORKER REPLACEMENT                   | Fixed target restored; new work correct; bounded restarts; no replay/duplicate worker IDs                                                                      |
+| ERRORING TASKS                       | Throws/rejections retain concrete task errors; future work succeeds                                                                                            |
+| QUEUE SATURATION                     | Gated single-worker queue 128 fills/rejects with PjsQueueFullError; FIFO 0..127, drain and recovery PASS                                                       |
+| STREAMRANGE                          | Completion order explicitly demonstrated with first partition gated; no missing/duplicate/overlapping range elements                                           |
+| SLOW CONSUMER                        | Controlled yield delay with live count/byte invariants; no performance-latency claim                                                                           |
+| CONSUMER BREAK                       | break/return/throw clean production and buffers; active posted jobs may finish                                                                                 |
+| COUNT BACKPRESSURE                   | Actual buffered plus admitted-unsettled children <= cap 1/2/4, including zero-byte output                                                                      |
+| EXACT RESULT CREDIT                  | Correct varied lengths PASS; smaller/larger mismatches reject before successful delivery                                                                       |
+| UPPER-BOUND RESULT CREDIT            | Maximum enforced; actual reconciliation/refund and terminal release PASS                                                                                       |
+| REFUND ACCOUNTING                    | M-A sums/event counts verified for zero, small and equal-to-maximum actual output                                                                              |
+| RESULT CONTRACT VIOLATIONS           | Binary/map/capacity errors have concrete identity, clean accounting and healthy followup                                                                       |
+| TRANSFER                             | Eligible input detaches at posting; output returned correctly; queued cancellation preserves ownership                                                         |
+| SHARED INPUT                         | Concurrent immutable shared reuse agrees with clone sum; mixed transports do not contaminate state                                                             |
+| RANGE BOUNDARIES                     | Empty, one, partial tail, oversized grain, divisible/nondivisible; typed 10,001-element tail; completion-only uncloneable discard PASS                         |
+| SHUTDOWN MATRIX                      | Idle/completed/active/queued/stream/cancelled/replacement states; graceful/forced behavior PASS                                                                |
+| MULTIPLE SHUTDOWN                    | Same promise before/after completion; first call fixes drain mode                                                                                              |
+| SUBMISSION DURING SHUTDOWN           | Concrete PjsRuntimeStateError                                                                                                                                  |
+| SUBMISSION AFTER SHUTDOWN            | Concrete PjsRuntimeStateError                                                                                                                                  |
+| PROCESS EXIT                         | Installed children naturally exit; watchdog only fails hangs; no parent process.exit                                                                           |
+| MULTIPLE RUNTIMES                    | Independent worker IDs/queues/counters/shutdown, no interference                                                                                               |
+| REPEATED CONSTRUCT / RUN / SHUTDOWN  | 120 fresh lifetimes inside extended; all terminal owners/workers zero                                                                                          |
+| MEMORY OBSERVATION                   | PASS WITH CAVEAT; fields separate; fresh GC control reduces heap 15.1 MB to 8.1 MB; RSS high-water remains                                                     |
+| RESOURCE LEAK STATUS                 | No growing PJS-owned task/operation/credit/worker/listener/timer residue in bounded campaigns; no unlimited-memory claim                                       |
+| PUBLIC ERROR MATRIX                  | All twelve concrete classes triggered in monorepo and actual installed JS package; types independently compiled                                                |
+| PACKAGE REPRODUCIBILITY              | Two independent clean npm-ci/build states have identical 128 file hashes and archive bytes; three-Node packages share hashes                                   |
+| PACKAGE CONTENT MANIFEST             | 100 dist JS/declaration/map files, 25 matching sources, package.json/README/LICENSE; 96,450 packed / 495,405 unpacked bytes; zero runtime dependencies         |
+| JAVASCRIPT CONSUMER                  | Separate external actual-tarball project; core/range/shared/transfer/stream/error/shutdown PASS                                                                |
+| TYPESCRIPT CONSUMER                  | Independent strict project with no inherited repo config/skipLibCheck; generics/options/signal/stream/ownership/errors; emitted workers PASS                   |
+| WORKER PATH                          | Installed artifact works from unrelated cwd and paths with spaces                                                                                              |
+| EXAMPLES                             | Six installed examples PASS on three Nodes and both clean builds                                                                                               |
+| LINUX QUALIFICATION                  | BLOCKER: fresh exact-candidate minimum/current 24 still required; historical Fedora not reused                                                                 |
+| WINDOWS QUALIFICATION                | PASS on exact candidate, three Nodes, clean packages and bounded soaks                                                                                         |
+| MACOS STATUS                         | NOT CLAIMED; ARM64 also unqualified; not an RC blocker                                                                                                         |
+| CI MATRIX                            | Four jobs, Linux/Windows 22.13.0/24; actual installed package + smoke each; standard/extended manual; execution not claimed here                               |
+| DOCUMENTATION                        | Proposal preceded implementation; contracts/errors/readiness/soak/report/handoff; internal link check PASS                                                     |
+| HISTORICAL ARTIFACT PRESERVATION     | 182 old docs/result artifacts byte-identical, including all Fedora/Windows campaign evidence; tag unchanged                                                    |
+| RUNTIME SOURCE CHANGES               | None; all 25 files identical to v0.15.0                                                                                                                        |
+| PUBLIC SEMANTIC CHANGES              | None: scheduling/admission/settlement/cancellation/credits/replacement/ordering/shutdown unchanged                                                             |
+| BUGS FOUND                           | No runtime defect; tooling development exposed relative npm CLI, compiler alias path and formatter/lint iterator-chain issues                                  |
+| BUGS FIXED                           | Tooling corrected before candidate commit; no runtime fix required                                                                                             |
+| REMAINING BLOCKERS                   | Fresh Linux qualification on same candidate, then clean final release-commit verification before tagging                                                       |
+| PACKAGE VERSION                      | Prepared 1.0.0-rc.1; lockfile metadata updated, dependency records unchanged                                                                                   |
+| FINAL CANDIDATE COMMIT               | `cad38a178d19d42d4be1cb542ccd5e67be54896a`                                                                                                                     |
+| CANONICAL TARBALL                    | Windows qualified candidate `.node-tools/rc1/canonical/pjs-runtime-1.0.0-rc.1.tgz`; final release pack awaits remaining gates                                  |
+| TARBALL SHA-256                      | `56cedf9ba5b03b445ce8fa44c6c72fde78fc75a10731632d27a2338bbbc02b3a`                                                                                             |
+| TAG STATUS                           | RC tag NOT CREATED; v0.15.0 unchanged                                                                                                                          |
+| GITHUB RELEASE STATUS                | RC release NOT CREATED; existing v0.15.0 release unchanged                                                                                                     |
+| NPM STATUS                           | NOT PUBLISHED                                                                                                                                                  |
+| FINAL DECISION                       | B: qualification gate blocked; no Windows runtime defect identified                                                                                            |
+| V1.0.0-RC.1 STATUS                   | BLOCKED                                                                                                                                                        |
+| RECOMMENDED POST-RC OBSERVATION PLAN | After Linux/release gates: external installed-consumer observation and incident reproduction; RC2 only for demonstrated fixes; no automatic final 1.0/features |
+| COMMITS CREATED                      | Candidate `cad38a178d19d42d4be1cb542ccd5e67be54896a`; evidence-only commit containing this report; full evidence SHA supplied with handoff                     |
 
-Node 22.13.0 portable official Windows x64 archive was SHA-256 verified:
-`b0feb09ebf41328628e7383f7a092fb7342ce1e05c867a90cf8f1379205a8429`.
-Minimum development build/types, all 184 contracts, installed JS/TS, six examples
-and all-error RC smoke pass. Default Node 24.21.0, PATH and Balanced plan unchanged.
-Actual environment will accompany candidate validation; hardware values are not
-assumed. Existing Node 22.23.3 supplies the middle version matrix cell.
+## Node, V8, OpenSSL and environment
 
-New source/declaration snapshots freeze all 38 root exports and every runtime
-source/declaration file against v0.15.0. New package controls install into separate
-external JS/TS projects, use paths with spaces and unrelated cwd, preserve ESM
-export restrictions/source maps, and require natural exit. New CI pins the minimum
-boundary on Linux and Windows and keeps extended profiles manual.
+| Node    | V8                  | OpenSSL     | npm     |
+| ------- | ------------------- | ----------- | ------- |
+| 22.13.0 | 12.4.254.21-node.22 | 3.0.15+quic | 10.9.2  |
+| 22.23.3 | 12.4.254.21-node.57 | 3.5.8       | 10.9.9  |
+| 24.21.0 | 13.6.233.17-node.53 | 3.5.8       | 11.18.0 |
 
-**Decision B at this boundary: candidate qualification pending; RC not released.**
-This host performs Windows qualification and a precise Linux handoff. No fresh
-Linux result is inferred from historical Fedora or CI configuration. macOS/ARM64
-are NOT CLAIMED. Experimental methods/options remain experimental; stats remain
-diagnostic. See [readiness](v1-rc1-readiness.md) and [soak report](v1-rc1-soak.md).
+Active power: Balanced, GUID `381b4222-f694-41f0-9685-ff5bb260df2e`.
+Before/after PATH hashes, Node/npm resolution, default versions, power and unset
+UV_THREADPOOL_SIZE match. Node 22.13.0 was an isolated official portable download,
+checksum `b0feb09ebf41328628e7383f7a092fb7342ce1e05c867a90cf8f1379205a8429`;
+Node 22.23.3 already existed. No uninstall, nvm/default/PATH/power/CPU change.
 
-No @pjs/crypto/compression package, scheduler change, feature, RC2, final 1.0 or
-npm publication. The post-RC observation plan is external installed-consumer use
-and lifecycle/ownership incident reporting; RC2 requires a demonstrated fix.
+## Files added and modified
+
+Added: [proposal](../proposal-v1.0.0-rc.1.md),
+[contracts](v1-rc1-contract-inventory.md), [errors](v1-rc1-error-matrix.md),
+this report, [readiness](v1-rc1-readiness.md), [soak](v1-rc1-soak.md),
+[Linux handoff](v1-rc1-linux-handoff.md), and nine files under
+[scripts/rc](../../scripts/rc/README.md). New raw evidence:
+
+- [validation-v1.0.0-rc.1-windows.json](../../benchmarks/results/validation-v1.0.0-rc.1-windows.json)
+- [package-v1.0.0-rc.1-windows.json](../../benchmarks/results/package-v1.0.0-rc.1-windows.json)
+- [soak-v1.0.0-rc.1-windows.json](../../benchmarks/results/soak-v1.0.0-rc.1-windows.json)
+
+Existing files modified: `.github/workflows/ci.yml`, `.gitignore`, `README.md`,
+`package.json`, `package-lock.json`, `packages/runtime/package.json`. The evidence
+follow-up updates only the newly added research reports and raw JSON. No historical
+report/artifact or runtime source was edited. Canonical tarball/checksum, transfer
+bundle and local diagnostic helpers are ignored workspace artifacts.
+
+Full outputs/counts/environment/hashes are in [validation evidence](../../benchmarks/results/validation-v1.0.0-rc.1-windows.json);
+all manifest/file hashes and consumer commands in [package evidence](../../benchmarks/results/package-v1.0.0-rc.1-windows.json);
+invariants, memory fields and the exact GC-control script in [soak evidence](../../benchmarks/results/soak-v1.0.0-rc.1-windows.json).
