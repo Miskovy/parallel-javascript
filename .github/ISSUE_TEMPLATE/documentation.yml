@@ -1,0 +1,24 @@
+name: Documentation
+description: Report incorrect, missing, or unclear documentation.
+title: '[Docs]: '
+body:
+  - type: input
+    id: page
+    attributes:
+      label: Affected page or path
+      placeholder: README.md, docs/guide/core-api.md, or a URL
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is incorrect or unclear?
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested clarification (optional)
+  - type: markdown
+    attributes:
+      value: Do not include vulnerability details; use [SECURITY.md](https://github.com/Miskovy/pjs/blob/main/SECURITY.md) for private reporting.

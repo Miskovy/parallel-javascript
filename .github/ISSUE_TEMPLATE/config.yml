@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability privately
+    url: https://github.com/Miskovy/pjs/blob/main/SECURITY.md
+    about: Read the security policy for GitHub private reporting and the private maintainer-contact fallback. Do not post vulnerability details in public issues.
