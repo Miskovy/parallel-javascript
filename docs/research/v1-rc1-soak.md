@@ -1,6 +1,9 @@
 # v1 RC1 bounded soak
 
-**PASS on Windows, exact candidate `cad38a178d19d42d4be1cb542ccd5e67be54896a`.**
+**PASS on Windows and tested Fedora/Linux x64, exact candidate `cad38a178d19d42d4be1cb542ccd5e67be54896a`.**
+
+## Retained Windows runs
+
 [Raw scenario/terminal/memory evidence](../../benchmarks/results/soak-v1.0.0-rc.1-windows.json)
 is separate from immutable historical measurements. [Commands and bounds](../../scripts/rc/README.md)
 describe fixed workers/queues/cycles/watchdogs/sample limits. Runs were sequential.
@@ -62,5 +65,37 @@ module and report retention is application-owned. No growing PJS logical owner,
 worker, listener or timer residue was observed. This is bounded evidence, not an
 unbounded memory guarantee. Exact control command/script are in the raw artifact.
 
-Fresh Linux minimum/current-Node reproduction is required. Timings and RSS need
-not match Windows; correctness, ownership and cleanup invariants must match.
+Fresh Linux minimum/current-Node qualification and clean extended reproduction
+passed below. Timing and RSS are host observations; contracts and invariants match.
+
+## Fresh Fedora/Linux runs
+
+All runs used unchanged exact-candidate scenarios, seed 20261003, sequentially.
+
+| Run               | Scenario checks | Accepted logical tasks | Duration |
+| ----------------- | --------------: | ---------------------: | -------: |
+| v22.13.0 standard |             409 |                  7,903 |  17.15 s |
+| v24.13.1 standard |             409 |                  7,903 |  16.83 s |
+| v24.13.1 extended |           2,009 |                 38,405 |  78.50 s |
+
+Linux total: **54,211 accepted tasks, 2,827 scenario checks**. Extended includes
+120 fresh lifetimes. Standard/extended count the same scenario families as Windows.
+Separate installed smoke checks also passed for both Node cells and both clean builds.
+
+Every terminal has zero tasks, operations, queue, busy/live workers, reservations,
+execution correlations, credit operations, buffers, reserved/unreconciled/reconciled
+bytes, production claims and reserved workers. Abort listeners were checked directly;
+zero warnings. Final active resources were two normal PipeWrap stdio handles with
+no Timeout or MessagePort. All child processes exited naturally.
+
+The exact-candidate extended run sampled 367 memory points. Peak RSS was 262,434,816
+bytes; peak heapUsed 117,812,296; peak external 2,491,037; peak arrayBuffers 192,957.
+Final RSS was 238,284,800; heapUsed 102,116,352; external 2,320,174; arrayBuffers 50,812.
+These separate fields include retained harness reports and allocation/GC effects.
+Linux did not run the additional Windows GC control and makes no GC-baseline or
+unbounded memory claim. All actual runtime-owned bookkeeping and workers returned
+to zero across 136 extended terminals. No bounded runtime/listener/timer/port leak
+was observed. RSS returning to its initial value is not a frozen guarantee.
+
+[Raw Linux scenarios, terminals, counters and memory samples](../../benchmarks/results/soak-v1.0.0-rc.1-linux.json)
+are retained separately; Windows and historical artifacts remain unchanged.

@@ -1,9 +1,15 @@
 # PJS V1.0.0-RC.1 HARDENING REPORT
 
-**Decision B: Windows PASS; RC BLOCKED pending fresh Linux qualification.**
-No runtime defect was observed. This is the required one-OS handoff, not
-authorization to tag a Windows-only RC. [Readiness](v1-rc1-readiness.md) and the
-[exact Linux handoff](v1-rc1-linux-handoff.md) describe the remaining release gates.
+**Decision A: the frozen RC candidate passes Windows and fresh Fedora/Linux qualification.**
+No runtime defect or public semantic change was found. The combined evidence
+commit must pass clean final validation and canonical logical package comparison
+before tagging. See [readiness](v1-rc1-readiness.md) and
+[Linux qualification](v1-rc1-linux-qualification.md).
+
+## Retained Windows qualification
+
+The following Windows report records its original handoff status. Its raw evidence
+and historical observations remain unchanged; Linux closure is recorded below.
 
 | Requested field                      | Result                                                                                                                                                         |
 | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -114,3 +120,42 @@ bundle and local diagnostic helpers are ignored workspace artifacts.
 Full outputs/counts/environment/hashes are in [validation evidence](../../benchmarks/results/validation-v1.0.0-rc.1-windows.json);
 all manifest/file hashes and consumer commands in [package evidence](../../benchmarks/results/package-v1.0.0-rc.1-windows.json);
 invariants, memory fields and the exact GC-control script in [soak evidence](../../benchmarks/results/soak-v1.0.0-rc.1-windows.json).
+
+## Fresh Linux qualification and cross-platform result
+
+Exact candidate `cad38a178d19d42d4be1cb542ccd5e67be54896a` passed on Fedora 44
+KDE x64, kernel 6.19.10-300.fc44.x86_64, Ryzen 3 PRO 3300U, 4 physical/logical/available
+CPUs, 7,715,655,680 bytes RAM, AC connected, schedutil governor. Default Node
+24.13.1/npm 11.8.0 and power/CPU/PATH/UV_THREADPOOL_SIZE settings were preserved.
+Official portable minimum Node 22.13.0/npm 10.9.2 was checksum-verified.
+
+Both Node cells passed 184/184 contracts, types, compatibility, lint/format/docs,
+38 exports (16 values/22 types), and byte-identical 25 source/25 declaration files.
+Both passed independent installed JS/TS projects, twelve public error identities,
+six examples, worker resolution with spaces/unrelated cwd and natural process exit.
+Standard runs each passed 409 checks/7,903 accepted tasks. Clean Node 24 extended
+passed 2,009 checks/38,405 tasks and 120 lifetimes. Total Linux retained hardening:
+**2,827 checks and 54,211 accepted tasks**. All terminal owners/credits/workers
+returned to zero; no abort-listener, warning, timer or port residue.
+
+Clean A/B packages were byte-identical on Fedora, with all 128 logical file hashes
+matching Windows. Fedora npm 11.8 packed 96,513 bytes/495,405 unpacked bytes;
+SHA-256 `079e81ae887669a2f99116f8a8596ad722d5db39210a9e7ec5718f5c3cfdd5f0`.
+The portable npm 10 package matched Windows archive bytes too. Archive differences
+under Fedora npm 11.8 do not change logical package contents. Zero runtime dependencies.
+
+Caller settlement retained the busy physical worker and 1024 maximum credits until
+physical completion. All prepared cancellation, timeout, crash/replacement/storm,
+FIFO, stream/consumer/backpressure/refund/transport/boundary and shutdown assertions
+passed unchanged. RSS and timing observations are host-specific. No runtime, public
+contract, package semantics, exports, declarations or harness changed. macOS/ARM64
+remain NOT CLAIMED. Historical evidence and Windows JSON remain byte-identical.
+
+Remote `main` includes later CI-only commit `4a649c7`; the combined RC evidence
+branch starts at Windows evidence `36176d5` so candidate-to-release changes remain
+reports/JSON only. No tag is created from the detached candidate worktree.
+
+[Linux validation](../../benchmarks/results/validation-v1.0.0-rc.1-linux.json),
+[Linux package](../../benchmarks/results/package-v1.0.0-rc.1-linux.json),
+[Linux soak](../../benchmarks/results/soak-v1.0.0-rc.1-linux.json) and
+[qualification report](v1-rc1-linux-qualification.md) retain the fresh results.
