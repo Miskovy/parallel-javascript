@@ -1,6 +1,6 @@
 # References
 
-This is the canonical bibliography for chapters 01–04 and the glossary.
+This is the canonical bibliography for chapters 01–05 and the glossary.
 Identifiers are stable within this book. External sources were consulted on
 **2026-10-04**. Living specifications and implementation pages can change; Node
 API references below use the 24.x documentation, which identified itself as
@@ -146,6 +146,72 @@ notes in the Fall 2026 course materials.
 Used for work/span analysis and the processor/time lower bounds. The URL is a
 living course resource; numerical dependency examples in the book are original.
 
+### BLELLOCH-WORK-DEPTH
+
+Guy E. Blelloch. _Programming Parallel Algorithms_. Communications of the ACM
+39(3), March 1996.
+[Author-hosted article](https://www.cs.cmu.edu/~scandal/cacm.html),
+[Work and Depth](https://www.cs.cmu.edu/~scandal/cacm/node1.html),
+[Relationship of Work and Depth to Running Time](https://www.cs.cmu.edu/~scandal/cacm/node3.html).
+Used for compositional work/depth analysis, reduction trees, and the limitations
+of abstract cost models when communication matters. Chapter 05's graph and
+numerical schedules are original examples.
+
+### BRENT-SIMULATION
+
+Richard P. Brent. _The Parallel Evaluation of General Arithmetic Expressions_.
+Journal of the ACM 21(2), April 1974, pp. 201–206.
+[Author's publication record and lemma summary](https://maths-people.anu.edu.au/brent/pub/pub022.html),
+[Original paper](https://maths-people.anu.edu.au/brent/pd/rpb022.pdf).
+Lemma 2 and its proof in Section 4 were consulted for simulating a unit-operation
+parallel computation on a limited processor count. Chapter 05 also derives the
+related bound for a greedy unit-cost DAG schedule; it does not transfer that
+bound to arbitrary weighted, blocking Node tasks.
+
+### UWO-PARALLELISM
+
+Marc Moreno Maza, University of Western Ontario. _Multithreaded Parallelism and
+Performance Measures_, course CS 4435–CS 9624, undated lecture slides.
+[Lecture PDF](https://www.csd.uwo.ca/~mmorenom/CS433-CS9624/Lectures/2.pdf).
+Slides 6–11, 26–30, and 43–44 were consulted for work/span, average parallelism,
+greedy scheduling, and the convention `slackness = work / (processors × span)`.
+The URL's course identifier differs from the identifier printed in the slides;
+the title and author above follow the document itself.
+
+### CMU-SCALING
+
+Carnegie Mellon University, course 15-418/15-618. _Workload-Driven Performance
+Evaluation_, Lecture 9, Spring 2018.
+[Lecture PDF](https://www.cs.cmu.edu/afs/cs.cmu.edu/academic/class/15418-s18/www/lectures/09_perfeval.pdf).
+Slides 3–9 and 12–24 were consulted for baseline selection, strong/weak scaling,
+cache-driven superlinear effects, and problem-, time-, and memory-constrained
+growth. Chapter 05 derives its own cubic-work examples; it does not treat every
+increase in input bytes as constant computational work per processor.
+
+### GRAMA-ISOEFFICIENCY
+
+Ananth Y. Grama, Anshul Gupta, and Vipin Kumar. _Isoefficiency: Measuring the
+Scalability of Parallel Algorithms and Architectures_. IEEE Parallel &
+Distributed Technology 1(3), August 1993, pp. 12–21.
+[DOI: 10.1109/88.242438](https://doi.org/10.1109/88.242438),
+[Institutional publication record](https://experts.umn.edu/en/publications/isoefficiency-measuring-the-scalability-of-parallel-algorithms-an/),
+[Accessible original paper at Maryland](https://www.cs.umd.edu/class/fall2019/cmsc714/readings/Grama-isoefficiency.pdf).
+The opening analysis on pp. 12–15 was consulted for growing work to maintain
+efficiency and relating useful work to total overhead. Chapter 05 uses ideal
+processor-time units and its own numerical targets, rather than fitting the
+paper's architecture examples to PJS.
+
+### KARP-FLATT
+
+Alan H. Karp and Horace P. Flatt. _Measuring Parallel Processor Performance_.
+Communications of the ACM 33(5), May 1990, pp. 539–543.
+[DOI: 10.1145/78607.78614](https://doi.org/10.1145/78607.78614),
+[Accessible original paper](https://parallelcomp.github.io/speedup-karp-flatt-cacm90.pdf).
+The “New Metric” derivation and discussion on pp. 539–540 were consulted for
+effective serial fraction and its absorption of imbalance and coordination
+costs. The publisher endpoint was inaccessible; the cited copy contains the
+original article. Chapter 05 derives its own positive/negative examples.
+
 ### AMDAHL
 
 Gene M. Amdahl. _Validity of the single processor approach to achieving large
@@ -228,6 +294,24 @@ PJS. Same v0.3 report and host; alternating baseline/candidate control.
 [alternating control](../benchmarks/results/cpu-regression-v0.3.json).
 Used for the failure to reproduce the initial one-worker slowdown and remaining
 variance. It does not establish zero overhead.
+
+### PJS-V03-SCALING
+
+PJS. _v0.3 technical report: reusable shared inputs_, CPU observations and
+shared-input sessions, 2026-09-27; Node v24.13.1, Linux
+6.19.10-300.fc44.x86_64, AMD Ryzen 3 PRO 3300U, four available logical CPUs.
+[Report and investigation](../docs/benchmarks-v0.3.md#cpu-observations-and-regression-investigation),
+[Benchmark methodology](../benchmarks/README.md),
+[Raw CPU sweep](../benchmarks/results/cpu-v0.3.json),
+[Alternating control](../benchmarks/results/cpu-regression-v0.3.json),
+[Shared-session report](../docs/benchmarks-v0.3.md#clone-transfer-and-shared-results),
+[Raw shared sessions](../benchmarks/results/shared-v0.3.json).
+Used for Chapter 05's distinction between direct-serial and one-pool-worker
+speedup, unstable superlinear-looking ratios, and a losing worker-count increase.
+CPU pool runs use 32 chunks; initial order was serial/four/two/one workers.
+Warm operation timings exclude startup. Shared-session amortized costs include
+one shared preparation over five executions. Neither campaign measures graph
+span or establishes a weak-scaling growth rule.
 
 ### PJS-V04-PARTITIONING
 
