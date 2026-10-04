@@ -19,6 +19,7 @@ The beginner path is:
 1. [Concurrency, Parallelism, and Computation](01-concurrency-parallelism-and-computation.md): distinguish overlapping activities from simultaneous execution, then reason about dependencies.
 2. [How Node.js Actually Executes JavaScript](02-how-node-executes-javascript.md): locate computation, waiting, heaps, and communication in the whole process.
 3. [The Cost Model of Parallelism](03-the-cost-model-of-parallelism.md): derive limits, account for overhead, and interpret retained experiments.
+4. [Partitioning, Grain Size, and Load Balance](04-partitioning-grain-size-and-load-balance.md): choose work boundaries, compare assignment strategies, and study the v0.4 grain sweep.
 
 Keep the [glossary](glossary.md) beside you. Mathematics uses GitHub-compatible
 `$$` display blocks; adjacent prose or plaintext gives the same calculation.
@@ -108,12 +109,11 @@ should be able to evaluate that design, including choosing a different one.
 
 ## Roadmap for later review
 
-Only chapters 01–03 exist in this milestone. Subject to human review of their
-tone, depth, citations, and accessibility, later material could cover:
+Chapters 01–04 are available. Subject to human review of their tone, depth,
+citations, and accessibility, later material could cover:
 
 | Proposed chapter | Focus                                                   |
 | ---------------- | ------------------------------------------------------- |
-| 04               | Partitioning, grain size, and load balance.             |
 | 05               | Work, span, and scaling beyond the introductory models. |
 | 06               | Scheduling and bounded admission.                       |
 | 07               | Data movement and ownership.                            |

@@ -77,6 +77,30 @@ must be read with their own boundaries and sampling limitations.
 | Amortization             | Distributing a one-time cost over repeated uses for an average/session analysis. It does not remove first-use latency.                                                 |
 | Oversubscription         | Runnable demand beyond useful execution capacity available to that workload. Configured PJS workers are only one source of process/machine demand.                     |
 
+## Partitioning and assignment
+
+[Chapter 04](04-partitioning-grain-size-and-load-balance.md) develops these models
+and examples. [OPENMP-SCHEDULE](references.md#openmp-schedule) gives concrete
+loop-scheduling vocabulary; [BL-WORK-STEALING](references.md#bl-work-stealing)
+states the randomized algorithm's assumptions. The independent-job bound is
+derived in the chapter, with historical attribution to
+[GRAHAM-LIST](references.md#graham-list).
+
+| Term                     | Meaning                                                                                                                                                         |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Makespan                 | Elapsed time until all work in a specified batch finishes. The ideal chunk model excludes runtime overhead and unrelated application work.                      |
+| Static assignment        | Choosing which resource owns each piece before observing its completion. Fixed partition boundaries do not by themselves imply static assignment.               |
+| Dynamic assignment       | Choosing the next ready piece when execution capacity becomes available. A central FIFO can assign fixed-grain chunks dynamically.                              |
+| Adaptive partitioning    | Changing future piece sizes or boundaries as execution proceeds. It is a different decision from assigning already defined pieces.                              |
+| Block-cyclic assignment  | Assigning successive fixed-size blocks to resources in a repeating cycle. It may spread position-dependent cost while changing locality.                        |
+| Skew                     | Unequal useful work associated with input data or decomposition. Equal item counts can conceal unequal computation costs.                                       |
+| Over-partitioning        | Creating more schedulable pieces than execution resources, without necessarily creating more workers. It adds assignment opportunities and recurring overhead.  |
+| List scheduling          | Assigning the next ready piece from a list whenever a resource is idle. The chapter's bound assumes independent, initially ready chunks on identical resources. |
+| Work stealing            | An idle resource takes ready work from another resource's queue. It does not subdivide an opaque task already executing.                                        |
+| Deque                    | Double-ended queue. The classical work-stealing algorithm uses opposite ends for owner operations and stealing.                                                 |
+| Fully strict computation | In the cited computation model, join edges return from child threads to their parents. This dependency restriction matters to the work-stealing theorem.        |
+| Halo                     | Additional neighboring input read by a partition beyond its output region. Read overlap and exclusive output ownership require separate reasoning.              |
+
 ## Data, lifetime, and bounds
 
 Transport mechanics come from [NODE-WORKERS](references.md#node-workers),
