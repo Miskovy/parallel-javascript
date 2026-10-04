@@ -1,0 +1,109 @@
+name: Bug Report
+description: Report a runtime, package/install, or type correctness problem.
+title: '[Bug]: '
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve PJS. **Do not report security vulnerabilities here.**
+        Follow [SECURITY.md](https://github.com/Miskovy/pjs/blob/main/SECURITY.md) for private reporting.
+        Remove secrets and personal information from public code and logs.
+  - type: checkboxes
+    id: existing-issues
+    attributes:
+      label: Existing issues
+      options:
+        - label: I searched existing issues for this problem.
+          required: true
+  - type: input
+    id: pjs-version
+    attributes:
+      label: PJS version
+      description: Include the commit SHA if using a checkout.
+    validations:
+      required: true
+  - type: input
+    id: installation-source
+    attributes:
+      label: Installation source
+      placeholder: Release tarball, locally packed tarball, or repository checkout
+    validations:
+      required: true
+  - type: input
+    id: node-version
+    attributes:
+      label: Node version
+      description: Output of node --version.
+    validations:
+      required: true
+  - type: input
+    id: npm-version
+    attributes:
+      label: npm version (if relevant)
+      description: Output of npm --version for install, build, or package problems.
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: OS name and version
+    validations:
+      required: true
+  - type: input
+    id: architecture
+    attributes:
+      label: Architecture
+      placeholder: x64, ARM64, or unknown
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      multiple: true
+      options:
+        - Task execution
+        - Worker lifecycle
+        - Cancellation/timeout
+        - Streaming
+        - Backpressure
+        - Memory ownership
+        - Package/install
+        - Types
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Include task modules, runtime configuration, and commands or steps needed to reproduce. A small repository link is also useful.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error/log output (if any)
+      render: text
+  - type: dropdown
+    id: consistency
+    attributes:
+      label: Does this reproduce consistently?
+      options:
+        - Every run
+        - Intermittently
+        - Observed once
+        - Unknown
+    validations:
+      required: true

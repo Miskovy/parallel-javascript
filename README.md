@@ -4,7 +4,9 @@ PJS runs explicitly registered CPU work in persistent Node workers, with bounded
 admission and explicit memory ownership. Your application keeps its event loop
 for I/O; PJS provides a separate compute plane. There are no runtime dependencies.
 
-**v1.0.0-rc.1 hardening is in progress; release awaits both-platform qualification.**
+**[v1.0.0-rc.1](https://github.com/Miskovy/pjs/releases/tag/v1.0.0-rc.1) has been
+released as a prerelease.** Windows and Fedora/Linux x64 qualification completed;
+macOS and ARM64 remain unclaimed. Final v1.0.0 has not been released.
 [RC readiness](docs/research/v1-rc1-readiness.md) records the release gates and
 platform boundaries. The immutable v0.15.0 release remains available.
 [API stability](docs/stability.md) distinguishes core candidates, supported
@@ -173,4 +175,11 @@ summaries. Historical research lives under docs and benchmarks; production code
 imports none of the workload harnesses. See [toolchain](docs/toolchain.md) and the
 [benchmark methodology](benchmarks/README.md) for their separate purposes.
 
-MIT licensed. No publication, 1.0 tag or next milestone is implied by this work.
+## Contributing and community
+
+Start with the [contributor guide](CONTRIBUTING.md) for setup, validation, and
+runtime/API change expectations. See [support](SUPPORT.md) for questions and issue
+reporting, the [Code of Conduct](CODE_OF_CONDUCT.md) for community expectations,
+and the [security policy](SECURITY.md) for private vulnerability reporting.
+
+MIT licensed. RC1 is a prerelease; npm publication and final v1.0.0 are not claimed.

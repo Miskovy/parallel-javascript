@@ -1,0 +1,116 @@
+name: Performance Regression
+description: Report a reproducible slowdown with environment and repeated comparison results.
+title: '[Performance]: '
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Noisy one-shot timings are insufficient to establish a regression. Share repeated
+        measurements and equivalent workloads; include variability rather than selecting favorable runs.
+        A functional bug can use the Bug Report form without benchmark evidence.
+        Report vulnerabilities privately via [SECURITY.md](https://github.com/Miskovy/pjs/blob/main/SECURITY.md).
+  - type: input
+    id: pjs-version
+    attributes:
+      label: Current PJS version
+      description: Include the commit SHA if using a checkout.
+    validations:
+      required: true
+  - type: input
+    id: node-version
+    attributes:
+      label: Node version
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: OS and architecture
+    validations:
+      required: true
+  - type: input
+    id: cpu
+    attributes:
+      label: CPU model
+    validations:
+      required: true
+  - type: input
+    id: cpu-counts
+    attributes:
+      label: Physical cores / logical CPUs (if known)
+  - type: input
+    id: ram
+    attributes:
+      label: RAM
+      description: Total system memory; include available memory if known.
+    validations:
+      required: true
+  - type: input
+    id: workers
+    attributes:
+      label: Worker count
+      description: State the configured or observed count, including any default used.
+    validations:
+      required: true
+  - type: textarea
+    id: queue-settings
+    attributes:
+      label: Queue and backpressure settings
+      description: Include maxQueue and relevant stream/result-credit settings, or state that defaults were used.
+    validations:
+      required: true
+  - type: textarea
+    id: workload
+    attributes:
+      label: Workload
+      description: Describe the computation, input/output ownership mode, and what is timed (including or excluding startup).
+    validations:
+      required: true
+  - type: input
+    id: input-size
+    attributes:
+      label: Input size
+      description: Include task count and bytes or elements per task, as appropriate.
+    validations:
+      required: true
+  - type: dropdown
+    id: comparison
+    attributes:
+      label: What is the comparison against?
+      multiple: true
+      options:
+        - Previous PJS version
+        - Serial JavaScript
+        - Raw persistent worker_threads
+        - Native Node API
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: baseline
+    attributes:
+      label: Baseline version and results
+      description: Identify the version or control and provide measurements with units and variability. Explain any environment differences.
+    validations:
+      required: true
+  - type: textarea
+    id: current-results
+    attributes:
+      label: Current PJS results
+      description: Use the same units and equivalent workload; provide repeated results or a summary with variability.
+    validations:
+      required: true
+  - type: input
+    id: runs
+    attributes:
+      label: Number of measured runs
+      description: Give the count for each comparison and any separate warmup runs.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction code and commands
+      description: Include task modules and measurement steps, or link a small reproduction repository. Remove secrets from code and logs.
+    validations:
+      required: true

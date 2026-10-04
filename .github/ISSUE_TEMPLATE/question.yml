@@ -1,0 +1,41 @@
+name: Question / Support
+description: Ask about using PJS with a concrete goal and relevant context.
+title: '[Question]: '
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Search existing issues and the [core API guide](https://github.com/Miskovy/pjs/blob/main/docs/guide/core-api.md) first.
+        Remove secrets from public code and logs. Use [SECURITY.md](https://github.com/Miskovy/pjs/blob/main/SECURITY.md)
+        to report vulnerabilities privately.
+  - type: textarea
+    id: goal
+    attributes:
+      label: What are you trying to do?
+    validations:
+      required: true
+  - type: textarea
+    id: code
+    attributes:
+      label: Relevant code (if applicable)
+      description: Include task registration, modules, and runtime options where useful.
+  - type: input
+    id: pjs-version
+    attributes:
+      label: PJS version
+      description: Include the commit SHA if using a checkout.
+    validations:
+      required: true
+  - type: input
+    id: node-version
+    attributes:
+      label: Node version
+    validations:
+      required: true
+  - type: textarea
+    id: tried
+    attributes:
+      label: What have you tried?
+      description: Include relevant docs, approaches, and results; say if you are just getting started.
+    validations:
+      required: true
