@@ -84,17 +84,17 @@ Windows evidence is retained unchanged. No runtime or public semantic change.
 | PUBLIC SEMANTIC CHANGES              | ZERO                                                                                                                                           |
 | LINUX-SPECIFIC FINDINGS              | Sandbox child-process EPERM before tests: unchanged runner passed outside sandbox; Fedora npm archive bytes differ without content drift       |
 | BUGS FOUND                           | No candidate runtime/package/contract defect                                                                                                   |
-| BLOCKERS                             | Linux blocker closed; clean final combined evidence-commit verification remains before tagging                                                 |
+| BLOCKERS                             | NONE: Linux and clean combined evidence-commit gates passed                                                                                    |
 | LINUX EVIDENCE FILES                 | Three new Linux JSON artifacts; this report and contract/error/hardening/soak/readiness updates                                                |
-| LINUX EVIDENCE COMMIT                | Commit containing this report; exact SHA retained in final release validation                                                                  |
-| COMBINED FINAL RELEASE COMMIT        | Combined Windows/Linux evidence branch; exact SHA retained in release validation                                                               |
-| FINAL CANDIDATE DIFF STATUS          | Evidence-only required and checked before release; later remote CI-only commit excluded                                                        |
-| FINAL DECISION                       | A — authorize RC1 candidate; tagging follows clean combined-commit check                                                                       |
-| RC1 TAG STATUS                       | NOT CREATED at Linux evidence snapshot                                                                                                         |
-| GITHUB RC RELEASE STATUS             | NOT CREATED at Linux evidence snapshot                                                                                                         |
+| LINUX EVIDENCE COMMIT                | `6f17d645aa153ce093c0e19147517de8d0d11c16`                                                                                                     |
+| COMBINED FINAL RELEASE COMMIT        | Final metadata closure atop `6f17d64`; exact tag-target SHA and clean validation accompany the GitHub prerelease                               |
+| FINAL CANDIDATE DIFF STATUS          | PASS: reports/qualification JSON only; source/package/harness/CI unchanged from candidate; later CI-only commit excluded                       |
+| FINAL DECISION                       | A — AUTHORIZE RC1: both platforms and clean combined evidence commit PASS                                                                      |
+| RC1 TAG STATUS                       | AUTHORIZED after final immutable-commit audit                                                                                                  |
+| GITHUB RC RELEASE STATUS             | AUTHORIZED after final immutable-commit audit                                                                                                  |
 | NPM STATUS                           | NOT PUBLISHED                                                                                                                                  |
-| V1.0.0-RC.1 STATUS                   | QUALIFIED; final combined-commit validation/release pending                                                                                    |
-| NEXT STEP                            | Clean final combined-commit qualification, canonical package equality, annotated RC1 tag and GitHub prerelease; then external observation      |
+| V1.0.0-RC.1 STATUS                   | AUTHORIZED: release gate passed; publication follows final tag-target audit                                                                    |
+| NEXT STEP                            | Final metadata closure check, annotated RC1 tag/GitHub prerelease; then external installed-consumer observation                                |
 
 ## Exact commands and provenance
 
@@ -143,3 +143,20 @@ release-equivalence requirements. macOS and ARM64 remain NOT CLAIMED.
 [contracts](v1-rc1-contract-inventory.md), [errors](v1-rc1-error-matrix.md) and
 [soak report](v1-rc1-soak.md). Historical evidence, Windows JSON and v0.15 release
 remain unchanged. No npm publication, RC2, final v1.0 or new feature work.
+
+## Combined evidence release gate
+
+Linux evidence commit `6f17d645aa153ce093c0e19147517de8d0d11c16` passed a new
+clean clone/npm ci, build, 184/184 contracts, full types/compatibility, lint/format,
+documentation, API/source/declaration freeze, independent installed JS/TS consumers,
+twelve errors, six examples, natural exit and the prepared smoke profile. Its
+canonical tarball equals the qualified Node 24 candidate package in all 128 file
+hashes, logical manifest and archive bytes. The final report metadata commit
+receives the same clean checks before tagging; exact tag-target validation and
+canonical file hashes accompany the GitHub prerelease.
+
+The minimum and Fedora Node 24 gzip files differ only in compressed bytes: their
+decompressed tar streams are byte-identical, SHA-256
+`be1fed396b57818f5e7536beb33fad9d1572f4b82e8b863797b64ad37e370def`.
+This strengthens the required logical package equivalence without requiring
+cross-platform gzip identity. No candidate semantics or harness changed.

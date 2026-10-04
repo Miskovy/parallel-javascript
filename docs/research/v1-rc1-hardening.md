@@ -2,8 +2,8 @@
 
 **Decision A: the frozen RC candidate passes Windows and fresh Fedora/Linux qualification.**
 No runtime defect or public semantic change was found. The combined evidence
-commit must pass clean final validation and canonical logical package comparison
-before tagging. See [readiness](v1-rc1-readiness.md) and
+commit passed clean final validation and canonical package equality. The final
+metadata closure receives a fresh immutable-commit check before tagging. See [readiness](v1-rc1-readiness.md) and
 [Linux qualification](v1-rc1-linux-qualification.md).
 
 ## Retained Windows qualification
@@ -159,3 +159,13 @@ reports/JSON only. No tag is created from the detached candidate worktree.
 [Linux package](../../benchmarks/results/package-v1.0.0-rc.1-linux.json),
 [Linux soak](../../benchmarks/results/soak-v1.0.0-rc.1-linux.json) and
 [qualification report](v1-rc1-linux-qualification.md) retain the fresh results.
+
+## Release gate closure
+
+Combined Linux/Windows evidence commit `6f17d64` passed fresh npm ci/build, 184/184
+contracts, types/compatibility, lint/format/docs, frozen API/source/declarations,
+actual package, independent installed JS/TS consumers, twelve errors, six examples
+and natural process exit. All package hashes and canonical archive bytes match
+the qualified Fedora Node 24 candidate. Decision A: no claimed-platform blocker.
+Final metadata closure remains evidence-only and is checked again before the
+annotated RC1 tag/GitHub prerelease. npm remains NOT PUBLISHED.
