@@ -1,6 +1,6 @@
 # References
 
-This is the canonical bibliography for the first three chapters and glossary.
+This is the canonical bibliography for chapters 01–04 and the glossary.
 Identifiers are stable within this book. External sources were consulted on
 **2026-10-04**. Living specifications and implementation pages can change; Node
 API references below use the 24.x documentation, which identified itself as
@@ -29,6 +29,15 @@ Used for shared-memory terminology and the need to coordinate conflicting
 accesses. The glossary gives an introductory description, not a substitute for
 the specification's event-level definition.
 
+### ECMA-NUMBER
+
+Ecma International / TC39. _ECMAScript Language Specification_, living draft,
+“The Number Type” and “Number::add.”
+[Number addition](https://tc39.es/ecma262/multipage/ecmascript-data-types-and-values.html#sec-numeric-types-number-add).
+Used for the finite-precision addition contract. Chapter 04's original numerical
+example demonstrates that regrouping partial sums can change results even when
+partitions are collected in logical order.
+
 ### HTML-CLONE
 
 WHATWG. _HTML Standard_, living standard, “Safe passing of structured data,”
@@ -36,6 +45,15 @@ including structured serialization, deserialization, and transfer.
 [Structured data](https://html.spec.whatwg.org/multipage/structured-data.html#safe-passing-of-structured-data).
 Used because Node explicitly describes its messaging in terms of this model;
 this does not import the browser event loop into Node.
+
+### OPENMP-SCHEDULE
+
+OpenMP Architecture Review Board. _OpenMP Application Programming Interface_,
+version 6.0, November 2024, Section 13.6.3, “schedule Clause,” printed pp. 417–418.
+[Specification PDF](https://www.openmp.org/wp-content/uploads/OpenMP-API-Specification-6-0.pdf).
+Used for static cyclic chunk assignment, completion-driven dynamic scheduling,
+and decreasing guided chunk sizes. This is a pinned specification reference,
+not a claim that PJS implements OpenMP or that 6.0 is the latest version.
 
 ## Runtime and operating-system implementation sources
 
@@ -156,6 +174,28 @@ Used for the computation/bandwidth ceiling and operational intensity. The
 deposited manuscript has an expanded title mentioning floating-point programs.
 The chapter does not fit a Roofline model to PJS data or infer hardware counters.
 
+### GRAHAM-LIST
+
+Ronald L. Graham. _Bounds for Certain Multiprocessing Anomalies_. Bell System
+Technical Journal 45(9), November 1966, pp. 1563–1581.
+[DOI: 10.1002/j.1538-7305.1966.tb01709.x](https://doi.org/10.1002/j.1538-7305.1966.tb01709.x),
+[Bell Labs institutional record](https://www.nokia.com/bell-labs/publications-and-media/publications/bounds-for-certain-multiprocessing-anomalies/).
+Historical attribution for list scheduling on identical resources. The publisher
+metadata/abstract and institutional introduction were accessible; the requested
+PDF redirected to the abstract, so the complete original was not read.
+Chapter 04 supplies a self-contained proof for independent, initially ready jobs;
+BL-WORK-STEALING Section 2 also states the related greedy work/span bound.
+
+### BL-WORK-STEALING
+
+Robert D. Blumofe and Charles E. Leiserson. _Scheduling Multithreaded Computations
+by Work Stealing_. Journal of the ACM 46(5), September 1999, pp. 720–748.
+[Accessible original paper at UCSB](https://sites.cs.ucsb.edu/~cappello/190B/papers/CilkJACMp720-blumofe.pdf),
+[MIT Cilk publication record](https://cilk.mit.edu/publications/).
+Sections 2 and 4–6 were consulted for fully strict computations, the randomized
+deque algorithm, the machine assumptions, and expected execution/steal-attempt
+bounds (Theorem 13 and Lemma 12). These bounds are not Node runtime guarantees.
+
 ## PJS evidence
 
 PJS project reports are repository primary evidence with their own experimental
@@ -188,6 +228,25 @@ PJS. Same v0.3 report and host; alternating baseline/candidate control.
 [alternating control](../benchmarks/results/cpu-regression-v0.3.json).
 Used for the failure to reproduce the initial one-worker slowdown and remaining
 variance. It does not establish zero overhead.
+
+### PJS-V04-PARTITIONING
+
+PJS. _v0.4: runtime-owned partitioning_,
+2026-09-27, Node v24.13.1, Linux 6.19.10-300.fc44.x86_64, AMD Ryzen 3 PRO 3300U,
+four available logical CPUs; Piscina comparison pinned to 5.3.2.
+[Report](../docs/benchmarks-v0.4.md),
+[harness methodology](../benchmarks/partitioning/README.md),
+[kernel](../benchmarks/partitioning/kernel.mjs),
+[raw range](../benchmarks/results/range-partition-v0.4.json),
+[raw matrix](../benchmarks/results/matrix-partition-v0.4.json),
+[raw skew](../benchmarks/results/skew-partition-v0.4.json),
+[raw dispatch](../benchmarks/results/dispatch-partition-v0.4.json).
+Used for fixed-grain sweeps, balance diagnostics, the one-worker attribution
+control, and transport budgets. Operation times exclude one-time shared input
+construction; worker kernel-wall occupancy is a proxy, not an exact idle metric.
+Manual PJS orchestration used v0.3 code, so comparisons with owned v0.4 operations
+do not isolate orchestration alone. Five measured samples per configuration do
+not establish production tails, other platforms, or a universal optimal grain.
 
 ### PJS-V13-CRYPTO
 

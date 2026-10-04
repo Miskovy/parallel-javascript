@@ -1,6 +1,6 @@
 # 03 — The Cost Model of Parallelism
 
-[Previous: Node execution](02-how-node-executes-javascript.md) · [Book](README.md) · [Glossary](glossary.md)
+[Previous: Node execution](02-how-node-executes-javascript.md) · [Next: Partitioning and load balance](04-partitioning-grain-size-and-load-balance.md) · [Book](README.md) · [Glossary](glossary.md)
 
 ## The missing terms in “four workers, four times faster”
 
