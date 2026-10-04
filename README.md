@@ -139,6 +139,13 @@ application rather than relying on a universal size threshold. The
 [v0.13](docs/cross-platform-v0.13.md) and [v0.14](docs/cross-platform-v0.14.md)
 evidence without general speedup claims.
 
+## The Science of PJS
+
+[The Science of PJS](science/README.md) teaches concurrency, Node execution, and
+the cost of parallelism from first principles, using the runtime and its retained
+experiments as a case study. Later topics include scheduling, memory, and
+backpressure; you do not need PJS to learn from the material.
+
 ## Examples and reference
 
 - [Basic run](examples/basic-run.mjs): registration, execution, shutdown.
