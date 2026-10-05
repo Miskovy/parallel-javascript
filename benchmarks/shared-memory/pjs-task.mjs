@@ -1,4 +1,4 @@
-import { transfer } from '@pjs/runtime';
+import { transfer } from '@pjavascript/runtime';
 import { execute } from './kernel.mjs';
 
 export default function task(input) {

@@ -2,7 +2,11 @@ import { writeFile } from 'node:fs/promises';
 import { availableParallelism } from 'node:os';
 import { monitorEventLoopDelay, performance } from 'node:perf_hooks';
 import { setImmediate } from 'node:timers';
-import { PjsQueueFullError, PjsRuntime, PjsTaskRegistry } from '@pjs/runtime';
+import {
+  PjsQueueFullError,
+  PjsRuntime,
+  PjsTaskRegistry,
+} from '@pjavascript/runtime';
 
 const quick = process.env.PJS_BENCH_QUICK === '1';
 const trials = quick ? 1 : 3;

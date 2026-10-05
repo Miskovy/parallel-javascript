@@ -2,7 +2,11 @@ import { writeFile } from 'node:fs/promises';
 import { performance } from 'node:perf_hooks';
 import { setImmediate } from 'node:timers';
 import { setTimeout as delay } from 'node:timers/promises';
-import { PjsQueueFullError, PjsRuntime, PjsTaskRegistry } from '@pjs/runtime';
+import {
+  PjsQueueFullError,
+  PjsRuntime,
+  PjsTaskRegistry,
+} from '@pjavascript/runtime';
 
 const registry = new PjsTaskRegistry();
 const task = registry.register(

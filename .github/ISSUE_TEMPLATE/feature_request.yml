@@ -41,6 +41,6 @@ body:
     attributes:
       value: |
         Significant runtime/API changes should be discussed before substantial implementation.
-        See [CONTRIBUTING.md](https://github.com/Miskovy/pjs/blob/main/CONTRIBUTING.md).
+        See [CONTRIBUTING.md](https://github.com/Miskovy/parallel-javascript/blob/main/CONTRIBUTING.md).
         Proposals are welcome; acceptance is not guaranteed. Report vulnerabilities privately via
-        [SECURITY.md](https://github.com/Miskovy/pjs/blob/main/SECURITY.md).
+        [SECURITY.md](https://github.com/Miskovy/parallel-javascript/blob/main/SECURITY.md).

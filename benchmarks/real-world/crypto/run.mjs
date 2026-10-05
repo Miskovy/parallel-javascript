@@ -7,7 +7,7 @@ import { join } from 'node:path';
 import { freemem, totalmem, tmpdir, loadavg } from 'node:os';
 import { monitorEventLoopDelay, performance } from 'node:perf_hooks';
 import { setTimeout as delay } from 'node:timers/promises';
-import { sharedReadonly } from '@pjs/runtime';
+import { sharedReadonly } from '@pjavascript/runtime';
 import { executor } from './executors.mjs';
 import { bcrypt, compute, scryptOptions, argonOptions } from './task.mjs';
 import {

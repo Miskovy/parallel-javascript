@@ -1,7 +1,7 @@
 import * as crypto from 'node:crypto';
 import { Buffer } from 'node:buffer';
 import { performance } from 'node:perf_hooks';
-import { transfer } from '@pjs/runtime';
+import { transfer } from '@pjavascript/runtime';
 
 export const bcrypt = await import('bcrypt')
   .then((m) => m.default)

@@ -1,4 +1,4 @@
-import { transfer } from '@pjs/runtime';
+import { transfer } from '@pjavascript/runtime';
 
 export function double(values) {
   for (let i = 0; i < values.length; i++) values[i] *= 2;

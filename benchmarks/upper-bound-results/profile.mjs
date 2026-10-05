@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { writeFile } from 'node:fs/promises';
 import { performance } from 'node:perf_hooks';
-import { PjsRuntime, PjsTaskRegistry } from '@pjs/runtime';
+import { PjsRuntime, PjsTaskRegistry } from '@pjavascript/runtime';
 import { setInternalProfileSink } from '../../packages/runtime/dist/telemetry/profile.js';
 import { machineReport } from '../environment.mjs';
 

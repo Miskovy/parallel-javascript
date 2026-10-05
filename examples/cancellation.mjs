@@ -1,6 +1,10 @@
 import assert from 'node:assert/strict';
 import { setTimeout as delay } from 'node:timers/promises';
-import { PjsCancelledError, PjsRuntime, PjsTaskRegistry } from '@pjs/runtime';
+import {
+  PjsCancelledError,
+  PjsRuntime,
+  PjsTaskRegistry,
+} from '@pjavascript/runtime';
 
 const registry = new PjsTaskRegistry();
 const task = registry.register(

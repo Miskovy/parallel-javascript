@@ -1,4 +1,4 @@
-import { transfer } from '@pjs/runtime';
+import { transfer } from '@pjavascript/runtime';
 
 function mix(value) {
   value ^= value << 13;

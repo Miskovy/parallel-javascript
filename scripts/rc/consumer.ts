@@ -8,7 +8,7 @@ import {
   type PjsTask,
   type StreamRangeResult,
   type RunOptions,
-} from '@pjs/runtime';
+} from '@pjavascript/runtime';
 
 interface Input {
   value?: number;

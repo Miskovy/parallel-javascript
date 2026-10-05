@@ -21,7 +21,7 @@ if (engine === 'pjs-manual') {
   ).href;
 } else delete process.env.PJS_BENCH_RUNTIME;
 const { PjsRuntime, PjsTaskRegistry, sharedReadonly } = await import(
-  process.env.PJS_BENCH_RUNTIME ?? '@pjs/runtime'
+  process.env.PJS_BENCH_RUNTIME ?? '@pjavascript/runtime'
 );
 let runtime, pool, task;
 const startupStart = performance.now();

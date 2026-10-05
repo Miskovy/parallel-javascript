@@ -3,7 +3,7 @@
 ## Supported versions
 
 The latest supported release line receives security attention. Currently,
-[v1.0.0-rc.1](https://github.com/Miskovy/pjs/releases/tag/v1.0.0-rc.1) is the
+[v1.0.0-rc.1](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.1) is the
 actively evaluated release candidate. It is a prerelease, not final v1.0.0.
 Pre-1.0 releases do not carry a long-term security-support guarantee, and older
 releases are not promised backported fixes.
@@ -16,7 +16,7 @@ publish exploit details in pull requests, logs, or other public discussions.
 When GitHub Private Vulnerability Reporting is available, open this repository's
 **Security → Report a vulnerability** flow to submit a private report and
 coordinate through a security advisory. Start at the
-[repository Security page](https://github.com/Miskovy/pjs/security).
+[repository Security page](https://github.com/Miskovy/parallel-javascript/security).
 
 If that flow is not available, contact the project maintainer privately using the
 private contact method available from the

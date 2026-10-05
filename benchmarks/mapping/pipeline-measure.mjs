@@ -2,7 +2,11 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { monitorEventLoopDelay, performance } from 'node:perf_hooks';
 import { setImmediate as immediate } from 'node:timers/promises';
-import { PjsRuntime, PjsTaskRegistry, sharedReadonly } from '@pjs/runtime';
+import {
+  PjsRuntime,
+  PjsTaskRegistry,
+  sharedReadonly,
+} from '@pjavascript/runtime';
 
 const config = JSON.parse(process.argv[2]);
 const { workers, size, grainSize, capacity, consumerCostMs, trials, warmups } =

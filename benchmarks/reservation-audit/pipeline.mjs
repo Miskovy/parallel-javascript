@@ -9,7 +9,7 @@ import {
   PjsRuntime,
   PjsTaskRegistry,
   sharedReadonly,
-} from '@pjs/runtime';
+} from '@pjavascript/runtime';
 import { inspectBinaryResult } from '../../packages/runtime/dist/partition/binary.js';
 import { isWorkerMessage } from '../../packages/runtime/dist/workers/protocol.js';
 import { machineReport } from '../environment.mjs';

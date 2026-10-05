@@ -178,7 +178,7 @@ try {
     report.states[1].package.tarball.sha256;
   report.canonical = { ...report.states[0].package.tarball };
   const destination = resolve(
-    arg('canonical-dir') ?? join(root, '.node-tools/rc1/canonical'),
+    arg('canonical-dir') ?? join(root, '.node-tools/rc2/canonical'),
   );
   mkdirSync(destination, { recursive: true });
   const target = join(destination, report.canonical.filename);

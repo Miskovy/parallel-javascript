@@ -1,4 +1,4 @@
-import { transfer } from '@pjs/runtime';
+import { transfer } from '@pjavascript/runtime';
 
 export function rleSize(source, start, end) {
   let runs = 0;

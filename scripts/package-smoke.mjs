@@ -62,7 +62,14 @@ try {
     run(
       'pack dry run',
       process.execPath,
-      [npmCli, 'pack', '--workspace', '@pjs/runtime', '--dry-run', '--json'],
+      [
+        npmCli,
+        'pack',
+        '--workspace',
+        '@pjavascript/runtime',
+        '--dry-run',
+        '--json',
+      ],
       root,
     ),
   )[0];
@@ -74,7 +81,7 @@ try {
         npmCli,
         'pack',
         '--workspace',
-        '@pjs/runtime',
+        '@pjavascript/runtime',
         '--pack-destination',
         temporary,
         '--json',
@@ -113,7 +120,7 @@ try {
     '--no-fund',
     '--package-lock=false',
   ]);
-  const installed = join(consumer, 'node_modules/@pjs/runtime');
+  const installed = join(consumer, 'node_modules/@pjavascript/runtime');
   const manifest = JSON.parse(readFileSync(join(installed, 'package.json')));
   assert.equal(Object.keys(manifest.dependencies ?? {}).length, 0);
   assert.deepEqual(Object.keys(manifest.exports), ['.']);
@@ -163,7 +170,7 @@ try {
   report.examples = examples;
 
   // Supply compiler-only dependencies as copies, never links back to the repo.
-  // @pjs/runtime itself has no production dependency on these packages.
+  // @pjavascript/runtime itself has no production dependency on these packages.
   for (const dependency of ['@types/node', 'undici-types']) {
     cpSync(
       join(root, 'node_modules', dependency),
@@ -174,7 +181,7 @@ try {
   const typeTests = readFileSync(
     join(root, 'packages/runtime/test/types.test.ts'),
     'utf8',
-  ).replaceAll('../dist/index.js', '@pjs/runtime');
+  ).replaceAll('../dist/index.js', '@pjavascript/runtime');
   writeFileSync(join(consumer, 'api-types.ts'), typeTests);
   const compiler = join(root, 'node_modules/@typescript/native/bin/tsc');
   run('installed declaration regression tests', process.execPath, [

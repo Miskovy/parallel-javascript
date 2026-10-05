@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { availableParallelism } from 'node:os';
 import { performance } from 'node:perf_hooks';
-import { PjsRuntime, PjsTaskRegistry } from '@pjs/runtime';
+import { PjsRuntime, PjsTaskRegistry } from '@pjavascript/runtime';
 import { countPrimes, referencePrimeCount } from './prime-search/task.mjs';
 import {
   matrices,

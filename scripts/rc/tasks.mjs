@@ -1,4 +1,4 @@
-import { transfer } from '@pjs/runtime';
+import { transfer } from '@pjavascript/runtime';
 import { threadId } from 'node:worker_threads';
 
 // Synthetic failure-injection fixtures, never production runtime code.

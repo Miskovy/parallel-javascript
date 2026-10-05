@@ -1,4 +1,4 @@
-import { transfer } from '@pjs/runtime';
+import { transfer } from '@pjavascript/runtime';
 
 function burn(value, iterations) {
   let state = (value + 1) | 0;

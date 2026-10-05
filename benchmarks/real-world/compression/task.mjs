@@ -1,5 +1,5 @@
 import { performance } from 'node:perf_hooks';
-import { transfer } from '@pjs/runtime';
+import { transfer } from '@pjavascript/runtime';
 import { compute } from './core.mjs';
 
 export function body(input) {

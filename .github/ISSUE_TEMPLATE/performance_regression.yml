@@ -8,7 +8,7 @@ body:
         Noisy one-shot timings are insufficient to establish a regression. Share repeated
         measurements and equivalent workloads; include variability rather than selecting favorable runs.
         A functional bug can use the Bug Report form without benchmark evidence.
-        Report vulnerabilities privately via [SECURITY.md](https://github.com/Miskovy/pjs/blob/main/SECURITY.md).
+        Report vulnerabilities privately via [SECURITY.md](https://github.com/Miskovy/parallel-javascript/blob/main/SECURITY.md).
   - type: input
     id: pjs-version
     attributes:

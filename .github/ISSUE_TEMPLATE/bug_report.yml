@@ -6,7 +6,7 @@ body:
     attributes:
       value: |
         Thanks for helping improve PJS. **Do not report security vulnerabilities here.**
-        Follow [SECURITY.md](https://github.com/Miskovy/pjs/blob/main/SECURITY.md) for private reporting.
+        Follow [SECURITY.md](https://github.com/Miskovy/parallel-javascript/blob/main/SECURITY.md) for private reporting.
         Remove secrets and personal information from public code and logs.
   - type: checkboxes
     id: existing-issues

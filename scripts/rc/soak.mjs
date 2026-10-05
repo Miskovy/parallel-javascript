@@ -5,7 +5,7 @@ import { performance } from 'node:perf_hooks';
 import { setTimeout as delay } from 'node:timers/promises';
 
 process.env.PJS_DEBUG_RESERVATION_INVARIANTS = '1';
-const api = await import('@pjs/runtime');
+const api = await import('@pjavascript/runtime');
 const {
   PjsRuntime,
   PjsTaskRegistry,

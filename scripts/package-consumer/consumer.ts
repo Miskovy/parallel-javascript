@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { PjsRuntime, PjsTaskRegistry } from '@pjs/runtime';
+import { PjsRuntime, PjsTaskRegistry } from '@pjavascript/runtime';
 
 const registry = new PjsTaskRegistry();
 const task = registry.register<number, number>(

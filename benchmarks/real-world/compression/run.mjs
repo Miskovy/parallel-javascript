@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { performance, monitorEventLoopDelay } from 'node:perf_hooks';
 import { setTimeout as delay } from 'node:timers/promises';
 import { deflateRawSync, inflateRawSync } from 'node:zlib';
-import { sharedReadonly } from '@pjs/runtime';
+import { sharedReadonly } from '@pjavascript/runtime';
 import { distribution, environment, sourceHashes } from '../crypto/support.mjs';
 import {
   bound,

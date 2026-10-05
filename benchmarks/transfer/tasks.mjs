@@ -1,4 +1,4 @@
-import { transfer } from '@pjs/runtime';
+import { transfer } from '@pjavascript/runtime';
 import { multiplyRows } from '../matrix-multiplication/task.mjs';
 
 export function cloneEcho(data) {

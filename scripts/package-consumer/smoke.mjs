@@ -7,7 +7,7 @@ import {
   PjsTaskError,
   PjsTaskRegistrationError,
   PjsTaskRegistry,
-} from '@pjs/runtime';
+} from '@pjavascript/runtime';
 
 const registry = new PjsTaskRegistry();
 const module = new URL('./tasks.mjs', import.meta.url);
@@ -44,11 +44,11 @@ try {
     'src/runtime.ts',
     'package.json',
   ]) {
-    await assert.rejects(import(`@pjs/runtime/${subpath}`), {
+    await assert.rejects(import(`@pjavascript/runtime/${subpath}`), {
       code: 'ERR_PACKAGE_PATH_NOT_EXPORTED',
     });
   }
-  assert.throws(() => createRequire(import.meta.url)('@pjs/runtime'), {
+  assert.throws(() => createRequire(import.meta.url)('@pjavascript/runtime'), {
     code: 'ERR_PACKAGE_PATH_NOT_EXPORTED',
   });
 } finally {

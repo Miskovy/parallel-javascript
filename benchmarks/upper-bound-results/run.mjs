@@ -2,7 +2,11 @@ import assert from 'node:assert/strict';
 import { writeFile } from 'node:fs/promises';
 import { monitorEventLoopDelay, performance } from 'node:perf_hooks';
 import { setTimeout as delay } from 'node:timers/promises';
-import { PjsRuntime, PjsTaskRegistry, sharedReadonly } from '@pjs/runtime';
+import {
+  PjsRuntime,
+  PjsTaskRegistry,
+  sharedReadonly,
+} from '@pjavascript/runtime';
 import { rleSize } from './task.mjs';
 import { machineReport } from '../environment.mjs';
 

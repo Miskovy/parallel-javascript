@@ -29,7 +29,7 @@ assert.ok(
 );
 const npmCli = resolve(selectedNpm);
 const packDir = resolve(
-  arg('pack-dir') ?? join(root, '.node-tools/rc1/packages', process.version),
+  arg('pack-dir') ?? join(root, '.node-tools/rc2/packages', process.version),
 );
 mkdirSync(packDir, { recursive: true });
 const temporary = mkdtempSync(join(tmpdir(), 'PJS RC external with spaces '));
@@ -83,7 +83,7 @@ try {
       npmCli,
       'pack',
       '--workspace',
-      '@pjs/runtime',
+      '@pjavascript/runtime',
       '--dry-run',
       '--json',
     ]),
@@ -93,12 +93,14 @@ try {
       npmCli,
       'pack',
       '--workspace',
-      '@pjs/runtime',
+      '@pjavascript/runtime',
       '--pack-destination',
       packDir,
       '--json',
     ]),
   )[0];
+  assert.equal(packed.name, '@pjavascript/runtime');
+  assert.equal(packed.version, '1.0.0-rc.2');
   assert.deepEqual(packed.files, dry.files);
   assert.equal(packed.entryCount, 128);
   assert.ok(
@@ -134,11 +136,19 @@ try {
       ],
       dir,
     );
-    const installed = join(dir, 'node_modules/@pjs/runtime');
+    const installed = join(dir, 'node_modules/@pjavascript/runtime');
     assert.equal(lstatSync(installed).isSymbolicLink(), false);
     assert.ok(!realpathSync(installed).startsWith(realpathSync(root)));
     const manifest = JSON.parse(readFileSync(join(installed, 'package.json')));
     assert.equal(manifest.version, packed.version);
+    assert.deepEqual(manifest.repository, {
+      type: 'git',
+      url: 'git+https://github.com/Miskovy/parallel-javascript.git',
+      directory: 'packages/runtime',
+    });
+    assert.deepEqual(manifest.bugs, {
+      url: 'https://github.com/Miskovy/parallel-javascript/issues',
+    });
     assert.deepEqual(
       {
         name: manifest.name,
@@ -149,7 +159,7 @@ try {
         files: manifest.files,
         dependencies: manifest.dependencies ?? {},
       },
-      frozen.manifest,
+      { ...frozen.manifest, name: '@pjavascript/runtime' },
     );
     for (const [path, expected] of Object.entries(frozen.declarations))
       assert.equal(
@@ -224,7 +234,7 @@ try {
       [
         '--input-type=module',
         '-e',
-        "import * as api from '@pjs/runtime';console.log(JSON.stringify(Object.keys(api).sort()))",
+        "import * as api from '@pjavascript/runtime';console.log(JSON.stringify(Object.keys(api).sort()))",
       ],
       js,
     ),
@@ -270,7 +280,7 @@ try {
     readFileSync(
       join(root, 'packages/runtime/test/types.test.ts'),
       'utf8',
-    ).replaceAll('../dist/index.js', '@pjs/runtime'),
+    ).replaceAll('../dist/index.js', '@pjavascript/runtime'),
   );
   const compiler = join(root, 'node_modules/@typescript/native/bin/tsc');
   run(
@@ -293,7 +303,7 @@ try {
   report.fileHashes = Object.fromEntries(
     packed.files.map((f) => [
       f.path,
-      hash(join(js, 'node_modules/@pjs/runtime', f.path)),
+      hash(join(js, 'node_modules/@pjavascript/runtime', f.path)),
     ]),
   );
   report.notes = [

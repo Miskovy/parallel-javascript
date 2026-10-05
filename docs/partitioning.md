@@ -28,7 +28,7 @@ inside a worker and is not serialized as a closure.
 
 ```ts
 // sum.ts → sum.js
-import type { RangePartition } from '@pjs/runtime';
+import type { RangePartition } from '@pjavascript/runtime';
 
 export function sum({
   partition,
@@ -44,8 +44,12 @@ export function sum({
 ```
 
 ```ts
-import { PjsRuntime, PjsTaskRegistry, sharedReadonly } from '@pjs/runtime';
-import type { RangePartition } from '@pjs/runtime';
+import {
+  PjsRuntime,
+  PjsTaskRegistry,
+  sharedReadonly,
+} from '@pjavascript/runtime';
+import type { RangePartition } from '@pjavascript/runtime';
 
 const registry = new PjsTaskRegistry();
 const sum = registry.register<
