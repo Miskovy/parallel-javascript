@@ -1,6 +1,6 @@
 # 04 — Partitioning, Grain Size, and Load Balance
 
-[Previous: The cost model](03-the-cost-model-of-parallelism.md) · [Book](README.md) · [Glossary](glossary.md)
+[Previous: The cost model](03-the-cost-model-of-parallelism.md) · [Next: Work, span, and scaling](05-work-span-and-scaling.md) · [Book](README.md) · [Glossary](glossary.md)
 
 ## Four equal pieces of what?
 

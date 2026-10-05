@@ -20,6 +20,7 @@ The beginner path is:
 2. [How Node.js Actually Executes JavaScript](02-how-node-executes-javascript.md): locate computation, waiting, heaps, and communication in the whole process.
 3. [The Cost Model of Parallelism](03-the-cost-model-of-parallelism.md): derive limits, account for overhead, and interpret retained experiments.
 4. [Partitioning, Grain Size, and Load Balance](04-partitioning-grain-size-and-load-balance.md): choose work boundaries, compare assignment strategies, and study the v0.4 grain sweep.
+5. [Work, Span, and Scaling](05-work-span-and-scaling.md): distinguish graph opportunity from measured scaling, compare growth rules, and interpret speedup honestly.
 
 Keep the [glossary](glossary.md) beside you. Mathematics uses GitHub-compatible
 `$$` display blocks; adjacent prose or plaintext gives the same calculation.
@@ -109,21 +110,20 @@ should be able to evaluate that design, including choosing a different one.
 
 ## Roadmap for later review
 
-Chapters 01–04 are available. Subject to human review of their tone, depth,
+Chapters 01–05 are available. Subject to human review of their tone, depth,
 citations, and accessibility, later material could cover:
 
-| Proposed chapter | Focus                                                   |
-| ---------------- | ------------------------------------------------------- |
-| 05               | Work, span, and scaling beyond the introductory models. |
-| 06               | Scheduling and bounded admission.                       |
-| 07               | Data movement and ownership.                            |
-| 08               | Shared memory, Atomics, and memory models.              |
-| 09               | Queueing theory and backpressure.                       |
-| 10               | Streaming producer/consumer systems.                    |
-| 11               | Cancellation, timeouts, and physical execution.         |
-| 12               | Failure models and worker recovery.                     |
-| 13               | Measuring parallel systems correctly.                   |
-| 14               | Deriving the PJS architecture.                          |
-| 15               | Open problems and future research.                      |
+| Proposed chapter | Focus                                           |
+| ---------------- | ----------------------------------------------- |
+| 06               | Scheduling and bounded admission.               |
+| 07               | Data movement and ownership.                    |
+| 08               | Shared memory, Atomics, and memory models.      |
+| 09               | Queueing theory and backpressure.               |
+| 10               | Streaming producer/consumer systems.            |
+| 11               | Cancellation, timeouts, and physical execution. |
+| 12               | Failure models and worker recovery.             |
+| 13               | Measuring parallel systems correctly.           |
+| 14               | Deriving the PJS architecture.                  |
+| 15               | Open problems and future research.              |
 
 These are proposed topics, not additional files or authorized runtime features.

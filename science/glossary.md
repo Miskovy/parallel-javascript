@@ -77,6 +77,28 @@ must be read with their own boundaries and sampling limitations.
 | Amortization             | Distributing a one-time cost over repeated uses for an average/session analysis. It does not remove first-use latency.                                                 |
 | Oversubscription         | Runnable demand beyond useful execution capacity available to that workload. Configured PJS workers are only one source of process/machine demand.                     |
 
+## Scaling and graph opportunity
+
+[Chapter 05](05-work-span-and-scaling.md) separates ideal graph quantities from
+timed comparisons. [UWO-PARALLELISM](references.md#uwo-parallelism) develops
+parallelism and slackness; [CMU-SCALING](references.md#cmu-scaling) explains growth
+rules and baseline choices; [GRAMA-ISOEFFICIENCY](references.md#grama-isoefficiency)
+examines constant-efficiency growth; [KARP-FLATT](references.md#karp-flatt)
+introduces the effective serial-fraction diagnostic.
+
+| Term                | Meaning                                                                                                                                                                                                                                      |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| DAG                 | Directed acyclic graph: vertices represent operations and directed edges represent dependencies, without a directed cycle.                                                                                                                   |
+| Average parallelism | Work divided by span, `A=W/D`, for a nonempty computation graph. It limits ideal speedup; it is not instantaneous ready width or measured CPU use.                                                                                           |
+| Parallel slackness  | Average parallelism divided by processor count, `σ=W/(pD)`, in this book's convention. Larger values leave more room below the span-imposed scaling ceiling.                                                                                 |
+| Work efficiency     | Comparison of a parallel algorithm's total work with a good serial algorithm's work for the same problem. Low span alone does not establish low total work.                                                                                  |
+| Greedy DAG schedule | Executes as many ready operations as capacity permits at each step. The chapter's guarantee assumes unit-cost vertices and free access to readiness/dependencies.                                                                            |
+| Strong scaling      | Varying resources while keeping the correct workload fixed, to study time to solution.                                                                                                                                                       |
+| Weak scaling        | Growing the problem with resources while holding a stated amount of problem per resource fixed. For constant useful computation per resource, item-count growth must reflect algorithmic cost.                                               |
+| Isoefficiency       | How useful work must grow with resource count to maintain a specified efficiency under an algorithm/machine model.                                                                                                                           |
+| Superlinear speedup | A finite measured speedup greater than the resource-count ratio between the baseline and parallel runs. It requires examining baselines and changing costs; it cannot occur for an unchanged fixed-cost graph on identical ideal processors. |
+| Karp–Flatt metric   | Effective serial fraction inferred from fixed-work measured speedup: `(1/S-1/p)/(1-1/p)`, for `p>1`. It absorbs scaling costs and does not count serial source instructions.                                                                 |
+
 ## Partitioning and assignment
 
 [Chapter 04](04-partitioning-grain-size-and-load-balance.md) develops these models
