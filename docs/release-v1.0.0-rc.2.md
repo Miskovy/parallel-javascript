@@ -1,4 +1,4 @@
-# PJS RC2 package identity
+# PJS RC2 release and package identity
 
 RC1 used the pre-publication package identity `@pjs/runtime@1.0.0-rc.1`.
 The maintainer could not obtain the `@pjs` npm scope and now controls the
@@ -14,10 +14,23 @@ RC1 was never published to npm. Its GitHub tag, release, assets, hashes, and
 qualification evidence remain immutable and describe the old identity. Consumers
 of its GitHub tarball still use that artifact's original package name.
 
-RC2 is a candidate awaiting qualification and human review; it has not been tagged,
-released, or published to npm. Evaluate the locally packed RC2 tarball. After
-publication, the intended registry installation will be
-`npm install @pjavascript/runtime@next`; registry availability is not claimed here.
+## Publication outcome
+
+The [GitHub prerelease](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.2)
+was created and public npm publication completed:
+
+- Package: [`@pjavascript/runtime`](https://www.npmjs.com/package/@pjavascript/runtime).
+- Version: `1.0.0-rc.2`; prerelease dist-tag: `next`.
+- Clean external installation from the public registry passed.
+- Real worker execution from the registry-installed package passed.
+- Runtime dependencies: zero; Piscina and development tooling absent.
+
+```sh
+npm install @pjavascript/runtime@next
+```
+
+Qualified: Windows x64, Fedora/Linux x64, Node 22.13+ within 22.x and Node 24.x.
+macOS and ARM64 remain unclaimed. Final v1.0.0 has not been released.
 
 Qualification covers source/API freeze, contracts, installed JS and TypeScript
 consumers, package metadata/dependency isolation, bounded RC smoke, and the existing
@@ -40,8 +53,11 @@ The following references deliberately retain their original identity/version:
   experiment instructions, including the baseline checkout's old package path.
 - `science/README.md` and `science/references.md`: the inspected RC1 architecture
   baseline and bibliography, with the original commit and qualification links.
-- Root README and security policy: the existing RC1 release remains the latest
-  released candidate while RC2 awaits review; links use the canonical repository.
+
+The root README and security policy now identify RC2 as the current published
+candidate. The repository's new package `homepage` metadata takes effect with the
+next published version; it does not retroactively change RC2 on npm. RC2 will not
+be republished. See [maintainer releasing instructions](releasing.md).
 
 Package-name differences in current freeze tooling are explicit comparisons against
 the preserved old manifest. All other frozen contract fields are still required

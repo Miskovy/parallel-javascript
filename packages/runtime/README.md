@@ -7,8 +7,19 @@ clone/transfer/shared-input ownership. ESM only; qualified Node families are
 PJS is pre-1.0. run, registration and lifecycle are core candidates. Range APIs
 and result-credit options remain experimental. Statistics are diagnostic.
 
-This RC2 candidate uses the permanent npm identity `@pjavascript/runtime`.
-It has not been published to npm; install a locally packed tarball for evaluation.
+## Install
+
+Current prerelease: **1.0.0-rc.2**, published as
+[`@pjavascript/runtime`](https://www.npmjs.com/package/@pjavascript/runtime) under `next`.
+Final v1.0.0 has not been released.
+
+```sh
+npm install @pjavascript/runtime@next
+```
+
+Qualified platforms: Windows x64 and Fedora/Linux x64. macOS and ARM64 are not claimed.
+
+## Example and contracts
 
 Create a local task module:
 
@@ -58,4 +69,4 @@ See the [full guide](https://github.com/Miskovy/parallel-javascript/blob/main/do
 The tarball includes compiled JS/declarations/maps and their TypeScript source
 for stack traces and editor navigation. Only the root import is supported.
 
-MIT licensed; see LICENSE. This prepared package does not imply npm publication.
+MIT licensed; see LICENSE. RC2 is a published prerelease.

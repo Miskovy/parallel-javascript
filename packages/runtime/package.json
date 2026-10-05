@@ -29,6 +29,7 @@
   "bugs": {
     "url": "https://github.com/Miskovy/parallel-javascript/issues"
   },
+  "homepage": "https://github.com/Miskovy/parallel-javascript#readme",
   "keywords": [
     "nodejs",
     "worker-threads",
