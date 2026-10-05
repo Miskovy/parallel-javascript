@@ -4,13 +4,18 @@ PJS runs explicitly registered CPU work in persistent Node workers, with bounded
 admission and explicit memory ownership. Your application keeps its event loop
 for I/O; PJS provides a separate compute plane. There are no runtime dependencies.
 
-**[v1.0.0-rc.1](https://github.com/Miskovy/pjs/releases/tag/v1.0.0-rc.1) has been
+**[v1.0.0-rc.1](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.1) has been
 released as a prerelease.** Windows and Fedora/Linux x64 qualification completed;
 macOS and ARM64 remain unclaimed. Final v1.0.0 has not been released.
 [RC readiness](docs/research/v1-rc1-readiness.md) records the release gates and
 platform boundaries. The immutable v0.15.0 release remains available.
 [API stability](docs/stability.md) distinguishes core candidates, supported
 ownership helpers, experimental range APIs and diagnostic statistics.
+
+RC2 prepares the permanent package identity `@pjavascript/runtime@1.0.0-rc.2`
+before first npm publication. The runtime implementation and public API are
+unchanged from RC1. See the [RC2 identity note](docs/release-v1.0.0-rc.2.md).
+RC2 has not been tagged or released.
 
 ## Install
 
@@ -20,13 +25,13 @@ From a checkout with development dependencies installed:
 ```sh
 npm ci
 npm run build
-npm pack --workspace @pjs/runtime --pack-destination /tmp
+npm pack --workspace @pjavascript/runtime --pack-destination /tmp
 ```
 
 Then, in your ESM application, install the resulting artifact:
 
 ```sh
-npm install /tmp/pjs-runtime-1.0.0-rc.1.tgz
+npm install /tmp/pjavascript-runtime-1.0.0-rc.2.tgz
 ```
 
 Replace `/tmp` with an absolute temporary directory on your system (for example
@@ -47,7 +52,7 @@ export function square(value) {
 Create `basic-run.mjs`:
 
 ```js
-import { PjsRuntime, PjsTaskRegistry } from '@pjs/runtime';
+import { PjsRuntime, PjsTaskRegistry } from '@pjavascript/runtime';
 
 const registry = new PjsTaskRegistry();
 const square = registry.register(

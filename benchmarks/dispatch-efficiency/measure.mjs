@@ -3,7 +3,11 @@ import { performance, monitorEventLoopDelay } from 'node:perf_hooks';
 import { availableParallelism } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import Piscina from 'piscina';
-import { PjsRuntime, PjsTaskRegistry, sharedReadonly } from '@pjs/runtime';
+import {
+  PjsRuntime,
+  PjsTaskRegistry,
+  sharedReadonly,
+} from '@pjavascript/runtime';
 import { originalSkew, stableSkew } from './kernel.mjs';
 
 const config = JSON.parse(process.argv[2]);

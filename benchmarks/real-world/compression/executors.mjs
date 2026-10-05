@@ -1,7 +1,7 @@
 import { Worker } from 'node:worker_threads';
 import { promisify } from 'node:util';
 import { deflateRaw, inflateRaw } from 'node:zlib';
-import { PjsRuntime, PjsTaskRegistry } from '@pjs/runtime';
+import { PjsRuntime, PjsTaskRegistry } from '@pjavascript/runtime';
 import { body } from './task.mjs';
 import { compact, options, view } from './core.mjs';
 const deflate = promisify(deflateRaw),

@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { transfer } from '@pjs/runtime';
+import { transfer } from '@pjavascript/runtime';
 
 export function square(value) {
   return value * value;

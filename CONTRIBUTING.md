@@ -35,8 +35,8 @@ majors are outside the supported policy. The project uses ESM; compile TypeScrip
 task modules to JavaScript before loading them in workers.
 
 ```sh
-git clone https://github.com/Miskovy/pjs.git
-cd pjs
+git clone https://github.com/Miskovy/parallel-javascript.git
+cd parallel-javascript
 npm ci
 npm run build
 ```

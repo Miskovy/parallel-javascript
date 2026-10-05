@@ -1,4 +1,4 @@
-# @pjs/runtime
+# @pjavascript/runtime
 
 Explicit CPU tasks on persistent Node workers, with bounded admission and explicit
 clone/transfer/shared-input ownership. ESM only; qualified Node families are
@@ -6,6 +6,9 @@ clone/transfer/shared-input ownership. ESM only; qualified Node families are
 
 PJS is pre-1.0. run, registration and lifecycle are core candidates. Range APIs
 and result-credit options remain experimental. Statistics are diagnostic.
+
+This RC2 candidate uses the permanent npm identity `@pjavascript/runtime`.
+It has not been published to npm; install a locally packed tarball for evaluation.
 
 Create a local task module:
 
@@ -17,7 +20,7 @@ export function square(value) {
 ```
 
 ```js
-import { PjsRuntime, PjsTaskRegistry } from '@pjs/runtime';
+import { PjsRuntime, PjsTaskRegistry } from '@pjavascript/runtime';
 const registry = new PjsTaskRegistry();
 const square = registry.register(
   'square',
@@ -48,10 +51,10 @@ Shared readonly input is immutable by contract, not frozen. Queue limits count
 waiting tasks; result credits bound visible binary payloads only, not process RSS
 or consumer-retained values. More workers or queue depth is not always better.
 
-See the [full guide](https://github.com/Miskovy/pjs/blob/main/docs/guide/core-api.md),
-[ownership](https://github.com/Miskovy/pjs/blob/main/docs/guide/memory-ownership.md),
-[lifecycle](https://github.com/Miskovy/pjs/blob/main/docs/guide/lifecycle.md) and
-[stability policy](https://github.com/Miskovy/pjs/blob/main/docs/stability.md).
+See the [full guide](https://github.com/Miskovy/parallel-javascript/blob/main/docs/guide/core-api.md),
+[ownership](https://github.com/Miskovy/parallel-javascript/blob/main/docs/guide/memory-ownership.md),
+[lifecycle](https://github.com/Miskovy/parallel-javascript/blob/main/docs/guide/lifecycle.md) and
+[stability policy](https://github.com/Miskovy/parallel-javascript/blob/main/docs/stability.md).
 The tarball includes compiled JS/declarations/maps and their TypeScript source
 for stack traces and editor navigation. Only the root import is supported.
 

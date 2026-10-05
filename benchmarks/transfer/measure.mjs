@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { performance } from 'node:perf_hooks';
 import { availableParallelism, cpus, platform } from 'node:os';
-import { PjsRuntime, PjsTaskRegistry } from '@pjs/runtime';
+import { PjsRuntime, PjsTaskRegistry } from '@pjavascript/runtime';
 
 const registry = new PjsTaskRegistry();
 const module = new URL('./tasks.mjs', import.meta.url);

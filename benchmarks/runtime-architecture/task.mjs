@@ -1,5 +1,5 @@
 const { transfer } = await import(
-  process.env.PJS_BENCH_RUNTIME ?? '@pjs/runtime'
+  process.env.PJS_BENCH_RUNTIME ?? '@pjavascript/runtime'
 );
 
 function burn(value, iterations) {

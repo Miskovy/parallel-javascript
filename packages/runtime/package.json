@@ -1,6 +1,6 @@
 {
-  "name": "@pjs/runtime",
-  "version": "1.0.0-rc.1",
+  "name": "@pjavascript/runtime",
+  "version": "1.0.0-rc.2",
   "description": "Explicit CPU task runtime for Node.js",
   "type": "module",
   "engines": {
@@ -23,11 +23,11 @@
   "types": "./dist/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Miskovy/pjs.git",
+    "url": "git+https://github.com/Miskovy/parallel-javascript.git",
     "directory": "packages/runtime"
   },
   "bugs": {
-    "url": "https://github.com/Miskovy/pjs/issues"
+    "url": "https://github.com/Miskovy/parallel-javascript/issues"
   },
   "keywords": [
     "nodejs",

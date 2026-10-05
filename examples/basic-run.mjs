@@ -1,4 +1,4 @@
-import { PjsRuntime, PjsTaskRegistry } from '@pjs/runtime';
+import { PjsRuntime, PjsTaskRegistry } from '@pjavascript/runtime';
 
 const registry = new PjsTaskRegistry();
 const square = registry.register(

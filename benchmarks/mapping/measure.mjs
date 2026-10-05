@@ -2,7 +2,11 @@ import assert from 'node:assert/strict';
 import { monitorEventLoopDelay, performance } from 'node:perf_hooks';
 import { fileURLToPath } from 'node:url';
 import Piscina from 'piscina';
-import { PjsRuntime, PjsTaskRegistry, sharedReadonly } from '@pjs/runtime';
+import {
+  PjsRuntime,
+  PjsTaskRegistry,
+  sharedReadonly,
+} from '@pjavascript/runtime';
 import { transformValue } from './task.mjs';
 
 const config = JSON.parse(process.argv[2]);

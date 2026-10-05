@@ -4,7 +4,11 @@ import { fileURLToPath } from 'node:url';
 import { monitorEventLoopDelay, performance } from 'node:perf_hooks';
 import { setImmediate as immediate } from 'node:timers/promises';
 import Piscina from 'piscina';
-import { PjsRuntime, PjsTaskRegistry, sharedReadonly } from '@pjs/runtime';
+import {
+  PjsRuntime,
+  PjsTaskRegistry,
+  sharedReadonly,
+} from '@pjavascript/runtime';
 import { transformByte } from './task.mjs';
 
 const config = JSON.parse(process.argv[2]);

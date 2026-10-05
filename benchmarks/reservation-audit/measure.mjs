@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { monitorEventLoopDelay, performance } from 'node:perf_hooks';
-import { PjsRuntime, PjsTaskRegistry } from '@pjs/runtime';
+import { PjsRuntime, PjsTaskRegistry } from '@pjavascript/runtime';
 import { setInternalProfileSink } from '../../packages/runtime/dist/telemetry/profile.js';
 
 const config = JSON.parse(process.argv[2]);

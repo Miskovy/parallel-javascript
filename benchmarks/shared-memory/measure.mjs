@@ -3,7 +3,11 @@ import { performance } from 'node:perf_hooks';
 import { availableParallelism } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import Piscina from 'piscina';
-import { PjsRuntime, PjsTaskRegistry, sharedReadonly } from '@pjs/runtime';
+import {
+  PjsRuntime,
+  PjsTaskRegistry,
+  sharedReadonly,
+} from '@pjavascript/runtime';
 import { matrices, referenceMultiply } from '../matrix-multiplication/task.mjs';
 import { referencePrimeCount } from '../prime-search/task.mjs';
 import { prefixSum } from './kernel.mjs';

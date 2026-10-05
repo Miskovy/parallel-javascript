@@ -1,5 +1,9 @@
 import assert from 'node:assert/strict';
-import { PjsRuntime, PjsTaskRegistry, sharedReadonly } from '@pjs/runtime';
+import {
+  PjsRuntime,
+  PjsTaskRegistry,
+  sharedReadonly,
+} from '@pjavascript/runtime';
 
 const registry = new PjsTaskRegistry();
 const module = new URL('./tasks.mjs', import.meta.url);

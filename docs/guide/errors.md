@@ -1,6 +1,6 @@
 # Public errors
 
-Import classes from `@pjs/runtime` and use `instanceof`, not exact message text.
+Import classes from `@pjavascript/runtime` and use `instanceof`, not exact message text.
 All twelve classes inherit PjsError, which inherits Error and sets name to the
 concrete class name. Messages are explanatory and contextual; their exact wording
 is not a protocol. Errors contain no coordinator maps or mutable runtime records.

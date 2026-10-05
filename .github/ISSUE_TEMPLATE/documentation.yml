@@ -21,4 +21,4 @@ body:
       label: Suggested clarification (optional)
   - type: markdown
     attributes:
-      value: Do not include vulnerability details; use [SECURITY.md](https://github.com/Miskovy/pjs/blob/main/SECURITY.md) for private reporting.
+      value: Do not include vulnerability details; use [SECURITY.md](https://github.com/Miskovy/parallel-javascript/blob/main/SECURITY.md) for private reporting.

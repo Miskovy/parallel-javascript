@@ -1,7 +1,11 @@
 import { writeFile } from 'node:fs/promises';
 import { performance } from 'node:perf_hooks';
 import { setImmediate as immediate } from 'node:timers/promises';
-import { PjsRuntime, PjsTaskRegistry, sharedReadonly } from '@pjs/runtime';
+import {
+  PjsRuntime,
+  PjsTaskRegistry,
+  sharedReadonly,
+} from '@pjavascript/runtime';
 
 const KiB = 2 ** 10;
 const registry = new PjsTaskRegistry();

@@ -5,8 +5,8 @@ body:
   - type: markdown
     attributes:
       value: |
-        Search existing issues and the [core API guide](https://github.com/Miskovy/pjs/blob/main/docs/guide/core-api.md) first.
-        Remove secrets from public code and logs. Use [SECURITY.md](https://github.com/Miskovy/pjs/blob/main/SECURITY.md)
+        Search existing issues and the [core API guide](https://github.com/Miskovy/parallel-javascript/blob/main/docs/guide/core-api.md) first.
+        Remove secrets from public code and logs. Use [SECURITY.md](https://github.com/Miskovy/parallel-javascript/blob/main/SECURITY.md)
         to report vulnerabilities privately.
   - type: textarea
     id: goal

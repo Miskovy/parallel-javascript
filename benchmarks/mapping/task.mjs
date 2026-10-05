@@ -1,5 +1,5 @@
 import { move, transferableSymbol, valueSymbol } from 'piscina';
-import { transfer } from '@pjs/runtime';
+import { transfer } from '@pjavascript/runtime';
 
 export function transformValue(value, index, iterations) {
   let state = (index + 1) | 0;

@@ -65,7 +65,7 @@ const named = source.statements
   .sort((a, b) => a.name.localeCompare(b.name));
 assert.deepEqual(named, baseline.namedExports);
 assert.deepEqual(
-  Object.keys(await import('@pjs/runtime')).sort(),
+  Object.keys(await import('@pjavascript/runtime')).sort(),
   baseline.runtimeValues,
 );
 const manifest = JSON.parse(
@@ -80,7 +80,11 @@ const contract = {
   files: manifest.files,
   dependencies: manifest.dependencies ?? {},
 };
-assert.deepEqual(contract, baseline.manifest);
+// Retain the historical baseline; only the permanent package name differs.
+assert.deepEqual(contract, {
+  ...baseline.manifest,
+  name: '@pjavascript/runtime',
+});
 console.log(
   JSON.stringify({
     passed: true,
@@ -92,6 +96,8 @@ console.log(
     declarationFiles: 25,
     sourceBytesIdentical: true,
     declarationBytesIdentical: true,
-    manifestContractIdentical: true,
+    manifestContractIdenticalExceptPackageName: true,
+    baselinePackageName: baseline.manifest.name,
+    packageName: manifest.name,
   }),
 );

@@ -1,7 +1,11 @@
 import { performance, monitorEventLoopDelay } from 'node:perf_hooks';
 import { writeFile } from 'node:fs/promises';
 import { setImmediate } from 'node:timers';
-import { PjsQueueFullError, PjsRuntime, PjsTaskRegistry } from '@pjs/runtime';
+import {
+  PjsQueueFullError,
+  PjsRuntime,
+  PjsTaskRegistry,
+} from '@pjavascript/runtime';
 
 const registry = new PjsTaskRegistry();
 const task = registry.register(

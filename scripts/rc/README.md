@@ -56,7 +56,7 @@ Use existing portable binaries without changing PATH or the default Node. Exampl
 paths below describe this Windows checkout's ignored local tooling:
 
 ```powershell
-& .\.node-tools\node-v22.13.0-win-x64\node.exe scripts/rc/qualify.mjs --profile=standard --npm-cli=E:/Miskovy/Work/pjs/pjs/.node-tools/node-v22.13.0-win-x64/node_modules/npm/bin/npm-cli.js --output=.node-tools/rc1/new-minimum.json
+& .\.node-tools\node-v22.13.0-win-x64\node.exe scripts/rc/qualify.mjs --profile=standard --npm-cli=E:/Miskovy/Work/pjs/pjs/.node-tools/node-v22.13.0-win-x64/node_modules/npm/bin/npm-cli.js --output=.node-tools/rc2/new-minimum.json
 ```
 
 Select the installed 22.23.3 executable/npm CLI similarly. Commands run tests and

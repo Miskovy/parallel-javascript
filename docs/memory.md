@@ -32,7 +32,7 @@ cannot appear in a transfer list. See [Node's messaging contract](https://nodejs
 ## Construct once, read many times
 
 ```ts
-import { sharedReadonly } from '@pjs/runtime';
+import { sharedReadonly } from '@pjavascript/runtime';
 
 const b = sharedReadonly(new Float64Array([1, 2, 3, 4]));
 // b: Float64Array<SharedArrayBuffer>

@@ -1,5 +1,5 @@
 import { Worker } from 'node:worker_threads';
-import { PjsRuntime, PjsTaskRegistry } from '@pjs/runtime';
+import { PjsRuntime, PjsTaskRegistry } from '@pjavascript/runtime';
 import { compute, nativeAsync } from './task.mjs';
 
 export async function executor(config, maxQueue = 256) {

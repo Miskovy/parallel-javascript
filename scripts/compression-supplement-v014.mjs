@@ -6,7 +6,7 @@ import { performance } from 'node:perf_hooks';
 import { setTimeout as delay } from 'node:timers/promises';
 import { readFile } from 'node:fs/promises';
 import { deflateRawSync } from 'node:zlib';
-import { sharedReadonly } from '@pjs/runtime';
+import { sharedReadonly } from '@pjavascript/runtime';
 import { matrix } from '../benchmarks/real-world/compression/matrix.mjs';
 import {
   bound,

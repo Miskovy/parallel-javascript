@@ -4,7 +4,11 @@ import { availableParallelism } from 'node:os';
 import { setTimeout as delayConsumer } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
 import Piscina from 'piscina';
-import { PjsRuntime, PjsTaskRegistry, sharedReadonly } from '@pjs/runtime';
+import {
+  PjsRuntime,
+  PjsTaskRegistry,
+  sharedReadonly,
+} from '@pjavascript/runtime';
 
 const config = JSON.parse(process.argv[2]);
 const {
