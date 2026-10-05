@@ -24,7 +24,7 @@ jobs:
       NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
     steps:
       - name: Check out the published release tag
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: refs/tags/${{ github.event.release.tag_name }}
           fetch-depth: 0
@@ -87,13 +87,11 @@ jobs:
           printf '%s  %s\n' "$SHA256" "$TARBALL" | sha256sum --check --strict
           npm publish "$TARBALL" --access public --tag "$DIST_TAG" --ignore-scripts
       - name: Verify registry version and chosen dist-tag
-        if: steps.registry.outputs.exists == 'false'
         env:
           VERSION: ${{ steps.release.outputs.version }}
           DIST_TAG: ${{ steps.release.outputs.dist-tag }}
         run: node scripts/release/npm-release.mjs verify "$VERSION" "$DIST_TAG"
       - name: Smoke-test a clean public-registry consumer
-        if: steps.registry.outputs.exists == 'false'
         env:
           VERSION: ${{ steps.release.outputs.version }}
           DIST_TAG: ${{ steps.release.outputs.dist-tag }}

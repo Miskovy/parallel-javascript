@@ -39,10 +39,10 @@ tags through any environment deployment restrictions. These protections are not
 assumed to exist already.
 
 The workflow uses GitHub-hosted Ubuntu, Node 24, and SHA-pinned official
-`actions/checkout` and `actions/setup-node` v7.0.0 releases. It checks for npm
+`actions/checkout` v7.0.1 and `actions/setup-node` v7.0.0 releases. It checks for npm
 11.5.1+ and disables package-manager caching. See upstream
 [trusted publishing guidance](https://docs.npmjs.com/trusted-publishers/),
-[checkout releases](https://github.com/actions/checkout/releases/tag/v7.0.0),
+[checkout releases](https://github.com/actions/checkout/releases/tag/v7.0.1),
 [setup-node releases](https://github.com/actions/setup-node/releases/tag/v7.0.0), and
 [Node releases](https://nodejs.org/en/about/previous-releases).
 
@@ -63,7 +63,8 @@ The workflow uses GitHub-hosted Ubuntu, Node 24, and SHA-pinned official
 6. The job enters the `npm` Environment; approve the deployment if configured.
 7. CD checks out the exact release tag, validates tag/version/classification and
    queries npm. An existing immutable version is reported and publication is
-   skipped; versions and tags are not changed automatically.
+   skipped; versions and tags are not changed automatically. Registry verification
+   and consumer smoke still run for an already-published version.
 8. For an absent version, CD runs `npm ci`, the release-helper tests,
    `test:contracts` (including build), `test:types`, `typecheck:compat`,
    `test:package`, lint, formatting, documentation and diff checks. The existing
@@ -78,7 +79,8 @@ The workflow uses GitHub-hosted Ubuntu, Node 24, and SHA-pinned official
 10. npm authenticates using short-lived GitHub OIDC identity and publishes the
     same `.tgz` publicly. Prereleases use `next`; stable versions use `latest`.
     npm generates provenance automatically for this public package/repository.
-11. CD verifies the published version and chosen dist-tag, with six bounded
+11. For both new publications and already-published versions, CD verifies the
+    version and chosen dist-tag, with six bounded
     visibility attempts and increasing backoff (5–25 seconds). It lists registry
     dist-tags and installs the chosen tag in a fresh external project, asserting
     the expected version and exercising public imports, worker loading/execution,
@@ -98,8 +100,11 @@ to repair a workflow run.
 
 If publication succeeds but later registry verification or consumer smoke fails,
 inspect npm and the logs first. Rerunning the workflow finds the published version
-and skips further publication and automatic tag mutation. Verify the recorded
-version, dist-tag, provenance and consumer manually after diagnosing the failure.
+and skips further qualification, packing, publication and automatic tag mutation.
+It still verifies the registry version and expected dist-tag and runs the public
+consumer smoke. A missing or moved dist-tag fails verification; investigate the
+release state before any deliberate correction. Inspect provenance manually after
+diagnosing a publication failure.
 A prerelease run verifies only `next`; an automatically created `latest` tag from
 first publication is allowed and is never deleted by CD.
 

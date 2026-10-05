@@ -123,3 +123,16 @@ test('registry verification requires the selected tag; first-publication latest 
     verifyRegistry('1.0.0', 'latest', '1.0.0-rc.2', { latest: '1.0.0' }),
   );
 });
+
+test('an already-published prerelease still requires next to point to its version', () => {
+  const version = '1.0.0-rc.3';
+  assert.equal(
+    registryPresence({ status: 0, stdout: JSON.stringify(version) }, version),
+    true,
+  );
+  verifyRegistry(version, 'next', version, { next: version });
+  for (const tags of [{}, { next: '1.0.0-rc.2' }])
+    assert.throws(() => verifyRegistry(version, 'next', version, tags), {
+      message: /next does not point to 1\.0\.0-rc\.3/,
+    });
+});

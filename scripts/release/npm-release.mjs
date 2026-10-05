@@ -202,7 +202,7 @@ async function main() {
       output('exists', exists);
       summary(
         exists
-          ? `${packageName}@${version} already exists on npm. Publication skipped; no version or dist-tag mutation.`
+          ? `${packageName}@${version} already exists on npm. Publication skipped; no version or dist-tag mutation. Registry verification and consumer smoke will still run.`
           : `${packageName}@${version} is absent from npm; qualification may proceed.`,
       );
       break;
