@@ -1,41 +1,33 @@
 # PJS — Parallel JavaScript Runtime
 
+[![npm prerelease](https://img.shields.io/npm/v/%40pjavascript%2Fruntime/next)](https://www.npmjs.com/package/@pjavascript/runtime)
+
 PJS runs explicitly registered CPU work in persistent Node workers, with bounded
 admission and explicit memory ownership. Your application keeps its event loop
 for I/O; PJS provides a separate compute plane. There are no runtime dependencies.
 
-**[v1.0.0-rc.1](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.1) has been
-released as a prerelease.** Windows and Fedora/Linux x64 qualification completed;
+**[v1.0.0-rc.2](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.2) is the
+current published prerelease, available on npm as `@pjavascript/runtime` under `next`.**
+Windows and Fedora/Linux x64 qualification completed;
 macOS and ARM64 remain unclaimed. Final v1.0.0 has not been released.
 [RC readiness](docs/research/v1-rc1-readiness.md) records the release gates and
 platform boundaries. The immutable v0.15.0 release remains available.
 [API stability](docs/stability.md) distinguishes core candidates, supported
 ownership helpers, experimental range APIs and diagnostic statistics.
 
-RC2 prepares the permanent package identity `@pjavascript/runtime@1.0.0-rc.2`
-before first npm publication. The runtime implementation and public API are
-unchanged from RC1. See the [RC2 identity note](docs/release-v1.0.0-rc.2.md).
-RC2 has not been tagged or released.
+RC2 established the permanent package identity `@pjavascript/runtime@1.0.0-rc.2`.
+The runtime implementation and public API are unchanged from RC1.
+See the [RC2 release note](docs/release-v1.0.0-rc.2.md).
 
 ## Install
 
-This repository validates a built tarball; this milestone does not publish to npm.
-From a checkout with development dependencies installed:
+Install the current prerelease from the [public npm package](https://www.npmjs.com/package/@pjavascript/runtime):
 
 ```sh
-npm ci
-npm run build
-npm pack --workspace @pjavascript/runtime --pack-destination /tmp
+npm install @pjavascript/runtime@next
 ```
 
-Then, in your ESM application, install the resulting artifact:
-
-```sh
-npm install /tmp/pjavascript-runtime-1.0.0-rc.2.tgz
-```
-
-Replace `/tmp` with an absolute temporary directory on your system (for example
-`$env:TEMP` in PowerShell). Use npm.cmd if your PowerShell policy blocks npm.ps1.
+Use `@next` deliberately until stable v1.0.0 exists; RC2 is a prerelease.
 Qualified versions: Node 22.13+ within 22.x and 24.x. TypeScript tasks must be
 compiled to JavaScript first. No CommonJS entrypoint is supplied.
 
@@ -169,6 +161,27 @@ backpressure; you do not need PJS to learn from the material.
 
 ## Development and validation
 
+### Local package evaluation
+
+From a checkout, build and pack a local artifact:
+
+```sh
+npm ci
+npm run build
+npm pack --workspace @pjavascript/runtime --pack-destination /tmp
+```
+
+Then install that artifact in your ESM application:
+
+```sh
+npm install /tmp/pjavascript-runtime-1.0.0-rc.2.tgz
+```
+
+Replace `/tmp` with an absolute temporary directory on your system (for example
+`$env:TEMP` in PowerShell). Use npm.cmd if your PowerShell policy blocks npm.ps1.
+
+### Validation
+
 ```sh
 npm test
 npm run test:contracts
@@ -194,4 +207,6 @@ runtime/API change expectations. See [support](SUPPORT.md) for questions and iss
 reporting, the [Code of Conduct](CODE_OF_CONDUCT.md) for community expectations,
 and the [security policy](SECURITY.md) for private vulnerability reporting.
 
-MIT licensed. RC1 is a prerelease; npm publication and final v1.0.0 are not claimed.
+Maintainers: see [releasing](docs/releasing.md) for trusted npm publication.
+
+MIT licensed. RC2 is published as a prerelease; final v1.0.0 has not been released.

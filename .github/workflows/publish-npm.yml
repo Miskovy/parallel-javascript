@@ -1,0 +1,98 @@
+name: Publish approved release to npm
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: npm-publish-pjavascript-runtime
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.repository == 'Miskovy/parallel-javascript'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
+    steps:
+      - name: Check out the published release tag
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: refs/tags/${{ github.event.release.tag_name }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up qualified Node with no package cache
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Require an OIDC-capable npm CLI
+        run: |
+          node --version
+          npm --version
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import { execFileSync } from 'node:child_process';
+          const [major, minor, patch] = execFileSync('npm', ['--version'], { encoding: 'utf8' }).trim().split('.').map(Number);
+          assert.ok(major > 11 || (major === 11 && (minor > 5 || (minor === 5 && patch >= 1))), 'npm >=11.5.1 is required');
+          NODE
+      - name: Validate release version and classification
+        id: release
+        run: node scripts/release/npm-release.mjs gate
+      - name: Guard immutable npm versions
+        id: registry
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+        run: node scripts/release/npm-release.mjs registry-check "$VERSION"
+      - name: Install locked build dependencies
+        if: steps.registry.outputs.exists == 'false'
+        run: npm ci
+      - name: Bounded contracts, types, package and documentation gates
+        if: steps.registry.outputs.exists == 'false'
+        run: |
+          node --test scripts/release/npm-release.test.mjs
+          npm run test:contracts
+          npm run test:types
+          npm run typecheck:compat
+          npm run test:package
+          npm run lint
+          npm run format:check
+          npm run test:docs
+          git diff --check
+      - name: Pack and validate the exact release artifact
+        if: steps.registry.outputs.exists == 'false'
+        id: artifact
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+          DIST_TAG: ${{ steps.release.outputs.dist-tag }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/pjs-release"
+          npm pack --workspace @pjavascript/runtime --pack-destination "$RUNNER_TEMP/pjs-release" --json > "$RUNNER_TEMP/pjs-release/pack.json"
+          node scripts/release/npm-release.mjs tarball "$RUNNER_TEMP/pjs-release/pack.json" "$RUNNER_TEMP/pjs-release" "$VERSION" "$DIST_TAG"
+      - name: Publish the validated tarball with trusted OIDC identity
+        if: steps.registry.outputs.exists == 'false'
+        env:
+          TARBALL: ${{ steps.artifact.outputs.tarball }}
+          SHA256: ${{ steps.artifact.outputs.sha256 }}
+          DIST_TAG: ${{ steps.release.outputs.dist-tag }}
+        run: |
+          printf '%s  %s\n' "$SHA256" "$TARBALL" | sha256sum --check --strict
+          npm publish "$TARBALL" --access public --tag "$DIST_TAG" --ignore-scripts
+      - name: Verify registry version and chosen dist-tag
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+          DIST_TAG: ${{ steps.release.outputs.dist-tag }}
+        run: node scripts/release/npm-release.mjs verify "$VERSION" "$DIST_TAG"
+      - name: Smoke-test a clean public-registry consumer
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+          DIST_TAG: ${{ steps.release.outputs.dist-tag }}
+        run: node scripts/release/npm-release.mjs registry-smoke "$VERSION" "$DIST_TAG"
