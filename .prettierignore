@@ -3,4 +3,5 @@ packages/runtime/dist/
 package-lock.json
 benchmarks/results/*.json
 benchmarks/results/local/
+benchmarks/results/flagship-monte-carlo/
 .node-tools/

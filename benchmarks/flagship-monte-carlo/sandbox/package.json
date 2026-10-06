@@ -1,0 +1,10 @@
+{
+  "name": "pjs-flagship-monte-carlo-consumer",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "dependencies": {
+    "@pjavascript/runtime": "1.0.0-rc.2",
+    "piscina": "5.3.2"
+  }
+}
