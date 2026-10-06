@@ -9,6 +9,7 @@ import {
   practicalWin,
 } from './src/stats.mjs';
 import { validateTrial } from './src/schema.mjs';
+import { cells } from './src/campaign.mjs';
 
 const key = (r) =>
   [
@@ -102,7 +103,10 @@ export function summary(rows) {
         cpuSecondsPerWallSecond: percentile(
           runs.map(
             (r) =>
-              (r.cpuUserMs + r.cpuSystemMs) / (r.simulationMs + r.reductionMs),
+              (r.cpuUserMs + r.cpuSystemMs) /
+              (r.stage === 'cold'
+                ? r.coldMs - r.sharedPreparationMs
+                : r.computeEndToEndMs),
           ),
           0.5,
         ),
@@ -477,7 +481,6 @@ export async function analyze(path) {
     (r) => r.type === 'completion' || r.type === 'calibration',
   );
   if (header.profile === 'full') {
-    const { cells } = await import('./run.mjs');
     const expected = cells(
       'full',
       header.config,

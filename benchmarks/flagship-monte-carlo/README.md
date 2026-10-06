@@ -126,3 +126,8 @@ Full is explicit and never part of ordinary CI. Smoke validates correctness,
 cleanup, serialization and analysis, and is not performance evidence. Files use
 exclusive creation and include Cairo execution date, host, Node and unique ID;
 raw trial evidence is append-only. Existing historical files are never changed.
+
+The committed campaign already has frozen sizes. Reproduction uses `smoke` and
+`full`; `calibrate` is only for initial registration of a new campaign with null
+sizes and rejects an already frozen config before collecting anything. Do not
+recalibrate this campaign or its Windows replication.

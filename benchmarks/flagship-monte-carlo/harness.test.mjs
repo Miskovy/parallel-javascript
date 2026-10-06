@@ -13,9 +13,13 @@ import {
 } from './src/stats.mjs';
 import { assertPackage } from './src/provenance.mjs';
 import { validateTrial } from './src/schema.mjs';
-import { summary } from './analyze.mjs';
+import { summary, analyze } from './analyze.mjs';
 import { config } from './config.mjs';
 import { command } from './prepare-consumer.mjs';
+import { cells } from './src/campaign.mjs';
+import { mkdtemp, writeFile, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 test('PRNG frozen integer vector, open uniforms, dimension/index determinism', () => {
   assert.deepEqual([0, 1, 0xffffffff].map(mix32), [0, 1753845952, 1734902346]);
@@ -283,4 +287,36 @@ test('child timeout and crash become explicit errors without forced success exit
     ),
     /fixture crash/,
   );
+});
+
+test('registered staged matrix and full completeness analysis have no runner dependency', async () => {
+  const matrix = cells('full', config, 4);
+  assert.equal(matrix.length, 62);
+  assert.equal(matrix.filter((c) => c.stage === 'primary').length, 30);
+  assert.ok(matrix.every((c) => c.workers <= 4 && c.chunks <= c.simulations));
+  const directory = await mkdtemp(join(tmpdir(), 'pjs-full-analysis-test-'));
+  try {
+    const path = join(directory, 'empty.jsonl');
+    await writeFile(
+      path,
+      [
+        {
+          type: 'campaign',
+          id: 'fixture',
+          profile: 'full',
+          config,
+          environment: { availableParallelism: 4 },
+        },
+        { type: 'completion', trials: 0, failures: 0 },
+      ]
+        .map(JSON.stringify)
+        .join('\n') + '\n',
+    );
+    const result = await analyze(path);
+    assert.equal(result.expectedTrials, 620);
+    assert.equal(result.complete, false);
+    assert.equal(result.trials, 0);
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
 });
