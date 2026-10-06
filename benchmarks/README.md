@@ -1,5 +1,15 @@
 # Benchmark methodology
 
+## Flagship Monte Carlo public-package campaign
+
+The [preregistered Monte Carlo methodology](flagship-monte-carlo/README.md)
+compares serial execution, persistent raw workers, exact Piscina 5.3.2 and the
+public PJS 1.0.0-rc.2 npm artifact. Use `npm run benchmark:flagship:smoke` for
+validation and `npm run benchmark:flagship:full` for the explicit retained
+campaign. The full campaign is excluded from ordinary tests and CI. Raw JSONL
+trials and deterministic generated analysis use new immutable filenames under
+`results/flagship-monte-carlo/`; historical evidence is preserved.
+
 ## Exact-reference v0.11 platform validation
 
 The portable campaign runner is `scripts/cross-platform-v011/run.mjs`.
