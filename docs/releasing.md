@@ -54,9 +54,16 @@ required human approval is recommended when supported. Allow the intended releas
 tags through any environment deployment restrictions. These protections are not
 assumed to exist already.
 
-The workflow uses GitHub-hosted Ubuntu, Node 24, and SHA-pinned official
-`actions/checkout` v7.0.1 and `actions/setup-node` v7.0.0 releases. It checks for npm
-11.5.1+ and disables package-manager caching. See upstream
+The workflow uses GitHub-hosted Ubuntu, exactly Node 24.21.0 / npm 11.19.0 from
+the reviewed [publication toolchain](../scripts/release/toolchain.json), and
+SHA-pinned official `actions/checkout` v7.0.1 and `actions/setup-node` v7.0.0.
+The shared release helper rejects any other publisher version before registry
+operations and disables package-manager caching. Runtime support for Node
+22.13.0 and Node 24 does not approve every bundled npm for publishing. Four-cell
+CI provisions the exact release npm archive after verifying its committed SHA-512,
+then tests the live CLI separately from ordinary runtime npm. Review Node/npm pins
+and archive integrity together when upgrading; repeat the four-cell qualification
+and two-build reproduction. See upstream
 [trusted publishing guidance](https://docs.npmjs.com/trusted-publishers/),
 [checkout releases](https://github.com/actions/checkout/releases/tag/v7.0.1),
 [setup-node releases](https://github.com/actions/setup-node/releases/tag/v7.0.0), and

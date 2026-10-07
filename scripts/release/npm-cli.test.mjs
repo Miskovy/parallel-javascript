@@ -11,6 +11,7 @@ import {
 import { tmpdir } from 'node:os';
 import { isAbsolute, join } from 'node:path';
 import { test } from 'node:test';
+import { assertSupportedReleaseNpmVersion } from './toolchain.mjs';
 import {
   packageName,
   parsePublishDryRunReport,
@@ -68,6 +69,8 @@ test(
     };
     try {
       evidence.npm = npm(['--version']).trim();
+      assertSupportedReleaseNpmVersion(evidence.npm);
+      evidence.supported = true;
       const version = '0.0.0-contract-test';
       const forbiddenScript = 'node -e "process.exit(97)"';
       writeFileSync(
@@ -122,6 +125,7 @@ test(
         ? 'direct record'
         : 'singleton package-name map';
       evidence.report = report;
+      evidence.liveContractExecuted = true;
     } finally {
       t.diagnostic(JSON.stringify(evidence));
       if (process.env.PJS_NPM_CONTRACT_REPORT)

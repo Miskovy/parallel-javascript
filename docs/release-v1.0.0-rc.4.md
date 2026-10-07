@@ -50,6 +50,37 @@ pack record; selected-workspace qualification and the real CLI regression check
 the pack output. `npm view --json` remains a version string, a dist-tag object,
 or an explicit error object; existing identity/tag/E404 guards stay intact.
 
+## Qualification boundary repairs
+
+Node 22.13.0 bundles npm 10.9.2, which executed the fixture's failing `prepare`
+script despite `npm pack --ignore-scripts`. That CLI remains usable for ordinary
+runtime installation and consumer qualification; it is outside the maintainer
+publisher contract. The lifecycle traps remain unchanged.
+
+The reviewed publication toolchain is now exactly Node 24.21.0 / npm 11.19.0,
+recorded once in [toolchain.json](../scripts/release/toolchain.json). Publication
+fails before registry operations if either version differs. Runtime CI still
+qualifies Node 22.13.0 and the Node 24 line independently. Each cell provisions
+npm 11.19.0 from its official archive, verifies the committed SHA-512 integrity
+before an offline, scripts-disabled install, and executes both the live fixture
+and actual artifact validator through that CLI. Reports distinguish runtime npm,
+publisher npm, support classification and actual live-contract execution.
+The direct npm 11.8.0 JSON form remains a parser regression, not an approved
+publication toolchain. Toolchain upgrades require a reviewed pin/integrity change,
+all four qualification cells and fresh candidate reproducibility; runner updates
+cannot silently change the publisher.
+
+A diagnostic Windows Node 24 run captured `tar -tzf` stdout before changing its
+parser: 128 CRLF separators, zero LF-only separators and zero bare CR characters
+([run 37619823168](https://github.com/Miskovy/parallel-javascript/actions/runs/37619823168)).
+The old LF-only split retained carriage returns in filenames. The narrow parser
+now accepts uniform LF or CRLF, removes only structural separators and one
+optional final terminator, and preserves spaces in paths. NUL, bare CR, mixed
+line endings and empty records fail closed. Exact entry count, duplicates, path
+allowlist, traversal checks, required files and complete frozen hashes remain
+mandatory. The release-critical line-output audit found no analogous uncorrected
+tar-list parser in adjacent tooling.
+
 ## Exact candidate and release boundary
 
 The [RC4 baseline](../scripts/rc/frozen-rc4.json) freezes all source, runtime tests,

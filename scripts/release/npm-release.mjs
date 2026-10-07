@@ -13,6 +13,7 @@ import { basename, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { setTimeout as delay } from 'node:timers/promises';
 import { baseline, assertFrozenPackage } from '../rc/baseline.mjs';
+import { assertSupportedReleaseNpmVersion } from './toolchain.mjs';
 
 export const packageName = '@pjavascript/runtime';
 const root = fileURLToPath(new URL('../../', import.meta.url));
@@ -141,6 +142,50 @@ export function parsePublishDryRunReport(stdout) {
   };
 }
 
+export function parseTarListing(stdout) {
+  assert.equal(typeof stdout, 'string', 'Tar listing must be text');
+  assert.ok(stdout.length > 0, 'Tar listing is empty');
+  assert.ok(!stdout.includes('\0'), 'Tar listing contains NUL');
+  assert.ok(!/\r(?!\n)/.test(stdout), 'Tar listing contains bare CR');
+  const crlf = stdout.includes('\r\n');
+  assert.ok(
+    !crlf || !/(?<!\r)\n/.test(stdout),
+    'Tar listing has mixed line endings',
+  );
+  const separator = crlf ? '\r\n' : '\n';
+  const records = stdout.split(separator);
+  if (records.at(-1) === '') records.pop();
+  assert.ok(
+    records.length > 0 && records.every((path) => path.length > 0),
+    'Tar listing has empty records',
+  );
+  return records;
+}
+
+export function validateTarListing(files, entryCount) {
+  assert.ok(
+    files.length >= 10 && files.length <= 1000,
+    'Implausible file count',
+  );
+  assert.equal(files.length, entryCount);
+  assert.equal(new Set(files).size, files.length);
+  assert.ok(
+    files.every((file) =>
+      /^package\/(?:dist\/|src\/|package.json$|README.md$|LICENSE$)/.test(file),
+    ),
+  );
+  assert.ok(files.every((file) => !file.split('/').includes('..')));
+  for (const required of [
+    'package.json',
+    'README.md',
+    'LICENSE',
+    'dist/index.js',
+    'dist/index.d.ts',
+    'dist/workers/bootstrap.js',
+  ])
+    assert.ok(files.includes(`package/${required}`), `Missing ${required}`);
+}
+
 export function validatePublishDryRunReport(report, version, entryCount) {
   assert.equal(report.name, packageName, 'npm dry-run package name mismatch');
   assert.equal(report.version, version, 'npm dry-run version mismatch');
@@ -262,6 +307,7 @@ function smoke(spec, version, offline = false) {
 
 async function main() {
   const [mode, ...args] = process.argv.slice(2);
+  assertSupportedReleaseNpmVersion(npm(['--version']).trim());
   switch (mode) {
     case 'gate': {
       const event = JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH));
@@ -339,30 +385,8 @@ async function main() {
           JSON.stringify(transport, null, 2) + '\n',
           { flag: 'wx' },
         );
-      const files = listing.trim().split('\n');
-      assert.ok(
-        files.length >= 10 && files.length <= 1000,
-        'Implausible file count',
-      );
-      assert.equal(files.length, packed.entryCount);
-      assert.equal(new Set(files).size, files.length);
-      assert.ok(
-        files.every((file) =>
-          /^package\/(?:dist\/|src\/|package.json$|README.md$|LICENSE$)/.test(
-            file,
-          ),
-        ),
-      );
-      assert.ok(files.every((file) => !file.split('/').includes('..')));
-      for (const required of [
-        'package.json',
-        'README.md',
-        'LICENSE',
-        'dist/index.js',
-        'dist/index.d.ts',
-        'dist/workers/bootstrap.js',
-      ])
-        assert.ok(files.includes(`package/${required}`), `Missing ${required}`);
+      const files = parseTarListing(listing);
+      validateTarListing(files, packed.entryCount);
       const manifest = JSON.parse(
         command('tar', ['-xOf', tarball, 'package/package.json']),
       );

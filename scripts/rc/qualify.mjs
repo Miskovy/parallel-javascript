@@ -6,12 +6,16 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { performance } from 'node:perf_hooks';
 import {
+  assertSupportedReleaseNpmVersion,
+  classifyReleaseNpmVersion,
+} from '../release/toolchain.mjs';
+import {
   baseline,
   assertArguments,
   assertFrozenWorkspace,
 } from './baseline.mjs';
 
-assertArguments(['output', 'npm-cli', 'profile']);
+assertArguments(['output', 'npm-cli', 'release-npm-cli', 'profile']);
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 assertFrozenWorkspace(root);
@@ -26,6 +30,17 @@ mkdirSync(dirname(absoluteOutput), { recursive: true });
 writeFileSync(absoluteOutput, '', { flag: 'wx' });
 const npmCli = arg('npm-cli', process.env.npm_execpath);
 assert.ok(npmCli, 'Supply --npm-cli=path or run via npm');
+const releaseNpmCli = arg('release-npm-cli', process.env.PJS_RELEASE_NPM_CLI);
+assert.ok(
+  releaseNpmCli,
+  'Select the provisioned --release-npm-cli independently of runtime npm',
+);
+const releaseNpm = execFileSync(
+  process.execPath,
+  [releaseNpmCli, '--version'],
+  { encoding: 'utf8' },
+).trim();
+assertSupportedReleaseNpmVersion(releaseNpm);
 const profile = arg('profile', 'standard');
 const expectedTests = baseline.contractTests;
 assert.ok(['smoke', 'standard', 'extended'].includes(profile));
@@ -56,6 +71,12 @@ const report = {
   npm: execFileSync(process.execPath, [npmCli, '--version'], {
     encoding: 'utf8',
   }).trim(),
+  runtimeNpm: execFileSync(process.execPath, [npmCli, '--version'], {
+    encoding: 'utf8',
+  }).trim(),
+  releaseNpmCli,
+  releaseNpm,
+  releaseNpmSupported: true,
   platform: process.platform,
   arch: process.arch,
   profile,
@@ -87,7 +108,7 @@ function run(label, args, executable = process.execPath) {
     env: {
       ...process.env,
       PJS_TAR_LISTING_REPORT: join(scratch, 'tar-listing.json'),
-      PJS_NPM_CLI: npmCli,
+      PJS_NPM_CLI: releaseNpmCli,
       PJS_NPM_CONTRACT_REPORT: join(scratch, 'npm-dry-run.json'),
       PJS_CONTRACT_REPORT: join(scratch, 'contracts.json'),
     },
@@ -195,6 +216,15 @@ try {
       'next',
     ],
   );
+  report.tarListingTransport = JSON.parse(
+    readFileSync(join(scratch, 'tar-listing.json')),
+  );
+  report.runtimeNpmPublisherPolicy = classifyReleaseNpmVersion(
+    report.runtimeNpm,
+  );
+  report.liveReleaseCliContractExecuted =
+    report.npmDryRun.liveContractExecuted === true;
+  assert.equal(report.liveReleaseCliContractExecuted, true);
   const soakOutput = join(scratch, 'soak.json');
   run(`RC ${profile} soak`, [
     'scripts/rc/soak.mjs',

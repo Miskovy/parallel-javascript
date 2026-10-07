@@ -8,7 +8,13 @@ import { fileURLToPath } from 'node:url';
 import { performance } from 'node:perf_hooks';
 import { assertArguments } from './baseline.mjs';
 
-assertArguments(['output', 'npm-cli', 'canonical-dir']);
+assertArguments([
+  'output',
+  'npm-cli',
+  'release-npm-cli',
+  'canonical-dir',
+  'scratch-dir',
+]);
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const arg = (name) =>
   process.argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3);
@@ -17,6 +23,11 @@ assert.ok(output, 'Specify a NEW --output=file.json');
 writeFileSync(output, '', { flag: 'wx' });
 const npmCli = arg('npm-cli') ?? process.env.npm_execpath;
 assert.ok(npmCli, 'Supply --npm-cli=path');
+const releaseNpmCli = arg('release-npm-cli') ?? process.env.PJS_RELEASE_NPM_CLI;
+assert.ok(
+  releaseNpmCli,
+  'Select --release-npm-cli for pinned publication qualification',
+);
 const candidate = execFileSync('git', ['rev-parse', 'HEAD'], {
   cwd: root,
   encoding: 'utf8',
@@ -26,7 +37,9 @@ const status = execFileSync('git', ['status', '--short'], {
   encoding: 'utf8',
 }).trim();
 assert.equal(status, '', 'Commit source before clean qualification');
-const temporary = mkdtempSync(join(tmpdir(), 'PJS RC clean states '));
+const scratchDirectory = resolve(arg('scratch-dir') ?? tmpdir());
+mkdirSync(scratchDirectory, { recursive: true });
+const temporary = mkdtempSync(join(scratchDirectory, 'PJS RC clean states '));
 const report = {
   schema: 1,
   sourceCommit: candidate,
@@ -111,6 +124,7 @@ try {
           `--npm-cli=${npmCli}`,
           `--output=${evidence}`,
           '--profile=extended',
+          `--release-npm-cli=${releaseNpmCli}`,
         ],
         checkout,
       );

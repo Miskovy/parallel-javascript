@@ -12,6 +12,7 @@ import {
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { test } from 'node:test';
+import { releaseToolchain } from '../release/toolchain.mjs';
 import { fileURLToPath } from 'node:url';
 import {
   baseline,
@@ -45,6 +46,7 @@ test('RC4 source/tests/API match immutable RC3 and merged R1A', () => {
   assertFrozenFiles(root);
   assert.equal(baseline.release, 'v1.0.0-rc.4');
   assert.equal(baseline.contractTests, 206);
+  assert.deepEqual(baseline.releaseToolchain, releaseToolchain);
   const historical = JSON.parse(
     readFileSync(new URL('./frozen-v015.json', import.meta.url)),
   );

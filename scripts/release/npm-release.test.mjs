@@ -1,7 +1,17 @@
 import assert from 'node:assert/strict';
+import { Buffer } from 'node:buffer';
 import { test } from 'node:test';
 import {
+  classifyReleaseNpmVersion,
+  assertSupportedReleaseNpmVersion,
+  assertPublicationToolchain,
+  verifyReleaseNpmArchive,
+  releaseToolchain,
+} from './toolchain.mjs';
+import {
   packageName,
+  parseTarListing,
+  validateTarListing,
   parsePublishDryRunReport,
   validatePublishDryRunReport,
   registryPresence,
@@ -238,4 +248,119 @@ test('an already-published prerelease still requires next to point to its versio
     assert.throws(() => verifyRegistry(version, 'next', version, tags), {
       message: /next does not point to 1\.0\.0-rc\.3/,
     });
+});
+
+test('publisher npm is an exact reviewed pin; Node 22 bundled npm 10 is unsupported', () => {
+  assertSupportedReleaseNpmVersion('11.19.0');
+  for (const version of [
+    '10.9.2',
+    '11.8.0',
+    '11.5.1',
+    '11.19.1',
+    '12.0.0',
+    '',
+    undefined,
+  ]) {
+    assert.equal(classifyReleaseNpmVersion(version).supported, false);
+    assert.throws(
+      () => assertSupportedReleaseNpmVersion(version),
+      /Unsupported publisher npm/,
+    );
+  }
+});
+
+test('publication Node pin is separate from runtime compatibility qualification', () => {
+  assertPublicationToolchain('24.21.0', '11.19.0');
+  assert.throws(
+    () => assertPublicationToolchain('22.13.0', '11.19.0'),
+    /Publication requires reviewed Node/,
+  );
+  assert.throws(
+    () => assertPublicationToolchain('24.22.0', '11.19.0'),
+    /Publication requires reviewed Node/,
+  );
+  assert.throws(
+    () => assertPublicationToolchain('24.21.0', '10.9.2'),
+    /Unsupported publisher npm/,
+  );
+  assert.equal(
+    releaseToolchain.npmTarball,
+    'https://registry.npmjs.org/npm/-/npm-11.19.0.tgz',
+  );
+});
+
+test('publisher provisioning rejects changed archive bytes before installation', () => {
+  assert.throws(
+    () => verifyReleaseNpmArchive(Buffer.from('mutation')),
+    /archive integrity mismatch/,
+  );
+});
+
+const validTarFiles = [
+  'package/package.json',
+  'package/README.md',
+  'package/LICENSE',
+  'package/dist/index.js',
+  'package/dist/index.d.ts',
+  'package/dist/workers/bootstrap.js',
+  'package/src/runtime.ts',
+  'package/dist/runtime.js',
+  'package/dist/runtime.d.ts',
+  'package/dist/runtime.js.map',
+];
+
+test('real tar transports LF and Windows CRLF preserve identical filenames', () => {
+  for (const separator of ['\n', '\r\n']) {
+    for (const trailing of ['', separator]) {
+      assert.deepEqual(
+        parseTarListing(validTarFiles.join(separator) + trailing),
+        validTarFiles,
+      );
+    }
+  }
+  assert.deepEqual(parseTarListing('package/dist/ space name.js \r\n'), [
+    'package/dist/ space name.js ',
+  ]);
+});
+
+test('tar listing rejects malformed transport without trimming filenames', () => {
+  for (const listing of [
+    '',
+    undefined,
+    'a\n\nb\n',
+    'a\r\n\r\nb\r\n',
+    'a\rb\n',
+    'a\r',
+    'a\0b\n',
+    'a\r\nb\n',
+    'a\n\n',
+  ]) {
+    assert.throws(() => parseTarListing(listing), /Tar listing/);
+  }
+});
+
+test('normalized tar records retain exact count, duplicate, path and required-file gates', () => {
+  validateTarListing(validTarFiles, validTarFiles.length);
+  assert.throws(() =>
+    validateTarListing([...validTarFiles, validTarFiles[0]], 11),
+  );
+  assert.throws(() => validateTarListing(validTarFiles, 11));
+  for (const path of [
+    'unexpected/file',
+    'package/unexpected',
+    'package/dist/../bad',
+    'package/package.json ',
+  ]) {
+    assert.throws(() => validateTarListing([...validTarFiles, path], 11));
+  }
+  assert.throws(
+    () =>
+      validateTarListing(
+        validTarFiles
+          .filter((path) => path !== 'package/LICENSE')
+          .concat('package/src/other.ts'),
+        10,
+      ),
+    /Missing LICENSE/,
+  );
 });
