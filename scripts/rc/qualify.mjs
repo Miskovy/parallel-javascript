@@ -19,6 +19,10 @@ writeFileSync(absoluteOutput, '', { flag: 'wx' });
 const npmCli = arg('npm-cli', process.env.npm_execpath);
 assert.ok(npmCli, 'Supply --npm-cli=path or run via npm');
 const profile = arg('profile', 'standard');
+const physicalBoundaryRepair = process.argv.includes(
+  '--physical-boundary-repair',
+);
+const expectedTests = physicalBoundaryRepair ? 206 : 184;
 assert.ok(['smoke', 'standard', 'extended'].includes(profile));
 const scratch = absoluteOutput + '.parts';
 mkdirSync(scratch, { recursive: true });
@@ -111,8 +115,8 @@ try {
   run('runtime node:test', ['--test', '--test-timeout=20000', ...tests]);
   run('independent individual contract counts', ['scripts/test-contracts.mjs']);
   report.contracts = JSON.parse(readFileSync(join(scratch, 'contracts.json')));
-  assert.equal(report.contracts.totals.tests, 184);
-  assert.equal(report.contracts.totals.pass, 184);
+  assert.equal(report.contracts.totals.tests, expectedTests);
+  assert.equal(report.contracts.totals.pass, expectedTests);
   assert.equal(report.contracts.totals.fail, 0);
   assert.equal(report.contracts.totals.skipped, 0);
   run('lint', ['node_modules/eslint/bin/eslint.js', '.']);
@@ -126,6 +130,7 @@ try {
   report.apiFreeze = JSON.parse(
     run('v0.15 public source/declaration/export freeze', [
       'scripts/rc/api-freeze.mjs',
+      ...(physicalBoundaryRepair ? ['--physical-boundary-repair'] : []),
     ]),
   );
   run('existing CPU example', ['examples/prime-search.mjs']);
@@ -137,6 +142,7 @@ try {
       `--npm-cli=${npmCli}`,
       `--output=${packageOutput}`,
       `--pack-dir=${join(scratch, 'packed')}`,
+      ...(physicalBoundaryRepair ? ['--physical-boundary-repair'] : []),
     ],
   );
   report.package = JSON.parse(readFileSync(packageOutput));
@@ -175,7 +181,7 @@ try {
       passed: true,
       node: process.version,
       sourceCommit: report.sourceCommit,
-      tests: 184,
+      tests: expectedTests,
       exports: 38,
       profile,
       operations: report.soak.operationCounts,

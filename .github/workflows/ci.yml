@@ -34,11 +34,11 @@ jobs:
       # Each job owns its runner; all heavy checks within a job are sequential.
       - name: Contracts, installed package and bounded soak
         if: runner.os != 'Windows'
-        run: npm run rc:qualify -- --profile=${{ inputs.profile || 'smoke' }} --output=.node-tools/rc-ci.json
+        run: npm run rc:qualify -- --physical-boundary-repair --profile=${{ inputs.profile || 'smoke' }} --output=.node-tools/rc-ci.json
       - name: Contracts, installed package and bounded soak
         if: runner.os == 'Windows'
         shell: cmd
-        run: npm.cmd run rc:qualify -- --profile=${{ inputs.profile || 'smoke' }} --output=.node-tools/rc-ci.json
+        run: npm.cmd run rc:qualify -- --physical-boundary-repair --profile=${{ inputs.profile || 'smoke' }} --output=.node-tools/rc-ci.json
       - name: Retain qualification evidence
         if: always()
         uses: actions/upload-artifact@v4

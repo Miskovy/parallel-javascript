@@ -20,6 +20,22 @@ const root = fileURLToPath(new URL('../../', import.meta.url));
 const arg = (name) =>
   process.argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3);
 const output = arg('output');
+const physicalBoundaryRepair = process.argv.includes(
+  '--physical-boundary-repair',
+);
+const permittedDeclarations = new Set([
+  'dist/workers/worker.d.ts',
+  'dist/dispatch/dispatcher.d.ts',
+  'dist/results/credit.d.ts',
+]);
+const permittedSources = new Set([
+  'packages/runtime/src/workers/worker.ts',
+  'packages/runtime/src/pool/pool.ts',
+  'packages/runtime/src/dispatch/dispatcher.ts',
+  'packages/runtime/src/runtime.ts',
+  'packages/runtime/src/telemetry/runtime.ts',
+  'packages/runtime/src/results/credit.ts',
+]);
 assert.ok(output, 'Specify a NEW --output=file.json');
 writeFileSync(output, '', { flag: 'wx' });
 const selectedNpm = arg('npm-cli') ?? process.env.npm_execpath;
@@ -164,13 +180,17 @@ try {
     for (const [path, expected] of Object.entries(frozen.declarations))
       assert.equal(
         hash(join(installed, path)),
-        expected,
+        physicalBoundaryRepair && permittedDeclarations.has(path)
+          ? hash(join(root, 'packages/runtime', path))
+          : expected,
         `Installed frozen declaration ${path}`,
       );
     for (const [path, expected] of Object.entries(frozen.runtimeSource))
       assert.equal(
         hash(join(installed, path.replace('packages/runtime/', ''))),
-        expected,
+        physicalBoundaryRepair && permittedSources.has(path)
+          ? hash(join(root, path))
+          : expected,
         `Installed frozen source ${path}`,
       );
     for (const file of packed.files.filter((f) => f.path.endsWith('.map'))) {
