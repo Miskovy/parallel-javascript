@@ -5,8 +5,16 @@ import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { performance } from 'node:perf_hooks';
+import {
+  baseline,
+  assertArguments,
+  assertFrozenWorkspace,
+} from './baseline.mjs';
+
+assertArguments(['output', 'npm-cli', 'profile']);
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
+assertFrozenWorkspace(root);
 const arg = (name, fallback) =>
   process.argv
     .find((a) => a.startsWith(`--${name}=`))
@@ -19,10 +27,7 @@ writeFileSync(absoluteOutput, '', { flag: 'wx' });
 const npmCli = arg('npm-cli', process.env.npm_execpath);
 assert.ok(npmCli, 'Supply --npm-cli=path or run via npm');
 const profile = arg('profile', 'standard');
-const physicalBoundaryRepair = process.argv.includes(
-  '--physical-boundary-repair',
-);
-const expectedTests = physicalBoundaryRepair ? 206 : 184;
+const expectedTests = baseline.contractTests;
 assert.ok(['smoke', 'standard', 'extended'].includes(profile));
 const scratch = absoluteOutput + '.parts';
 mkdirSync(scratch, { recursive: true });
@@ -40,6 +45,8 @@ const report = {
   schema: 1,
   kind: 'Exact-Node RC qualification',
   sourceCommit: git('rev-parse', 'HEAD'),
+  release: baseline.release,
+  baselineSha256: hash('scripts/rc/frozen-rc3.json'),
   startingStatus: git('status', '--short'),
   node: process.version,
   nodeExecutable: process.execPath,
@@ -63,6 +70,7 @@ const report = {
 };
 const save = () =>
   writeFileSync(absoluteOutput, JSON.stringify(report, null, 2) + '\n');
+assert.equal(report.startingStatus, '', 'Commit source before qualification');
 save();
 function run(label, args, executable = process.execPath) {
   console.log('START ' + label);
@@ -97,6 +105,12 @@ try {
     '-p',
     'packages/runtime/tsconfig.json',
   ]);
+  run('release and immutable-baseline regressions', [
+    '--test',
+    'scripts/release/npm-release.test.mjs',
+    'scripts/rc/baseline.test.mjs',
+  ]);
+  run('existing package smoke', ['scripts/package-smoke.mjs']);
   run('test:types', [
     'node_modules/@typescript/native/bin/tsc',
     '-p',
@@ -118,6 +132,7 @@ try {
   assert.equal(report.contracts.totals.tests, expectedTests);
   assert.equal(report.contracts.totals.pass, expectedTests);
   assert.equal(report.contracts.totals.fail, 0);
+  assert.equal(report.contracts.totals.cancelled, 0);
   assert.equal(report.contracts.totals.skipped, 0);
   run('lint', ['node_modules/eslint/bin/eslint.js', '.']);
   run('format:check', [
@@ -128,9 +143,8 @@ try {
   run('documentation links', ['scripts/check-docs.mjs']);
   run('diff --check', ['diff', '--check'], 'git');
   report.apiFreeze = JSON.parse(
-    run('v0.15 public source/declaration/export freeze', [
+    run('RC3 exact source/declaration/export/manifest freeze', [
       'scripts/rc/api-freeze.mjs',
-      ...(physicalBoundaryRepair ? ['--physical-boundary-repair'] : []),
     ]),
   );
   run('existing CPU example', ['examples/prime-search.mjs']);
@@ -142,7 +156,6 @@ try {
       `--npm-cli=${npmCli}`,
       `--output=${packageOutput}`,
       `--pack-dir=${join(scratch, 'packed')}`,
-      ...(physicalBoundaryRepair ? ['--physical-boundary-repair'] : []),
     ],
   );
   report.package = JSON.parse(readFileSync(packageOutput));
@@ -173,6 +186,13 @@ try {
   assert.equal(
     report.preservation.tagObjectAfter,
     report.preservation.tagObjectBefore,
+  );
+  assert.equal(hash('scripts/rc/frozen-rc3.json'), report.baselineSha256);
+  report.endingStatus = git('status', '--short');
+  assert.equal(
+    report.endingStatus,
+    '',
+    'Qualification changed tracked candidate',
   );
   report.passed = true;
   save();

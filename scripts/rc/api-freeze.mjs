@@ -1,36 +1,19 @@
 import assert from 'node:assert/strict';
-import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
+import {
+  baseline,
+  assertArguments,
+  assertFrozenFiles,
+  assertFrozenWorkspace,
+} from './baseline.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
-const baseline = JSON.parse(
-  readFileSync(new URL('./frozen-v015.json', import.meta.url)),
-);
-const hash = (path) =>
-  createHash('sha256').update(readFileSync(path)).digest('hex');
-// R1A deliberately repairs implementation while preserving the public contract.
-// Historical byte-freeze mode remains available without this explicit flag.
-const physicalBoundaryRepair = process.argv.includes(
-  '--physical-boundary-repair',
-);
-const permittedSourceChanges = new Set([
-  'packages/runtime/src/workers/worker.ts',
-  'packages/runtime/src/pool/pool.ts',
-  'packages/runtime/src/dispatch/dispatcher.ts',
-  'packages/runtime/src/runtime.ts',
-  'packages/runtime/src/telemetry/runtime.ts',
-  'packages/runtime/src/results/credit.ts',
-]);
-const permittedDeclarationChanges = new Set([
-  'dist/workers/worker.d.ts',
-  'dist/dispatch/dispatcher.d.ts',
-  'dist/results/credit.d.ts',
-]);
-const changedSource = [];
-const changedDeclarations = [];
+assertArguments([]);
+assertFrozenWorkspace(root);
+assertFrozenFiles(root);
 for (const path of Object.keys(baseline.runtimeSource)) {
   const tree = ts.createSourceFile(
     path,
@@ -50,22 +33,6 @@ for (const path of Object.keys(baseline.runtimeSource)) {
     ts.forEachChild(node, walk);
   };
   walk(tree);
-}
-for (const [path, expected] of Object.entries(baseline.runtimeSource)) {
-  if (hash(resolve(root, path)) === expected) continue;
-  assert.ok(
-    physicalBoundaryRepair && permittedSourceChanges.has(path),
-    `Frozen runtime source changed: ${path}`,
-  );
-  changedSource.push(path);
-}
-for (const [path, expected] of Object.entries(baseline.declarations)) {
-  if (hash(resolve(root, 'packages/runtime', path)) === expected) continue;
-  assert.ok(
-    physicalBoundaryRepair && permittedDeclarationChanges.has(path),
-    `Public declaration changed: ${path}`,
-  );
-  changedDeclarations.push(path);
 }
 const source = ts.createSourceFile(
   'index.ts',
@@ -95,36 +62,23 @@ assert.deepEqual(
 const manifest = JSON.parse(
   readFileSync(resolve(root, 'packages/runtime/package.json')),
 );
-const contract = {
-  name: manifest.name,
-  type: manifest.type,
-  engines: manifest.engines,
-  exports: manifest.exports,
-  types: manifest.types,
-  files: manifest.files,
-  dependencies: manifest.dependencies ?? {},
-};
-// Retain the historical baseline; only the permanent package name differs.
-assert.deepEqual(contract, {
-  ...baseline.manifest,
-  name: '@pjavascript/runtime',
-});
+assert.deepEqual(
+  manifest,
+  baseline.manifest,
+  'Frozen package manifest changed',
+);
 console.log(
   JSON.stringify({
     passed: true,
-    baselineCommit: baseline.commit,
-    exports: 38,
-    values: 16,
-    typeOnly: 22,
-    runtimeFiles: 25,
-    declarationFiles: 25,
-    sourceBytesIdentical: changedSource.length === 0,
-    declarationBytesIdentical: changedDeclarations.length === 0,
-    physicalBoundaryRepair,
-    changedSource,
-    changedDeclarations,
-    manifestContractIdenticalExceptPackageName: true,
-    baselinePackageName: baseline.manifest.name,
-    packageName: manifest.name,
+    release: baseline.release,
+    runtimeSourceCommit: baseline.runtimeSourceCommit,
+    exports: named.length,
+    values: baseline.runtimeValues.length,
+    typeOnly: named.filter((entry) => entry.kind === 'type').length,
+    runtimeFiles: Object.keys(baseline.runtimeSource).length,
+    declarationFiles: Object.keys(baseline.declarations).length,
+    sourceBytesIdentical: true,
+    declarationBytesIdentical: true,
+    manifestIdentical: true,
   }),
 );
