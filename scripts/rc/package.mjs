@@ -39,7 +39,7 @@ assert.ok(
 );
 const npmCli = resolve(selectedNpm);
 const packDir = resolve(
-  arg('pack-dir') ?? join(root, '.node-tools/rc3/packages', process.version),
+  arg('pack-dir') ?? join(root, '.node-tools/rc4/packages', process.version),
 );
 mkdirSync(packDir, { recursive: true });
 const temporary = mkdtempSync(join(tmpdir(), 'PJS RC external with spaces '));

@@ -4,7 +4,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
 export const baseline = JSON.parse(
-  readFileSync(new URL('./frozen-rc3.json', import.meta.url)),
+  readFileSync(new URL('./frozen-rc4.json', import.meta.url)),
 );
 
 export function assertArguments(names, args = process.argv.slice(2)) {
@@ -52,6 +52,7 @@ function inventory(root, directory, suffix) {
 export function assertFrozenFiles(root) {
   for (const [directory, suffix, expected, prefix] of [
     ['packages/runtime/src', '.ts', baseline.runtimeSource, ''],
+    ['packages/runtime/test', '', baseline.runtimeTests, ''],
     [
       'packages/runtime/dist',
       '.d.ts',

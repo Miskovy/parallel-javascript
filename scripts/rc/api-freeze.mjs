@@ -75,6 +75,8 @@ console.log(
     exports: named.length,
     values: baseline.runtimeValues.length,
     typeOnly: named.filter((entry) => entry.kind === 'type').length,
+    runtimeReferenceCommit: baseline.runtimeReferenceCommit,
+    runtimeTestFiles: Object.keys(baseline.runtimeTests).length,
     runtimeFiles: Object.keys(baseline.runtimeSource).length,
     declarationFiles: Object.keys(baseline.declarations).length,
     sourceBytesIdentical: true,

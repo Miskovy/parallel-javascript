@@ -185,7 +185,7 @@ try {
   );
   report.canonical = { ...report.states[0].package.tarball };
   const destination = resolve(
-    arg('canonical-dir') ?? join(root, '.node-tools/rc3/canonical'),
+    arg('canonical-dir') ?? join(root, '.node-tools/rc4/canonical'),
   );
   mkdirSync(destination, { recursive: true });
   const target = join(destination, report.canonical.filename);

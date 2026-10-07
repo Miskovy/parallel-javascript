@@ -9,9 +9,12 @@ and result-credit options remain experimental. Statistics are diagnostic.
 
 ## Install
 
-This source prepares **1.0.0-rc.3**, a candidate containing the R1A physical-completion
-repair. Until RC3 is published, the registry prerelease remains **1.0.0-rc.2** as
+This source prepares **1.0.0-rc.4**, a candidate containing the R1A physical-completion
+repair. Until RC4 is published, the registry prerelease remains **1.0.0-rc.2** as
 [`@pjavascript/runtime`](https://www.npmjs.com/package/@pjavascript/runtime) under `next`.
+RC3 was qualified and released on GitHub; its npm workflow stopped before
+publication because the release validator assumed the wrong npm JSON shape.
+RC4 has the same runtime and corrects release tooling.
 Final v1.0.0 has not been released.
 
 ```sh
@@ -73,4 +76,4 @@ See the [full guide](https://github.com/Miskovy/parallel-javascript/blob/main/do
 The tarball includes compiled JS/declarations/maps and their TypeScript source
 for stack traces and editor navigation. Only the root import is supported.
 
-MIT licensed; see LICENSE. RC3 remains a prerelease candidate.
+MIT licensed; see LICENSE. RC4 remains a prerelease candidate.
