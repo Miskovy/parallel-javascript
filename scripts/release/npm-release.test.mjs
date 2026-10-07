@@ -1,11 +1,114 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import {
+  packageName,
+  parsePublishDryRunReport,
+  validatePublishDryRunReport,
   registryPresence,
   releasePolicy,
   validateManifest,
   verifyRegistry,
 } from './npm-release.mjs';
+
+const dryRecord = { name: packageName, version: '1.0.0-rc.4', entryCount: 128 };
+test('duplicate package candidates and duplicate/escaped record keys are ambiguous', () => {
+  const record = JSON.stringify(dryRecord);
+  for (const stdout of [
+    `{"${packageName}":${record},"${packageName}":${record}}`,
+    `{"name":"wrong","name":"${packageName}","version":"1.0.0-rc.4","entryCount":128}`,
+    `{"name":"wrong","\\u006eame":"${packageName}","version":"1.0.0-rc.4","entryCount":128}`,
+  ])
+    assert.throws(
+      () => parsePublishDryRunReport(stdout),
+      /Duplicate npm dry-run JSON key/,
+    );
+});
+const validateDry = (value) =>
+  validatePublishDryRunReport(
+    parsePublishDryRunReport(JSON.stringify(value)),
+    dryRecord.version,
+    dryRecord.entryCount,
+  );
+
+test('npm 11.19.0 singleton package-name map normalizes before identity validation', () => {
+  const value = { [packageName]: dryRecord };
+  assert.deepEqual(parsePublishDryRunReport(JSON.stringify(value)), dryRecord);
+  validateDry(value);
+});
+
+test('npm 11.8.0 direct report remains intentionally supported', () => {
+  assert.deepEqual(
+    parsePublishDryRunReport(JSON.stringify(dryRecord)),
+    dryRecord,
+  );
+  validateDry(dryRecord);
+});
+
+test('empty, invalid and non-object dry-run JSON fails with useful diagnostics', () => {
+  for (const stdout of [
+    undefined,
+    null,
+    '',
+    ' ',
+    '{broken',
+    'null',
+    'false',
+    '42',
+    '"text"',
+  ])
+    assert.throws(() => parsePublishDryRunReport(stdout), /npm dry-run/);
+});
+
+test('unobserved arrays, multi-package maps and ambiguous nesting are rejected', () => {
+  for (const value of [
+    [],
+    [dryRecord],
+    [dryRecord, dryRecord],
+    {},
+    { reports: dryRecord },
+    { [packageName]: [dryRecord] },
+    { [packageName]: null },
+    { [packageName]: dryRecord, other: dryRecord },
+    { name: packageName, ...dryRecord, [packageName]: dryRecord },
+    { other: dryRecord },
+  ])
+    assert.throws(() => validateDry(value), /npm dry-run/);
+});
+
+test('missing or invalid required report fields fail closed', () => {
+  for (const change of [
+    { name: undefined },
+    { name: '' },
+    { name: 1 },
+    { version: undefined },
+    { version: '' },
+    { entryCount: undefined },
+    { entryCount: '128' },
+    { entryCount: null },
+    { entryCount: 0 },
+    { entryCount: -1 },
+    { entryCount: 1.5 },
+    { entryCount: Number.MAX_SAFE_INTEGER + 1 },
+  ]) {
+    const value = { ...dryRecord, ...change };
+    assert.throws(() => validateDry(value), /npm dry-run/);
+    assert.throws(() => validateDry({ [packageName]: value }), /npm dry-run/);
+  }
+});
+
+test('canonical dry-run identity, version and file-count mismatches are rejected', () => {
+  for (const [change, message] of [
+    [{ name: '@pjs/runtime' }, /package name mismatch/],
+    [{ version: '1.0.0-rc.3' }, /version mismatch/],
+    [{ entryCount: 127 }, /entryCount mismatch/],
+  ]) {
+    assert.throws(() => validateDry({ ...dryRecord, ...change }), message);
+    assert.throws(
+      () => validateDry({ [packageName]: { ...dryRecord, ...change } }),
+      message,
+    );
+  }
+});
 
 const release = (version, prerelease) => ({
   tag_name: `v${version}`,

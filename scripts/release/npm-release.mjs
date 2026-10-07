@@ -61,6 +61,96 @@ export function validateManifest(manifest, version) {
   assert.deepEqual(manifest.publishConfig ?? {}, {});
 }
 
+// Observed with npm 11.8.0 (direct record) and 11.19.0 (package-name map).
+// This is deliberately not a generic npm-output normalizer.
+export function parsePublishDryRunReport(stdout) {
+  assert.equal(typeof stdout, 'string', 'npm dry-run stdout must be text');
+  assert.ok(stdout.trim(), 'npm dry-run stdout is empty');
+  let value;
+  try {
+    value = JSON.parse(stdout);
+  } catch {
+    throw new Error('npm dry-run stdout is not valid JSON');
+  }
+  assert.ok(
+    value && typeof value === 'object' && !Array.isArray(value),
+    'Unsupported npm dry-run JSON shape: expected an object',
+  );
+  // JSON.parse discards duplicate keys. Reject ambiguity, including escaped keys.
+  const containers = [];
+  for (const match of stdout.matchAll(/"(?:\\.|[^"\\])*"|[{}[\]]/g)) {
+    const token = match[0];
+    if (token === '{') containers.push(new Set());
+    else if (token === '[') containers.push(null);
+    else if (token === '}' || token === ']') containers.pop();
+    else if (
+      stdout
+        .slice(match.index + token.length)
+        .trimStart()
+        .startsWith(':')
+    ) {
+      const key = JSON.parse(token);
+      const keys = containers.at(-1);
+      assert.ok(!keys.has(key), `Duplicate npm dry-run JSON key: ${key}`);
+      keys.add(key);
+    }
+  }
+  let record = value;
+  if (!Object.hasOwn(value, 'name')) {
+    assert.deepEqual(
+      Object.keys(value),
+      [packageName],
+      'Unsupported npm dry-run JSON shape: expected exactly one package-name key',
+    );
+    record = value[packageName];
+  }
+  assert.ok(
+    record && typeof record === 'object' && !Array.isArray(record),
+    'npm dry-run package record must be an object',
+  );
+  const fields = new Set([
+    'id',
+    'name',
+    'version',
+    'size',
+    'unpackedSize',
+    'shasum',
+    'integrity',
+    'filename',
+    'files',
+    'entryCount',
+    'bundled',
+  ]);
+  assert.ok(
+    Object.keys(record).every((key) => fields.has(key)),
+    'Unknown or ambiguous npm dry-run package fields',
+  );
+  for (const key of ['name', 'version'])
+    assert.ok(
+      typeof record[key] === 'string' && record[key].length > 0,
+      `npm dry-run ${key} must be a nonempty string`,
+    );
+  assert.ok(
+    Number.isSafeInteger(record.entryCount) && record.entryCount > 0,
+    'npm dry-run entryCount must be a positive safe integer',
+  );
+  return {
+    name: record.name,
+    version: record.version,
+    entryCount: record.entryCount,
+  };
+}
+
+export function validatePublishDryRunReport(report, version, entryCount) {
+  assert.equal(report.name, packageName, 'npm dry-run package name mismatch');
+  assert.equal(report.version, version, 'npm dry-run version mismatch');
+  assert.equal(
+    report.entryCount,
+    entryCount,
+    'npm dry-run entryCount mismatch',
+  );
+}
+
 function summary(message) {
   console.log(message);
   if (process.env.GITHUB_STEP_SUMMARY)
@@ -87,6 +177,13 @@ function command(executable, args, options = {}) {
 }
 
 function npm(args, options) {
+  const selectedCli = process.env.PJS_NPM_CLI ?? process.env.npm_execpath;
+  if (selectedCli)
+    return command(
+      process.execPath,
+      [resolve(selectedCli), ...args, '--registry', registry],
+      options,
+    );
   return command('npm', [...args, '--registry', registry], options);
 }
 
@@ -266,7 +363,7 @@ async function main() {
         ),
       );
       // Inspect and install the artifact that the workflow will publish; never repack it.
-      const dry = JSON.parse(
+      const dry = parsePublishDryRunReport(
         npm([
           'publish',
           tarball,
@@ -279,9 +376,7 @@ async function main() {
           '--json',
         ]),
       );
-      assert.equal(dry.name, packageName);
-      assert.equal(dry.version, version);
-      assert.equal(dry.entryCount, files.length);
+      validatePublishDryRunReport(dry, version, files.length);
       smoke(tarball, version, true);
       const sha256 = createHash('sha256')
         .update(readFileSync(tarball))

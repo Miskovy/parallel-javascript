@@ -82,6 +82,8 @@ function run(label, args, executable = process.execPath) {
     maxBuffer: 24 * 1024 ** 2,
     env: {
       ...process.env,
+      PJS_NPM_CLI: npmCli,
+      PJS_NPM_CONTRACT_REPORT: join(scratch, 'npm-dry-run.json'),
       PJS_CONTRACT_REPORT: join(scratch, 'contracts.json'),
     },
   });
@@ -108,6 +110,7 @@ try {
   run('release and immutable-baseline regressions', [
     '--test',
     'scripts/release/npm-release.test.mjs',
+    'scripts/release/npm-cli.test.mjs',
     'scripts/rc/baseline.test.mjs',
   ]);
   run('existing package smoke', ['scripts/package-smoke.mjs']);
@@ -160,6 +163,24 @@ try {
   );
   report.package = JSON.parse(readFileSync(packageOutput));
   assert.equal(report.package.passed, true);
+  report.npmDryRun = JSON.parse(
+    readFileSync(join(scratch, 'npm-dry-run.json')),
+  );
+  const packMetadata = join(scratch, 'release-pack.json');
+  writeFileSync(packMetadata, JSON.stringify([report.package.tarball]) + '\n', {
+    flag: 'wx',
+  });
+  run(
+    'exact release artifact validation and selected-npm publication dry run',
+    [
+      'scripts/release/npm-release.mjs',
+      'tarball',
+      packMetadata,
+      join(scratch, 'packed'),
+      baseline.manifest.version,
+      'next',
+    ],
+  );
   const soakOutput = join(scratch, 'soak.json');
   run(`RC ${profile} soak`, [
     'scripts/rc/soak.mjs',
