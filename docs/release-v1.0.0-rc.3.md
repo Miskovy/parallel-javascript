@@ -32,3 +32,14 @@ the [release procedure](releasing.md) tags an approved commit and publishes its
 GitHub prerelease. Tag/version mismatch, stale baselines, altered artifacts and
 existing immutable registry versions fail closed. Qualification evidence records
 the exact candidate commit; any change requires qualification again.
+
+## npm publication outcome
+
+`v1.0.0-rc.3` was fully runtime-qualified and published as a GitHub prerelease
+at commit `bf11b5db8a6fbe389210102e8f2ceacf62e35b87`. The
+[release-triggered npm workflow](https://github.com/Miskovy/parallel-javascript/actions/runs/37605190163)
+stopped during pre-publication artifact validation: PJS expected a direct JSON
+record, while npm 11.19.0 returned a singleton map keyed by package name.
+The OIDC publish step was never attempted and no registry mutation occurred.
+No RC3 npm package was published. The tag and GitHub Release remain unchanged;
+[RC4](release-v1.0.0-rc.4.md) prepares the release-tool correction.
