@@ -81,3 +81,10 @@ host. See the [proposal](../../docs/proposal-v1.0.0-rc.1.md),
 [contract inventory](../../docs/research/v1-rc1-contract-inventory.md),
 [error matrix](../../docs/research/v1-rc1-error-matrix.md) and
 [readiness gates](../../docs/research/v1-rc1-readiness.md).
+
+R1A CI passes `--physical-boundary-repair` to the qualifier. This explicitly
+permits source differences in the six repaired owners and declaration changes
+in the three internal worker/dispatcher/credit modules; public declarations, root exports,
+and package contracts retain their baseline checks. It expects 206 contracts,
+including the 22 physical-boundary regressions. Historical byte-freeze mode and
+its baseline JSON remain unchanged when the flag is omitted.

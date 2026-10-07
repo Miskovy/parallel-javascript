@@ -11,6 +11,26 @@ const baseline = JSON.parse(
 );
 const hash = (path) =>
   createHash('sha256').update(readFileSync(path)).digest('hex');
+// R1A deliberately repairs implementation while preserving the public contract.
+// Historical byte-freeze mode remains available without this explicit flag.
+const physicalBoundaryRepair = process.argv.includes(
+  '--physical-boundary-repair',
+);
+const permittedSourceChanges = new Set([
+  'packages/runtime/src/workers/worker.ts',
+  'packages/runtime/src/pool/pool.ts',
+  'packages/runtime/src/dispatch/dispatcher.ts',
+  'packages/runtime/src/runtime.ts',
+  'packages/runtime/src/telemetry/runtime.ts',
+  'packages/runtime/src/results/credit.ts',
+]);
+const permittedDeclarationChanges = new Set([
+  'dist/workers/worker.d.ts',
+  'dist/dispatch/dispatcher.d.ts',
+  'dist/results/credit.d.ts',
+]);
+const changedSource = [];
+const changedDeclarations = [];
 for (const path of Object.keys(baseline.runtimeSource)) {
   const tree = ts.createSourceFile(
     path,
@@ -31,18 +51,22 @@ for (const path of Object.keys(baseline.runtimeSource)) {
   };
   walk(tree);
 }
-for (const [path, expected] of Object.entries(baseline.runtimeSource))
-  assert.equal(
-    hash(resolve(root, path)),
-    expected,
+for (const [path, expected] of Object.entries(baseline.runtimeSource)) {
+  if (hash(resolve(root, path)) === expected) continue;
+  assert.ok(
+    physicalBoundaryRepair && permittedSourceChanges.has(path),
     `Frozen runtime source changed: ${path}`,
   );
-for (const [path, expected] of Object.entries(baseline.declarations))
-  assert.equal(
-    hash(resolve(root, 'packages/runtime', path)),
-    expected,
+  changedSource.push(path);
+}
+for (const [path, expected] of Object.entries(baseline.declarations)) {
+  if (hash(resolve(root, 'packages/runtime', path)) === expected) continue;
+  assert.ok(
+    physicalBoundaryRepair && permittedDeclarationChanges.has(path),
     `Public declaration changed: ${path}`,
   );
+  changedDeclarations.push(path);
+}
 const source = ts.createSourceFile(
   'index.ts',
   readFileSync(resolve(root, 'packages/runtime/src/index.ts'), 'utf8'),
@@ -94,8 +118,11 @@ console.log(
     typeOnly: 22,
     runtimeFiles: 25,
     declarationFiles: 25,
-    sourceBytesIdentical: true,
-    declarationBytesIdentical: true,
+    sourceBytesIdentical: changedSource.length === 0,
+    declarationBytesIdentical: changedDeclarations.length === 0,
+    physicalBoundaryRepair,
+    changedSource,
+    changedDeclarations,
     manifestContractIdenticalExceptPackageName: true,
     baselinePackageName: baseline.manifest.name,
     packageName: manifest.name,

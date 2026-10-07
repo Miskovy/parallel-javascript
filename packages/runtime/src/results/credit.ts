@@ -26,6 +26,7 @@ interface ResultReservation {
   creditedBytes: number;
   reconciled: boolean;
   dispatched: boolean;
+  dispatching: boolean;
   executionDone: boolean;
   callerSettled: boolean;
 }
@@ -112,6 +113,7 @@ export class ResultCreditManager {
       creditedBytes: bytes,
       reconciled: false,
       dispatched: false,
+      dispatching: false,
       executionDone: false,
       callerSettled: false,
     });
@@ -125,13 +127,44 @@ export class ResultCreditManager {
     this.assertInvariants('reserve');
   }
 
-  markDispatched(correlationId: string, taskIds: readonly string[]): void {
+  /** Hold credit before structured clone can reenter caller settlement. */
+  markDispatching(correlationId: string, taskIds: readonly string[]): void {
+    if (this.reservations.size === 0) return;
     const reservedIds = taskIds.filter((taskId) =>
       this.reservations.has(taskId),
     );
     if (reservedIds.length === 0) return;
     for (const taskId of reservedIds)
-      this.reservations.get(taskId)!.dispatched = true;
+      this.reservations.get(taskId)!.dispatching = true;
+    this.executions.set(correlationId, reservedIds);
+    this.assertInvariants('posting');
+  }
+
+  /** A failed post never created physical execution; roll back its claim. */
+  rollbackDispatch(correlationId: string): void {
+    const taskIds = this.executions.get(correlationId);
+    if (!taskIds) return;
+    this.executions.delete(correlationId);
+    for (const taskId of taskIds) {
+      const reservation = this.reservations.get(taskId)!;
+      if (reservation.dispatched)
+        throw new Error('Cannot roll back a successful physical dispatch');
+      reservation.dispatching = false;
+      if (reservation.callerSettled) this.release(taskId, false);
+    }
+    this.assertInvariants('post-failed');
+  }
+
+  markDispatched(correlationId: string, taskIds: readonly string[]): void {
+    const reservedIds = taskIds.filter((taskId) =>
+      this.reservations.has(taskId),
+    );
+    if (reservedIds.length === 0) return;
+    for (const taskId of reservedIds) {
+      const reservation = this.reservations.get(taskId)!;
+      reservation.dispatching = false;
+      reservation.dispatched = true;
+    }
     this.executions.set(correlationId, reservedIds);
     this.assertInvariants('dispatch');
   }
@@ -140,7 +173,10 @@ export class ResultCreditManager {
     const reservation = this.reservations.get(taskId);
     if (!reservation) return;
     reservation.callerSettled = true;
-    if (!reservation.dispatched || reservation.executionDone)
+    if (
+      (!reservation.dispatched && !reservation.dispatching) ||
+      reservation.executionDone
+    )
       this.release(taskId);
     else this.assertInvariants('settle-running');
   }
@@ -203,7 +239,10 @@ export class ResultCreditManager {
     for (const [taskId, reservation] of this.reservations) {
       if (reservation.operation !== operation) continue;
       reservation.callerSettled = true;
-      if (!reservation.dispatched || reservation.executionDone)
+      if (
+        (!reservation.dispatched && !reservation.dispatching) ||
+        reservation.executionDone
+      )
         this.release(taskId);
     }
     this.assertInvariants('cancel-operation');
@@ -303,7 +342,10 @@ export class ResultCreditManager {
         const reservation =
           this.reservations.get(taskId) ??
           fail(`execution ${correlationId} references missing ${taskId}`);
-        if (!reservation.dispatched || reservation.executionDone)
+        if (
+          (!reservation.dispatched && !reservation.dispatching) ||
+          reservation.executionDone
+        )
           fail(`execution ${correlationId} references inactive ${taskId}`);
       }
     }
@@ -326,7 +368,10 @@ export class ResultCreditManager {
       const credits = this.operations.get(reservation.operation);
       if (credits?.taskByPartition.get(reservation.partitionIndex) !== taskId)
         fail(`reservation ${taskId} has no matching partition mapping`);
-      if (reservation.dispatched && !reservation.executionDone) {
+      if (
+        (reservation.dispatched || reservation.dispatching) &&
+        !reservation.executionDone
+      ) {
         if (!correlated.has(taskId))
           fail(`dispatched reservation ${taskId} has no execution correlation`);
       } else if (correlated.has(taskId))

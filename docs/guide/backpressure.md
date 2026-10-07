@@ -76,6 +76,17 @@ can permit further production while a consumer is slow; it promises neither
 throughput gains nor lower RSS. Active cancelled work keeps its reservation until
 physical completion/termination, preventing premature reuse of credit.
 
+Physical completion means a valid final response for the task/batch or confirmed
+worker-thread exit. Worker failure notification and a termination request do not
+release dispatched result credit. Exact and upper-bound reservations remain held
+while a failed worker can still execute; confirmed exit releases retained credit
+for already-settled callers. This release is not a successful upper-bound refund.
+Every logical reservation in a physical batch follows the same exit boundary.
+
+The published `1.0.0-rc.2` abnormal-failure path releases this ownership too early;
+the R1A correction restores the documented boundary. Normal results still end
+task execution immediately without requiring the reusable worker thread to exit.
+
 ## External resource declarations
 
 **PJS can correctly enforce a wrong workload declaration.** The workload/library

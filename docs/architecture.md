@@ -109,11 +109,27 @@ Runtime: `created → starting → running → stopping → stopped`. Fatal infr
 
 Pool: `created → active → stopping → stopped`. A fixed population is selected within min/max bounds at construction. Workers persist until shutdown or failure. There is no idle shrinking, per-task spawning, or hidden nested pool.
 
-Worker: `starting → idle ↔ busy`; crash/protocol/bootstrap error → `failed`; termination → `stopped`. Replacement has a fresh monotonically increasing runtime worker ID and a Node thread ID. The old thread exits before the new one is spawned. An error followed by an exit counts as one failure. Historical worker objects are discarded on replacement; lifetime failure counters remain.
+Worker: `starting → idle ↔ busy`; crash/protocol/bootstrap error → `failed`; termination request → `stopped`. Status is separate from physical occupancy: a failed/stopped worker retains its current physical correlation until confirmed exit. `workers.busy` counts occupied correlations, including those awaiting termination. Replacement has a fresh monotonically increasing runtime worker ID and a Node thread ID. The old thread exits before the new one is spawned. An error followed by an exit counts as one failure. Historical worker objects are discarded on replacement; lifetime failure counters remain.
 
 Task: `created → queued → scheduled → running → completed | failed`; any nonterminal accepted state may become `cancelled | timed_out`. `started` is an explicit protocol acknowledgement. Every accepted task has a UUID. Terminal settlement deletes the runtime record, removes it from the queue, removes its abort listener, clears its timer, releases the retained input, and resolves or rejects once. Returned errors retain task IDs. Completed records are not retained indefinitely.
 
-The crucial distinction is caller settlement versus execution completion. A cancelled/timed-out running task has no remaining promise bookkeeping, but its worker retains the task ID until its result or crash. Late responses release that slot without touching the settled promise. Thus `tasks.pending` may be zero while `workers.busy` is positive. Runtime draining checks both, plus live partition operations.
+The crucial distinction is caller settlement versus execution completion. A cancelled/timed-out running task has no remaining promise bookkeeping, but its worker retains the task ID until a valid final result or confirmed thread exit. Late responses release that slot without touching the settled promise. Thus `tasks.pending` may be zero while `workers.busy` is positive. Runtime draining checks both, plus live partition operations.
+
+Physical completion requires affirmative evidence: a valid final response for the
+occupied task/batch, or confirmed Node Worker exit. Error/messageerror events,
+protocol rejection, logical failure, cancellation, timeout, status changes, and
+termination requests are not that evidence. Worker failure immediately notifies
+the logical task layer, while a separate, exactly-once exit callback ends any
+remaining physical correlation. The dispatcher marks result execution ended on
+valid final response or confirmed exit only. Exit also requests the existing
+guarded progress loop; it does not introduce another scheduler.
+
+Result credit also holds a posting claim before structured clone can invoke
+application getters. Reentrant caller settlement cannot release that claim. A
+successful post converts it to dispatched ownership; a failed post rolls it back
+and releases settled credit immediately, without inventing physical execution.
+Final response validation must match both the correlation and its physical kind:
+a single-item response cannot complete an occupied batch.
 
 ## Task contract and protocol
 

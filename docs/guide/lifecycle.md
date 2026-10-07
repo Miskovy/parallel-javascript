@@ -79,6 +79,21 @@ once, and listeners/timers/task/operation records are removed on their terminal
 paths. Existing cross-platform suites test these invariants. This does not imply
 immediate RSS return from Node or native allocators.
 
+Failure notification can reject callers before a thread exits. During that
+interval, `workers.busy` still counts the occupied physical correlation, even if
+the worker detail status is `failed` or `stopped`. Those statuses describe worker
+usability or termination intent, not confirmed exit. Active result reservations
+remain held until a valid final response or confirmed thread exit. A failed
+worker's subsequent messages cannot settle callers, refund credit, or restore
+its usability. Replacement starts only after exit.
+
+`@pjavascript/runtime@1.0.0-rc.2` contains a correctness and resource-governance
+defect in this abnormal-failure interval: binary `streamRange()` reservations
+(exact or upper-bound, including batches) and busy accounting can release before
+confirmed exit. R1A repairs that boundary without adding execution leases or
+changing the lifetime restart policy. Security impact has not been established;
+workers continue to execute trusted application modules.
+
 ## Shutdown
 
 `shutdown()` closes admission synchronously and defaults to `{ drain: true }`.
