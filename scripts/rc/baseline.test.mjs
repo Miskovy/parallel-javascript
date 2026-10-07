@@ -12,6 +12,7 @@ import {
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { test } from 'node:test';
+import { releaseToolchain } from '../release/toolchain.mjs';
 import { fileURLToPath } from 'node:url';
 import {
   baseline,
@@ -26,6 +27,7 @@ function copyCandidate() {
   const temporary = mkdtempSync(join(tmpdir(), 'pjs-freeze-'));
   for (const path of [
     ...Object.keys(baseline.runtimeSource),
+    ...Object.keys(baseline.runtimeTests),
     ...Object.keys(baseline.declarations).map(
       (path) => 'packages/runtime/' + path,
     ),
@@ -39,16 +41,46 @@ function copyCandidate() {
   return temporary;
 }
 
-test('RC3 source freeze matches the merged repair; root API preserves historical exports', () => {
+test('RC4 source/tests/API match immutable RC3 and merged R1A', () => {
   assertFrozenWorkspace(root);
   assertFrozenFiles(root);
-  assert.equal(baseline.release, 'v1.0.0-rc.3');
+  assert.equal(baseline.release, 'v1.0.0-rc.4');
   assert.equal(baseline.contractTests, 206);
+  assert.deepEqual(baseline.releaseToolchain, releaseToolchain);
   const historical = JSON.parse(
     readFileSync(new URL('./frozen-v015.json', import.meta.url)),
   );
   assert.deepEqual(baseline.namedExports, historical.namedExports);
   assert.deepEqual(baseline.runtimeValues, historical.runtimeValues);
+  const rc3 = JSON.parse(
+    readFileSync(new URL('./frozen-rc3.json', import.meta.url)),
+  );
+  assert.equal(
+    createHash('sha256')
+      .update(readFileSync(new URL('./frozen-rc3.json', import.meta.url)))
+      .digest('hex'),
+    baseline.previousBaselineSha256,
+  );
+  for (const field of [
+    'runtimeSource',
+    'declarations',
+    'namedExports',
+    'runtimeValues',
+  ])
+    assert.deepEqual(baseline[field], rc3[field]);
+  for (const [path, digest] of Object.entries(baseline.runtimeTests))
+    assert.equal(
+      createHash('sha256')
+        .update(
+          execFileSync(
+            'git',
+            ['show', `${baseline.runtimeReferenceCommit}:${path}`],
+            { cwd: root },
+          ),
+        )
+        .digest('hex'),
+      digest,
+    );
   for (const [path, digest] of Object.entries(baseline.runtimeSource))
     assert.equal(
       createHash('sha256')
@@ -65,6 +97,7 @@ test('RC3 source freeze matches the merged repair; root API preserves historical
 });
 
 for (const path of [
+  'packages/runtime/test/physical-boundary.test.mjs',
   'packages/runtime/src/workers/worker.ts',
   'packages/runtime/dist/results/credit.d.ts',
 ])

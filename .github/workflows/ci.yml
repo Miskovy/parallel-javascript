@@ -31,14 +31,23 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: npm
       - run: npm ci
+      - name: Provision integrity-pinned publication CLI independently of runtime npm
+        id: release-cli
+        if: runner.os != 'Windows'
+        run: npm run release:npm -- "$RUNNER_TEMP/pjs-release-cli"
+      - name: Provision integrity-pinned publication CLI independently of runtime npm
+        id: release-cli-windows
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: npm.cmd run release:npm -- "%RUNNER_TEMP%/pjs-release-cli"
       # Each job owns its runner; all heavy checks within a job are sequential.
       - name: Contracts, installed package and bounded soak
         if: runner.os != 'Windows'
-        run: npm run rc:qualify -- --profile=${{ inputs.profile || 'standard' }} --output=.node-tools/rc-ci.json
+        run: npm run rc:qualify -- --release-npm-cli="${{ steps.release-cli.outputs.path }}" --profile=${{ inputs.profile || 'standard' }} --output=.node-tools/rc-ci.json
       - name: Contracts, installed package and bounded soak
         if: runner.os == 'Windows'
         shell: cmd
-        run: npm.cmd run rc:qualify -- --profile=${{ inputs.profile || 'standard' }} --output=.node-tools/rc-ci.json
+        run: npm.cmd run rc:qualify -- --release-npm-cli="${{ steps.release-cli-windows.outputs.path }}" --profile=${{ inputs.profile || 'standard' }} --output=.node-tools/rc-ci.json
       - name: Retain qualification evidence
         if: always()
         uses: actions/upload-artifact@v4

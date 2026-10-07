@@ -13,6 +13,7 @@ import { basename, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { setTimeout as delay } from 'node:timers/promises';
 import { baseline, assertFrozenPackage } from '../rc/baseline.mjs';
+import { assertSupportedReleaseNpmVersion } from './toolchain.mjs';
 
 export const packageName = '@pjavascript/runtime';
 const root = fileURLToPath(new URL('../../', import.meta.url));
@@ -61,6 +62,140 @@ export function validateManifest(manifest, version) {
   assert.deepEqual(manifest.publishConfig ?? {}, {});
 }
 
+// Observed with npm 11.8.0 (direct record) and 11.19.0 (package-name map).
+// This is deliberately not a generic npm-output normalizer.
+export function parsePublishDryRunReport(stdout) {
+  assert.equal(typeof stdout, 'string', 'npm dry-run stdout must be text');
+  assert.ok(stdout.trim(), 'npm dry-run stdout is empty');
+  let value;
+  try {
+    value = JSON.parse(stdout);
+  } catch {
+    throw new Error('npm dry-run stdout is not valid JSON');
+  }
+  assert.ok(
+    value && typeof value === 'object' && !Array.isArray(value),
+    'Unsupported npm dry-run JSON shape: expected an object',
+  );
+  // JSON.parse discards duplicate keys. Reject ambiguity, including escaped keys.
+  const containers = [];
+  for (const match of stdout.matchAll(/"(?:\\.|[^"\\])*"|[{}[\]]/g)) {
+    const token = match[0];
+    if (token === '{') containers.push(new Set());
+    else if (token === '[') containers.push(null);
+    else if (token === '}' || token === ']') containers.pop();
+    else if (
+      stdout
+        .slice(match.index + token.length)
+        .trimStart()
+        .startsWith(':')
+    ) {
+      const key = JSON.parse(token);
+      const keys = containers.at(-1);
+      assert.ok(!keys.has(key), `Duplicate npm dry-run JSON key: ${key}`);
+      keys.add(key);
+    }
+  }
+  let record = value;
+  if (!Object.hasOwn(value, 'name')) {
+    assert.deepEqual(
+      Object.keys(value),
+      [packageName],
+      'Unsupported npm dry-run JSON shape: expected exactly one package-name key',
+    );
+    record = value[packageName];
+  }
+  assert.ok(
+    record && typeof record === 'object' && !Array.isArray(record),
+    'npm dry-run package record must be an object',
+  );
+  const fields = new Set([
+    'id',
+    'name',
+    'version',
+    'size',
+    'unpackedSize',
+    'shasum',
+    'integrity',
+    'filename',
+    'files',
+    'entryCount',
+    'bundled',
+  ]);
+  assert.ok(
+    Object.keys(record).every((key) => fields.has(key)),
+    'Unknown or ambiguous npm dry-run package fields',
+  );
+  for (const key of ['name', 'version'])
+    assert.ok(
+      typeof record[key] === 'string' && record[key].length > 0,
+      `npm dry-run ${key} must be a nonempty string`,
+    );
+  assert.ok(
+    Number.isSafeInteger(record.entryCount) && record.entryCount > 0,
+    'npm dry-run entryCount must be a positive safe integer',
+  );
+  return {
+    name: record.name,
+    version: record.version,
+    entryCount: record.entryCount,
+  };
+}
+
+export function parseTarListing(stdout) {
+  assert.equal(typeof stdout, 'string', 'Tar listing must be text');
+  assert.ok(stdout.length > 0, 'Tar listing is empty');
+  assert.ok(!stdout.includes('\0'), 'Tar listing contains NUL');
+  assert.ok(!/\r(?!\n)/.test(stdout), 'Tar listing contains bare CR');
+  const crlf = stdout.includes('\r\n');
+  assert.ok(
+    !crlf || !/(?<!\r)\n/.test(stdout),
+    'Tar listing has mixed line endings',
+  );
+  const separator = crlf ? '\r\n' : '\n';
+  const records = stdout.split(separator);
+  if (records.at(-1) === '') records.pop();
+  assert.ok(
+    records.length > 0 && records.every((path) => path.length > 0),
+    'Tar listing has empty records',
+  );
+  return records;
+}
+
+export function validateTarListing(files, entryCount) {
+  assert.ok(
+    files.length >= 10 && files.length <= 1000,
+    'Implausible file count',
+  );
+  assert.equal(files.length, entryCount);
+  assert.equal(new Set(files).size, files.length);
+  assert.ok(
+    files.every((file) =>
+      /^package\/(?:dist\/|src\/|package.json$|README.md$|LICENSE$)/.test(file),
+    ),
+  );
+  assert.ok(files.every((file) => !file.split('/').includes('..')));
+  for (const required of [
+    'package.json',
+    'README.md',
+    'LICENSE',
+    'dist/index.js',
+    'dist/index.d.ts',
+    'dist/workers/bootstrap.js',
+  ])
+    assert.ok(files.includes(`package/${required}`), `Missing ${required}`);
+}
+
+export function validatePublishDryRunReport(report, version, entryCount) {
+  assert.equal(report.name, packageName, 'npm dry-run package name mismatch');
+  assert.equal(report.version, version, 'npm dry-run version mismatch');
+  assert.equal(
+    report.entryCount,
+    entryCount,
+    'npm dry-run entryCount mismatch',
+  );
+}
+
 function summary(message) {
   console.log(message);
   if (process.env.GITHUB_STEP_SUMMARY)
@@ -87,6 +222,13 @@ function command(executable, args, options = {}) {
 }
 
 function npm(args, options) {
+  const selectedCli = process.env.PJS_NPM_CLI ?? process.env.npm_execpath;
+  if (selectedCli)
+    return command(
+      process.execPath,
+      [resolve(selectedCli), ...args, '--registry', registry],
+      options,
+    );
   return command('npm', [...args, '--registry', registry], options);
 }
 
@@ -165,6 +307,7 @@ function smoke(spec, version, offline = false) {
 
 async function main() {
   const [mode, ...args] = process.argv.slice(2);
+  assertSupportedReleaseNpmVersion(npm(['--version']).trim());
   switch (mode) {
     case 'gate': {
       const event = JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH));
@@ -224,30 +367,26 @@ async function main() {
       assert.equal(basename(packed.filename), packed.filename);
       assert.ok(packed.filename.endsWith('.tgz'));
       const tarball = resolve(directory, packed.filename);
-      const files = command('tar', ['-tzf', tarball]).trim().split('\n');
-      assert.ok(
-        files.length >= 10 && files.length <= 1000,
-        'Implausible file count',
+      const listing = command('tar', ['-tzf', tarball]);
+      const transport = {
+        platform: process.platform,
+        stdout: listing,
+        crlf: (listing.match(/\r\n/g) ?? []).length,
+        lf: (listing.match(/(?<!\r)\n/g) ?? []).length,
+        bareCr: (listing.match(/\r(?!\n)/g) ?? []).length,
+      };
+      summary(
+        'Tar listing transport: ' +
+          JSON.stringify({ ...transport, stdout: listing.slice(0, 600) }),
       );
-      assert.equal(files.length, packed.entryCount);
-      assert.equal(new Set(files).size, files.length);
-      assert.ok(
-        files.every((file) =>
-          /^package\/(?:dist\/|src\/|package.json$|README.md$|LICENSE$)/.test(
-            file,
-          ),
-        ),
-      );
-      assert.ok(files.every((file) => !file.split('/').includes('..')));
-      for (const required of [
-        'package.json',
-        'README.md',
-        'LICENSE',
-        'dist/index.js',
-        'dist/index.d.ts',
-        'dist/workers/bootstrap.js',
-      ])
-        assert.ok(files.includes(`package/${required}`), `Missing ${required}`);
+      if (process.env.PJS_TAR_LISTING_REPORT)
+        writeFileSync(
+          process.env.PJS_TAR_LISTING_REPORT,
+          JSON.stringify(transport, null, 2) + '\n',
+          { flag: 'wx' },
+        );
+      const files = parseTarListing(listing);
+      validateTarListing(files, packed.entryCount);
       const manifest = JSON.parse(
         command('tar', ['-xOf', tarball, 'package/package.json']),
       );
@@ -266,7 +405,7 @@ async function main() {
         ),
       );
       // Inspect and install the artifact that the workflow will publish; never repack it.
-      const dry = JSON.parse(
+      const dry = parsePublishDryRunReport(
         npm([
           'publish',
           tarball,
@@ -279,9 +418,7 @@ async function main() {
           '--json',
         ]),
       );
-      assert.equal(dry.name, packageName);
-      assert.equal(dry.version, version);
-      assert.equal(dry.entryCount, files.length);
+      validatePublishDryRunReport(dry, version, files.length);
       smoke(tarball, version, true);
       const sha256 = createHash('sha256')
         .update(readFileSync(tarball))

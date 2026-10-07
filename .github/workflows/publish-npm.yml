@@ -29,21 +29,16 @@ jobs:
           ref: refs/tags/${{ github.event.release.tag_name }}
           fetch-depth: 0
           persist-credentials: false
+      - name: Read reviewed publication toolchain
+        id: toolchain
+        run: node scripts/release/toolchain.mjs outputs
       - name: Set up qualified Node with no package cache
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: '24'
+          node-version: ${{ steps.toolchain.outputs.node }}
           package-manager-cache: false
-      - name: Require an OIDC-capable npm CLI
-        run: |
-          node --version
-          npm --version
-          node --input-type=module <<'NODE'
-          import assert from 'node:assert/strict';
-          import { execFileSync } from 'node:child_process';
-          const [major, minor, patch] = execFileSync('npm', ['--version'], { encoding: 'utf8' }).trim().split('.').map(Number);
-          assert.ok(major > 11 || (major === 11 && (minor > 5 || (minor === 5 && patch >= 1))), 'npm >=11.5.1 is required');
-          NODE
+      - name: Require the exact reviewed Node and npm publisher
+        run: node scripts/release/toolchain.mjs check
       - name: Validate release version and classification
         id: release
         run: node scripts/release/npm-release.mjs gate
@@ -58,7 +53,7 @@ jobs:
       - name: Bounded contracts, types, package and documentation gates
         if: steps.registry.outputs.exists == 'false'
         run: |
-          node --test scripts/release/npm-release.test.mjs
+          npm run test:release
           npm run test:contracts
           npm run test:rc:api
           node --test scripts/rc/baseline.test.mjs

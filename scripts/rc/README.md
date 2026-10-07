@@ -1,12 +1,13 @@
 # RC contract qualification
 
-This tooling qualifies the exact `1.0.0-rc.3` candidate; it adds no product API.
-[`frozen-rc3.json`](frozen-rc3.json) freezes all 25 production source files, all
-25 declarations, 38 named exports (16 runtime values), the full package manifest,
-206 contracts and all 128 packed file hashes. Its runtime provenance is merged
+This tooling qualifies the exact `1.0.0-rc.4` candidate; it adds no product API.
+[`frozen-rc4.json`](frozen-rc4.json) freezes all 25 production source files, all
+24 runtime test/fixture/type/config files, 25 declarations, 38 named exports (16 runtime values), the full package manifest,
+206 runtime contracts, 29 release/baseline regressions, the reviewed publication
+toolchain and all 128 packed file hashes. Its runtime provenance is merged
 R1A commit `2387e1efd0cfb225387132266d0152949315b411`. Qualification reports record
 HEAD separately: the release candidate includes versioning, documentation and gates
-on top of that runtime. The historical [`frozen-v015.json`](frozen-v015.json) and
+on top of that runtime. The immutable [`frozen-rc3.json`](frozen-rc3.json), historical [`frozen-v015.json`](frozen-v015.json) and
 v0.15.0 tag remain unchanged; they are no longer the active candidate baseline.
 
 There are no repair allowlists or compatibility bypass flags. Unknown/duplicate
@@ -51,18 +52,37 @@ From a clean exact candidate checkout:
 
 ```sh
 npm ci
-npm run rc:qualify -- --profile=standard --output=/absolute/new/validation.json
-npm run rc:repro -- --output=/absolute/new/repro.json --canonical-dir=/absolute/new/package-dir
+npm run release:npm -- /absolute/new/release-cli
+npm run rc:qualify -- --release-npm-cli=/absolute/new/release-cli/node_modules/npm/bin/npm-cli.js --profile=standard --output=/absolute/new/validation.json
+npm run rc:repro -- --release-npm-cli=/absolute/new/release-cli/node_modules/npm/bin/npm-cli.js --scratch-dir=/absolute/sufficient-storage --output=/absolute/new/repro.json --canonical-dir=/absolute/new/package-dir
 ```
 
-The second command requires a clean tree and performs explicit process.execPath gates, release/baseline regressions, runtime test runner
+The qualification command requires a clean tree and performs explicit process.execPath gates, release/baseline regressions (including credential-free real selected-npm dry-run), runtime test runner
 and independently counted contracts, source/export/declaration freeze, types,
 lint, formatting, docs, CPU smoke, actual pack, separate external JS/TS projects,
-six installed examples, all error identities, installed smoke and standard soak.
-The third command creates two independent clean states at HEAD, runs npm ci in
+six installed examples, all error identities, installed smoke, full release-artifact
+validation with the selected npm CLI and standard soak. Raw npm version/stdout/stderr
+are retained in the qualification parts, including failures. Test scripts are
+blocked by `--ignore-scripts`; publication commands are always `--dry-run`.
+The reproduction command creates two independent clean states at HEAD, runs npm ci in
 each, full current-Node qualification plus extended soak in A, build/package in B,
 then requires identical packed file hashes and archive bytes. It retains the canonical tarball/checksum.
 Dependencies and package sources come from the exact committed candidate.
+
+Ordinary npm (including Node 22.13.0's npm 10.9.2) performs dependency installation,
+packing and installed-consumer validation. Publication-specific operations must
+select the separately provisioned npm 11.19.0; unsupported publisher versions fail
+before executing the fixture's lifecycle traps. Production publication additionally
+requires Node 24.21.0. The version/integrity policy lives in
+[`toolchain.json`](../release/toolchain.json) and its shared helper. CI exercises the
+same publisher CLI on every runtime cell rather than skipping npm 10 cells.
+Reports record both npm versions and whether live release qualification ran.
+
+For constrained temporary filesystems, select a sufficiently large `--scratch-dir`
+and set `TMPDIR` to a separate disposable directory on that filesystem so nested
+consumer/fixture temporary files also fit. Preserve retained reports and canonical
+artifacts; remove only reconstructible caches or dependency directories. Storage
+failure does not satisfy any reproducibility gate.
 
 ## Isolated Windows Node minimum
 
@@ -70,7 +90,7 @@ Use existing portable binaries without changing PATH or the default Node. Exampl
 paths below describe this Windows checkout's ignored local tooling:
 
 ```powershell
-& .\.node-tools\node-v22.13.0-win-x64\node.exe scripts/rc/qualify.mjs --profile=standard --npm-cli=E:/Miskovy/Work/pjs/pjs/.node-tools/node-v22.13.0-win-x64/node_modules/npm/bin/npm-cli.js --output=.node-tools/rc3/new-minimum.json
+& .\.node-tools\node-v22.13.0-win-x64\node.exe scripts/rc/qualify.mjs --release-npm-cli=E:/reviewed-release-cli/node_modules/npm/bin/npm-cli.js --profile=standard --npm-cli=E:/Miskovy/Work/pjs/pjs/.node-tools/node-v22.13.0-win-x64/node_modules/npm/bin/npm-cli.js --output=.node-tools/rc4/new-minimum.json
 ```
 
 Select the installed 22.23.3 executable/npm CLI similarly. Commands run tests and

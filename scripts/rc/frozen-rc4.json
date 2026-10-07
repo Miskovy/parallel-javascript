@@ -1,0 +1,465 @@
+{
+  "release": "v1.0.0-rc.4",
+  "runtimeSourceCommit": "2387e1efd0cfb225387132266d0152949315b411",
+  "runtimeReferenceCommit": "bf11b5db8a6fbe389210102e8f2ceacf62e35b87",
+  "previousBaselineSha256": "4f8fccd27a102a27e2dba9179fffa59e25ba72fdd8c0ed571742c3a7544d16d1",
+  "contractTests": 206,
+  "releaseContractTests": 29,
+  "namedExports": [
+    {
+      "name": "BinaryStreamRangeOptions",
+      "kind": "type",
+      "module": "./partition/range.js"
+    },
+    {
+      "name": "PartitionInput",
+      "kind": "type",
+      "module": "./partition/range.js"
+    },
+    {
+      "name": "PartitionOptions",
+      "kind": "type",
+      "module": "./partition/range.js"
+    },
+    {
+      "name": "PartitionRange",
+      "kind": "type",
+      "module": "./partition/range.js"
+    },
+    {
+      "name": "PjsBinaryResult",
+      "kind": "type",
+      "module": "./partition/range.js"
+    },
+    {
+      "name": "PjsBinaryResultContractError",
+      "kind": "value",
+      "module": "./errors/index.js"
+    },
+    {
+      "name": "PjsCancelledError",
+      "kind": "value",
+      "module": "./errors/index.js"
+    },
+    {
+      "name": "PjsError",
+      "kind": "value",
+      "module": "./errors/index.js"
+    },
+    {
+      "name": "PjsMapContractError",
+      "kind": "value",
+      "module": "./errors/index.js"
+    },
+    {
+      "name": "PjsQueueFullError",
+      "kind": "value",
+      "module": "./errors/index.js"
+    },
+    {
+      "name": "PjsResultCapacityError",
+      "kind": "value",
+      "module": "./errors/index.js"
+    },
+    {
+      "name": "PjsRuntime",
+      "kind": "value",
+      "module": "./runtime.js"
+    },
+    {
+      "name": "PjsRuntimeOptions",
+      "kind": "type",
+      "module": "./runtime.js"
+    },
+    {
+      "name": "PjsRuntimeStateError",
+      "kind": "value",
+      "module": "./errors/index.js"
+    },
+    {
+      "name": "PjsSerializationError",
+      "kind": "value",
+      "module": "./errors/index.js"
+    },
+    {
+      "name": "PjsTask",
+      "kind": "type",
+      "module": "./tasks/registry.js"
+    },
+    {
+      "name": "PjsTaskError",
+      "kind": "value",
+      "module": "./errors/index.js"
+    },
+    {
+      "name": "PjsTaskRegistrationError",
+      "kind": "value",
+      "module": "./errors/index.js"
+    },
+    {
+      "name": "PjsTaskRegistry",
+      "kind": "value",
+      "module": "./tasks/registry.js"
+    },
+    {
+      "name": "PjsTimeoutError",
+      "kind": "value",
+      "module": "./errors/index.js"
+    },
+    {
+      "name": "PjsTransfer",
+      "kind": "type",
+      "module": "./tasks/transfer.js"
+    },
+    {
+      "name": "PjsTypedArray",
+      "kind": "type",
+      "module": "./partition/range.js"
+    },
+    {
+      "name": "PjsTypedArrayConstructor",
+      "kind": "type",
+      "module": "./partition/range.js"
+    },
+    {
+      "name": "PjsWorkerError",
+      "kind": "value",
+      "module": "./errors/index.js"
+    },
+    {
+      "name": "RangePartition",
+      "kind": "type",
+      "module": "./partition/range.js"
+    },
+    {
+      "name": "RunOptions",
+      "kind": "type",
+      "module": "./types/index.js"
+    },
+    {
+      "name": "RuntimeState",
+      "kind": "type",
+      "module": "./types/index.js"
+    },
+    {
+      "name": "sharedReadonly",
+      "kind": "value",
+      "module": "./tasks/shared.js"
+    },
+    {
+      "name": "ShutdownOptions",
+      "kind": "type",
+      "module": "./types/index.js"
+    },
+    {
+      "name": "StreamRangeOptions",
+      "kind": "type",
+      "module": "./partition/range.js"
+    },
+    {
+      "name": "StreamRangeResult",
+      "kind": "type",
+      "module": "./partition/stream.js"
+    },
+    {
+      "name": "TaskSnapshot",
+      "kind": "type",
+      "module": "./types/index.js"
+    },
+    {
+      "name": "TaskStatus",
+      "kind": "type",
+      "module": "./types/index.js"
+    },
+    {
+      "name": "transfer",
+      "kind": "value",
+      "module": "./tasks/transfer.js"
+    },
+    {
+      "name": "TypedMapRangeOptions",
+      "kind": "type",
+      "module": "./partition/range.js"
+    },
+    {
+      "name": "UpperBoundBinaryStreamRangeOptions",
+      "kind": "type",
+      "module": "./partition/range.js"
+    },
+    {
+      "name": "WorkerState",
+      "kind": "type",
+      "module": "./types/index.js"
+    },
+    {
+      "name": "WorkerStatus",
+      "kind": "type",
+      "module": "./types/index.js"
+    }
+  ],
+  "runtimeValues": [
+    "PjsBinaryResultContractError",
+    "PjsCancelledError",
+    "PjsError",
+    "PjsMapContractError",
+    "PjsQueueFullError",
+    "PjsResultCapacityError",
+    "PjsRuntime",
+    "PjsRuntimeStateError",
+    "PjsSerializationError",
+    "PjsTaskError",
+    "PjsTaskRegistrationError",
+    "PjsTaskRegistry",
+    "PjsTimeoutError",
+    "PjsWorkerError",
+    "sharedReadonly",
+    "transfer"
+  ],
+  "runtimeSource": {
+    "packages/runtime/src/dispatch/dispatcher.ts": "5ac63f2efed7eb2cf12c565f57827ef3f70d1cbd99b5c66b9bf69931439f3e71",
+    "packages/runtime/src/errors/index.ts": "2f1458c63366be67919f51866acd7e1a9966300166c39f164c481913d0b1f4e7",
+    "packages/runtime/src/index.ts": "96d3697fde71fc4a46943c52f5556c1b63227f2b792650c14cf29bfd073cef44",
+    "packages/runtime/src/internal/integer.ts": "c1d5f34cd7a4d6aa228910e0a7e7f7929e21bea0f84e231d5984a3b7e7d51b6c",
+    "packages/runtime/src/partition/binary.ts": "20e4ff84ea39912befa189a5a3e5f57739e249d3954c3d7aea6cfa45e1b97120",
+    "packages/runtime/src/partition/coordinator.ts": "3afae72cfa583b5c04b8645a09af3dcf603139f1b4268204bd35627f2f185cde",
+    "packages/runtime/src/partition/operation.ts": "e5ec55abcb8a90fca7df99c7b7ade39c5ae2fa2358efd1a11e5edc8b438384e1",
+    "packages/runtime/src/partition/range.ts": "c985cb95b03c2c339f18f1cae44ca7f77eca7eb2908afe946f11b71c724a1489",
+    "packages/runtime/src/partition/stream.ts": "09d2dcb73771334c0a4fb9647c6234d59acdef43e3170045d8c8e810a7017566",
+    "packages/runtime/src/pool/pool.ts": "cd0eba7ac580c4a34d1dd706ffde5a1a02f6854561c28572d7ed96cc27e67529",
+    "packages/runtime/src/results/credit.ts": "06ca132cae8475aca816cce82e7243ebcf3b2dca10216042805f1b2510e24cf8",
+    "packages/runtime/src/runtime.ts": "e72f38da727b295109e1cf42c90f4be1670d9a1538a3d4390262bd0339f7d177",
+    "packages/runtime/src/scheduler/fifo.ts": "caa0307b7ce3b71d412ae9b432ad90cd946eed209958d88a1d6f9a13d481e014",
+    "packages/runtime/src/tasks/coordinator.ts": "05b6f044c538a438827e8ab7c16071ac04aeb89b12122c8fc48f2dd8239767d7",
+    "packages/runtime/src/tasks/registry.ts": "b0698736068769a2b7ab2b8c1cbf2179650f7b41701e82ab4dccf8e8c8254eca",
+    "packages/runtime/src/tasks/shared.ts": "d3a6b371f5b20657bf47d6b84f6c7d7bd4cfec0f0395b6bade2ac828ee5a3ca5",
+    "packages/runtime/src/tasks/task.ts": "92eb849cc4b2921c347656edabf6a813b323e9295c46c7255dddc89330f820f5",
+    "packages/runtime/src/tasks/transfer.ts": "9de35965f11f40ab7697ca8e5439af634fe8122829c357c3b36f310dbfd278ac",
+    "packages/runtime/src/telemetry/metrics.ts": "031d1994dd4fec40d50b265f4e59c00dd9348d089d507ed87019bb1fef7b088e",
+    "packages/runtime/src/telemetry/profile.ts": "831b42554f3dcb74a45ae42bdfca5811eab921d8c248986ca1859af26f9496f7",
+    "packages/runtime/src/telemetry/runtime.ts": "cecde6c99409080d0b00b3a5bc056306d5d9cc6eaafda804f7b519e185b973ee",
+    "packages/runtime/src/types/index.ts": "7a252af8bb57fe42ac43f015a73ee111afd932725da039ffd77c36140c7b35fa",
+    "packages/runtime/src/workers/bootstrap.ts": "f19fbfb8f0a27d1e3e97cc7599bdfc8922d7502557af9a71c4bf2e9cf0c6d2e9",
+    "packages/runtime/src/workers/protocol.ts": "d8f66b337c21563d0c510b2bc72ae1db3a70d065da22d2374583d1bd8d1f5d90",
+    "packages/runtime/src/workers/worker.ts": "873386f8c476032b69f03b6ad89d428e64a245775bf220cdf31abc3efcbf65a3"
+  },
+  "runtimeTests": {
+    "packages/runtime/test/batch.test.mjs": "684efad2d53714614bccfc43d83c16d0fea7a6dd18c03dc314dbb4643ba3830f",
+    "packages/runtime/test/binary-result.test.mjs": "ee9f54ca52fc96c3935683e7c79fb03acbc53034a8c0a36ce30c1c20a536ab43",
+    "packages/runtime/test/completion.test.mjs": "beddbd7f82ad6c3a41fb0e7998e6ecb21a6be337771a4f9dedc27b4dfc6f2cad",
+    "packages/runtime/test/fixtures/broken.mjs": "bd7e2480d5f6bc450d5f0024e5d8b78ce8bcbccc71b945660ba9106b94336087",
+    "packages/runtime/test/fixtures/hanging-import.mjs": "5b9a6689d226104b61ad384931f385be2931d0656894e55b2713273ea2a43b81",
+    "packages/runtime/test/fixtures/partition-tasks.mjs": "add612a198f718ec19b4d2edacd0b0f3ebeb34c94affbae62f9a4ec1e348288c",
+    "packages/runtime/test/fixtures/physical-boundary-tasks.mjs": "159a161858138115f225f82189e0868f46c6ce9c4bb08386e24e7ac8641fab4e",
+    "packages/runtime/test/fixtures/shared-tasks.mjs": "aa2d3f81da337e36c6297c741298701c2af535e2f21218b866a2ce5f413d9ad8",
+    "packages/runtime/test/fixtures/tasks.mjs": "df49e8c964cd17f1be76b65c042bc986c78ba9927496c658636ce9a556d23be6",
+    "packages/runtime/test/fixtures/transfer-tasks.mjs": "5e5e54a87956f0a54d1d979877034a7a2c85f311c2b3a160cac3aaea750159a7",
+    "packages/runtime/test/map.test.mjs": "cb45271cd7115fd6263142b51aa1cfeb321bb462dfe3ebe8cba288f15a5583bf",
+    "packages/runtime/test/matrix.test.mjs": "cf9a9ba12151f1ecb399636e1773a2b9f12239e4ac16c064f94d5e293216a4dd",
+    "packages/runtime/test/memory-observability.test.mjs": "abd94718006048402bd74b27c0b56da68cec043c45a45dee0f9e6086df41575d",
+    "packages/runtime/test/partition.test.mjs": "3c8cd8f875ce31d8091674324267772fd0891692129a16efcfc4a0be102b8bb0",
+    "packages/runtime/test/physical-boundary.test.mjs": "accfae166408497d8d59b933852d428bf6c491df6dafe9e267c922c9c5604fce",
+    "packages/runtime/test/public-options.test.mjs": "11c2ec08d2295b356ab351fedaefdaa7c97fd4ca4863a655b115d2d7f6d1fe24",
+    "packages/runtime/test/result-credit.test.mjs": "f6e13396c9ddf90f9010a413a6b333fd9dc1cc9e509c55110466592ae02bc471",
+    "packages/runtime/test/runtime.test.mjs": "2ca16d6c2a9634209e747caea86ce419cf56f856c813b63249efb993530f7991",
+    "packages/runtime/test/shared.test.mjs": "d04afa2bc7cdeeb3e20c8de39385b77263270e787a687f86e495fd72aebfe326",
+    "packages/runtime/test/stream.test.mjs": "8d2e9caeec24510d9366d739224f042db3a04fcc37316c0be329cb553347c2b7",
+    "packages/runtime/test/transfer.test.mjs": "348c0b13f9714748a06bb8beb20974f71c320664eb6e3a89fcc35b41d4c8216a",
+    "packages/runtime/test/tsconfig.json": "6f8c2ca79d1e31c62ef4173e118393d460a99c49462a96e551675fb5674bd690",
+    "packages/runtime/test/types.test.ts": "990b4752d99fc52407f5edccb2a9a163aed4dcd8f300f5d3b628876222b23b42",
+    "packages/runtime/test/upper-bound-result.test.mjs": "ae364f4b50127cedfe3784f677519852fa8fe0e92bc97cc69c496eef6a9c291b"
+  },
+  "declarations": {
+    "dist/dispatch/dispatcher.d.ts": "5e60b00e5dd1a437c5867b3a9f32581fe21455c69af239040b76ffcc17488543",
+    "dist/errors/index.d.ts": "df8fd877222f102de55bd5c7f196c4c83e964e63bf9009154a85c8d4a5621169",
+    "dist/index.d.ts": "3aadd11f6520083f9bc0e1a3851e20b0e0634ccde052e1880662cd38a65f0d3a",
+    "dist/internal/integer.d.ts": "5753b8818139e38ce3cca56a5c4418392ff80f87aab5e6cb913f6fbc8f63663d",
+    "dist/partition/binary.d.ts": "db4cbdfe0dd5aa5b61813e58a8e3b657815382fe9491f78819e7af1521dbdd8a",
+    "dist/partition/coordinator.d.ts": "6d61d06b0e45e5e33270b599c77a7b28fdfc1cfc2c9433c2f2b3271bf20acaaf",
+    "dist/partition/operation.d.ts": "9e4c247a072107b8465e771289c6ae36c4e3142ceb230fda4fedd70fa9380300",
+    "dist/partition/range.d.ts": "24de172906fa1f90673c2735e703582751ba5618d62e7dfc1bdc91720052ed7c",
+    "dist/partition/stream.d.ts": "403ca6dcd4446b387d7268bed07a231b5bc11ecc5772c7f26891848cb7b4d4b9",
+    "dist/pool/pool.d.ts": "d31a2faa1762592f1991540b64ce8556238bd13e496d39426a406216b2fe8c54",
+    "dist/results/credit.d.ts": "515f1634982d89073bc6ea1b21792b287f1296bdc65826f94c160fe808aa2d8b",
+    "dist/runtime.d.ts": "675741db711bec63d726cdb966fc3f0ec1b115f8a60151c92140e3357ba1a199",
+    "dist/scheduler/fifo.d.ts": "746ea23fe020bad0f3a0b644f47fd39142b9f58ab61b48cde15151ce184bc7e5",
+    "dist/tasks/coordinator.d.ts": "1501d014de6b2d5847f1738dd0e624de41791f5ac25f0345d3b4ee26e5a7d1c9",
+    "dist/tasks/registry.d.ts": "89b758e58a2a6c9cbcf76b0f7128cb4545cb0510de2305a4eac577c72b5b97b7",
+    "dist/tasks/shared.d.ts": "2b5f60e704be1d1b71ab9bc708e01801dbb7517b30fcb588139b98ac3b171b15",
+    "dist/tasks/task.d.ts": "83b24fdfe30b37157943ce81fb8504472fb2ab9be95831fbc1e5705e585d947b",
+    "dist/tasks/transfer.d.ts": "58c9722e65a602a64207adcc3cdc2453ad0082c806fe930a6ced1387e660de27",
+    "dist/telemetry/metrics.d.ts": "7145c8861d7e0e90ffa522d535cec3dc8431f4b9a43c5ebfc944d37af2560e74",
+    "dist/telemetry/profile.d.ts": "81b3fd387783a87ad070694511582ce17835186a931b80e3604d50fda7403f52",
+    "dist/telemetry/runtime.d.ts": "77d38666f7654f3da9467f65ce8dce515cd24e999cf9007233ce530b485a9b10",
+    "dist/types/index.d.ts": "fa8fcf8975ee527da1d1c0ac1d96420b5eaa1b19eb7aca6234cd5f9cec279dea",
+    "dist/workers/bootstrap.d.ts": "089fbfd7f9aada2383c495bbddcbf2d09578b973df7790d71e455bd6b6f5c04d",
+    "dist/workers/protocol.d.ts": "6872b8f302e35449b5d8f512a3910d6bd5d86779023a6f3e93dbb7f0dbad90e9",
+    "dist/workers/worker.d.ts": "287451b9a4cdc63c429d9e1ddea5ba48a4dd6d115351d2b955dafe88024a9ccd"
+  },
+  "manifest": {
+    "name": "@pjavascript/runtime",
+    "version": "1.0.0-rc.4",
+    "description": "Explicit CPU task runtime for Node.js",
+    "type": "module",
+    "engines": {
+      "node": "^22.13.0 || ^24.0.0"
+    },
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "files": ["dist", "src"],
+    "scripts": {
+      "build": "tsc -p tsconfig.json"
+    },
+    "license": "MIT",
+    "types": "./dist/index.d.ts",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/Miskovy/parallel-javascript.git",
+      "directory": "packages/runtime"
+    },
+    "bugs": {
+      "url": "https://github.com/Miskovy/parallel-javascript/issues"
+    },
+    "homepage": "https://github.com/Miskovy/parallel-javascript#readme",
+    "keywords": ["nodejs", "worker-threads", "parallel", "cpu"]
+  },
+  "packageFiles": {
+    "LICENSE": "7977502d5d3bdd267520de1cce1176142296dd2a0d00309206703c7bba990135",
+    "README.md": "83ad830f3e676748e71ae60b7d1e7845f39cc83e63f53769b6000680bd9a7457",
+    "dist/dispatch/dispatcher.d.ts": "5e60b00e5dd1a437c5867b3a9f32581fe21455c69af239040b76ffcc17488543",
+    "dist/dispatch/dispatcher.d.ts.map": "b6116e98afa72eff30163f078cbbe0779499e3af6fa451e78e81a17778d3eb18",
+    "dist/dispatch/dispatcher.js": "8844a0badb4071ae05352bad145b5d4c0f65e3fdf870f3c99ced7703c69bafb5",
+    "dist/dispatch/dispatcher.js.map": "f72662d21998d73c8d9068ea342af2a234d47ebc609f8ed86ae5351cb18157e9",
+    "dist/errors/index.d.ts": "df8fd877222f102de55bd5c7f196c4c83e964e63bf9009154a85c8d4a5621169",
+    "dist/errors/index.d.ts.map": "4a947ae1cfacabef7a5bed9bd00c1004b017407ff1798cb58507f81a02a17e78",
+    "dist/errors/index.js": "beb26a6f6014cbb78c0e0d9444ea5a380fa15984828c0bda544bf673782a0303",
+    "dist/errors/index.js.map": "493a89c1a69dda65d2bcc4ca1db913234619ad73ae04fcf4887b97a3dff33ce2",
+    "dist/index.d.ts": "3aadd11f6520083f9bc0e1a3851e20b0e0634ccde052e1880662cd38a65f0d3a",
+    "dist/index.d.ts.map": "fab3e290eb2713c0f365f0c6e96441c21da612c18383905b66ddfe5aa534b85e",
+    "dist/index.js": "cc0b0e2c9a46156c13c5829b5add269b2376ed741ab204b24b897ecd541733f1",
+    "dist/index.js.map": "2ee0fcf6a041a18356cb88ca8488f5b6a241b17b26e2f82e21144627645c31dd",
+    "dist/internal/integer.d.ts": "5753b8818139e38ce3cca56a5c4418392ff80f87aab5e6cb913f6fbc8f63663d",
+    "dist/internal/integer.d.ts.map": "86197bb7bb9ec384fa9bd02c5b0dab8b3a58212c89af0b5d79c3174df1da22d4",
+    "dist/internal/integer.js": "e30e3850679a0f8e19d3139d8acb1d84a6295322d293137cb2a9917eafc85f36",
+    "dist/internal/integer.js.map": "59ae3e52e096703f2aa46792552ba529418476e4b2a7f5a427c0b68f45b3cea0",
+    "dist/partition/binary.d.ts": "db4cbdfe0dd5aa5b61813e58a8e3b657815382fe9491f78819e7af1521dbdd8a",
+    "dist/partition/binary.d.ts.map": "2b65f605ef19aa8357ac96e605963632a17e48f4100446a3c0f134fea2f3350b",
+    "dist/partition/binary.js": "8f781cf8cdb0e443b8722669d3d75d8fc94390160c0d6efbe0e127b5b11f5803",
+    "dist/partition/binary.js.map": "98431783d23b666b3d0a0a2c0af1a5c27390e7fb3e6f03710efe24ed327311d8",
+    "dist/partition/coordinator.d.ts": "6d61d06b0e45e5e33270b599c77a7b28fdfc1cfc2c9433c2f2b3271bf20acaaf",
+    "dist/partition/coordinator.d.ts.map": "e99b9313eaa696bc93321659fadb660cab4aead2bf08e5e050608dba8d89a50f",
+    "dist/partition/coordinator.js": "5c2f655b9bdf9545a4514698401d8da6ae65d5b2ed88eb1da2b9b00d2282315c",
+    "dist/partition/coordinator.js.map": "e08358c7632592a2e877578d7b8080aaf5759f84137a3c7b31c570c78a6f7cb9",
+    "dist/partition/operation.d.ts": "9e4c247a072107b8465e771289c6ae36c4e3142ceb230fda4fedd70fa9380300",
+    "dist/partition/operation.d.ts.map": "f0e0fbdd8396b486a64050cfa62f92b9ec076452e619d2d46cfed0df762981d4",
+    "dist/partition/operation.js": "de5ef2831590835b4091ad8fdc53261308710e76b3ec1a3ca9d9d7589bc61184",
+    "dist/partition/operation.js.map": "4284486c4a1300828cba8f20a78d8ead09cdfb31e627cf7a14b7a473d81846cb",
+    "dist/partition/range.d.ts": "24de172906fa1f90673c2735e703582751ba5618d62e7dfc1bdc91720052ed7c",
+    "dist/partition/range.d.ts.map": "86ba5e51e8d665c155825aa869bde90ffc74a521bbdf80ee1a2e8e34ee4642c4",
+    "dist/partition/range.js": "c337bdfe20b39ca9525a7ffaea71e375ce768072fe303cc8e204bf883372acae",
+    "dist/partition/range.js.map": "6a64513ac3589e7c724c1394af31c63f75d2567e91ca39ea5a34b0c18bac3eaf",
+    "dist/partition/stream.d.ts": "403ca6dcd4446b387d7268bed07a231b5bc11ecc5772c7f26891848cb7b4d4b9",
+    "dist/partition/stream.d.ts.map": "5cdb2d6ddf3016e61cbd470207a82652a76c0d0b3b3d12be677cdabb78786c68",
+    "dist/partition/stream.js": "6f85fc6d158ebafd1dd444a2c30a5e8810f7004dd5f63019477bf8b2fa919b72",
+    "dist/partition/stream.js.map": "b0f96d88cf25d4d3c977eb3b91c8f41b7c781e823158e30c1d6228f8bb2fd539",
+    "dist/pool/pool.d.ts": "d31a2faa1762592f1991540b64ce8556238bd13e496d39426a406216b2fe8c54",
+    "dist/pool/pool.d.ts.map": "73c6c058224b4b24ede37691830cdd7db3cdb4fc47240bb1e4c934fd39e976c8",
+    "dist/pool/pool.js": "369cc483f8815e2b56f559da9960e87bae3b35cb5053e60c37e386c012d991cf",
+    "dist/pool/pool.js.map": "a3c4b3ae54edec430e2d31a3434858aa452fb804dfabdfecb8fa3ba5266c51cd",
+    "dist/results/credit.d.ts": "515f1634982d89073bc6ea1b21792b287f1296bdc65826f94c160fe808aa2d8b",
+    "dist/results/credit.d.ts.map": "7f47fab31155b6774769c58c6dbceca486d46e39727100f9fdf1a37307bd0dd0",
+    "dist/results/credit.js": "779bdaa737c074e6aa0f178bfc853ba1758565b3fad69228c2a4bf5efbd22dd5",
+    "dist/results/credit.js.map": "2ba589bdddf15a9581898a62022479a7bc5687fb0fbd067f14c09148843ae751",
+    "dist/runtime.d.ts": "675741db711bec63d726cdb966fc3f0ec1b115f8a60151c92140e3357ba1a199",
+    "dist/runtime.d.ts.map": "e1eac6e6b824acaa45f0bf6c43d4326f76a4d90a60881912818e3889bdceead3",
+    "dist/runtime.js": "255a7df5dcc3a8b2c310f1941320eaebddae2db8418c3394191d22e306b9f8bd",
+    "dist/runtime.js.map": "f8e84b5d5f05a9108682a9bf969d8f05b05479c76dc7f2b978eddf63504058d6",
+    "dist/scheduler/fifo.d.ts": "746ea23fe020bad0f3a0b644f47fd39142b9f58ab61b48cde15151ce184bc7e5",
+    "dist/scheduler/fifo.d.ts.map": "a48e1cb6f847a18fa5e8f7a3fe8d04a714ff8fc0dd474e866cae6f44da1e2c5e",
+    "dist/scheduler/fifo.js": "e534524a4a212c1a9bdbef6cded48faaf9b8baf4c809bc32ae1f33dd9a3e6050",
+    "dist/scheduler/fifo.js.map": "a00e7ef359f5ba78a8761e393dba52bc87b415dd91256a37acfaa1cbafec3b7d",
+    "dist/tasks/coordinator.d.ts": "1501d014de6b2d5847f1738dd0e624de41791f5ac25f0345d3b4ee26e5a7d1c9",
+    "dist/tasks/coordinator.d.ts.map": "3fb05b44f1135acfc020c4b242989dc7d5d7a0bd163382ce3fd155825848842f",
+    "dist/tasks/coordinator.js": "d86d93b4cdb3f97f069c699ba4c70bde6bc9a5ebf804ad27018af4558c55322d",
+    "dist/tasks/coordinator.js.map": "7dd3dc4b803781a1aa5c6e859f39f5976918d1d89490e4d396889d76cf80a7f9",
+    "dist/tasks/registry.d.ts": "89b758e58a2a6c9cbcf76b0f7128cb4545cb0510de2305a4eac577c72b5b97b7",
+    "dist/tasks/registry.d.ts.map": "4ceb30b34b95bf982ce3c7408fe3fc13868e54a0f4cf73653a721f98e2786716",
+    "dist/tasks/registry.js": "43aa3cbb37ef1380b47fdcdfea67b74bd2d26fe37377471a5c1dc95cae75c165",
+    "dist/tasks/registry.js.map": "7682a5dd1b715e46a22dfe32a6f5a0f1f7a57e228ebe13429258b24187f896fb",
+    "dist/tasks/shared.d.ts": "2b5f60e704be1d1b71ab9bc708e01801dbb7517b30fcb588139b98ac3b171b15",
+    "dist/tasks/shared.d.ts.map": "e36097662b4d7efbd7335f6e7c3a955b633649b11a92a7cd801163df055ed359",
+    "dist/tasks/shared.js": "5ea6c4b88f8592262fddd4e1379eee02c13fdada599cb70c42d332182c5a4236",
+    "dist/tasks/shared.js.map": "a424d0a26ba1bf5f37f15626ba6d760670cd8cdf97b786e75a37016caa69716b",
+    "dist/tasks/task.d.ts": "83b24fdfe30b37157943ce81fb8504472fb2ab9be95831fbc1e5705e585d947b",
+    "dist/tasks/task.d.ts.map": "16a8459a58d4854c7c47ffdb70f011db76420cf60a01932c60de2ed7b7b0c611",
+    "dist/tasks/task.js": "058a2c45e24e915dd86989a39da0d72b42d01a54e0f7bb7505f0e04cbc8b6c38",
+    "dist/tasks/task.js.map": "428f07462b00248528f498598e77ef959f275c26b7600b8f907cb44620de6df7",
+    "dist/tasks/transfer.d.ts": "58c9722e65a602a64207adcc3cdc2453ad0082c806fe930a6ced1387e660de27",
+    "dist/tasks/transfer.d.ts.map": "0ff67cc331b3334ff45fa5272f46b9f53b224127bcf8829940fe359453132ac4",
+    "dist/tasks/transfer.js": "6a581330be59e19d5e584de7d669a9a597e6b3360f2cc72c5e48ae94a0591ea6",
+    "dist/tasks/transfer.js.map": "79fb998432cacb02e91bbdf22255364c8d0e2827e62ee227b81bc1e45df12951",
+    "dist/telemetry/metrics.d.ts": "7145c8861d7e0e90ffa522d535cec3dc8431f4b9a43c5ebfc944d37af2560e74",
+    "dist/telemetry/metrics.d.ts.map": "4e8c003e673756e906a5903a7e12daa090e8054a11c0aa6d7e1f77b11881a63d",
+    "dist/telemetry/metrics.js": "ad6d810e300d1ea100d1230948cb820cab6afcfab05a19d81f8ad3d19ecf2324",
+    "dist/telemetry/metrics.js.map": "3685505ab7c2d39173a33726951ba8ba8b6ff7648072283f97f96c81ca5adb1b",
+    "dist/telemetry/profile.d.ts": "81b3fd387783a87ad070694511582ce17835186a931b80e3604d50fda7403f52",
+    "dist/telemetry/profile.d.ts.map": "2f810472eaab5031cccb39eef71d0bdc8aadda583d5c68060f6306a46de12111",
+    "dist/telemetry/profile.js": "2ff1f354516c4b3b18ad72d9743f85ddc411bfba24a2f344442af19f0eeb1874",
+    "dist/telemetry/profile.js.map": "43b8490771b46ef7733cff7a23794bd8a552d72ccc139e89e0e0c134a6af4a07",
+    "dist/telemetry/runtime.d.ts": "77d38666f7654f3da9467f65ce8dce515cd24e999cf9007233ce530b485a9b10",
+    "dist/telemetry/runtime.d.ts.map": "7849850d561eedd213a7dc23132ccfa1ab287f6b933f98a8977e6805476de75c",
+    "dist/telemetry/runtime.js": "c5fb756c2a2a66c23ffeb08be2b50e4627280c21af85b65a850798c4a0e24320",
+    "dist/telemetry/runtime.js.map": "653227208e15335fb060573a48f2027291772d47213e124ef23011ae1d3ae05f",
+    "dist/types/index.d.ts": "fa8fcf8975ee527da1d1c0ac1d96420b5eaa1b19eb7aca6234cd5f9cec279dea",
+    "dist/types/index.d.ts.map": "845b9929e45d544d0c72a6a8e4d51e614856c500a8304b6d0350479a620eef58",
+    "dist/types/index.js": "827c148a2159c5d098f9fe33185b555382ad63931193dda5f41f6af38a6a4445",
+    "dist/types/index.js.map": "c4ac53ade294b76aa27a4b8b63477beeecc81827655f68f64c9bc4c7bbeeb817",
+    "dist/workers/bootstrap.d.ts": "089fbfd7f9aada2383c495bbddcbf2d09578b973df7790d71e455bd6b6f5c04d",
+    "dist/workers/bootstrap.d.ts.map": "0c56b103e4b14e120788ae73443838b77025de8cbf720d34a256e3bad3852f2b",
+    "dist/workers/bootstrap.js": "540e244a1c7f93fcd179923fc4485f0fe98d13c0c4484268ed1c689359c83002",
+    "dist/workers/bootstrap.js.map": "fd6e6c3e044fc216ce6c814580787ffd938a081475c8645aa9208c5a4c5b9cc2",
+    "dist/workers/protocol.d.ts": "6872b8f302e35449b5d8f512a3910d6bd5d86779023a6f3e93dbb7f0dbad90e9",
+    "dist/workers/protocol.d.ts.map": "6065d5e8542343b36e8ea0d81c1d524e81addaf98cec18486467b0bbdb685018",
+    "dist/workers/protocol.js": "704508fdf13e027de1786523f50183aaac6845754b042e7c0ef61e0fbc149b54",
+    "dist/workers/protocol.js.map": "75b1857e710d8dd8d86b11b8490d9061f69030768972edbffd962eb0769e33b0",
+    "dist/workers/worker.d.ts": "287451b9a4cdc63c429d9e1ddea5ba48a4dd6d115351d2b955dafe88024a9ccd",
+    "dist/workers/worker.d.ts.map": "252d4aaa6e578291463a5795b35eeb21ec42242732ad656428e5ce87f9b0405d",
+    "dist/workers/worker.js": "a6ba4658c53d98dca797576fc750c49d6740f808f5f0800eac38555fe8f2910f",
+    "dist/workers/worker.js.map": "ed25f455342664d7dea33809d92a6a7ce9cb8410643539e7929e4a81e53c5c45",
+    "package.json": "7ec6311940906ad70a3517b5e81a89eec11ba375c8f469dea21b15147be487ea",
+    "src/dispatch/dispatcher.ts": "5ac63f2efed7eb2cf12c565f57827ef3f70d1cbd99b5c66b9bf69931439f3e71",
+    "src/errors/index.ts": "2f1458c63366be67919f51866acd7e1a9966300166c39f164c481913d0b1f4e7",
+    "src/index.ts": "96d3697fde71fc4a46943c52f5556c1b63227f2b792650c14cf29bfd073cef44",
+    "src/internal/integer.ts": "c1d5f34cd7a4d6aa228910e0a7e7f7929e21bea0f84e231d5984a3b7e7d51b6c",
+    "src/partition/binary.ts": "20e4ff84ea39912befa189a5a3e5f57739e249d3954c3d7aea6cfa45e1b97120",
+    "src/partition/coordinator.ts": "3afae72cfa583b5c04b8645a09af3dcf603139f1b4268204bd35627f2f185cde",
+    "src/partition/operation.ts": "e5ec55abcb8a90fca7df99c7b7ade39c5ae2fa2358efd1a11e5edc8b438384e1",
+    "src/partition/range.ts": "c985cb95b03c2c339f18f1cae44ca7f77eca7eb2908afe946f11b71c724a1489",
+    "src/partition/stream.ts": "09d2dcb73771334c0a4fb9647c6234d59acdef43e3170045d8c8e810a7017566",
+    "src/pool/pool.ts": "cd0eba7ac580c4a34d1dd706ffde5a1a02f6854561c28572d7ed96cc27e67529",
+    "src/results/credit.ts": "06ca132cae8475aca816cce82e7243ebcf3b2dca10216042805f1b2510e24cf8",
+    "src/runtime.ts": "e72f38da727b295109e1cf42c90f4be1670d9a1538a3d4390262bd0339f7d177",
+    "src/scheduler/fifo.ts": "caa0307b7ce3b71d412ae9b432ad90cd946eed209958d88a1d6f9a13d481e014",
+    "src/tasks/coordinator.ts": "05b6f044c538a438827e8ab7c16071ac04aeb89b12122c8fc48f2dd8239767d7",
+    "src/tasks/registry.ts": "b0698736068769a2b7ab2b8c1cbf2179650f7b41701e82ab4dccf8e8c8254eca",
+    "src/tasks/shared.ts": "d3a6b371f5b20657bf47d6b84f6c7d7bd4cfec0f0395b6bade2ac828ee5a3ca5",
+    "src/tasks/task.ts": "92eb849cc4b2921c347656edabf6a813b323e9295c46c7255dddc89330f820f5",
+    "src/tasks/transfer.ts": "9de35965f11f40ab7697ca8e5439af634fe8122829c357c3b36f310dbfd278ac",
+    "src/telemetry/metrics.ts": "031d1994dd4fec40d50b265f4e59c00dd9348d089d507ed87019bb1fef7b088e",
+    "src/telemetry/profile.ts": "831b42554f3dcb74a45ae42bdfca5811eab921d8c248986ca1859af26f9496f7",
+    "src/telemetry/runtime.ts": "cecde6c99409080d0b00b3a5bc056306d5d9cc6eaafda804f7b519e185b973ee",
+    "src/types/index.ts": "7a252af8bb57fe42ac43f015a73ee111afd932725da039ffd77c36140c7b35fa",
+    "src/workers/bootstrap.ts": "f19fbfb8f0a27d1e3e97cc7599bdfc8922d7502557af9a71c4bf2e9cf0c6d2e9",
+    "src/workers/protocol.ts": "d8f66b337c21563d0c510b2bc72ae1db3a70d065da22d2374583d1bd8d1f5d90",
+    "src/workers/worker.ts": "873386f8c476032b69f03b6ad89d428e64a245775bf220cdf31abc3efcbf65a3"
+  },
+  "releaseToolchain": {
+    "node": "24.21.0",
+    "npm": "11.19.0",
+    "npmTarball": "https://registry.npmjs.org/npm/-/npm-11.19.0.tgz",
+    "npmIntegrity": "sha512-SDd/hHg3KqHE5Ht2NHWxNYNtqCQ2pXAPLl6OtQhPyED5PHsRfrOtO199MZTIG2cQoQ1ZRI9t28shrD+2cr3AAw=="
+  }
+}

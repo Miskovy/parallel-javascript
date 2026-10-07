@@ -12,17 +12,21 @@ GitHub's repository **Packages** sidebar represents GitHub Packages. This projec
 does not publish a duplicate there or create another package identity. Any later
 organization/linked-artifact or GitHub Packages adoption is a separate decision.
 
-## RC3 candidate qualification
+## RC4 candidate qualification
 
-The [RC3 candidate note](release-v1.0.0-rc.3.md) defines this release's scope.
-The active [baseline](../scripts/rc/frozen-rc3.json) freezes the merged R1A runtime,
-RC3 metadata, declarations and every packed file. The old R1A repair allowance is
+The [RC4 candidate note](release-v1.0.0-rc.4.md) defines this release's scope.
+The active [baseline](../scripts/rc/frozen-rc4.json) freezes the merged R1A runtime,
+RC4 metadata, declarations and every packed file. The old R1A repair allowance is
 removed. Run the [qualification commands](../scripts/rc/README.md) from a committed,
 clean tree. Four CI cells run standard soak; two independent clean local builds
 run full qualification/extended soak and require identical archives. Preserve the
 candidate commit, report, canonical tarball and SHA-256 together. Any subsequent
 change invalidates qualification of that commit and requires qualification again.
-Published status remains RC2 until the deliberate procedure below completes.
+RC3 is an immutable GitHub prerelease with no npm publication: its release
+validator stopped before the OIDC step. Published npm status remains RC2 until
+the deliberate procedure below completes. PR qualification now tests the selected
+npm CLI without credentials/scripts and validates the actual candidate tarball
+through the same release helper; unknown JSON shapes fail before review.
 
 ## One-time maintainer configuration
 
@@ -50,9 +54,16 @@ required human approval is recommended when supported. Allow the intended releas
 tags through any environment deployment restrictions. These protections are not
 assumed to exist already.
 
-The workflow uses GitHub-hosted Ubuntu, Node 24, and SHA-pinned official
-`actions/checkout` v7.0.1 and `actions/setup-node` v7.0.0 releases. It checks for npm
-11.5.1+ and disables package-manager caching. See upstream
+The workflow uses GitHub-hosted Ubuntu, exactly Node 24.21.0 / npm 11.19.0 from
+the reviewed [publication toolchain](../scripts/release/toolchain.json), and
+SHA-pinned official `actions/checkout` v7.0.1 and `actions/setup-node` v7.0.0.
+The shared release helper rejects any other publisher version before registry
+operations and disables package-manager caching. Runtime support for Node
+22.13.0 and Node 24 does not approve every bundled npm for publishing. Four-cell
+CI provisions the exact release npm archive after verifying its committed SHA-512,
+then tests the live CLI separately from ordinary runtime npm. Review Node/npm pins
+and archive integrity together when upgrading; repeat the four-cell qualification
+and two-build reproduction. See upstream
 [trusted publishing guidance](https://docs.npmjs.com/trusted-publishers/),
 [checkout releases](https://github.com/actions/checkout/releases/tag/v7.0.1),
 [setup-node releases](https://github.com/actions/setup-node/releases/tag/v7.0.0), and
@@ -66,7 +77,7 @@ The workflow uses GitHub-hosted Ubuntu, Node 24, and SHA-pinned official
 2. Pass existing CI, including Ubuntu/Windows Node 22.13/24 qualification, and
    merge the reviewed change.
 3. Tag the approved commit with exactly `v` plus the runtime package version.
-   Create its GitHub Release: e.g. `1.0.0-rc.3` requires `v1.0.0-rc.3`, whereas
+   Create its GitHub Release: e.g. `1.0.0-rc.4` requires `v1.0.0-rc.4`, whereas
    `1.0.0` requires `v1.0.0`.
 4. Mark any SemVer prerelease as a GitHub prerelease. Stable versions must have
    the prerelease checkbox cleared.
@@ -77,12 +88,12 @@ The workflow uses GitHub-hosted Ubuntu, Node 24, and SHA-pinned official
    queries npm. An existing immutable version is reported and publication is
    skipped; versions and tags are not changed automatically. Registry verification
    and consumer smoke still run for an already-published version.
-8. For an absent version, CD runs `npm ci`, the release-helper tests,
+8. For an absent version, CD runs `npm ci`, `test:release` (including the selected real npm CLI dry-run regression),
    `test:contracts` (including build), `test:types`, `typecheck:compat`,
    `test:package`, lint, formatting, documentation and diff checks. The existing
-   broad CI matrix remains separate. CD also enforces the active exact RC3
+   broad CI matrix remains separate. CD also enforces the active exact RC4
    source/declaration/export/manifest baseline. Its final artifact check compares
-   every packed file with the committed RC3 hashes; no repair exception is accepted
+   every packed file with the committed RC4 hashes; no repair exception is accepted
    and no extended research campaign runs here. Future releases must deliberately
    review a new version and baseline together.
 9. CD packs once into runner temporary staging. It validates the actual tarball's
@@ -123,7 +134,7 @@ A prerelease run verifies only `next`; an automatically created `latest` tag fro
 first publication is allowed and is never deleted by CD.
 
 RC2 is already published. Validate changes with
-`node --test scripts/release/npm-release.test.mjs`, formatting, documentation and
+`npm run test:release`, formatting, documentation and
 workflow checks; do not publish it again to test the pipeline. No manual publish
 dispatch is provided. End-to-end OIDC publication will be exercised only by a
 future deliberately approved release.
