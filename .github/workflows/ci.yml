@@ -45,3 +45,4 @@ jobs:
         with:
           name: rc-contracts-${{ matrix.os }}-node-${{ matrix.node }}
           path: .node-tools/rc-ci.json*
+          include-hidden-files: true
