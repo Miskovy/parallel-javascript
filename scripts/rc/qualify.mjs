@@ -86,6 +86,7 @@ function run(label, args, executable = process.execPath) {
     maxBuffer: 24 * 1024 ** 2,
     env: {
       ...process.env,
+      PJS_TAR_LISTING_REPORT: join(scratch, 'tar-listing.json'),
       PJS_NPM_CLI: npmCli,
       PJS_NPM_CONTRACT_REPORT: join(scratch, 'npm-dry-run.json'),
       PJS_CONTRACT_REPORT: join(scratch, 'contracts.json'),

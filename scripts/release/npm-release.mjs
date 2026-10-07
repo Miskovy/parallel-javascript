@@ -321,7 +321,25 @@ async function main() {
       assert.equal(basename(packed.filename), packed.filename);
       assert.ok(packed.filename.endsWith('.tgz'));
       const tarball = resolve(directory, packed.filename);
-      const files = command('tar', ['-tzf', tarball]).trim().split('\n');
+      const listing = command('tar', ['-tzf', tarball]);
+      const transport = {
+        platform: process.platform,
+        stdout: listing,
+        crlf: (listing.match(/\r\n/g) ?? []).length,
+        lf: (listing.match(/(?<!\r)\n/g) ?? []).length,
+        bareCr: (listing.match(/\r(?!\n)/g) ?? []).length,
+      };
+      summary(
+        'Tar listing transport: ' +
+          JSON.stringify({ ...transport, stdout: listing.slice(0, 600) }),
+      );
+      if (process.env.PJS_TAR_LISTING_REPORT)
+        writeFileSync(
+          process.env.PJS_TAR_LISTING_REPORT,
+          JSON.stringify(transport, null, 2) + '\n',
+          { flag: 'wx' },
+        );
+      const files = listing.trim().split('\n');
       assert.ok(
         files.length >= 10 && files.length <= 1000,
         'Implausible file count',
