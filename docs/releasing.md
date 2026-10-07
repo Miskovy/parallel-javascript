@@ -12,6 +12,18 @@ GitHub's repository **Packages** sidebar represents GitHub Packages. This projec
 does not publish a duplicate there or create another package identity. Any later
 organization/linked-artifact or GitHub Packages adoption is a separate decision.
 
+## RC3 candidate qualification
+
+The [RC3 candidate note](release-v1.0.0-rc.3.md) defines this release's scope.
+The active [baseline](../scripts/rc/frozen-rc3.json) freezes the merged R1A runtime,
+RC3 metadata, declarations and every packed file. The old R1A repair allowance is
+removed. Run the [qualification commands](../scripts/rc/README.md) from a committed,
+clean tree. Four CI cells run standard soak; two independent clean local builds
+run full qualification/extended soak and require identical archives. Preserve the
+candidate commit, report, canonical tarball and SHA-256 together. Any subsequent
+change invalidates qualification of that commit and requires qualification again.
+Published status remains RC2 until the deliberate procedure below completes.
+
 ## One-time maintainer configuration
 
 On **npmjs.com**, open the package Settings → Trusted publishing and configure a
@@ -68,9 +80,11 @@ The workflow uses GitHub-hosted Ubuntu, Node 24, and SHA-pinned official
 8. For an absent version, CD runs `npm ci`, the release-helper tests,
    `test:contracts` (including build), `test:types`, `typecheck:compat`,
    `test:package`, lint, formatting, documentation and diff checks. The existing
-   broad CI matrix remains separate. The RC qualification/package scripts have
-   RC2-specific assertions, so CD uses reusable bounded gates and its own final
-   artifact check; no extended research campaigns run here.
+   broad CI matrix remains separate. CD also enforces the active exact RC3
+   source/declaration/export/manifest baseline. Its final artifact check compares
+   every packed file with the committed RC3 hashes; no repair exception is accepted
+   and no extended research campaign runs here. Future releases must deliberately
+   review a new version and baseline together.
 9. CD packs once into runner temporary staging. It validates the actual tarball's
    name, version, plausible file count, allowed contents, zero runtime
    dependencies and repository metadata, performs a publish dry-run and runs an

@@ -19,6 +19,10 @@ RC2 established the permanent package identity `@pjavascript/runtime@1.0.0-rc.2`
 The runtime implementation and public API are unchanged from RC1.
 See the [RC2 release note](docs/release-v1.0.0-rc.2.md).
 
+This branch prepares the [RC3 candidate](docs/release-v1.0.0-rc.3.md) with the
+merged R1A physical-completion repair and an exact qualification baseline.
+It does not add execution leases or change the published npm version.
+
 ## Install
 
 Install the current prerelease from the [public npm package](https://www.npmjs.com/package/@pjavascript/runtime):
@@ -174,7 +178,7 @@ npm pack --workspace @pjavascript/runtime --pack-destination /tmp
 Then install that artifact in your ESM application:
 
 ```sh
-npm install /tmp/pjavascript-runtime-1.0.0-rc.2.tgz
+npm install /tmp/pjavascript-runtime-1.0.0-rc.3.tgz
 ```
 
 Replace `/tmp` with an absolute temporary directory on your system (for example

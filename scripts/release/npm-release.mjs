@@ -12,6 +12,7 @@ import { tmpdir } from 'node:os';
 import { basename, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { setTimeout as delay } from 'node:timers/promises';
+import { baseline, assertFrozenPackage } from '../rc/baseline.mjs';
 
 export const packageName = '@pjavascript/runtime';
 const root = fileURLToPath(new URL('../../', import.meta.url));
@@ -172,6 +173,11 @@ async function main() {
         readFileSync(join(root, 'packages/runtime/package.json')),
       );
       validateManifest(manifest, manifest.version);
+      assert.equal(
+        manifest.version,
+        baseline.manifest.version,
+        'Review a matching release baseline before publication',
+      );
       const { version, distTag } = releasePolicy(
         manifest.version,
         event.release,
@@ -242,9 +248,22 @@ async function main() {
         'dist/workers/bootstrap.js',
       ])
         assert.ok(files.includes(`package/${required}`), `Missing ${required}`);
-      validateManifest(
-        JSON.parse(command('tar', ['-xOf', tarball, 'package/package.json'])),
-        version,
+      const manifest = JSON.parse(
+        command('tar', ['-xOf', tarball, 'package/package.json']),
+      );
+      validateManifest(manifest, version);
+      assertFrozenPackage(
+        manifest,
+        Object.fromEntries(
+          files.map((file) => [
+            file.slice('package/'.length),
+            createHash('sha256')
+              .update(
+                command('tar', ['-xOf', tarball, file], { encoding: null }),
+              )
+              .digest('hex'),
+          ]),
+        ),
       );
       // Inspect and install the artifact that the workflow will publish; never repack it.
       const dry = JSON.parse(

@@ -9,7 +9,8 @@ and result-credit options remain experimental. Statistics are diagnostic.
 
 ## Install
 
-Current prerelease: **1.0.0-rc.2**, published as
+This source prepares **1.0.0-rc.3**, a candidate containing the R1A physical-completion
+repair. Until RC3 is published, the registry prerelease remains **1.0.0-rc.2** as
 [`@pjavascript/runtime`](https://www.npmjs.com/package/@pjavascript/runtime) under `next`.
 Final v1.0.0 has not been released.
 
@@ -55,7 +56,10 @@ before registration.
 Cancellation/timeout can reject a caller while execution still occupies a worker.
 There is no preemption, retry or rollback. Graceful shutdown waits for physical
 work and stream delivery; abandoned streams can keep it pending. The first
-shutdown call fixes drain mode.
+shutdown call fixes drain mode. An abnormal worker failure rejects affected callers
+without proving execution ended: binary result credits and physical busy occupancy
+remain held until confirmed thread exit. A valid final result ends its own physical
+correlation immediately. Worker replacement waits for exit; work is never replayed.
 
 Clone is default. Explicit transfers detach all sender-side views at dispatch.
 Shared readonly input is immutable by contract, not frozen. Queue limits count
@@ -69,4 +73,4 @@ See the [full guide](https://github.com/Miskovy/parallel-javascript/blob/main/do
 The tarball includes compiled JS/declarations/maps and their TypeScript source
 for stack traces and editor navigation. Only the root import is supported.
 
-MIT licensed; see LICENSE. RC2 is a published prerelease.
+MIT licensed; see LICENSE. RC3 remains a prerelease candidate.

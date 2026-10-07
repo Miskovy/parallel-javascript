@@ -15,27 +15,21 @@ import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { performance } from 'node:perf_hooks';
+import {
+  baseline,
+  assertArguments,
+  assertFrozenFiles,
+  assertFrozenWorkspace,
+  assertFrozenPackage,
+} from './baseline.mjs';
 
+assertArguments(['output', 'npm-cli', 'pack-dir']);
 const root = fileURLToPath(new URL('../../', import.meta.url));
+assertFrozenWorkspace(root);
+assertFrozenFiles(root);
 const arg = (name) =>
   process.argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3);
 const output = arg('output');
-const physicalBoundaryRepair = process.argv.includes(
-  '--physical-boundary-repair',
-);
-const permittedDeclarations = new Set([
-  'dist/workers/worker.d.ts',
-  'dist/dispatch/dispatcher.d.ts',
-  'dist/results/credit.d.ts',
-]);
-const permittedSources = new Set([
-  'packages/runtime/src/workers/worker.ts',
-  'packages/runtime/src/pool/pool.ts',
-  'packages/runtime/src/dispatch/dispatcher.ts',
-  'packages/runtime/src/runtime.ts',
-  'packages/runtime/src/telemetry/runtime.ts',
-  'packages/runtime/src/results/credit.ts',
-]);
 assert.ok(output, 'Specify a NEW --output=file.json');
 writeFileSync(output, '', { flag: 'wx' });
 const selectedNpm = arg('npm-cli') ?? process.env.npm_execpath;
@@ -45,7 +39,7 @@ assert.ok(
 );
 const npmCli = resolve(selectedNpm);
 const packDir = resolve(
-  arg('pack-dir') ?? join(root, '.node-tools/rc2/packages', process.version),
+  arg('pack-dir') ?? join(root, '.node-tools/rc3/packages', process.version),
 );
 mkdirSync(packDir, { recursive: true });
 const temporary = mkdtempSync(join(tmpdir(), 'PJS RC external with spaces '));
@@ -53,9 +47,6 @@ const js = join(temporary, 'JS consumer with spaces');
 const ts = join(temporary, 'TS consumer with spaces');
 const unrelated = join(temporary, 'unrelated working directory');
 for (const dir of [js, ts, unrelated]) mkdirSync(dir);
-const frozen = JSON.parse(
-  readFileSync(new URL('./frozen-v015.json', import.meta.url)),
-);
 const report = {
   schema: 1,
   node: process.version,
@@ -116,9 +107,9 @@ try {
     ]),
   )[0];
   assert.equal(packed.name, '@pjavascript/runtime');
-  assert.equal(packed.version, '1.0.0-rc.2');
+  assert.equal(packed.version, baseline.manifest.version);
   assert.deepEqual(packed.files, dry.files);
-  assert.equal(packed.entryCount, 128);
+  assert.equal(packed.entryCount, Object.keys(baseline.packageFiles).length);
   assert.ok(
     packed.files.every((f) =>
       /^(dist\/|src\/|package.json$|README.md$|LICENSE$)/.test(f.path),
@@ -165,34 +156,15 @@ try {
     assert.deepEqual(manifest.bugs, {
       url: 'https://github.com/Miskovy/parallel-javascript/issues',
     });
-    assert.deepEqual(
-      {
-        name: manifest.name,
-        type: manifest.type,
-        engines: manifest.engines,
-        exports: manifest.exports,
-        types: manifest.types,
-        files: manifest.files,
-        dependencies: manifest.dependencies ?? {},
-      },
-      { ...frozen.manifest, name: '@pjavascript/runtime' },
+    assertFrozenPackage(
+      manifest,
+      Object.fromEntries(
+        packed.files.map((file) => [
+          file.path,
+          hash(join(installed, file.path)),
+        ]),
+      ),
     );
-    for (const [path, expected] of Object.entries(frozen.declarations))
-      assert.equal(
-        hash(join(installed, path)),
-        physicalBoundaryRepair && permittedDeclarations.has(path)
-          ? hash(join(root, 'packages/runtime', path))
-          : expected,
-        `Installed frozen declaration ${path}`,
-      );
-    for (const [path, expected] of Object.entries(frozen.runtimeSource))
-      assert.equal(
-        hash(join(installed, path.replace('packages/runtime/', ''))),
-        physicalBoundaryRepair && permittedSources.has(path)
-          ? hash(join(root, path))
-          : expected,
-        `Installed frozen source ${path}`,
-      );
     for (const file of packed.files.filter((f) => f.path.endsWith('.map'))) {
       const map = JSON.parse(readFileSync(join(installed, file.path)));
       for (const source of map.sources)
@@ -259,7 +231,7 @@ try {
       js,
     ),
   );
-  assert.deepEqual(report.installedExports, frozen.runtimeValues);
+  assert.deepEqual(report.installedExports, baseline.runtimeValues);
   cpSync(join(root, 'examples'), join(js, 'examples'), { recursive: true });
   report.examples = [];
   for (const example of [

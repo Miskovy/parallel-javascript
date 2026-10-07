@@ -6,7 +6,9 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { performance } from 'node:perf_hooks';
+import { assertArguments } from './baseline.mjs';
 
+assertArguments(['output', 'npm-cli', 'canonical-dir']);
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const arg = (name) =>
   process.argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3);
@@ -176,9 +178,14 @@ try {
   report.archiveBytesIdentical =
     report.states[0].package.tarball.sha256 ===
     report.states[1].package.tarball.sha256;
+  assert.equal(
+    report.archiveBytesIdentical,
+    true,
+    'Clean archive bytes differ',
+  );
   report.canonical = { ...report.states[0].package.tarball };
   const destination = resolve(
-    arg('canonical-dir') ?? join(root, '.node-tools/rc2/canonical'),
+    arg('canonical-dir') ?? join(root, '.node-tools/rc3/canonical'),
   );
   mkdirSync(destination, { recursive: true });
   const target = join(destination, report.canonical.filename);
@@ -194,6 +201,23 @@ try {
     { flag: 'wx' },
   );
   report.canonical.retainedPath = target;
+  writeFileSync(
+    join(destination, 'candidate.json'),
+    JSON.stringify(
+      {
+        sourceCommit: candidate,
+        version: report.canonical.version,
+        baselineSha256: report.states[0].qualification.baselineSha256,
+        filename: report.canonical.filename,
+        sha256: report.canonical.sha256,
+        logicalFilesIdentical: true,
+        archiveBytesIdentical: true,
+      },
+      null,
+      2,
+    ) + '\n',
+    { flag: 'wx' },
+  );
   report.passed = true;
   save();
   console.log(
