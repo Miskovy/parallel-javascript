@@ -28,6 +28,7 @@ export interface ExecutionDispatcherCallbacks {
   started(worker: PjsWorker, taskId: string): void;
   result(worker: PjsWorker, message: ExecutionResultMessage): void;
   failed(error: PjsWorkerError): void;
+  exited(): void;
   dispatchFailed(task: PendingTask, error: Error): void;
   fatal(error: PjsWorkerError): void;
 }
@@ -83,9 +84,11 @@ export class ExecutionDispatcher {
           );
           this.callbacks.result(worker, message);
         },
-        failed: (_worker, error) => {
-          if (error.taskId) this.resultCredits.markExecutionEnded(error.taskId);
-          this.callbacks.failed(error);
+        failed: (_worker, error) => this.callbacks.failed(error),
+        exited: (_worker, correlationId) => {
+          if (correlationId)
+            this.resultCredits.markExecutionEnded(correlationId);
+          this.callbacks.exited();
         },
         fatal: (error) => this.callbacks.fatal(error),
       },
@@ -237,6 +240,7 @@ export class ExecutionDispatcher {
 
   private dispatch(worker: PjsWorker, task: PendingTask): void {
     const items = task.batch;
+    const taskIds = items ? items.map((item) => item.id) : [task.id];
     const scheduledAt = Date.now();
     const monotonicNow = performance.now();
     if (items) {
@@ -255,6 +259,7 @@ export class ExecutionDispatcher {
         monotonicNow - task.admittedAt,
       );
     try {
+      this.resultCredits.markDispatching(task.id, taskIds);
       if (items && items.length > 1)
         worker.executeBatch(
           task.id,
@@ -282,10 +287,7 @@ export class ExecutionDispatcher {
           task.expectedResultBytes,
           task.resultByteContract,
         );
-      this.resultCredits.markDispatched(
-        task.id,
-        (items ?? [task]).map((item) => item.id),
-      );
+      this.resultCredits.markDispatched(task.id, taskIds);
       this.metrics.executeMessages++;
       this.metrics.logicalTasks += items?.length ?? 1;
       this.metrics.logicalPartitions += items
@@ -295,6 +297,7 @@ export class ExecutionDispatcher {
           : 0;
       if (items && items.length > 1) this.metrics.batchedExecuteMessages++;
     } catch (error) {
+      this.resultCredits.rollbackDispatch(task.id);
       this.callbacks.dispatchFailed(task, error as Error);
     } finally {
       this.callbacks.dispatched(task);

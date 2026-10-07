@@ -109,6 +109,7 @@ export class PjsRuntime {
         result: (worker, message) =>
           this.taskCoordinator.result(worker, message),
         failed: (error) => this.taskCoordinator.failTask(error),
+        exited: () => this.pump(),
         dispatchFailed: (task, error) =>
           this.taskCoordinator.settle(task, 'failed', error),
         fatal: (error) => this.fail(error),

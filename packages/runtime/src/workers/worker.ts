@@ -21,6 +21,7 @@ export interface WorkerCallbacks {
   started(worker: PjsWorker, taskId: string): void;
   result(worker: PjsWorker, message: ExecutionResultMessage): void;
   failed(worker: PjsWorker, error: PjsWorkerError, wasStarting: boolean): void;
+  exited(worker: PjsWorker, correlationId: string | undefined): void;
 }
 
 export class PjsWorker {
@@ -33,6 +34,7 @@ export class PjsWorker {
   private stopPromise: Promise<void> | undefined;
   private executionPhase: 'none' | 'scheduled' | 'running' = 'none';
   private currentTaskIds: string[] = [];
+  private exitObserved = false;
 
   constructor(
     readonly id: number,
@@ -68,10 +70,7 @@ export class PjsWorker {
     this.thread.on('error', (cause: Error) =>
       this.fail(`Worker error: ${cause.message}`, cause),
     );
-    this.thread.on('exit', (code) => {
-      if (this.state.status !== 'stopped' && this.state.status !== 'failed')
-        this.fail(`Worker unexpectedly exited with code ${code}`);
-    });
+    this.thread.on('exit', (code) => this.exited(code));
   }
 
   snapshot(): WorkerState {
@@ -81,6 +80,11 @@ export class PjsWorker {
   /** Internal hot-path state check; public snapshots remain defensive copies. */
   get status(): WorkerState['status'] {
     return this.state.status;
+  }
+
+  /** Failure and termination intent do not end an occupied physical slot. */
+  get hasPhysicalExecution(): boolean {
+    return this.state.currentTaskId !== undefined;
   }
 
   execute(
@@ -213,12 +217,28 @@ export class PjsWorker {
     if (this.state.status === 'idle')
       this.thread.postMessage({ type: 'shutdown' } satisfies HostMessage);
     this.state.status = 'stopped';
-    delete this.state.currentTaskId;
-    this.currentTaskIds = [];
-    this.stopPromise = this.thread.terminate().then(() => {
+    this.stopPromise = this.terminateThread().then(() => {
       this.thread.removeAllListeners();
     });
     return this.stopPromise;
+  }
+
+  /** Internal Node boundary; tests can delay termination on one worker instance. */
+  private terminateThread(): Promise<number> {
+    return this.thread.terminate();
+  }
+
+  private exited(code: number): void {
+    if (this.exitObserved) return;
+    this.exitObserved = true;
+    const correlationId = this.state.currentTaskId;
+    // A direct exit reports logical failure before releasing physical ownership.
+    if (this.state.status !== 'stopped' && this.state.status !== 'failed')
+      this.fail(`Worker unexpectedly exited with code ${code}`);
+    delete this.state.currentTaskId;
+    this.currentTaskIds = [];
+    this.executionPhase = 'none';
+    this.callbacks.exited(this, correlationId);
   }
 
   private receive(value: unknown): void {
@@ -263,6 +283,10 @@ export class PjsWorker {
     }
     if (this.executionPhase !== 'running') {
       this.fail('Task result arrived before start');
+      return;
+    }
+    if (this.currentTaskIds.length > 0 !== (value.type === 'batchResult')) {
+      this.fail('Unexpected final response kind for physical execution');
       return;
     }
     if (value.type === 'batchResult') {
@@ -327,7 +351,6 @@ export class PjsWorker {
     const taskId = this.state.currentTaskId;
     if (taskId) this.state.failedTasks++;
     this.state.status = 'failed';
-    this.currentTaskIds = [];
     clearTimeout(this.startupTimer);
     const error = new PjsWorkerError(message, {
       workerId: this.id,

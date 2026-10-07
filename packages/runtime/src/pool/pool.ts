@@ -46,7 +46,9 @@ export class PjsPool {
     return [...this.workers.values()].map((worker) => worker.snapshot());
   }
   get busy(): number {
-    return this.snapshots().filter((worker) => worker.status === 'busy').length;
+    return [...this.workers.values()].filter(
+      (worker) => worker.hasPhysicalExecution,
+    ).length;
   }
 
   stop(): Promise<void> {
@@ -73,6 +75,8 @@ export class PjsPool {
         result: (worker, message) => this.callbacks.result(worker, message),
         failed: (worker, error, wasStarting) =>
           this.failed(worker, error, wasStarting),
+        exited: (worker, correlationId) =>
+          this.callbacks.exited(worker, correlationId),
       },
     );
     this.workers.set(worker.id, worker);

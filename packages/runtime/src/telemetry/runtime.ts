@@ -20,7 +20,7 @@ export class RuntimeTelemetry {
       state: this.state(),
       workers: {
         total: workers.length,
-        busy: workers.filter((worker) => worker.status === 'busy').length,
+        busy: this.dispatcher.busy,
         idle: workers.filter((worker) => worker.status === 'idle').length,
         starting: workers.filter((worker) => worker.status === 'starting')
           .length,
