@@ -24,6 +24,17 @@ Within 1.x, a declared stable core would follow SemVer: incompatible stable
 behavior or types require a major version. Experimental advanced controls can
 coexist with a stable core if documented separately. We have not made that freeze.
 
+## R1 development additions
+
+The historical inventory describes RC4's 38 root exports. Development adds the
+experimental `PjsExecutionLeaseError` value and `RestartPolicy` type,
+`RunOptions.executionLease`, `PjsRuntimeOptions.restartPolicy`,
+`ShutdownOptions.forceAfter`, and `stats().containment` diagnostics.
+Their absence in the already-published RC4 package is deliberate; no publication
+or version bump accompanies this feature work. None is promoted into the stable
+core by its unprefixed spelling. Range leases are explicitly unsupported.
+See [ADR 0021](adr/0021-physical-execution-containment.md) for the full contract.
+
 ## Platform and module policy
 
 PJS is an **ESM Node package**. Use `import`; compile TypeScript tasks to JavaScript

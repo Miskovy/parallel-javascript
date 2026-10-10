@@ -1,6 +1,7 @@
 import {
   PjsRuntime,
   PjsTaskRegistry,
+  PjsExecutionLeaseError,
   transfer,
   sharedReadonly,
 } from '../dist/index.js';
@@ -8,6 +9,7 @@ import type {
   PjsTransfer,
   RangePartition,
   PartitionInput,
+  PartitionOptions,
   StreamRangeResult,
   PjsTypedArray,
   TypedMapRangeOptions,
@@ -278,3 +280,36 @@ const bigints: Promise<BigInt64Array<ArrayBuffer>> = runtime.parallelMapRange(
   { experimentalOutputConstructor: BigInt64Array },
 );
 void bigints;
+
+// R1 experimental physical containment options.
+const leasedResult: Promise<Uint8Array> = runtime.run(task, data, {
+  timeout: 100,
+  executionLease: 500,
+});
+void leasedResult;
+const rollingRuntime = new PjsRuntime({
+  registry,
+  restartPolicy: { maxRestarts: 3, windowMs: 60_000 },
+});
+void rollingRuntime;
+const boundedShutdown: Promise<void> = runtime.shutdown({
+  drain: true,
+  forceAfter: 500,
+});
+void boundedShutdown;
+const leaseError: PjsExecutionLeaseError = new PjsExecutionLeaseError(
+  'expired',
+  { taskId: 'a', workerId: 1 },
+);
+void leaseError;
+// @ts-expect-error Lease duration is milliseconds.
+runtime.run(task, data, { executionLease: '500' });
+runtime.partitionRange(task, range, () => ({ input: data }), {
+  // @ts-expect-error Physical leases are unsupported for ranges.
+  executionLease: 500,
+});
+// @ts-expect-error Explicit undefined cannot request a range lease either.
+const rejectedRangeLease: PartitionOptions = {
+  executionLease: undefined,
+};
+void rejectedRangeLease;

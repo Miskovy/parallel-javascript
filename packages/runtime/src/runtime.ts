@@ -27,6 +27,7 @@ import { PjsTaskRegistry } from './tasks/registry.js';
 import type { PjsTask, TaskDescriptor } from './tasks/registry.js';
 import { RuntimeTelemetry } from './telemetry/runtime.js';
 import type {
+  RestartPolicy,
   RunOptions,
   RuntimeState,
   ShutdownOptions,
@@ -46,6 +47,8 @@ export interface PjsRuntimeOptions {
   maxQueue?: number;
   startupTimeout?: number;
   maxRestarts?: number;
+  /** @experimental Rolling pool-wide restart budget; mutually exclusive with maxRestarts. */
+  restartPolicy?: RestartPolicy;
 }
 
 /** Public facade, composition root, lifecycle authority, and guarded progress loop. */
@@ -61,6 +64,8 @@ export class PjsRuntime {
   private readonly readyPromise: Promise<void>;
   private shutdownPromise: Promise<void> | undefined;
   private drainMode = true;
+  private shutdownEscalations = 0;
+  private shutdownTimer: ReturnType<typeof setTimeout> | undefined;
   private drainResolve: (() => void) | undefined;
 
   constructor(options: PjsRuntimeOptions) {
@@ -89,6 +94,25 @@ export class PjsRuntime {
       options.maxRestarts ?? workers * 4,
       0,
     );
+    let restartPolicy: RestartPolicy | undefined;
+    if (options.restartPolicy !== undefined) {
+      if (options.maxRestarts !== undefined)
+        throw new TypeError(
+          'restartPolicy and maxRestarts are mutually exclusive',
+        );
+      restartPolicy = {
+        maxRestarts: integer(
+          'restartPolicy.maxRestarts',
+          options.restartPolicy.maxRestarts,
+          0,
+        ),
+        windowMs: integer(
+          'restartPolicy.windowMs',
+          options.restartPolicy.windowMs,
+          1,
+        ),
+      };
+    }
     this.registry = options.registry.snapshot();
     this.dispatcher = new ExecutionDispatcher(
       {
@@ -96,6 +120,7 @@ export class PjsRuntime {
         maxQueue: options.maxQueue ?? 1024,
         startupTimeout,
         maxRestarts,
+        ...(restartPolicy ? { restartPolicy } : {}),
       },
       [...this.registry.values()],
       this.resultCredits,
@@ -160,6 +185,7 @@ export class PjsRuntime {
       this.dispatcher,
       this.taskCoordinator,
       this.rangeCoordinator,
+      () => this.shutdownEscalations,
     );
     this.state = 'starting';
     this.readyPromise = this.dispatcher
@@ -301,45 +327,97 @@ export class PjsRuntime {
 
   shutdown(options: ShutdownOptions = {}): Promise<void> {
     if (this.shutdownPromise) return this.shutdownPromise;
+    const forceAfter = options.forceAfter;
+    if (forceAfter !== undefined) {
+      integer('forceAfter', forceAfter, 1, 2 ** 31 - 1);
+      if (options.drain === false)
+        throw new TypeError('forceAfter requires graceful shutdown');
+    }
     this.drainMode = options.drain ?? true;
     const failed = this.state === 'failed';
     if (!failed) this.state = 'stopping';
+    if (!failed && forceAfter !== undefined) {
+      const deadline = this.monotonicNow() + forceAfter;
+      const escalate = () => {
+        const remaining = deadline - this.monotonicNow();
+        if (remaining > 0) {
+          this.shutdownTimer = this.scheduleShutdownTimer(escalate, remaining);
+          return;
+        }
+        this.shutdownTimer = undefined;
+        if (this.state !== 'stopping' || !this.drainMode) return;
+        this.drainMode = false;
+        this.shutdownEscalations++;
+        this.cancelForShutdown();
+        // Begin termination even if startup or the graceful drain waiter is pending.
+        void this.dispatcher.stop().catch(() => {});
+        this.drainResolve?.();
+        this.drainResolve = undefined;
+      };
+      this.shutdownTimer = this.scheduleShutdownTimer(escalate, forceAfter);
+    }
     // Defer the body so the idempotent promise is installed before any cleanup occurs.
     this.shutdownPromise = Promise.resolve().then(async () => {
       if (!failed && this.drainMode) {
         await this.readyPromise.catch(() => {});
-        await new Promise<void>((resolve) => {
-          this.drainResolve = resolve;
-          this.pump();
-          this.checkDrained();
-        });
+        if (this.drainMode && this.state !== 'failed')
+          await new Promise<void>((resolve) => {
+            this.drainResolve = resolve;
+            this.pump();
+            this.checkDrained();
+          });
       } else {
-        this.rangeCoordinator.finishAll(
-          'cancelled',
-          (operation) =>
-            new PjsCancelledError(
-              'Runtime shutdown cancelled partition operation',
-              { operationId: operation.id },
-            ),
-        );
-        for (const task of this.taskCoordinator.values())
-          this.taskCoordinator.settle(
-            task,
-            'cancelled',
-            new PjsCancelledError('Runtime shutdown cancelled task', {
-              taskId: task.id,
-              ...(task.snapshot.workerId !== undefined
-                ? { workerId: task.snapshot.workerId }
-                : {}),
-            }),
-          );
+        this.cancelForShutdown();
       }
-      await this.dispatcher.stop();
-      this.resultCredits.releaseAll();
-      this.rangeCoordinator.stopProduction();
-      this.state = 'stopped';
+      try {
+        await this.dispatcher.stop();
+        this.resultCredits.releaseAll();
+        this.rangeCoordinator.stopProduction();
+        this.state = 'stopped';
+      } finally {
+        if (this.shutdownTimer !== undefined)
+          this.cancelShutdownTimer(this.shutdownTimer);
+        this.shutdownTimer = undefined;
+      }
     });
     return this.shutdownPromise;
+  }
+
+  private monotonicNow(): number {
+    return performance.now();
+  }
+
+  private scheduleShutdownTimer(
+    callback: () => void,
+    delay: number,
+  ): ReturnType<typeof setTimeout> {
+    return setTimeout(callback, delay);
+  }
+
+  private cancelShutdownTimer(timer: ReturnType<typeof setTimeout>): void {
+    clearTimeout(timer);
+  }
+
+  private cancelForShutdown(): void {
+    this.rangeCoordinator.finishAll(
+      'cancelled',
+      (operation) =>
+        new PjsCancelledError(
+          'Runtime shutdown cancelled partition operation',
+          { operationId: operation.id },
+        ),
+    );
+    for (const task of this.taskCoordinator.values())
+      this.taskCoordinator.settle(
+        task,
+        'cancelled',
+        new PjsCancelledError('Runtime shutdown cancelled task', {
+          taskId: task.id,
+          ...(task.snapshot.workerId !== undefined
+            ? { workerId: task.snapshot.workerId }
+            : {}),
+        }),
+      );
   }
 
   private dispatchAllowed(): boolean {
@@ -401,9 +479,16 @@ export class PjsRuntime {
           cause: error,
         }),
       );
-    void this.dispatcher.stop().then(() => {
-      this.resultCredits.releaseAll();
-      this.checkDrained();
-    });
+    void this.dispatcher
+      .stop()
+      .then(() => {
+        this.resultCredits.releaseAll();
+        this.checkDrained();
+      })
+      .catch(() => {
+        // A failed termination cannot justify physical credit release.
+        this.drainResolve?.();
+        this.drainResolve = undefined;
+      });
   }
 }

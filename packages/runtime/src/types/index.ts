@@ -44,9 +44,19 @@ export interface RunOptions {
   transferList?: readonly ArrayBuffer[];
   /** End-to-end deadline in milliseconds, including startup and queue time. */
   timeout?: number;
+  /** @experimental Physical dispatch lease in milliseconds; ordinary run() only. */
+  executionLease?: number;
 }
 
 export interface ShutdownOptions {
   /** Defaults to true. False explicitly permits terminating active executions. */
   drain?: boolean;
+  /** @experimental Escalate the first graceful shutdown after this many milliseconds. */
+  forceAfter?: number;
+}
+
+/** @experimental Pool-wide rolling restart budget; replaces the lifetime budget. */
+export interface RestartPolicy {
+  maxRestarts: number;
+  windowMs: number;
 }

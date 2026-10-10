@@ -119,11 +119,14 @@ bound RSS, worker allocations, inputs or consumer-retained values.** See
 [backpressure](docs/guide/backpressure.md).
 
 **Cancellation/timeout can settle a caller while its worker is still busy.** There
-is no preemption or rollback. run deadlines include remaining startup and queue
-wait; stream deadlines also include consumer delivery. A crash fails affected
-work and may replace the worker, without retrying the task. shutdown drains by
-default and can wait indefinitely on uncooperative work or an abandoned stream;
-choose non-draining shutdown initially if termination is required. See
+is no rollback. run timeouts include remaining startup and queue wait; stream
+timeouts also include consumer delivery. A crash fails affected work and may
+replace the worker without retrying the task. Omitted physical leases preserve
+unbounded execution. The experimental R1 development API adds exclusive
+`run({ executionLease })`, `restartPolicy`, and graceful `shutdown({ forceAfter })`;
+these are not in the already-published RC4 artifact. Leases initiate asynchronous
+containment and retain occupancy until valid completion or confirmed exit.
+Shutdown still drains indefinitely when escalation is omitted. See
 [lifecycle](docs/guide/lifecycle.md) and [errors](docs/guide/errors.md).
 
 ## When PJS helps — and when it does not

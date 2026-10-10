@@ -20,6 +20,7 @@ export type {
 } from './partition/range.js';
 export type { StreamRangeResult } from './partition/stream.js';
 export type {
+  RestartPolicy,
   RunOptions,
   ShutdownOptions,
   RuntimeState,
@@ -32,6 +33,7 @@ export {
   PjsError,
   PjsTaskError,
   PjsWorkerError,
+  PjsExecutionLeaseError,
   PjsQueueFullError,
   PjsTimeoutError,
   PjsCancelledError,

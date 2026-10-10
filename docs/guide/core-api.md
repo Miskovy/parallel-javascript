@@ -56,6 +56,12 @@ optional `transferList` moves input buffers. `signal` and `timeout` affect calle
 settlement, not preemption. Constructor/registration validation throws; ordinary
 submission validation rejects. See [errors](errors.md) and [lifecycle](lifecycle.md).
 
+R1 development adds experimental `run({ executionLease })`,
+constructor `restartPolicy` and graceful `shutdown({ forceAfter })`.
+These opt-in controls are not part of the immutable RC4 publication.
+See [physical containment](lifecycle.md#experimental-physical-execution-leases-r1-development)
+for units, unsupported range/batch combinations and recovery limits.
+
 ## Choosing a range result
 
 Use a half-open `{ start, end, grainSize }` range with safe integer endpoints and
