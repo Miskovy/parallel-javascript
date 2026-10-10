@@ -18,6 +18,9 @@ import {
   releasePolicy,
   validateManifest,
   verifyRegistry,
+  convergeRegistry,
+  parseRegistryResponse,
+  requestRegistry,
 } from './npm-release.mjs';
 
 const dryRecord = { name: packageName, version: '1.0.0-rc.4', entryCount: 128 };
@@ -363,4 +366,307 @@ test('normalized tar records retain exact count, duplicate, path and required-fi
       ),
     /Missing LICENSE/,
   );
+});
+
+const rc4 = '1.0.0-rc.4';
+const identity = { name: packageName, version: rc4 };
+const registryOk = (value) => ({ status: 0, stdout: JSON.stringify(value) });
+const registryError = (code) => ({
+  status: 1,
+  stdout: JSON.stringify({ error: { code } }),
+});
+
+function fakeRegistry(respond) {
+  let clock = 123_456;
+  const calls = [];
+  const waits = [];
+  const logs = [];
+  return {
+    calls,
+    waits,
+    logs,
+    elapsed: () => clock - 123_456,
+    options: {
+      now: () => clock,
+      sleep: async (ms) => {
+        assert.ok(ms > 0 && ms <= 600_000 - (clock - 123_456));
+        waits.push(ms);
+        clock += ms;
+      },
+      log: (message) => logs.push(message),
+      request: async (field, timeoutMs) => {
+        calls.push({ field, timeoutMs, elapsedMs: clock - 123_456 });
+        assert.ok(timeoutMs > 0 && timeoutMs <= 30_000);
+        assert.ok(timeoutMs <= 600_000 - (clock - 123_456));
+        const result = respond(field, calls.length, timeoutMs);
+        clock += result.elapsedMs ?? 0;
+        return parseRegistryResponse(result);
+      },
+    },
+  };
+}
+const convergedResponse = (field) =>
+  registryOk(field === 'identity' ? identity : { next: rc4 });
+const converge = (fake) => convergeRegistry(rc4, 'next', fake.options);
+
+test('registry convergence succeeds immediately without sleeping or another query', async () => {
+  const fake = fakeRegistry(convergedResponse);
+  assert.deepEqual(await converge(fake), { next: rc4 });
+  assert.deepEqual(
+    fake.calls.map((call) => call.field),
+    ['identity', 'tags'],
+  );
+  assert.deepEqual(fake.waits, []);
+  assert.match(
+    fake.logs.at(-1),
+    /attempt=1 elapsedMs=0 remainingMs=600000 classification=CONVERGED action=success/,
+  );
+});
+
+test('registry convergence tolerates visibility later than the old six-attempt limit', async () => {
+  const fake = fakeRegistry((field, count) =>
+    count <= 6 ? registryError('E404') : convergedResponse(field),
+  );
+  await converge(fake);
+  assert.deepEqual(fake.waits, [5000, 10000, 20000, 30000, 30000, 30000]);
+  assert.equal(fake.elapsed(), 125_000);
+  assert.equal(fake.calls.length, 8);
+  assert.match(fake.logs[1], /classification=E404 action=retry-in-5000ms/);
+});
+
+test('missing and old selected dist-tags retry until the exact version agrees', async () => {
+  let tagQueries = 0;
+  const fake = fakeRegistry((field) => {
+    if (field === 'identity') return registryOk(identity);
+    tagQueries++;
+    return registryOk(
+      tagQueries === 1 ? {} : { next: tagQueries === 2 ? '1.0.0-rc.2' : rc4 },
+    );
+  });
+  await converge(fake);
+  assert.deepEqual(fake.waits, [5000, 10000]);
+  assert.equal(tagQueries, 3);
+  assert.match(fake.logs[1], /classification=DIST_TAG_PENDING/);
+});
+
+test('explicit temporary registry and network failures can converge', async () => {
+  for (const code of [
+    'E408',
+    'E429',
+    'E500',
+    'E502',
+    'E503',
+    'E504',
+    'ECONNRESET',
+    'ECONNREFUSED',
+    'ETIMEDOUT',
+    'EAI_AGAIN',
+  ]) {
+    const fake = fakeRegistry((field, count) =>
+      count === 1 ? registryError(code) : convergedResponse(field),
+    );
+    await converge(fake);
+    assert.deepEqual(fake.waits, [5000], code);
+    assert.equal(fake.calls.length, 3, code);
+    assert.ok(
+      fake.logs.some((message) => message.includes(`classification=${code}`)),
+    );
+  }
+});
+
+test('child-process request timeouts retry, while process/configuration errors do not', async () => {
+  const fake = fakeRegistry((field, count) =>
+    count === 1
+      ? {
+          error: Object.assign(new Error('request timed out'), {
+            code: 'ETIMEDOUT',
+          }),
+          elapsedMs: 30_000,
+        }
+      : convergedResponse(field),
+  );
+  await converge(fake);
+  assert.equal(fake.elapsed(), 35_000);
+  const permanent = fakeRegistry(() => ({
+    error: Object.assign(new Error('missing npm'), { code: 'ENOENT' }),
+  }));
+  await assert.rejects(converge(permanent), { classification: 'ENOENT' });
+  assert.deepEqual(permanent.waits, []);
+  assert.equal(permanent.calls.length, 1);
+});
+
+test('deadline exhaustion clips the final sleep and makes no later request', async () => {
+  const fake = fakeRegistry(() => registryError('E404'));
+  await assert.rejects(converge(fake), {
+    classification: 'DEADLINE_EXHAUSTED',
+  });
+  assert.equal(fake.elapsed(), 600_000);
+  assert.deepEqual(fake.waits.slice(0, 4), [5000, 10000, 20000, 30000]);
+  assert.equal(fake.waits.at(-1), 25_000);
+  assert.ok(fake.waits.every((ms) => ms <= 30_000));
+  assert.equal(fake.calls.length, fake.waits.length);
+  assert.match(
+    fake.logs.at(-1),
+    /remainingMs=0 classification=E404 action=deadline-exhausted/,
+  );
+});
+
+test('request time consumes the deadline and every timeout uses the remaining budget', async () => {
+  const fake = fakeRegistry((_field, _count, timeoutMs) => ({
+    ...registryError('ETIMEDOUT'),
+    elapsedMs: Math.min(timeoutMs, 29_000),
+  }));
+  await assert.rejects(converge(fake), {
+    classification: 'DEADLINE_EXHAUSTED',
+  });
+  assert.equal(fake.elapsed(), 600_000);
+  assert.equal(fake.calls.at(-1).timeoutMs, 6000);
+  assert.ok(fake.calls.some((call) => call.timeoutMs < 30_000));
+});
+
+test('the second query uses remaining time; late success cannot escape the deadline', async () => {
+  const fake = fakeRegistry((field, count) => {
+    if (count <= 20)
+      return { ...registryError('E404'), elapsedMs: count <= 2 ? 20_000 : 0 };
+    return {
+      ...convergedResponse(field),
+      elapsedMs: field === 'identity' ? 10_000 : 5000,
+    };
+  });
+  await assert.rejects(converge(fake), {
+    classification: 'DEADLINE_EXHAUSTED',
+  });
+  assert.equal(fake.elapsed(), 600_000);
+  assert.equal(fake.calls.at(-2).field, 'identity');
+  assert.equal(fake.calls.at(-2).timeoutMs, 15_000);
+  assert.equal(fake.calls.at(-1).field, 'tags');
+  assert.equal(fake.calls.at(-1).timeoutMs, 5000);
+  assert.ok(!fake.logs.some((message) => message.includes('action=success')));
+});
+
+test('authorization, integrity, configuration and unknown registry errors fail immediately', async () => {
+  for (const code of [
+    'E401',
+    'E403',
+    'E400',
+    'E422',
+    'E501',
+    'EINTEGRITY',
+    'EBADENGINE',
+    'ENOTFOUND',
+    'UNKNOWN',
+  ]) {
+    const fake = fakeRegistry(() => registryError(code));
+    await assert.rejects(converge(fake), { classification: code });
+    assert.equal(fake.calls.length, 1, code);
+    assert.deepEqual(fake.waits, [], code);
+    assert.match(fake.logs.at(-1), /action=fail$/);
+  }
+});
+
+test('malformed responses and incompatible identities are terminal', async () => {
+  for (const result of [
+    { status: 0, stdout: '' },
+    { status: 0, stdout: '{broken' },
+    registryOk(null),
+    registryOk([]),
+    registryOk(rc4),
+    registryOk({}),
+    registryOk({ ...identity, version: 4 }),
+    { status: 1, stdout: '{}' },
+  ]) {
+    const fake = fakeRegistry(() => result);
+    await assert.rejects(converge(fake), {
+      classification: 'MALFORMED_RESPONSE',
+    });
+    assert.equal(fake.calls.length, 1);
+    assert.deepEqual(fake.waits, []);
+  }
+  for (const value of [
+    { ...identity, name: '@pjs/runtime' },
+    { ...identity, version: '1.0.0-rc.2' },
+  ]) {
+    const fake = fakeRegistry(() => registryOk(value));
+    await assert.rejects(converge(fake), {
+      classification: 'IDENTITY_MISMATCH',
+    });
+    assert.equal(fake.calls.length, 1);
+    assert.deepEqual(fake.waits, []);
+  }
+});
+
+test('malformed dist-tags fail without retry even after a transient error', async () => {
+  for (const tags of [
+    null,
+    [],
+    'next',
+    { next: null },
+    { next: 4 },
+    { next: 'invalid' },
+    { next: rc4, latest: 'invalid' },
+  ]) {
+    const fake = fakeRegistry((field, count) =>
+      count === 1
+        ? registryError('E404')
+        : registryOk(field === 'identity' ? identity : tags),
+    );
+    await assert.rejects(converge(fake), {
+      classification: 'MALFORMED_RESPONSE',
+    });
+    assert.deepEqual(fake.waits, [5000]);
+    assert.equal(fake.calls.length, 3);
+  }
+});
+
+test('invalid version or release tag selection starts no registry work', async () => {
+  const fake = fakeRegistry(convergedResponse);
+  for (const [version, tag] of [
+    ['bad', 'next'],
+    [rc4, 'latest'],
+    ['1.0.0', 'next'],
+  ])
+    await assert.rejects(convergeRegistry(version, tag, fake.options));
+  assert.deepEqual(fake.calls, []);
+  assert.deepEqual(fake.waits, []);
+});
+
+test('stable convergence verifies latest while preserving unrelated tags', async () => {
+  const tags = { latest: '1.0.0', next: rc4 };
+  const fake = fakeRegistry((field) =>
+    registryOk(
+      field === 'identity' ? { name: packageName, version: '1.0.0' } : tags,
+    ),
+  );
+  assert.deepEqual(
+    await convergeRegistry('1.0.0', 'latest', fake.options),
+    tags,
+  );
+});
+
+test('npm requests disable hidden retries and cap process and fetch timeouts together', () => {
+  for (const field of ['identity', 'tags']) {
+    let calls = 0;
+    const response = requestRegistry(
+      rc4,
+      field,
+      1234,
+      (_executable, args, options) => {
+        calls++;
+        assert.ok(args.includes('--fetch-retries=0'));
+        assert.ok(args.includes('--fetch-timeout=1234'));
+        assert.ok(args.includes('--prefer-online'));
+        assert.ok(args.includes('https://registry.npmjs.org/'));
+        assert.ok(
+          args.includes(
+            field === 'identity' ? `${packageName}@${rc4}` : packageName,
+          ),
+        );
+        assert.equal(options.timeout, 1234);
+        assert.equal(options.killSignal, 'SIGKILL');
+        return convergedResponse(field);
+      },
+    );
+    assert.deepEqual(response, field === 'identity' ? identity : { next: rc4 });
+    assert.equal(calls, 1);
+  }
 });

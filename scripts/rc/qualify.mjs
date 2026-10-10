@@ -43,6 +43,9 @@ const releaseNpm = execFileSync(
 assertSupportedReleaseNpmVersion(releaseNpm);
 const profile = arg('profile', 'standard');
 const expectedTests = baseline.contractTests;
+// Additive CD regressions; preserve RC4's immutable historical test count.
+const convergenceTests = 14;
+const expectedReleaseTests = baseline.releaseContractTests + convergenceTests;
 assert.ok(['smoke', 'standard', 'extended'].includes(profile));
 const scratch = absoluteOutput + '.parts';
 mkdirSync(scratch, { recursive: true });
@@ -62,6 +65,11 @@ const report = {
   kind: 'Exact-Node RC qualification',
   sourceCommit: git('rev-parse', 'HEAD'),
   release: baseline.release,
+  releaseContracts: {
+    frozen: baseline.releaseContractTests,
+    convergence: convergenceTests,
+    expected: expectedReleaseTests,
+  },
   baselineSha256: hash('scripts/rc/frozen-rc4.json'),
   startingStatus: git('status', '--short'),
   node: process.version,
@@ -141,11 +149,11 @@ try {
   ]);
   assert.match(
     releaseOutput,
-    new RegExp(`[ℹ#] tests ${baseline.releaseContractTests}\\b`),
+    new RegExp(`[ℹ#] tests ${expectedReleaseTests}\\b`),
   );
   assert.match(
     releaseOutput,
-    new RegExp(`[ℹ#] pass ${baseline.releaseContractTests}\\b`),
+    new RegExp(`[ℹ#] pass ${expectedReleaseTests}\\b`),
   );
   assert.match(releaseOutput, /[ℹ#] skipped 0\b/);
   run('existing package smoke', ['scripts/package-smoke.mjs']);

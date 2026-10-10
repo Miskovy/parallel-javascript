@@ -10,6 +10,7 @@ import {
 } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, join, resolve } from 'node:path';
+import { performance } from 'node:perf_hooks';
 import { fileURLToPath } from 'node:url';
 import { setTimeout as delay } from 'node:timers/promises';
 import { baseline, assertFrozenPackage } from '../rc/baseline.mjs';
@@ -257,6 +258,178 @@ export function verifyRegistry(version, distTag, actualVersion, tags) {
   );
 }
 
+function registryFailure(classification, message, retryable = false) {
+  return Object.assign(new Error(message), { classification, retryable });
+}
+
+// Unknown errors fail closed. Only explicit npm/network transient codes retry.
+const transientRegistryCodes = new Set([
+  'E404',
+  'E408',
+  'E429',
+  'E500',
+  'E502',
+  'E503',
+  'E504',
+  'ECONNRESET',
+  'ECONNREFUSED',
+  'ETIMEDOUT',
+  'EAI_AGAIN',
+]);
+
+export function parseRegistryResponse(result) {
+  if (result.error)
+    throw registryFailure(
+      result.error.code ?? 'PROCESS_ERROR',
+      result.error.message,
+      result.error.code === 'ETIMEDOUT',
+    );
+  let response;
+  try {
+    response = JSON.parse(result.stdout);
+  } catch {
+    throw registryFailure(
+      'MALFORMED_RESPONSE',
+      'Registry response is not JSON',
+    );
+  }
+  if (result.status !== 0) {
+    const code = response?.error?.code;
+    if (typeof code !== 'string')
+      throw registryFailure(
+        'MALFORMED_RESPONSE',
+        'Missing registry error code',
+      );
+    throw registryFailure(
+      code,
+      `Registry request failed: ${code}`,
+      transientRegistryCodes.has(code),
+    );
+  }
+  return response;
+}
+
+export function requestRegistry(version, field, timeoutMs, run = spawnSync) {
+  const args = [
+    'view',
+    field === 'identity' ? `${packageName}@${version}` : packageName,
+    ...(field === 'identity' ? ['name', 'version'] : ['dist-tags']),
+    '--json',
+    '--registry',
+    registry,
+    '--fetch-retries=0',
+    `--fetch-timeout=${timeoutMs}`,
+    '--prefer-online',
+  ];
+  const cli = process.env.PJS_NPM_CLI ?? process.env.npm_execpath;
+  return parseRegistryResponse(
+    run(cli ? process.execPath : 'npm', cli ? [resolve(cli), ...args] : args, {
+      cwd: root,
+      encoding: 'utf8',
+      timeout: timeoutMs,
+      killSignal: 'SIGKILL',
+      maxBuffer: 8 * 1024 ** 2,
+    }),
+  );
+}
+
+export async function convergeRegistry(
+  version,
+  distTag,
+  {
+    request = (field, timeoutMs) => requestRegistry(version, field, timeoutMs),
+    now = () => performance.now(),
+    sleep = delay,
+    log = console.log,
+  } = {},
+) {
+  assert.ok(semver.test(version), 'Invalid registry version');
+  assert.equal(distTag, semver.exec(version)?.[4] ? 'next' : 'latest');
+  const started = now();
+  const deadlineMs = 600_000;
+  let attempt = 0;
+  let retryDelayMs = 5000;
+  let lastClassification = 'NONE';
+  const remaining = () => deadlineMs - (now() - started);
+  const diagnostic = (classification, action) =>
+    log(
+      `Registry convergence attempt=${attempt} elapsedMs=${Math.floor(now() - started)} remainingMs=${Math.max(0, Math.floor(remaining()))} classification=${classification} action=${action}`,
+    );
+  const exhausted = () => {
+    diagnostic(lastClassification, 'deadline-exhausted');
+    return registryFailure(
+      'DEADLINE_EXHAUSTED',
+      `Registry convergence deadline exhausted after ${attempt} attempts; last classification: ${lastClassification}`,
+    );
+  };
+  const query = async (field) => {
+    const timeoutMs = Math.min(30_000, Math.floor(remaining()));
+    if (timeoutMs <= 0) throw exhausted();
+    const response = await request(field, timeoutMs);
+    if (remaining() <= 0) throw exhausted();
+    return response;
+  };
+  while (remaining() > 0) {
+    attempt++;
+    diagnostic('NONE', 'query');
+    try {
+      const identity = await query('identity');
+      if (
+        !identity ||
+        typeof identity !== 'object' ||
+        Array.isArray(identity) ||
+        typeof identity.name !== 'string' ||
+        typeof identity.version !== 'string'
+      )
+        throw registryFailure(
+          'MALFORMED_RESPONSE',
+          'Registry identity must contain name and version',
+        );
+      if (identity.name !== packageName || identity.version !== version)
+        throw registryFailure(
+          'IDENTITY_MISMATCH',
+          'Registry package identity/version mismatch',
+        );
+      const tags = await query('tags');
+      if (
+        !tags ||
+        typeof tags !== 'object' ||
+        Array.isArray(tags) ||
+        Object.values(tags).some(
+          (tag) => typeof tag !== 'string' || !semver.test(tag),
+        )
+      )
+        throw registryFailure(
+          'MALFORMED_RESPONSE',
+          'Registry dist-tags must map names to valid versions',
+        );
+      if (tags[distTag] !== version)
+        throw registryFailure(
+          'DIST_TAG_PENDING',
+          `${distTag} does not point to ${version}`,
+          true,
+        );
+      verifyRegistry(version, distTag, identity.version, tags);
+      if (remaining() <= 0) throw exhausted();
+      diagnostic('CONVERGED', 'success');
+      return tags;
+    } catch (error) {
+      if (error.classification === 'DEADLINE_EXHAUSTED') throw error;
+      lastClassification = error.classification ?? 'PERMANENT_ERROR';
+      if (!error.retryable) {
+        diagnostic(lastClassification, 'fail');
+        throw error;
+      }
+      if (remaining() <= 0) throw exhausted();
+      const waitMs = Math.min(retryDelayMs, remaining());
+      diagnostic(lastClassification, `retry-in-${Math.floor(waitMs)}ms`);
+      await sleep(waitMs);
+      retryDelayMs = Math.min(30_000, retryDelayMs * 2);
+    }
+  }
+  throw exhausted();
+}
+
 function smoke(spec, version, offline = false) {
   const consumer = mkdtempSync(join(tmpdir(), 'pjs-release-consumer-'));
   writeFileSync(
@@ -432,34 +605,11 @@ async function main() {
     }
     case 'verify': {
       const [version, distTag] = args;
-      for (let attempt = 0; attempt < 6; attempt++) {
-        try {
-          const actual = JSON.parse(
-            npm(['view', `${packageName}@${version}`, 'version', '--json'], {
-              timeout: 30000,
-            }),
-          );
-          const tags = JSON.parse(
-            npm(['view', packageName, 'dist-tags', '--json'], {
-              timeout: 30000,
-            }),
-          );
-          verifyRegistry(version, distTag, actual, tags);
-          summary(
-            npm(['dist-tag', 'ls', packageName], { timeout: 30000 }).trim(),
-          );
-          summary(
-            `Registry verified: ${packageName}@${version}; ${distTag} → ${version}.`,
-          );
-          return;
-        } catch (error) {
-          if (attempt === 5) throw error;
-          console.log(
-            `Registry visibility attempt ${attempt + 1} failed: ${error.message}`,
-          );
-          await delay(5000 * (attempt + 1));
-        }
-      }
+      const tags = await convergeRegistry(version, distTag);
+      summary(JSON.stringify(tags));
+      summary(
+        `Registry verified: ${packageName}@${version}; ${distTag} → ${version}.`,
+      );
       break;
     }
     case 'registry-smoke': {

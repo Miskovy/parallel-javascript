@@ -2,8 +2,8 @@
 
 The canonical package is [`@pjavascript/runtime` on npmjs.com](https://www.npmjs.com/package/@pjavascript/runtime),
 served by `https://registry.npmjs.org/`. Current published prerelease:
-`v1.0.0-rc.2`, installed with `npm install @pjavascript/runtime@next`.
-Final v1.0.0 has not been released. Do not republish RC2.
+`v1.0.0-rc.4`, installed with `npm install @pjavascript/runtime@next`.
+Final v1.0.0 has not been released. Published versions are immutable; do not republish them.
 
 The repository npm badge and install link make the package immediately discoverable.
 The new package `homepage` field appears beginning with the next published version;
@@ -23,8 +23,8 @@ run full qualification/extended soak and require identical archives. Preserve th
 candidate commit, report, canonical tarball and SHA-256 together. Any subsequent
 change invalidates qualification of that commit and requires qualification again.
 RC3 is an immutable GitHub prerelease with no npm publication: its release
-validator stopped before the OIDC step. Published npm status remains RC2 until
-the deliberate procedure below completes. PR qualification now tests the selected
+validator stopped before the OIDC step. RC4 is published on npm with registry signatures and a provenance attestation.
+The procedure below applies to future deliberately approved releases. PR qualification now tests the selected
 npm CLI without credentials/scripts and validates the actual candidate tarball
 through the same release helper; unknown JSON shapes fail before review.
 
@@ -105,8 +105,12 @@ and two-build reproduction. See upstream
     same `.tgz` publicly. Prereleases use `next`; stable versions use `latest`.
     npm generates provenance automatically for this public package/repository.
 11. For both new publications and already-published versions, CD verifies the
-    version and chosen dist-tag, with six bounded
-    visibility attempts and increasing backoff (5–25 seconds). It lists registry
+    exact package identity, version and chosen dist-tag within a ten-minute
+    monotonic convergence deadline. Transient failures use exponential backoff
+    (5, 10, 20, then at most 30 seconds), bounded by the remaining deadline.
+    Each npm request has both a process timeout and fetch timeout of at most
+    30 seconds, reduced to the remaining budget; npm internal retries are disabled
+    and online revalidation is requested. It reports the validated registry
     dist-tags and installs the chosen tag in a fresh external project, asserting
     the expected version and exercising public imports, worker loading/execution,
     error recovery and shutdown with the existing package-consumer fixtures.
@@ -127,13 +131,43 @@ If publication succeeds but later registry verification or consumer smoke fails,
 inspect npm and the logs first. Rerunning the workflow finds the published version
 and skips further qualification, packing, publication and automatic tag mutation.
 It still verifies the registry version and expected dist-tag and runs the public
-consumer smoke. A missing or moved dist-tag fails verification; investigate the
-release state before any deliberate correction. Inspect provenance manually after
+consumer smoke. A missing or moved dist-tag retries within the convergence
+deadline, then fails; investigate the release state before any deliberate correction. Inspect provenance manually after
 diagnosing a publication failure.
 A prerelease run verifies only `next`; an automatically created `latest` tag from
 first publication is allowed and is never deleted by CD.
 
-RC2 is already published. Validate changes with
+The post-publication verifier retries only explicit E404 propagation, a missing or
+stale selected dist-tag, ECONNRESET, ECONNREFUSED, ETIMEDOUT (including the child
+process timeout), EAI_AGAIN, and registry E408/E429/E500/E502/E503/E504 responses.
+Authorization errors (E401/E403), malformed JSON/identity/dist-tags, a different
+package name or exact version, integrity/configuration errors, and unknown errors
+fail immediately. Diagnostics include attempt number, monotonic elapsed and
+remaining milliseconds, classification, and next action. Request time counts
+against the deadline; no new request or retry sleep starts after exhaustion, and
+a response arriving at or after the deadline cannot count as convergence.
+
+The immutable pre-publication guard remains separate and unchanged: only explicit
+E404 permits publication; its network/auth failures never authorize a publish.
+No automatic retry republishes an artifact or repairs a dist-tag. After deadline
+exhaustion, inspect the public version, selected tag and provenance, then rerun
+verification and consumer smoke after convergence. A rerun of the release workflow
+still skips publication when the exact version exists. Because the workflow checks
+out the immutable release tag, rerunning RC4 uses RC4's original verifier; this
+hardening applies to future release tags that contain it. The updated helper may
+also be run read-only from this branch with the reviewed publication CLI to verify
+an existing version. Do not move the RC4 tag to adopt this helper.
+
+### Historical latest tag
+
+On 2026-10-10, the public registry reported both `next` and `latest` pointing to
+`1.0.0-rc.4`; RC4's exact name/version, registry signatures and provenance-attestation
+metadata were present. The earlier `latest` → `1.0.0-rc.2` state has already been
+corrected. No tag mutation is needed or performed by this change. CD does not
+promote prereleases to `latest` automatically. Any future deliberate tag correction
+requires explicit maintainer authorization and an existing appropriate npm session.
+
+RC2 and RC4 are already published. Validate changes with
 `npm run test:release`, formatting, documentation and
 workflow checks; do not publish it again to test the pipeline. No manual publish
 dispatch is provided. End-to-end OIDC publication will be exercised only by a
