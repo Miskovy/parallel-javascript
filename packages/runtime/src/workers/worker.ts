@@ -1,5 +1,9 @@
 import { Worker } from 'node:worker_threads';
-import { PjsSerializationError, PjsWorkerError } from '../errors/index.js';
+import {
+  PjsExecutionLeaseError,
+  PjsSerializationError,
+  PjsWorkerError,
+} from '../errors/index.js';
 import type { TaskDescriptor } from '../tasks/registry.js';
 import { validateTransferList } from '../tasks/transfer.js';
 import {
@@ -22,6 +26,13 @@ export interface WorkerCallbacks {
   result(worker: PjsWorker, message: ExecutionResultMessage): void;
   failed(worker: PjsWorker, error: PjsWorkerError, wasStarting: boolean): void;
   exited(worker: PjsWorker, correlationId: string | undefined): void;
+  leaseTerminationRequested?(worker: PjsWorker): void;
+}
+
+interface ExecutionLease {
+  readonly correlationId: string;
+  readonly deadline: number;
+  timer: ReturnType<typeof setTimeout> | undefined;
 }
 
 export class PjsWorker {
@@ -35,6 +46,8 @@ export class PjsWorker {
   private executionPhase: 'none' | 'scheduled' | 'running' = 'none';
   private currentTaskIds: string[] = [];
   private exitObserved = false;
+  private lease: ExecutionLease | undefined;
+  leaseExpired = false;
 
   constructor(
     readonly id: number,
@@ -85,6 +98,72 @@ export class PjsWorker {
   /** Failure and termination intent do not end an occupied physical slot. */
   get hasPhysicalExecution(): boolean {
     return this.state.currentTaskId !== undefined;
+  }
+
+  /** Called only after successful posting and the dispatcher credit claim. */
+  armExecutionLease(correlationId: string, duration: number): void {
+    if (
+      this.state.status !== 'busy' ||
+      this.state.currentTaskId !== correlationId
+    )
+      return; // Reentrant shutdown during posting has already initiated containment.
+    const lease: ExecutionLease = {
+      correlationId,
+      deadline: this.monotonicNow() + duration,
+      timer: undefined,
+    };
+    this.lease = lease;
+    lease.timer = this.scheduleLeaseTimer(
+      () => this.expireLease(lease),
+      duration,
+    );
+  }
+
+  private monotonicNow(): number {
+    return performance.now();
+  }
+
+  private scheduleLeaseTimer(
+    callback: () => void,
+    delay: number,
+  ): ReturnType<typeof setTimeout> {
+    return setTimeout(callback, delay);
+  }
+
+  private cancelLeaseTimer(timer: ReturnType<typeof setTimeout>): void {
+    clearTimeout(timer);
+  }
+
+  private clearLease(): void {
+    const lease = this.lease;
+    this.lease = undefined;
+    if (lease?.timer !== undefined) this.cancelLeaseTimer(lease.timer);
+  }
+
+  private expireLease(lease: ExecutionLease): void {
+    if (
+      this.lease !== lease ||
+      this.state.status !== 'busy' ||
+      this.state.currentTaskId !== lease.correlationId
+    )
+      return;
+    const remaining = lease.deadline - this.monotonicNow();
+    if (remaining > 0) {
+      lease.timer = this.scheduleLeaseTimer(
+        () => this.expireLease(lease),
+        remaining,
+      );
+      return;
+    }
+    this.leaseExpired = true;
+    this.fail(
+      'Physical execution lease expired',
+      undefined,
+      new PjsExecutionLeaseError('Physical execution lease expired', {
+        workerId: this.id,
+        taskId: lease.correlationId,
+      }),
+    );
   }
 
   execute(
@@ -211,12 +290,14 @@ export class PjsWorker {
   stop(): Promise<void> {
     if (this.stopPromise) return this.stopPromise;
     clearTimeout(this.startupTimer);
+    this.clearLease();
     this.rejectReady(
       new PjsWorkerError('Worker stopped before ready', { workerId: this.id }),
     );
     if (this.state.status === 'idle')
       this.thread.postMessage({ type: 'shutdown' } satisfies HostMessage);
     this.state.status = 'stopped';
+    if (this.leaseExpired) this.callbacks.leaseTerminationRequested?.(this);
     this.stopPromise = this.terminateThread().then(() => {
       this.thread.removeAllListeners();
     });
@@ -231,6 +312,7 @@ export class PjsWorker {
   private exited(code: number): void {
     if (this.exitObserved) return;
     this.exitObserved = true;
+    this.clearLease();
     const correlationId = this.state.currentTaskId;
     // A direct exit reports logical failure before releasing physical ownership.
     if (this.state.status !== 'stopped' && this.state.status !== 'failed')
@@ -309,6 +391,7 @@ export class PjsWorker {
         return;
       }
     }
+    this.clearLease();
     this.state.status = 'idle';
     delete this.state.currentTaskId;
     this.currentTaskIds = [];
@@ -344,19 +427,26 @@ export class PjsWorker {
     this.callbacks.result(this, value);
   }
 
-  private fail(message: string, cause?: unknown): void {
+  private fail(
+    message: string,
+    cause?: unknown,
+    leaseError?: PjsExecutionLeaseError,
+  ): void {
     if (this.state.status === 'failed' || this.state.status === 'stopped')
       return;
     const wasStarting = this.state.status === 'starting';
     const taskId = this.state.currentTaskId;
     if (taskId) this.state.failedTasks++;
     this.state.status = 'failed';
+    this.clearLease();
     clearTimeout(this.startupTimer);
-    const error = new PjsWorkerError(message, {
-      workerId: this.id,
-      ...(taskId ? { taskId } : {}),
-      cause,
-    });
+    const error =
+      leaseError ??
+      new PjsWorkerError(message, {
+        workerId: this.id,
+        ...(taskId ? { taskId } : {}),
+        cause,
+      });
     this.rejectReady(error);
     this.callbacks.failed(this, error, wasStarting);
   }

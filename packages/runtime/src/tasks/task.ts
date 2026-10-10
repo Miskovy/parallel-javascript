@@ -15,6 +15,7 @@ export interface PendingTask extends ScheduledTask {
   snapshot: TaskSnapshot;
   input: unknown;
   transferList: ArrayBuffer[];
+  executionLease?: number;
   expectedResultBytes?: number;
   resultByteContract?: UpperBoundResultByteContract;
   releaseTransfers: () => void;

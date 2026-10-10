@@ -49,6 +49,8 @@ export class PjsTaskError extends PjsError {
   }
 }
 export class PjsWorkerError extends PjsError {}
+/** @experimental Containment initiated for an expired physical dispatch lease. */
+export class PjsExecutionLeaseError extends PjsWorkerError {}
 export class PjsQueueFullError extends PjsError {}
 export class PjsTimeoutError extends PjsError {}
 export class PjsCancelledError extends PjsError {}

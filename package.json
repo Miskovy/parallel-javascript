@@ -46,6 +46,7 @@
     "soak:rc:smoke": "npm run build && node scripts/rc/soak.mjs --profile=smoke",
     "soak:rc": "npm run build && node scripts/rc/soak.mjs --profile=standard",
     "rc:qualify": "node scripts/rc/qualify.mjs",
+    "runtime:qualify": "node scripts/runtime-qualify.mjs",
     "rc:repro": "node scripts/rc/repro.mjs",
     "benchmark:flagship:test": "node --test --test-timeout=20000 benchmarks/flagship-monte-carlo/harness.test.mjs && node benchmarks/flagship-monte-carlo/run.mjs test",
     "benchmark:flagship:smoke": "node benchmarks/flagship-monte-carlo/run.mjs smoke",

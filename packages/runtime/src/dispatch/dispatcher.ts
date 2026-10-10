@@ -4,7 +4,7 @@ import { PjsScheduler } from '../scheduler/fifo.js';
 import type { PendingTask } from '../tasks/task.js';
 import { internalProfilingEnabled } from '../telemetry/profile.js';
 import type { TaskDescriptor } from '../tasks/registry.js';
-import type { WorkerState } from '../types/index.js';
+import type { RestartPolicy, WorkerState } from '../types/index.js';
 import type { ExecutionResultMessage } from '../workers/protocol.js';
 import type { PjsWorker } from '../workers/worker.js';
 import type { ResultCreditManager } from '../results/credit.js';
@@ -14,6 +14,7 @@ export interface ExecutionDispatcherOptions {
   maxQueue: number;
   startupTimeout: number;
   maxRestarts: number;
+  restartPolicy?: RestartPolicy;
 }
 
 export interface ExecutionDispatcherCallbacks {
@@ -72,6 +73,9 @@ export class ExecutionDispatcher {
         workers: options.workers,
         startupTimeout: options.startupTimeout,
         maxRestarts: options.maxRestarts,
+        ...(options.restartPolicy
+          ? { restartPolicy: options.restartPolicy }
+          : {}),
       },
       tasks,
       {
@@ -121,6 +125,10 @@ export class ExecutionDispatcher {
 
   stop(): Promise<void> {
     return this.pool.stop();
+  }
+
+  recoverySnapshot() {
+    return this.pool.recoverySnapshot();
   }
 
   workerSnapshots(): WorkerState[] {
@@ -288,6 +296,8 @@ export class ExecutionDispatcher {
           task.resultByteContract,
         );
       this.resultCredits.markDispatched(task.id, taskIds);
+      if (task.executionLease !== undefined)
+        worker.armExecutionLease(task.id, task.executionLease);
       this.metrics.executeMessages++;
       this.metrics.logicalTasks += items?.length ?? 1;
       this.metrics.logicalPartitions += items

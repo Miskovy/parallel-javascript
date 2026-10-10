@@ -1,7 +1,7 @@
 # Public errors
 
 Import classes from `@pjavascript/runtime` and use `instanceof`, not exact message text.
-All twelve classes inherit PjsError, which inherits Error and sets name to the
+All error classes inherit PjsError, which inherits Error and sets name to the
 concrete class name. Messages are explanatory and contextual; their exact wording
 is not a protocol. Errors contain no coordinator maps or mutable runtime records.
 
@@ -19,6 +19,12 @@ is not a protocol. Errors contain no coordinator maps or mutable runtime records
 | PjsMapContractError          | Wrong map block kind/length or host assembly failure                           | Parent rejection                                                        | Correct worker block; failure is a workload contract error                                               |
 | PjsBinaryResultContractError | Invalid declaration/callback or nonbinary/shared/detached/wrong-size result    | Stream next rejection                                                   | Fix declaration/output; distinct from worker crash; exact requires equality                              |
 | PjsResultCapacityError       | One declared result exceeds per-stream capacity                                | Stream next rejection                                                   | Increase explicit capacity or reduce grain/bound; runtime never waits for impossible capacity            |
+
+R1 development adds experimental PjsExecutionLeaseError, a PjsWorkerError subclass,
+for a still-pending ordinary run caller when its physical lease expires. It retains
+small task/worker context. Previously settled callers keep their timeout/cancellation
+error. Containment continues without replay, and credits stay held until exit.
+This error is not present in the immutable RC4 publication.
 
 Error context has optional taskId, workerId, operationId, partitionIndex,
 rangeStart, rangeEnd and cause. Context is available only when known: errors before
