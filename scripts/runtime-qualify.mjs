@@ -5,7 +5,7 @@ import { dirname, resolve } from 'node:path';
 import { performance } from 'node:perf_hooks';
 import { assertSupportedReleaseNpmVersion } from './release/toolchain.mjs';
 
-const allowed = ['output', 'release-npm-cli'];
+const allowed = ['output', 'release-npm-cli', 'r2-report'];
 for (const arg of process.argv.slice(2))
   assert.ok(
     allowed.some((name) => arg.startsWith('--' + name + '=')),
@@ -105,6 +105,28 @@ for (const name of [
   assert.equal(result.status, 0, report.checks.at(-1).output);
   console.log('PASS ' + name);
 }
+if (option('r2-report')) {
+  report.r2 = JSON.parse(readFileSync(resolve(option('r2-report')), 'utf8'));
+} else {
+  const { campaign } = await import('./r2/campaign.mjs');
+  report.r2 = await campaign({ profile: 'standard', output: output + '.r2' });
+}
+save();
+assert.equal(
+  report.r2.sourceCommit,
+  report.sourceCommit,
+  'R2 source revision mismatch',
+);
+assert.equal(
+  report.r2.dirtyWorkingTree,
+  false,
+  'R2 requires a committed candidate',
+);
+assert.equal(report.r2.node, report.node, 'R2 Node version mismatch');
+assert.equal(report.r2.operatingSystem, report.platform, 'R2 OS mismatch');
+assert.equal(report.r2.architecture, report.arch, 'R2 architecture mismatch');
+assert.equal(report.r2.profile, 'standard', 'R2 standard corpus required');
+assert.equal(report.r2.passed, true, 'R2 campaign failed');
 report.contracts = JSON.parse(
   readFileSync(output + '.contracts.json', 'utf8'),
 ).totals;
