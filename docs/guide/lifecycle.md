@@ -16,7 +16,7 @@ worker:                     occupied ─────────────→ 
 ## Caller settlement is not physical completion
 
 **Cancellation or timeout can reject the caller while the worker remains busy.**
-PJS does not interrupt synchronous JS/native code or provide cooperative polling.
+Caller cancellation/timeout does not interrupt synchronous JS/native code or provide cooperative polling. The separate experimental physical lease initiates worker containment.
 An eventual late result is discarded, without a second settlement. The worker
 slot is reusable only after execution returns or the worker ends. Side effects
 and completed shared writes are not undone. A posted batch can finish all its
@@ -51,6 +51,53 @@ to disable it; zero is invalid. Host event-loop progress is required for deliver
 
 Parent progression also checks elapsed deadlines before delivering/reconciling
 results. Ordinary run uses its host timer. Neither is a hard real-time guarantee.
+
+## Experimental physical execution leases (R1 development)
+
+These additions are not present in the immutable published RC4 package.
+
+```js
+await runtime.run(task, input, { timeout: 1000, executionLease: 5000 });
+await runtime.shutdown({ drain: true, forceAfter: 10_000 });
+```
+
+`executionLease` starts only after successful physical posting, before the started
+acknowledgement; queue time is excluded. Integer milliseconds range from 1 through 2147483647. Omission leaves physical execution unbounded. Only exclusive ordinary
+run dispatches support leases. Range/map/stream options containing the field, even
+undefined, and leased runs with experimentalDispatchBatchSize reject before execution.
+
+Expiry checks the worker, correlation and unique token, fails a pending caller once
+with PjsExecutionLeaseError, then initiates asynchronous termination. A caller that
+already timed out/aborted retains its original outcome. No task is retried. The worker
+and binary reservations remain physically occupied until confirmed exit; a stale timer
+cannot affect a later dispatch. Normal validated completion clears the lease.
+
+This bounds when containment is initiated, subject to host event-loop progress.
+[Node termination](https://nodejs.org/docs/latest-v24.x/api/worker_threads.html#workerterminate)
+is asynchronous. This is not a sandbox, hard realtime preemption, bounded native-code
+termination or OOM protection. Transferred input stays detached; shared memory and
+side effects can be partial, including abandoned Atomics locks. There is no rollback.
+
+Use constructor `restartPolicy: { maxRestarts: 3, windowMs: 60_000 }` to opt into a
+pool-wide rolling restart window. It is mutually exclusive with lifetime maxRestarts.
+Both values are integers (maxRestarts >= 0, windowMs >= 1). Unexpected failures and
+lease containment consume one restart decision each; records expire at age >= windowMs
+using monotonic time. Shutdown termination consumes none. Bootstrap failure remains
+fatal without a retry. Exhaustion fails accepted work and stops the pool.
+
+`forceAfter` measures from the first graceful shutdown call, including startup.
+The first call's options and promise govern concurrent callers. Omission keeps graceful
+shutdown unbounded; forceAfter with drain:false is invalid. Deadline expiry changes
+permanently to forced mode, cancels queued and active pending callers, stops production
+and initiates termination. Resolution still awaits exits. Graceful drain can replace
+failed workers to finish accepted work; forced mode cannot spawn replacements.
+Timers clear on completion. Termination rejection cannot signal successful shutdown
+or justify release of physically held credits.
+
+`stats().containment` counts lease expirations, lease termination requests, confirmed
+lease exits, replacement spawns, rolling-window utilization (undefined for lifetime
+policy), budget exhaustion and shutdown escalations. Busy occupancy reflects actual
+physical correlation. See [ADR 0021](../adr/0021-physical-execution-containment.md).
 
 ## Streams
 
@@ -105,6 +152,6 @@ your streams before awaiting graceful shutdown.
 `shutdown({ drain: false })` cancels callers/parents and terminates workers,
 including active work; await it for physical cleanup. It cannot undo side effects.
 Task-created async finalizers are not shutdown hooks. **The first shutdown call
-fixes the mode**; repeated calls return the same promise, and cannot escalate an
-existing graceful drain. Submissions during/after shutdown reject
+fixes the options**; repeated calls return the same promise. R1 development allows
+forceAfter on that first graceful call; later calls cannot add escalation. Submissions during/after shutdown reject
 PjsRuntimeStateError. Use try/finally around the runtime lifetime.

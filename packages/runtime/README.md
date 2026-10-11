@@ -57,9 +57,16 @@ module exports, not serialized closures or a sandbox. Compile TypeScript tasks
 before registration.
 
 Cancellation/timeout can reject a caller while execution still occupies a worker.
-There is no preemption, retry or rollback. Graceful shutdown waits for physical
-work and stream delivery; abandoned streams can keep it pending. The first
-shutdown call fixes drain mode. An abnormal worker failure rejects affected callers
+There is no automatic retry or rollback. Omitted physical leases leave execution
+unbounded. The experimental development API supports exclusive ordinary
+`run({ executionLease })` in integer milliseconds, pool-wide rolling
+`restartPolicy: { maxRestarts, windowMs }` and graceful `shutdown({ forceAfter })`.
+These additions are not in the published RC4 artifact. Expiry initiates asynchronous
+termination; it does not promise hard realtime preemption or native/OOM protection.
+Ranges and physical batches reject leases before execution. Transferred buffers
+stay detached, shared writes may be partial, and held Atomics locks may be abandoned.
+Graceful shutdown without escalation waits for physical work and stream delivery.
+The first shutdown call fixes options and the shared promise. An abnormal worker failure rejects affected callers
 without proving execution ended: binary result credits and physical busy occupancy
 remain held until confirmed thread exit. A valid final result ends its own physical
 correlation immediately. Worker replacement waits for exit; work is never replayed.

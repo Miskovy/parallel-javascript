@@ -20,6 +20,8 @@ export interface PartitionInput<Input> {
 
 /** @experimental One deadline and signal for the whole range, not each child. */
 export interface PartitionOptions {
+  /** Physical execution leases are unsupported for range and batch operations. */
+  executionLease?: never;
   signal?: AbortSignal;
   timeout?: number;
   /**

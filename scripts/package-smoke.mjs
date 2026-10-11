@@ -146,6 +146,12 @@ try {
     unrelated,
   );
   report.consumer = JSON.parse(smokeOutput.trim());
+  run(
+    'installed physical containment and recovery',
+    process.execPath,
+    [join(consumer, 'containment.mjs')],
+    unrelated,
+  );
 
   cpSync(join(root, 'examples'), join(consumer, 'examples'), {
     recursive: true,

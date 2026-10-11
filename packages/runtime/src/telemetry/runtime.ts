@@ -10,6 +10,7 @@ export class RuntimeTelemetry {
     private readonly dispatcher: ExecutionDispatcher,
     private readonly tasks: TaskCoordinator,
     private readonly ranges: RangeCoordinator,
+    private readonly shutdownEscalations: () => number,
   ) {}
 
   snapshot() {
@@ -18,6 +19,10 @@ export class RuntimeTelemetry {
     const rangeSnapshot = this.ranges.snapshot();
     return {
       state: this.state(),
+      containment: {
+        ...this.dispatcher.recoverySnapshot(),
+        shutdownEscalations: this.shutdownEscalations(),
+      },
       workers: {
         total: workers.length,
         busy: this.dispatcher.busy,

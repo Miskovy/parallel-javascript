@@ -3,12 +3,6 @@ on:
   push:
   pull_request:
   workflow_dispatch:
-    inputs:
-      profile:
-        description: Bounded RC soak profile (heavy runs are manual)
-        type: choice
-        options: [standard, extended]
-        default: standard
 
 jobs:
   validate:
@@ -43,15 +37,15 @@ jobs:
       # Each job owns its runner; all heavy checks within a job are sequential.
       - name: Contracts, installed package and bounded soak
         if: runner.os != 'Windows'
-        run: npm run rc:qualify -- --release-npm-cli="${{ steps.release-cli.outputs.path }}" --profile=${{ inputs.profile || 'standard' }} --output=.node-tools/rc-ci.json
+        run: npm run runtime:qualify -- --release-npm-cli="${{ steps.release-cli.outputs.path }}" --output=.node-tools/runtime-ci.json
       - name: Contracts, installed package and bounded soak
         if: runner.os == 'Windows'
         shell: cmd
-        run: npm.cmd run rc:qualify -- --release-npm-cli="${{ steps.release-cli-windows.outputs.path }}" --profile=${{ inputs.profile || 'standard' }} --output=.node-tools/rc-ci.json
+        run: npm.cmd run runtime:qualify -- --release-npm-cli="${{ steps.release-cli-windows.outputs.path }}" --output=.node-tools/runtime-ci.json
       - name: Retain qualification evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: rc-contracts-${{ matrix.os }}-node-${{ matrix.node }}
-          path: .node-tools/rc-ci.json*
+          name: runtime-contracts-${{ matrix.os }}-node-${{ matrix.node }}
+          path: .node-tools/runtime-ci.json*
           include-hidden-files: true

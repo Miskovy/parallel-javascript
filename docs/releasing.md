@@ -18,7 +18,7 @@ The [RC4 candidate note](release-v1.0.0-rc.4.md) defines this release's scope.
 The active [baseline](../scripts/rc/frozen-rc4.json) freezes the merged R1A runtime,
 RC4 metadata, declarations and every packed file. The old R1A repair allowance is
 removed. Run the [qualification commands](../scripts/rc/README.md) from a committed,
-clean tree. Four CI cells run standard soak; two independent clean local builds
+clean tree. The RC4 qualification historically used four CI cells with standard soak; two independent clean local builds
 run full qualification/extended soak and require identical archives. Preserve the
 candidate commit, report, canonical tarball and SHA-256 together. Any subsequent
 change invalidates qualification of that commit and requires qualification again.
@@ -27,6 +27,29 @@ validator stopped before the OIDC step. RC4 is published on npm with registry si
 The procedure below applies to future deliberately approved releases. PR qualification now tests the selected
 npm CLI without credentials/scripts and validates the actual candidate tarball
 through the same release helper; unknown JSON shapes fail before review.
+
+## Runtime feature qualification after RC4
+
+RC4 is already published and immutable. Feature branches intentionally change
+runtime source bytes and use ordinary contract qualification:
+
+```sh
+npm run release:npm -- .node-tools/release-cli
+npm run runtime:qualify -- --release-npm-cli=/absolute/path/to/provisioned/npm-cli.js --output=.node-tools/new-runtime-report.json
+```
+
+The provisioner prints the selected path. Start from a clean committed tree and
+choose a new output filename. The four Linux/Windows x64 Node 22.13.0/24 CI cells
+use this path: build, all contracts (including the bounded containment soak),
+types, compatibility compiler, installed package, release tooling, lint, formatting,
+documentation and diff checks. Reports retain exact versions, source commit and outputs.
+This is not approval to publish the unchanged version or a new candidate.
+
+The release-specific `rc:qualify`, API/package freezes and committed
+`frozen-rc4.json` remain intact. They must fail for changed feature bytes rather
+than pretend R1 is the RC4 artifact. Qualify RC4 from its historical tag/commit;
+a future release requires a separately reviewed version and baseline.
+The `release.published` workflow, OIDC binding and publication guards are unchanged.
 
 ## One-time maintainer configuration
 

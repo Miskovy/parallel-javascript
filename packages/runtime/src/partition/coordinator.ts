@@ -169,6 +169,10 @@ export class RangeCoordinator implements TaskParentPort {
     let dispatchBatchSize: number;
     let outputs: unknown[] | PjsTypedArray | undefined;
     try {
+      if ('executionLease' in options)
+        throw new TypeError(
+          'executionLease is unsupported for range and batch operations',
+        );
       plan = planRange(
         range,
         resultMode === 'collect' || resultMode === 'map'

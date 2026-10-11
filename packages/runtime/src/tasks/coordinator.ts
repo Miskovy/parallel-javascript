@@ -130,6 +130,19 @@ export class TaskCoordinator {
           { taskId: id },
         ),
       );
+    let executionLease: number | undefined;
+    try {
+      executionLease = options.executionLease;
+      if (executionLease !== undefined) {
+        integer('executionLease', executionLease, 1, 2 ** 31 - 1);
+        if (child || 'experimentalDispatchBatchSize' in options)
+          throw new TypeError(
+            'executionLease requires an exclusive ordinary run() dispatch',
+          );
+      }
+    } catch (error) {
+      return rejectSubmission(error as Error);
+    }
     if (options.timeout !== undefined) {
       try {
         integer('timeout', options.timeout, 1, 2 ** 31 - 1);
@@ -203,6 +216,7 @@ export class TaskCoordinator {
     return new Promise<Output>((resolve, reject) => {
       const pending: PendingTask = {
         id,
+        ...(executionLease === undefined ? {} : { executionLease }),
         ...(child ? { child } : {}),
         snapshot: {
           id,
