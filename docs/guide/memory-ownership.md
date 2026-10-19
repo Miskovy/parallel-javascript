@@ -72,3 +72,11 @@ next iteration but the yielded value itself is already consumer-owned. Collectin
 operations/maps have their own retained/preallocated results and no binary stream
 budget. Inputs, worker heaps, scratch/native allocations, transport copies, shared
 backing and process RSS are never bounded by result credits or maxQueue.
+
+Logical cleanup and memory returned to the OS are separate observations.
+`tasks.pending === 0` can coexist with a physically executing cancelled task;
+wait for physical completion or successful shutdown before repurposing shared
+input. Even after full cleanup, V8 and native allocators may keep RSS above its
+initial value. Measure main/worker isolate heap and external allocations
+separately; RSS is process-wide and `arrayBuffers` overlaps `external`.
+See the [R3 ownership inventory and research methodology](../research/r3-memory-resource-qualification.md).
