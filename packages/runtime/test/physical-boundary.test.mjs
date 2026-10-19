@@ -1,3 +1,4 @@
+import { runtimeComponents } from './helpers/runtime-inspection.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { setTimeout as delay } from 'node:timers/promises';
@@ -31,17 +32,19 @@ async function until(predicate) {
 }
 
 function firstWorker(runtime) {
-  return [...runtime.dispatcher.pool.workers.values()][0];
+  return [...runtimeComponents(runtime).dispatcher.pool.workers.values()][0];
 }
 
 function assertOwners(runtime) {
-  const workers = [...runtime.dispatcher.pool.workers.values()];
+  const workers = [
+    ...runtimeComponents(runtime).dispatcher.pool.workers.values(),
+  ];
   const physical = workers
     .filter((worker) => worker.hasPhysicalExecution)
     .map((worker) => worker.snapshot().currentTaskId);
   assert.equal(new Set(physical).size, physical.length);
   assert.equal(runtime.stats().workers.busy, physical.length);
-  const credits = runtime.resultCredits;
+  const credits = runtimeComponents(runtime).resultCredits;
   for (const correlation of credits.executions.keys())
     assert.ok(physical.includes(correlation), 'credit has a physical owner');
   for (const reservation of credits.reservations.values()) {
@@ -94,7 +97,7 @@ async function setup(t, options = {}, module = fixture) {
     assert.equal(runtime.stats().tasks.pending, 0);
     assert.equal(runtime.stats().operations.pending, 0);
     assert.equal(runtime.stats().queue.size, 0);
-    assert.deepEqual(runtime.resultCredits.diagnostics(), {
+    assert.deepEqual(runtimeComponents(runtime).resultCredits.diagnostics(), {
       reservations: 0,
       executions: 0,
       operations: 0,
@@ -131,11 +134,11 @@ function stream(runtime, task, shared, mode, extra = {}, count = 1) {
 
 function observeEnds(runtime) {
   const ends = [];
-  const credits = runtime.resultCredits;
+  const credits = runtimeComponents(runtime).resultCredits;
   const mark = credits.markExecutionEnded.bind(credits);
   credits.markExecutionEnded = (correlation) => {
     assert.ok(
-      [...runtime.dispatcher.pool.workers.values()].every(
+      [...runtimeComponents(runtime).dispatcher.pool.workers.values()].every(
         (worker) => worker.snapshot().currentTaskId !== correlation,
       ),
       'physical correlation cleared before credit completion',
@@ -373,10 +376,10 @@ test(
     const ends = observeEnds(runtime);
     const old = firstWorker(runtime);
     let logicalBeforePhysical = false;
-    const failTask = runtime.taskCoordinator.failTask.bind(
-      runtime.taskCoordinator,
+    const failTask = runtimeComponents(runtime).taskCoordinator.failTask.bind(
+      runtimeComponents(runtime).taskCoordinator,
     );
-    runtime.taskCoordinator.failTask = (error) => {
+    runtimeComponents(runtime).taskCoordinator.failTask = (error) => {
       logicalBeforePhysical = old.hasPhysicalExecution && ends.length === 0;
       failTask(error);
     };
@@ -455,19 +458,19 @@ for (const kind of ['graceful', 'forced', 'fatal']) {
       );
       await until(() => Atomics.load(new Int32Array(shared), 0) !== 0);
       let releases = 0;
-      const releaseAll = runtime.resultCredits.releaseAll.bind(
-        runtime.resultCredits,
-      );
-      runtime.resultCredits.releaseAll = () => {
+      const releaseAll = runtimeComponents(
+        runtime,
+      ).resultCredits.releaseAll.bind(runtimeComponents(runtime).resultCredits);
+      runtimeComponents(runtime).resultCredits.releaseAll = () => {
         assert.equal(
           exit.confirmed,
           true,
           'releaseAll requires confirmed stop',
         );
         assert.ok(
-          [...runtime.dispatcher.pool.workers.values()].every(
-            (worker) => worker.exitObserved,
-          ),
+          [
+            ...runtimeComponents(runtime).dispatcher.pool.workers.values(),
+          ].every((worker) => worker.exitObserved),
         );
         releases++;
         releaseAll();
@@ -558,7 +561,7 @@ test(
     assert.equal(old.hasPhysicalExecution, false);
     assert.equal(old.exitObserved, false);
     assert.equal(ends.length, 0);
-    assert.deepEqual(runtime.resultCredits.diagnostics(), {
+    assert.deepEqual(runtimeComponents(runtime).resultCredits.diagnostics(), {
       reservations: 0,
       executions: 0,
       operations: 0,

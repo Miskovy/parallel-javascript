@@ -33,7 +33,9 @@ import type {
   PartitionChild,
   RangeResultMode,
 } from './operation.js';
-import { partitionAt, planRange } from './range.js';
+import { partitionAt } from './range.js';
+import { validateRangeRequest } from './validation.js';
+import { assembleMapBlock } from './results/map-assembly.js';
 import type {
   BinaryStreamRangeOptions,
   PartitionInput,
@@ -41,28 +43,11 @@ import type {
   PjsTypedArray,
   PjsTypedArrayConstructor,
   RangePartition,
-  StreamRangeOptions,
-  UpperBoundBinaryStreamRangeOptions,
 } from './range.js';
-import { RangeStream } from './stream.js';
-import type { StreamRangeResult } from './stream.js';
+import type { RangeStream } from './stream.js';
 
 type OperationKind = 'collecting' | 'completion' | 'streaming' | 'mapping';
 type TerminalOperationStatus = Exclude<OperationStatus, 'created' | 'running'>;
-
-const typedArrayConstructors = new Set<PjsTypedArrayConstructor>([
-  Int8Array,
-  Uint8Array,
-  Uint8ClampedArray,
-  Int16Array,
-  Uint16Array,
-  Int32Array,
-  Uint32Array,
-  Float32Array,
-  Float64Array,
-  BigInt64Array,
-  BigUint64Array,
-]);
 
 function operationKind(resultMode: RangeResultMode): OperationKind {
   return resultMode === 'collect'
@@ -169,35 +154,13 @@ export class RangeCoordinator implements TaskParentPort {
     let dispatchBatchSize: number;
     let outputs: unknown[] | PjsTypedArray | undefined;
     try {
-      if ('executionLease' in options)
-        throw new TypeError(
-          'executionLease is unsupported for range and batch operations',
-        );
-      plan = planRange(
+      ({ plan, timeout, signal, dispatchBatchSize } = validateRangeRequest(
         range,
-        resultMode === 'collect' || resultMode === 'map'
-          ? 2 ** 32 - 1
-          : Number.MAX_SAFE_INTEGER,
-      );
-      if (typeof createInput !== 'function')
-        throw new TypeError('createInput must be a synchronous function');
-      timeout = options.timeout;
-      signal = options.signal;
-      dispatchBatchSize = integer(
-        'experimentalDispatchBatchSize',
-        options.experimentalDispatchBatchSize ?? 1,
-        1,
-        16,
-      );
-      if (timeout !== undefined) integer('timeout', timeout, 1, 2 ** 31 - 1);
-      if (
-        resultMode === 'map' &&
-        mapOutputConstructor !== undefined &&
-        !typedArrayConstructors.has(mapOutputConstructor)
-      )
-        throw new TypeError(
-          'experimentalOutputConstructor must be a built-in typed-array constructor',
-        );
+        createInput,
+        options,
+        resultMode,
+        mapOutputConstructor,
+      ));
     } catch (error) {
       return reject(error as Error);
     }
@@ -329,97 +292,10 @@ export class RangeCoordinator implements TaskParentPort {
     });
   }
 
-  stream<Input, Output>(
-    task: PjsTask<Input, Output>,
-    range: { start: number; end: number; grainSize: number },
-    createInput: (partition: RangePartition) => PartitionInput<Input>,
-    options:
-      | StreamRangeOptions
-      | BinaryStreamRangeOptions
-      | UpperBoundBinaryStreamRangeOptions = {},
-  ): AsyncIterable<StreamRangeResult<Output>> {
-    let capacity: number;
-    let resultByteDeclaration:
-      BinaryStreamRangeOptions['experimentalResultBytes'] | undefined;
-    let resultByteCapacity: number | undefined;
-    let resultByteMode: ResultByteMode = 'exact';
-    try {
-      capacity = integer(
-        'experimentalMaxBufferedResults',
-        options.experimentalMaxBufferedResults ?? this.workerCount,
-        1,
-      );
-      const hasExact = 'experimentalResultBytes' in options;
-      const hasMaximum = 'experimentalMaxResultBytes' in options;
-      if (hasExact && hasMaximum)
-        throw new TypeError(
-          'Exact and upper-bound result declarations are mutually exclusive',
-        );
-      const hasDeclaration = hasExact || hasMaximum;
-      const hasByteCapacity = 'experimentalMaxReservedResultBytes' in options;
-      if (hasDeclaration !== hasByteCapacity)
-        throw new TypeError(
-          'One result-byte declaration and experimentalMaxReservedResultBytes must be provided together',
-        );
-      if (hasDeclaration && hasByteCapacity) {
-        resultByteMode = hasMaximum ? 'upper-bound' : 'exact';
-        const declarationName = hasMaximum
-          ? 'experimentalMaxResultBytes'
-          : 'experimentalResultBytes';
-        resultByteDeclaration = hasMaximum
-          ? (options as UpperBoundBinaryStreamRangeOptions)
-              .experimentalMaxResultBytes
-          : (options as BinaryStreamRangeOptions).experimentalResultBytes;
-        resultByteCapacity = integer(
-          'experimentalMaxReservedResultBytes',
-          options.experimentalMaxReservedResultBytes,
-          0,
-        );
-        if (typeof resultByteDeclaration === 'number') {
-          try {
-            integer(declarationName, resultByteDeclaration, 0);
-          } catch (cause) {
-            throw new PjsBinaryResultContractError(
-              `${declarationName} must be a nonnegative safe integer`,
-              { cause },
-            );
-          }
-        } else if (typeof resultByteDeclaration !== 'function')
-          throw new TypeError(
-            `${declarationName} must be a nonnegative safe integer or function`,
-          );
-      }
-    } catch (error) {
-      this.operationMetrics.rejected++;
-      this.operationTypeMetrics.streaming.rejected++;
-      if (
-        'experimentalResultBytes' in options ||
-        'experimentalMaxResultBytes' in options ||
-        'experimentalMaxReservedResultBytes' in options
-      )
-        this.resultCredits.recordRejected();
-      const failed = new RangeStream<Output>(1);
-      failed.fail(error as Error);
-      return failed;
-    }
-    const stream = new RangeStream<Output>(capacity);
-    const lifecycle = this.start(
-      task,
-      range,
-      createInput,
-      options,
-      'stream',
-      stream as RangeStream<unknown>,
-      undefined,
-      resultByteDeclaration,
-      resultByteCapacity,
-      resultByteMode,
-    );
-    void lifecycle.then(
-      () => stream.complete(),
-      (error: Error) => stream.fail(error),
-    );
-    return stream;
+  /** API adaptation failed before an accepted parent exists. */
+  rejectStreamOptions(): void {
+    this.operationMetrics.rejected++;
+    this.operationTypeMetrics.streaming.rejected++;
   }
 
   canSubmit(child: PartitionChild): boolean {
@@ -476,7 +352,16 @@ export class RangeCoordinator implements TaskParentPort {
       } else if (operation.resultMode === 'map') {
         const assemblyStarted = performance.now();
         try {
-          this.assembleMapBlock(operation, child.partition, output);
+          const elements = assembleMapBlock(
+            operation.outputs!,
+            operation.plan.start,
+            operation.id,
+            child.partition,
+            output,
+            operation.mapOutputConstructor,
+          );
+          this.mapResultMetrics.blocks++;
+          this.mapResultMetrics.elements += elements;
         } catch (cause) {
           const mapError =
             cause instanceof PjsMapContractError
@@ -816,65 +701,6 @@ export class RangeCoordinator implements TaskParentPort {
         'parentSettlement',
         performance.now() - profileStarted,
       );
-  }
-
-  private assembleMapBlock(
-    operation: RangeOperation,
-    partition: RangePartition,
-    output: unknown,
-  ): void {
-    const expected = partition.end - partition.start;
-    const offset = partition.start - operation.plan.start;
-    const context = {
-      operationId: operation.id,
-      partitionIndex: partition.index,
-      rangeStart: partition.start,
-      rangeEnd: partition.end,
-    };
-    if (operation.mapOutputConstructor) {
-      if (
-        !ArrayBuffer.isView(output) ||
-        output instanceof DataView ||
-        output.constructor !== operation.mapOutputConstructor
-      )
-        throw new PjsMapContractError(
-          `Map partition ${partition.index} must return ${operation.mapOutputConstructor.name}`,
-          context,
-        );
-      const block = output as PjsTypedArray;
-      if (block.length !== expected)
-        throw new PjsMapContractError(
-          `Map partition ${partition.index} returned ${block.length} elements; expected ${expected}`,
-          context,
-        );
-      const target = operation.outputs as PjsTypedArray;
-      const setter = target as unknown as {
-        set(
-          values: ArrayLike<number> | ArrayLike<bigint>,
-          offset?: number,
-        ): void;
-      };
-      setter.set(
-        block as unknown as ArrayLike<number> | ArrayLike<bigint>,
-        offset,
-      );
-    } else {
-      if (!Array.isArray(output))
-        throw new PjsMapContractError(
-          `Map partition ${partition.index} must return an Array`,
-          context,
-        );
-      if (output.length !== expected)
-        throw new PjsMapContractError(
-          `Map partition ${partition.index} returned ${output.length} elements; expected ${expected}`,
-          context,
-        );
-      const target = operation.outputs as unknown[];
-      for (let index = 0; index < output.length; index++)
-        target[offset + index] = output[index];
-    }
-    this.mapResultMetrics.blocks++;
-    this.mapResultMetrics.elements += expected;
   }
 
   private finishDeliveredStream(operation: RangeOperation): boolean {

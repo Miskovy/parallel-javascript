@@ -1,3 +1,4 @@
+import { runtimeComponents } from './runtime-inspection.mjs';
 import assert from 'node:assert/strict';
 import { setTimeout as delay } from 'node:timers/promises';
 import { performance } from 'node:perf_hooks';
@@ -16,7 +17,7 @@ export async function until(predicate) {
   }
 }
 export function firstWorker(runtime) {
-  return [...runtime.dispatcher.pool.workers.values()][0];
+  return [...runtimeComponents(runtime).dispatcher.pool.workers.values()][0];
 }
 export function clock(owner, kind = 'Lease') {
   let now = 0;
@@ -63,14 +64,19 @@ export function controlExit(worker) {
   return control;
 }
 export function assertOwners(runtime, { quiescent = false } = {}) {
-  const workers = [...runtime.dispatcher.pool.workers.values()];
+  const workers = [
+    ...runtimeComponents(runtime).dispatcher.pool.workers.values(),
+  ];
   const physical = workers
     .filter((w) => w.hasPhysicalExecution)
     .map((w) => w.snapshot().currentTaskId);
   assert.equal(new Set(physical).size, physical.length);
   assert.equal(runtime.stats().workers.busy, physical.length);
-  assert.ok(workers.length <= runtime.dispatcher.pool.options.workers);
-  const credits = runtime.resultCredits;
+  assert.ok(
+    workers.length <=
+      runtimeComponents(runtime).dispatcher.pool.options.workers,
+  );
+  const credits = runtimeComponents(runtime).resultCredits;
   for (const correlation of credits.executions.keys())
     assert.ok(
       physical.includes(correlation),

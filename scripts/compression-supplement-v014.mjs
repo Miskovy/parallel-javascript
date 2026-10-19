@@ -1,3 +1,4 @@
+import { runtimeComponents } from '../packages/runtime/test/helpers/runtime-inspection.mjs';
 import assert from 'node:assert/strict';
 import { writeFile, mkdtemp, rm } from 'node:fs/promises';
 import { availableParallelism, tmpdir } from 'node:os';
@@ -103,7 +104,7 @@ try {
     await rejected;
     const active = {
       stats: runtime.stats(),
-      credits: runtime.resultCredits.diagnostics(),
+      credits: runtimeComponents(runtime).resultCredits.diagnostics(),
     };
     assert.equal(active.stats.workers.busy, 1);
     assert.equal(

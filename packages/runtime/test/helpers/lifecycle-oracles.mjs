@@ -1,3 +1,4 @@
+import { runtimeComponents, runtimeController } from './runtime-inspection.mjs';
 import assert from 'node:assert/strict';
 import { assertOwners } from './containment.mjs';
 import { INVARIANTS } from './lifecycle-model.mjs';
@@ -74,7 +75,7 @@ export function compare(expected, actual) {
 export function inspect(runtime, controller, quiescent = false) {
   try {
     assertOwners(runtime, { quiescent });
-    const credits = runtime.resultCredits;
+    const credits = runtimeComponents(runtime).resultCredits;
     const sum = [...credits.reservations.values()].reduce(
       (n, r) => n + r.creditedBytes,
       0,
@@ -93,13 +94,19 @@ export function inspect(runtime, controller, quiescent = false) {
       assert.ok(r.creditedBytes >= 0 && r.creditedBytes <= r.bytes);
       if (r.reconciled) assert.ok(r.executionDone && r.mode === 'upper-bound');
     }
-    assert.equal(runtime.dispatcher.admissionReservations, 0);
-    assert.equal(runtime.dispatcher.reservedWorkers.size, 0);
+    assert.equal(
+      runtimeComponents(runtime).dispatcher.admissionReservations,
+      0,
+    );
+    assert.equal(runtimeComponents(runtime).dispatcher.reservedWorkers.size, 0);
     if (quiescent) {
-      assert.equal(runtime.rangeCoordinator.size, 0);
-      assert.equal(runtime.rangeCoordinator.productionTick, undefined);
-      assert.equal(runtime.shutdownTimer, undefined);
-      assert.equal(runtime.dispatcher.pool.repairs.size, 0);
+      assert.equal(runtimeComponents(runtime).rangeCoordinator.size, 0);
+      assert.equal(
+        runtimeComponents(runtime).rangeCoordinator.productionTick,
+        undefined,
+      );
+      assert.equal(runtimeController(runtime).shutdownTimer, undefined);
+      assert.equal(runtimeComponents(runtime).dispatcher.pool.repairs.size, 0);
       for (const c of controller.controls.values()) {
         assert.ok(c.exit.confirmed, 'test-owned worker exited');
         assert.equal(c.worker.lease, undefined);
