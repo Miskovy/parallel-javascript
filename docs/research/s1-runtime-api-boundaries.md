@@ -15,10 +15,12 @@ qualification.
 Work is isolated on `refactor/v1-runtime-api-boundaries`. Local implementation
 commits are `dcf08cc9bd40cec7af2e6233f0d4e49fb0921e2d` (configuration) and
 `f1e9ab2dcda4b63ae381bbc4c0d79edb2ae9f223` (composition, controller, API,
-validation/assembly and verification observations). The subsequent documentation
-commit is the delivered candidate. Each final qualification report records its
-exact `sourceCommit`; the delivery ledger under `.node-tools/s1/` records that
-SHA without requiring a self-referential documentation commit.
+validation/assembly and verification observations). Initial integrated candidate
+`17016d321fa2fff635d1b55eff058e2322ffaa41` passed both Windows qualifiers, then
+final seam review found an uncovered result-getter ordering gap in the extraction.
+The delivered candidate includes its correction and ninth seam test. Each final
+qualification report records its exact `sourceCommit`; the delivery ledger under
+`.node-tools/s1/` records that SHA without a self-referential documentation commit.
 
 The audit read runtime, partition operation/range/stream/binary code, task
 coordination/registration/transfer code, dispatch, pool, worker/bootstrap/protocol,
@@ -62,9 +64,11 @@ delegate their existing unions without expanding supported public overloads.
 
 No per-task closures over a component graph or payload history are added. Stream
 capabilities are allocated once per runtime. Request validation returns a
-short-lived parent-level record without input/factory payloads. Assembly receives
-the existing output target and scalar identity/context inputs, with no owner
-record or resource authority. There are no new timers or Promise scheduling layers.
+short-lived parent-level record without input/factory payloads. Assembly validation
+receives scalar identity/context inputs and returns the existing block without
+allocating a wrapper. The coordinator then reads its output target and calls the
+copy helper; neither helper receives an owner record or resource authority.
+There are no new timers or Promise scheduling layers.
 
 ## Public API parity
 
@@ -118,11 +122,12 @@ detection, real-worker checks, credit sums, diagnostics and watchdog budgets are
 unchanged. R3 configurations, scenarios, seeds, measurements and bounds are
 unchanged. Historical RC tooling is preserved for its historical source.
 
-Eight new `runtime-boundaries.test.mjs` cases cover actual startup with complete
+Nine new `runtime-boundaries.test.mjs` cases cover actual startup with complete
 callbacks and synchronous spawn, constructor/snapshot/queue getter ordering,
 prototype/shared-promise compatibility, mode/request adaptation, map constructor
 getter timing, stream normalization/rejection ordering, assembly context/offsets,
-blocked internal package paths, and range getter order before state rejection.
+blocked internal package paths, range getter order before state rejection, and a
+real-worker result-constructor getter that aborts before target lookup.
 Port probes supplement the original real-worker suites. Existing map, stream,
 reservation, AsyncResource and lifecycle tests continue to exercise settlement
 and cleanup; their assertions were not replaced by aggregate statistics.
@@ -130,11 +135,24 @@ and cleanup; their assertions were not replaced by aggregate statistics.
 Development verification passed the original 284 contracts before editing, plus
 type and compatibility checks. After extraction, the 291-case development run
 passed, and the subsequently added eighth seam case passed in the focused suite
-(final total: 292). An intermediate observation relocation missed spread-expression
+(initial integrated total: 292). The final ninth seam case also passed alongside
+all existing map tests (delivered total: 293). An intermediate observation relocation missed spread-expression
 receivers and failed existing private checks; those paths were corrected without
 altering assertions. TypeScript's compatibility compiler required explicit types
 on cyclic composition callback owners; both compilers now pass. Development
 reports and raw type/benchmark snapshots remain under `.node-tools/s1/`.
+
+Final review found that passing the target into a combined assembly helper read
+`operation.outputs` before validation. A typed-result `constructor` getter can
+synchronously abort and clear that target. A real-worker probe using the original
+baseline settlement/assembly methods produced zero blocks/elements; the first
+extraction incorrectly counted one block/two elements. Splitting stateless
+validation from copying restores the coordinator's original lookup point and
+zero counters, without passing a parent record, adding a closure or retaining
+the target. The minimal probe and baseline/extracted/corrected results are retained
+as `map-reentrancy.mjs` and `map-reentrancy-*.json`. This restores baseline behavior;
+it introduces no unrelated API correction. Earlier successful qualification
+reports identify `17016d3` and are retained separately from the final candidate.
 
 ## Clean candidate qualification
 
@@ -156,10 +174,10 @@ The returned CLI is
 is `provision.json` in that directory. This provisions tooling only.
 
 ```powershell
-npm.cmd run runtime:qualify -- --release-npm-cli=E:/Miskovy/Work/pjs/pjs/.node-tools/s1/release-npm/node_modules/npm/bin/npm-cli.js --output=.node-tools/s1/win-node24.json
+npm.cmd run runtime:qualify -- --release-npm-cli=E:/Miskovy/Work/pjs/pjs/.node-tools/s1/release-npm/node_modules/npm/bin/npm-cli.js --output=.node-tools/s1/final-win-node24.json
 # In a separate shell, prepend the existing Node 22 distribution to PATH:
 $env:PATH = (Join-Path (Get-Location) '.node-tools/node-v22.13.0-win-x64') + ';' + $env:PATH
-npm.cmd run runtime:qualify -- --release-npm-cli=E:/Miskovy/Work/pjs/pjs/.node-tools/s1/release-npm/node_modules/npm/bin/npm-cli.js --output=.node-tools/s1/win-node22.json
+npm.cmd run runtime:qualify -- --release-npm-cli=E:/Miskovy/Work/pjs/pjs/.node-tools/s1/release-npm/node_modules/npm/bin/npm-cli.js --output=.node-tools/s1/final-win-node22.json
 ```
 
 Each qualifier enforces clean committed source and runs build, contracts, type
@@ -205,7 +223,7 @@ map block validation/copying becomes stateless while the range coordinator retai
 parents, metrics, production and settlement.
 
 Retain physical execution/credit ownership and the guarded pump order. Relocate
-existing exact observations through a test-only adapter and add eight seam cases.
+existing exact observations through a test-only adapter and add nine seam cases.
 Document the boundary in ADR 0022 while preserving ADR 0018's history. Attach the
 clean-candidate qualification ledger, resolved public-contract comparison and
 bounded benchmark evidence. Report Linux cells as unqualified until candidate CI

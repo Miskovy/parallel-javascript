@@ -4,6 +4,7 @@ import {
   PjsRuntime,
   PjsTaskRegistry,
   PjsMapContractError,
+  PjsCancelledError,
 } from '../dist/index.js';
 import { ExecutionDispatcher } from '../dist/dispatch/dispatcher.js';
 import { run } from '../dist/api/run.js';
@@ -11,7 +12,10 @@ import { partitionRange } from '../dist/api/range/partition-range.js';
 import { parallelFor } from '../dist/api/range/parallel-for.js';
 import { parallelMapRange } from '../dist/api/range/parallel-map-range.js';
 import { streamRange } from '../dist/api/range/stream-range.js';
-import { assembleMapBlock } from '../dist/partition/results/map-assembly.js';
+import {
+  assembleMapBlock,
+  validateMapBlock,
+} from '../dist/partition/results/map-assembly.js';
 import { runtimeComponents } from './helpers/runtime-inspection.mjs';
 
 const fixture = new URL('./fixtures/containment-tasks.mjs', import.meta.url);
@@ -308,14 +312,19 @@ test('map assembly preserves logical offsets and validates whole blocks before c
     const target = constructor ? new constructor(4) : new Array(4);
     const block = constructor ? new constructor(values) : values;
     assert.equal(
-      assembleMapBlock(target, 10, 'map-owner', partition, block, constructor),
+      assembleMapBlock(
+        target,
+        10,
+        partition,
+        validateMapBlock('map-owner', partition, block, constructor),
+        constructor,
+      ),
       2,
     );
     assert.deepEqual(Array.from(target).slice(2), values);
     const before = Array.from(target);
     assert.throws(
-      () =>
-        assembleMapBlock(target, 10, 'map-owner', partition, [], constructor),
+      () => validateMapBlock('map-owner', partition, [], constructor),
       (error) => {
         assert.ok(error instanceof PjsMapContractError);
         assert.equal(error.operationId, 'map-owner');
@@ -326,6 +335,49 @@ test('map assembly preserves logical offsets and validates whole blocks before c
       },
     );
     assert.deepEqual(Array.from(target), before);
+  }
+});
+
+test('map result validation getters can abort before the coordinator reads its assembly target', async () => {
+  const registry = new PjsTaskRegistry();
+  const task = registry.register(
+    'map',
+    new URL('./fixtures/partition-tasks.mjs', import.meta.url),
+    'mapBlock',
+  );
+  const runtime = new PjsRuntime({ registry, workers: 1 });
+  const descriptor = Object.getOwnPropertyDescriptor(
+    Float64Array.prototype,
+    'constructor',
+  );
+  const abort = new AbortController();
+  let getters = 0;
+  try {
+    await runtime.ready();
+    Object.defineProperty(Float64Array.prototype, 'constructor', {
+      configurable: true,
+      get() {
+        getters++;
+        abort.abort();
+        return Float64Array;
+      },
+    });
+    await assert.rejects(
+      runtime.parallelMapRange(
+        task,
+        { start: 0, end: 2, grainSize: 2 },
+        (partition) => ({ input: { partition, kind: 'float64' } }),
+        { experimentalOutputConstructor: Float64Array, signal: abort.signal },
+      ),
+      PjsCancelledError,
+    );
+    assert.equal(getters, 1);
+    assert.equal(runtime.stats().operations.cancelled, 1);
+    assert.equal(runtime.stats().mapResults.blocks, 0);
+    assert.equal(runtime.stats().mapResults.elements, 0);
+  } finally {
+    Object.defineProperty(Float64Array.prototype, 'constructor', descriptor);
+    await runtime.shutdown({ drain: false });
   }
 });
 

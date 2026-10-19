@@ -78,8 +78,9 @@ constructor; stream adaptation owns overload handling, count/byte option
 normalization and stream construction. The coordinator retains rejection
 accounting, accepted parents, lazy children, deadlines and terminal settlement.
 Stateless request validation lives in `partition/validation.ts`. Mapping block
-validation and copying live in `partition/results/map-assembly.ts`; targets,
-assembly timing, counters and parent settlement remain coordinator-owned.
+validation and copying live in `partition/results/map-assembly.ts`; the coordinator
+reads its target after validation because a result getter can abort the parent.
+Targets, assembly timing, counters and parent settlement remain coordinator-owned.
 These paths are internal and add no package entrypoints.
 
 ## Progress loop and reentrancy

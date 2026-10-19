@@ -5,17 +5,14 @@ import type {
   RangePartition,
 } from '../range.js';
 
-/** Validates and copies one block; the caller owns target, metrics and settlement. */
-export function assembleMapBlock(
-  target: unknown[] | PjsTypedArray,
-  rangeStart: number,
+/** Validate before the caller reads its target: getters can terminate the parent. */
+export function validateMapBlock(
   operationId: string,
   partition: RangePartition,
   output: unknown,
   outputConstructor?: PjsTypedArrayConstructor,
-): number {
+): unknown[] | PjsTypedArray {
   const expected = partition.end - partition.start;
-  const offset = partition.start - rangeStart;
   const context = {
     operationId,
     partitionIndex: partition.index,
@@ -39,13 +36,7 @@ export function assembleMapBlock(
         context,
       );
 
-    const setter = target as unknown as {
-      set(values: ArrayLike<number> | ArrayLike<bigint>, offset?: number): void;
-    };
-    setter.set(
-      block as unknown as ArrayLike<number> | ArrayLike<bigint>,
-      offset,
-    );
+    return block;
   } else {
     if (!Array.isArray(output))
       throw new PjsMapContractError(
@@ -58,8 +49,30 @@ export function assembleMapBlock(
         context,
       );
 
-    for (let index = 0; index < output.length; index++)
-      (target as unknown[])[offset + index] = output[index];
+    return output;
   }
-  return expected;
+}
+
+/** Copy a validated block; the caller owns the target, counters and settlement. */
+export function assembleMapBlock(
+  target: unknown[] | PjsTypedArray,
+  rangeStart: number,
+  partition: RangePartition,
+  block: unknown[] | PjsTypedArray,
+  outputConstructor?: PjsTypedArrayConstructor,
+): number {
+  const offset = partition.start - rangeStart;
+  if (outputConstructor) {
+    const setter = target as unknown as {
+      set(values: ArrayLike<number> | ArrayLike<bigint>, offset?: number): void;
+    };
+    setter.set(
+      block as unknown as ArrayLike<number> | ArrayLike<bigint>,
+      offset,
+    );
+  } else {
+    for (let index = 0; index < block.length; index++)
+      (target as unknown[])[offset + index] = block[index];
+  }
+  return partition.end - partition.start;
 }

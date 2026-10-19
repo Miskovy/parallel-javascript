@@ -57,9 +57,13 @@ API adapters accept typed submission/accounting capabilities, never the facade
 or a general runtime context. Calls remain synchronous. Stream rejection
 accounting remains in the coordinator and credit owner, including the original
 order relative to reentrant property checks. Map assembly accepts only the
-target, range offset, operation identity, partition, block and constructor. It
-does not own counters, parent records or resource release. The coordinator
-records assembly time and successful block counts and settles failures.
+operation identity, partition, block and constructor for validation, and the
+target/range offset for copying. Validation returns the existing block without
+allocating a wrapper. The coordinator reads its target only after validation:
+a result constructor getter can synchronously abort the parent and clear that
+target. Capturing it earlier changes assembly counters after cancellation.
+The helpers do not own counters, parent records or resource release. The
+coordinator records assembly time and successful block counts and settles failures.
 
 ## Retained invariants
 

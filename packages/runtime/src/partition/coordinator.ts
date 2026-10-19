@@ -35,7 +35,7 @@ import type {
 } from './operation.js';
 import { partitionAt } from './range.js';
 import { validateRangeRequest } from './validation.js';
-import { assembleMapBlock } from './results/map-assembly.js';
+import { assembleMapBlock, validateMapBlock } from './results/map-assembly.js';
 import type {
   BinaryStreamRangeOptions,
   PartitionInput,
@@ -352,12 +352,19 @@ export class RangeCoordinator implements TaskParentPort {
       } else if (operation.resultMode === 'map') {
         const assemblyStarted = performance.now();
         try {
-          const elements = assembleMapBlock(
-            operation.outputs!,
-            operation.plan.start,
+          const block = validateMapBlock(
             operation.id,
             child.partition,
             output,
+            operation.mapOutputConstructor,
+          );
+          // Validation getters can synchronously abort and clear operation.outputs.
+          // Read the coordinator-owned target after validation, as before extraction.
+          const elements = assembleMapBlock(
+            operation.outputs!,
+            operation.plan.start,
+            child.partition,
+            block,
             operation.mapOutputConstructor,
           );
           this.mapResultMetrics.blocks++;
