@@ -4,6 +4,11 @@
 
 Accepted for v0.11.
 
+The facade/composition/lifecycle/pump colocation decision is superseded by
+[ADR 0022](0022-runtime-api-boundaries.md). Its subsystem ownership,
+construction and reentrancy guarantees remain in force. The original decision
+below is preserved as historical context.
+
 ## Context
 
 By v0.10, `PjsRuntime` implemented runtime lifecycle, logical task lifecycle,

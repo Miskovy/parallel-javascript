@@ -6,20 +6,24 @@ exports `PjsRuntime`, `PjsTaskRegistry`, `transfer`, `sharedReadonly`, public
 types, and errors. Pool, worker transport, FIFO implementation, coordinators,
 mutable records, telemetry, profiling hooks, and protocol remain internal.
 
-v0.11 decomposes the host core without changing public behavior. `PjsRuntime`
-is now the public facade, composition root, runtime-lifecycle authority, and
-owner of one guarded progress loop. Task, range, physical-dispatch,
-result-credit, and telemetry responsibilities have explicit owners. The
-boundary criterion is independent mutable state plus lifecycle invariants, not
-file size; this is systems decomposition rather than microservice-style
-layering.
+The v0.11 decomposition established task, range, physical-dispatch, result-credit,
+and telemetry owners. S1 separates public API adaptation, configuration,
+construction, and runtime lifecycle while keeping `PjsRuntime` as the public
+facade. [ADR 0022](adr/0022-runtime-api-boundaries.md) supersedes the colocation
+part of ADR 0018 and preserves its subsystem ownership guarantees.
 
 ```mermaid
 flowchart TD
-  A[Application] --> R[PjsRuntime facade / composition / lifecycle / pump]
-  R --> O[RangeCoordinator: parent lifecycle and result policy]
-  R --> T[TaskCoordinator: logical task lifecycle]
-  R --> D[ExecutionDispatcher: admission and physical dispatch]
+  A[Application] --> R[PjsRuntime facade]
+  R --> API[API adapters: run and range modes]
+  R --> B[Composition: normalized options and callback wiring]
+  R --> L[RuntimeController: lifecycle and guarded pump]
+  B -. constructs before startup .-> L
+  API --> O[RangeCoordinator: parent lifecycle and result policy]
+  API --> T[TaskCoordinator: logical task lifecycle]
+  L --> O
+  L --> T
+  L --> D[ExecutionDispatcher: admission and physical dispatch]
   R --> V[RuntimeTelemetry: read-only projection]
   O --> T
   O --> C[ResultCreditManager: binary reservation lifecycle]
@@ -29,17 +33,17 @@ flowchart TD
   D --> C
   P --> W[PjsWorker: correlated execution slot]
   W --> N[Node worker_threads and V8 isolates]
-  G[PjsTaskRegistry: immutable module descriptors] --> R
+  G[PjsTaskRegistry: immutable module descriptors] --> B
   V -. snapshots .-> O
   V -. snapshots .-> T
   V -. snapshots .-> D
 ```
 
-## v0.11 component ownership
+## Component ownership
 
 | Mutable domain              | Authority             | Important state                                                                      |
 | --------------------------- | --------------------- | ------------------------------------------------------------------------------------ |
-| Runtime lifecycle           | `PjsRuntime`          | state, readiness/shutdown promises, drain mode, pump guard                           |
+| Runtime lifecycle           | `RuntimeController`   | state, readiness/shutdown promises, drain mode, pump guard, escalation timer         |
 | Range parents               | `RangeCoordinator`    | operations, production cursor, deadlines, result policy, operation/partition metrics |
 | Logical tasks               | `TaskCoordinator`     | task records, timers/listeners, transfer claims, caller settlement, task metrics     |
 | Physical admission/dispatch | `ExecutionDispatcher` | queue-credit/idle-worker claims, batching, physical counters                         |
@@ -61,9 +65,26 @@ No subsystem receives the runtime facade. Task-to-parent notification uses a
 narrow synchronous `TaskParentPort`; it cannot mutate arbitrary runtime state.
 There is no service locator, generic event bus, or asynchronous command layer.
 
+`configuration/runtime-options.ts` normalizes scalar construction controls.
+`composition/create-runtime-components.ts` captures the registry snapshot, reads
+queue capacity, constructs all owners, and connects narrow callbacks. Passive
+constructors cannot invoke operational callbacks. Startup starts synchronously
+only after coordinators, controller, telemetry and stream capabilities exist.
+Registry and queue getter reads retain their original order.
+
+`api/run.ts` and `api/range/` receive typed submission capabilities. Collecting
+and completion adapters select their modes; map adaptation selects the output
+constructor; stream adaptation owns overload handling, count/byte option
+normalization and stream construction. The coordinator retains rejection
+accounting, accepted parents, lazy children, deadlines and terminal settlement.
+Stateless request validation lives in `partition/validation.ts`. Mapping block
+validation and copying live in `partition/results/map-assembly.ts`; targets,
+assembly timing, counters and parent settlement remain coordinator-owned.
+These paths are internal and add no package entrypoints.
+
 ## Progress loop and reentrancy
 
-`PjsRuntime` retains one guarded pump with the established order:
+`RuntimeController` owns one guarded pump with the established order:
 
 ```text
 dispatch queued work
@@ -201,8 +222,9 @@ Queue latency is monotonic acceptance-to-physical-dispatch time, including start
 
 ## Stabilization boundary
 
-v0.15 retains all 25 runtime source files unchanged. Composition still constructs
-all subsystem owners before dispatcher.start can trigger callbacks. No scheduler,
+Historically, v0.15 retained all 25 runtime source files unchanged. S1 changes
+internal boundaries as described above. Composition constructs all subsystem
+owners before dispatcher.start can trigger callbacks. No scheduler,
 credit owner, pool or message protocol is replaced. The only root imports are the
 façade, registration, ownership helpers, public types and errors; registry.snapshot
 is a known unsupported public-member leak, documented in the inventory.
@@ -213,7 +235,8 @@ The canonical user contracts now live in the [core guide](guide/core-api.md),
 before execution, reconciles upper-bound successful arrivals, and releases when
 PJS ownership ends. It does not manage process memory.
 
-No architectural regression requiring refactoring was found. Disabled internal
+The v0.15 audit found no architectural regression requiring refactoring. S1 is
+the separately approved maintenance boundary change. Disabled internal
 profiling and opt-in reservation invariant scans remain research/test facilities;
 no benchmark imports or codec-specific behavior enter the production graph.
 Read the [readiness matrix](research/v0.15-v1-readiness.md) for the proposed stable
