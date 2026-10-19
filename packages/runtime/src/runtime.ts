@@ -1,4 +1,6 @@
-import { availableParallelism } from 'node:os';
+import { normalizeRuntimeOptions } from './configuration/runtime-options.js';
+import type { PjsRuntimeOptions } from './configuration/runtime-options.js';
+export type { PjsRuntimeOptions } from './configuration/runtime-options.js';
 import { ExecutionDispatcher } from './dispatch/dispatcher.js';
 import {
   PjsCancelledError,
@@ -23,11 +25,9 @@ import type {
 import type { StreamRangeResult } from './partition/stream.js';
 import { ResultCreditManager } from './results/credit.js';
 import { TaskCoordinator } from './tasks/coordinator.js';
-import { PjsTaskRegistry } from './tasks/registry.js';
 import type { PjsTask, TaskDescriptor } from './tasks/registry.js';
 import { RuntimeTelemetry } from './telemetry/runtime.js';
 import type {
-  RestartPolicy,
   RunOptions,
   RuntimeState,
   ShutdownOptions,
@@ -38,18 +38,6 @@ type CountOnlyStreamRangeOptions = StreamRangeOptions & {
   experimentalMaxResultBytes?: never;
   experimentalMaxReservedResultBytes?: never;
 };
-
-export interface PjsRuntimeOptions {
-  registry: PjsTaskRegistry;
-  workers?: number;
-  minWorkers?: number;
-  maxWorkers?: number;
-  maxQueue?: number;
-  startupTimeout?: number;
-  maxRestarts?: number;
-  /** @experimental Rolling pool-wide restart budget; mutually exclusive with maxRestarts. */
-  restartPolicy?: RestartPolicy;
-}
 
 /** Public facade, composition root, lifecycle authority, and guarded progress loop. */
 export class PjsRuntime {
@@ -69,50 +57,8 @@ export class PjsRuntime {
   private drainResolve: (() => void) | undefined;
 
   constructor(options: PjsRuntimeOptions) {
-    const minimum = integer('minWorkers', options.minWorkers ?? 1, 1);
-    const maximum = integer(
-      'maxWorkers',
-      options.maxWorkers ??
-        Math.max(minimum, options.workers ?? availableParallelism()),
-      minimum,
-    );
-    const workers = integer(
-      'workers',
-      options.workers ??
-        Math.max(minimum, Math.min(maximum, availableParallelism())),
-      minimum,
-      maximum,
-    );
-    const startupTimeout = integer(
-      'startupTimeout',
-      options.startupTimeout ?? 30_000,
-      1,
-      2 ** 31 - 1,
-    );
-    const maxRestarts = integer(
-      'maxRestarts',
-      options.maxRestarts ?? workers * 4,
-      0,
-    );
-    let restartPolicy: RestartPolicy | undefined;
-    if (options.restartPolicy !== undefined) {
-      if (options.maxRestarts !== undefined)
-        throw new TypeError(
-          'restartPolicy and maxRestarts are mutually exclusive',
-        );
-      restartPolicy = {
-        maxRestarts: integer(
-          'restartPolicy.maxRestarts',
-          options.restartPolicy.maxRestarts,
-          0,
-        ),
-        windowMs: integer(
-          'restartPolicy.windowMs',
-          options.restartPolicy.windowMs,
-          1,
-        ),
-      };
-    }
+    const { workers, startupTimeout, maxRestarts, restartPolicy } =
+      normalizeRuntimeOptions(options);
     this.registry = options.registry.snapshot();
     this.dispatcher = new ExecutionDispatcher(
       {
