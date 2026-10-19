@@ -5,7 +5,7 @@ import { dirname, resolve } from 'node:path';
 import { performance } from 'node:perf_hooks';
 import { assertSupportedReleaseNpmVersion } from './release/toolchain.mjs';
 
-const allowed = ['output', 'release-npm-cli', 'r2-report'];
+const allowed = ['output', 'release-npm-cli', 'r2-report', 'r3-report'];
 for (const arg of process.argv.slice(2))
   assert.ok(
     allowed.some((name) => arg.startsWith('--' + name + '=')),
@@ -127,6 +127,65 @@ assert.equal(report.r2.operatingSystem, report.platform, 'R2 OS mismatch');
 assert.equal(report.r2.architecture, report.arch, 'R2 architecture mismatch');
 assert.equal(report.r2.profile, 'standard', 'R2 standard corpus required');
 assert.equal(report.r2.passed, true, 'R2 campaign failed');
+
+if (option('r3-report')) {
+  report.r3 = JSON.parse(readFileSync(resolve(option('r3-report')), 'utf8'));
+} else {
+  const { campaign } = await import('./r3/campaign.mjs');
+  report.r3 = await campaign({ profile: 'standard', output: output + '.r3' });
+}
+save();
+assert.equal(
+  report.r3.sourceCommit,
+  report.sourceCommit,
+  'R3 source revision mismatch',
+);
+assert.equal(
+  report.r3.dirtyWorkingTree,
+  false,
+  'R3 requires a committed candidate',
+);
+assert.equal(report.r3.node, report.node, 'R3 Node version mismatch');
+assert.equal(report.r3.operatingSystem, report.platform, 'R3 OS mismatch');
+assert.equal(report.r3.architecture, report.arch, 'R3 architecture mismatch');
+assert.equal(report.r3.profile, 'standard', 'R3 standard profile required');
+const { PROFILES: r3Profiles } = await import('./r3/campaign.mjs');
+assert.deepEqual(
+  report.r3.config,
+  r3Profiles.standard,
+  'R3 standard bounds required',
+);
+assert.deepEqual(
+  report.r3.seeds,
+  r3Profiles.standard.seeds,
+  'R3 standard seed corpus required',
+);
+assert.equal(
+  report.r3.gc,
+  'off',
+  'Ordinary qualification must not require forced GC',
+);
+assert.equal(
+  report.r3.scenarioCount,
+  11,
+  'R3 standard scenario matrix required',
+);
+assert.equal(
+  report.r3.freshProcessExecutions,
+  report.r3.scenarioCount,
+  'R3 missing child processes',
+);
+assert.equal(report.r3.passed, true, 'R3 campaign failed');
+assert.equal(
+  report.r3.results.length,
+  report.r3.scenarioCount,
+  'R3 missing results',
+);
+assert.ok(
+  report.r3.results.every((r) => r.passed && r.exitCode === 0 && r.samples > 0),
+  'R3 incomplete child evidence',
+);
+
 report.contracts = JSON.parse(
   readFileSync(output + '.contracts.json', 'utf8'),
 ).totals;
