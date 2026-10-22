@@ -47,6 +47,17 @@ npm run build
 node scripts/api-contract-inventory.mjs --check --output=.node-tools/stage-a/inventory.json
 ```
 
+Run from the repository root after the normal locked `npm ci` and build; no
+manual output-directory preparation is required. With `--output`, the tool
+creates missing parent directories recursively and exclusively creates the file.
+An existing output path fails without changing its contents; choose a fresh path
+for each retained report. Without `--output`, no report directory/file is created.
+The focused output-handling regression command (after build) is:
+
+```sh
+node --test scripts/api-contract-inventory.test.mjs
+```
+
 The script independently follows source and built root declarations with the
 TypeScript checker, compares public structures, discovers repository-owned
 signature-reachable types, enumerates statistics leaves, and verifies inventory
@@ -741,8 +752,10 @@ public name without exporting the worker protocol's serialized record.
 Every PJS class extends `PjsError`, except `PjsExecutionLeaseError` extends
 `PjsWorkerError` and transitively `PjsError`. Native RangeError/TypeError from
 validation and application getter errors are not PjsError. Public errors retain
-`instanceof`, their concrete `.name` and descriptive nonempty `.message`; exact
-message/stack bytes, worker frame locations and unsafe thrown-value formatting
+`instanceof`, their concrete `.name` and a string `.message`, which may be empty.
+Public constructors preserve supplied empty strings, including `new PjsError('')`
+and `new PjsTaskError({ name: 'Error', message: '' }, {})`. Exact message/stack
+bytes, worker frame locations and unsafe thrown-value formatting
 are not compatibility protocols. `cause: unknown` can be an application reason,
 serialized remote error or infrastructure error; consumers must inspect safely.
 
@@ -851,7 +864,7 @@ cumulative diagnostics. Values do not sum to one physical completion count.
 | `STAT.containment.shutdownEscalations`              | `number`; required                                                                                                     | Controller              | C; escalations    | first graceful shutdown actually escalated to forced mode (0 or 1)                                                                            | `src/telemetry/runtime.ts:24`; `dist/runtime.d.ts:45`       |
 | `STAT.containment.workerReplacements`               | `number`; required                                                                                                     | Pool                    | C; workers        | replacement wrappers actually spawned after confirmed exits                                                                                   | `src/pool/pool.ts:80`; `dist/runtime.d.ts:42`               |
 | `STAT.dispatch.averageLogicalTasksPerExecute`       | `number`; required                                                                                                     | Dispatcher              | G; tasks/message  | logicalTasks / executeMessages, zero if no messages; descriptive ratio, no throughput promise                                                 | `src/dispatch/dispatcher.ts:236`; `dist/runtime.d.ts:178`   |
-| `STAT.dispatch.batchedExecuteMessages`              | `number`; required                                                                                                     | Dispatcher              | C; messages       | successfully posted batch-mode messages, including singleton batch envelopes                                                                  | `src/dispatch/dispatcher.ts:59`; `dist/runtime.d.ts:175`    |
+| `STAT.dispatch.batchedExecuteMessages`              | `number`; required                                                                                                     | Dispatcher              | C; messages       | successfully posted batches with more than one logical item; singleton submissions use ordinary execution                                     | `src/dispatch/dispatcher.ts:59`; `dist/runtime.d.ts:175`    |
 | `STAT.dispatch.executeMessages`                     | `number`; required                                                                                                     | Dispatcher              | C; messages       | successfully posted execute messages, one per single/batch                                                                                    | `src/dispatch/dispatcher.ts:57`; `dist/runtime.d.ts:173`    |
 | `STAT.dispatch.logicalPartitions`                   | `number`; required                                                                                                     | Dispatcher              | C; partitions     | range children in successfully posted execute messages                                                                                        | `src/dispatch/dispatcher.ts:61`; `dist/runtime.d.ts:177`    |
 | `STAT.dispatch.logicalTasks`                        | `number`; required                                                                                                     | Dispatcher              | C; tasks          | logical items in successfully posted execute messages                                                                                         | `src/dispatch/dispatcher.ts:60`; `dist/runtime.d.ts:176`    |

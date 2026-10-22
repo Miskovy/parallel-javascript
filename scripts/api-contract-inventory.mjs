@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
-import { readFileSync, writeFileSync } from 'node:fs';
-import { relative, resolve } from 'node:path';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { dirname, relative, resolve } from 'node:path';
 import ts from 'typescript';
 
 // Structural discovery, not a byte freeze. Policy remains in the canonical document.
@@ -357,10 +357,13 @@ if (args.includes('--check')) {
     );
 }
 const output = args.find((arg) => arg.startsWith('--output='))?.slice(9);
-if (output)
-  writeFileSync(resolve(output), JSON.stringify(result, null, 2) + '\n', {
+if (output) {
+  const path = resolve(output);
+  mkdirSync(dirname(path), { recursive: true });
+  writeFileSync(path, JSON.stringify(result, null, 2) + '\n', {
     flag: 'wx',
   });
+}
 console.log(
   JSON.stringify({
     ...result.counts,
