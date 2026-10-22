@@ -10,9 +10,11 @@ ownership and all existing physical-completion/containment constraints.
 S1, corrected Stage A, B1 and B2 are integrated through PR #22 at main
 `2ae078b93c8b819d2d843ecb32ffb1fc5e6728f7`. B3 is separately authorized and
 implemented in development: snapshot storage/access is internal and the unsupported
-public method/declaration is removed. This does not accept/implement B4, C
-promotion, or this ADR as a whole. The context and counts below retain the
-historical Stage A baseline; the canonical inventory records current B1–B3
+public method/declaration is removed. B3 is integrated through PR #23 at main
+`e58e792a2069a9ac72cc13fe2309eb1e3c2b7dab`. B4 is implemented separately in
+development with explicit diagnostic/error types and preserved runtime behavior.
+This does not accept C promotion or this ADR as a whole. The context and counts below retain the
+historical Stage A baseline; the canonical inventory records current B1–B4
 changes and the explicit pre-v1 snapshot migration.
 
 ## Historical Stage A context and baseline
@@ -89,7 +91,9 @@ decisions. Tests are necessary evidence and never substitute for these choices.
 
 The original review order was S1, A, then separate B units. S1/Stage A/B1/B2
 are integrated through PR #22 and B3 is implemented as a separate development
-change. B4 and C1/C2/C3/C4 remain separate review units with owners, dependencies
+change, now integrated through PR #23. B4 has separate development contracts and
+an [engineering report](../research/b4-explicit-diagnostic-contracts.md).
+C1/C2/C3/C4 remain separate review units with owners, dependencies
 and acceptance in the linked specs.
 Preserve facade/configuration/composition/controller boundaries and one pump;
 do not add generic contexts, tracing, event buses or parallel state owners.

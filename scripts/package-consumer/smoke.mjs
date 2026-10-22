@@ -50,6 +50,9 @@ try {
     'dist/telemetry/profile.js',
     'src/runtime.ts',
     'dist/tasks/registry.js',
+    'dist/diagnostics.js',
+    'src/diagnostics.ts',
+    'dist/errors/index.js',
     'src/tasks/registry.ts',
     'package.json',
   ]) {

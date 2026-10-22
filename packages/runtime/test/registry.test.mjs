@@ -153,6 +153,9 @@ test('worker replacement uses the captured descriptors rather than later registr
   try {
     await runtime.ready();
     const originalId = runtime.stats().workers.details[0].id;
+    assert.equal(await runtime.run(echo, 9), 9);
+    const original = runtime.stats().workers.details[0];
+    assert.equal(original.completedTasks, 1);
     const late = registry.register(
       'late',
       new URL('./fixtures/absent-b3-task.mjs', import.meta.url),
@@ -164,6 +167,10 @@ test('worker replacement uses the captured descriptors rather than later registr
         runtime.stats().workers.restarts === 1,
     );
     assert.notEqual(runtime.stats().workers.details[0].id, originalId);
+    assert.equal(runtime.stats().workers.details[0].completedTasks, 0);
+    assert.equal(runtime.stats().workers.details[0].failedTasks, 0);
+    assert.equal(runtime.stats().tasks.completed, 1);
+    assert.equal(original.completedTasks, 1);
     assert.equal(await runtime.run(echo, 10), 10);
     await assert.rejects(runtime.run(late, 1), PjsTaskRegistrationError);
   } finally {

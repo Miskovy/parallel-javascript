@@ -1,9 +1,28 @@
 # Statistics and terminology
 
-`runtime.stats()` returns copies with current state and cumulative counters.
-It is a supported diagnostic surface; the full nested layout is not frozen for
-1.x. It has no completed-task history, histograms, p50/p95/p99 or observer hooks.
+`runtime.stats(): PjsRuntimeStats` returns writable defensive copies with current
+state and cumulative counters. B4 development root-exports explicit diagnostic
+types while preserving all 158 inventoried leaves and their meanings. Broader v1
+stabilization and feature promotion remain pending. These declarations are absent
+from published RC4. It has no completed-task history, histograms, p50/p95/p99 or observer hooks.
 Do not derive unavailable quantiles from averages.
+
+```ts
+import type {
+  PjsRuntimeStats,
+  PjsOperationSnapshot,
+} from '@pjavascript/runtime';
+```
+
+The root contract names its outcome, containment, worker, queue, timing,
+operation, stream-result, map-result, partition and dispatch records with
+Pjs-prefixed Stats names. PjsOperationSnapshot retains optional mode fields,
+including optional typedOutput with a string or undefined value. PjsOperationStatus
+retains created/running/completed/failed/cancelled/timed_out; PjsRangeResultMode
+retains collect/discard/stream/map. Existing TaskSnapshot, WorkerState and their
+status types are unchanged. The [canonical inventory](../research/v1-api-contract-inventory.md)
+lists every field's units, owner and lifetime. Mutating a returned copy does not
+change runtime state. Multiple subsystem observations are not an atomic sample.
 
 | Fields                                                                | Meaning                                                                                                                                                                                                                    |
 | --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

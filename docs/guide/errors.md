@@ -5,6 +5,37 @@ All error classes inherit PjsError, which inherits Error and sets name to the
 concrete class name. Messages are explanatory and contextual; their exact wording
 is not a protocol. Errors contain no coordinator maps or mutable runtime records.
 
+B4 development root-exports PjsErrorContext, PjsBinaryResultErrorContext and
+PjsTaskErrorDetails as types. These declarations are absent from published RC4.
+PjsErrorContext has optional taskId, workerId, operationId, partitionIndex,
+rangeStart, rangeEnd and unknown cause. Its binary extension adds optional
+declaredBytes, actualBytes, actualType and resultByteCapacity. PjsTaskErrorDetails
+has required string name/message and optional string stack; PjsTaskError still
+requires a context argument. Other public errors retain their optional context.
+
+```ts
+import { PjsTaskError } from '@pjavascript/runtime';
+import type {
+  PjsErrorContext,
+  PjsTaskErrorDetails,
+} from '@pjavascript/runtime';
+
+const context: PjsErrorContext = {
+  taskId: 'application-task',
+  cause: undefined,
+};
+const details: PjsTaskErrorDetails = { name: 'ApplicationError', message: '' };
+const error = new PjsTaskError(details, context);
+```
+
+The six instance context fields are readonly in TypeScript and always present,
+with undefined values when unavailable. Native stack/cause remain optional;
+cause is unknown and requires narrowing. Context input fields remain writable.
+Each class copies only its existing metadata: a binary-contract error does not
+gain resultByteCapacity, and a capacity error does not gain actualBytes/actualType.
+Readonly declarations do not freeze JavaScript instances. Empty messages and
+optional remote stacks are preserved; worker protocol records remain internal.
+
 | Class                        | Trigger / associated API                                                       | Delivery                                                                | Recovery / retry                                                                                         |
 | ---------------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
 | PjsError                     | Base error; host range input factory throws or returns malformed payload       | Parent rejection / stream next rejection                                | Fix factory; no blind retry after partial range side effects                                             |

@@ -62,6 +62,16 @@ async function inspectBuffered(
   const stats = runtime.stats().streamResults;
   assert.equal(stats.knownBufferedPayloadBytes, expectedBytes);
   assert.equal(stats.unknownBufferedResults, expectedUnknown);
+  const active = runtime.stats().activeOperations[0];
+  assert.equal(active.resultMode, 'stream');
+  assert.equal(active.knownBufferedPayloadBytes, expectedBytes);
+  assert.equal('bufferedKnownPayloadBytes' in active, false);
+  assert.equal('typedOutput' in active, false);
+  assert.equal('mappedElements' in active, false);
+  assert.deepEqual(
+    runtime.stats().streams,
+    runtime.stats().operations.streaming,
+  );
   await stream.return();
   assert.equal(runtime.stats().streamResults.knownBufferedPayloadBytes, 0);
   assert.equal(runtime.stats().streamResults.unknownBufferedResults, 0);

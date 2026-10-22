@@ -197,6 +197,9 @@ test('refund resumes admission before consumer yield and slow buffers retain act
   assert.equal(stats.streamResults.currentReservedResultBytes, 3);
   assert.equal(stats.streamResults.refundedResultBytes, 21);
   assert.equal(stats.activeOperations[0].bufferedKnownPayloadBytes, 3);
+  assert.equal(stats.activeOperations[0].knownBufferedPayloadBytes, 3);
+  assert.equal(stats.streamResults.peakReservedResultBytes, 10);
+  assert.equal(stats.streamResults.resultByteRefunds, 3);
   assert.equal(stats.activeOperations[0].reservedResultBytes, 3);
   assert.equal(stats.streamResults.resultByteReservationWaits > 0, true);
   assert.deepEqual(calls, [0, 1, 2, 3]);

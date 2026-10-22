@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { PjsRuntime, PjsTaskRegistry } from '@pjavascript/runtime';
+import { diagnosticContracts, errorContracts } from './diagnostics.js';
 import type {
   CountOnlyStreamRangeOptions,
   PjsRangeStream,
@@ -44,6 +45,8 @@ try {
     timeout: 5000,
   });
   assert.equal(result, 42);
+  diagnosticContracts(runtime);
+  errorContracts();
   const options: CountOnlyStreamRangeOptions = {
     experimentalMaxBufferedResults: 1,
   };

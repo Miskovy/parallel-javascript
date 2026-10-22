@@ -22,8 +22,10 @@ PjsBinaryResult views now require ordinary ArrayBuffer backing. Shared-capable
 inputs and mapping types are preserved. Those declarations are absent from RC4;
 ranges remain experimental. B3 development removes unsupported registry.snapshot()
 access and keeps configuration snapshots internal; callers needing introspection
-must retain their own registration metadata. B4, broader promotion decisions and
-option renames remain proposed.
+must retain their own registration metadata. B4 development adds seventeen
+type-only diagnostic/error contracts, including PjsRuntimeStats and PjsErrorContext,
+preserving all 158 diagnostic leaves and runtime behavior. Broader promotion
+decisions and option renames remain proposed.
 
 ```sh
 npm install @pjavascript/runtime@next
