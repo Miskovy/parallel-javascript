@@ -44,19 +44,31 @@ export interface RunOptions {
   transferList?: readonly ArrayBuffer[];
   /** End-to-end deadline in milliseconds, including startup and queue time. */
   timeout?: number;
-  /** @experimental Physical dispatch lease in milliseconds; ordinary run() only. */
+  /**
+   * @experimental Physical dispatch lease; supported ordinary run() only.
+   * Integer milliseconds from 1 through 2147483647; undefined disables it.
+   * Starts after successful posting, excluding startup/queue wait before dispatch.
+   * Expiry requests asynchronous containment; it does not settle an already-settled caller again.
+   */
   executionLease?: number;
 }
 
 export interface ShutdownOptions {
   /** Defaults to true. False explicitly permits terminating active executions. */
   drain?: boolean;
-  /** @experimental Escalate the first graceful shutdown after this many milliseconds. */
+  /**
+   * @experimental Escalate the first graceful shutdown, including remaining startup.
+   * Integer milliseconds from 1 through 2147483647; requires drain not to be false.
+   * First shutdown options/promise win. Resolution still requires confirmed worker exits;
+   * termination rejection cannot report successful cleanup. Undefined adds no escalation deadline.
+   */
   forceAfter?: number;
 }
 
-/** @experimental Pool-wide rolling restart budget; replaces the lifetime budget. */
+/** @experimental Pool-wide monotonic rolling restart decision budget; replaces the lifetime budget. */
 export interface RestartPolicy {
+  /** Nonnegative safe-integer recovery decision limit, not a replacement-spawn count. */
   maxRestarts: number;
+  /** Positive safe-integer milliseconds; decisions expire at age >= windowMs. */
   windowMs: number;
 }

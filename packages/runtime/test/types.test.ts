@@ -19,6 +19,9 @@ import type {
   CountOnlyStreamRangeOptions,
   PjsOwnedTypedArray,
   ResultByteDeclaration,
+  RunOptions,
+  RestartPolicy,
+  ShutdownOptions,
 } from '../dist/index.js';
 // @ts-expect-error Internal worker descriptors are not root API types.
 import type { TaskDescriptor } from '../dist/index.js';
@@ -494,20 +497,23 @@ const bigints: Promise<BigInt64Array<ArrayBuffer>> = runtime.parallelMapRange(
 void bigints;
 
 // R1 experimental physical containment options.
-const leasedResult: Promise<Uint8Array> = runtime.run(task, data, {
+const c1RunOptions: RunOptions = {
   timeout: 100,
   executionLease: 500,
-});
+};
+const leasedResult: Promise<Uint8Array> = runtime.run(task, data, c1RunOptions);
 void leasedResult;
+const c1RestartPolicy: RestartPolicy = { maxRestarts: 3, windowMs: 60_000 };
 const rollingRuntime = new PjsRuntime({
   registry,
-  restartPolicy: { maxRestarts: 3, windowMs: 60_000 },
+  restartPolicy: c1RestartPolicy,
 });
 void rollingRuntime;
-const boundedShutdown: Promise<void> = runtime.shutdown({
+const c1ShutdownOptions: ShutdownOptions = {
   drain: true,
   forceAfter: 500,
-});
+};
+const boundedShutdown: Promise<void> = runtime.shutdown(c1ShutdownOptions);
 void boundedShutdown;
 const leaseError: PjsExecutionLeaseError = new PjsExecutionLeaseError(
   'expired',
@@ -525,6 +531,19 @@ const rejectedRangeLease: PartitionOptions = {
   executionLease: undefined,
 };
 void rejectedRangeLease;
+// @ts-expect-error Graceful escalation requires a numeric duration.
+const rejectedShutdownDuration: ShutdownOptions = { forceAfter: '500' };
+const rejectedRestartBudget: RestartPolicy = {
+  // @ts-expect-error Restart decision budgets are numeric, not text.
+  maxRestarts: '3',
+  windowMs: 1000,
+};
+const rejectedRestartWindow: RestartPolicy = {
+  maxRestarts: 3,
+  // @ts-expect-error Restart windows require numeric milliseconds.
+  windowMs: '1000',
+};
+void [rejectedShutdownDuration, rejectedRestartBudget, rejectedRestartWindow];
 
 // B4 contracts mirror the emitted installed diagnostic/error consumer.
 import assert from 'node:assert/strict';

@@ -939,3 +939,97 @@ test(
     assertOwners(runtime);
   },
 );
+
+test(
+  'lease-driven repair termination rejection fails closed without replay or early replacement',
+  bounded,
+  async (t) => {
+    const registry = new PjsTaskRegistry();
+    const module = new URL('./fixtures/containment-tasks.mjs', import.meta.url);
+    const hang = registry.register('hang', module, 'hang');
+    const echo = registry.register('echo', module, 'echo');
+    const runtime = new PjsRuntime({
+      registry,
+      workers: 1,
+      restartPolicy: { maxRestarts: 1, windowMs: 1000 },
+    });
+    await runtime.ready();
+    const worker = firstWorker(runtime);
+    const time = clock(worker);
+    const buffer = shared();
+    let exits = 0;
+    worker.thread.on('exit', () => exits++);
+    t.after(async () => {
+      // A rejected stop remains rejected; only the actual Node exit ends ownership.
+      await worker.thread.terminate();
+      worker.thread.removeAllListeners();
+      assertOwners(runtime, { quiescent: true });
+    });
+    const terminationFailure = new Error(
+      'controlled lease repair termination rejection',
+    );
+    let requests = 0;
+    worker.terminateThread = () => {
+      requests++;
+      return Promise.reject(terminationFailure);
+    };
+    let settlements = 0;
+    const leased = runtime.run(
+      hang,
+      { shared: buffer },
+      { executionLease: 100 },
+    );
+    const leasedCheck = assert.rejects(leased, (error) => {
+      settlements++;
+      assert.ok(error instanceof PjsExecutionLeaseError);
+      assert.equal(error.workerId, worker.id);
+      return true;
+    });
+    await until(() => started(buffer));
+    const queuedCheck = assert.rejects(
+      runtime.run(echo, 'not replayed'),
+      PjsWorkerError,
+    );
+    time.advance(100);
+    await Promise.all([leasedCheck, queuedCheck]);
+    await until(() => runtime.stats().state === 'failed');
+    assert.equal(settlements, 1);
+    assert.equal(requests, 1);
+    assert.equal(exits, 0);
+    assert.equal(worker.hasPhysicalExecution, true);
+    assert.equal(runtime.stats().workers.busy, 1);
+    assert.equal(runtime.stats().workers.total, 1);
+    assert.equal(runtime.stats().workers.restarts, 1);
+    assert.equal(runtime.stats().tasks.pending, 0);
+    assert.equal(runtime.stats().dispatch.executeMessages, 1);
+    assert.equal(runtime.stats().containment.leaseExpirations, 1);
+    assert.equal(runtime.stats().containment.leaseTerminationRequests, 1);
+    assert.equal(runtime.stats().containment.confirmedLeaseExits, 0);
+    assert.equal(runtime.stats().containment.workerReplacements, 0);
+    assert.equal(runtime.stats().containment.restartBudgetExhaustions, 0);
+    assertOwners(runtime);
+    const shutdown = runtime.shutdown();
+    assert.equal(runtime.shutdown({ drain: false }), shutdown);
+    await assert.rejects(shutdown, (error) => error === terminationFailure);
+    await assert.rejects(
+      runtime.run(echo, 'still unavailable'),
+      PjsRuntimeStateError,
+    );
+    time.timers[0].callback();
+    assert.equal(settlements, 1);
+    assert.equal(requests, 1);
+    assert.equal(runtime.stats().workers.busy, 1);
+    assert.equal(runtime.stats().state, 'failed');
+    await worker.thread.terminate();
+    assert.equal(exits, 1);
+    assert.equal(runtime.stats().containment.confirmedLeaseExits, 1);
+    assert.equal(runtime.stats().containment.workerReplacements, 0);
+    assert.equal(runtime.stats().dispatch.executeMessages, 1);
+    assert.equal(runtime.stats().state, 'failed');
+    await assert.rejects(
+      runtime.shutdown(),
+      (error) => error === terminationFailure,
+    );
+    assertOwners(runtime, { quiescent: true });
+  },
+);

@@ -7,6 +7,17 @@ stabilization and feature promotion remain pending. These declarations are absen
 from published RC4. It has no completed-task history, histograms, p50/p95/p99 or observer hooks.
 Do not derive unavailable quantiles from averages.
 
+Containment diagnostics retain the same seven PjsContainmentStats fields in
+C1-A/Q. restartWindowUtilization is a required property whose value is the current
+rolling-window restart decision count, or undefined without a rolling policy.
+workers.restarts counts approved recovery decisions; workerReplacements counts
+actual replacement spawns after confirmed exit. A rejected termination can leave
+the former incremented and the latter unchanged, with workers.busy still occupied
+after tasks.pending reaches zero. Neither failure nor cleanup rejection proves
+physical completion. The [C1 report](../research/c1-containment-acceptance.md)
+records the added failure-path and installed-consumer evidence; no field or
+experimental-status change is implied.
+
 ```ts
 import type {
   PjsRuntimeStats,

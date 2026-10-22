@@ -10,8 +10,12 @@ export interface PjsRuntimeOptions {
   maxWorkers?: number;
   maxQueue?: number;
   startupTimeout?: number;
+  /** Lifetime recovery decision budget without restartPolicy; defaults to workers * 4. Zero is valid. */
   maxRestarts?: number;
-  /** @experimental Rolling pool-wide restart budget; mutually exclusive with maxRestarts. */
+  /**
+   * @experimental Rolling pool-wide restart budget, copied during construction.
+   * A defined value is mutually exclusive with defined maxRestarts; omitting policy uses the lifetime budget.
+   */
   restartPolicy?: RestartPolicy;
 }
 
