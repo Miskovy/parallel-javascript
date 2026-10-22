@@ -10,7 +10,7 @@ for I/O; PJS provides a separate compute plane. There are no runtime dependencie
 is the published prerelease; npm `next` and `latest` both select it.**
 See the [registry metadata](https://registry.npmjs.org/@pjavascript%2fruntime).
 Final v1.0.0 has not been released. Development source contains later R1/R2/R3
-work and integrated S1/Stage A/B1/B2; unchanged version fields do not make it the published artifact.
+work and integrated S1/Stage A/B1–B4 through PR #24; unchanged version fields do not make it the published artifact.
 Historical [RC readiness](docs/research/v1-rc1-readiness.md) and the immutable
 v0.15.0 release remain available.
 [API stability](docs/stability.md) distinguishes core candidates, supported
@@ -30,6 +30,8 @@ composition; introspection callers should retain their own registration metadata
 B4 development names the existing diagnostic and error contracts through seventeen
 type-only root exports, preserving all 158 diagnostic leaves and runtime behavior.
 Broader promotion decisions and future option names remain pending.
+The [Stage C engineering plan](docs/research/v1-api-migration-plan.md) starts with
+C1 containment acceptance and qualification; promotion remains a separate decision.
 
 ## Install
 

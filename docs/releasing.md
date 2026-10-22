@@ -57,7 +57,15 @@ than pretend R1 is the RC4 artifact. Qualify RC4 from its historical tag/commit;
 a future release requires a separately reviewed version and baseline.
 The `release.published` workflow, OIDC binding and publication guards are unchanged.
 
-## Proposed future candidate gates — not implemented by Stage A
+## Proposed future candidate gates — Stage F remains separate
+
+S1, corrected Stage A and B1–B4 are integrated through PR #24 at main
+`35f2aacfe431516ed559409a3cba6bf2ccd2e6b7`. The [Stage C engineering plan](research/v1-api-migration-plan.md)
+now records controlled C1–C4 acceptance, qualification, promotion and option-window
+decisions. Planning, historical B4 CI and eventual individual feature promotion
+do not select a release version/baseline or authorize publication. C1 can close
+its acceptance evidence before unrelated C2/C3 implementation; separately tracked
+hold applicability remains unresolved and requires a maintainer decision.
 
 The blocker is concrete: [baseline.mjs](../scripts/rc/baseline.mjs) selects
 `frozen-rc4.json` unconditionally. RC API/package/qualification/reproduction

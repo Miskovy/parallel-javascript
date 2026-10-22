@@ -1,7 +1,7 @@
 # Current API contract inventory and proposed v1 dispositions
 
-B4 development inventory, based on integrated S1/Stage A/B1–B3. **B1–B4 are
-implemented in development; broader policy and Stage C remain proposed. No feature
+Integrated B4 inventory at main `35f2aacfe431516ed559409a3cba6bf2ccd2e6b7`.
+**S1, corrected Stage A and B1–B4 are integrated; broader policy and Stage C remain proposed. No feature
 is promoted.**
 This is the canonical current inventory. The [v0.15 inventory](v0.15-public-api-inventory.md)
 and [RC1 freeze inventory](v1-rc1-contract-inventory.md) are historical, including
@@ -9,9 +9,18 @@ their old `@pjs/runtime` spelling and 38-export count.
 
 ## Source identity and evidence limits
 
-Current B4 base is main `e58e792a2069a9ac72cc13fe2309eb1e3c2b7dab`, including
+B4 was merged through [PR #24](https://github.com/Miskovy/parallel-javascript/pull/24).
+Current main, reviewed B4 head e78b773 and CI synthetic merge c8c1576 have the
+same tree `48bb493a6717dfbd2259af017937ca623110b044`. The current source and
+public inventory therefore match B4; this is tree equivalence, not a fresh test
+run at main. The [Stage C qualification ledger](v1-api-migration-plan.md#verified-starting-state-and-qualification-ledger)
+records the re-inspected four-cell B4 CI evidence and separate local results.
+Current experimental annotations/options remain unchanged pending unit-specific
+C1–C4 decisions.
+
+B4's implementation base was main `e58e792a2069a9ac72cc13fe2309eb1e3c2b7dab`, including
 [PR #23](https://github.com/Miskovy/parallel-javascript/pull/23) and reviewed
-S1, corrected Stage A and B1–B3. The isolated B4 branch is
+S1, corrected Stage A and B1–B3. Its isolated B4 branch was
 `feat/v1-explicit-diagnostic-contracts`. B4 adds seventeen type-only root names
 for diagnostics and error contexts/details. All 158 statistics leaves retain
 their types and optionality; all 36 existing production JavaScript files retain

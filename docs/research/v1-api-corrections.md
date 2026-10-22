@@ -2,6 +2,13 @@
 
 **B1–B4 are implemented in development; their changes are absent from published
 RC4. Broader promotion decisions remain proposed.**
+
+S1, corrected Stage A and B1–B4 are integrated at fetched main
+`35f2aacfe431516ed559409a3cba6bf2ccd2e6b7` through PRs #22–#24. Its tree matches
+the reviewed B4 candidate and CI synthetic merge. The [Stage C engineering plan](v1-api-migration-plan.md)
+now owns the current qualification ledger, C1 acceptance/qualification handoff,
+option-migration recommendation and separately scoped C2–C4 decisions. The B
+engineering reports remain historical; integration is not feature promotion.
 Current contracts are in the [canonical inventory](v1-api-contract-inventory.md).
 S1, corrected Stage A, B1 and B2 reached main through PR #22 at
 `2ae078b93c8b819d2d843ecb32ffb1fc5e6728f7`. B3 is separately authorized on
@@ -258,8 +265,8 @@ R2/R3 campaigns at promotion/final qualification, not sleeps or performance boun
 
 ## Review order and shared exits
 
-B1–B3 are integrated through PRs #22/#23. B4 is separately implemented in
-development and consumes the approved inventory and B3 removal. Each change runs
+B1–B4 are integrated through PRs #22–#24. B4 consumed the approved inventory
+and B3 removal. The separate Stage C plan does not implement promotion. Each B change runs
 build, contract tests applicable to affected ownership, both compiler consumers,
 installed package smoke, lint, format, docs and diff checks. Review emitted
 source/declaration/root graph differences against the named unit; expected API
