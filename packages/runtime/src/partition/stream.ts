@@ -5,6 +5,20 @@ export interface StreamRangeResult<Output> {
   readonly output: Output;
 }
 
+/** @experimental Eager, single-consumer range delivery with explicit cleanup. */
+export interface PjsRangeStream<Output> extends AsyncIterableIterator<
+  StreamRangeResult<Output>,
+  undefined,
+  void
+> {
+  next(): Promise<IteratorResult<StreamRangeResult<Output>, undefined>>;
+  return(): Promise<IteratorResult<StreamRangeResult<Output>, undefined>>;
+  throw(
+    error?: unknown,
+  ): Promise<IteratorResult<StreamRangeResult<Output>, undefined>>;
+  [Symbol.asyncIterator](): PjsRangeStream<Output>;
+}
+
 interface StreamCallbacks {
   demand(): void;
   cancel(): void;
@@ -19,13 +33,13 @@ function observablePayloadBytes(value: unknown): number | undefined {
 }
 
 /** @internal Single-consumer completion-order delivery with bounded buffering. */
-export class RangeStream<Output> implements AsyncIterableIterator<
-  StreamRangeResult<Output>
-> {
+export class RangeStream<Output> implements PjsRangeStream<Output> {
   private readonly buffer: StreamRangeResult<Output>[] = [];
   private waiter:
     | {
-        resolve: (value: IteratorResult<StreamRangeResult<Output>>) => void;
+        resolve: (
+          value: IteratorResult<StreamRangeResult<Output>, undefined>,
+        ) => void;
         reject: (error: Error) => void;
       }
     | undefined;
@@ -87,7 +101,7 @@ export class RangeStream<Output> implements AsyncIterableIterator<
     waiter?.reject(error);
   }
 
-  next(): Promise<IteratorResult<StreamRangeResult<Output>>> {
+  next(): Promise<IteratorResult<StreamRangeResult<Output>, undefined>> {
     if (this.buffer.length > 0) {
       const value = this.buffer.shift()!;
       this.release(value.output);
@@ -108,7 +122,7 @@ export class RangeStream<Output> implements AsyncIterableIterator<
     });
   }
 
-  return(): Promise<IteratorResult<StreamRangeResult<Output>>> {
+  return(): Promise<IteratorResult<StreamRangeResult<Output>, undefined>> {
     if (!this.done) {
       this.done = true;
       this.clearBuffer();
@@ -122,7 +136,9 @@ export class RangeStream<Output> implements AsyncIterableIterator<
     return Promise.resolve({ value: undefined, done: true });
   }
 
-  throw(error?: unknown): Promise<IteratorResult<StreamRangeResult<Output>>> {
+  throw(
+    error?: unknown,
+  ): Promise<IteratorResult<StreamRangeResult<Output>, undefined>> {
     const reason = error instanceof Error ? error : new Error(String(error));
     if (!this.done) {
       this.done = true;
@@ -137,7 +153,7 @@ export class RangeStream<Output> implements AsyncIterableIterator<
     return Promise.reject(reason);
   }
 
-  [Symbol.asyncIterator](): AsyncIterableIterator<StreamRangeResult<Output>> {
+  [Symbol.asyncIterator](): PjsRangeStream<Output> {
     return this;
   }
 
