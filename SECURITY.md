@@ -2,9 +2,12 @@
 
 ## Supported versions
 
-The latest supported release line receives security attention. Currently,
-[v1.0.0-rc.2](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.2) is the
-actively evaluated release candidate. It is a prerelease, not final v1.0.0.
+As checked on 22 October 2026,
+[v1.0.0-rc.4](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.4)
+is the published prerelease; [npm metadata](https://registry.npmjs.org/@pjavascript%2fruntime)
+reports `latest` and `next` at RC4. It is the current published line for security
+triage, not final v1.0.0. Development-source additions and proposed v1 decisions
+must not be assumed present in that immutable package.
 Pre-1.0 releases do not carry a long-term security-support guarantee, and older
 releases are not promised backported fixes.
 

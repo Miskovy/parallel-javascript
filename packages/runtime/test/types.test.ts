@@ -15,10 +15,14 @@ import type {
   TypedMapRangeOptions,
   BinaryStreamRangeOptions,
   PjsBinaryResult,
+  PjsRangeStream,
+  CountOnlyStreamRangeOptions,
+  PjsOwnedTypedArray,
+  ResultByteDeclaration,
 } from '../dist/index.js';
 
 const registry = new PjsTaskRegistry();
-const task = registry.register<Uint8Array, Uint8Array>(
+const task = registry.register<Uint8Array, Uint8Array<ArrayBuffer>>(
   'bytes',
   new URL('./fixture.js', import.meta.url),
 );
@@ -125,6 +129,66 @@ const stream: AsyncIterable<StreamRangeResult<number>> = runtime.streamRange(
   },
 );
 void stream;
+
+const countOptions: CountOnlyStreamRangeOptions = {
+  experimentalMaxBufferedResults: 2,
+};
+const directStream: PjsRangeStream<number> = runtime.streamRange(
+  partitionTask,
+  range,
+  (partition) => ({ input: { partition, shared } }),
+  countOptions,
+);
+const iterableCompatibility: AsyncIterable<StreamRangeResult<number>> =
+  directStream;
+const selfStream: PjsRangeStream<number> = directStream[Symbol.asyncIterator]();
+void iterableCompatibility;
+void selfStream;
+async function closeableConsumer(value: PjsRangeStream<number>) {
+  const item = await value.next();
+  if (item.done) {
+    const completionValue: undefined = item.value;
+    // @ts-expect-error Completed iterators cannot leak any into a number.
+    const badCompletion: number = item.value;
+    void completionValue;
+    void badCompletion;
+  } else {
+    const output: number = item.value.output;
+    const partition: RangePartition = item.value.partition;
+    // @ts-expect-error Output stays the task output, not another result wrapper.
+    const nested: StreamRangeResult<number> = item.value.output;
+    void output;
+    void partition;
+    void nested;
+  }
+  const closed = await value.return();
+  if (closed.done) {
+    const returned: undefined = closed.value;
+    void returned;
+  }
+  await value.throw(new Error('close'));
+}
+void closeableConsumer;
+type CompletionValue = Extract<
+  Awaited<ReturnType<PjsRangeStream<number>['next']>>,
+  { done: true }
+>['value'];
+type IsAny<T> = 0 extends 1 & T ? true : false;
+const completionIsNotAny: IsAny<CompletionValue> = false;
+void completionIsNotAny;
+// @ts-expect-error Count-only options exclude exact byte declarations.
+const countExact: CountOnlyStreamRangeOptions = { experimentalResultBytes: 8 };
+const countMaximum: CountOnlyStreamRangeOptions = {
+  // @ts-expect-error Count-only options exclude maximum byte declarations.
+  experimentalMaxResultBytes: 8,
+};
+// @ts-expect-error Count-only options exclude byte capacity, including explicit undefined.
+const countCapacity: CountOnlyStreamRangeOptions = {
+  experimentalMaxReservedResultBytes: undefined,
+};
+void countExact;
+void countMaximum;
+void countCapacity;
 // @ts-expect-error Stream task input typing applies to every payload.
 runtime.streamRange(task, range, () => ({ input: 'bad' }));
 
@@ -136,6 +200,13 @@ const binaryOptions: BinaryStreamRangeOptions = {
 const binaryStream: AsyncIterable<StreamRangeResult<Uint8Array>> =
   runtime.streamRange(task, range, () => ({ input: data }), binaryOptions);
 void binaryStream;
+const directExact: PjsRangeStream<Uint8Array> = runtime.streamRange(
+  task,
+  range,
+  () => ({ input: data }),
+  binaryOptions,
+);
+void directExact.return();
 const binaryValue: PjsBinaryResult = new DataView(new ArrayBuffer(8));
 const upperOptions = {
   experimentalMaxResultBytes: (partition: RangePartition) =>
@@ -145,45 +216,177 @@ const upperOptions = {
 const upperStream: AsyncIterable<StreamRangeResult<Uint8Array>> =
   runtime.streamRange(task, range, () => ({ input: data }), upperOptions);
 void upperStream;
-runtime.streamRange(
-  partitionTask,
+const directUpper: PjsRangeStream<Uint8Array> = runtime.streamRange(
+  task,
   range,
-  (partition) => ({ input: { partition, shared } }),
-  // @ts-expect-error Upper-bound streams require direct binary task results.
+  () => ({ input: data }),
   upperOptions,
 );
-runtime.streamRange(task, range, () => ({ input: data }), {
-  // @ts-expect-error Exact and upper-bound declarations cannot coexist.
-  experimentalResultBytes: 16,
-  // @ts-expect-error Mutually exclusive declarations fail every overload.
-  experimentalMaxResultBytes: 32,
-  // @ts-expect-error Count-only fallback excludes byte capacity.
-  experimentalMaxReservedResultBytes: 64,
-});
-runtime.streamRange(task, range, () => ({ input: data }), {
-  // @ts-expect-error A maximum needs a byte capacity.
-  experimentalMaxResultBytes: 32,
-});
-runtime.streamRange(task, range, () => ({ input: data }), {
-  // @ts-expect-error Declaration callbacks must be synchronous.
-  experimentalMaxResultBytes: async () => 32,
-  // @ts-expect-error Count-only fallback excludes byte capacity.
-  experimentalMaxReservedResultBytes: 64,
-});
-void binaryValue;
-runtime.streamRange(
-  partitionTask,
+void directUpper.throw();
+// All eleven view kinds retain ordinary backing, including offset and empty views.
+const ownedViews = [
+  new Int8Array(0),
+  new Uint8Array(new ArrayBuffer(16), 8, 8),
+  new Uint8ClampedArray(1),
+  new Int16Array(1),
+  new Uint16Array(1),
+  new Int32Array(1),
+  new Uint32Array(1),
+  new Float32Array(1),
+  new Float64Array(1),
+  new BigInt64Array(1),
+  new BigUint64Array(1),
+] satisfies PjsOwnedTypedArray[];
+const ownedResults = [
+  ...ownedViews,
+  new ArrayBuffer(0),
+  new DataView(new ArrayBuffer(16), 8, 8),
+] satisfies PjsBinaryResult[];
+for (const value of ownedResults) {
+  const ownedTask = registry.register<undefined, typeof value>(
+    'owned',
+    new URL('./fixture.js', import.meta.url),
+  );
+  const input = () => ({ input: undefined });
+  const exact: PjsRangeStream<typeof value> = runtime.streamRange(
+    ownedTask,
+    range,
+    input,
+    binaryOptions,
+  );
+  const upper: PjsRangeStream<typeof value> = runtime.streamRange(
+    ownedTask,
+    range,
+    input,
+    upperOptions,
+  );
+  const envelope: PjsTransfer<typeof value> = transfer(value, [
+    value instanceof ArrayBuffer ? value : value.buffer,
+  ]);
+  void exact;
+  void upper;
+  void envelope;
+}
+const declaration: ResultByteDeclaration = (partition) =>
+  partition.end - partition.start;
+const constantDeclaration: ResultByteDeclaration = 0;
+// @ts-expect-error Byte declaration callbacks cannot be async.
+const asyncDeclaration: ResultByteDeclaration = async () => 0;
+void declaration;
+void constantDeclaration;
+void asyncDeclaration;
+
+const sharedViews = [
+  new Int8Array(new SharedArrayBuffer(8)),
+  new Uint8Array(new SharedArrayBuffer(8)),
+  new Uint8ClampedArray(new SharedArrayBuffer(8)),
+  new Int16Array(new SharedArrayBuffer(8)),
+  new Uint16Array(new SharedArrayBuffer(8)),
+  new Int32Array(new SharedArrayBuffer(8)),
+  new Uint32Array(new SharedArrayBuffer(8)),
+  new Float32Array(new SharedArrayBuffer(8)),
+  new Float64Array(new SharedArrayBuffer(8)),
+  new BigInt64Array(new SharedArrayBuffer(8)),
+  new BigUint64Array(new SharedArrayBuffer(8)),
+] as const;
+type BinaryEligibility<Values extends readonly unknown[]> = {
+  [Index in keyof Values]: Values[Index] extends PjsBinaryResult ? true : false;
+};
+// Check each tuple entry independently, rather than rejecting only the union.
+const sharedEligibility: BinaryEligibility<typeof sharedViews> = [
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+];
+void sharedEligibility;
+for (const value of sharedViews) {
+  // @ts-expect-error Every explicitly shared-backed typed kind is excluded.
+  const owned: PjsOwnedTypedArray = value;
+  // @ts-expect-error Strict binary results exclude shared-backed typed views.
+  const binary: PjsBinaryResult = value;
+  const sharedOutputTask = registry.register<undefined, typeof value>(
+    'shared-output',
+    new URL('./fixture.js', import.meta.url),
+  );
+  const input = () => ({ input: undefined });
+  // @ts-expect-error No count-only fallback for shared output in exact mode.
+  runtime.streamRange(sharedOutputTask, range, input, binaryOptions);
+  // @ts-expect-error No count-only fallback for shared output in upper-bound mode.
+  runtime.streamRange(sharedOutputTask, range, input, upperOptions);
+  const count: PjsRangeStream<typeof value> = runtime.streamRange(
+    sharedOutputTask,
+    range,
+    input,
+  );
+  const broad: PjsTypedArray = value;
+  void owned;
+  void binary;
+  void count;
+  void broad;
+}
+const sharedMapTask = registry.register<
+  Uint8Array<SharedArrayBuffer>,
+  Uint8Array<ArrayBuffer>
+>('shared-map', new URL('./fixture.js', import.meta.url));
+const sharedMapped: Promise<Uint8Array<ArrayBuffer>> = runtime.parallelMapRange(
+  sharedMapTask,
   range,
-  (partition) => ({
-    input: { partition, shared },
-  }),
-  // @ts-expect-error Strict binary options require a direct binary task result.
-  binaryOptions,
+  () => ({ input: new Uint8Array(new SharedArrayBuffer(8)) }),
+  { experimentalOutputConstructor: Uint8Array },
 );
-runtime.streamRange(task, range, () => ({ input: data }), {
-  // @ts-expect-error Both strict binary options are required together.
-  experimentalResultBytes: 16,
+void sharedMapped;
+const sharedView = new DataView(new SharedArrayBuffer(8));
+// @ts-expect-error DataView must have ordinary backing too.
+const rejectedDataView: PjsBinaryResult = sharedView;
+// @ts-expect-error Direct shared buffers are excluded.
+const rejectedSharedBuffer: PjsBinaryResult = new SharedArrayBuffer(8);
+// @ts-expect-error Nested ordinary binary objects are not direct binary results.
+const rejectedGraph: PjsBinaryResult = { data: new Uint8Array(8) };
+declare const widened: Uint8Array<ArrayBufferLike>;
+// @ts-expect-error A widened view does not establish ordinary backing.
+const rejectedWidened: PjsBinaryResult = widened;
+const copied: PjsBinaryResult = new Uint8Array(widened);
+void rejectedDataView;
+void rejectedSharedBuffer;
+void rejectedGraph;
+void rejectedWidened;
+void copied;
+const numberInput = (partition: RangePartition) => ({
+  input: { partition, shared },
 });
+const byteInput = () => ({ input: data });
+// @ts-expect-error Upper-bound streams require direct binary task results.
+runtime.streamRange(partitionTask, range, numberInput, upperOptions);
+const conflictingByteOptions = {
+  experimentalResultBytes: 16,
+  experimentalMaxResultBytes: 32,
+  experimentalMaxReservedResultBytes: 64,
+};
+// @ts-expect-error Exact and upper-bound declarations cannot coexist or use count-only fallback.
+runtime.streamRange(task, range, byteInput, conflictingByteOptions);
+const missingMaximumCapacity = { experimentalMaxResultBytes: 32 };
+// @ts-expect-error A maximum needs a byte capacity.
+runtime.streamRange(task, range, byteInput, missingMaximumCapacity);
+const asyncMaximumOptions = {
+  experimentalMaxResultBytes: async () => 32,
+  experimentalMaxReservedResultBytes: 64,
+};
+// @ts-expect-error Declaration callbacks must be synchronous; no count-only fallback.
+runtime.streamRange(task, range, byteInput, asyncMaximumOptions);
+void binaryValue;
+// @ts-expect-error Strict binary options require a direct binary task result.
+runtime.streamRange(partitionTask, range, numberInput, binaryOptions);
+const missingExactCapacity = { experimentalResultBytes: 16 };
+// @ts-expect-error Both strict binary options are required together.
+runtime.streamRange(task, range, byteInput, missingExactCapacity);
 
 const arrayMapTask = registry.register<{ partition: RangePartition }, number[]>(
   'array-map',
@@ -248,10 +451,9 @@ void shutdown;
 // @ts-expect-error Shutdown policy is a boolean.
 runtime.shutdown({ drain: 'false' });
 
-runtime.streamRange(task, range, () => ({ input: data }), {
-  // @ts-expect-error Capacity without either declaration cannot select byte mode.
-  experimentalMaxReservedResultBytes: 64,
-});
+const capacityWithoutDeclaration = { experimentalMaxReservedResultBytes: 64 };
+// @ts-expect-error Capacity without either declaration cannot select byte mode.
+runtime.streamRange(task, range, byteInput, capacityWithoutDeclaration);
 // @ts-expect-error Explicit undefined does not mean omission for byte mode.
 runtime.streamRange(task, range, () => ({ input: data }), {
   experimentalResultBytes: undefined,

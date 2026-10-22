@@ -11,14 +11,17 @@ export type {
   PartitionInput,
   PartitionOptions,
   StreamRangeOptions,
+  CountOnlyStreamRangeOptions,
   BinaryStreamRangeOptions,
   UpperBoundBinaryStreamRangeOptions,
   PjsBinaryResult,
+  PjsOwnedTypedArray,
+  ResultByteDeclaration,
   PjsTypedArray,
   PjsTypedArrayConstructor,
   TypedMapRangeOptions,
 } from './partition/range.js';
-export type { StreamRangeResult } from './partition/stream.js';
+export type { PjsRangeStream, StreamRangeResult } from './partition/stream.js';
 export type {
   RestartPolicy,
   RunOptions,
