@@ -43,8 +43,9 @@ error class or interface value.
 
 ## Artifact and inventory comparison
 
-The untouched main build and its JavaScript/declaration SHA-256 manifest are
-retained before editing. Per-file comparison requires every pre-existing
+The untouched main build was copied before editing. Its JavaScript/declaration
+SHA-256 manifest was subsequently computed from that preserved copy. Per-file
+comparison requires every pre-existing
 production JavaScript file to remain byte-identical: all 36 pass. The sole new
 JavaScript file, diagnostics.js, contains `export {};` and its source-map comment,
 with no initialization or root runtime export. Source maps are outside the JS
