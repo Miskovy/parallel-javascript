@@ -1,24 +1,205 @@
 # Stage C: proposed migration and controlled promotion
 
-**Proposed, pending review and Stage B/C implementation.** Current consumers must
+**Stage C engineering plan — proposed, pending unit-specific maintainer decisions.**
+S1, corrected Stage A and B1–B4 are integrated; this does not accept every roadmap
+proposal. Current consumers must
 use existing declarations and experimental spellings. Nothing in these examples
 is a runnable current-source replacement. The [inventory](v1-api-contract-inventory.md)
 is authoritative for today's behavior; [B](v1-api-corrections.md) specifies the
 four corrections before promotion. See [ADR 0023](../adr/0023-v1-api-stability-decisions.md).
+
+## Verified starting state and qualification ledger
+
+Planning base: fetched main `35f2aacfe431516ed559409a3cba6bf2ccd2e6b7`, the
+[PR #24](https://github.com/Miskovy/parallel-javascript/pull/24) merge of B4.
+The reviewed B4 candidate is `e78b773587c2f6f58ce9ef8f26d2b97de35251a5`.
+Both have tree `48bb493a6717dfbd2259af017937ca623110b044`, also verified for
+the CI synthetic merge `c8c1576ffc255e4550463d5664c810b61afb4235` through
+GitHub's commit metadata. The main-to-candidate tree diff is empty. Thus the
+merged implementation matches the reviewed/tested source tree; these remain
+historical B4 executions, not fresh runs at main or this documentation candidate.
+
+The current inventory records **61 roots, 17 runtime values, 44 type-only names,
+322 members, zero additional named reachable types and 158 diagnostic leaves**.
+B1 exposes existing closeable stream behavior; B2 constrains strict binary backing;
+B3 internalizes registry snapshots; B4 names diagnostic/error contracts. No proposed
+C2/C3 stable option spelling exists yet and no feature has been promoted. Preserve S1's facade,
+configuration/composition/controller boundaries and existing state owners.
+
+The [B4 CI run 39837158296](https://github.com/Miskovy/parallel-javascript/actions/runs/39837158296)
+completed successfully. Its retained reports actually identify **synthetic merge
+c8c1576**, not the candidate head. All twelve artifact archives were downloaded,
+verified against GitHub's archive SHA-256 digests and inspected after extraction
+during planning. Per-cell ordinary reports, contract children, R2 histories/actions,
+real-worker/negative/replay/cleanup records, and every R3 config/result reconciled.
+The raw children agree on source, clean tree, exact environment, measurements,
+quiescent owners and confirmed thread exits. This re-inspection corroborates the
+supplied independent review; it does not execute a new campaign.
+
+| Evidence source                       | Tested source       | Platform    | Exact Node | Runtime npm | Accepted results                                                |
+| ------------------------------------- | ------------------- | ----------- | ---------- | ----------- | --------------------------------------------------------------- |
+| B4 CI, ubuntu / 22.13.0               | c8c1576, tree above | Linux x64   | 22.13.0    | 10.9.2      | 314 contracts; 162 R2 histories / 2,746 actions; 11 R3 children |
+| B4 CI, ubuntu / 24                    | c8c1576, tree above | Linux x64   | 24.21.0    | 11.19.0     | Same counts, independently reconciled                           |
+| B4 CI, windows / 22.13.0              | c8c1576, tree above | Windows x64 | 22.13.0    | 10.9.2      | Same counts, independently reconciled                           |
+| B4 CI, windows / 24                   | c8c1576, tree above | Windows x64 | 24.22.1    | 11.19.1     | Same counts, independently reconciled                           |
+| Retained local B4 final-node22 report | e78b773             | Windows x64 | 22.13.0    | 10.9.2      | 314 contracts and ordinary B4 gates; no new R2/R3 campaign      |
+| Retained local B4 final-node24 report | e78b773             | Windows x64 | 24.21.0    | 11.18.0     | 314 contracts and ordinary B4 gates; no new R2/R3 campaign      |
+
+All four CI cells pass build, types, compatibility, installed declarations and
+emitted TS consumers under both locked compilers, release dry-run regressions,
+lint/format/docs/diff. Primary compiler is 7.0.2; compatibility checker is 6.0.3
+(wrapper 6.0.2). Release npm is independently selected at 11.19.0. Each retained
+CI package has 188 files and SHA-256
+`e6b2e9a40d13b11fe6add6b31a5bcab9f9e9e4bc680b692347d1d850226934b0`;
+the four actual archives match their reports. Local reports and their archived
+packages remain separate evidence, even where the package hashes agree.
+That hash identifies B4, not this later documentation candidate: this plan also
+updates the packed package README. No new package/campaign qualification is
+claimed for those documentation edits.
+
+Earlier [S1](s1-runtime-api-boundaries.md), [B2](b2-strict-binary-output-types.md),
+[B3](b3-internal-registry-snapshots.md) and [B4](b4-explicit-diagnostic-contracts.md)
+reports retain their original source/environment/availability conclusions. B1's
+local engineering/delivery record identifies 5e5625bb97b12c3e5ed18fbc58177787cbb9c7b5;
+its attributed independent review is recorded in the B2 report. Historical B2
+Linux remains incomplete: Node 22 used separately successful runs without an
+end-to-end ordinary qualifier, and Node 24 was incomplete/failed. Later B4 success
+does not repair that record. No Node 24.0.0 floor or final-release qualification
+follows from these later-patch B4 results.
+
+Separately tracked release holds remain **open and untouched**. The available
+status records do not establish which C units are independent of those holds.
+Record that applicability dependency as **unresolved**, without investigation or
+technical discussion. Independent planning and the proposed C1 acceptance work
+can proceed; a promotion recommendation requires a maintainer's explicit
+applicability/eligibility decision. No blanket clearance is inferred from CI.
+
+## C1 next: contract closure and qualification, then a separate promotion decision
+
+Code inspection identifies **no required C1 behavior change**. This is a scoped
+finding about the named contract, not proof that every possible defect is absent.
+Distinguish the work precisely:
+
+executionLease and forceAfter remain optional integer milliseconds in
+**1 through 2³¹ − 1**, disabled when undefined; they are elapsed monotonic
+deadlines, not CPU-time budgets. On a non-failed runtime, forceAfter starts at the
+first valid graceful shutdown request, including startup, with drain defaulting true; defined
+forceAfter with drain false is invalid. restartPolicy.maxRestarts is a nonnegative
+safe-integer decision budget and windowMs a positive safe-integer millisecond
+window. With no rolling policy, lifetime maxRestarts defaults to workers × 4.
+Defined restartPolicy and defined maxRestarts conflict; an explicitly undefined
+lifetime option is permitted. Do not replace those existing defined-value rules
+with the new property-presence alias rules intended only for C2/C3. Cancellation,
+logical timeout and lease expiry are distinct; termination is asynchronous.
+
+| Concern                                       | Actual code and existing evidence                                                                                                                                                                                                                                                                                                                       | Planned gap / change class                                                                                                                                                                                                                                                                                                      |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Ordinary executionLease                       | `api/run.ts` delegates unchanged; `tasks/coordinator.ts` validates a defined lease before timeout/signal/transfer work and rejects children/batch-property presence; `dispatch/dispatcher.ts` arms only after successful post and physical credit claim; `workers/worker.ts` owns correlation, monotonic deadline, stale-token checks and timer cleanup | Contract documentation and installed emitted TS coverage; no lease algorithm or adapter refactor                                                                                                                                                                                                                                |
+| Rolling restartPolicy vs lifetime maxRestarts | `configuration/runtime-options.ts` normalizes/copies the policy before registry capture; `pool/pool.ts` owns the rolling timestamps, removes entries at or before cutoff, counts approved restart decisions and waits for exit before replacement. Lifetime fallback defaults to workers × 4, with zero valid                                           | Existing deterministic expiry/exhaustion/mutation tests suffice; clarify mutually exclusive defined values, defaults, units and decision-count vs replacement-count diagnostics                                                                                                                                                 |
+| First graceful shutdown / forceAfter          | `lifecycle/runtime-controller.ts` returns the cached promise before reading later options, uses monotonic remaining time and awaits dispatcher stop before releaseAll/stopped. Worker stop and pool repair preserve physical occupancy until actual exit                                                                                                | Existing first-call, startup, early-wake, transfer/credit, real infinite-work and termination-rejection cases suffice for those paths. Add an installed active-escalation scenario; idle shutdown with forceAfter alone does not demonstrate escalation                                                                         |
+| Error and diagnostics                         | `errors/index.ts`, `diagnostics.ts`, `telemetry/runtime.ts` already expose the B4 contracts; `types/index.ts` and runtime options still mark containment controls experimental                                                                                                                                                                          | Documentation/type-comment clarification and focused fixtures; preserve hierarchy, all seven containment fields and required number-or-undefined utilization count                                                                                                                                                              |
+| Failed lease-driven replacement termination   | Production worker/pool/controller paths retain ownership and fail closed; the existing explicit rejection case injects non-draining shutdown termination failure                                                                                                                                                                                        | A focused deterministic acceptance case for lease-expiry → failed repair termination is missing in the inspected cases. Add proof of no replacement/replay, one caller settlement, rejected cleanup and retained physical ownership until actual exit; this is missing path-specific evidence, not a planned runtime correction |
+
+These are the exact C1 production modules to inspect and compare, not a mandate to
+edit them. Also retain `composition/create-runtime-components.ts`,
+`tasks/registry.ts`, `results/credit.ts` and the facade's ready/run/shutdown
+delegation as read-only boundary references. Registry behavior is already closed
+by B3; C1 does not reopen registry design or range/binary promotion.
+
+### C1 work packages
+
+1. **C1-A contract record and focused acceptance.** Update current containment,
+   lifecycle, telemetry/error and stability guidance, plus corresponding inventory
+   dispositions. Clarify existing declaration comments where needed, preserving
+   every experimental annotation. Reuse `containment.test.mjs` (queue/post failure,
+   early/stale lease timers, already-settled callers, rolling cutoff at 100 ms,
+   shutdown/escalation/failed termination), `physical-boundary.test.mjs`,
+   `runtime.test.mjs`, `public-options.test.mjs`, `runtime-boundaries.test.mjs`,
+   `registry.test.mjs`, `diagnostics.test.mjs` and relevant memory-lifecycle cases.
+   Use the existing containment clock/exit gates and bounded helpers. Add only
+   the missing lease-repair termination-rejection path; do not duplicate the
+   tested non-draining-shutdown failure or rewrite the independent model.
+2. **C1-A installed package closure.** Extend `scripts/package-consumer/consumer.ts`
+   and existing fixtures with emitted ordinary-run lease, rolling policy and
+   forceAfter use; explicitly import/use RunOptions, RestartPolicy,
+   ShutdownOptions, PjsExecutionLeaseError and PjsContainmentStats. Keep the
+   existing full `types.test.ts` under both compilers and add focused wrong-value/
+   unsupported-range negatives only where absent. Runtime-only exclusions remain
+   runtime checks; do not silently redesign the option interfaces as unions.
+   Extend installed `containment.mjs`/`containment-tasks.mjs` with synchronized
+   active graceful escalation and a lifetime-budget/default-mode comparison to
+   the existing rolling-policy lease/replacement case. Observe shared start
+   signals, one caller outcome, confirmed cleanup and no replay; preserve the
+   existing watchdog. Verify shared shutdown promise/options identity using an
+   instrumented later getter, and run from the packed package outside the repo
+   through `package-smoke.mjs`, without skipLibCheck.
+3. **C1-Q source-bound qualification.** Commit the acceptance candidate and run
+   the C1 row of the matrix below. Preserve failed attempts and reconcile every
+   retained child/package. Compare production JS and supported declarations with
+   the B4 base: absent intentionally reviewed comments, expect unchanged runtime
+   code and no supported shape change. Any behavioral discrepancy is a scope
+   decision: stop, preserve the repro, and propose a separate correction rather
+   than widening C1 or weakening an assertion/timeout.
+4. **C1-P explicit promotion action, after evidence review.** A maintainer must
+   approve the named C1 candidate and release-hold eligibility. Only a separately
+   authorized patch then removes the relevant experimental annotations from
+   RunOptions.executionLease, ShutdownOptions.forceAfter, RestartPolicy,
+   PjsRuntimeOptions.restartPolicy and PjsExecutionLeaseError, and updates current
+   docs/inventory P1 dispositions. PjsContainmentStats already has an explicit
+   public shape; preserve it. Review emitted comment/declaration/package diffs
+   and apply the matrix's source-change rule. No option spelling changes, version
+   selection, publication or acceptance of ADR 0023 as a whole follows.
+
+### C1 acceptance checklist
+
+- [ ] Leases remain supported ordinary-run dispatch only, with successful-post
+      start, no queue-time charge, distinct caller deadline and no second
+      settlement after timeout/abort; no range/batch lease support is added.
+- [ ] Rolling monotonic policy and defined lifetime budget exclusion, copied
+      construction options, exact expiry boundary, zero budget, lifetime fallback,
+      fatal/bootstrap behavior and bounded configured live-worker population retain
+      their existing results.
+- [ ] First shutdown owns options/shared promise; graceful drain or escalation
+      preserves credits/occupancy until validated result or confirmed exit.
+      Rejected termination rejects cleanup, retains physical ownership and never
+      reports successful cleanup or spawns an early replacement.
+- [ ] Error inheritance/name/context, diagnostic counters/units/lifetimes and
+      writable copied records agree with B4. Restart utilization is a count,
+      with undefined without a rolling policy.
+- [ ] Installed JS and both emitted TS consumers exercise all controls and
+      legacy fallback; focused contracts use synchronization, with no new sleeps,
+      GC deadlines, performance bounds or production test hooks.
+- [ ] Exact candidate/platform/Node/package evidence passes the C1 matrix;
+      failed/incomplete/unavailable cells remain visible and excluded.
+- [ ] Maintainer explicitly decides promotion/hold applicability; until then
+      experimental status remains. No task replay, rollback, restored transferred
+      inputs or hard realtime interruption guarantee is promised.
 
 ## Spelling and occurrence audit
 
 Recommend these six minimal renames. Do not rename methods, result wrappers,
 partition fields, error classes or diagnostic aliases merely for consistency.
 
-| Current                            | Proposed stable        | Declared option shapes / dependencies                                         |
-| ---------------------------------- | ---------------------- | ----------------------------------------------------------------------------- |
-| experimentalDispatchBatchSize      | dispatchBatchSize      | PartitionOptions and all derived stream/binary/typed-map options; C2          |
-| experimentalMaxBufferedResults     | maxBufferedResults     | StreamRangeOptions, exact/upper-bound options, count-only reachable shape; C2 |
-| experimentalResultBytes            | resultBytes            | BinaryStreamRangeOptions; excluded in upper-bound and count-only; C3          |
-| experimentalMaxResultBytes         | maxResultBytes         | UpperBoundBinaryStreamRangeOptions; excluded in exact and count-only; C3      |
-| experimentalMaxReservedResultBytes | maxReservedResultBytes | Both strict-binary shapes; excluded in count-only; C3                         |
-| experimentalOutputConstructor      | outputConstructor      | TypedMapRangeOptions; C2                                                      |
+| Current                            | Proposed stable        | Declared option shapes / dependencies                                                     |
+| ---------------------------------- | ---------------------- | ----------------------------------------------------------------------------------------- |
+| experimentalDispatchBatchSize      | dispatchBatchSize      | PartitionOptions and all derived stream/binary/typed-map options; C2                      |
+| experimentalMaxBufferedResults     | maxBufferedResults     | StreamRangeOptions, exact/upper-bound options, root-named CountOnlyStreamRangeOptions; C2 |
+| experimentalResultBytes            | resultBytes            | BinaryStreamRangeOptions; excluded in upper-bound and count-only; C3                      |
+| experimentalMaxResultBytes         | maxResultBytes         | UpperBoundBinaryStreamRangeOptions; excluded in exact and count-only; C3                  |
+| experimentalMaxReservedResultBytes | maxReservedResultBytes | Both strict-binary shapes; excluded in count-only; C3                                     |
+| experimentalOutputConstructor      | outputConstructor      | TypedMapRangeOptions; C2                                                                  |
+
+The refreshed [tracked occurrence appendix](stage-c-option-occurrence-audit.md)
+is pinned to planning base 35f2aac and covers production source, tests, examples,
+tooling, current/historical docs and benchmarks. Counts are exact tokens / matching
+lines / files: DispatchBatchSize **130/128/53**; MaxBufferedResults **110/110/54**;
+OutputConstructor **42/42/22**; ResultBytes **83/83/46**; MaxResultBytes
+**62/62/33**; MaxReservedResultBytes **95/95/45**, all with the experimental prefix.
+The appendix gives every file/line and its review class; this planning patch and
+ignored/generated files are outside that fixed-baseline count. Do not bulk-replace
+historical/RC records or treat deliberate audit/rejection-test uses as leaks.
+
+### Historical S1 occurrence audit — retained unchanged
 
 The extraction tool discovers current runtime-source occurrences and root member
 inheritance; the following cross-repository audit covers tests, docs, benchmarks,
@@ -313,6 +494,20 @@ RC4; Stage A changes no versions. An alternative single breaking prerelease with
 no aliases reduces normalization complexity but gives existing consumers no
 overlap window. Accept that alternative only by explicit ADR amendment before C.
 
+The refreshed audit shows live use in production, type/runtime fixtures, installed
+consumers, examples and operational tooling, beyond historical prose. The existing
+package consumers already exercise both strict modes and all range entry points;
+preserving an overlap window lets those callers migrate without an immediate
+spelling break. It does not prove the future alias implementation correct.
+**Continue recommending the shared transition**, subject to approval: it adds
+presence selection, exclusive unions, JSDoc deprecations, cross-spelling matrices
+and an eventual removal guard. A single explicit breaking prerelease eliminates
+that temporary normalization/type complexity and declaration-merging interruption,
+but requires callers to update all six spellings atomically. Choose it only if
+maintainers accept that documented pre-v1 compatibility cost; then amend C4 to
+contract closure rather than pretending an alias window occurred. Neither path
+selects a version, starts a window or authorizes a partial migration publication.
+
 C2 and C3 are separately reviewed implementation units that land before the
 same transition prerelease; they do not each start a new alias window. C4 removes
 all six aliases in the following selected prerelease. Do not publish an
@@ -384,7 +579,7 @@ context remain. Add synchronized reentrancy tests before claiming equivalence.
 No change to timeout units, worker defaults, maxQueue, result ordering, full
 collect/map retention, stream eagerness or byte units is bundled with renaming.
 
-## B1–B3 development migration and proposed C examples
+## Integrated B1–B4 migration and proposed C examples
 
 Stream cleanup: B1 now exposes the existing methods in development declarations;
 published RC4 still has the old AsyncIterable declaration. B2's ordinary-backed
@@ -444,6 +639,12 @@ independent descriptor copies, frozen handle identity and construction-time
 isolation from later registrations; valid registration timing/errors are unchanged.
 This is a deliberate pre-v1 JS/TS removal, separate from B4 and C promotion.
 
+B4 intentionally names all diagnostic/error contracts without changing runtime
+behavior. Its seventeen type-only root exports and the preserved 158 diagnostic
+leaves are integrated through PR #24. Current diagnostic/error guides and the
+canonical inventory describe that source; older engineering reports retain their
+original validation scope. C1 does not rename those types or prune their fields.
+
 Option migration (B1 required for direct return; C3 required for stable options):
 
 ```ts
@@ -474,14 +675,87 @@ new API. Each published example must be run against its installed candidate.
 Containment examples must say a lease/escalation requests asynchronous termination,
 not hard realtime interruption, sandboxing or restoration of transferred buffers.
 
-## Reviewable promotion units and exit criteria
+## C1–C4 dependency and decision table
 
-| Unit                                 | Dependencies / affected owners                                                                                                 | Contract and installed-consumer evidence / exit                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| C1 containment                       | B4; run adapter, configuration, controller, pool/worker contracts and docs; no option renames needed                           | Review exclusive ordinary-run lease start after successful posting, queue exclusion, already-settled caller expiry, rolling pool window vs lifetime fallback, first shutdown options, failed termination and confirmed exit replacement. Installed JS/TS imports lease error and exercises all three controls. Containment, physical-boundary and standard R2 pass with checked histories; no replay/rollback/hard deadline claims. Then explicitly approve P1 promotion                                                                                                                     |
-| C2 ranges/count streams/map/batching | B1/B3/B4; range adapters/validation, map helper, existing scheduler/dispatcher interfaces; rename batch/count/constructor only | Preserve ordered collection/flat map, completion-only pre-serialization discard, eager completion-order streams, required cleanup, count limits, map constructor reentrancy, exact cardinality and empty ranges. Test batch 1/16 and invalid endpoints, singleton configured batch, transfer/lease rejection, middle-item failure/skipped siblings, cancellation/context and physical boundaries. Installed JS/TS uses every method, overload and three stable spellings; transition alias matrix passes. Standard contract/R2/R3 evidence with raw child checks; then approve P2 separately |
-| C3 exact/upper-bound byte results    | B1/B2/B4 plus C2 normalizer conventions; strict stream adapter, actual credit/worker validation owners; three byte renames     | Test exact/maximum output types and actual kind/backing/visible bytes, numeric/callback/zero declarations, all incompatible spellings/shapes, oversize before factory, reservation waits, successful slack refunds, no refund on failure, cancelled parent physical retention, no object-graph/RSS claims. Installed JS rejects invalid runtime values and TS negative shared-backed outputs under both compilers. Binary/upper-bound/result-credit/physical suites and standard R2/R3 checked artifacts pass; then approve P3 separately                                                    |
-| C4 alias removal / contract closure  | C2/C3 transition release and explicit selected following prerelease; root/options declarations, normalizers, fixtures/docs     | Delete aliases and reject old property presence. All six stable names only in current installed consumers and supported shape. Semantic API diff includes intentional B changes/new names; no accidental nested diagnostic or reachable-type leak. Docs/examples, build/types/package/lint pass; then select final-candidate version/baseline in F                                                                                                                                                                                                                                           |
+| Unit / intended supported surface                                                                                                                                     | Dependencies and actual owners                                                                                                                                                                                                                                                  | Proposed changes / compatibility                                                                                                                                                                                                                                       | Existing evidence and missing proof                                                                                                                                                             | Objective exit                                                                                                                                                                                                             | Required decision / independent progress                                                                                                                                                                                                 |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **C1 containment:** ordinary executionLease, rolling restartPolicy vs lifetime maxRestarts, graceful forceAfter, lease error and containment diagnostics              | B4 complete. Task coordinator validates; dispatcher posts/claims; worker owns lease and physical exit; pool owns recovery; controller owns shutdown; telemetry copies                                                                                                           | No identified algorithm change. C1-A/Q adds focused contracts, installed scenarios and docs/type-comment clarity; C1-P separately removes approved annotations. No spelling or shape break                                                                             | Reconciled B4 ledger plus the precise existing/missing cases above. New C1 acceptance/qualification and promotion approval remain missing                                                       | C1 checklist, installed controls, unchanged semantics and C1 matrix pass at the named candidate                                                                                                                            | Authorize A/Q separately from P1 approval. Can proceed without C2/C3 implementation. Hold applicability remains unresolved, not presumed independent                                                                                     |
+| **C2 ranges, count streams, mapping, batching:** partitionRange/parallelFor/streamRange/parallelMapRange, closeable iterator, batch/count/outputConstructor spellings | B1/B3/B4 complete. API range adapters and validation; RangeCoordinator owns parents/production; map assembly validates/copies; dispatcher/scheduler own existing admission. No C1 promotion prerequisite                                                                        | Add three stable names and approved deprecated aliases at existing read boundaries; adapt option interfaces to explicit unions/intersections as necessary; update active docs/examples/consumers. JS changes are intended normalization changes, not an engine rewrite | B4 range/closeable-stream/map/batch and installed coverage exists. New spelling/presence/getter/proxy/reentrancy matrix, transition assignability and source-bound qualification are missing    | Ordered collect/map and full retention, completion-only discard, eager completion-order stream, cleanup, count bounds; batch 1/16/invalid/singleton transfer exclusions; no range leases; C2 matrix passes                 | Approve P2 and migration strategy separately. Plan/implement independently of C1; coordinate C3's shared transition and boundary semantics before any migration publication                                                              |
+| **C3 strict binary results:** exact/upper-bound visible payload credits, ordinary-backed outputs, declaration callbacks and byte aliases                              | B1/B2/B4 complete; requires C2's agreed count/batch normalization and shared option-shape conventions, not blanket C2 promotion. Stream adapter selects mode; credit manager owns reservations/reconciliation; worker validates actual output; coordinator owns parent delivery | Add three stable byte names and approved aliases, retain cross-spelling exact/maximum/capacity exclusions and count-only never members; update active docs/installed consumers. Preserve physical-credit semantics and B2 backing constraint                           | B4 binary/upper-bound/credit/physical suites, 104 installed positives and 29 rejection cases exist. Mixed-spelling mode/exclusion, lazy callback/getter ordering and fresh C3 proof are missing | Oversize before factory, numeric/callback/zero/visible-byte contracts, one-time waits, positive-slack refunds, no failure refund, cancellation credit through physical end; C3 matrix passes, no RSS/backing-store promise | Approve P3 and shared migration boundary. Binary planning can proceed now; final normalization integration and transition publication depend on the C2 convention decision                                                               |
+| **C4 alias removal and closure:** stable spellings only in supported option shapes, legacy presence explicitly rejected                                               | Under alias strategy, both C2/C3 integrated and their single transition actually released, followed by separately approved next prerelease boundary. Same validation owners; public shape/docs/inventory closure                                                                | Delete deprecated acceptance/type members, retain old-name presence guards and negative tests; restore explicit stable interfaces where appropriate. Deliberate pre-v1 removal, no silent ignore/default fallback                                                      | No C4 candidate exists and no alias window has begun. Needs evidence of the actual shared transition, approved removal boundary, current stable-only installed consumers and semantic diff      | All six legacy properties reject even inherited/undefined, current consumers use stable names, no diagnostic/root/internal leak; C4 matrix passes before F                                                                 | Approve removal timing explicitly, never by elapsed time. Planning can proceed; execution is blocked by the real transition dependencies. If the breaking alternative is chosen, amend C4 to closure with no invented alias prerequisite |
+
+### C2/C3 boundary assignments and migration acceptance
+
+Change only the selected names at their existing boundaries:
+`partition/validation.ts` reads batch after timeout/signal; `api/range/stream-range.ts`
+reads count before declaration mode/capacity and preserves rejection accounting;
+`api/range/parallel-map-range.ts` reads the constructor before parent submission;
+`tasks/coordinator.ts` must recognize either batch spelling when rejecting a
+defined ordinary-run lease combination. `partition/range.ts` and existing facade/
+adapter signatures own the public option shapes. Keep any shared name-selection
+helper private and small; select a property name by presence and read its value
+only at that boundary. Do not centralize all reads, spread options, wrap methods
+as async or introduce a new configuration/state framework.
+
+Each pair needs JS and both-compiler fixtures for old-only, new-only, neither,
+both equal/different/undefined, inherited properties and getter/proxy has/read
+order. Strict mode tests must cross exact/maximum/capacity spellings; count-only
+must exclude all byte keys in both spellings. Check invalid calls before input
+factories/admission/transfer effects, reentrant abort/shutdown and the existing
+map validation-before-target lookup seam. New presence probes are observable;
+document those deliberate checks without changing valid single-spelling getter
+order or accounting. Transition notes must explain interface-to-union declaration
+merging costs, and TypeScript's limits without exactOptionalPropertyTypes.
+
+### Qualification matrix and evidence rules
+
+| Unit / stage                 | Deterministic contracts and type/package gates                                                                                                                                                                                                                                            | Campaign scope                                                                                                                                                                                                                                           | Required outcome                                                                                                                            |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| This documentation plan      | Documentation links, locked Prettier formatting, diff cleanliness; verify documentation-only paths and unchanged protected inputs                                                                                                                                                         | None manually run; re-inspect existing B4 artifacts only. Normal repository CI may run automatically on push/PR                                                                                                                                          | Reviewable plan; no fresh runtime qualification or promotion claim                                                                          |
+| C1-A/Q and P1 recommendation | Reuse the named containment/physical/boundary/diagnostic suites plus full ordinary contracts; both locked public fixtures and production compatibility; installed JS plus emitted TS controls; build, inventory/declaration/JS comparison, dry-run release tooling, lint/format/docs/diff | Standard R2 for caller/lease/restart/shutdown ordering. Standard R3 is relevant because containment touches transfer/shared input, reservation and shutdown lifetimes; use the unchanged standard profile, not invented reduced or extended GC scenarios | Fresh C1 source-bound four-cell evidence, including missing acceptance paths, before recommending P1; C1-P still requires explicit approval |
+| C2 / P2 recommendation       | Full ordinary gates; range/completion/stream/closeable/map/batch and getter-boundary cases; both compiler overload/alias negatives; installed every method, overload and three stable names                                                                                               | Relevant standard R2/R3 with original independent model, seeds/actions/bounds retained                                                                                                                                                                   | Reviewed migration semantics and P2 contract, no accidental physical/admission/async-context changes                                        |
+| C3 / P3 recommendation       | Full ordinary gates; binary/upper-bound/result-credit/physical/transfer cases; both strict modes/backing negatives under both compilers; installed byte modes and cross-spelling guards                                                                                                   | Relevant standard R2/R3, including cancelled-owner retention/reconciliation and confirmed exits                                                                                                                                                          | Visible-byte/ownership semantics and combined C2/C3 normalization accepted; no process-memory claim                                         |
+| C4 closure                   | Full ordinary gates; stable-only public declarations and installed consumers; legacy own/inherited/undefined presence negatives at all old boundaries; intended semantic inventory delta                                                                                                  | Reuse explicitly identified, input-equivalent accepted promotion evidence when justified; run affected standard R2/R3 if guard/admission/accounting paths change. This is not an automatic waiver and not a new campaign for a documentation-only edit   | All six supported shapes closed, removal boundary approved, input/source differences explained; final F remains required                    |
+| Stage F final candidate      | Select new source/version/baseline/artifact; full required checks, installed/rehearsed exact tarball, semantic review and two clean build reproduction                                                                                                                                    | Full required standard and separately specified extended/final campaigns; qualify supported floors and selected current patches on both OSes                                                                                                             | Candidate-specific release qualification, with release holds still governed separately; no publication permission                           |
+
+The proposed starting C1 promotion cells deliberately match verified B4 coverage:
+**Linux x64 Node 22.13.0 and 24.21.0; Windows x64 Node 22.13.0 and 24.22.1**.
+These are exact initial test targets, not a claim of today's latest patch or a
+new support floor. Confirm patch selections/availability before running; record
+and approve replacements explicitly rather than treating the floating CI `24`
+selector as evidence for an untested patch. A common selected Node 24 patch
+across OSes is preferable if deliberately chosen and qualified. Node 24.0.0,
+selected current patches in both majors, deduplicated floor/current cells, other
+final gates and reproducibility remain Stage F obligations. No macOS/ARM or
+family-wide every-patch result is inferred.
+
+Use `runtime:qualify` for an actual promotion candidate with the independently
+selected release CLI and fresh exclusive output paths. In existing CI, R2/R3 run
+once before that qualifier and their reports are supplied; do not launch a second
+copy merely to aggregate. Supplement with the full compatibility compiler type
+fixture, inventory parity/tool regressions and intentional emitted/API comparison.
+Keep compiler/runtime npm/release npm identities separate. Both installed compilers
+check declarations without skipLibCheck and execute consumers against the exact
+retained tarball outside the repo.
+
+Every accepted receipt records actual SHA **and tested tree**, clean status,
+platform/architecture, exact Node patch, tools/command/environment, source inputs
+and package SHA-256. Reconcile contract children; R2 raw histories/actions,
+observations, real-worker, negative, replay and cleanup records; each R3 child
+config/result, source/environment, measurements, ownership checkpoints and confirmed
+exits. Verify archived/extracted copies and package bytes, not aggregates alone.
+If source changes after qualification, rerun affected gates or obtain an explicit
+review of exact relevant-input equivalence; retain original execution SHAs and
+never relabel receipts as fresh runs of the new commit. An annotation-only
+promotion patch still needs a reviewed declaration/comment/package diff and
+new package identity where bytes change.
+
+Failed, incomplete and unavailable cells remain in the ledger and cannot count
+as passed. Retain failures and original timeouts/checks; a corrected rerun gets
+fresh paths and source attribution. A failed named feature gate delays that
+unit's promotion. Do not silently change semantics, broaden this plan into a
+correction/refactor, repair unrelated holds, or use another group's green result
+as a substitute. No full campaign is manually run solely to write this plan.
 
 All units preserve S1 component ownership, one controller/pump, range AsyncResource
 and normal Promise context. No new tracing or broad type/state rewrite. Each unit
@@ -501,6 +775,63 @@ the promised experimental-free target. Select withdrawal by a separately reviewe
 decision; do not delete useful APIs merely because the schedule is tight.
 
 ## Final sequence and publication boundary
+
+### Open maintainer decisions
+
+1. Authorize C1-A/Q as the next scoped acceptance/documentation/qualification
+   task; confirm that no new behavior or experimental-status removal is included.
+2. State which separately tracked holds apply to each unit and whether the named
+   C1 candidate is eligible for promotion review. Applicability is unresolved here;
+   no investigation or clearance is delegated by this plan.
+3. After the C1 checklist/evidence, approve or defer P1 for an exact candidate and
+   authorize the separate C1-P annotation/status patch. C2/P2 and C3/P3 remain
+   their own contract and promotion decisions.
+4. Approve the shared alias transition recommendation or explicitly choose/amend
+   to one breaking prerelease. Approve six mappings, presence/exclusion semantics,
+   transition type compatibility cost and the no-partial-publication boundary.
+   Choose actual unused release versions later; no alias window starts here.
+5. Approve C4's later removal boundary after a real transition, or its amended
+   closure scope under the breaking alternative. Separately approve F's exact
+   platform/patch/floor and source/artifact selection; G remains publication-only
+   authorization after all release gates, not an automatic consequence of C.
+
+### Ready-to-copy C1-A/Q prompt — future task, not executed by this plan
+
+```text
+Prepare PJS C1-A/Q acceptance and qualification from current verified main.
+Read AGENTS.md and the reviewed docs/research/v1-api-migration-plan.md, including
+its C1 work packages, qualification matrix and unresolved hold applicability.
+Fetch refs, preserve unrelated work and use an isolated branch/worktree.
+
+Existing code appears to meet the containment contract. Do not refactor runtime
+algorithms, rename options, change defaults or remove experimental annotations.
+Preserve ordinary-run successful-post leases, distinct caller deadlines, one
+settlement, monotonic rolling/lifetime budgets, first-shutdown promise/options,
+confirmed-exit replacement, failure-retained physical ownership, no replay,
+rollback, transfer restoration or hard realtime guarantee.
+
+Implement C1-A's scoped docs/type-comment and missing acceptance work: reuse
+existing deterministic suites; add the lease-driven repair termination-rejection
+path without duplicating the existing non-draining rejection test. Extend packed
+JS and both emitted TS consumers for all containment controls, active graceful
+escalation and lifetime fallback, preserving gates/watchdogs and public shapes.
+Keep separately tracked holds open; do not investigate them or assume eligibility.
+If a behavioral mismatch appears, retain the repro and stop for a scope decision.
+
+Commit and qualify the clean candidate using the C1 matrix's exact proposed OS/
+Node cells, reconfirmed before execution. Run ordinary gates, both locked compiler
+consumers, installed-package and inventory/JS comparisons plus standard R2/R3 at
+promotion recommendation. Reconcile raw children, exact source/tested tree and
+tarball hashes; retain failed/incomplete/unavailable attempts without weakening
+checks/timeouts. Historical B4 evidence is baseline evidence, not fresh C1 runs.
+
+Deliver the candidate, report and a reviewable scoped change. A normal push/draft
+PR targeting main is authorized for this future C1-A/Q task only when this prompt
+is explicitly invoked. Do not merge, auto-merge, promote P1, select versions,
+publish, tag, implement C2-C4/Stage F, investigate release holds or perform Rust/
+unrelated work. Recommend or defer promotion; C1-P needs separate maintainer
+approval and authorization after the evidence and eligibility review.
+```
 
 S1 integration → reviewed A decisions → B corrections → C controlled promotions
 and alias removal → F final-candidate qualification/rehearsal → G separately

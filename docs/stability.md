@@ -1,7 +1,7 @@
 # API stability and compatibility
 
-PJS is pre-1.0. **The v1 policy below is proposed, pending review and Stage B/C
-implementation.** It does not promote current features or declare v1 ready.
+PJS is pre-1.0. **Stage B is integrated; Stage C promotion/migration decisions
+remain proposed.** This does not promote current features or declare v1 ready.
 The [canonical current inventory](research/v1-api-contract-inventory.md) discovers
 61 root names, all declared members and no additional reachable named types,
 including R1 additions. The [v0.15 inventory](research/v0.15-public-api-inventory.md)
@@ -27,7 +27,12 @@ GitHub lists [RC4 as a prerelease](https://github.com/Miskovy/parallel-javascrip
 Merged development main includes R1/R2/R3 additions absent from that immutable
 artifact. Main `2ae078b93c8b819d2d843ecb32ffb1fc5e6728f7` integrates reviewed
 S1/Stage A/B1/B2 through PR #22. B3 is integrated through PR #23 at main
-`e58e792a2069a9ac72cc13fe2309eb1e3c2b7dab`; B4 is a separate development change.
+`e58e792a2069a9ac72cc13fe2309eb1e3c2b7dab`. B4 is integrated through PR #24 at
+current main `35f2aacfe431516ed559409a3cba6bf2ccd2e6b7`, whose tree matches the
+reviewed B4 head and tested synthetic merge. The [Stage C plan](research/v1-api-migration-plan.md)
+proposes C1 contract/installed-evidence closure and qualification first, with a
+separate P1 promotion decision. C2/C3/C4 and the shared option-migration boundary
+have their own dependencies/approvals; hold applicability is unresolved.
 Unchanged development `rc.4` manifests do not authorize republishing its new bytes.
 
 ## Current status and proposed disposition
@@ -92,12 +97,13 @@ JavaScript first and register local file URLs relative to the calling module.
 No CommonJS entrypoint, browser/bundler integration or TypeScript loader is promised.
 No production dependency or new compiler prerequisite is introduced for consumers.
 
-Unchanged manifests declare `^22.13.0 || ^24.0.0`. Recent S1 qualification covers
-exact Node **22.13.0 and 24.21.0** on Windows/Linux x64. Linux evidence is attributed
-to the supplied independent review/handoff; its raw addendum/archive is unavailable
-here. See the inventory for the accepted confirmed rerun versus excluded original
-Node 24 child artifact. Historical passes do not qualify Stage B/C or prove Node
-24.0.0. No macOS, ARM64, other major or every-patch guarantee follows.
+Unchanged manifests declare `^22.13.0 || ^24.0.0`. Re-inspected B4 CI covers
+Linux x64 Node **22.13.0 / 24.21.0** and Windows x64 **22.13.0 / 24.22.1** at the
+exact synthetic-merge SHA/tree in the [qualification ledger](research/v1-api-migration-plan.md#verified-starting-state-and-qualification-ledger).
+Local B4 Windows 24.21.0 results remain separate. Historical S1/B1 evidence and
+incomplete B2 Linux qualification retain their original attribution; B4 passes
+do not rewrite them, qualify C candidates or prove Node 24.0.0. No macOS, ARM64,
+other major or every-patch guarantee follows.
 
 Recommend retaining those engine floors only if final-candidate F qualifies the
 actual floor **22.13.0 / 24.0.0** and a deliberately selected current patch in

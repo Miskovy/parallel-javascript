@@ -2,7 +2,7 @@
 
 ## Status
 
-**Proposed — pending maintainer review and Stage B/C implementation.** No surface
+**Proposed — Stage B integrated; Stage C decisions/promotion still pending.** No surface
 is promoted and no final release is authorized. This records recommendations,
 not an accepted replacement of earlier contracts. It preserves ADR 0022's S1
 ownership and all existing physical-completion/containment constraints.
@@ -11,8 +11,13 @@ S1, corrected Stage A, B1 and B2 are integrated through PR #22 at main
 `2ae078b93c8b819d2d843ecb32ffb1fc5e6728f7`. B3 is separately authorized and
 implemented in development: snapshot storage/access is internal and the unsupported
 public method/declaration is removed. B3 is integrated through PR #23 at main
-`e58e792a2069a9ac72cc13fe2309eb1e3c2b7dab`. B4 is implemented separately in
-development with explicit diagnostic/error types and preserved runtime behavior.
+`e58e792a2069a9ac72cc13fe2309eb1e3c2b7dab`. B4's explicit diagnostic/error
+contracts are integrated through PR #24 at current main
+`35f2aacfe431516ed559409a3cba6bf2ccd2e6b7`, with a tree identical to reviewed
+e78b773 and its tested synthetic merge. The [Stage C engineering plan](../research/v1-api-migration-plan.md)
+records the evidence ledger, next C1 acceptance/qualification unit and distinct
+C1–C4 promotion/migration decisions. No runtime change or experimental-status
+removal is implemented by that planning update.
 This does not accept C promotion or this ADR as a whole. The context and counts below retain the
 historical Stage A baseline; the canonical inventory records current B1–B4
 changes and the explicit pre-v1 snapshot migration.
@@ -91,7 +96,7 @@ decisions. Tests are necessary evidence and never substitute for these choices.
 
 The original review order was S1, A, then separate B units. S1/Stage A/B1/B2
 are integrated through PR #22 and B3 is implemented as a separate development
-change, now integrated through PR #23. B4 has separate development contracts and
+change, now integrated through PR #23. B4 is integrated through PR #24 with
 an [engineering report](../research/b4-explicit-diagnostic-contracts.md).
 C1/C2/C3/C4 remain separate review units with owners, dependencies
 and acceptance in the linked specs.
