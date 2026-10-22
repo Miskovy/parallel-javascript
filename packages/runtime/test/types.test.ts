@@ -17,10 +17,12 @@ import type {
   PjsBinaryResult,
   PjsRangeStream,
   CountOnlyStreamRangeOptions,
+  PjsOwnedTypedArray,
+  ResultByteDeclaration,
 } from '../dist/index.js';
 
 const registry = new PjsTaskRegistry();
-const task = registry.register<Uint8Array, Uint8Array>(
+const task = registry.register<Uint8Array, Uint8Array<ArrayBuffer>>(
   'bytes',
   new URL('./fixture.js', import.meta.url),
 );
@@ -221,11 +223,142 @@ const directUpper: PjsRangeStream<Uint8Array> = runtime.streamRange(
   upperOptions,
 );
 void directUpper.throw();
-// B1 deliberately preserves B2's broad shared-backed binary typing gap.
-const sharedBinaryStillAssignable: PjsBinaryResult = new Uint8Array(
-  new SharedArrayBuffer(8),
+// All eleven view kinds retain ordinary backing, including offset and empty views.
+const ownedViews = [
+  new Int8Array(0),
+  new Uint8Array(new ArrayBuffer(16), 8, 8),
+  new Uint8ClampedArray(1),
+  new Int16Array(1),
+  new Uint16Array(1),
+  new Int32Array(1),
+  new Uint32Array(1),
+  new Float32Array(1),
+  new Float64Array(1),
+  new BigInt64Array(1),
+  new BigUint64Array(1),
+] satisfies PjsOwnedTypedArray[];
+const ownedResults = [
+  ...ownedViews,
+  new ArrayBuffer(0),
+  new DataView(new ArrayBuffer(16), 8, 8),
+] satisfies PjsBinaryResult[];
+for (const value of ownedResults) {
+  const ownedTask = registry.register<undefined, typeof value>(
+    'owned',
+    new URL('./fixture.js', import.meta.url),
+  );
+  const input = () => ({ input: undefined });
+  const exact: PjsRangeStream<typeof value> = runtime.streamRange(
+    ownedTask,
+    range,
+    input,
+    binaryOptions,
+  );
+  const upper: PjsRangeStream<typeof value> = runtime.streamRange(
+    ownedTask,
+    range,
+    input,
+    upperOptions,
+  );
+  const envelope: PjsTransfer<typeof value> = transfer(value, [
+    value instanceof ArrayBuffer ? value : value.buffer,
+  ]);
+  void exact;
+  void upper;
+  void envelope;
+}
+const declaration: ResultByteDeclaration = (partition) =>
+  partition.end - partition.start;
+const constantDeclaration: ResultByteDeclaration = 0;
+// @ts-expect-error Byte declaration callbacks cannot be async.
+const asyncDeclaration: ResultByteDeclaration = async () => 0;
+void declaration;
+void constantDeclaration;
+void asyncDeclaration;
+
+const sharedViews = [
+  new Int8Array(new SharedArrayBuffer(8)),
+  new Uint8Array(new SharedArrayBuffer(8)),
+  new Uint8ClampedArray(new SharedArrayBuffer(8)),
+  new Int16Array(new SharedArrayBuffer(8)),
+  new Uint16Array(new SharedArrayBuffer(8)),
+  new Int32Array(new SharedArrayBuffer(8)),
+  new Uint32Array(new SharedArrayBuffer(8)),
+  new Float32Array(new SharedArrayBuffer(8)),
+  new Float64Array(new SharedArrayBuffer(8)),
+  new BigInt64Array(new SharedArrayBuffer(8)),
+  new BigUint64Array(new SharedArrayBuffer(8)),
+] as const;
+type BinaryEligibility<Values extends readonly unknown[]> = {
+  [Index in keyof Values]: Values[Index] extends PjsBinaryResult ? true : false;
+};
+// Check each tuple entry independently, rather than rejecting only the union.
+const sharedEligibility: BinaryEligibility<typeof sharedViews> = [
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+];
+void sharedEligibility;
+for (const value of sharedViews) {
+  // @ts-expect-error Every explicitly shared-backed typed kind is excluded.
+  const owned: PjsOwnedTypedArray = value;
+  // @ts-expect-error Strict binary results exclude shared-backed typed views.
+  const binary: PjsBinaryResult = value;
+  const sharedOutputTask = registry.register<undefined, typeof value>(
+    'shared-output',
+    new URL('./fixture.js', import.meta.url),
+  );
+  const input = () => ({ input: undefined });
+  // @ts-expect-error No count-only fallback for shared output in exact mode.
+  runtime.streamRange(sharedOutputTask, range, input, binaryOptions);
+  // @ts-expect-error No count-only fallback for shared output in upper-bound mode.
+  runtime.streamRange(sharedOutputTask, range, input, upperOptions);
+  const count: PjsRangeStream<typeof value> = runtime.streamRange(
+    sharedOutputTask,
+    range,
+    input,
+  );
+  const broad: PjsTypedArray = value;
+  void owned;
+  void binary;
+  void count;
+  void broad;
+}
+const sharedMapTask = registry.register<
+  Uint8Array<SharedArrayBuffer>,
+  Uint8Array<ArrayBuffer>
+>('shared-map', new URL('./fixture.js', import.meta.url));
+const sharedMapped: Promise<Uint8Array<ArrayBuffer>> = runtime.parallelMapRange(
+  sharedMapTask,
+  range,
+  () => ({ input: new Uint8Array(new SharedArrayBuffer(8)) }),
+  { experimentalOutputConstructor: Uint8Array },
 );
-void sharedBinaryStillAssignable;
+void sharedMapped;
+const sharedView = new DataView(new SharedArrayBuffer(8));
+// @ts-expect-error DataView must have ordinary backing too.
+const rejectedDataView: PjsBinaryResult = sharedView;
+// @ts-expect-error Direct shared buffers are excluded.
+const rejectedSharedBuffer: PjsBinaryResult = new SharedArrayBuffer(8);
+// @ts-expect-error Nested ordinary binary objects are not direct binary results.
+const rejectedGraph: PjsBinaryResult = { data: new Uint8Array(8) };
+declare const widened: Uint8Array<ArrayBufferLike>;
+// @ts-expect-error A widened view does not establish ordinary backing.
+const rejectedWidened: PjsBinaryResult = widened;
+const copied: PjsBinaryResult = new Uint8Array(widened);
+void rejectedDataView;
+void rejectedSharedBuffer;
+void rejectedGraph;
+void rejectedWidened;
+void copied;
 const numberInput = (partition: RangePartition) => ({
   input: { partition, shared },
 });

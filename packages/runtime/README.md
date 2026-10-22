@@ -17,7 +17,10 @@ is a prerelease. Final v1.0.0 has not been released. Development source contains
 later R1/R2/R3 work and local S1 absent from the immutable RC4 artifact, despite
 unchanged version fields. B1 development adds type-only PjsRangeStream and
 CountOnlyStreamRangeOptions exports, exposing existing stream cleanup behavior.
-Those declarations are absent from RC4; ranges remain experimental and the
+B2 adds PjsOwnedTypedArray and ResultByteDeclaration type-only exports; strict
+PjsBinaryResult views now require ordinary ArrayBuffer backing. Shared-capable
+inputs and mapping types are preserved. Those declarations are absent from RC4;
+ranges remain experimental and the
 broader Stage A v1 decisions and option renames remain proposed.
 
 ```sh
