@@ -49,7 +49,7 @@ to those bounds. This is a default, not a sizing recommendation.
 `maxQueue` defaults to 1024 waiting logical tasks. `startupTimeout` defaults to
 30000 ms per worker; `maxRestarts` defaults to four times workers over the
 runtime's lifetime. Integer ranges and invalid-value behavior are in the
-[option inventory](../research/v0.15-public-api-inventory.md).
+[current option inventory](../research/v1-api-contract-inventory.md).
 
 `run` takes one input and returns a promise of one output. Clone is default;
 optional `transferList` moves input buffers. `signal` and `timeout` affect caller
@@ -110,6 +110,39 @@ the output; an application reorder buffer has its own memory cost outside PJS.
 The [binary recipe](../../examples/streaming-binary.mjs) demonstrates reconstruction.
 
 ## TypeScript and trusted tasks
+
+### Explicit stream cleanup (B1 development)
+
+The development candidate returns `PjsRangeStream<Output>` with required direct
+`next()`, `return()` and `throw()`. `CountOnlyStreamRangeOptions` is also importable
+from the root; it excludes all three strict byte-mode properties. These type-only
+exports are not in published RC4. Range streaming remains experimental.
+
+```ts
+const stream = runtime.streamRange(task, range, createInput);
+try {
+  const item = await stream.next();
+  if (!item.done) consume(item.value.partition, item.value.output);
+} finally {
+  await stream.return();
+}
+```
+
+Creation is eager; dropping the reference does not cancel. A stream is its own
+single-consumer iterator. `for await` break invokes cleanup, while a second read
+that would install another pending waiter rejects without cancelling the first.
+Explicit return clears delivery and synchronously cancels the parent, resolving
+a pending read as done. Its fulfilled promise is not a physical-completion
+barrier: posted work/byte reservations remain held until validated completion or
+confirmed worker exit. Await runtime shutdown for final runtime cleanup.
+
+Producer failure/abort/deadline is sticky for later reads even after return.
+Consumer `throw(reason)` rejects itself and a pending read with the same normalized
+Error and closes delivery; its supplied reason is not stored as producer failure.
+Repeated close does not cancel again. See the [full protocol table](../research/v1-api-corrections.md)
+for terminal throw and synchronous reason-conversion details.
+
+### Task types
 
 Use `registry.register<Input, Output>(...)` to describe the caller-visible payload
 types, including when the worker returns `transfer(...)`. PJS infers outputs from

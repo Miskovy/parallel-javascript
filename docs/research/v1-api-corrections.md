@@ -1,12 +1,14 @@
-# Stage B: proposed API corrections
+# Stage B: B1 implemented; B2–B4 proposed
 
-**Specification for review, not an implemented API.** Selected source and current
-contracts are in the [canonical inventory](v1-api-contract-inventory.md). These
-four units follow approval of [ADR 0023](../adr/0023-v1-api-stability-decisions.md)
-and integration of S1. Each needs its own review, committed candidate identity,
-contract results and installed-package JS/TS evidence. No version is selected here.
+**B1 is implemented in the development candidate; it is absent from published
+RC4's declarations. B2–B4 and broader promotion decisions remain proposed.**
+Current contracts are in the [canonical inventory](v1-api-contract-inventory.md).
+B1 is explicitly authorized on a branch dependent on unmerged S1 and corrected
+Stage A, starting at `3d7eda67c6be4c818967ad47777acfb75afd62ac`; no dependency
+was merged. Each later unit needs its own authorization/review, committed candidate
+identity, contract results and installed-package evidence. No version is selected.
 
-## Verified gaps and evidence
+## Historical Stage A gaps and B1 resolution
 
 Stage A built the selected S1 source with locked TypeScript 7.0.2 and inspected
 declarations with locked TypeScript 6.0.3. Focused probes under both compilers
@@ -17,11 +19,14 @@ in strict exact-byte stream mode fails with `PjsBinaryResultContractError`.
 Proposed ordinary-backed unions accept positive owned views and reject explicit
 shared-backed views under both compilers. The proposed B1 interface and direct
 cleanup/iteration consumers also compile under both locked compilers. These ignored probes substantiate the
-gaps and type design; they are not installed-package acceptance for unimplemented B.
+gaps and type design; they are not installed-package acceptance for B2–B4.
+B1 now resolves the direct cleanup declaration gap with the public interface and
+real installed JS/TS consumers. It does not fix the shared-backed result type or
+registry visibility gaps.
 
-## B1: closeable stream contract — implement first
+## B1: closeable stream contract — implemented in development
 
-Propose the following **new, unavailable until B1** root type; both existing
+The development candidate root-exports the following type; both existing
 `streamRange` overloads return `PjsRangeStream<Output>`. Their parameters, overload
 order, eager execution and adapter delegation remain unchanged.
 
@@ -40,11 +45,12 @@ export interface PjsRangeStream<Output> extends AsyncIterableIterator<
 }
 ```
 
-Make `RangeStream` implement this interface and narrow its self-iterator return
-annotation. Do not export the implementation class, introduce an async facade,
-defer startup until first read, or add an extra parent state owner. The generic
-parameter describes output, not a nested iterator result. Root-export
-`CountOnlyStreamRangeOptions` intentionally, preserving its current exclusions.
+`RangeStream` implements this interface and returns it from self-iteration. The
+implementation class remains internal to the package. Facade and adapter still
+delegate synchronously; there is no lazy-start wrapper or extra parent state owner.
+The generic parameter describes output, not a nested iterator result. Root-exported
+`CountOnlyStreamRangeOptions` has one canonical definition in partition/range.ts,
+preserving its three byte exclusions. No runtime export or protocol body changed.
 
 | Action / condition                        | Required behavior, matching current implementation                                                                                                                                                                                                                                 |
 | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -66,8 +72,14 @@ physical ownership; `await stream.return()` is not that barrier. `shutdown()` is
 the runtime cleanup barrier and can reject if confirmed termination fails.
 Preserve range AsyncResource scope and ordinary Promise continuation context.
 
-Affected code: root exports, facade/stream adapter annotations, stream type and
-implementation self annotation, consumer fixtures/docs. Required acceptance:
+Implemented coverage: eleven deterministic closeable-stream cases use existing
+gated workers/inspection helpers, preserving queued and physical ownership;
+existing stream tests cover completion order and AsyncResource/Promise context.
+The expiry-sticky case invokes the existing expiry path with an inspected expired
+deadline, while existing timer tests retain real deadline coverage. The installed
+package harness runs JS cleanup, unchanged root-key/subpath assertions, and full
+declaration plus emitted consumer checks under both locked compilers without
+skipLibCheck. Required acceptance for the B1 candidate remains:
 
 - Installed JS and both locked TS consumers directly call required `return()`
   and `throw()` without non-null assertions or casts; `for await` still works.
@@ -238,7 +250,7 @@ R2/R3 campaigns at promotion/final qualification, not sleeps or performance boun
 
 ## Review order and shared exits
 
-B1 is first and independent of B2/B3. B2 can follow B1; B3 can be reviewed
+B1 is implemented independently of B2/B3. B2 can follow B1 with separate authorization; B3 can be reviewed
 separately. B4 consumes the approved inventory and B3 removal. Each change runs
 build, contract tests applicable to affected ownership, both compiler consumers,
 installed package smoke, lint, format, docs and diff checks. Review emitted

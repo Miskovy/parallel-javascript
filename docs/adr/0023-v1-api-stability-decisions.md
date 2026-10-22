@@ -7,6 +7,12 @@ is promoted and no final release is authorized. This records recommendations,
 not an accepted replacement of earlier contracts. It preserves ADR 0022's S1
 ownership and all existing physical-completion/containment constraints.
 
+B1 implementation is separately authorized and present in the development
+candidate. This does not accept/implement B2–B4, C promotion, or this ADR as a
+whole. S1 and corrected Stage A remain unmerged dependencies of the B1 branch.
+Counts below describe Stage A; the canonical current inventory now reconciles
+B1's two additional type-only root exports.
+
 ## Context and baseline
 
 On 22 October 2026, fetched main remains

@@ -15,7 +15,10 @@ As checked on 22 October 2026, **1.0.0-rc.4** is published as
 both `next` and `latest` at RC4. Its [GitHub release](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.4)
 is a prerelease. Final v1.0.0 has not been released. Development source contains
 later R1/R2/R3 work and local S1 absent from the immutable RC4 artifact, despite
-unchanged version fields. Stage A's proposed v1 policy and names are not implemented.
+unchanged version fields. B1 development adds type-only PjsRangeStream and
+CountOnlyStreamRangeOptions exports, exposing existing stream cleanup behavior.
+Those declarations are absent from RC4; ranges remain experimental and the
+broader Stage A v1 decisions and option renames remain proposed.
 
 ```sh
 npm install @pjavascript/runtime@next

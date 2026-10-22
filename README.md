@@ -20,8 +20,10 @@ RC2 established the permanent package identity. [RC4](docs/release-v1.0.0-rc.4.m
 published the R1A runtime qualified in RC3 and corrected the release tooling that
 had blocked RC3's npm publication. Later development containment additions are
 absent from that artifact. The [Stage A decision package](docs/research/v1-api-contract-inventory.md)
-proposes v1 corrections and promotion gates; those decisions and future names
-remain pending review and implementation.
+proposes v1 corrections and promotion gates. B1 development now exposes existing
+stream cleanup through PjsRangeStream and CountOnlyStreamRangeOptions type-only
+exports; those declarations are absent from RC4. Broader decisions, B2–B4 and
+future option names remain pending review and implementation.
 
 ## Install
 
