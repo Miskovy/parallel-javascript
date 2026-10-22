@@ -157,6 +157,12 @@ try {
     unrelated,
   );
   run(
+    'installed strict binary outputs, envelopes and JavaScript rejection guards',
+    process.execPath,
+    [join(consumer, 'binary.mjs')],
+    unrelated,
+  );
+  run(
     'installed physical containment and recovery',
     process.execPath,
     [join(consumer, 'containment.mjs')],

@@ -1,19 +1,20 @@
-# Stage B: B1 implemented; B2–B4 proposed
+# Stage B: B1/B2 implemented; B3/B4 proposed
 
-**B1 is implemented in the development candidate; it is absent from published
-RC4's declarations. B2–B4 and broader promotion decisions remain proposed.**
+**B1/B2 are implemented in the development candidate; their declaration changes
+are absent from published RC4. B3/B4 and broader promotion decisions remain proposed.**
 Current contracts are in the [canonical inventory](v1-api-contract-inventory.md).
 B1 is explicitly authorized on a branch dependent on unmerged S1 and corrected
 Stage A, starting at `3d7eda67c6be4c818967ad47777acfb75afd62ac`; no dependency
-was merged. Each later unit needs its own authorization/review, committed candidate
+was merged. B2 is separately authorized on reviewed B1
+`5e5625bb97b12c3e5ed18fbc58177787cbb9c7b5`. Each later unit needs its own authorization/review, committed candidate
 identity, contract results and installed-package evidence. No version is selected.
 
-## Historical Stage A gaps and B1 resolution
+## Historical Stage A gaps and B1/B2 resolution
 
 Stage A built the selected S1 source with locked TypeScript 7.0.2 and inspected
 declarations with locked TypeScript 6.0.3. Focused probes under both compilers
 confirmed: direct `stream.return()` produces TS2339; assigning an explicitly
-`SharedArrayBuffer`-backed Uint8Array to current `PjsBinaryResult` compiles; and
+`SharedArrayBuffer`-backed Uint8Array to Stage A's `PjsBinaryResult` compiles; and
 `registry.snapshot()` compiles. A real worker returning that shared-backed view
 in strict exact-byte stream mode fails with `PjsBinaryResultContractError`.
 Proposed ordinary-backed unions accept positive owned views and reject explicit
@@ -21,8 +22,9 @@ shared-backed views under both compilers. The proposed B1 interface and direct
 cleanup/iteration consumers also compile under both locked compilers. These ignored probes substantiate the
 gaps and type design; they are not installed-package acceptance for B2–B4.
 B1 now resolves the direct cleanup declaration gap with the public interface and
-real installed JS/TS consumers. It does not fix the shared-backed result type or
-registry visibility gaps.
+real installed JS/TS consumers. B2 now resolves the shared-backed strict result
+type gap with ordinary-backed views and installed positive/negative consumers;
+the registry visibility gap remains for B3.
 
 ## B1: closeable stream contract — implemented in development
 
@@ -96,11 +98,11 @@ This adds usable type information without a behavioral change. A cleaner throw
 protocol is a bounded alternative, but would change current pending-read/failure
 semantics; reject that alternative for B1 and review it separately if requested.
 
-## B2: ordinary-backed strict binary outputs
+## B2: ordinary-backed strict binary outputs — implemented in development
 
-Keep `PjsTypedArray` and `PjsTypedArrayConstructor` shared-capable for inputs and
-mapping. Strict binary result validation already forbids shared backing. Propose
-new root `PjsOwnedTypedArray` and narrow existing `PjsBinaryResult` as follows:
+B2 preserves `PjsTypedArray` and `PjsTypedArrayConstructor` for inputs and
+mapping. Strict binary result validation already forbids shared backing. The
+new root `PjsOwnedTypedArray` narrows existing `PjsBinaryResult` as follows:
 
 ```ts
 export type PjsOwnedTypedArray =
@@ -127,7 +129,7 @@ unique, transferable-buffer checks. Buffer or widened generic view types are
 accepted only when their ordinary backing is established; do not promise every
 Node Buffer's generic declaration or backing to satisfy this constraint.
 
-Root-export existing `ResultByteDeclaration` intentionally; keep
+B2 root-exports existing `ResultByteDeclaration` intentionally, preserving
 `number | ((partition: RangePartition) => number)`. No async callback or per-task
 context wrapper. Both strict stream option shapes, worker validation, exact and
 upper-bound reconciliation, per-stream capacity and error classes remain intact.
@@ -141,7 +143,7 @@ to `ArrayBufferLike` may need an inferred `new Uint8Array(...)`, an explicit
 output consumers must copy, use count-only mode without byte guarantees, or stay
 on the earlier prerelease. Do not narrow shared-readonly input or mapping types.
 
-Affected code: range output types/root exports, strict overload consumers,
+Implemented code: range output types/root exports, strict overload consumers,
 installed TS fixtures, ownership/binary docs. Acceptance under both compilers:
 
 - Positive ArrayBuffer, all eleven ordinary-backed typed views, offset subviews,
@@ -250,8 +252,8 @@ R2/R3 campaigns at promotion/final qualification, not sleeps or performance boun
 
 ## Review order and shared exits
 
-B1 is implemented independently of B2/B3. B2 can follow B1 with separate authorization; B3 can be reviewed
-separately. B4 consumes the approved inventory and B3 removal. Each change runs
+B1 and B2 are separately implemented in development; B2 depends on reviewed B1.
+B3 can be reviewed separately. B4 consumes the approved inventory and B3 removal. Each change runs
 build, contract tests applicable to affected ownership, both compiler consumers,
 installed package smoke, lint, format, docs and diff checks. Review emitted
 source/declaration/root graph differences against the named unit; expected API

@@ -7,11 +7,12 @@ is promoted and no final release is authorized. This records recommendations,
 not an accepted replacement of earlier contracts. It preserves ADR 0022's S1
 ownership and all existing physical-completion/containment constraints.
 
-B1 implementation is separately authorized and present in the development
-candidate. This does not accept/implement B2–B4, C promotion, or this ADR as a
-whole. S1 and corrected Stage A remain unmerged dependencies of the B1 branch.
+B1 and B2 implementation are separately authorized and present in the development
+candidate. This does not accept/implement B3/B4, C promotion, or this ADR as a
+whole. S1 and corrected Stage A remain unmerged dependencies. B2 depends on the
+independently reviewed B1 candidate 5e5625bb97b12c3e5ed18fbc58177787cbb9c7b5.
 Counts below describe Stage A; the canonical current inventory now reconciles
-B1's two additional type-only root exports.
+B1/B2's four additional type-only root exports.
 
 ## Context and baseline
 

@@ -384,11 +384,12 @@ context remain. Add synchronized reentrancy tests before claiming equivalence.
 No change to timeout units, worker defaults, maxQueue, result ordering, full
 collect/map retention, stream eagerness or byte units is bundled with renaming.
 
-## B1 development cleanup and proposed B2/C examples
+## B1/B2 development migration and proposed C examples
 
 Stream cleanup: B1 now exposes the existing methods in development declarations;
-published RC4 still has the old AsyncIterable declaration. The B2/C examples below
-remain proposed and unavailable until their separate implementation.
+published RC4 still has the old AsyncIterable declaration. B2's ordinary-backed
+strict output declarations are also implemented in development. The C option
+renames below remain proposed and unavailable until separate implementation.
 
 ```ts
 // BEFORE B1 / published RC4: cleanup through the optional iterator return.
@@ -409,19 +410,31 @@ try {
 }
 ```
 
-Binary ownership: a shared view currently typechecks as PjsBinaryResult but strict
-runtime validation rejects it. The proposed type makes that mismatch visible.
+Binary ownership: B2 narrows strict PjsBinaryResult views to ordinary backing.
+This deliberate pre-v1 type change matches existing runtime rejection of shared
+outputs; worker behavior and clone/transfer defaults do not change.
 
 ```ts
-// BEFORE: compiles currently; invalid strict-binary output at runtime.
+// BEFORE B2 / published RC4: compiles; invalid strict output at runtime.
 const shared = new Uint8Array(new SharedArrayBuffer(16));
 const current: PjsBinaryResult = shared;
 
-// PROPOSED AFTER B2: copy if a strict ordinary-backed output is needed.
+// CURRENT B2 DEVELOPMENT: copy if a strict ordinary-backed output is needed.
 const owned: PjsBinaryResult = new Uint8Array(shared);
 const view: DataView<ArrayBuffer> = new DataView(new ArrayBuffer(16));
-// Explicit SAB-backed output must become a targeted negative TS fixture.
+// @ts-expect-error Explicit SAB backing is now rejected.
+const invalid: PjsBinaryResult = shared;
 ```
+
+A task output schema widened to Uint8Array<ArrayBufferLike> (including a bare
+Uint8Array annotation) must establish ordinary backing: retain constructor
+inference, annotate Uint8Array<ArrayBuffer>, or copy to ordinary storage. Buffer
+acceptance depends on its backing declaration, not its name. PjsOwnedTypedArray
+does not prove unique references or transferability; transfer() keeps its own
+liveness and list checks. Shared output users can copy, use count-only streams
+without byte guarantees, or retain their prior prerelease. Inputs, PjsTypedArray,
+constructors, sharedReadonly and mapping types are preserved. ResultByteDeclaration
+is now root-exported with its unchanged number/synchronous callback signature.
 
 Option migration (B1 required for direct return; C3 required for stable options):
 

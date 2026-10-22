@@ -4,6 +4,8 @@ import type {
   CountOnlyStreamRangeOptions,
   PjsRangeStream,
   StreamRangeResult,
+  PjsBinaryResult,
+  ResultByteDeclaration,
 } from '@pjavascript/runtime';
 
 const registry = new PjsTaskRegistry();
@@ -12,8 +14,31 @@ const task = registry.register<number, number>(
   new URL('./task.js', import.meta.url),
   'double',
 );
+const binaryTask = registry.register<{ move: boolean }, PjsBinaryResult>(
+  'owned',
+  new URL('./task.js', import.meta.url),
+  'ownedBinary',
+);
 const runtime = new PjsRuntime({ registry, workers: 1 });
 try {
+  const bytes: ResultByteDeclaration = (partition) =>
+    (partition.end - partition.start) * 16;
+  for (const move of [false, true]) {
+    const binary: PjsRangeStream<PjsBinaryResult> = runtime.streamRange(
+      binaryTask,
+      { start: 0, end: 1, grainSize: 1 },
+      () => ({ input: { move } }),
+      {
+        experimentalResultBytes: bytes,
+        experimentalMaxReservedResultBytes: 16,
+      },
+    );
+    for await (const { output } of binary) {
+      assert.ok(output instanceof BigInt64Array);
+      assert.equal(output.byteLength, 16);
+      assert.equal(output[0], 42n);
+    }
+  }
   const result: number = await runtime.run(task, 21, {
     signal: new AbortController().signal,
     timeout: 5000,

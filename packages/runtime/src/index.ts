@@ -15,6 +15,8 @@ export type {
   BinaryStreamRangeOptions,
   UpperBoundBinaryStreamRangeOptions,
   PjsBinaryResult,
+  PjsOwnedTypedArray,
+  ResultByteDeclaration,
   PjsTypedArray,
   PjsTypedArrayConstructor,
   TypedMapRangeOptions,

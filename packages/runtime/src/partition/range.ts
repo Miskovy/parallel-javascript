@@ -44,10 +44,28 @@ export type CountOnlyStreamRangeOptions = StreamRangeOptions & {
   experimentalMaxReservedResultBytes?: never;
 };
 
-/** @experimental Direct binary values eligible for strict result-byte contracts. */
-export type PjsBinaryResult =
-  ArrayBuffer | PjsTypedArray | DataView<ArrayBufferLike>;
+/**
+ * @experimental Ordinary-backed views eligible for strict result-byte contracts.
+ * Ownership here does not prove unique references or transferability.
+ */
+export type PjsOwnedTypedArray =
+  | Int8Array<ArrayBuffer>
+  | Uint8Array<ArrayBuffer>
+  | Uint8ClampedArray<ArrayBuffer>
+  | Int16Array<ArrayBuffer>
+  | Uint16Array<ArrayBuffer>
+  | Int32Array<ArrayBuffer>
+  | Uint32Array<ArrayBuffer>
+  | Float32Array<ArrayBuffer>
+  | Float64Array<ArrayBuffer>
+  | BigInt64Array<ArrayBuffer>
+  | BigUint64Array<ArrayBuffer>;
 
+/** @experimental Direct ordinary-backed values; worker validation still applies. */
+export type PjsBinaryResult =
+  ArrayBuffer | PjsOwnedTypedArray | DataView<ArrayBuffer>;
+
+/** @experimental Synchronous visible-byte declaration for one logical partition. */
 export type ResultByteDeclaration =
   number | ((partition: RangePartition) => number);
 

@@ -22,7 +22,9 @@ had blocked RC3's npm publication. Later development containment additions are
 absent from that artifact. The [Stage A decision package](docs/research/v1-api-contract-inventory.md)
 proposes v1 corrections and promotion gates. B1 development now exposes existing
 stream cleanup through PjsRangeStream and CountOnlyStreamRangeOptions type-only
-exports; those declarations are absent from RC4. Broader decisions, B2–B4 and
+exports. B2 development adds PjsOwnedTypedArray and ResultByteDeclaration type-only
+exports and narrows PjsBinaryResult to ordinary backing, matching strict worker
+validation. These declarations are absent from RC4. Broader decisions, B3/B4 and
 future option names remain pending review and implementation.
 
 ## Install
