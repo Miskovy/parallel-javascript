@@ -1,7 +1,7 @@
-# Stage B: B1–B3 implemented; B4 proposed
+# Stage B: B1–B4 implemented in development
 
-**B1–B3 are implemented in development; their changes are absent from published
-RC4. B4 and broader promotion decisions remain proposed.**
+**B1–B4 are implemented in development; their changes are absent from published
+RC4. Broader promotion decisions remain proposed.**
 Current contracts are in the [canonical inventory](v1-api-contract-inventory.md).
 S1, corrected Stage A, B1 and B2 reached main through PR #22 at
 `2ae078b93c8b819d2d843ecb32ffb1fc5e6728f7`. B3 is separately authorized on
@@ -196,6 +196,11 @@ prototype/declaration removal explicitly in the API diff.
 
 ## B4: explicit diagnostic and error contracts
 
+Implemented from integrated main `e58e792a2069a9ac72cc13fe2309eb1e3c2b7dab`.
+The [engineering report](b4-explicit-diagnostic-contracts.md) records validation
+and evidence limits. The rules below remain the review/acceptance specification;
+implementation does not promote features or accept ADR 0023 as a whole.
+
 Retain every `STAT.*` field with the types, optionality, units, owner and lifetime
 in the inventory; retain streams/maps and buffered-byte aliases. Do not narrow
 active statuses, make copies readonly, replace optional mode fields with a new
@@ -253,8 +258,8 @@ R2/R3 campaigns at promotion/final qualification, not sleeps or performance boun
 
 ## Review order and shared exits
 
-B1–B3 are separately implemented in development. B3 starts from main after
-S1/Stage A/B1/B2 integration and remains a separate review unit. B4 consumes the approved inventory and B3 removal. Each change runs
+B1–B3 are integrated through PRs #22/#23. B4 is separately implemented in
+development and consumes the approved inventory and B3 removal. Each change runs
 build, contract tests applicable to affected ownership, both compiler consumers,
 installed package smoke, lint, format, docs and diff checks. Review emitted
 source/declaration/root graph differences against the named unit; expected API

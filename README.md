@@ -27,7 +27,9 @@ exports and narrows PjsBinaryResult to ordinary backing, matching strict worker
 validation. These declarations are absent from RC4. B3 development removes the
 unsupported public registry.snapshot() method and keeps snapshots internal to
 composition; introspection callers should retain their own registration metadata.
-B4, broader promotion decisions and future option names remain pending.
+B4 development names the existing diagnostic and error contracts through seventeen
+type-only root exports, preserving all 158 diagnostic leaves and runtime behavior.
+Broader promotion decisions and future option names remain pending.
 
 ## Install
 

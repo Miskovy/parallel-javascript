@@ -1,4 +1,4 @@
-export interface ErrorContext {
+export interface PjsErrorContext {
   taskId?: string;
   workerId?: number;
   cause?: unknown;
@@ -8,11 +8,17 @@ export interface ErrorContext {
   rangeEnd?: number;
 }
 
-export interface BinaryResultErrorContext extends ErrorContext {
+export interface PjsBinaryResultErrorContext extends PjsErrorContext {
   declaredBytes?: number;
   actualBytes?: number;
   actualType?: string;
   resultByteCapacity?: number;
+}
+
+export interface PjsTaskErrorDetails {
+  name: string;
+  message: string;
+  stack?: string;
 }
 
 export class PjsError extends Error {
@@ -22,7 +28,7 @@ export class PjsError extends Error {
   readonly partitionIndex: number | undefined;
   readonly rangeStart: number | undefined;
   readonly rangeEnd: number | undefined;
-  constructor(message: string, context: ErrorContext = {}) {
+  constructor(message: string, context: PjsErrorContext = {}) {
     super(message, { cause: context.cause });
     this.name = new.target.name;
     this.taskId = context.taskId;
@@ -37,10 +43,7 @@ export class PjsError extends Error {
 export class PjsTaskError extends PjsError {
   readonly remoteName: string;
   readonly remoteStack: string | undefined;
-  constructor(
-    error: { name: string; message: string; stack?: string },
-    context: ErrorContext,
-  ) {
+  constructor(error: PjsTaskErrorDetails, context: PjsErrorContext) {
     super(error.message, context);
     this.remoteName = error.name;
     this.remoteStack = error.stack;
@@ -62,7 +65,7 @@ export class PjsBinaryResultContractError extends PjsError {
   readonly declaredBytes: number | undefined;
   readonly actualBytes: number | undefined;
   readonly actualType: string | undefined;
-  constructor(message: string, context: BinaryResultErrorContext = {}) {
+  constructor(message: string, context: PjsBinaryResultErrorContext = {}) {
     super(message, context);
     this.declaredBytes = context.declaredBytes;
     this.actualBytes = context.actualBytes;
@@ -72,7 +75,7 @@ export class PjsBinaryResultContractError extends PjsError {
 export class PjsResultCapacityError extends PjsError {
   readonly declaredBytes: number | undefined;
   readonly resultByteCapacity: number | undefined;
-  constructor(message: string, context: BinaryResultErrorContext = {}) {
+  constructor(message: string, context: PjsBinaryResultErrorContext = {}) {
     super(message, context);
     this.declaredBytes = context.declaredBytes;
     this.resultByteCapacity = context.resultByteCapacity;

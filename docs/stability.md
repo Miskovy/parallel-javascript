@@ -3,7 +3,7 @@
 PJS is pre-1.0. **The v1 policy below is proposed, pending review and Stage B/C
 implementation.** It does not promote current features or declare v1 ready.
 The [canonical current inventory](research/v1-api-contract-inventory.md) discovers
-44 root names, all declared members and four additional reachable named types,
+61 root names, all declared members and no additional reachable named types,
 including R1 additions. The [v0.15 inventory](research/v0.15-public-api-inventory.md)
 is historical (38 root names), not the development contract.
 
@@ -16,32 +16,35 @@ narrows strict PjsBinaryResult views to ordinary backing. This deliberate pre-v1
 constraint preserves shared-capable inputs, mapping and count-only streams.
 B3 development removes unsupported registry.snapshot() and its declaration;
 module-private storage and internal composition snapshots preserve registration
-and runtime isolation. Introspection callers retain their own metadata. B4,
-feature promotion and option renames remain proposed.
+and runtime isolation. Introspection callers retain their own metadata. B4
+development adds seventeen type-only diagnostic/error roots, naming all 158
+preserved diagnostic leaves without changing runtime behavior. Feature promotion
+and option renames remain proposed.
 
 As checked on 22 October 2026, npm `latest` and `next` select
 [`@pjavascript/runtime@1.0.0-rc.4`](https://registry.npmjs.org/@pjavascript%2fruntime);
 GitHub lists [RC4 as a prerelease](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.4).
 Merged development main includes R1/R2/R3 additions absent from that immutable
 artifact. Main `2ae078b93c8b819d2d843ecb32ffb1fc5e6728f7` integrates reviewed
-S1/Stage A/B1/B2 through PR #22. B3 is a separate development change from that base.
+S1/Stage A/B1/B2 through PR #22. B3 is integrated through PR #23 at main
+`e58e792a2069a9ac72cc13fe2309eb1e3c2b7dab`; B4 is a separate development change.
 Unchanged development `rc.4` manifests do not authorize republishing its new bytes.
 
 ## Current status and proposed disposition
 
-| Surface                                                                                     | Current status                                              | Recommended v1 disposition / exact gate                                                                                                                                                             |
-| ------------------------------------------------------------------------------------------- | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Registry registration, runtime construction, ready/run/shutdown, base options/errors        | Core candidate                                              | Stabilize with documented registration/admission/first-shutdown contracts; B3 encapsulation, B4 errors, installed core consumers                                                                    |
-| transfer/sharedReadonly and ownership types                                                 | Specialized supported                                       | Stabilize specialized helpers: dispatch detachment/alias effects, copy-visible-bytes shared input, immutability by contract; installed ownership and physical-boundary gates                        |
-| executionLease, lease error, restartPolicy, forceAfter                                      | Experimental development additions despite unprefixed names | Promote C1 after B4, containment/physical/R2 and installed JS/TS gates; ordinary exclusive run only, no replay or hard termination deadline                                                         |
-| partitionRange / parallelFor                                                                | Experimental                                                | Promote C2: ordered retained collection / completion-only pre-serialization discard, one parent deadline/context, partial side effects; range/batch/installed gates                                 |
-| streamRange / result types                                                                  | Experimental                                                | B1 closeable stream implemented; C2: eager completion order, single consumer, explicit abandonment cleanup; stream/context/memory/installed gates                                                   |
-| parallelMapRange / array and typed overloads / map error                                    | Experimental                                                | Promote C2: full flat target, logical ordering, built-in constructors, exact block kind/cardinality and reentrant validation-before-target lookup                                                   |
-| Dispatch batching and count/output-constructor options                                      | Experimental with experimental prefix                       | C2 minimal renames; default 1, limit 16, sequential items, transfer/lease restrictions and skipped-item failure preserved; no automatic batching                                                    |
-| Exact / upper-bound binary output options, types and errors                                 | Experimental                                                | B2 ordinary-backed result types implemented in development; C3 minimal renames and separate promotion after credit/worker/physical/installed negative TS gates; visible payload per stream, not RSS |
-| stats / task and worker snapshots / containment diagnostics                                 | Supported diagnostics; nested shape not frozen              | B4 explicit named interfaces, retain all 158 inventoried fields and aliases with reviewed units/lifetimes; C1/C2/C3 gates for corresponding groups; no timing/performance guarantee                 |
-| Registry.snapshot / TaskDescriptor                                                          | Internal; public method removed in B3                       | B3 implemented in development: module-private WeakMap, internal snapshot function, stable handles/copied descriptors; introspection callers retain their own metadata                               |
-| Error contexts, inline task-error details, reachable status/mode and byte-declaration types | Structurally reachable, mostly not root-named               | Intentionally name/export supported types in B1/B2/B4; preserve metadata, hierarchy and status vocabularies. Internalize only TaskDescriptor in B3                                                  |
+| Surface                                                                              | Current status                                              | Recommended v1 disposition / exact gate                                                                                                                                                             |
+| ------------------------------------------------------------------------------------ | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Registry registration, runtime construction, ready/run/shutdown, base options/errors | Core candidate                                              | Stabilize with documented registration/admission/first-shutdown contracts; B3 encapsulation, B4 errors, installed core consumers                                                                    |
+| transfer/sharedReadonly and ownership types                                          | Specialized supported                                       | Stabilize specialized helpers: dispatch detachment/alias effects, copy-visible-bytes shared input, immutability by contract; installed ownership and physical-boundary gates                        |
+| executionLease, lease error, restartPolicy, forceAfter                               | Experimental development additions despite unprefixed names | Promote C1 after B4, containment/physical/R2 and installed JS/TS gates; ordinary exclusive run only, no replay or hard termination deadline                                                         |
+| partitionRange / parallelFor                                                         | Experimental                                                | Promote C2: ordered retained collection / completion-only pre-serialization discard, one parent deadline/context, partial side effects; range/batch/installed gates                                 |
+| streamRange / result types                                                           | Experimental                                                | B1 closeable stream implemented; C2: eager completion order, single consumer, explicit abandonment cleanup; stream/context/memory/installed gates                                                   |
+| parallelMapRange / array and typed overloads / map error                             | Experimental                                                | Promote C2: full flat target, logical ordering, built-in constructors, exact block kind/cardinality and reentrant validation-before-target lookup                                                   |
+| Dispatch batching and count/output-constructor options                               | Experimental with experimental prefix                       | C2 minimal renames; default 1, limit 16, sequential items, transfer/lease restrictions and skipped-item failure preserved; no automatic batching                                                    |
+| Exact / upper-bound binary output options, types and errors                          | Experimental                                                | B2 ordinary-backed result types implemented in development; C3 minimal renames and separate promotion after credit/worker/physical/installed negative TS gates; visible payload per stream, not RSS |
+| stats / task and worker snapshots / containment diagnostics                          | Supported diagnostics; explicit B4 contracts in development | B4 preserves all 158 inventoried fields and aliases with reviewed units/lifetimes; C1/C2/C3 gates for corresponding groups; no timing/performance guarantee                                         |
+| Registry.snapshot / TaskDescriptor                                                   | Internal; public method removed in B3                       | B3 implemented in development: module-private WeakMap, internal snapshot function, stable handles/copied descriptors; introspection callers retain their own metadata                               |
+| Error contexts, task-error details, status/mode and byte-declaration types           | Intentionally root-named in B1/B2/B4 development            | Preserve metadata, hierarchy and status vocabularies; TaskDescriptor remains internal after B3                                                                                                      |
 
 [ADR 0023](adr/0023-v1-api-stability-decisions.md) records the recommendations,
 alternatives and review decisions. The [B specification](research/v1-api-corrections.md)

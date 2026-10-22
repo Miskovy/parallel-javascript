@@ -12,9 +12,14 @@ import type { RangeStream } from './stream.js';
 import type { ResultByteMode } from '../results/credit.js';
 import type { UpperBoundResultByteContract } from '../workers/protocol.js';
 
-export type OperationStatus =
-  'created' | 'running' | 'completed' | 'failed' | 'cancelled' | 'timed_out';
-export type RangeResultMode = 'collect' | 'discard' | 'stream' | 'map';
+import type {
+  PjsOperationStatus as OperationStatus,
+  PjsRangeResultMode as RangeResultMode,
+} from '../diagnostics.js';
+export type {
+  PjsOperationStatus as OperationStatus,
+  PjsRangeResultMode as RangeResultMode,
+} from '../diagnostics.js';
 
 /** Host-owned state only. No worker slot and no preallocated child Promise list. */
 export class RangeOperation extends AsyncResource {

@@ -136,6 +136,45 @@ test('map validates array and typed block cardinality and kind', async (t) => {
   );
 });
 
+test('map diagnostics count validated copies separately from successful child responses', async (t) => {
+  const { runtime, task } = setup(t, { workers: 1 });
+  await runtime.ready();
+  const gate = new SharedArrayBuffer(8);
+  const result = runtime.parallelMapRange(
+    task,
+    { start: 0, end: 2, grainSize: 2 },
+    (partition) => input(partition, { gate }),
+  );
+  await until(() => Atomics.load(new Int32Array(gate), 0) === 1);
+  const active = runtime.stats().activeOperations[0];
+  assert.equal(active.resultMode, 'map');
+  assert.equal(Object.hasOwn(active, 'typedOutput'), true);
+  assert.equal(active.typedOutput, undefined);
+  assert.equal('bufferedResults' in active, false);
+  active.mappedElements = -1;
+  assert.equal(runtime.stats().activeOperations[0].mappedElements, 2);
+  assert.equal(runtime.stats().activeOperations[0].assembledBlocks, 0);
+  assert.deepEqual(runtime.stats().maps, runtime.stats().operations.mapping);
+  release(gate);
+  assert.deepEqual(await result, [0, 2]);
+  await assert.rejects(
+    runtime.parallelMapRange(
+      task,
+      { start: 0, end: 2, grainSize: 2 },
+      (partition) => input(partition, { lengthDelta: -1 }),
+    ),
+    PjsMapContractError,
+  );
+  const stats = runtime.stats();
+  assert.equal(stats.partitions.completed, 2);
+  assert.equal(stats.tasks.completed, 2);
+  assert.equal(stats.mapResults.blocks, 1);
+  assert.equal(stats.mapResults.elements, 2);
+  assert.equal(stats.maps.completed, 1);
+  assert.equal(stats.maps.failed, 1);
+  assert.deepEqual(stats.maps, stats.operations.mapping);
+});
+
 test('typed map clones and transfers blocks without boxing the final output', async (t) => {
   const { runtime, task } = setup(t);
   for (const move of [false, true]) {

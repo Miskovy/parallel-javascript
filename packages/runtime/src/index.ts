@@ -1,5 +1,26 @@
 export { PjsRuntime } from './runtime.js';
 export type { PjsRuntimeOptions } from './runtime.js';
+export type {
+  PjsRuntimeStats,
+  PjsOutcomeStats,
+  PjsContainmentStats,
+  PjsWorkerStats,
+  PjsQueueStats,
+  PjsTimingStats,
+  PjsOperationStats,
+  PjsStreamResultStats,
+  PjsMapResultStats,
+  PjsPartitionStats,
+  PjsDispatchStats,
+  PjsOperationSnapshot,
+  PjsOperationStatus,
+  PjsRangeResultMode,
+} from './diagnostics.js';
+export type {
+  PjsErrorContext,
+  PjsBinaryResultErrorContext,
+  PjsTaskErrorDetails,
+} from './errors/index.js';
 export { PjsTaskRegistry } from './tasks/registry.js';
 export type { PjsTask } from './tasks/registry.js';
 export { transfer } from './tasks/transfer.js';
