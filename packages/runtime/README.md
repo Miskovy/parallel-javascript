@@ -1,27 +1,32 @@
 # @pjavascript/runtime
 
 Explicit CPU tasks on persistent Node workers, with bounded admission and explicit
-clone/transfer/shared-input ownership. ESM only; qualified Node families are
-22.13+ within 22.x and 24.x. No production dependencies.
+clone/transfer/shared-input ownership. ESM only; manifests declare Node
+`^22.13.0 || ^24.0.0`. No production dependencies.
 
 PJS is pre-1.0. run, registration and lifecycle are core candidates. Range APIs
 and result-credit options remain experimental. Statistics are diagnostic.
 
 ## Install
 
-This source prepares **1.0.0-rc.4**, a candidate containing the R1A physical-completion
-repair. Until RC4 is published, the registry prerelease remains **1.0.0-rc.2** as
-[`@pjavascript/runtime`](https://www.npmjs.com/package/@pjavascript/runtime) under `next`.
-RC3 was qualified and released on GitHub; its npm workflow stopped before
-publication because the release validator assumed the wrong npm JSON shape.
-RC4 has the same runtime and corrects release tooling.
-Final v1.0.0 has not been released.
+As checked on 22 October 2026, **1.0.0-rc.4** is published as
+[`@pjavascript/runtime`](https://www.npmjs.com/package/@pjavascript/runtime);
+[registry metadata](https://registry.npmjs.org/@pjavascript%2fruntime) reports
+both `next` and `latest` at RC4. Its [GitHub release](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.4)
+is a prerelease. Final v1.0.0 has not been released. Development source contains
+later R1/R2/R3 work and local S1 absent from the immutable RC4 artifact, despite
+unchanged version fields. Stage A's proposed v1 policy and names are not implemented.
 
 ```sh
 npm install @pjavascript/runtime@next
 ```
 
-Qualified platforms: Windows x64 and Fedora/Linux x64. macOS and ARM64 are not claimed.
+Recent S1 evidence covers exact Node 22.13.0/24.21.0 on Windows/Linux x64; it does
+not establish Node 24.0.0. Final-candidate policy requires floor/current-patch
+qualification in both majors on both platforms; see the
+[stability policy](https://github.com/Miskovy/parallel-javascript/blob/main/docs/stability.md).
+macOS and ARM64 are not claimed. Compile TypeScript tasks to ordinary JavaScript
+and register file URLs; no CommonJS/browser/bundler/loader support is promised.
 
 ## Example and contracts
 
