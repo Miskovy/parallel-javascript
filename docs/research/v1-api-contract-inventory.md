@@ -13,8 +13,10 @@ Selected source is the reviewed local S1 candidate
 `f93fb9cb249a54ee625a19a20b5a6d7f7d68647f`, four local commits ahead of main.
 S1 is not merged. Stage A's local branch `docs/v1-api-stability-decisions` depends
 on it; integrating this branch does not authorize merging S1 or publishing.
-The original checkout's untracked review bundle is preserved in place; this
-work uses a separate worktree. There is no runtime-source delta in Stage A.
+This work uses a separate worktree; the original checkout remains at S1. Its
+retained S1 delivery ledger/evidence ZIP are separate ignored artifacts. The old
+root review bundle is absent at final verification and is not an input to this
+inventory; Stage A did not move/delete it. There is no runtime-source delta.
 
 The supplied readiness plan revision 3 (20 October) and Stage A handoff report
 independent Linux x64 Node 22.13.0/24.21.0 S1 qualification: 293 contracts,
@@ -976,8 +978,10 @@ only mapResults.blocks/elements count successful copies.
 
 ## Stage A verification
 
-On Windows x64, Node 24.21.0 / npm 11.18.0, locked build/type compiler 7.0.2
-and compatibility/inventory compiler 6.0.3:
+On Windows x64, Node 24.21.0, locked build/type compiler 7.0.2 and
+compatibility/inventory compiler 6.0.3. `npm.cmd` resolves npm 11.18.0 for install
+and direct shell checks; captured verification invokes the already-installed
+adjacent npm 11.19.0 CLI explicitly. No package/toolchain version was changed.
 
 - `npm run build`, `npm run test:types`, `npm run typecheck:compat`: passed.
 - `node scripts/api-contract-inventory.mjs --check --output=<fresh-file>`:

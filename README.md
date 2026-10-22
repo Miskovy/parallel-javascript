@@ -6,24 +6,22 @@ PJS runs explicitly registered CPU work in persistent Node workers, with bounded
 admission and explicit memory ownership. Your application keeps its event loop
 for I/O; PJS provides a separate compute plane. There are no runtime dependencies.
 
-**[v1.0.0-rc.2](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.2) is the
-current published prerelease, available on npm as `@pjavascript/runtime` under `next`.**
-Windows and Fedora/Linux x64 qualification completed;
-macOS and ARM64 remain unclaimed. Final v1.0.0 has not been released.
-[RC readiness](docs/research/v1-rc1-readiness.md) records the release gates and
-platform boundaries. The immutable v0.15.0 release remains available.
+**As checked on 22 October 2026, [v1.0.0-rc.4](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.4)
+is the published prerelease; npm `next` and `latest` both select it.**
+See the [registry metadata](https://registry.npmjs.org/@pjavascript%2fruntime).
+Final v1.0.0 has not been released. Development source contains later R1/R2/R3
+work and local S1; unchanged version fields do not make it the published artifact.
+Historical [RC readiness](docs/research/v1-rc1-readiness.md) and the immutable
+v0.15.0 release remain available.
 [API stability](docs/stability.md) distinguishes core candidates, supported
 ownership helpers, experimental range APIs and diagnostic statistics.
 
-RC2 established the permanent package identity `@pjavascript/runtime@1.0.0-rc.2`.
-The runtime implementation and public API are unchanged from RC1.
-See the [RC2 release note](docs/release-v1.0.0-rc.2.md).
-
-This branch prepares the [RC4 candidate](docs/release-v1.0.0-rc.4.md) with the
-same R1A runtime qualified in [RC3](docs/release-v1.0.0-rc.3.md). RC3 reached a
-GitHub prerelease, but its npm workflow stopped before publication because the
-release validator assumed the wrong npm CLI JSON shape. RC4 corrects that release
-contract; execution leases and the published npm version remain unchanged.
+RC2 established the permanent package identity. [RC4](docs/release-v1.0.0-rc.4.md)
+published the R1A runtime qualified in RC3 and corrected the release tooling that
+had blocked RC3's npm publication. Later development containment additions are
+absent from that artifact. The [Stage A decision package](docs/research/v1-api-contract-inventory.md)
+proposes v1 corrections and promotion gates; those decisions and future names
+remain pending review and implementation.
 
 ## Install
 
@@ -33,9 +31,12 @@ Install the current prerelease from the [public npm package](https://www.npmjs.c
 npm install @pjavascript/runtime@next
 ```
 
-Use `@next` deliberately until stable v1.0.0 exists; RC2 is a prerelease.
-Qualified versions: Node 22.13+ within 22.x and 24.x. TypeScript tasks must be
-compiled to JavaScript first. No CommonJS entrypoint is supplied.
+Use `@next` deliberately until stable v1.0.0 exists; RC4 is a prerelease.
+Manifests declare Node `^22.13.0 || ^24.0.0`. Recent S1 evidence covers exact
+22.13.0 and 24.21.0 on Linux/Windows x64; it does not prove the 24.0.0 floor.
+See the [proposed floor/current-patch qualification policy](docs/stability.md#proposed-node-and-platform-policy).
+macOS and ARM64 remain unclaimed. TypeScript tasks must be compiled to JavaScript
+first. PJS is ESM; no CommonJS/browser/bundler/loader support is promised.
 
 ## Thirty-second example
 
