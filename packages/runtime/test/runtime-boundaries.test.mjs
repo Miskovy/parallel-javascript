@@ -26,12 +26,7 @@ test('construction preserves getter/snapshot/start order and starts the complete
   const events = [];
   const registry = new PjsTaskRegistry();
   const task = registry.register('echo', fixture, 'echo');
-  let late;
-  const snapshot = registry.snapshot.bind(registry);
-  registry.snapshot = () => {
-    events.push('snapshot');
-    return snapshot();
-  };
+  let beforeSnapshot, late;
   const policy = new Proxy(
     { maxRestarts: 2, windowMs: 100 },
     {
@@ -53,6 +48,8 @@ test('construction preserves getter/snapshot/start order and starts the complete
     {
       get(target, key) {
         events.push(key);
+        if (key === 'registry')
+          beforeSnapshot = registry.register('getter', fixture, 'echo');
         if (key === 'maxQueue')
           late = registry.register('late', fixture, 'echo');
         return target[key];
@@ -88,7 +85,6 @@ test('construction preserves getter/snapshot/start order and starts the complete
       'restartPolicy',
       'policy.windowMs',
       'registry',
-      'snapshot',
       'maxQueue',
       'start',
     ]);
@@ -96,6 +92,8 @@ test('construction preserves getter/snapshot/start order and starts the complete
     assert.ok(runtimeComponents(runtime).telemetry);
     await runtime.ready();
     assert.equal(await runtime.run(task, 7), 7);
+    // The registry getter precedes capture, and the queue getter follows it.
+    assert.equal(await runtime.run(beforeSnapshot, 8), 8);
     await assert.rejects(runtime.run(late, 1), /registry snapshot/);
   } finally {
     await runtime.shutdown({ drain: false });

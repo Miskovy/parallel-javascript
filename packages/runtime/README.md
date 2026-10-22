@@ -14,14 +14,16 @@ As checked on 22 October 2026, **1.0.0-rc.4** is published as
 [registry metadata](https://registry.npmjs.org/@pjavascript%2fruntime) reports
 both `next` and `latest` at RC4. Its [GitHub release](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.4)
 is a prerelease. Final v1.0.0 has not been released. Development source contains
-later R1/R2/R3 work and local S1 absent from the immutable RC4 artifact, despite
+later R1/R2/R3 and integrated S1/Stage A/B1/B2 absent from immutable RC4, despite
 unchanged version fields. B1 development adds type-only PjsRangeStream and
 CountOnlyStreamRangeOptions exports, exposing existing stream cleanup behavior.
 B2 adds PjsOwnedTypedArray and ResultByteDeclaration type-only exports; strict
 PjsBinaryResult views now require ordinary ArrayBuffer backing. Shared-capable
 inputs and mapping types are preserved. Those declarations are absent from RC4;
-ranges remain experimental and the
-broader Stage A v1 decisions and option renames remain proposed.
+ranges remain experimental. B3 development removes unsupported registry.snapshot()
+access and keeps configuration snapshots internal; callers needing introspection
+must retain their own registration metadata. B4, broader promotion decisions and
+option renames remain proposed.
 
 ```sh
 npm install @pjavascript/runtime@next

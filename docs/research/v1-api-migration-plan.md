@@ -384,7 +384,7 @@ context remain. Add synchronized reentrancy tests before claiming equivalence.
 No change to timeout units, worker defaults, maxQueue, result ordering, full
 collect/map retention, stream eagerness or byte units is bundled with renaming.
 
-## B1/B2 development migration and proposed C examples
+## B1–B3 development migration and proposed C examples
 
 Stream cleanup: B1 now exposes the existing methods in development declarations;
 published RC4 still has the old AsyncIterable declaration. B2's ordinary-backed
@@ -435,6 +435,14 @@ liveness and list checks. Shared output users can copy, use count-only streams
 without byte guarantees, or retain their prior prerelease. Inputs, PjsTypedArray,
 constructors, sharedReadonly and mapping types are preserved. ResultByteDeclaration
 is now root-exported with its unchanged number/synchronous callback signature.
+
+B3 registry composition: the unsupported public registry.snapshot() method and
+its declaration are removed in development. Introspection callers must keep their
+own registration metadata. No deprecated method, public symbol, root helper or
+supported internal subpath replaces it. Internal snapshotRegistry access preserves
+independent descriptor copies, frozen handle identity and construction-time
+isolation from later registrations; valid registration timing/errors are unchanged.
+This is a deliberate pre-v1 JS/TS removal, separate from B4 and C promotion.
 
 Option migration (B1 required for direct return; C3 required for stable options):
 

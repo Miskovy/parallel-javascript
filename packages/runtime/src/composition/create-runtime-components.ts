@@ -7,13 +7,14 @@ import { RangeCoordinator } from '../partition/coordinator.js';
 import { ResultCreditManager } from '../results/credit.js';
 import { TaskCoordinator } from '../tasks/coordinator.js';
 import { RuntimeTelemetry } from '../telemetry/runtime.js';
+import { snapshotRegistry } from '../tasks/registry.js';
 
 /** Passive constructors store callbacks; operational callbacks begin only at start. */
 export function createRuntimeComponents(options: PjsRuntimeOptions) {
   const resultCredits = new ResultCreditManager();
   const { workers, startupTimeout, maxRestarts, restartPolicy } =
     normalizeRuntimeOptions(options);
-  const registry = options.registry.snapshot();
+  const registry = snapshotRegistry(options.registry);
   const dispatcher: ExecutionDispatcher = new ExecutionDispatcher(
     {
       workers,

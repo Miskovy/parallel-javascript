@@ -7,14 +7,15 @@ is promoted and no final release is authorized. This records recommendations,
 not an accepted replacement of earlier contracts. It preserves ADR 0022's S1
 ownership and all existing physical-completion/containment constraints.
 
-B1 and B2 implementation are separately authorized and present in the development
-candidate. This does not accept/implement B3/B4, C promotion, or this ADR as a
-whole. S1 and corrected Stage A remain unmerged dependencies. B2 depends on the
-independently reviewed B1 candidate 5e5625bb97b12c3e5ed18fbc58177787cbb9c7b5.
-Counts below describe Stage A; the canonical current inventory now reconciles
-B1/B2's four additional type-only root exports.
+S1, corrected Stage A, B1 and B2 are integrated through PR #22 at main
+`2ae078b93c8b819d2d843ecb32ffb1fc5e6728f7`. B3 is separately authorized and
+implemented in development: snapshot storage/access is internal and the unsupported
+public method/declaration is removed. This does not accept/implement B4, C
+promotion, or this ADR as a whole. The context and counts below retain the
+historical Stage A baseline; the canonical inventory records current B1–B3
+changes and the explicit pre-v1 snapshot migration.
 
-## Context and baseline
+## Historical Stage A context and baseline
 
 On 22 October 2026, fetched main remains
 `72335494704a6251c26505226c4f2575424ab190` (PR #17 R3). S1 remains local at
@@ -86,9 +87,10 @@ decisions. Tests are necessary evidence and never substitute for these choices.
 
 ## Implementation and validation
 
-Integrate reviewed S1 separately, approve A, then start B1's required closeable
-stream declaration and installed consumers. B2/B3/B4 and C1/C2/C3/C4 are small
-review units with owners, dependencies and acceptance in the linked specs.
+The original review order was S1, A, then separate B units. S1/Stage A/B1/B2
+are integrated through PR #22 and B3 is implemented as a separate development
+change. B4 and C1/C2/C3/C4 remain separate review units with owners, dependencies
+and acceptance in the linked specs.
 Preserve facade/configuration/composition/controller boundaries and one pump;
 do not add generic contexts, tracing, event buses or parallel state owners.
 Ordinary Promise continuation context and range AsyncResource scope are retained.

@@ -10,7 +10,7 @@ for I/O; PJS provides a separate compute plane. There are no runtime dependencie
 is the published prerelease; npm `next` and `latest` both select it.**
 See the [registry metadata](https://registry.npmjs.org/@pjavascript%2fruntime).
 Final v1.0.0 has not been released. Development source contains later R1/R2/R3
-work and local S1; unchanged version fields do not make it the published artifact.
+work and integrated S1/Stage A/B1/B2; unchanged version fields do not make it the published artifact.
 Historical [RC readiness](docs/research/v1-rc1-readiness.md) and the immutable
 v0.15.0 release remain available.
 [API stability](docs/stability.md) distinguishes core candidates, supported
@@ -24,8 +24,10 @@ proposes v1 corrections and promotion gates. B1 development now exposes existing
 stream cleanup through PjsRangeStream and CountOnlyStreamRangeOptions type-only
 exports. B2 development adds PjsOwnedTypedArray and ResultByteDeclaration type-only
 exports and narrows PjsBinaryResult to ordinary backing, matching strict worker
-validation. These declarations are absent from RC4. Broader decisions, B3/B4 and
-future option names remain pending review and implementation.
+validation. These declarations are absent from RC4. B3 development removes the
+unsupported public registry.snapshot() method and keeps snapshots internal to
+composition; introspection callers should retain their own registration metadata.
+B4, broader promotion decisions and future option names remain pending.
 
 ## Install
 

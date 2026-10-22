@@ -14,15 +14,28 @@ export interface TaskDescriptor {
   exportName: string;
 }
 
+const entries = new WeakMap<PjsTaskRegistry, Map<object, TaskDescriptor>>();
+
+function registryEntries(
+  registry: PjsTaskRegistry,
+): Map<object, TaskDescriptor> {
+  const registered = entries.get(registry);
+  if (!registered) throw new TypeError('Invalid task registry receiver');
+  return registered;
+}
+
 export class PjsTaskRegistry {
-  private readonly entries = new Map<object, TaskDescriptor>();
+  constructor() {
+    entries.set(this, new Map());
+  }
 
   register<Input, Output>(
     id: string,
     module: URL,
     exportName = 'default',
   ): PjsTask<Input, Output> {
-    if (!id || [...this.entries.values()].some((entry) => entry.id === id)) {
+    const registered = registryEntries(this);
+    if (!id || [...registered.values()].some((entry) => entry.id === id)) {
       throw new PjsTaskRegistrationError(
         `Task ID must be nonempty and unique: ${id}`,
       );
@@ -37,17 +50,19 @@ export class PjsTaskRegistry {
       );
     }
     const handle = Object.freeze({ id });
-    this.entries.set(handle, { id, module: module.href, exportName });
+    registered.set(handle, { id, module: module.href, exportName });
     return handle;
   }
+}
 
-  /** @internal Each runtime captures a configuration snapshot. */
-  snapshot(): ReadonlyMap<object, TaskDescriptor> {
-    return new Map(
-      [...this.entries].map(([handle, descriptor]) => [
-        handle,
-        { ...descriptor },
-      ]),
-    );
-  }
+/** @internal Each runtime captures a configuration snapshot, outside the root API. */
+export function snapshotRegistry(
+  registry: PjsTaskRegistry,
+): ReadonlyMap<object, TaskDescriptor> {
+  return new Map(
+    [...registryEntries(registry)].map(([handle, descriptor]) => [
+      handle,
+      { ...descriptor },
+    ]),
+  );
 }

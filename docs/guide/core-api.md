@@ -42,6 +42,13 @@ every registered module. Module globals persist per isolate. A registration made
 after construction is not in that runtime's snapshot. Handles from another
 registry, or `{ id: 'same-name' }` objects, are rejected.
 
+B3 development removes the unsupported public registry.snapshot() method and its
+TypeScript declaration. Keep your own registration metadata for introspection.
+Composition captures an internal copy after scalar normalization and before the
+queue getter; later registrations cannot change existing runtimes or replacement
+worker configuration. Internal snapshot access and TaskDescriptor are not root
+exports or supported package subpaths. This pre-v1 removal is absent from RC4.
+
 `registry` is required. `workers` chooses the fixed population; `minWorkers`
 defaults to 1 and `maxWorkers` to the larger of minimum and explicit workers or
 availableParallelism(). Without explicit workers the available value is clamped
