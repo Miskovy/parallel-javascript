@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { PjsRuntime, PjsTaskRegistry } from '@pjavascript/runtime';
 import { diagnosticContracts, errorContracts } from './diagnostics.js';
+import { containmentContracts } from './containment.js';
 import type {
   CountOnlyStreamRangeOptions,
   PjsRangeStream,
@@ -90,3 +91,4 @@ try {
 } finally {
   await runtime.shutdown();
 }
+await containmentContracts();

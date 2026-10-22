@@ -1,6 +1,7 @@
 # Current API contract inventory and proposed v1 dispositions
 
-Integrated B4 inventory at main `35f2aacfe431516ed559409a3cba6bf2ccd2e6b7`.
+C1-A/Q acceptance inventory from main `7533fbad82c3d80df80a6f6b633398b21dbcf827`
+(PR #25 plan integration), retaining the integrated B4 public graph.
 **S1, corrected Stage A and B1–B4 are integrated; broader policy and Stage C remain proposed. No feature
 is promoted.**
 This is the canonical current inventory. The [v0.15 inventory](v0.15-public-api-inventory.md)
@@ -10,13 +11,23 @@ their old `@pjs/runtime` spelling and 38-export count.
 ## Source identity and evidence limits
 
 B4 was merged through [PR #24](https://github.com/Miskovy/parallel-javascript/pull/24).
-Current main, reviewed B4 head e78b773 and CI synthetic merge c8c1576 have the
-same tree `48bb493a6717dfbd2259af017937ca623110b044`. The current source and
-public inventory therefore match B4; this is tree equivalence, not a fresh test
-run at main. The [Stage C qualification ledger](v1-api-migration-plan.md#verified-starting-state-and-qualification-ledger)
+The B4 merge main 35f2aac, reviewed B4 head e78b773 and CI synthetic merge c8c1576 have the
+same tree `48bb493a6717dfbd2259af017937ca623110b044`. Those B4 revisions share
+the reviewed/tested tree; this is historical tree equivalence, not qualification
+of a later C1 candidate. The [Stage C qualification ledger](v1-api-migration-plan.md#verified-starting-state-and-qualification-ledger)
 records the re-inspected four-cell B4 CI evidence and separate local results.
 Current experimental annotations/options remain unchanged pending unit-specific
 C1–C4 decisions.
+
+C1-A/Q adds acceptance and installed-package evidence and clarifies declaration
+comments without changing any supported signature/field/modifier. All 37
+pre-existing production JS files remain identical to its untouched main baseline;
+all 37 declaration token streams are unchanged, with comments changing only in
+types/index.d.ts and configuration/runtime-options.d.ts. The 61/322/0/158 graph
+and seventeen runtime values remain intact. Locations below are refreshed from
+the checker; historical reports and the existing field meanings remain untouched.
+See [C1 evidence and pending promotion](c1-containment-acceptance.md). C1-P is not
+approved by this acceptance work, and hold applicability remains unresolved.
 
 B4's implementation base was main `e58e792a2069a9ac72cc13fe2309eb1e3c2b7dab`, including
 [PR #23](https://github.com/Miskovy/parallel-javascript/pull/23) and reviewed
@@ -130,7 +141,7 @@ compiled JavaScript local `file:` module exports; no closures or new language.
 | `ROOT.PjsBinaryResultContractError`       | JS + TS class    | [src/errors/index.ts:64](../../packages/runtime/src/errors/index.ts#L64); `dist/errors/index.d.ts:54`                                                 | Result credits / worker validation / stream API; Experimental binary result contract | B2 then P3/C3; binary-result, upper-bound-result, result-credit, physical-boundary; B2 negative TS                  |
 | `ROOT.PjsCancelledError`                  | JS + TS class    | [src/errors/index.ts:59](../../packages/runtime/src/errors/index.ts#L59); `dist/errors/index.d.ts:44`                                                 | Registry / task / errors; Core candidate                                             | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
 | `ROOT.PjsError`                           | JS + TS class    | [src/errors/index.ts:24](../../packages/runtime/src/errors/index.ts#L24); `dist/errors/index.d.ts:21`                                                 | Registry / task / errors; Core candidate                                             | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
-| `ROOT.PjsExecutionLeaseError`             | JS + TS class    | [src/errors/index.ts:56](../../packages/runtime/src/errors/index.ts#L56); `dist/errors/index.d.ts:38`                                                 | Worker / pool / controller; Experimental R1 development                              | P1/C1; containment, physical-boundary, model-lifecycle; C1 installed fixture                                        |
+| `ROOT.PjsExecutionLeaseError`             | JS + TS class    | [src/errors/index.ts:56](../../packages/runtime/src/errors/index.ts#L56); `dist/errors/index.d.ts:38`                                                 | Containment; experimental; C1-A/Q acceptance implemented                             | P1 pending explicit approval/eligibility; C1 failure-path and installed JS/both emitted TS controls; see C1 report  |
 | `ROOT.PjsMapContractError`                | JS + TS class    | [src/errors/index.ts:63](../../packages/runtime/src/errors/index.ts#L63); `dist/errors/index.d.ts:52`                                                 | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
 | `ROOT.PjsOwnedTypedArray`                 | TS only          | [src/partition/range.ts:51](../../packages/runtime/src/partition/range.ts#L51); `dist/partition/range.d.ts:45`                                        | Result credits / stream API; experimental, B2 implemented in development             | P3/C3 promotion pending; both installed compilers and binary worker guards                                          |
 | `ROOT.PjsQueueFullError`                  | JS + TS class    | [src/errors/index.ts:57](../../packages/runtime/src/errors/index.ts#L57); `dist/errors/index.d.ts:40`                                                 | Registry / task / errors; Core candidate                                             | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
@@ -150,12 +161,12 @@ compiled JavaScript local `file:` module exports; no closures or new language.
 | `ROOT.PjsTypedArrayConstructor`           | TS only          | [src/partition/range.ts:103](../../packages/runtime/src/partition/range.ts#L103); `dist/partition/range.d.ts:67`                                      | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
 | `ROOT.PjsWorkerError`                     | JS + TS class    | [src/errors/index.ts:54](../../packages/runtime/src/errors/index.ts#L54); `dist/errors/index.d.ts:35`                                                 | Registry / task / errors; Core candidate                                             | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
 | `ROOT.RangePartition`                     | TS only          | [src/partition/range.ts:9](../../packages/runtime/src/partition/range.ts#L9); `dist/partition/range.d.ts:8`                                           | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
-| `ROOT.RestartPolicy`                      | TS only          | [src/types/index.ts:59](../../packages/runtime/src/types/index.ts#L59); `dist/types/index.d.ts:45`                                                    | Worker / pool / controller; Experimental R1 development                              | P1/C1; containment, physical-boundary, model-lifecycle; C1 installed fixture                                        |
+| `ROOT.RestartPolicy`                      | TS only          | [src/types/index.ts:69](../../packages/runtime/src/types/index.ts#L69); `dist/types/index.d.ts:55`                                                    | Containment; experimental; C1-A/Q acceptance implemented                             | P1 pending explicit approval/eligibility; C1 failure-path and installed JS/both emitted TS controls; see C1 report  |
 | `ROOT.ResultByteDeclaration`              | TS only          | [src/partition/range.ts:69](../../packages/runtime/src/partition/range.ts#L69); `dist/partition/range.d.ts:49`                                        | Result credits / stream API; experimental, B2 implemented in development             | P3/C3 promotion pending; both installed compilers and binary worker guards                                          |
 | `ROOT.RunOptions`                         | TS only          | [src/types/index.ts:41](../../packages/runtime/src/types/index.ts#L41); `dist/types/index.d.ts:29`                                                    | Configuration / task / controller; Core plus experimental R1 fields                  | S base; P1 R1 fields/C1; public-options, containment, runtime-boundaries; C1 installed fixture                      |
 | `ROOT.RuntimeState`                       | TS only          | [src/types/index.ts:1](../../packages/runtime/src/types/index.ts#L1); `dist/types/index.d.ts:1`                                                       | Telemetry / worker / task; Supported diagnostics; shape unfrozen                     | D/B4; preserve listed vocabulary; runtime, containment, memory-observability; B4 per-field assertions               |
 | `ROOT.sharedReadonly`                     | JS + TS function | [src/tasks/shared.ts:16](../../packages/runtime/src/tasks/shared.ts#L16); `dist/tasks/shared.d.ts:7`                                                  | Transfer claims / shared helper; Specialized supported                               | S specialized; preserve ownership; transfer, shared, physical-boundary, package-smoke                               |
-| `ROOT.ShutdownOptions`                    | TS only          | [src/types/index.ts:51](../../packages/runtime/src/types/index.ts#L51); `dist/types/index.d.ts:38`                                                    | Configuration / task / controller; Core plus experimental R1 fields                  | S base; P1 R1 fields/C1; public-options, containment, runtime-boundaries; C1 installed fixture                      |
+| `ROOT.ShutdownOptions`                    | TS only          | [src/types/index.ts:56](../../packages/runtime/src/types/index.ts#L56); `dist/types/index.d.ts:43`                                                    | Configuration / task / controller; Core plus experimental R1 fields                  | S base; P1 R1 fields/C1; public-options, containment, runtime-boundaries; C1 installed fixture                      |
 | `ROOT.StreamRangeOptions`                 | TS only          | [src/partition/range.ts:35](../../packages/runtime/src/partition/range.ts#L35); `dist/partition/range.d.ts:31`                                        | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
 | `ROOT.StreamRangeResult`                  | TS only          | [src/partition/stream.ts:3](../../packages/runtime/src/partition/stream.ts#L3); `dist/partition/stream.d.ts:2`                                        | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
 | `ROOT.TaskSnapshot`                       | TS only          | [src/types/index.ts:24](../../packages/runtime/src/types/index.ts#L24); `dist/types/index.d.ts:13`                                                    | Telemetry / worker / task; Supported diagnostics; shape unfrozen                     | D/B4; preserve listed vocabulary; runtime, containment, memory-observability; B4 per-field assertions               |
@@ -755,11 +766,11 @@ statistics sections, rather than a second policy in these lookup rows.
 | ID                                     | Current type / modifiers                                  | Source; declaration                                                                                                                                      |
 | -------------------------------------- | --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `MEM.PjsRuntimeOptions.maxQueue`       | optional; `number`                                        | [src/configuration/runtime-options.ts:11](../../packages/runtime/src/configuration/runtime-options.ts#L11); `dist/configuration/runtime-options.d.ts:8`  |
-| `MEM.PjsRuntimeOptions.maxRestarts`    | optional; `number`                                        | [src/configuration/runtime-options.ts:13](../../packages/runtime/src/configuration/runtime-options.ts#L13); `dist/configuration/runtime-options.d.ts:10` |
+| `MEM.PjsRuntimeOptions.maxRestarts`    | optional; `number`                                        | [src/configuration/runtime-options.ts:14](../../packages/runtime/src/configuration/runtime-options.ts#L14); `dist/configuration/runtime-options.d.ts:11` |
 | `MEM.PjsRuntimeOptions.maxWorkers`     | optional; `number`                                        | [src/configuration/runtime-options.ts:10](../../packages/runtime/src/configuration/runtime-options.ts#L10); `dist/configuration/runtime-options.d.ts:7`  |
 | `MEM.PjsRuntimeOptions.minWorkers`     | optional; `number`                                        | [src/configuration/runtime-options.ts:9](../../packages/runtime/src/configuration/runtime-options.ts#L9); `dist/configuration/runtime-options.d.ts:6`    |
 | `MEM.PjsRuntimeOptions.registry`       | required; `import("./tasks/registry.js").PjsTaskRegistry` | [src/configuration/runtime-options.ts:7](../../packages/runtime/src/configuration/runtime-options.ts#L7); `dist/configuration/runtime-options.d.ts:4`    |
-| `MEM.PjsRuntimeOptions.restartPolicy`  | optional; `import("./types/index.js").RestartPolicy`      | [src/configuration/runtime-options.ts:15](../../packages/runtime/src/configuration/runtime-options.ts#L15); `dist/configuration/runtime-options.d.ts:12` |
+| `MEM.PjsRuntimeOptions.restartPolicy`  | optional; `import("./types/index.js").RestartPolicy`      | [src/configuration/runtime-options.ts:19](../../packages/runtime/src/configuration/runtime-options.ts#L19); `dist/configuration/runtime-options.d.ts:16` |
 | `MEM.PjsRuntimeOptions.startupTimeout` | optional; `number`                                        | [src/configuration/runtime-options.ts:12](../../packages/runtime/src/configuration/runtime-options.ts#L12); `dist/configuration/runtime-options.d.ts:9`  |
 | `MEM.PjsRuntimeOptions.workers`        | optional; `number`                                        | [src/configuration/runtime-options.ts:8](../../packages/runtime/src/configuration/runtime-options.ts#L8); `dist/configuration/runtime-options.d.ts:5`    |
 
@@ -936,14 +947,14 @@ statistics sections, rather than a second policy in these lookup rows.
 
 | ID                              | Current type / modifiers | Source; declaration                                                                                |
 | ------------------------------- | ------------------------ | -------------------------------------------------------------------------------------------------- |
-| `MEM.RestartPolicy.maxRestarts` | required; `number`       | [src/types/index.ts:60](../../packages/runtime/src/types/index.ts#L60); `dist/types/index.d.ts:46` |
-| `MEM.RestartPolicy.windowMs`    | required; `number`       | [src/types/index.ts:61](../../packages/runtime/src/types/index.ts#L61); `dist/types/index.d.ts:47` |
+| `MEM.RestartPolicy.maxRestarts` | required; `number`       | [src/types/index.ts:71](../../packages/runtime/src/types/index.ts#L71); `dist/types/index.d.ts:57` |
+| `MEM.RestartPolicy.windowMs`    | required; `number`       | [src/types/index.ts:73](../../packages/runtime/src/types/index.ts#L73); `dist/types/index.d.ts:59` |
 
 ### RunOptions
 
 | ID                              | Current type / modifiers           | Source; declaration                                                                                |
 | ------------------------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------- |
-| `MEM.RunOptions.executionLease` | optional; `number`                 | [src/types/index.ts:48](../../packages/runtime/src/types/index.ts#L48); `dist/types/index.d.ts:36` |
+| `MEM.RunOptions.executionLease` | optional; `number`                 | [src/types/index.ts:53](../../packages/runtime/src/types/index.ts#L53); `dist/types/index.d.ts:41` |
 | `MEM.RunOptions.signal`         | optional; `AbortSignal`            | [src/types/index.ts:42](../../packages/runtime/src/types/index.ts#L42); `dist/types/index.d.ts:30` |
 | `MEM.RunOptions.timeout`        | optional; `number`                 | [src/types/index.ts:46](../../packages/runtime/src/types/index.ts#L46); `dist/types/index.d.ts:34` |
 | `MEM.RunOptions.transferList`   | optional; `readonly ArrayBuffer[]` | [src/types/index.ts:44](../../packages/runtime/src/types/index.ts#L44); `dist/types/index.d.ts:32` |
@@ -952,8 +963,8 @@ statistics sections, rather than a second policy in these lookup rows.
 
 | ID                               | Current type / modifiers | Source; declaration                                                                                |
 | -------------------------------- | ------------------------ | -------------------------------------------------------------------------------------------------- |
-| `MEM.ShutdownOptions.drain`      | optional; `boolean`      | [src/types/index.ts:53](../../packages/runtime/src/types/index.ts#L53); `dist/types/index.d.ts:40` |
-| `MEM.ShutdownOptions.forceAfter` | optional; `number`       | [src/types/index.ts:55](../../packages/runtime/src/types/index.ts#L55); `dist/types/index.d.ts:42` |
+| `MEM.ShutdownOptions.drain`      | optional; `boolean`      | [src/types/index.ts:58](../../packages/runtime/src/types/index.ts#L58); `dist/types/index.d.ts:45` |
+| `MEM.ShutdownOptions.forceAfter` | optional; `number`       | [src/types/index.ts:65](../../packages/runtime/src/types/index.ts#L65); `dist/types/index.d.ts:52` |
 
 ### StreamRangeOptions
 

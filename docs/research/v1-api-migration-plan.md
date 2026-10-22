@@ -8,6 +8,19 @@ is a runnable current-source replacement. The [inventory](v1-api-contract-invent
 is authoritative for today's behavior; [B](v1-api-corrections.md) specifies the
 four corrections before promotion. See [ADR 0023](../adr/0023-v1-api-stability-decisions.md).
 
+## C1-A/Q implementation status
+
+The C1 handoff has now been invoked after this plan was integrated through PR #25
+at main `7533fbad82c3d80df80a6f6b633398b21dbcf827`. The
+[C1 engineering report](c1-containment-acceptance.md) records the acceptance,
+installed-consumer and comment/documentation changes, plus the clean-candidate
+qualification procedure. Source/environment/package receipts in delivery bind
+actual results to the final candidate. The planning-base ledger/findings and
+handoff text below remain their original reference; they are not newly executed
+B4 results or a second authorization. C1-A/Q does not remove experimental status,
+implement C2–C4 or decide unresolved release-hold applicability. C1-P remains a
+separate maintainer approval/action after evidence and eligibility review.
+
 ## Verified starting state and qualification ledger
 
 Planning base: fetched main `35f2aacfe431516ed559409a3cba6bf2ccd2e6b7`, the

@@ -55,6 +55,10 @@ results. Ordinary run uses its host timer. Neither is a hard real-time guarantee
 ## Experimental physical execution leases (R1 development)
 
 These additions are not present in the immutable published RC4 package.
+C1-A/Q adds focused acceptance and installed-package qualification without
+changing these contracts or experimental status. See the
+[C1 engineering report](../research/c1-containment-acceptance.md) for source-bound
+evidence and the separate promotion decision.
 
 ```js
 await runtime.run(task, input, { timeout: 1000, executionLease: 5000 });
@@ -79,14 +83,22 @@ termination or OOM protection. Transferred input stays detached; shared memory a
 side effects can be partial, including abandoned Atomics locks. There is no rollback.
 
 Use constructor `restartPolicy: { maxRestarts: 3, windowMs: 60_000 }` to opt into a
-pool-wide rolling restart window. It is mutually exclusive with lifetime maxRestarts.
+pool-wide rolling restart window. A defined policy is mutually exclusive with a
+defined lifetime maxRestarts value; JavaScript maxRestarts: undefined does not
+select a lifetime budget. This is a defined-value rule, not a property-presence
+alias rule. With no policy, lifetime maxRestarts defaults to workers × 4 and zero
+is valid. TypeScript retains its existing optional number properties; with
+exactOptionalPropertyTypes, explicit undefined is not part of that optional
+number declaration.
 Both values are integers (maxRestarts >= 0, windowMs >= 1). Unexpected failures and
 lease containment consume one restart decision each; records expire at age >= windowMs
 using monotonic time. Shutdown termination consumes none. Bootstrap failure remains
 fatal without a retry. Exhaustion fails accepted work and stops the pool.
 
-`forceAfter` measures from the first graceful shutdown call, including startup.
-The first call's options and promise govern concurrent callers. Omission keeps graceful
+On a non-failed runtime, `forceAfter` measures from the first graceful shutdown
+call, including startup. The first call's options and promise govern concurrent
+callers; later calls return that same promise without reading their option getters.
+Omission keeps graceful
 shutdown unbounded; forceAfter with drain:false is invalid. Deadline expiry changes
 permanently to forced mode, cancels queued and active pending callers, stops production
 and initiates termination. Resolution still awaits exits. Graceful drain can replace
@@ -94,8 +106,15 @@ failed workers to finish accepted work; forced mode cannot spawn replacements.
 Timers clear on completion. Termination rejection cannot signal successful shutdown
 or justify release of physically held credits.
 
+A lease-driven replacement whose termination request rejects fails the runtime
+without spawning a replacement or replaying queued work. The already-settled
+leased caller keeps its lease error; cleanup rejects and the physical correlation
+remains occupied until actual exit. A later confirmed exit ends that ownership
+but does not turn a previously rejected, cached shutdown promise into success.
+
 `stats().containment` counts lease expirations, lease termination requests, confirmed
-lease exits, replacement spawns, rolling-window utilization (undefined for lifetime
+lease exits, replacement spawns, rolling-window utilization (a decision count, not
+a fraction; required with undefined for lifetime
 policy), budget exhaustion and shutdown escalations. Busy occupancy reflects actual
 physical correlation. See [ADR 0021](../adr/0021-physical-execution-containment.md).
 

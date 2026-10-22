@@ -57,6 +57,14 @@ small task/worker context. Previously settled callers keep their timeout/cancell
 error. Containment continues without replay, and credits stay held until exit.
 This error is not present in the immutable RC4 publication.
 
+C1-A/Q exercises the distinct lease-repair termination-rejection path. A pending
+ordinary leased caller receives PjsExecutionLeaseError once; a later failed
+replacement termination fails queued work without replay and makes cleanup
+reject. It does not replace the original caller outcome or release a still-live
+physical correlation. Even a subsequent actual exit does not convert the cached
+rejected shutdown promise into success. Error classes, metadata and experimental
+status are unchanged; see the [C1 report](../research/c1-containment-acceptance.md).
+
 Error context has optional taskId, workerId, operationId, partitionIndex,
 rangeStart, rangeEnd and cause. Context is available only when known: errors before
 admission may have no worker. Binary contract errors additionally have declaredBytes,

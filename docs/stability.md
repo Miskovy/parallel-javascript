@@ -28,11 +28,19 @@ Merged development main includes R1/R2/R3 additions absent from that immutable
 artifact. Main `2ae078b93c8b819d2d843ecb32ffb1fc5e6728f7` integrates reviewed
 S1/Stage A/B1/B2 through PR #22. B3 is integrated through PR #23 at main
 `e58e792a2069a9ac72cc13fe2309eb1e3c2b7dab`. B4 is integrated through PR #24 at
-current main `35f2aacfe431516ed559409a3cba6bf2ccd2e6b7`, whose tree matches the
+B4 integration main `35f2aacfe431516ed559409a3cba6bf2ccd2e6b7`, whose tree matches the
 reviewed B4 head and tested synthetic merge. The [Stage C plan](research/v1-api-migration-plan.md)
 proposes C1 contract/installed-evidence closure and qualification first, with a
 separate P1 promotion decision. C2/C3/C4 and the shared option-migration boundary
 have their own dependencies/approvals; hold applicability is unresolved.
+C1-A/Q is implemented as an acceptance/qualification change from main
+`7533fbad82c3d80df80a6f6b633398b21dbcf827`, the PR #25 plan integration. It adds
+the focused failure-path and installed JS/both-compiler scenarios, plus contract
+comment/guidance clarification. Runtime algorithms, public shapes and all
+experimental annotations are preserved. The [C1 report](research/c1-containment-acceptance.md)
+and source-bound delivery distinguish current evidence from historical B4 runs.
+C1-P promotion still needs explicit maintainer approval and hold-applicability
+review; no eligibility or release clearance is inferred.
 Unchanged development `rc.4` manifests do not authorize republishing its new bytes.
 
 ## Current status and proposed disposition
