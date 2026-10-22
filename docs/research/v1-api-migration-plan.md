@@ -384,13 +384,14 @@ context remain. Add synchronized reentrancy tests before claiming equivalence.
 No change to timeout units, worker defaults, maxQueue, result ordering, full
 collect/map retention, stream eagerness or byte units is bundled with renaming.
 
-## Proposed before/after examples — unavailable until B/C
+## B1 development cleanup and proposed B2/C examples
 
-Stream cleanup: today's JS object has `return()`, but its declared AsyncIterable
-hides that method. A cast is a current workaround, not a reason to retain the gap.
+Stream cleanup: B1 now exposes the existing methods in development declarations;
+published RC4 still has the old AsyncIterable declaration. The B2/C examples below
+remain proposed and unavailable until their separate implementation.
 
 ```ts
-// BEFORE: current TS declaration requires reaching the optional iterator return.
+// BEFORE B1 / published RC4: cleanup through the optional iterator return.
 const iterable = runtime.streamRange(task, range, createInput);
 const iterator = iterable[Symbol.asyncIterator]();
 try {
@@ -399,7 +400,7 @@ try {
   await iterator.return?.();
 }
 
-// PROPOSED AFTER B1: required direct cleanup, same eager execution.
+// CURRENT B1 DEVELOPMENT: required direct cleanup, same eager execution.
 const stream = runtime.streamRange(task, range, createInput);
 try {
   await stream.next();

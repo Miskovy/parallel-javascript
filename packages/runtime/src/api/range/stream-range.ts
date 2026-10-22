@@ -8,34 +8,29 @@ import type { StreamRangeSubmission } from './contracts.js';
 import { integer } from '../../internal/integer.js';
 import { PjsBinaryResultContractError } from '../../errors/index.js';
 import { RangeStream } from '../../partition/stream.js';
-import type { StreamRangeResult } from '../../partition/stream.js';
+import type { PjsRangeStream } from '../../partition/stream.js';
 import type {
   BinaryStreamRangeOptions,
+  CountOnlyStreamRangeOptions,
   UpperBoundBinaryStreamRangeOptions,
   StreamRangeOptions,
   PjsBinaryResult,
 } from '../../partition/range.js';
 import type { ResultByteMode } from '../../results/credit.js';
-type CountOnlyStreamRangeOptions = StreamRangeOptions & {
-  experimentalResultBytes?: never;
-  experimentalMaxResultBytes?: never;
-  experimentalMaxReservedResultBytes?: never;
-};
-
 export function streamRange<Input, Output extends PjsBinaryResult>(
   submission: StreamRangeSubmission,
   task: PjsTask<Input, Output>,
   range: PartitionRange,
   createInput: (partition: RangePartition) => PartitionInput<Input>,
   options: BinaryStreamRangeOptions | UpperBoundBinaryStreamRangeOptions,
-): AsyncIterable<StreamRangeResult<Output>>;
+): PjsRangeStream<Output>;
 export function streamRange<Input, Output>(
   submission: StreamRangeSubmission,
   task: PjsTask<Input, Output>,
   range: PartitionRange,
   createInput: (partition: RangePartition) => PartitionInput<Input>,
   options?: CountOnlyStreamRangeOptions,
-): AsyncIterable<StreamRangeResult<Output>>;
+): PjsRangeStream<Output>;
 export function streamRange<Input, Output>(
   submission: StreamRangeSubmission,
   task: PjsTask<Input, Output>,
@@ -45,7 +40,7 @@ export function streamRange<Input, Output>(
     | StreamRangeOptions
     | BinaryStreamRangeOptions
     | UpperBoundBinaryStreamRangeOptions,
-): AsyncIterable<StreamRangeResult<Output>>;
+): PjsRangeStream<Output>;
 export function streamRange<Input, Output>(
   submission: StreamRangeSubmission,
   task: PjsTask<Input, Output>,
@@ -55,7 +50,7 @@ export function streamRange<Input, Output>(
     | StreamRangeOptions
     | BinaryStreamRangeOptions
     | UpperBoundBinaryStreamRangeOptions = {},
-): AsyncIterable<StreamRangeResult<Output>> {
+): PjsRangeStream<Output> {
   let capacity: number;
   let resultByteDeclaration:
     BinaryStreamRangeOptions['experimentalResultBytes'] | undefined;

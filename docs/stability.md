@@ -3,9 +3,15 @@
 PJS is pre-1.0. **The v1 policy below is proposed, pending review and Stage B/C
 implementation.** It does not promote current features or declare v1 ready.
 The [canonical current inventory](research/v1-api-contract-inventory.md) discovers
-40 root names, all declared members and seven additional reachable named types,
+42 root names, all declared members and six additional reachable named types,
 including R1 additions. The [v0.15 inventory](research/v0.15-public-api-inventory.md)
 is historical (38 root names), not the development contract.
+
+B1 is now implemented in development: streamRange returns PjsRangeStream with
+required direct cleanup, and CountOnlyStreamRangeOptions is root-named. Both new
+exports are type-only; runtime keys and stream protocol are unchanged. The stream
+API remains experimental. These declaration additions are not in published RC4;
+B2–B4, feature promotion and option renames are not approved by B1.
 
 As checked on 22 October 2026, npm `latest` and `next` select
 [`@pjavascript/runtime@1.0.0-rc.4`](https://registry.npmjs.org/@pjavascript%2fruntime);
@@ -23,7 +29,7 @@ Unchanged development `rc.4` manifests do not authorize republishing its new byt
 | transfer/sharedReadonly and ownership types                                                 | Specialized supported                                       | Stabilize specialized helpers: dispatch detachment/alias effects, copy-visible-bytes shared input, immutability by contract; installed ownership and physical-boundary gates        |
 | executionLease, lease error, restartPolicy, forceAfter                                      | Experimental development additions despite unprefixed names | Promote C1 after B4, containment/physical/R2 and installed JS/TS gates; ordinary exclusive run only, no replay or hard termination deadline                                         |
 | partitionRange / parallelFor                                                                | Experimental                                                | Promote C2: ordered retained collection / completion-only pre-serialization discard, one parent deadline/context, partial side effects; range/batch/installed gates                 |
-| streamRange / result types                                                                  | Experimental                                                | B1 required closeable stream, then C2: eager completion order, single consumer, explicit abandonment cleanup; stream/context/memory/installed gates                                 |
+| streamRange / result types                                                                  | Experimental                                                | B1 closeable stream implemented; C2: eager completion order, single consumer, explicit abandonment cleanup; stream/context/memory/installed gates                                   |
 | parallelMapRange / array and typed overloads / map error                                    | Experimental                                                | Promote C2: full flat target, logical ordering, built-in constructors, exact block kind/cardinality and reentrant validation-before-target lookup                                   |
 | Dispatch batching and count/output-constructor options                                      | Experimental with experimental prefix                       | C2 minimal renames; default 1, limit 16, sequential items, transfer/lease restrictions and skipped-item failure preserved; no automatic batching                                    |
 | Exact / upper-bound binary output options, types and errors                                 | Experimental                                                | B2 ordinary-backed result types; C3 minimal renames and separate promotion after credit/worker/physical/installed negative TS gates; visible payload per stream, not RSS            |

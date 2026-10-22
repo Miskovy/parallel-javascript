@@ -37,6 +37,13 @@ export interface StreamRangeOptions extends PartitionOptions {
   experimentalMaxBufferedResults?: number;
 }
 
+/** @experimental Count-only delivery excludes every strict byte-mode property. */
+export type CountOnlyStreamRangeOptions = StreamRangeOptions & {
+  experimentalResultBytes?: never;
+  experimentalMaxResultBytes?: never;
+  experimentalMaxReservedResultBytes?: never;
+};
+
 /** @experimental Direct binary values eligible for strict result-byte contracts. */
 export type PjsBinaryResult =
   ArrayBuffer | PjsTypedArray | DataView<ArrayBufferLike>;

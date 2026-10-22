@@ -1,5 +1,10 @@
 import assert from 'node:assert/strict';
 import { PjsRuntime, PjsTaskRegistry } from '@pjavascript/runtime';
+import type {
+  CountOnlyStreamRangeOptions,
+  PjsRangeStream,
+  StreamRangeResult,
+} from '@pjavascript/runtime';
 
 const registry = new PjsTaskRegistry();
 const task = registry.register<number, number>(
@@ -14,6 +19,46 @@ try {
     timeout: 5000,
   });
   assert.equal(result, 42);
+  const options: CountOnlyStreamRangeOptions = {
+    experimentalMaxBufferedResults: 1,
+  };
+  const stream: PjsRangeStream<number> = runtime.streamRange(
+    task,
+    { start: 0, end: 3, grainSize: 1 },
+    (partition) => ({ input: partition.index }),
+    options,
+  );
+  const compatible: AsyncIterable<StreamRangeResult<number>> = stream;
+  assert.equal(stream[Symbol.asyncIterator](), stream);
+  try {
+    for await (const item of compatible) {
+      const output: number = item.output;
+      assert.equal(output, 0);
+      break;
+    }
+  } finally {
+    await stream.return();
+  }
+  const completion = await stream.next();
+  assert.equal(completion.done, true);
+  if (completion.done) {
+    const value: undefined = completion.value;
+    assert.equal(value, undefined);
+  }
+  const closedBeforeRead = runtime.streamRange(
+    task,
+    { start: 0, end: 2, grainSize: 1 },
+    (partition) => ({ input: partition.index }),
+  );
+  await closedBeforeRead.return();
+  const thrown = runtime.streamRange(
+    task,
+    { start: 0, end: 2, grainSize: 1 },
+    (partition) => ({ input: partition.index }),
+  );
+  const reason = new Error('installed TypeScript close');
+  await assert.rejects(thrown.throw(reason), (error) => error === reason);
+  assert.deepEqual(await thrown.next(), { done: true, value: undefined });
 } finally {
   await runtime.shutdown();
 }
