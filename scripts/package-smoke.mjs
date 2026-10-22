@@ -110,6 +110,10 @@ try {
     ...packed,
     sha256: createHash('sha256').update(readFileSync(tarball)).digest('hex'),
   };
+  if (reportPath) {
+    cpSync(tarball, reportPath + '.tgz', { force: false, errorOnExist: true });
+    report.tarball.retainedPath = reportPath + '.tgz';
+  }
   run('install tarball offline', process.execPath, [
     npmCli,
     'install',
@@ -146,6 +150,18 @@ try {
     unrelated,
   );
   report.consumer = JSON.parse(smokeOutput.trim());
+  run(
+    'installed closeable range streams and unchanged runtime root keys',
+    process.execPath,
+    [join(consumer, 'stream.mjs')],
+    unrelated,
+  );
+  run(
+    'installed strict binary outputs, envelopes and JavaScript rejection guards',
+    process.execPath,
+    [join(consumer, 'binary.mjs')],
+    unrelated,
+  );
   run(
     'installed physical containment and recovery',
     process.execPath,
@@ -189,25 +205,31 @@ try {
     'utf8',
   ).replaceAll('../dist/index.js', '@pjavascript/runtime');
   writeFileSync(join(consumer, 'api-types.ts'), typeTests);
-  const compiler = join(root, 'node_modules/@typescript/native/bin/tsc');
-  run('installed declaration regression tests', process.execPath, [
-    compiler,
-    '-p',
-    join(consumer, 'tsconfig.types.json'),
-  ]);
-  run('TypeScript consumer build', process.execPath, [
-    compiler,
-    '-p',
-    join(consumer, 'tsconfig.json'),
-  ]);
-  run(
-    'TypeScript emitted consumer run',
-    process.execPath,
-    [join(consumer, 'output/consumer.js')],
-    unrelated,
-  );
+  for (const [label, binary] of [
+    ['primary', '@typescript/native/bin/tsc'],
+    ['compatibility', 'typescript/bin/tsc6'],
+  ]) {
+    const compiler = join(root, 'node_modules', binary);
+    run(`${label} compiler version`, process.execPath, [compiler, '--version']);
+    run(`${label} installed declaration regression tests`, process.execPath, [
+      compiler,
+      '-p',
+      join(consumer, 'tsconfig.types.json'),
+    ]);
+    run(`${label} TypeScript consumer build`, process.execPath, [
+      compiler,
+      '-p',
+      join(consumer, 'tsconfig.json'),
+    ]);
+    run(
+      `${label} TypeScript emitted consumer run`,
+      process.execPath,
+      [join(consumer, 'output/consumer.js')],
+      unrelated,
+    );
+  }
   report.types =
-    'Installed declarations checked without skipLibCheck; TS consumer compiled and executed; development type packages copied, compiler supplied by harness';
+    'Both locked compilers checked installed declarations without skipLibCheck and compiled/executed the TS cleanup consumer; development type packages copied, compilers supplied by harness';
   report.passed = true;
   console.log(
     JSON.stringify({

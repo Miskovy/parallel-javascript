@@ -63,8 +63,19 @@ worker-owned output → posting → PJS buffered result → yield → consumer-o
 For strict binary streams, PJS reserves declared visible result bytes before
 execution. It validates the direct output before posting. Shared/detached/nested
 outputs do not qualify. A view's visible byteLength is measured, not its whole
-backing allocation. The current broad TypeScript view types do not prove these
-runtime constraints; do not assume a typecheck guarantees exclusive backing.
+backing allocation. In B2 development, PjsBinaryResult is ArrayBuffer,
+PjsOwnedTypedArray (all eleven typed kinds with ArrayBuffer backing), or
+DataView<ArrayBuffer>. ResultByteDeclaration is root-exported as a number or
+synchronous partition callback. Published RC4 still has the broader view types.
+
+This is a pre-v1 type narrowing: retain ordinary constructor inference, annotate
+a task output as Uint8Array<ArrayBuffer>, or copy a widened/shared view into an
+ordinary allocation. Count-only streams still accept shared-capable cloned
+outputs without byte guarantees; input and mapping types are preserved.
+"Owned" does not establish unique aliases, liveness or transferability. Clone
+remains default; transfer() validates its own live, unique, transferable buffers.
+Node Buffer acceptance depends on its declared backing. Runtime checks remain
+mandatory for JavaScript, unknown payloads and type assertions.
 
 On yield, result credits release immediately. Values retained or processed by
 your consumer thereafter are outside PJS's bound. An awaited sink delays the

@@ -5,6 +5,12 @@ served by `https://registry.npmjs.org/`. Current published prerelease:
 `v1.0.0-rc.4`, installed with `npm install @pjavascript/runtime@next`.
 Final v1.0.0 has not been released. Published versions are immutable; do not republish them.
 
+Public metadata rechecked 22 October 2026 reports both `latest` and `next` at RC4;
+GitHub lists it as a prerelease. Development main and unmerged S1 contain later
+source; unchanged RC4 version fields do not identify those bytes as the published
+artifact. [Stage A's decision package](research/v1-api-contract-inventory.md) and
+[ADR 0023](adr/0023-v1-api-stability-decisions.md) are proposed, not release approval.
+
 The repository npm badge and install link make the package immediately discoverable.
 The new package `homepage` field appears beginning with the next published version;
 existing RC2 metadata and its packaged README do not change retroactively.
@@ -50,6 +56,45 @@ The release-specific `rc:qualify`, API/package freezes and committed
 than pretend R1 is the RC4 artifact. Qualify RC4 from its historical tag/commit;
 a future release requires a separately reviewed version and baseline.
 The `release.published` workflow, OIDC binding and publication guards are unchanged.
+
+## Proposed future candidate gates — not implemented by Stage A
+
+The blocker is concrete: [baseline.mjs](../scripts/rc/baseline.mjs) selects
+`frozen-rc4.json` unconditionally. RC API/package/qualification/reproduction
+scripts and the publish workflow consequently enforce RC4 identity. Feature
+qualification is not permission to publish a new candidate through that freeze.
+Do not edit RC4 hashes or skip exact-source/declaration/package checks to proceed.
+
+Before F, implement a separately reviewed explicit release-version-to-baseline
+selection. Reject unknown versions, tag/version/source mismatches and missing
+baselines; no default to RC4 and no "current source" auto-acceptance. Retain the
+historical RC4 path for its original commit/tag. Select a new unused prerelease,
+intentional semantic contract and exact candidate baseline together. Define how
+qualification binds to the final committed source without a self-referential
+commit hash in its own baseline (for example, hash the explicitly enumerated
+source/manifest inputs and bind reports to their committed SHA). Freeze before
+the accepted qualification run; any material candidate change invalidates it.
+
+Semantic compatibility checks review supported declarations, behavior/defaults,
+errors and ownership against the approved B/C contract; exact reproducibility
+checks compare the complete packed artifact and metadata. A declaration-byte
+hash alone cannot prove semantics, and semantic equivalence cannot excuse changed
+bytes under an immutable version. Two clean builds of the selected final source
+must reproduce the approved archive; installed consumers and rehearsal must use
+that exact staged archive with recorded SHA-256. Recheck it immediately before
+any later authorized publication.
+
+Follow S1 integration → A decision review → B fixes → C promotions/alias removal
+→ F final qualification/rehearsal → G separate authorization. F qualifies both
+promised Node floors (22.13.0 and 24.0.0 unless deliberately narrowed) and selected
+current patches in each major, Linux/Windows x64, with exact versions and reviewed
+release npm. S1's 22.13.0/24.21.0 results do not prove 24.0.0 or qualify future
+source. Apply the [floor failure decision](stability.md#proposed-node-and-platform-policy),
+standard R2/R3 raw-child reconciliation and required extended/reproduction gates.
+The current publisher does not run those full campaigns; enforce source-bound
+evidence before final release authorization instead of assuming a successful CD
+job establishes them. No workflow, selector, version or frozen baseline changes
+in Stage A. Conditional internal cleanup/optimization must finish before F.
 
 ## One-time maintainer configuration
 
