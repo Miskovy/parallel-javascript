@@ -1,15 +1,14 @@
-# Stage B: B1/B2 implemented; B3/B4 proposed
+# Stage B: B1–B3 implemented; B4 proposed
 
-**B1/B2 are implemented in the development candidate; their declaration changes
-are absent from published RC4. B3/B4 and broader promotion decisions remain proposed.**
+**B1–B3 are implemented in development; their changes are absent from published
+RC4. B4 and broader promotion decisions remain proposed.**
 Current contracts are in the [canonical inventory](v1-api-contract-inventory.md).
-B1 is explicitly authorized on a branch dependent on unmerged S1 and corrected
-Stage A, starting at `3d7eda67c6be4c818967ad47777acfb75afd62ac`; no dependency
-was merged. B2 is separately authorized on reviewed B1
-`5e5625bb97b12c3e5ed18fbc58177787cbb9c7b5`. Each later unit needs its own authorization/review, committed candidate
+S1, corrected Stage A, B1 and B2 reached main through PR #22 at
+`2ae078b93c8b819d2d843ecb32ffb1fc5e6728f7`. B3 is separately authorized on
+that base. Each later unit needs its own authorization/review, committed candidate
 identity, contract results and installed-package evidence. No version is selected.
 
-## Historical Stage A gaps and B1/B2 resolution
+## Historical Stage A gaps and B1–B3 resolution
 
 Stage A built the selected S1 source with locked TypeScript 7.0.2 and inspected
 declarations with locked TypeScript 6.0.3. Focused probes under both compilers
@@ -24,7 +23,9 @@ gaps and type design; they are not installed-package acceptance for B2–B4.
 B1 now resolves the direct cleanup declaration gap with the public interface and
 real installed JS/TS consumers. B2 now resolves the shared-backed strict result
 type gap with ordinary-backed views and installed positive/negative consumers;
-the registry visibility gap remains for B3.
+B3 now removes the unsupported registry visibility gap with internal snapshots
+and installed JS/TS absence checks. The historical probes above remain historical
+evidence, not fresh B3 qualification.
 
 ## B1: closeable stream contract — implemented in development
 
@@ -159,18 +160,18 @@ installed TS fixtures, ownership/binary docs. Acceptance under both compilers:
 - Existing binary-result, upper-bound-result, result-credit, transfer and
   physical-boundary suites pass. No accounting, validation-timing or byte-unit change.
 
-## B3: remove the registry composition leak
+## B3: remove the registry composition leak — implemented in development
 
-Recommend module-private WeakMap storage keyed by actual registry instance.
+B3 uses module-private WeakMap storage keyed by actual registry instance.
 `register()` and an internal module-exported function
 `snapshotRegistry(registry: PjsTaskRegistry): ReadonlyMap<object, TaskDescriptor>`
-share that storage; only composition imports the function. Initialize storage in
-the registry constructor. The internal accessor rejects an instance absent from
-the WeakMap with TypeError; test that guard in B3. Forged/borrowed registration
+share that storage; only production composition imports the function. Storage is
+initialized in the registry constructor. The internal accessor rejects an instance absent from
+the WeakMap with TypeError; registry regression cases cover that guard. Forged/borrowed registration
 receivers remain unsupported and must fail without exposing storage. Do not add a public symbol.
 Retain public registration validation timing and error identities.
 
-Remove public prototype `snapshot()` and its declaration. Preserve identical
+B3 removes public prototype `snapshot()` and its declaration. It preserves identical
 frozen task handles as map keys, distinct copied maps/descriptors per snapshot,
 and constructor-time snapshot isolation from later registrations. Keep the
 descriptor an internal registry/composition/worker concern. Preserve constructor
@@ -185,7 +186,7 @@ and packed JS; it must not be root-exported or root-reachable. Absolute-path
 inspection is technically possible and remains unsupported, not secure isolation.
 
 Acceptance: installed TS rejects `registry.snapshot()` and root TaskDescriptor
-imports; installed JS verifies `typeof registry.snapshot === 'undefined'` and
+and snapshotRegistry imports; installed JS verifies `typeof registry.snapshot === 'undefined'` and
 supported root keys exclude helper/storage. Register-before/after-construction,
 duplicate/invalid modules, same-ID handles from different registries, copied
 descriptor mutation, replacement bootstrap and S1 reentrant constructor order all
@@ -252,8 +253,8 @@ R2/R3 campaigns at promotion/final qualification, not sleeps or performance boun
 
 ## Review order and shared exits
 
-B1 and B2 are separately implemented in development; B2 depends on reviewed B1.
-B3 can be reviewed separately. B4 consumes the approved inventory and B3 removal. Each change runs
+B1–B3 are separately implemented in development. B3 starts from main after
+S1/Stage A/B1/B2 integration and remains a separate review unit. B4 consumes the approved inventory and B3 removal. Each change runs
 build, contract tests applicable to affected ownership, both compiler consumers,
 installed package smoke, lint, format, docs and diff checks. Review emitted
 source/declaration/root graph differences against the named unit; expected API

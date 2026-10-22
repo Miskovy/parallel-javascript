@@ -20,8 +20,18 @@ import type {
   PjsOwnedTypedArray,
   ResultByteDeclaration,
 } from '../dist/index.js';
+// @ts-expect-error Internal worker descriptors are not root API types.
+import type { TaskDescriptor } from '../dist/index.js';
+// @ts-expect-error Composition snapshot access is not a root export.
+import { snapshotRegistry } from '../dist/index.js';
+
+declare const internalDescriptor: TaskDescriptor;
+void internalDescriptor;
+void snapshotRegistry;
 
 const registry = new PjsTaskRegistry();
+// @ts-expect-error The unsupported public snapshot method was removed in B3.
+registry.snapshot();
 const task = registry.register<Uint8Array, Uint8Array<ArrayBuffer>>(
   'bytes',
   new URL('./fixture.js', import.meta.url),

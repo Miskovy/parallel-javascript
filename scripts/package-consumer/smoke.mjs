@@ -10,6 +10,9 @@ import {
 } from '@pjavascript/runtime';
 
 const registry = new PjsTaskRegistry();
+assert.equal(typeof registry.snapshot, 'undefined');
+assert.equal(Object.hasOwn(PjsTaskRegistry.prototype, 'snapshot'), false);
+assert.deepEqual(Reflect.ownKeys(registry), []);
 const module = new URL('./tasks.mjs', import.meta.url);
 const square = registry.register('square', module, 'square');
 const fail = registry.register('fail', module, 'fail');
@@ -24,9 +27,13 @@ assert.throws(
   },
 );
 const runtime = new PjsRuntime({ registry, workers: 1 });
+const late = registry.register('late', module, 'square');
+const foreign = new PjsTaskRegistry().register('square', module, 'square');
 try {
   await runtime.ready();
   assert.equal(await runtime.run(square, 12), 144);
+  await assert.rejects(runtime.run(late, 1), PjsTaskRegistrationError);
+  await assert.rejects(runtime.run(foreign, 1), PjsTaskRegistrationError);
   await assert.rejects(runtime.run(fail, null), (error) => {
     assert.ok(error instanceof PjsTaskError);
     assert.ok(error instanceof PjsError);
@@ -42,6 +49,8 @@ try {
     'dist/index.js',
     'dist/telemetry/profile.js',
     'src/runtime.ts',
+    'dist/tasks/registry.js',
+    'src/tasks/registry.ts',
     'package.json',
   ]) {
     await assert.rejects(import(`@pjavascript/runtime/${subpath}`), {

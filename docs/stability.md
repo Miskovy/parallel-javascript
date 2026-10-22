@@ -3,7 +3,7 @@
 PJS is pre-1.0. **The v1 policy below is proposed, pending review and Stage B/C
 implementation.** It does not promote current features or declare v1 ready.
 The [canonical current inventory](research/v1-api-contract-inventory.md) discovers
-44 root names, all declared members and five additional reachable named types,
+44 root names, all declared members and four additional reachable named types,
 including R1 additions. The [v0.15 inventory](research/v0.15-public-api-inventory.md)
 is historical (38 root names), not the development contract.
 
@@ -14,14 +14,17 @@ API remains experimental. These declaration additions are not in published RC4;
 B2 development also exports PjsOwnedTypedArray and ResultByteDeclaration and
 narrows strict PjsBinaryResult views to ordinary backing. This deliberate pre-v1
 constraint preserves shared-capable inputs, mapping and count-only streams.
-B3/B4, feature promotion and option renames remain proposed.
+B3 development removes unsupported registry.snapshot() and its declaration;
+module-private storage and internal composition snapshots preserve registration
+and runtime isolation. Introspection callers retain their own metadata. B4,
+feature promotion and option renames remain proposed.
 
 As checked on 22 October 2026, npm `latest` and `next` select
 [`@pjavascript/runtime@1.0.0-rc.4`](https://registry.npmjs.org/@pjavascript%2fruntime);
 GitHub lists [RC4 as a prerelease](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.4).
 Merged development main includes R1/R2/R3 additions absent from that immutable
-artifact. Stage A is based on unmerged local S1
-`f93fb9cb249a54ee625a19a20b5a6d7f7d68647f`; S1 integration remains pending.
+artifact. Main `2ae078b93c8b819d2d843ecb32ffb1fc5e6728f7` integrates reviewed
+S1/Stage A/B1/B2 through PR #22. B3 is a separate development change from that base.
 Unchanged development `rc.4` manifests do not authorize republishing its new bytes.
 
 ## Current status and proposed disposition
@@ -37,7 +40,7 @@ Unchanged development `rc.4` manifests do not authorize republishing its new byt
 | Dispatch batching and count/output-constructor options                                      | Experimental with experimental prefix                       | C2 minimal renames; default 1, limit 16, sequential items, transfer/lease restrictions and skipped-item failure preserved; no automatic batching                                                    |
 | Exact / upper-bound binary output options, types and errors                                 | Experimental                                                | B2 ordinary-backed result types implemented in development; C3 minimal renames and separate promotion after credit/worker/physical/installed negative TS gates; visible payload per stream, not RSS |
 | stats / task and worker snapshots / containment diagnostics                                 | Supported diagnostics; nested shape not frozen              | B4 explicit named interfaces, retain all 158 inventoried fields and aliases with reviewed units/lifetimes; C1/C2/C3 gates for corresponding groups; no timing/performance guarantee                 |
-| Registry.snapshot / TaskDescriptor                                                          | Public JS/TS composition leak, unsupported                  | Remove method and root-reachable descriptor in B3; internal WeakMap snapshot function, stable handles and copied descriptors; explicit pre-v1 migration                                             |
+| Registry.snapshot / TaskDescriptor                                                          | Internal; public method removed in B3                       | B3 implemented in development: module-private WeakMap, internal snapshot function, stable handles/copied descriptors; introspection callers retain their own metadata                               |
 | Error contexts, inline task-error details, reachable status/mode and byte-declaration types | Structurally reachable, mostly not root-named               | Intentionally name/export supported types in B1/B2/B4; preserve metadata, hierarchy and status vocabularies. Internalize only TaskDescriptor in B3                                                  |
 
 [ADR 0023](adr/0023-v1-api-stability-decisions.md) records the recommendations,
@@ -66,7 +69,8 @@ performance bounds and internal graphs are not protocols.
 
 The root package is the only supported import. Packed source/maps enable editor
 navigation, not internal subpath contracts. Public class members remain callable
-in JS despite export maps or `@internal`; B3 actually removes snapshot. TS-private
+in JS despite export maps or `@internal`; B3 removes registry.snapshot() from the
+prototype and public declaration. Registry storage is module-private, while other TS-private
 emitted properties, absolute-path internal imports, protocol, profile sink,
 reservation debug flags and private-field inspection remain unsupported. Do not
 claim that this provides runtime secrecy or a security sandbox.
