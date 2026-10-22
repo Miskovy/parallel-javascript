@@ -1,3 +1,4 @@
+import { runtimeComponents, runtimeController } from './runtime-inspection.mjs';
 import assert from 'node:assert/strict';
 import { getEventListeners } from 'node:events';
 import { setImmediate as immediate } from 'node:timers/promises';
@@ -33,9 +34,9 @@ export function create(options = {}) {
 /** Numeric observations only: sampling must not become a payload owner. */
 export function inspect(runtime) {
   const stats = runtime.stats();
-  const pool = runtime.dispatcher.pool;
+  const pool = runtimeComponents(runtime).dispatcher.pool;
   const workers = [...pool.workers.values()];
-  const credits = runtime.resultCredits;
+  const credits = runtimeComponents(runtime).resultCredits;
   return {
     state: stats.state,
     pending: stats.tasks.pending,
@@ -54,12 +55,15 @@ export function inspect(runtime) {
     buffered: stats.streamResults.buffered,
     bufferedVisibleBytes: stats.streamResults.knownBufferedPayloadBytes,
     productionTick: Number(
-      runtime.rangeCoordinator.productionTick !== undefined,
+      runtimeComponents(runtime).rangeCoordinator.productionTick !== undefined,
     ),
-    admissionClaims: runtime.dispatcher.admissionReservations,
-    reservedWorkers: runtime.dispatcher.reservedWorkers.size,
-    shutdownTimer: Number(runtime.shutdownTimer !== undefined),
-    drainWaiter: Number(runtime.drainResolve !== undefined),
+    admissionClaims:
+      runtimeComponents(runtime).dispatcher.admissionReservations,
+    reservedWorkers: runtimeComponents(runtime).dispatcher.reservedWorkers.size,
+    shutdownTimer: Number(
+      runtimeController(runtime).shutdownTimer !== undefined,
+    ),
+    drainWaiter: Number(runtimeController(runtime).drainResolve !== undefined),
   };
 }
 
@@ -67,7 +71,7 @@ export function inspect(runtime) {
 export function assertConservation(runtime) {
   assertOwners(runtime);
   const stats = runtime.stats();
-  const credits = runtime.resultCredits;
+  const credits = runtimeComponents(runtime).resultCredits;
   let total = 0;
   const owners = new Map();
   for (const r of credits.reservations.values()) {
@@ -87,15 +91,22 @@ export function assertConservation(runtime) {
     assert.equal(actual.taskByPartition.size, expected.partitions);
     assert.ok(actual.bytes <= operation.resultByteCapacity);
   }
-  assert.equal(runtime.taskCoordinator.tasks.size, stats.tasks.pending);
+  assert.equal(
+    runtimeComponents(runtime).taskCoordinator.tasks.size,
+    stats.tasks.pending,
+  );
   assert.ok(stats.queue.size <= stats.queue.capacity);
-  for (const task of runtime.taskCoordinator.tasks.values()) {
+  for (const task of runtimeComponents(
+    runtime,
+  ).taskCoordinator.tasks.values()) {
     if (['scheduled', 'running'].includes(task.snapshot.status)) {
       assert.equal(task.input, undefined, 'posted host input released');
       assert.deepEqual(task.transferList, [], 'posting claim released');
     }
   }
-  for (const operation of runtime.rangeCoordinator.operations.values()) {
+  for (const operation of runtimeComponents(
+    runtime,
+  ).rangeCoordinator.operations.values()) {
     if (!operation.stream) continue;
     assert.ok(
       operation.stream.buffered + operation.children.size <=
@@ -136,7 +147,9 @@ export async function quiescent(runtime, { stopped = false } = {}) {
   if (stopped) {
     assert.equal(d.state, 'stopped');
     assert.equal(d.liveWorkers, 0);
-    for (const worker of runtime.dispatcher.pool.workers.values()) {
+    for (const worker of runtimeComponents(
+      runtime,
+    ).dispatcher.pool.workers.values()) {
       assert.equal(worker.exitObserved, true);
       assert.equal(worker.thread.threadId, -1);
       assert.deepEqual(worker.thread.eventNames(), []);
@@ -169,7 +182,7 @@ export function listeners(signal) {
 
 /** Track real thread exits without retaining retired Worker objects. */
 export function observeWorkers(runtime) {
-  const pool = runtime.dispatcher.pool;
+  const pool = runtimeComponents(runtime).dispatcher.pool;
   const live = new Set();
   const counters = { created: 0, confirmedExits: 0, peakLive: 0 };
   function attach(worker) {

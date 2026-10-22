@@ -1,3 +1,4 @@
+import { runtimeComponents } from './helpers/runtime-inspection.mjs';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { setTimeout as delay } from 'node:timers/promises';
@@ -53,7 +54,7 @@ async function clean(runtime) {
       runtime.stats().workers.busy === 0 &&
       runtime.stats().streamResults.currentReservedResultBytes === 0,
   );
-  assert.deepEqual(runtime.resultCredits.diagnostics(), {
+  assert.deepEqual(runtimeComponents(runtime).resultCredits.diagnostics(), {
     reservations: 0,
     executions: 0,
     operations: 0,
@@ -217,7 +218,10 @@ test('zero actual refunds all maximum but count capacity still blocks production
   await until(() => runtime.stats().streamResults.buffered === 2);
   assert.equal(runtime.stats().partitions.admitted, 2);
   assert.equal(runtime.stats().streamResults.currentReservedResultBytes, 0);
-  assert.equal(runtime.resultCredits.diagnostics().reservations, 2);
+  assert.equal(
+    runtimeComponents(runtime).resultCredits.diagnostics().reservations,
+    2,
+  );
   assert.equal((await collect(stream)).length, 8);
   await clean(runtime);
 });

@@ -1,3 +1,7 @@
+import {
+  runtimeComponents,
+  runtimeController,
+} from './helpers/runtime-inspection.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
@@ -181,10 +185,14 @@ for (const winner of ['result', 'lease', 'error', 'exit']) {
       await until(() => started(buffer) && worker.executionPhase === 'running');
       const id = worker.snapshot().currentTaskId;
       let ends = 0;
-      const mark = runtime.resultCredits.markExecutionEnded.bind(
-        runtime.resultCredits,
+      const mark = runtimeComponents(
+        runtime,
+      ).resultCredits.markExecutionEnded.bind(
+        runtimeComponents(runtime).resultCredits,
       );
-      runtime.resultCredits.markExecutionEnded = (correlation) => {
+      runtimeComponents(runtime).resultCredits.markExecutionEnded = (
+        correlation,
+      ) => {
         ends++;
         mark(correlation);
       };
@@ -386,7 +394,7 @@ test(
     const { runtime, tasks } = await setup(t, {
       restartPolicy: { maxRestarts: 1, windowMs: 100 },
     });
-    const pool = runtime.dispatcher.pool;
+    const pool = runtimeComponents(runtime).dispatcher.pool;
     pool.monotonicNow = () => 0;
     await assert.rejects(runtime.run(tasks.crash, null), PjsWorkerError);
     await until(() => runtime.stats().workers.idle === 1);
@@ -414,7 +422,7 @@ test(
     const { runtime, tasks } = await setup(t, { restartPolicy: policy });
     policy.maxRestarts = 0;
     let now = 0;
-    runtime.dispatcher.pool.monotonicNow = () => now;
+    runtimeComponents(runtime).dispatcher.pool.monotonicNow = () => now;
     await assert.rejects(runtime.run(tasks.crash, null), PjsWorkerError);
     await until(() => runtime.stats().workers.idle === 1);
     assert.equal(runtime.stats().containment.restartWindowUtilization, 1);
@@ -438,8 +446,8 @@ test(
       restartPolicy: { maxRestarts: 3, windowMs: 100 },
     });
     // Corrupt only the internal replacement descriptor, after original bootstrap.
-    runtime.dispatcher.pool.tasks[0] = {
-      ...runtime.dispatcher.pool.tasks[0],
+    runtimeComponents(runtime).dispatcher.pool.tasks[0] = {
+      ...runtimeComponents(runtime).dispatcher.pool.tasks[0],
       exportName: 'missing_export',
     };
     await assert.rejects(runtime.run(tasks.crash, null), PjsWorkerError);
@@ -484,7 +492,7 @@ test(
     const { runtime, tasks, control } = await setup(t);
     const worker = firstWorker(runtime),
       leaseTime = clock(worker),
-      time = clock(runtime, 'Shutdown'),
+      time = clock(runtimeController(runtime), 'Shutdown'),
       exit = control();
     const buffer = shared();
     const failed = assert.rejects(
@@ -509,7 +517,7 @@ test(
     await Promise.all([failed, queued]);
     await Promise.resolve();
     assert.equal(stopped, false);
-    assert.equal(runtime.drainMode, false);
+    assert.equal(runtimeController(runtime).drainMode, false);
     assert.equal(runtime.stats().workers.busy, 1);
     assert.equal(leaseTime.timers[0].cancelled, true);
     assert.equal(runtime.stats().workers.restarts, 0);
@@ -657,7 +665,9 @@ test(
   bounded,
   async (t) => {
     const { runtime, tasks, control } = await setup(t, { workers: 4 });
-    const workers = [...runtime.dispatcher.pool.workers.values()];
+    const workers = [
+      ...runtimeComponents(runtime).dispatcher.pool.workers.values(),
+    ];
     const exits = [control(workers[0]), control(workers[1])];
     const buffers = [shared(), shared()];
     const failures = buffers.map((buffer) =>
@@ -752,7 +762,7 @@ test(
   bounded,
   async (t) => {
     const { runtime, tasks } = await setup(t);
-    const time = clock(runtime, 'Shutdown');
+    const time = clock(runtimeController(runtime), 'Shutdown');
     assert.equal(await runtime.run(tasks.echo, 1), 1);
     const shutdown = runtime.shutdown({ forceAfter: 100 });
     await shutdown;
@@ -769,11 +779,11 @@ test(
   async () => {
     const registry = new PjsTaskRegistry();
     const runtime = new PjsRuntime({ registry, workers: 1 });
-    const time = clock(runtime, 'Shutdown');
+    const time = clock(runtimeController(runtime), 'Shutdown');
     const shutdown = runtime.shutdown({ forceAfter: 100 });
     time.timers[0].callback();
     assert.equal(time.timers.length, 2);
-    assert.equal(runtime.drainMode, true);
+    assert.equal(runtimeController(runtime).drainMode, true);
     time.advance(100);
     await shutdown;
     await assert.rejects(runtime.ready());
@@ -824,7 +834,7 @@ for (const mode of ['exact', 'upper']) {
     async (t) => {
       const { runtime, tasks, control } = await setup(t);
       const exit = control(),
-        time = clock(runtime, 'Shutdown'),
+        time = clock(runtimeController(runtime), 'Shutdown'),
         buffer = shared();
       const results = runtime.streamRange(
         tasks.hang,

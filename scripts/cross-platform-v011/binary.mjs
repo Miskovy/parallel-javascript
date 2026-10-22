@@ -1,3 +1,4 @@
+import { runtimeComponents } from '../../packages/runtime/test/helpers/runtime-inspection.mjs';
 import assert from 'node:assert/strict';
 import { performance, monitorEventLoopDelay } from 'node:perf_hooks';
 import { join } from 'node:path';
@@ -81,7 +82,7 @@ try {
   const final = {
     tasks: stats.tasks.pending,
     operations: stats.operations.pending,
-    ...runtime.resultCredits.diagnostics(),
+    ...runtimeComponents(runtime).resultCredits.diagnostics(),
     reservedResultBytes: stats.streamResults.currentReservedResultBytes,
   };
   assert.deepEqual(final, {

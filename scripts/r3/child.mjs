@@ -1,3 +1,4 @@
+import { runtimeComponents } from '../../packages/runtime/test/helpers/runtime-inspection.mjs';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -117,10 +118,10 @@ async function startRuntime() {
     },
   }));
   workerCounts = observeWorkers(runtime);
-  const dispatched = runtime.taskCoordinator.dispatched.bind(
-    runtime.taskCoordinator,
+  const dispatched = runtimeComponents(runtime).taskCoordinator.dispatched.bind(
+    runtimeComponents(runtime).taskCoordinator,
   );
-  runtime.taskCoordinator.dispatched = (task) => {
+  runtimeComponents(runtime).taskCoordinator.dispatched = (task) => {
     dispatched(task);
     for (const item of task.batch ?? [task]) {
       assert.equal(item.input, undefined);
@@ -128,9 +129,11 @@ async function startRuntime() {
       report.logicalChecks.dispatchedInputs++;
     }
   };
-  const settle = runtime.taskCoordinator.settle.bind(runtime.taskCoordinator);
-  runtime.taskCoordinator.settle = (task, ...args) => {
-    const owned = runtime.taskCoordinator.has(task.id);
+  const settle = runtimeComponents(runtime).taskCoordinator.settle.bind(
+    runtimeComponents(runtime).taskCoordinator,
+  );
+  runtimeComponents(runtime).taskCoordinator.settle = (task, ...args) => {
+    const owned = runtimeComponents(runtime).taskCoordinator.has(task.id);
     settle(task, ...args);
     if (owned) {
       assert.equal(task.input, undefined);
@@ -278,9 +281,12 @@ async function recover(phase, iteration) {
   await until(
     () =>
       runtime.stats().workers.idle === config.workers &&
-      runtime.dispatcher.pool.repairs.size === 0,
+      runtimeComponents(runtime).dispatcher.pool.repairs.size === 0,
   );
-  assert.equal(runtime.dispatcher.pool.workers.has(old.id), false);
+  assert.equal(
+    runtimeComponents(runtime).dispatcher.pool.workers.has(old.id),
+    false,
+  );
   assert.equal(old.thread.threadId, -1);
   assert.deepEqual(old.thread.eventNames(), []);
   assert.equal(old.lease, undefined);
@@ -352,7 +358,9 @@ async function workerSample(phase) {
       ),
     ),
   });
-  for (const worker of runtime.dispatcher.pool.workers.values()) {
+  for (const worker of runtimeComponents(
+    runtime,
+  ).dispatcher.pool.workers.values()) {
     const available = typeof worker.thread.getHeapStatistics === 'function';
     const observation = {
       phase,

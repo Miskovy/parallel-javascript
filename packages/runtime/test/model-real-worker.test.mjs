@@ -1,3 +1,4 @@
+import { runtimeComponents } from './helpers/runtime-inspection.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { writeFileSync } from 'node:fs';
@@ -141,7 +142,9 @@ scenario(
       workers: 4,
       restartPolicy: { maxRestarts: 2, windowMs: 100 },
     });
-    const workers = [...runtime.dispatcher.pool.workers.values()];
+    const workers = [
+      ...runtimeComponents(runtime).dispatcher.pool.workers.values(),
+    ];
     const times = workers.slice(0, 2).map((w) => clock(w)),
       exits = workers.slice(0, 2).map((w) => control(w));
     const buffers = [shared(), shared()];
@@ -173,7 +176,7 @@ scenario(
     const { runtime, tasks } = await create({
       restartPolicy: { maxRestarts: 1, windowMs: 100 },
     });
-    const time = clock(runtime.dispatcher.pool);
+    const time = clock(runtimeComponents(runtime).dispatcher.pool);
     for (let i = 0; i < 2; i++) {
       await assert.rejects(runtime.run(tasks.crash, {}), PjsWorkerError);
       await until(

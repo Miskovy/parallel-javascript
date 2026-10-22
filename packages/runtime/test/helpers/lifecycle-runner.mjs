@@ -1,3 +1,4 @@
+import { runtimeComponents, runtimeController } from './runtime-inspection.mjs';
 import assert from 'node:assert/strict';
 import { getEventListeners } from 'node:events';
 import { setImmediate as turn } from 'node:timers/promises';
@@ -48,8 +49,8 @@ class Controller {
         ? { restartPolicy: { maxRestarts: config.maxRestarts, windowMs: 100 } }
         : { maxRestarts: config.maxRestarts }),
     });
-    this.shutdownTime = clock(this.runtime, 'Shutdown');
-    this.pool = this.runtime.dispatcher.pool;
+    this.shutdownTime = clock(runtimeController(this.runtime), 'Shutdown');
+    this.pool = runtimeComponents(this.runtime).dispatcher.pool;
     this.poolTime = clock(this.pool);
     const spawn = this.pool.spawn.bind(this.pool);
     this.pool.spawn = () => {
@@ -58,7 +59,7 @@ class Controller {
     };
     for (const w of this.pool.workers.values()) this.install(w);
     // Observe actual resolve/reject invocations, even when Promise itself hides duplicates.
-    const tasks = this.runtime.taskCoordinator.tasks;
+    const tasks = runtimeComponents(this.runtime).taskCoordinator.tasks;
     const set = tasks.set.bind(tasks);
     tasks.set = (id, pending) => {
       const alias = pending.child
@@ -141,14 +142,18 @@ class Controller {
       );
       const ids = message.items?.map((x) => x.taskId) ?? [message.taskId];
       for (const id of ids) {
-        const reservation = this.runtime.resultCredits.reservations.get(id);
+        const reservation = runtimeComponents(
+          this.runtime,
+        ).resultCredits.reservations.get(id);
         if (reservation)
           assert.ok(reservation.dispatching, 'posting retains credit claim');
       }
       // Node structured clone invokes getters synchronously, including transfer detachment.
       structuredClone(message, { transfer: transfers });
       for (const id of ids) {
-        const reservation = this.runtime.resultCredits.reservations.get(id);
+        const reservation = runtimeComponents(
+          this.runtime,
+        ).resultCredits.reservations.get(id);
         if (reservation)
           assert.ok(
             reservation.dispatching,
@@ -292,7 +297,7 @@ class Controller {
         break;
       case 'EXPIRE_CALLER_TIMEOUT':
         // Deliver the host timeout transition, without replacing global Node timers.
-        r.taskCoordinator.settle(
+        runtimeComponents(r).taskCoordinator.settle(
           record.pending,
           'timed_out',
           new PjsTimeoutError('R2 controlled timeout', {
@@ -302,7 +307,7 @@ class Controller {
               : { workerId: record.pending.snapshot.workerId }),
           }),
         );
-        r.pump();
+        runtimeController(r).pump();
         break;
       case 'DELIVER_STARTED':
         c.receive({
@@ -439,7 +444,7 @@ class Controller {
       containment = s.containment;
     return {
       state: s.state,
-      drain: r.drainMode,
+      drain: runtimeController(r).drainMode,
       shutdownOutcome: this.shutdownOutcome ?? null,
       logicalMetrics: {
         accepted: s.tasks.accepted,
@@ -456,7 +461,8 @@ class Controller {
         error: t.error,
         settlements: t.settlements,
         credit:
-          r.resultCredits.reservations.get(t.pending.id)?.creditedBytes ?? null,
+          runtimeComponents(r).resultCredits.reservations.get(t.pending.id)
+            ?.creditedBytes ?? null,
         mode: t.pending.resultByteContract
           ? 'upper-bound'
           : t.pending.expectedResultBytes !== undefined
@@ -518,10 +524,12 @@ class Controller {
     const rejected = [...this.controls.values()].some((c) => c.rejected);
     if (rejected) {
       for (const c of this.controls.values()) await c.worker.thread.terminate();
-      await this.runtime.dispatcher.stop().catch(() => {});
+      await runtimeComponents(this.runtime)
+        .dispatcher.stop()
+        .catch(() => {});
       await this.begin({ drain: false }).catch(() => {});
     } else {
-      await this.runtime.dispatcher.stop();
+      await runtimeComponents(this.runtime).dispatcher.stop();
       await this.begin({ drain: false });
     }
     await flush();

@@ -1,12 +1,11 @@
-import { availableParallelism } from 'node:os';
-import { ExecutionDispatcher } from './dispatch/dispatcher.js';
-import {
-  PjsCancelledError,
-  PjsRuntimeStateError,
-  PjsWorkerError,
-} from './errors/index.js';
-import { integer } from './internal/integer.js';
-import { RangeCoordinator } from './partition/coordinator.js';
+import { run as adaptRun } from './api/run.js';
+import { streamRange as adaptStreamRange } from './api/range/stream-range.js';
+import { parallelMapRange as adaptParallelMapRange } from './api/range/parallel-map-range.js';
+import { parallelFor as adaptParallelFor } from './api/range/parallel-for.js';
+import { partitionRange as adaptPartitionRange } from './api/range/partition-range.js';
+import { createRuntimeComponents } from './composition/create-runtime-components.js';
+import type { PjsRuntimeOptions } from './configuration/runtime-options.js';
+export type { PjsRuntimeOptions } from './configuration/runtime-options.js';
 import type {
   BinaryStreamRangeOptions,
   PartitionInput,
@@ -21,17 +20,8 @@ import type {
   UpperBoundBinaryStreamRangeOptions,
 } from './partition/range.js';
 import type { StreamRangeResult } from './partition/stream.js';
-import { ResultCreditManager } from './results/credit.js';
-import { TaskCoordinator } from './tasks/coordinator.js';
-import { PjsTaskRegistry } from './tasks/registry.js';
-import type { PjsTask, TaskDescriptor } from './tasks/registry.js';
-import { RuntimeTelemetry } from './telemetry/runtime.js';
-import type {
-  RestartPolicy,
-  RunOptions,
-  RuntimeState,
-  ShutdownOptions,
-} from './types/index.js';
+import type { PjsTask } from './tasks/registry.js';
+import type { RunOptions, ShutdownOptions } from './types/index.js';
 
 type CountOnlyStreamRangeOptions = StreamRangeOptions & {
   experimentalResultBytes?: never;
@@ -39,179 +29,14 @@ type CountOnlyStreamRangeOptions = StreamRangeOptions & {
   experimentalMaxReservedResultBytes?: never;
 };
 
-export interface PjsRuntimeOptions {
-  registry: PjsTaskRegistry;
-  workers?: number;
-  minWorkers?: number;
-  maxWorkers?: number;
-  maxQueue?: number;
-  startupTimeout?: number;
-  maxRestarts?: number;
-  /** @experimental Rolling pool-wide restart budget; mutually exclusive with maxRestarts. */
-  restartPolicy?: RestartPolicy;
-}
-
-/** Public facade, composition root, lifecycle authority, and guarded progress loop. */
+/** Public facade. API policy and runtime lifecycle live with their internal owners. */
 export class PjsRuntime {
-  private state: RuntimeState = 'created';
-  private readonly registry: ReadonlyMap<object, TaskDescriptor>;
-  private readonly resultCredits = new ResultCreditManager();
-  private readonly dispatcher: ExecutionDispatcher;
-  private readonly taskCoordinator: TaskCoordinator;
-  private readonly rangeCoordinator: RangeCoordinator;
-  private readonly telemetry: RuntimeTelemetry;
-  private pumping = false;
-  private readonly readyPromise: Promise<void>;
-  private shutdownPromise: Promise<void> | undefined;
-  private drainMode = true;
-  private shutdownEscalations = 0;
-  private shutdownTimer: ReturnType<typeof setTimeout> | undefined;
-  private drainResolve: (() => void) | undefined;
-
+  private readonly components: ReturnType<typeof createRuntimeComponents>;
   constructor(options: PjsRuntimeOptions) {
-    const minimum = integer('minWorkers', options.minWorkers ?? 1, 1);
-    const maximum = integer(
-      'maxWorkers',
-      options.maxWorkers ??
-        Math.max(minimum, options.workers ?? availableParallelism()),
-      minimum,
-    );
-    const workers = integer(
-      'workers',
-      options.workers ??
-        Math.max(minimum, Math.min(maximum, availableParallelism())),
-      minimum,
-      maximum,
-    );
-    const startupTimeout = integer(
-      'startupTimeout',
-      options.startupTimeout ?? 30_000,
-      1,
-      2 ** 31 - 1,
-    );
-    const maxRestarts = integer(
-      'maxRestarts',
-      options.maxRestarts ?? workers * 4,
-      0,
-    );
-    let restartPolicy: RestartPolicy | undefined;
-    if (options.restartPolicy !== undefined) {
-      if (options.maxRestarts !== undefined)
-        throw new TypeError(
-          'restartPolicy and maxRestarts are mutually exclusive',
-        );
-      restartPolicy = {
-        maxRestarts: integer(
-          'restartPolicy.maxRestarts',
-          options.restartPolicy.maxRestarts,
-          0,
-        ),
-        windowMs: integer(
-          'restartPolicy.windowMs',
-          options.restartPolicy.windowMs,
-          1,
-        ),
-      };
-    }
-    this.registry = options.registry.snapshot();
-    this.dispatcher = new ExecutionDispatcher(
-      {
-        workers,
-        maxQueue: options.maxQueue ?? 1024,
-        startupTimeout,
-        maxRestarts,
-        ...(restartPolicy ? { restartPolicy } : {}),
-      },
-      [...this.registry.values()],
-      this.resultCredits,
-      {
-        ready: () => this.pump(),
-        scheduled: (worker, task, scheduledAt, queueMs) =>
-          this.taskCoordinator.scheduled(worker, task, scheduledAt, queueMs),
-        dispatched: (task) => this.taskCoordinator.dispatched(task),
-        started: (worker, taskId) =>
-          this.taskCoordinator.started(worker, taskId),
-        result: (worker, message) =>
-          this.taskCoordinator.result(worker, message),
-        failed: (error) => this.taskCoordinator.failTask(error),
-        exited: () => this.pump(),
-        dispatchFailed: (task, error) =>
-          this.taskCoordinator.settle(task, 'failed', error),
-        fatal: (error) => this.fail(error),
-      },
-    );
-    this.taskCoordinator = new TaskCoordinator(
-      this.registry,
-      this.dispatcher,
-      this.resultCredits,
-      {
-        state: () => this.state,
-        canAccept: (child) =>
-          this.state === 'starting' ||
-          this.state === 'running' ||
-          (child && this.state === 'stopping' && this.drainMode),
-        dispatchAllowed: () => this.dispatchAllowed(),
-        requestPump: () => this.pump(),
-      },
-      {
-        canSubmit: (child) => this.rangeCoordinator.canSubmit(child),
-        context: (child) => this.rangeCoordinator.context(child),
-        rejected: (child, error) =>
-          this.rangeCoordinator.rejected(child, error),
-        admitted: (child, taskId) =>
-          this.rangeCoordinator.admitted(child, taskId),
-        settled: (task, status, error, output) =>
-          this.rangeCoordinator.settled(task, status, error, output),
-      },
-    );
-    this.rangeCoordinator = new RangeCoordinator(
-      this.registry,
-      workers,
-      Math.min(
-        Number.MAX_SAFE_INTEGER,
-        workers + this.dispatcher.queueCapacity,
-      ),
-      this.dispatcher,
-      this.taskCoordinator,
-      this.resultCredits,
-      {
-        state: () => this.state,
-        dispatchAllowed: () => this.dispatchAllowed(),
-        requestPump: () => this.pump(),
-      },
-    );
-    this.telemetry = new RuntimeTelemetry(
-      () => this.state,
-      this.dispatcher,
-      this.taskCoordinator,
-      this.rangeCoordinator,
-      () => this.shutdownEscalations,
-    );
-    this.state = 'starting';
-    this.readyPromise = this.dispatcher
-      .start()
-      .then(() => {
-        if (this.state === 'starting') this.state = 'running';
-        if (
-          this.state === 'failed' ||
-          this.state === 'stopped' ||
-          (this.state === 'stopping' && !this.drainMode)
-        )
-          throw new PjsRuntimeStateError('Runtime stopped during startup');
-        this.pump();
-      })
-      .catch((cause: unknown) => {
-        const error =
-          cause instanceof Error ? cause : new PjsWorkerError(String(cause));
-        if (this.state !== 'stopping' && this.state !== 'stopped')
-          this.fail(error);
-        throw error;
-      });
-    void this.readyPromise.catch(() => {});
+    this.components = createRuntimeComponents(options);
   }
-
   ready(): Promise<void> {
-    return this.readyPromise;
+    return this.components.controller.ready();
   }
 
   /**
@@ -225,13 +50,13 @@ export class PjsRuntime {
     createInput: (partition: RangePartition) => PartitionInput<Input>,
     options: PartitionOptions = {},
   ): Promise<Output[]> {
-    return this.rangeCoordinator.start(
+    return adaptPartitionRange(
+      this.components.rangeCoordinator,
       task,
       range,
       createInput,
       options,
-      'collect',
-    ) as Promise<Output[]>;
+    );
   }
 
   /**
@@ -244,13 +69,13 @@ export class PjsRuntime {
     createInput: (partition: RangePartition) => PartitionInput<Input>,
     options: PartitionOptions = {},
   ): Promise<void> {
-    return this.rangeCoordinator.start(
+    return adaptParallelFor(
+      this.components.rangeCoordinator,
       task,
       range,
       createInput,
       options,
-      'discard',
-    ) as Promise<void>;
+    );
   }
 
   /** @experimental Ordered element map assembled from validated typed blocks. */
@@ -273,19 +98,13 @@ export class PjsRuntime {
     createInput: (partition: RangePartition) => PartitionInput<Input>,
     options: PartitionOptions | TypedMapRangeOptions = {},
   ): Promise<unknown[] | PjsTypedArray> {
-    const outputConstructor =
-      'experimentalOutputConstructor' in options
-        ? options.experimentalOutputConstructor
-        : undefined;
-    return this.rangeCoordinator.start(
+    return adaptParallelMapRange(
+      this.components.rangeCoordinator,
       task,
       range,
       createInput,
       options,
-      'map',
-      undefined,
-      outputConstructor,
-    ) as Promise<unknown[] | PjsTypedArray>;
+    );
   }
 
   /** @experimental Bounded completion-order delivery of partition results. */
@@ -310,7 +129,13 @@ export class PjsRuntime {
       | BinaryStreamRangeOptions
       | UpperBoundBinaryStreamRangeOptions = {},
   ): AsyncIterable<StreamRangeResult<Output>> {
-    return this.rangeCoordinator.stream(task, range, createInput, options);
+    return adaptStreamRange(
+      this.components.streamRange,
+      task,
+      range,
+      createInput,
+      options,
+    );
   }
 
   run<Input, Output>(
@@ -318,177 +143,14 @@ export class PjsRuntime {
     input: Input,
     options: RunOptions = {},
   ): Promise<Output> {
-    return this.taskCoordinator.submit(task, input, options);
+    return adaptRun(this.components.taskCoordinator, task, input, options);
   }
 
   stats() {
-    return this.telemetry.snapshot();
+    return this.components.telemetry.snapshot();
   }
 
   shutdown(options: ShutdownOptions = {}): Promise<void> {
-    if (this.shutdownPromise) return this.shutdownPromise;
-    const forceAfter = options.forceAfter;
-    if (forceAfter !== undefined) {
-      integer('forceAfter', forceAfter, 1, 2 ** 31 - 1);
-      if (options.drain === false)
-        throw new TypeError('forceAfter requires graceful shutdown');
-    }
-    this.drainMode = options.drain ?? true;
-    const failed = this.state === 'failed';
-    if (!failed) this.state = 'stopping';
-    if (!failed && forceAfter !== undefined) {
-      const deadline = this.monotonicNow() + forceAfter;
-      const escalate = () => {
-        const remaining = deadline - this.monotonicNow();
-        if (remaining > 0) {
-          this.shutdownTimer = this.scheduleShutdownTimer(escalate, remaining);
-          return;
-        }
-        this.shutdownTimer = undefined;
-        if (this.state !== 'stopping' || !this.drainMode) return;
-        this.drainMode = false;
-        this.shutdownEscalations++;
-        this.cancelForShutdown();
-        // Begin termination even if startup or the graceful drain waiter is pending.
-        void this.dispatcher.stop().catch(() => {});
-        this.drainResolve?.();
-        this.drainResolve = undefined;
-      };
-      this.shutdownTimer = this.scheduleShutdownTimer(escalate, forceAfter);
-    }
-    // Defer the body so the idempotent promise is installed before any cleanup occurs.
-    this.shutdownPromise = Promise.resolve().then(async () => {
-      if (!failed && this.drainMode) {
-        await this.readyPromise.catch(() => {});
-        if (this.drainMode && this.state !== 'failed')
-          await new Promise<void>((resolve) => {
-            this.drainResolve = resolve;
-            this.pump();
-            this.checkDrained();
-          });
-      } else {
-        this.cancelForShutdown();
-      }
-      try {
-        await this.dispatcher.stop();
-        this.resultCredits.releaseAll();
-        this.rangeCoordinator.stopProduction();
-        this.state = 'stopped';
-      } finally {
-        if (this.shutdownTimer !== undefined)
-          this.cancelShutdownTimer(this.shutdownTimer);
-        this.shutdownTimer = undefined;
-      }
-    });
-    return this.shutdownPromise;
-  }
-
-  private monotonicNow(): number {
-    return performance.now();
-  }
-
-  private scheduleShutdownTimer(
-    callback: () => void,
-    delay: number,
-  ): ReturnType<typeof setTimeout> {
-    return setTimeout(callback, delay);
-  }
-
-  private cancelShutdownTimer(timer: ReturnType<typeof setTimeout>): void {
-    clearTimeout(timer);
-  }
-
-  private cancelForShutdown(): void {
-    this.rangeCoordinator.finishAll(
-      'cancelled',
-      (operation) =>
-        new PjsCancelledError(
-          'Runtime shutdown cancelled partition operation',
-          { operationId: operation.id },
-        ),
-    );
-    for (const task of this.taskCoordinator.values())
-      this.taskCoordinator.settle(
-        task,
-        'cancelled',
-        new PjsCancelledError('Runtime shutdown cancelled task', {
-          taskId: task.id,
-          ...(task.snapshot.workerId !== undefined
-            ? { workerId: task.snapshot.workerId }
-            : {}),
-        }),
-      );
-  }
-
-  private dispatchAllowed(): boolean {
-    return (
-      this.state === 'running' || (this.state === 'stopping' && this.drainMode)
-    );
-  }
-
-  private pump(): void {
-    if (this.pumping) return;
-    if (!this.dispatchAllowed()) {
-      this.checkDrained();
-      return;
-    }
-    this.pumping = true;
-    try {
-      this.dispatcher.dispatchQueued(() => this.dispatchAllowed());
-      if (this.rangeCoordinator.size > 0) {
-        this.rangeCoordinator.produce();
-        this.dispatcher.dispatchQueued(() => this.dispatchAllowed());
-      }
-    } finally {
-      this.pumping = false;
-    }
-    this.checkDrained();
-  }
-
-  private checkDrained(): void {
-    if (
-      this.taskCoordinator.size === 0 &&
-      this.rangeCoordinator.size === 0 &&
-      this.dispatcher.busy === 0
-    ) {
-      this.drainResolve?.();
-      this.drainResolve = undefined;
-    }
-  }
-
-  private fail(error: Error): void {
-    if (this.state === 'failed' || this.state === 'stopped') return;
-    this.state = 'failed';
-    this.rangeCoordinator.finishAll(
-      'failed',
-      (operation) =>
-        new PjsWorkerError(error.message, {
-          operationId: operation.id,
-          cause: error,
-        }),
-    );
-    for (const task of this.taskCoordinator.values())
-      this.taskCoordinator.settle(
-        task,
-        'failed',
-        new PjsWorkerError(error.message, {
-          taskId: task.id,
-          ...(task.snapshot.workerId !== undefined
-            ? { workerId: task.snapshot.workerId }
-            : {}),
-          cause: error,
-        }),
-      );
-    void this.dispatcher
-      .stop()
-      .then(() => {
-        this.resultCredits.releaseAll();
-        this.checkDrained();
-      })
-      .catch(() => {
-        // A failed termination cannot justify physical credit release.
-        this.drainResolve?.();
-        this.drainResolve = undefined;
-      });
+    return this.components.controller.shutdown(options);
   }
 }

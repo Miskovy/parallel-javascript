@@ -1,3 +1,4 @@
+import { runtimeComponents } from '../packages/runtime/test/helpers/runtime-inspection.mjs';
 import assert from 'node:assert/strict';
 import { getEventListeners } from 'node:events';
 import { mkdir, writeFile } from 'node:fs/promises';
@@ -119,7 +120,7 @@ async function consumeExpectedFailure(stream) {
   assert.fail('expected stream failure');
 }
 function internalCounts(runtime) {
-  const credits = runtime.resultCredits;
+  const credits = runtimeComponents(runtime).resultCredits;
   assert.equal(
     typeof credits?.diagnostics,
     'function',
@@ -573,8 +574,9 @@ try {
         finalStats.streamResults.currentReservedResultBytes,
       reservations: 0,
       executions: 0,
-      creditOperations: runtime.resultCredits.diagnostics().operations,
-      ...runtime.resultCredits.creditDiagnostics(),
+      creditOperations:
+        runtimeComponents(runtime).resultCredits.diagnostics().operations,
+      ...runtimeComponents(runtime).resultCredits.creditDiagnostics(),
       refundMetrics: finalStats.streamResults,
       tasksPending: finalStats.tasks.pending,
       operationsPending: finalStats.operations.pending,

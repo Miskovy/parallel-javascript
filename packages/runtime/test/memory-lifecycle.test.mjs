@@ -1,3 +1,7 @@
+import {
+  runtimeComponents,
+  runtimeController,
+} from './helpers/runtime-inspection.mjs';
 import assert from 'node:assert/strict';
 import { createHook } from 'node:async_hooks';
 import { test } from 'node:test';
@@ -107,9 +111,9 @@ for (const reason of ['cancel', 'timeout']) {
           PjsCancelledError,
         ),
       );
-      const records = [...runtime.taskCoordinator.tasks.values()].filter(
-        (v) => v.snapshot.status === 'queued',
-      );
+      const records = [
+        ...runtimeComponents(runtime).taskCoordinator.tasks.values(),
+      ].filter((v) => v.snapshot.status === 'queued');
       assert.equal(records.length, 3);
       assert.ok(records.every((v) => v.input.data === data));
       assert.equal(listeners(queued.signal), 3);
@@ -150,9 +154,9 @@ test(
       }),
       PjsCancelledError,
     );
-    const record = [...runtime.taskCoordinator.tasks.values()].find(
-      (v) => v.input === data,
-    );
+    const record = [
+      ...runtimeComponents(runtime).taskCoordinator.tasks.values(),
+    ].find((v) => v.input === data);
     await assert.rejects(
       runtime.run(tasks.echo, data, { transferList: [data] }),
       /already reserved/,
@@ -290,16 +294,25 @@ test(
       if (kind === 'hang') {
         assert.equal(old.exitObserved, false);
         assert.equal(runtime.stats().workers.busy, 1);
-        assert.equal(runtime.dispatcher.pool.repairs.size, 1);
-        assert.equal(runtime.dispatcher.pool.workers.has(old.id), true);
+        assert.equal(
+          runtimeComponents(runtime).dispatcher.pool.repairs.size,
+          1,
+        );
+        assert.equal(
+          runtimeComponents(runtime).dispatcher.pool.workers.has(old.id),
+          true,
+        );
       }
       exit.release();
       await until(
         () =>
           runtime.stats().workers.idle === 1 &&
-          runtime.dispatcher.pool.repairs.size === 0,
+          runtimeComponents(runtime).dispatcher.pool.repairs.size === 0,
       );
-      assert.equal(runtime.dispatcher.pool.workers.has(old.id), false);
+      assert.equal(
+        runtimeComponents(runtime).dispatcher.pool.workers.has(old.id),
+        false,
+      );
       assert.equal(old.thread.threadId, -1);
       assert.deepEqual(old.thread.eventNames(), []);
       assert.equal(old.lease, undefined);
@@ -327,7 +340,7 @@ test(
     assert.deepEqual([...retained], [11, 12]);
     assert.equal(retained.buffer.byteLength, 2);
     source[1] = 44;
-    const cloneRegistrySize = runtime.registry.size;
+    const cloneRegistrySize = runtimeComponents(runtime).registry.size;
     const reads = await Promise.all(
       [retained, retained.buffer].map((data) =>
         runtime.run(tasks.inspect, { data }),
@@ -359,7 +372,7 @@ test(
       (await runtime.run(tasks.inspect, { data: retained })).first,
       11,
     );
-    assert.equal(runtime.registry.size, cloneRegistrySize);
+    assert.equal(runtimeComponents(runtime).registry.size, cloneRegistrySize);
     await stop(runtime);
     assert.equal(retained[1], 12, 'application retention remains valid');
   },
@@ -388,7 +401,9 @@ test(
       { bytes: 8, backing: 4096 },
       { experimentalDispatchBatchSize: 2 },
     );
-    const operations = [...runtime.rangeCoordinator.operations.values()];
+    const operations = [
+      ...runtimeComponents(runtime).rangeCoordinator.operations.values(),
+    ];
     await until(() => runtime.stats().streamResults.buffered === 8);
     assertConservation(runtime);
     assert.equal(runtime.stats().streamResults.currentReservedResultBytes, 64);
@@ -443,8 +458,11 @@ for (const mode of ['exact', 'upper-bound']) {
         runtime.stats().streamResults.currentReservedResultBytes,
         48,
       );
-      assert.equal(runtime.resultCredits.executions.size, 1);
-      assert.equal(runtime.resultCredits.reservations.size, 3);
+      assert.equal(runtimeComponents(runtime).resultCredits.executions.size, 1);
+      assert.equal(
+        runtimeComponents(runtime).resultCredits.reservations.size,
+        3,
+      );
       // Fault notification precedes physical completion, regardless of late payloads.
       old.thread.emit('error', new Error('controlled failure'));
       assert.equal(old.exitObserved, false);
@@ -475,7 +493,9 @@ test(
         { bytes: 8 },
         { signal: abort.signal, timeout: 5000 },
       );
-      const operation = [...runtime.rangeCoordinator.operations.values()][0];
+      const operation = [
+        ...runtimeComponents(runtime).rangeCoordinator.operations.values(),
+      ][0];
       await until(() => results.buffered === 2);
       if (action === 'abort') abort.abort();
       else if (action === 'throw')
@@ -534,10 +554,10 @@ test(
         restartPolicy: { maxRestarts: 1, windowMs: 100 },
       });
       let now = 0;
-      runtime.dispatcher.pool.monotonicNow = () => now;
+      runtimeComponents(runtime).dispatcher.pool.monotonicNow = () => now;
       if (kind === 'bootstrap')
-        runtime.dispatcher.pool.tasks[0] = {
-          ...runtime.dispatcher.pool.tasks[0],
+        runtimeComponents(runtime).dispatcher.pool.tasks[0] = {
+          ...runtimeComponents(runtime).dispatcher.pool.tasks[0],
           exportName: 'missing',
         };
       await assert.rejects(runtime.run(tasks.crash, {}), PjsWorkerError);
@@ -548,7 +568,10 @@ test(
         if (kind === 'expiry') {
           now = 100;
           assert.equal(runtime.stats().containment.restartWindowUtilization, 0);
-          assert.equal(runtime.dispatcher.pool.restartHistory.length, 0);
+          assert.equal(
+            runtimeComponents(runtime).dispatcher.pool.restartHistory.length,
+            0,
+          );
         }
         await assert.rejects(runtime.run(tasks.crash, {}), PjsWorkerError);
         await until(() =>
@@ -558,7 +581,7 @@ test(
         );
       }
       await stop(runtime);
-      assert.equal(runtime.dispatcher.pool.repairs.size, 0);
+      assert.equal(runtimeComponents(runtime).dispatcher.pool.repairs.size, 0);
       assert.equal(
         runtime.stats().dispatch.executeMessages,
         kind === 'bootstrap' ? 1 : 2,
@@ -593,7 +616,7 @@ test(
             );
       if (kind !== 'repair') await until(() => entered(control) === 1);
       else await outcome;
-      const time = clock(runtime, 'Shutdown');
+      const time = clock(runtimeController(runtime), 'Shutdown');
       const ending = runtime.shutdown(
         kind === 'force' ? { forceAfter: 100 } : { drain: kind === 'drain' },
       );
