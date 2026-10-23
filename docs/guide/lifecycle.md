@@ -1,5 +1,7 @@
 # Lifecycle, cancellation and failure
 
+**Promotion status:** Development P1 containment contracts are promoted following benchmark review; caller settlement still does not release physical ownership before validated completion or confirmed exit.
+
 Construction snapshots the registry and starts workers. `ready()` resolves after
 initial imports; `run` and range operations may be accepted during startup.
 Startup submissions occupy queue capacity, so with `maxQueue: 0` await ready and
@@ -16,7 +18,7 @@ worker:                     occupied ─────────────→ 
 ## Caller settlement is not physical completion
 
 **Cancellation or timeout can reject the caller while the worker remains busy.**
-Caller cancellation/timeout does not interrupt synchronous JS/native code or provide cooperative polling. The separate experimental physical lease initiates worker containment.
+Caller cancellation/timeout does not interrupt synchronous JS/native code or provide cooperative polling. The separate physical lease initiates worker containment.
 An eventual late result is discarded, without a second settlement. The worker
 slot is reusable only after execution returns or the worker ends. Side effects
 and completed shared writes are not undone. A posted batch can finish all its
@@ -52,11 +54,13 @@ to disable it; zero is invalid. Host event-loop progress is required for deliver
 Parent progression also checks elapsed deadlines before delivering/reconciling
 results. Ordinary run uses its host timer. Neither is a hard real-time guarantee.
 
-## Experimental physical execution leases (R1 development)
+<a id="experimental-physical-execution-leases-r1-development"></a>
+
+## Physical execution leases (development)
 
 These additions are not present in the immutable published RC4 package.
 C1-A/Q adds focused acceptance and installed-package qualification without
-changing these contracts or experimental status. See the
+changing these contracts; P1 status is recorded above. See the
 [C1 engineering report](../research/c1-containment-acceptance.md) for source-bound
 evidence and the separate promotion decision.
 

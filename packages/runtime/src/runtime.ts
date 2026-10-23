@@ -36,7 +36,7 @@ export class PjsRuntime {
   }
 
   /**
-   * @experimental Host-coordinated numeric ranges; this API is not yet stable.
+   * Host-coordinated numeric ranges with ordered retained results.
    * The synchronous factory runs lazily on the main thread with reserved admission.
    * Results are collected by partition index. maxQueue does not bound result bytes.
    */
@@ -56,7 +56,7 @@ export class PjsRuntime {
   }
 
   /**
-   * @experimental Completion-only CPU work over a numeric range.
+   * Completion-only CPU work over a numeric range.
    * Worker return values are ignored before result serialization.
    */
   parallelFor<Input>(
@@ -74,14 +74,14 @@ export class PjsRuntime {
     );
   }
 
-  /** @experimental Ordered element map assembled from validated typed blocks. */
+  /** Ordered element map assembled from validated typed blocks. */
   parallelMapRange<Input, Constructor extends PjsTypedArrayConstructor>(
     task: PjsTask<Input, InstanceType<Constructor>>,
     range: PartitionRange,
     createInput: (partition: RangePartition) => PartitionInput<Input>,
     options: TypedMapRangeOptions<Constructor>,
   ): Promise<InstanceType<Constructor>>;
-  /** @experimental Ordered element map assembled from validated array blocks. */
+  /** Ordered element map assembled from validated array blocks. */
   parallelMapRange<Input, Output>(
     task: PjsTask<Input, readonly Output[]>,
     range: PartitionRange,
@@ -103,7 +103,7 @@ export class PjsRuntime {
     );
   }
 
-  /** @experimental Bounded completion-order delivery of partition results. */
+  /** Bounded completion-order delivery of partition results. */
   streamRange<Input, Output extends PjsBinaryResult>(
     task: PjsTask<Input, Output>,
     range: PartitionRange,

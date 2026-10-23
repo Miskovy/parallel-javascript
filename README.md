@@ -2,6 +2,8 @@
   <img src="static/pjs-logo-square-1280x1280.png" width="200" height="200" alt="PJS logo: green circuit and hexagon mark">
 </p>
 
+**Promotion status:** Development P1/P2/P3 contracts are promoted following benchmark review; this does not change published RC4, begin the alias window or authorize a release.
+
 <h1 align="center">PJS</h1>
 
 <p align="center"><strong>Parallel JavaScript Runtime</strong></p>
@@ -85,10 +87,10 @@ Squaring one number teaches the contract; it is too small to benefit from worker
 | ----------------------------- | ------------------------------------------------------------- | ----------------------------- |
 | `run`                         | One explicit task, one promise                                | Core candidate                |
 | `ready` / `shutdown`          | Startup and resource lifetime                                 | Core candidates               |
-| `partitionRange`              | Ordered, retained per-partition results                       | Experimental                  |
-| `parallelFor`                 | Completion-only ranges and deliberate side effects            | Experimental                  |
-| `parallelMapRange`            | Flat ordered array or typed-array output                      | Experimental                  |
-| `streamRange`                 | Completion-order results under count and optional byte limits | Experimental                  |
+| `partitionRange`              | Ordered, retained per-partition results                       | Promoted in development       |
+| `parallelFor`                 | Completion-only ranges and deliberate side effects            | Promoted in development       |
+| `parallelMapRange`            | Flat ordered array or typed-array output                      | Promoted in development       |
+| `streamRange`                 | Completion-order results under count and optional byte limits | Promoted in development       |
 | `transfer` / `sharedReadonly` | Moved buffers or reusable shared input                        | Specialized supported helpers |
 | `stats`                       | Copied state and cumulative counters                          | Diagnostic surface            |
 
@@ -104,7 +106,7 @@ from published RC4 despite unchanged version fields. Checkout examples use the
 six new development option names with deprecated aliases; RC4 uses the older
 spellings and declarations. Later containment controls are also absent from RC4.
 
-All feature experimental annotations and all six aliases remain. Promotion,
+P1/P2/P3 are promoted in development; all six aliases remain. The
 one shared transition prerelease, C4 removal and final-candidate qualification
 need the separate [maintainer decisions](docs/research/v1-api-migration-plan.md#decisions-for-maintainer-review).
 See the [stability policy](docs/stability.md) and [current inventory](docs/research/v1-api-contract-inventory.md).
@@ -122,7 +124,7 @@ credits do not bound RSS, worker allocations, inputs or consumer-retained values
 See [backpressure](docs/guide/backpressure.md).
 
 Cancellation or timeout can settle a caller while its worker stays busy. There
-is no automatic retry or rollback. Development's experimental exclusive
+is no automatic retry or rollback. Development's exclusive
 `run({ executionLease })`, rolling `restartPolicy` and graceful
 `shutdown({ forceAfter })` initiate asynchronous containment; physical ownership
 lasts until valid completion or confirmed exit. Without escalation, graceful

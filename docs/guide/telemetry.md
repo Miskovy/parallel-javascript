@@ -3,7 +3,8 @@
 `runtime.stats(): PjsRuntimeStats` returns writable defensive copies with current
 state and cumulative counters. B4 development root-exports explicit diagnostic
 types while preserving all 158 inventoried leaves and their meanings. Broader v1
-stabilization and feature promotion remain pending. These declarations are absent
+stabilization remains pending; P1/P2/P3 feature contracts are promoted in development.
+These declarations are absent
 from published RC4. It has no completed-task history, histograms, p50/p95/p99 or observer hooks.
 Do not derive unavailable quantiles from averages.
 
@@ -15,8 +16,8 @@ actual replacement spawns after confirmed exit. A rejected termination can leave
 the former incremented and the latter unchanged, with workers.busy still occupied
 after tasks.pending reaches zero. Neither failure nor cleanup rejection proves
 physical completion. The [C1 report](../research/c1-containment-acceptance.md)
-records the added failure-path and installed-consumer evidence; no field or
-experimental-status change is implied.
+records the added failure-path and installed-consumer evidence without changing
+field meanings. The later P1/P2/P3 promotion changes annotations/status only.
 
 ```ts
 import type {

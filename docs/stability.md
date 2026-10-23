@@ -1,5 +1,7 @@
 # API stability and compatibility
 
+**Promotion status:** P1/P2/P3 are promoted in development after reviewed benchmark acceptance; all six deprecated aliases remain. Publication, hold applicability, C4 and Stage F/G remain separate.
+
 PJS is pre-1.0. As checked on **23 October 2026**, npm `latest` and `next`
 select [`@pjavascript/runtime@1.0.0-rc.4`](https://registry.npmjs.org/@pjavascript%2fruntime),
 and [GitHub RC4](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.4)
@@ -16,12 +18,14 @@ B1 exposes the existing closeable stream contract; B2 narrows strict results to
 ordinary backing; B3 removes unsupported registry.snapshot() access; B4 names
 diagnostic/error types. C1-A/Q adds acceptance and installed-consumer evidence.
 C2/C3 implement [six option spelling pairs](partitioning.md#c2-development-option-transition)
-with deprecated aliases and exclusive presence rules. **All feature experimental
-annotations and all six aliases remain.** The authoritative
+with deprecated aliases and exclusive presence rules. **P1/P2/P3 contracts are promoted in development;
+all six deprecated aliases remain.** The authoritative
 [post-C3 decisions](research/v1-api-migration-plan.md#decisions-for-maintainer-review)
 separate P1/P2/P3 promotion, the shared transition release, C4, F and publication.
-Hold applicability remains unresolved; merged work and passing CI imply no
-promotion, eligibility or release clearance.
+Hold applicability remains unresolved; P1/P2/P3 development promotion follows
+explicit maintainer approval, not an inference from passing CI. It supplies no
+hold eligibility or release clearance. The [promotion report](research/p1-p2-p3-development-promotion.md)
+records the fresh qualification and strict JavaScript byte-identity failure.
 
 ## Current status and proposed disposition
 
@@ -29,12 +33,12 @@ promotion, eligibility or release clearance.
 | ------------------------------------------------------------------------------------ | ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Registry registration, runtime construction, ready/run/shutdown, base options/errors | Core candidate                                              | Stabilize with documented registration/admission/first-shutdown contracts; B3 encapsulation, B4 errors, installed core consumers                                             |
 | transfer/sharedReadonly and ownership types                                          | Specialized supported                                       | Stabilize specialized helpers: dispatch detachment/alias effects, copy-visible-bytes shared input, immutability by contract; installed ownership and physical-boundary gates |
-| executionLease, lease error, restartPolicy, forceAfter                               | Experimental development additions despite unprefixed names | Promote C1 after B4, containment/physical/R2 and installed JS/TS gates; ordinary exclusive run only, no replay or hard termination deadline                                  |
-| partitionRange / parallelFor                                                         | Experimental                                                | Promote C2: ordered retained collection / completion-only pre-serialization discard, one parent deadline/context, partial side effects; range/batch/installed gates          |
-| streamRange / result types                                                           | Experimental                                                | B1 closeable stream implemented; C2: eager completion order, single consumer, explicit abandonment cleanup; stream/context/memory/installed gates                            |
-| parallelMapRange / array and typed overloads / map error                             | Experimental                                                | Promote C2: full flat target, logical ordering, built-in constructors, exact block kind/cardinality and reentrant validation-before-target lookup                            |
-| Dispatch batching and count/output-constructor options                               | Experimental; C2 names and deprecated aliases               | C2 renames implemented; P2 promotion remains separate. Default 1, limit 16, sequential items, transfer/lease restrictions and skipped-item failure preserved                 |
-| Exact / upper-bound binary output options, types and errors                          | Experimental                                                | B2 types and C3 renames implemented; separate P3 promotion after credit/worker/physical/installed negative TS gates; visible payload per stream, not RSS                     |
+| executionLease, lease error, restartPolicy, forceAfter                               | Promoted development contract                               | C1 accepted after B4, containment/physical/R2 and installed JS/TS gates; ordinary exclusive run only, no replay or hard termination deadline                                 |
+| partitionRange / parallelFor                                                         | Promoted development contract                               | C2 contract: ordered retained collection / completion-only pre-serialization discard, one parent deadline/context, partial side effects; range/batch/installed gates         |
+| streamRange / result types                                                           | Promoted development contract                               | B1 closeable stream implemented; C2: eager completion order, single consumer, explicit abandonment cleanup; stream/context/memory/installed gates                            |
+| parallelMapRange / array and typed overloads / map error                             | Promoted development contract                               | C2 contract: full flat target, logical ordering, built-in constructors, exact block kind/cardinality and reentrant validation-before-target lookup                           |
+| Dispatch batching and count/output-constructor options                               | Promoted development contract                               | C2 renames implemented; P2 promotion is accepted. Default 1, limit 16, sequential items, transfer/lease restrictions and skipped-item failure preserved                      |
+| Exact / upper-bound binary output options, types and errors                          | Promoted development contract                               | B2 types and C3 renames implemented; P3 accepted after credit/worker/physical/installed negative TS gates; visible payload per stream, not RSS                               |
 | stats / task and worker snapshots / containment diagnostics                          | Supported diagnostics; explicit B4 contracts in development | B4 preserves all 158 inventoried fields and aliases with reviewed units/lifetimes; C1/C2/C3 gates for corresponding groups; no timing/performance guarantee                  |
 | Registry.snapshot / TaskDescriptor                                                   | Internal; public method removed in B3                       | B3 implemented in development: module-private WeakMap, internal snapshot function, stable handles/copied descriptors; introspection callers retain their own metadata        |
 | Error contexts, task-error details, status/mode and byte-declaration types           | Intentionally root-named in B1/B2/B4 development            | Preserve metadata, hierarchy and status vocabularies; TaskDescriptor remains internal after B3                                                                               |

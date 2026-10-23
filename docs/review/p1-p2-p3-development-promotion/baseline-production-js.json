@@ -1,0 +1,192 @@
+[
+  {
+    "path": "api/range/contracts.js",
+    "bytes": 48,
+    "sha256": "427a6852d1b4fbc59c12b396120836e73895fb11bee3ec3841f58f9c9f32499d"
+  },
+  {
+    "path": "api/range/parallel-for.js",
+    "bytes": 199,
+    "sha256": "4834c61228ddf64d5f61227f7d437c9c87d68b4899e12359406e617851f3504c"
+  },
+  {
+    "path": "api/range/parallel-map-range.js",
+    "bytes": 511,
+    "sha256": "a32458166666ab0869ec0c4b9d3e78f7da5d420863c60044df397431017970b9"
+  },
+  {
+    "path": "api/range/partition-range.js",
+    "bytes": 205,
+    "sha256": "0c4a1ab2825ca18793470888824485c9e429eb5258cffe5c882e7a96a318894b"
+  },
+  {
+    "path": "api/range/stream-range.js",
+    "bytes": 3606,
+    "sha256": "5ac2ca9f1850b526c16480256012c0cc14b713ffda0a0e426d48e0accf3ca4f2"
+  },
+  {
+    "path": "api/run.js",
+    "bytes": 146,
+    "sha256": "fcddeefbaed3182d054160dfd000c123f7d993b3713419a0eb229e4fc8a2aed4"
+  },
+  {
+    "path": "composition/create-runtime-components.js",
+    "bytes": 3596,
+    "sha256": "84f2ae04c7f9500a15117099ebc2adc1a64568f21ec2bfdc87f55dcb4528fdae"
+  },
+  {
+    "path": "configuration/runtime-options.js",
+    "bytes": 1489,
+    "sha256": "0e19d8c91d1be6fb904f0d2e8819e73357ade4aae931dead7079a7d2915aaee4"
+  },
+  {
+    "path": "diagnostics.js",
+    "bytes": 50,
+    "sha256": "b84fc4bac1fa2a4554cbc33b8b20f56908a2de8c302e63178c2981bfd185dc08"
+  },
+  {
+    "path": "dispatch/dispatcher.js",
+    "bytes": 8613,
+    "sha256": "c6d5f42a83fe271b008c3956652034d79ad9a90ca677de14bbe90d5c14dac973"
+  },
+  {
+    "path": "errors/index.js",
+    "bytes": 2129,
+    "sha256": "03ba022ff23f20564ddee9d23ab4d1d4ffc378c88d7778e588a9ddd4348b82a1"
+  },
+  {
+    "path": "index.js",
+    "bytes": 533,
+    "sha256": "7c98dcad3823d3054b470e5cf144f8424443df3a1e27cb9ce84280397b142736"
+  },
+  {
+    "path": "internal/integer.js",
+    "bytes": 308,
+    "sha256": "e30e3850679a0f8e19d3139d8acb1d84a6295322d293137cb2a9917eafc85f36"
+  },
+  {
+    "path": "internal/option-spelling.js",
+    "bytes": 452,
+    "sha256": "d9916c73b7ec99a821c4a303101af0d5fa9245fb6f1b9698f4bc7eebb8b56303"
+  },
+  {
+    "path": "lifecycle/runtime-controller.js",
+    "bytes": 7547,
+    "sha256": "82ab942ddae193336cbb987d3ba195bf296df231f4ba82bde0953794510bf96d"
+  },
+  {
+    "path": "partition/binary.js",
+    "bytes": 1520,
+    "sha256": "8f781cf8cdb0e443b8722669d3d75d8fc94390160c0d6efbe0e127b5b11f5803"
+  },
+  {
+    "path": "partition/coordinator.js",
+    "bytes": 28664,
+    "sha256": "6fbf36ed8655c722639d47bf5cc10f84598de509e5033598aa140c0527c5a22c"
+  },
+  {
+    "path": "partition/operation.js",
+    "bytes": 1547,
+    "sha256": "de5ef2831590835b4091ad8fdc53261308710e76b3ec1a3ca9d9d7589bc61184"
+  },
+  {
+    "path": "partition/range.js",
+    "bytes": 1246,
+    "sha256": "c337bdfe20b39ca9525a7ffaea71e375ce768072fe303cc8e204bf883372acae"
+  },
+  {
+    "path": "partition/results/map-assembly.js",
+    "bytes": 1894,
+    "sha256": "822715808e1aab783f95b481af14050236eadbaeb8c71ec3d4faa93d440e25dc"
+  },
+  {
+    "path": "partition/stream.js",
+    "bytes": 4641,
+    "sha256": "6f85fc6d158ebafd1dd444a2c30a5e8810f7004dd5f63019477bf8b2fa919b72"
+  },
+  {
+    "path": "partition/validation.js",
+    "bytes": 1707,
+    "sha256": "f2044a3db887c2093b38711129c07462ac68c955a8c6aac61488ccfc198d6aaf"
+  },
+  {
+    "path": "pool/pool.js",
+    "bytes": 5235,
+    "sha256": "43f57b00660ad7baa65741c8db156acc508c76976c018eb0952efbe70fe920d2"
+  },
+  {
+    "path": "results/credit.js",
+    "bytes": 14486,
+    "sha256": "779bdaa737c074e6aa0f178bfc853ba1758565b3fad69228c2a4bf5efbd22dd5"
+  },
+  {
+    "path": "runtime.js",
+    "bytes": 2198,
+    "sha256": "43f84c93009e897e1c293aa4f18900900d855353a3ba7ff97dd7367d30370acd"
+  },
+  {
+    "path": "scheduler/fifo.js",
+    "bytes": 1639,
+    "sha256": "e534524a4a212c1a9bdbef6cded48faaf9b8baf4c809bc32ae1f33dd9a3e6050"
+  },
+  {
+    "path": "tasks/coordinator.js",
+    "bytes": 13969,
+    "sha256": "9c6d26410e6d4594a8f3cfa5a48fedf4a5e8ddfe514cc139c4e32837205c3963"
+  },
+  {
+    "path": "tasks/registry.js",
+    "bytes": 1344,
+    "sha256": "86808c9880c19006135d393bfddfb8720fe802c4e109ee9247711b791d9e9af0"
+  },
+  {
+    "path": "tasks/shared.js",
+    "bytes": 965,
+    "sha256": "5ea6c4b88f8592262fddd4e1379eee02c13fdada599cb70c42d332182c5a4236"
+  },
+  {
+    "path": "tasks/task.js",
+    "bytes": 43,
+    "sha256": "058a2c45e24e915dd86989a39da0d72b42d01a54e0f7bb7505f0e04cbc8b6c38"
+  },
+  {
+    "path": "tasks/transfer.js",
+    "bytes": 3074,
+    "sha256": "6a581330be59e19d5e584de7d669a9a597e6b3360f2cc72c5e48ae94a0591ea6"
+  },
+  {
+    "path": "telemetry/metrics.js",
+    "bytes": 1192,
+    "sha256": "ad6d810e300d1ea100d1230948cb820cab6afcfab05a19d81f8ad3d19ecf2324"
+  },
+  {
+    "path": "telemetry/profile.js",
+    "bytes": 283,
+    "sha256": "2ff1f354516c4b3b18ad72d9743f85ddc411bfba24a2f344442af19f0eeb1874"
+  },
+  {
+    "path": "telemetry/runtime.js",
+    "bytes": 2008,
+    "sha256": "43bf66c539762c531ac9d3c6a8464897f40bfa8d45c46fc0eed30afc93dcbcca"
+  },
+  {
+    "path": "types/index.js",
+    "bytes": 44,
+    "sha256": "827c148a2159c5d098f9fe33185b555382ad63931193dda5f41f6af38a6a4445"
+  },
+  {
+    "path": "workers/bootstrap.js",
+    "bytes": 11710,
+    "sha256": "540e244a1c7f93fcd179923fc4485f0fe98d13c0c4484268ed1c689359c83002"
+  },
+  {
+    "path": "workers/protocol.js",
+    "bytes": 5837,
+    "sha256": "704508fdf13e027de1786523f50183aaac6845754b042e7c0ef61e0fbc149b54"
+  },
+  {
+    "path": "workers/worker.js",
+    "bytes": 13570,
+    "sha256": "d4ea88e7778f4afde3f3b01533bb7967d08b77fd1b14a883449806857cc2c4e6"
+  }
+]

@@ -1,5 +1,7 @@
 # Admission and result backpressure
 
+**Promotion status:** Development P2/P3 contracts are promoted following benchmark review; result-byte credits bound visible payload per stream and are not a process-memory limit.
+
 There are three independent bounds. **Queue depth is not CPU capacity.**
 
 | Bound                  | Controls                                                                  | Does not control                                                              |

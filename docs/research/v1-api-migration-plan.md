@@ -1,20 +1,28 @@
-# Stage C: proposed migration and controlled promotion
+# Stage C: development promotion and remaining release decisions
 
-**Stage C engineering plan — implementation integrated; promotions and release decisions pending.**
+**Promotion status:** P1/P2/P3 development annotations/status are promoted following benchmark acceptance review. The approved patch preserves all six aliases; transition release, hold applicability, C4 and F/G remain separate.
+
+**Stage C status — C1–C3 integrated; approved P1/P2/P3 promoted in development.**
+Release-policy and hold-applicability decisions remain unresolved. The combined
+transition prerelease is not yet authorized, the alias window has not started,
+and C4 and Stage F/G remain pending separate authorization.
 The [inventory](v1-api-contract-inventory.md) records the current contract;
 [ADR 0023](../adr/0023-v1-api-stability-decisions.md) retains the proposed v1 policy.
 
 **Maintainer instruction, 23 October 2026:** P1/P2/P3 promotion is explicitly
 approved. The [benchmark health campaign](benchmark-health-spec.md) records
-that approval; benchmark acceptance and the resulting exact promotion patch
-remain subject to review. The campaign leaves feature annotations in place
-and prepares the patch without applying it. Separately tracked hold
+that approval. Following the human-reviewed merge of PR #31 at
+`102ae49bec616be960bf1e3d63a727dea1731eae`, this promotion applies the
+reviewed annotation/status scope with documentation corrections. The benchmark
+campaign itself left feature annotations in place and prepared an unapplied patch.
+See the [promotion report](p1-p2-p3-development-promotion.md) for fresh artifact
+qualification and the strict JavaScript byte-identity failure. Separately tracked hold
 applicability, the transition release, C4 and Stage F/G gates remain unchanged.
 The older approval queue below retains its historical attribution.
 
-## Post-C3 decisions — 23 October 2026
+## Historical post-C3 decisions — 23 October 2026
 
-Current main is `0f79db5e1192dd47db32d2e300fc382a0f431462`, the
+At this historical checkpoint, main was `0f79db5e1192dd47db32d2e300fc382a0f431462`, the
 [PR #28](https://github.com/Miskovy/parallel-javascript/pull/28) merge. Its tree
 `6169704317bc1d2015eef4b64cd3c5d456683067` matches reviewed C3 head
 `26eb1e6028300b894908236842ebfe3a9abec6a5`. S1, corrected Stage A, B1–B4,
@@ -23,7 +31,9 @@ implement the six spelling transitions. **P1/P2/P3 promotion, the transition
 release and C4 removal have not been approved by those merges.** All six
 deprecated aliases and all feature-level experimental annotations remain.
 
-This section is the current decision queue. The planning-base ledger, original
+This section retains the decision queue before the later P1/P2/P3 approval.
+The current disposition is recorded under Decisions for maintainer review below.
+The planning-base ledger, original
 handoffs, occurrence indexes and historical conclusions below retain their
 original attribution; they are not outstanding instructions to reimplement C1–C3.
 No separate implementation milestone is proposed. Hold applicability remains
@@ -60,9 +70,17 @@ Subsequent [Node 24.0.0 floor qualification](node24-floor-qualification.md) reco
 the exact development candidate and Linux/Windows x64 results. It supplies floor
 evidence without promoting P1/P2/P3, starting the shared alias window or closing
 Stage F's final-candidate matrix and release gates. The decisions below remain
-pending.
+pending at that checkpoint; current dispositions follow.
 
 ### Decisions for maintainer review
+
+P1/P2/P3 approval is recorded and their development annotation/status scope is
+applied in this branch. The P1/P2/P3 rows below preserve the earlier proposal,
+including its pending wording and separate P2/P3 boundary; they are historical,
+not requests for renewed promotion approval. Hold applicability remains unresolved.
+The transition-prerelease, C4 and Stage F/G rows remain the current decision queue.
+Fresh qualification and the strict byte-identity gate are recorded in the
+[promotion report](p1-p2-p3-development-promotion.md).
 
 | Decision                                     | Complete / exact references                                                                                                                                                     | Unresolved                                                                                                                                                            | Concrete proposed action after approval                                                                                                                   | Explicit decision required                                                                                                                                 |
 | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -73,9 +91,11 @@ pending.
 | C4 alias-removal boundary                    | Six-name migration exists; no transition prerelease/window has occurred                                                                                                         | Actual shared release, selected following prerelease, removal authorization and closure evidence                                                                      | After the approved window, propose removing all six aliases and rejecting legacy presence, with installed/type/docs closure and affected qualification    | Approve the actual removal boundary and scoped C4 work later; merging C2/C3 or elapsed time alone cannot begin removal                                     |
 | Stage F qualification / separate publication | Current baseline selector, immutable RC4 inputs and publication guards are documented in [releasing](../releasing.md#proposed-future-candidate-gates--stage-f-remains-separate) | Accepted final contract/promotions, C4 closure, applicable holds, final source/version/baseline, floor/current patch matrix, extended/reproduction/rehearsal evidence | Prepare a separately reviewed selector/candidate package at F, then qualify and reproduce its exact staged artifact; G is a later publication-only action | Authorize F preparation and its exact matrix/identity separately; authorize G only after reviewing all required evidence. No date/version is selected here |
 
-### Exact scope of a future promotion patch
+### Historical proposed scope of the promotion patch
 
-These are proposals for review, **not changes made by this task**. Use the actual
+The following proposals were recorded before approval and are retained as the
+scope reviewed for this promotion. Their instructions to keep an unapproved
+group experimental describe that earlier checkpoint. Use the actual
 source markers, not a global removal of `@experimental`:
 
 - **P1:** `types/index.ts` — RunOptions.executionLease,
@@ -114,10 +134,10 @@ SHAs. Record the new package identity whenever comments/README/declarations
 change packed bytes. This documentation task runs docs/format/example/package
 checks, not manual R2/R3 qualification.
 
-**Smallest next action:** record approve/defer and hold applicability for each
-P1/P2/P3 row against the named evidence. Only then authorize the corresponding
-small annotation/status patch. Release version selection, the shared alias window,
-C4, Stage F and publication remain their own later decisions.
+**Current next action:** review this development promotion and its fresh artifact
+qualification, including the reported strict byte-identity failure. Hold applicability,
+release version selection, the shared alias window, C4, Stage F and publication
+remain their own later decisions; promotion starts none of those milestones.
 
 ## C2 development implementation status
 
@@ -129,8 +149,8 @@ See E2/E3 above and the [C2 report](c2-range-option-transition.md).
 ## C1-A/Q implementation status
 
 C1-A/Q is integrated through [PR #26](https://github.com/Miskovy/parallel-javascript/pull/26).
-See E1/E3 above and the [C1 report](c1-containment-acceptance.md). C1-P remains a
-separate annotation/status action after promotion and eligibility approval.
+See E1/E3 above and the [C1 report](c1-containment-acceptance.md). This branch
+applies the approved P1 annotation/status scope; hold applicability remains unresolved.
 
 ## Verified starting state and qualification ledger
 

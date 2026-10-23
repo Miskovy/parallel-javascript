@@ -1,9 +1,11 @@
 # ADR 0023: Proposed v1 API stability and migration decisions
 
+**Promotion status:** P1/P2/P3 development promotion accepted following benchmark review; this does not accept unrelated policy/release decisions in this ADR. All six aliases and separate hold/C4/F/G gates remain.
+
 ## Status
 
-**Proposed — implementation through C3 integrated; promotion/policy decisions pending.**
-No surface is promoted and no final release is authorized. This records
+**Proposed — implementation through C3 integrated; remaining policy/release decisions pending.**
+P1/P2/P3 are promoted in development; no final release is authorized. This records
 recommendations, not acceptance of the ADR as a whole. Preserve ADR 0022's S1
 ownership and all physical-completion/containment constraints.
 
@@ -11,7 +13,7 @@ As verified on 23 October 2026, main
 `0f79db5e1192dd47db32d2e300fc382a0f431462` includes S1, corrected Stage A,
 B1–B4, C1-A/Q, C2 and C3. The [Stage C decision table](../research/v1-api-migration-plan.md#decisions-for-maintainer-review)
 is the current approval queue and exact proposed annotation/status scope. All six
-deprecated aliases and experimental annotations remain. Promotion, the shared
+deprecated aliases remain; P1/P2/P3 annotations are removed. The shared
 transition prerelease, C4, F and G require their separate decisions; unresolved
 hold applicability is unchanged.
 

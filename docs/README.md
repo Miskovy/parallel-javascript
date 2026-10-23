@@ -2,7 +2,8 @@
 
 Start with the [README quickstart](../README.md), then choose a guide for the
 contract you need. The current guides describe **integrated development source
-through C3**, not the immutable package already published on npm.
+through C3 and the approved P1/P2/P3 promotion**, not the immutable package
+already published on npm.
 
 ## Using PJS
 
@@ -28,7 +29,11 @@ Final v1.0.0 has not been released.
 Development main `0f79db5e1192dd47db32d2e300fc382a0f431462` integrates S1,
 corrected Stage A, B1–B4, C1-A/Q, C2 and C3. It includes later containment
 controls, declaration corrections and six option renames absent from RC4.
-All six deprecated aliases and feature experimental annotations remain.
+P1/P2/P3 contracts are promoted in development; all six deprecated aliases remain.
+The [promotion report](research/p1-p2-p3-development-promotion.md) records fresh
+qualification and the strict JavaScript byte-identity failure. Release holds,
+the unauthorized transition prerelease, C4 and Stage F/G remain separate;
+the alias window has not started.
 Unchanged manifest versions do not make development bytes published RC4.
 
 - [Stability and exact Node/platform evidence](stability.md).
