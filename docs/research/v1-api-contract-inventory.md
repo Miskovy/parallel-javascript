@@ -1,6 +1,6 @@
 # Current API contract inventory and proposed v1 dispositions
 
-**Promotion status:** P1 containment, P2 range/count/map/batch and P3 strict-result contracts are promoted in development after reviewed benchmark acceptance. Historical evidence retains its execution attribution; all six aliases remain deprecated and accepted. Fresh qualification and the strict JavaScript byte-identity failure are recorded in the [promotion report](p1-p2-p3-development-promotion.md).
+**Promotion status:** P1 containment, P2 range/count/map/batch and P3 strict-result contracts are promoted in development after reviewed benchmark acceptance. Historical evidence retains its execution attribution; all six aliases remain deprecated and accepted. Fresh qualification, the historical strict JavaScript byte-identity failure and the explicit maintainer-approved revised acceptance are recorded in the [promotion report](p1-p2-p3-development-promotion.md).
 
 Promotion baseline:
 `102ae49bec616be960bf1e3d63a727dea1731eae` ([PR #31](https://github.com/Miskovy/parallel-javascript/pull/31)),

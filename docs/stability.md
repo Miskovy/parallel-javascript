@@ -25,7 +25,8 @@ separate P1/P2/P3 promotion, the shared transition release, C4, F and publicatio
 Hold applicability remains unresolved; P1/P2/P3 development promotion follows
 explicit maintainer approval, not an inference from passing CI. It supplies no
 hold eligibility or release clearance. The [promotion report](research/p1-p2-p3-development-promotion.md)
-records the fresh qualification and strict JavaScript byte-identity failure.
+records fresh qualification, the historical strict JavaScript byte-identity
+failure and the explicit maintainer-approved revised acceptance.
 
 ## Current status and proposed disposition
 

@@ -16,7 +16,8 @@ that approval. Following the human-reviewed merge of PR #31 at
 reviewed annotation/status scope with documentation corrections. The benchmark
 campaign itself left feature annotations in place and prepared an unapplied patch.
 See the [promotion report](p1-p2-p3-development-promotion.md) for fresh artifact
-qualification and the strict JavaScript byte-identity failure. Separately tracked hold
+qualification, the historical strict JavaScript byte-identity failure and the
+explicit maintainer-approved revised acceptance. Separately tracked hold
 applicability, the transition release, C4 and Stage F/G gates remain unchanged.
 The older approval queue below retains its historical attribution.
 
@@ -135,7 +136,8 @@ change packed bytes. This documentation task runs docs/format/example/package
 checks, not manual R2/R3 qualification.
 
 **Current next action:** review this development promotion and its fresh artifact
-qualification, including the reported strict byte-identity failure. Hold applicability,
+qualification and the explicit maintainer-approved revised acceptance, while
+preserving the original strict byte-identity failure. Hold applicability,
 release version selection, the shared alias window, C4, Stage F and publication
 remain their own later decisions; promotion starts none of those milestones.
 

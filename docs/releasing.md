@@ -72,7 +72,8 @@ C1-A/Q, C2 and C3 are integrated at main
 record approved P1/P2/P3 development promotion while keeping the combined
 six-alias transition prerelease and later C4 removal separate. The
 [promotion report](research/p1-p2-p3-development-promotion.md) records fresh
-qualification and the strict JavaScript byte-identity failure. No transition
+qualification, the historical strict JavaScript byte-identity failure and the
+explicit maintainer-approved revised acceptance. No transition
 prerelease is authorized and no window starts from a promotion commit or merge. Hold applicability remains
 unresolved; actual versions, support-floor changes and publication are unselected.
 Historical runtime evidence is not final-candidate qualification.

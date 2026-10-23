@@ -31,7 +31,8 @@ corrected Stage A, B1–B4, C1-A/Q, C2 and C3. It includes later containment
 controls, declaration corrections and six option renames absent from RC4.
 P1/P2/P3 contracts are promoted in development; all six deprecated aliases remain.
 The [promotion report](research/p1-p2-p3-development-promotion.md) records fresh
-qualification and the strict JavaScript byte-identity failure. Release holds,
+qualification, the historical strict JavaScript byte-identity failure and the
+explicit maintainer-approved revised acceptance. Release holds,
 the unauthorized transition prerelease, C4 and Stage F/G remain separate;
 the alias window has not started.
 Unchanged manifest versions do not make development bytes published RC4.
