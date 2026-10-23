@@ -39,9 +39,10 @@ it does not establish stable-release or production-readiness approval.
 npm install @pjavascript/runtime@next
 ```
 
-PJS is ESM. Manifests declare Node `^22.13.0 || ^24.0.0`; accepted development
-evidence covers exact Linux/Windows x64 patches and **does not establish the
-24.0.0 floor**. See [Node and platform scope](docs/stability.md#proposed-node-and-platform-policy).
+PJS is ESM. Manifests declare Node `^22.13.0 || ^24.0.0`. Consult the exact
+[Node and platform evidence](docs/stability.md#proposed-node-and-platform-policy),
+including the [24.0.0 floor report](docs/research/node24-floor-qualification.md),
+for tested development candidates; an engine range is not evidence for every patch.
 macOS and ARM64 remain unclaimed. Compile TypeScript tasks to JavaScript before
 registration.
 

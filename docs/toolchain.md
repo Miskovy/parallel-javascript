@@ -1,6 +1,6 @@
 # Toolchain choices
 
-PJS v0.2 builds with **TypeScript 7.0.2**. ESLint continues to use the TypeScript 6 compiler API through a compatibility package. All compiler and lint dependencies are development-only; the runtime has no external runtime dependencies.
+The compiler migration introduced in v0.2 uses **TypeScript 7.0.2**. ESLint continues to use the TypeScript 6 compiler API through a compatibility package. All compiler and lint dependencies are development-only; the runtime has no external runtime dependencies.
 
 ## Compiler commands and aliases
 
@@ -31,9 +31,9 @@ Declared ranges allow compatible updates; the lockfile records the tested resolu
 
 ## Node runtime versus development tools
 
-The runtime package targets Node `>=22.0.0`; the workspace declares `^22.13.0 || >=24.0.0` to match the supported development-tool range. ESLint 10 requires newer Node versions than the runtime implementation. See [ESLint's requirements](https://eslint.org/docs/latest/use/getting-started).
+Both runtime and workspace manifests declare **`^22.13.0 || ^24.0.0`**. The validation workflow runs exact 22.13.0, exact 24.0.0 and floating 24 on Linux/Windows x64 with the locked development tools. The [floor qualification report](research/node24-floor-qualification.md) identifies exact tested candidates and verifies the 24.0.0 executable against official archive bytes. Node typings and engine declarations alone cannot establish runtime compatibility.
 
-Local validation used Node 24.21.0 on Windows. Broader engine declarations are targets, not evidence of completed cross-platform/version validation. Node typings cannot prove compatibility with every Node 22 minor.
+The original compiler-migration validation used Node 24.21.0 on Windows. Later development evidence retains its own source and environment attribution; it does not retroactively qualify the original migration or published RC4. Runtime npm and the independently integrity-pinned release npm **11.19.0** are recorded separately. Exact floor passes do not establish every Node 22/24 patch or Stage F release qualification.
 
 ## Scope of the migration
 

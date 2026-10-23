@@ -47,11 +47,16 @@ npm run runtime:qualify -- --release-npm-cli=/absolute/path/to/provisioned/npm-c
 ```
 
 The provisioner prints the selected path. Start from a clean committed tree and
-choose a new output filename. The four Linux/Windows x64 Node 22.13.0/24 CI cells
+choose a new output filename. The six Linux/Windows x64 Node 22.13.0/24.0.0/24 CI cells
 use this path: build, all contracts (including the bounded containment soak),
 types, compatibility compiler, installed package, release tooling, lint, formatting,
 documentation and diff checks. Reports retain exact versions, source commit and outputs.
 This is not approval to publish the unchanged version or a new candidate.
+
+The [24.0.0 floor report](research/node24-floor-qualification.md) records exact
+development-candidate outcomes and supplemental compiler/inventory checks.
+Floor evidence does not qualify a later final release or replace Stage F's
+selected floor/current-patch matrix, extended campaigns and reproduction gates.
 
 The release-specific `rc:qualify`, API/package freezes and committed
 `frozen-rc4.json` remain intact. They must fail for changed feature bytes rather
@@ -137,10 +142,10 @@ the reviewed [publication toolchain](../scripts/release/toolchain.json), and
 SHA-pinned official `actions/checkout` v7.0.1 and `actions/setup-node` v7.0.0.
 The shared release helper rejects any other publisher version before registry
 operations and disables package-manager caching. Runtime support for Node
-22.13.0 and Node 24 does not approve every bundled npm for publishing. Four-cell
+22.13.0 and Node 24 does not approve every bundled npm for publishing. Six-cell
 CI provisions the exact release npm archive after verifying its committed SHA-512,
 then tests the live CLI separately from ordinary runtime npm. Review Node/npm pins
-and archive integrity together when upgrading; repeat the four-cell qualification
+and archive integrity together when upgrading; repeat the runtime validation matrix
 and two-build reproduction. See upstream
 [trusted publishing guidance](https://docs.npmjs.com/trusted-publishers/),
 [checkout releases](https://github.com/actions/checkout/releases/tag/v7.0.1),

@@ -34,8 +34,9 @@ Use Node **22.13+ within Node 22.x**, or **Node 24.x**, with npm and Git. Other 
 majors are outside the supported policy. The project uses ESM; compile TypeScript
 task modules to JavaScript before loading them in workers. The manifest range
 does not mean every patch has been qualified: see the [exact evidence and proposed
-floor policy](docs/stability.md#proposed-node-and-platform-policy). Node 24.0.0
-remains unqualified.
+floor policy](docs/stability.md#proposed-node-and-platform-policy). The
+[24.0.0 report](docs/research/node24-floor-qualification.md) records that floor's
+actual candidate and per-platform outcomes.
 
 ```sh
 git clone https://github.com/Miskovy/parallel-javascript.git
