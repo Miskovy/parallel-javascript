@@ -201,8 +201,8 @@ required.
 ## Costs and choice
 
 v0.12 adds explicit upper-bound declarations to strict binary streams through
-`experimentalMaxResultBytes`, together with `experimentalMaxReservedResultBytes`.
-Exact `experimentalResultBytes` keeps equality semantics; declarations cannot
+`maxResultBytes`, together with `maxReservedResultBytes`.
+Exact `resultBytes` keeps equality semantics; declarations cannot
 be combined. Both use live direct non-shared binary values and visible bytes.
 
 The maximum is charged before admission. A successful worker validates and

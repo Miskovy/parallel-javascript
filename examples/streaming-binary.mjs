@@ -25,8 +25,8 @@ try {
     factory,
     {
       maxBufferedResults: 4,
-      experimentalResultBytes: (partition) => partition.end - partition.start,
-      experimentalMaxReservedResultBytes: 16384,
+      resultBytes: (partition) => partition.end - partition.start,
+      maxReservedResultBytes: 16384,
     },
   )) {
     reconstructed.set(output, partition.start);
@@ -43,9 +43,8 @@ try {
     factory,
     {
       maxBufferedResults: 4,
-      experimentalMaxResultBytes: (partition) =>
-        partition.end - partition.start,
-      experimentalMaxReservedResultBytes: 16384,
+      maxResultBytes: (partition) => partition.end - partition.start,
+      maxReservedResultBytes: 16384,
     },
   )) {
     // Restore logical order explicitly; this finite example retains all blocks.

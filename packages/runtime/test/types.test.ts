@@ -876,3 +876,97 @@ function negativeContracts(stats: PjsRuntimeStats, error: PjsError): void {
   void [missing, buffered, utilization, status, mode];
 }
 void negativeContracts;
+
+const c3BadValue0 = {
+  resultBytes: 8,
+  experimentalResultBytes: 8,
+  maxReservedResultBytes: 8,
+};
+// @ts-expect-error C3 exclusive presence/mode/required-field contract.
+const c3Bad0: BinaryStreamRangeOptions = c3BadValue0;
+void c3Bad0;
+
+const c3BadValue1 = {
+  maxResultBytes: 8,
+  experimentalMaxResultBytes: 8,
+  maxReservedResultBytes: 8,
+};
+// @ts-expect-error C3 exclusive presence/mode/required-field contract.
+const c3Bad1: UpperBoundBinaryStreamRangeOptions = c3BadValue1;
+void c3Bad1;
+
+const c3BadValue2 = {
+  resultBytes: 8,
+  maxReservedResultBytes: 8,
+  experimentalMaxReservedResultBytes: 8,
+};
+// @ts-expect-error C3 exclusive presence/mode/required-field contract.
+const c3Bad2: BinaryStreamRangeOptions = c3BadValue2;
+void c3Bad2;
+
+const c3BadValue3 = {
+  resultBytes: 8,
+  maxResultBytes: 8,
+  maxReservedResultBytes: 8,
+};
+// @ts-expect-error C3 exclusive presence/mode/required-field contract.
+const c3Bad3: BinaryStreamRangeOptions = c3BadValue3;
+void c3Bad3;
+
+const c3BadValue4 = {
+  experimentalResultBytes: 8,
+  maxResultBytes: 8,
+  maxReservedResultBytes: 8,
+};
+// @ts-expect-error C3 exclusive presence/mode/required-field contract.
+const c3Bad4: UpperBoundBinaryStreamRangeOptions = c3BadValue4;
+void c3Bad4;
+
+const c3BadValue5 = { resultBytes: 8 };
+// @ts-expect-error C3 exclusive presence/mode/required-field contract.
+const c3Bad5: BinaryStreamRangeOptions = c3BadValue5;
+void c3Bad5;
+
+const c3BadValue6 = { maxReservedResultBytes: 8 };
+// @ts-expect-error C3 exclusive presence/mode/required-field contract.
+const c3Bad6: UpperBoundBinaryStreamRangeOptions = c3BadValue6;
+void c3Bad6;
+
+const c3BadValue7 = {
+  resultBytes: 8,
+  experimentalResultBytes: undefined,
+  maxReservedResultBytes: 8,
+};
+// @ts-expect-error C3 exclusive presence/mode/required-field contract.
+const c3Bad7: BinaryStreamRangeOptions = c3BadValue7;
+void c3Bad7;
+
+const c3BadValue8 = { resultBytes: undefined };
+// @ts-expect-error C3 exclusive presence/mode/required-field contract.
+const c3Bad8: CountOnlyStreamRangeOptions = c3BadValue8;
+void c3Bad8;
+
+const c3BadValue9 = { maxResultBytes: undefined };
+// @ts-expect-error C3 exclusive presence/mode/required-field contract.
+const c3Bad9: CountOnlyStreamRangeOptions = c3BadValue9;
+void c3Bad9;
+
+const c3BadValue10 = { maxReservedResultBytes: undefined };
+// @ts-expect-error C3 exclusive presence/mode/required-field contract.
+const c3Bad10: CountOnlyStreamRangeOptions = c3BadValue10;
+void c3Bad10;
+
+const c3BadValue11 = { experimentalResultBytes: undefined };
+// @ts-expect-error C3 exclusive presence/mode/required-field contract.
+const c3Bad11: CountOnlyStreamRangeOptions = c3BadValue11;
+void c3Bad11;
+
+const c3BadValue12 = { experimentalMaxResultBytes: undefined };
+// @ts-expect-error C3 exclusive presence/mode/required-field contract.
+const c3Bad12: CountOnlyStreamRangeOptions = c3BadValue12;
+void c3Bad12;
+
+const c3BadValue13 = { experimentalMaxReservedResultBytes: undefined };
+// @ts-expect-error C3 exclusive presence/mode/required-field contract.
+const c3Bad13: CountOnlyStreamRangeOptions = c3BadValue13;
+void c3Bad13;

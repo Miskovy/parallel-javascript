@@ -2,11 +2,11 @@
 
 There are three independent bounds. **Queue depth is not CPU capacity.**
 
-| Bound                              | Controls                                                                  | Does not control                                                              |
-| ---------------------------------- | ------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| maxQueue                           | Waiting logical tasks; active physical slots are separate                 | CPU throughput, input bytes, retained results                                 |
-| maxBufferedResults                 | Buffered + admitted-unsettled logical results per stream; default workers | Bytes or consumer-retained outputs                                            |
-| experimentalMaxReservedResultBytes | Occupied declared/actual visible binary result credit per stream          | Heap/RSS, backing size, scratch/native memory, inputs or post-yield retention |
+| Bound                  | Controls                                                                  | Does not control                                                              |
+| ---------------------- | ------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| maxQueue               | Waiting logical tasks; active physical slots are separate                 | CPU throughput, input bytes, retained results                                 |
+| maxBufferedResults     | Buffered + admitted-unsettled logical results per stream; default workers | Bytes or consumer-retained outputs                                            |
+| maxReservedResultBytes | Occupied declared/actual visible binary result credit per stream          | Heap/RSS, backing size, scratch/native memory, inputs or post-yield retention |
 
 FIFO means dispatch order among queued work, not result completion order. A full
 ordinary run queue rejects immediately with PjsQueueFullError; the runtime is not
@@ -29,10 +29,10 @@ count + byte capacity available
   → retain actual credit while buffered → yield / release
 ```
 
-Exact mode declares `experimentalResultBytes`; maximum mode declares
-`experimentalMaxResultBytes`. Each accepts a nonnegative safe integer or a
+Exact mode declares `resultBytes`; maximum mode declares
+`maxResultBytes`. Each accepts a nonnegative safe integer or a
 synchronous function of partition. Exactly one declaration must accompany
-experimentalMaxReservedResultBytes. Omit unused properties entirely, rather than
+maxReservedResultBytes. Omit unused properties entirely, rather than
 passing undefined. Callback throws/invalid values are contract errors. A declaration
 larger than capacity fails with PjsResultCapacityError instead of waiting forever.
 Zero-byte outputs still consume count credit. Multiple streams have independent
@@ -48,8 +48,8 @@ length is a real v0.14 example; PJS does not discover that length.
 ```js
 const options = {
   maxBufferedResults: 4,
-  experimentalResultBytes: (partition) => partition.end - partition.start,
-  experimentalMaxReservedResultBytes: 16384,
+  resultBytes: (partition) => partition.end - partition.start,
+  maxReservedResultBytes: 16384,
 };
 ```
 

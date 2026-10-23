@@ -1,5 +1,16 @@
 # API stability and compatibility
 
+C3 development migration is implemented: resultBytes, maxResultBytes and
+maxReservedResultBytes accept deprecated experimentalResultBytes,
+experimentalMaxResultBytes and experimentalMaxReservedResultBytes aliases.
+Each pair rejects both-presence, even equal, inherited or explicitly undefined.
+Mixed spellings across distinct declaration/capacity pairs are valid. Any exact
+spelling conflicts with any maximum spelling; one declaration and one capacity
+are required. Count-only types exclude all six byte properties. Features remain
+experimental; P3 approval and unresolved holds remain separate. No release window
+starts here, and C4 removal requires its later decision. See the
+[C3 engineering report](research/c3-byte-option-transition.md).
+
 PJS is pre-1.0. **Stage B is integrated; C2's development alias transition is
 implemented. Stage C feature promotions remain pending separate approval.**
 This does not promote current features or declare v1 ready.
@@ -24,7 +35,7 @@ remains pending. C2 introduces `dispatchBatchSize`, `maxBufferedResults` and
 `outputConstructor` with deprecated legacy aliases and both-presence rejection.
 The [range reference](partitioning.md#c2-development-option-transition) documents
 observable presence checks and the interface-to-type-alias compatibility cost.
-The three C3 byte names remain proposed and unavailable.
+The C3 byte migration is implemented in development; P3 remains separate.
 
 As checked on 22 October 2026, npm `latest` and `next` select
 [`@pjavascript/runtime@1.0.0-rc.4`](https://registry.npmjs.org/@pjavascript%2fruntime);

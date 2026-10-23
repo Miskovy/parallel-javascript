@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { setImmediate as immediate } from 'node:timers/promises';
 import * as api from '@pjavascript/runtime';
 import { c2Contracts } from './c2.mjs';
+import { c3Contracts } from './c3.mjs';
 
 assert.deepEqual(
   Object.keys(api).sort(),
@@ -110,3 +111,4 @@ try {
 assert.equal(runtime.stats().streamResults.currentReservedResultBytes, 0);
 assert.equal(runtime.stats().workers.busy, 0);
 await c2Contracts();
+await c3Contracts();

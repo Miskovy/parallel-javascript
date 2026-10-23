@@ -111,6 +111,72 @@ try {
       assert.equal(output[0], 42n);
     }
   }
+  const migrated: (
+    BinaryStreamRangeOptions | UpperBoundBinaryStreamRangeOptions
+  )[] = [
+    {
+      resultBytes: 16,
+      maxReservedResultBytes: 16,
+      dispatchBatchSize: 2,
+      maxBufferedResults: 1,
+    },
+    {
+      resultBytes: 16,
+      experimentalMaxReservedResultBytes: 16,
+      dispatchBatchSize: 2,
+      maxBufferedResults: 1,
+    },
+    {
+      experimentalResultBytes: 16,
+      maxReservedResultBytes: 16,
+      dispatchBatchSize: 2,
+      maxBufferedResults: 1,
+    },
+    {
+      experimentalResultBytes: 16,
+      experimentalMaxReservedResultBytes: 16,
+      dispatchBatchSize: 2,
+      maxBufferedResults: 1,
+    },
+    {
+      maxResultBytes: 16,
+      maxReservedResultBytes: 16,
+      dispatchBatchSize: 2,
+      maxBufferedResults: 1,
+    },
+    {
+      maxResultBytes: 16,
+      experimentalMaxReservedResultBytes: 16,
+      dispatchBatchSize: 2,
+      maxBufferedResults: 1,
+    },
+    {
+      experimentalMaxResultBytes: 16,
+      maxReservedResultBytes: 16,
+      dispatchBatchSize: 2,
+      maxBufferedResults: 1,
+    },
+    {
+      experimentalMaxResultBytes: 16,
+      experimentalMaxReservedResultBytes: 16,
+      dispatchBatchSize: 2,
+      maxBufferedResults: 1,
+    },
+  ];
+  for (const option of migrated) {
+    const stream: PjsRangeStream<PjsBinaryResult> = runtime.streamRange(
+      binaryTask,
+      { start: 0, end: 1, grainSize: 1 },
+      () => ({ input: { move: false } }),
+      option,
+    );
+    try {
+      for await (const { output } of stream)
+        assert.equal(output.byteLength, 16);
+    } finally {
+      await stream.return();
+    }
+  }
   const result: number = await runtime.run(task, 21, {
     signal: new AbortController().signal,
     timeout: 5000,

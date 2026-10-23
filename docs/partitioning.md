@@ -1,5 +1,16 @@
 # Experimental numeric range operations
 
+C3 development migration is implemented: resultBytes, maxResultBytes and
+maxReservedResultBytes accept deprecated experimentalResultBytes,
+experimentalMaxResultBytes and experimentalMaxReservedResultBytes aliases.
+Each pair rejects both-presence, even equal, inherited or explicitly undefined.
+Mixed spellings across distinct declaration/capacity pairs are valid. Any exact
+spelling conflicts with any maximum spelling; one declaration and one capacity
+are required. Count-only types exclude all six byte properties. Features remain
+experimental; P3 approval and unresolved holds remain separate. No release window
+starts here, and C4 removal requires its later decision. See the
+[C3 engineering report](research/c3-byte-option-transition.md).
+
 For the current public contract and stability boundary, start with the
 [v0.15 user guide](guide/core-api.md) and [stability policy](stability.md).
 This detailed reference retains the experimental mechanics.
@@ -33,10 +44,7 @@ overload order, shared-capable inputs/maps and closeable streams are preserved.
 Runtime presence checks remain authoritative, particularly without TypeScript's
 `exactOptionalPropertyTypes`, where an optional `never` can admit `undefined`.
 
-Strict binary contracts retain `experimentalResultBytes`,
-`experimentalMaxResultBytes` and `experimentalMaxReservedResultBytes`. C3's
-`resultBytes`, `maxResultBytes` and `maxReservedResultBytes` remain proposed and
-unavailable. C2 and C3 must both land before the same eventual transition
+Strict binary contracts now accept the C3 development spellings and deprecated aliases. C2 and C3 must both land before the same eventual transition
 prerelease; this development change starts no release window. Publication and
 later C4 alias removal require separate decisions. See the
 [C2 report](research/c2-range-option-transition.md) and
@@ -260,8 +268,8 @@ cannot exceed the capacity, including when a physical batch contains multiple
 items. Reading releases a credit and production resumes. The count does not
 estimate bytes, and application-side reordering or collection is outside it.
 
-Strict binary mode requires both `experimentalResultBytes` and
-`experimentalMaxReservedResultBytes`. The declaration is a nonnegative safe
+Strict binary mode requires both `resultBytes` and
+`maxReservedResultBytes`. The declaration is a nonnegative safe
 integer or a synchronous per-partition callback returning one. It runs lazily
 in the operation AsyncResource before the input factory and is cached while
 waiting for credit. A single declaration larger than capacity fails with
@@ -295,9 +303,8 @@ for await (const { output } of runtime.streamRange(
   (partition) => ({ input: { partition, source } }),
   {
     // Value/count RLE uses at most two output bytes per input byte.
-    experimentalMaxResultBytes: (partition) =>
-      2 * (partition.end - partition.start),
-    experimentalMaxReservedResultBytes: 4 * 1024 * 1024,
+    maxResultBytes: (partition) => 2 * (partition.end - partition.start),
+    maxReservedResultBytes: 4 * 1024 * 1024,
     maxBufferedResults: 16,
   },
 )) {
@@ -305,8 +312,8 @@ for await (const { output } of runtime.streamRange(
 }
 ```
 
-Use `experimentalMaxResultBytes` for `actual <= maximum`. Keep
-`experimentalResultBytes` for `actual === declared`; smaller exact outputs still
+Use `maxResultBytes` for `actual <= maximum`. Keep
+`resultBytes` for `actual === declared`; smaller exact outputs still
 fail. Both declarations together fail. The maximum callback follows the same
 synchronous, cached, pre-factory rules as exact declarations. A maximum exceeding
 capacity fails before input construction.

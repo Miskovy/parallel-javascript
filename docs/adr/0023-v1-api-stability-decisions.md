@@ -22,6 +22,11 @@ This does not accept C promotion or this ADR as a whole. The context and counts 
 historical Stage A baseline; the canonical inventory records current B1–B4
 changes and the explicit pre-v1 snapshot migration.
 
+C3 development update: the three byte-option alias transitions are implemented
+under the explicitly authorized migration handoff. All six aliases and feature
+experimental status remain. This accepts no promotion, release window, version
+or C4 removal. See the [C3 report](../research/c3-byte-option-transition.md).
+
 ## Historical Stage A context and baseline
 
 Development update: the C2 handoff authorizes the shared alias-transition design
