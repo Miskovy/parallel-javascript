@@ -61,8 +61,8 @@ test('empty, one, many, and batched streams deliver partition results', async (t
       { start: 0, end, grainSize: 1 },
       input,
       {
-        experimentalDispatchBatchSize: batch,
-        experimentalMaxBufferedResults: 5,
+        dispatchBatchSize: batch,
+        maxBufferedResults: 5,
       },
     ))
       values.push(value);
@@ -100,8 +100,8 @@ test('slow consumer keeps produced plus in-flight results within capacity', asyn
   const { runtime, task } = setup(t);
   const values = [];
   for await (const value of runtime.streamRange(task, range, input, {
-    experimentalDispatchBatchSize: 8,
-    experimentalMaxBufferedResults: 2,
+    dispatchBatchSize: 8,
+    maxBufferedResults: 2,
   })) {
     values.push(value);
     const active = runtime.stats().activeOperations[0];
@@ -121,7 +121,7 @@ test('the operation deadline includes slow consumer waiting', async (t) => {
   const iterator = iterate(
     runtime.streamRange(task, range, input, {
       timeout: 100,
-      experimentalMaxBufferedResults: 2,
+      maxBufferedResults: 2,
     }),
   );
   assert.equal((await iterator.next()).done, false);
@@ -133,8 +133,8 @@ test('the operation deadline includes slow consumer waiting', async (t) => {
 test('consumer break and throw cancel remaining work exactly once', async (t) => {
   const { runtime, task } = setup(t, { workers: 1 });
   for await (const value of runtime.streamRange(task, range, input, {
-    experimentalDispatchBatchSize: 4,
-    experimentalMaxBufferedResults: 1,
+    dispatchBatchSize: 4,
+    maxBufferedResults: 1,
   })) {
     void value;
     break;
@@ -158,7 +158,7 @@ test('producer failure preserves yielded values and rejects the stream', async (
       task,
       { start: 0, end: 8, grainSize: 1 },
       (partition) => input(partition, { fail: partition.index === 2 }),
-      { experimentalDispatchBatchSize: 4, experimentalMaxBufferedResults: 1 },
+      { dispatchBatchSize: 4, maxBufferedResults: 1 },
     ))
       yielded.push(value.partition.index);
   }, PjsTaskError);
@@ -234,7 +234,7 @@ test('abort, timeout, crash, and non-draining shutdown reject iteration', async 
 test('graceful shutdown includes buffered result delivery', async (t) => {
   const { runtime, task } = setup(t);
   const stream = runtime.streamRange(task, range, input, {
-    experimentalMaxBufferedResults: 2,
+    maxBufferedResults: 2,
   });
   const shutdown = runtime.shutdown();
   const values = [];
@@ -273,7 +273,7 @@ test('stream coexists with ordinary and completion-only work', async (t) => {
   const stream = (async () => {
     let count = 0;
     for await (const value of runtime.streamRange(task, range, input, {
-      experimentalMaxBufferedResults: 1,
+      maxBufferedResults: 1,
     })) {
       void value;
       count++;
@@ -286,7 +286,7 @@ test('stream coexists with ordinary and completion-only work', async (t) => {
     returnValue: 42,
   });
   const completion = runtime.parallelFor(task, range, input, {
-    experimentalDispatchBatchSize: 4,
+    dispatchBatchSize: 4,
   });
   assert.deepEqual(await Promise.all([stream, ordinary, completion]), [
     12,
@@ -312,7 +312,7 @@ test('invalid result capacity rejects through the iterator', async (t) => {
   const { runtime, task } = setup(t);
   const iterator = iterate(
     runtime.streamRange(task, range, input, {
-      experimentalMaxBufferedResults: 0,
+      maxBufferedResults: 0,
     }),
   );
   await assert.rejects(iterator.next(), RangeError);

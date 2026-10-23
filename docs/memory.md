@@ -129,7 +129,7 @@ do not roll back writes that already happened.
 
 v0.7 `streamRange()` bounds retained host results by logical count. A result
 credit is reserved before its child is admitted, so completed buffered results
-plus unsettled children never exceed `experimentalMaxBufferedResults`. This is
+plus unsettled children never exceed `maxBufferedResults`. This is
 not a byte budget: one result can contain an arbitrarily large structured-clone
 graph.
 

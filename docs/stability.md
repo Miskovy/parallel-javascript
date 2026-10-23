@@ -1,7 +1,8 @@
 # API stability and compatibility
 
-PJS is pre-1.0. **Stage B is integrated; Stage C promotion/migration decisions
-remain proposed.** This does not promote current features or declare v1 ready.
+PJS is pre-1.0. **Stage B is integrated; C2's development alias transition is
+implemented. Stage C feature promotions remain pending separate approval.**
+This does not promote current features or declare v1 ready.
 The [canonical current inventory](research/v1-api-contract-inventory.md) discovers
 61 root names, all declared members and no additional reachable named types,
 including R1 additions. The [v0.15 inventory](research/v0.15-public-api-inventory.md)
@@ -19,7 +20,11 @@ module-private storage and internal composition snapshots preserve registration
 and runtime isolation. Introspection callers retain their own metadata. B4
 development adds seventeen type-only diagnostic/error roots, naming all 158
 preserved diagnostic leaves without changing runtime behavior. Feature promotion
-and option renames remain proposed.
+remains pending. C2 introduces `dispatchBatchSize`, `maxBufferedResults` and
+`outputConstructor` with deprecated legacy aliases and both-presence rejection.
+The [range reference](partitioning.md#c2-development-option-transition) documents
+observable presence checks and the interface-to-type-alias compatibility cost.
+The three C3 byte names remain proposed and unavailable.
 
 As checked on 22 October 2026, npm `latest` and `next` select
 [`@pjavascript/runtime@1.0.0-rc.4`](https://registry.npmjs.org/@pjavascript%2fruntime);
@@ -53,7 +58,7 @@ Unchanged development `rc.4` manifests do not authorize republishing its new byt
 | partitionRange / parallelFor                                                         | Experimental                                                | Promote C2: ordered retained collection / completion-only pre-serialization discard, one parent deadline/context, partial side effects; range/batch/installed gates                                 |
 | streamRange / result types                                                           | Experimental                                                | B1 closeable stream implemented; C2: eager completion order, single consumer, explicit abandonment cleanup; stream/context/memory/installed gates                                                   |
 | parallelMapRange / array and typed overloads / map error                             | Experimental                                                | Promote C2: full flat target, logical ordering, built-in constructors, exact block kind/cardinality and reentrant validation-before-target lookup                                                   |
-| Dispatch batching and count/output-constructor options                               | Experimental with experimental prefix                       | C2 minimal renames; default 1, limit 16, sequential items, transfer/lease restrictions and skipped-item failure preserved; no automatic batching                                                    |
+| Dispatch batching and count/output-constructor options                               | Experimental; C2 names and deprecated aliases               | C2 minimal renames; default 1, limit 16, sequential items, transfer/lease restrictions and skipped-item failure preserved; no automatic batching                                                    |
 | Exact / upper-bound binary output options, types and errors                          | Experimental                                                | B2 ordinary-backed result types implemented in development; C3 minimal renames and separate promotion after credit/worker/physical/installed negative TS gates; visible payload per stream, not RSS |
 | stats / task and worker snapshots / containment diagnostics                          | Supported diagnostics; explicit B4 contracts in development | B4 preserves all 158 inventoried fields and aliases with reviewed units/lifetimes; C1/C2/C3 gates for corresponding groups; no timing/performance guarantee                                         |
 | Registry.snapshot / TaskDescriptor                                                   | Internal; public method removed in B3                       | B3 implemented in development: module-private WeakMap, internal snapshot function, stable handles/copied descriptors; introspection callers retain their own metadata                               |
@@ -73,8 +78,10 @@ Pre-v1 incompatible changes need prerelease notes and migration guidance. The
 recommended transition accepts deprecated option aliases for one prerelease,
 rejects both spellings by property presence, and removes/rejects aliases in the
 following selected prerelease before final freeze. Actual version numbers and
-release authorization are separate decisions. Current runnable examples continue
-to use current spellings until implementation.
+release authorization are separate decisions. Current runnable examples use the
+implemented C2 names and retain existing binary spellings. C2 and C3 must land
+before one shared transition prerelease; no release window starts with this
+development change. Aliases remain until a separately authorized C4 decision.
 
 Once declared stable in 1.x, supported behavior **and types**, error identities,
 supported diagnostic fields, defaults and ownership/cleanup semantics follow

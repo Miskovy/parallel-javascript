@@ -4,6 +4,15 @@ export function square(value) {
   return value * value;
 }
 
+export function rangeBlock({ partition, typed = false, discard = false }) {
+  if (discard) return () => partition.index;
+  const values = Array.from(
+    { length: partition.end - partition.start },
+    (_, offset) => (partition.start + offset) * 2,
+  );
+  return typed ? new Float64Array(values) : values;
+}
+
 export function fail() {
   throw new RangeError('controlled installed task failure');
 }

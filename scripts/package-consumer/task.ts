@@ -5,6 +5,23 @@ export function double(value: number): number {
   return value * 2;
 }
 
+export function arrayBlock(partition: {
+  start: number;
+  end: number;
+}): number[] {
+  return Array.from(
+    { length: partition.end - partition.start },
+    (_, offset) => (partition.start + offset) * 2,
+  );
+}
+
+export function typedBlock(partition: {
+  start: number;
+  end: number;
+}): Float64Array<ArrayBuffer> {
+  return new Float64Array(arrayBlock(partition));
+}
+
 export function containmentHang(shared: SharedArrayBuffer): never {
   const control = new Int32Array(shared);
   Atomics.add(control, 2, 1);

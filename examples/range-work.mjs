@@ -20,7 +20,7 @@ try {
     map,
     range,
     (partition) => ({ input: { partition, data } }),
-    { experimentalOutputConstructor: Float64Array },
+    { outputConstructor: Float64Array },
   );
   const output = new Float64Array(new SharedArrayBuffer(data.byteLength));
   await runtime.parallelFor(fill, range, (partition) => ({

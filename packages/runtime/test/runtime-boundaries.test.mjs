@@ -196,6 +196,7 @@ test('API adapters preserve request references, modes, constructor getter timing
     promise,
   );
   assert.deepEqual(events, [
+    'has:outputConstructor',
     'has:experimentalOutputConstructor',
     'get:experimentalOutputConstructor',
   ]);
@@ -273,7 +274,10 @@ test('failed stream normalization counts rejection before reentrant property che
       },
       has(target, key) {
         events.push('has:' + key);
-        return key === 'experimentalResultBytes';
+        return (
+          key === 'experimentalMaxBufferedResults' ||
+          key === 'experimentalResultBytes'
+        );
       },
     },
   );
@@ -296,6 +300,8 @@ test('failed stream normalization counts rejection before reentrant property che
     options,
   );
   assert.deepEqual(events, [
+    'has:maxBufferedResults',
+    'has:experimentalMaxBufferedResults',
     'rejected',
     'has:experimentalResultBytes',
     'bytes',
@@ -365,7 +371,7 @@ test('map result validation getters can abort before the coordinator reads its a
         task,
         { start: 0, end: 2, grainSize: 2 },
         (partition) => ({ input: { partition, kind: 'float64' } }),
-        { experimentalOutputConstructor: Float64Array, signal: abort.signal },
+        { outputConstructor: Float64Array, signal: abort.signal },
       ),
       PjsCancelledError,
     );
@@ -439,12 +445,14 @@ test('range validation retains getter order before state rejection and never inv
     const prefix =
       method === 'parallelMapRange'
         ? [
+            'has:outputConstructor',
             'has:experimentalOutputConstructor',
             'get:experimentalOutputConstructor',
           ]
         : method === 'streamRange'
           ? [
-              'get:experimentalMaxBufferedResults',
+              'has:maxBufferedResults',
+              'has:experimentalMaxBufferedResults',
               'has:experimentalResultBytes',
               'has:experimentalMaxResultBytes',
               'has:experimentalMaxReservedResultBytes',
@@ -458,7 +466,8 @@ test('range validation retains getter order before state rejection and never inv
       'range.grainSize',
       'get:timeout',
       'get:signal',
-      'get:experimentalDispatchBatchSize',
+      'has:dispatchBatchSize',
+      'has:experimentalDispatchBatchSize',
     ]);
   }
 });

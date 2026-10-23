@@ -135,7 +135,11 @@ export class TaskCoordinator {
       executionLease = options.executionLease;
       if (executionLease !== undefined) {
         integer('executionLease', executionLease, 1, 2 ** 31 - 1);
-        if (child || 'experimentalDispatchBatchSize' in options)
+        if (
+          child ||
+          'experimentalDispatchBatchSize' in options ||
+          'dispatchBatchSize' in options
+        )
           throw new TypeError(
             'executionLease requires an exclusive ordinary run() dispatch',
           );

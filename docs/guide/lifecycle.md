@@ -68,7 +68,10 @@ await runtime.shutdown({ drain: true, forceAfter: 10_000 });
 `executionLease` starts only after successful physical posting, before the started
 acknowledgement; queue time is excluded. Integer milliseconds range from 1 through 2147483647. Omission leaves physical execution unbounded. Only exclusive ordinary
 run dispatches support leases. Range/map/stream options containing the field, even
-undefined, and leased runs with experimentalDispatchBatchSize reject before execution.
+undefined, and leased runs with either `dispatchBatchSize` or deprecated
+`experimentalDispatchBatchSize` present reject before execution, even when that
+batch property is inherited or explicitly undefined. Ordinary run does not gain
+batching support.
 
 Expiry checks the worker, correlation and unique token, fails a pending caller once
 with PjsExecutionLeaseError, then initiates asynchronous termination. A caller that

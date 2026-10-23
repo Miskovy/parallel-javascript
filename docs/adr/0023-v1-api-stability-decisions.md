@@ -24,6 +24,14 @@ changes and the explicit pre-v1 snapshot migration.
 
 ## Historical Stage A context and baseline
 
+Development update: the C2 handoff authorizes the shared alias-transition design
+for the three batch/count/constructor names, retaining deprecated aliases with
+exclusive presence semantics. See the [C2 report](../research/c2-range-option-transition.md)
+and [current migration status](../research/v1-api-migration-plan.md#c2-development-implementation-status).
+This implements that unit without accepting this ADR as a whole, promoting any
+feature, implementing C3/C4 or starting the shared transition release window.
+The original decision context below remains historical.
+
 On 22 October 2026, fetched main remains
 `72335494704a6251c26505226c4f2575424ab190` (PR #17 R3). S1 remains local at
 `f93fb9cb249a54ee625a19a20b5a6d7f7d68647f`, four commits ahead; this Stage A

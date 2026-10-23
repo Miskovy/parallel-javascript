@@ -27,7 +27,7 @@ function setup(t, options = {}) {
   return { runtime, task };
 }
 const range = { start: 0, end: 16, grainSize: 1 };
-const options = { experimentalDispatchBatchSize: 4 };
+const options = { dispatchBatchSize: 4 };
 const input = (partition) => ({ input: { partition } });
 async function until(predicate) {
   const deadline = Date.now() + 5000;
@@ -45,7 +45,7 @@ function release(gate) {
 test('batch size one preserves v0.4 logical output and message semantics', async (t) => {
   const { runtime, task } = setup(t, { workers: 4, maxQueue: 4 });
   const output = await runtime.partitionRange(task, range, input, {
-    experimentalDispatchBatchSize: 1,
+    dispatchBatchSize: 1,
   });
   assert.deepEqual(
     output.flatMap((result) => result.indices),

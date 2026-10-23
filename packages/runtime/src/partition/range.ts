@@ -19,23 +19,40 @@ export interface PartitionInput<Input> {
 }
 
 /** @experimental One deadline and signal for the whole range, not each child. */
-export interface PartitionOptions {
+export type PartitionOptions = {
   /** Physical execution leases are unsupported for range and batch operations. */
   executionLease?: never;
   signal?: AbortSignal;
   timeout?: number;
-  /**
-   * @experimental Group transfer-free logical partitions into one worker turn.
-   * This research option may change or be removed before the API is stabilized.
-   */
-  experimentalDispatchBatchSize?: number;
-}
+} & (
+  | {
+      /** @experimental Group transfer-free partitions; integer 1–16, default 1. */
+      dispatchBatchSize?: number;
+      /** @deprecated Use dispatchBatchSize. Both spellings together reject. */
+      experimentalDispatchBatchSize?: never;
+    }
+  | {
+      dispatchBatchSize?: never;
+      /** @deprecated Use dispatchBatchSize. Both spellings together reject. */
+      experimentalDispatchBatchSize?: number;
+    }
+);
 
 /** @experimental Completion-order stream delivery options. */
-export interface StreamRangeOptions extends PartitionOptions {
-  /** Logical results retained or reserved in-flight for this stream. */
-  experimentalMaxBufferedResults?: number;
-}
+export type StreamRangeOptions = PartitionOptions &
+  (
+    | {
+        /** @experimental Logical retained/in-flight results; defaults to workers. */
+        maxBufferedResults?: number;
+        /** @deprecated Use maxBufferedResults. Both spellings together reject. */
+        experimentalMaxBufferedResults?: never;
+      }
+    | {
+        maxBufferedResults?: never;
+        /** @deprecated Use maxBufferedResults. Both spellings together reject. */
+        experimentalMaxBufferedResults?: number;
+      }
+  );
 
 /** @experimental Count-only delivery excludes every strict byte-mode property. */
 export type CountOnlyStreamRangeOptions = StreamRangeOptions & {
@@ -70,20 +87,18 @@ export type ResultByteDeclaration =
   number | ((partition: RangePartition) => number);
 
 /** @experimental Exact visible bytes declared before each stream child is admitted. */
-export interface BinaryStreamRangeOptions extends PartitionOptions {
-  experimentalMaxBufferedResults?: number;
+export type BinaryStreamRangeOptions = StreamRangeOptions & {
   experimentalResultBytes: ResultByteDeclaration;
   experimentalMaxResultBytes?: never;
   experimentalMaxReservedResultBytes: number;
-}
+};
 
 /** @experimental Maximum visible bytes; successful unused credit refunds on arrival. */
-export interface UpperBoundBinaryStreamRangeOptions extends PartitionOptions {
-  experimentalMaxBufferedResults?: number;
+export type UpperBoundBinaryStreamRangeOptions = StreamRangeOptions & {
   experimentalMaxResultBytes: ResultByteDeclaration;
   experimentalResultBytes?: never;
   experimentalMaxReservedResultBytes: number;
-}
+};
 
 /** @experimental Typed numeric blocks supported by element-range mapping. */
 export type PjsTypedArray =
@@ -114,11 +129,22 @@ export type PjsTypedArrayConstructor =
   | BigUint64ArrayConstructor;
 
 /** @experimental Selects a stable flat typed result, including for empty ranges. */
-export interface TypedMapRangeOptions<
+export type TypedMapRangeOptions<
   Constructor extends PjsTypedArrayConstructor = PjsTypedArrayConstructor,
-> extends PartitionOptions {
-  experimentalOutputConstructor: Constructor;
-}
+> = PartitionOptions &
+  (
+    | {
+        /** @experimental Built-in typed-array constructor for the flat result. */
+        outputConstructor: Constructor;
+        /** @deprecated Use outputConstructor. Both spellings together reject. */
+        experimentalOutputConstructor?: never;
+      }
+    | {
+        outputConstructor?: never;
+        /** @deprecated Use outputConstructor. Both spellings together reject. */
+        experimentalOutputConstructor: Constructor;
+      }
+  );
 
 export interface RangePlan extends PartitionRange {
   chunkCount: number;

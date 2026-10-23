@@ -10,6 +10,8 @@ import type {
   RangePartition,
   PartitionInput,
   PartitionOptions,
+  StreamRangeOptions,
+  UpperBoundBinaryStreamRangeOptions,
   StreamRangeResult,
   PjsTypedArray,
   TypedMapRangeOptions,
@@ -82,7 +84,7 @@ const ordered: Promise<number[]> = runtime.partitionRange(
   partitionTask,
   range,
   (partition) => ({ input: { partition, shared } }),
-  { timeout: 1000, experimentalDispatchBatchSize: 4 },
+  { timeout: 1000, dispatchBatchSize: 4 },
 );
 void ordered;
 const makeInput = (partition: RangePartition): PartitionInput<Uint8Array> => ({
@@ -113,7 +115,7 @@ const completion: Promise<void> = runtime.parallelFor(
   partitionTask,
   range,
   (partition) => ({ input: { partition, shared } }),
-  { timeout: 1000, experimentalDispatchBatchSize: 8 },
+  { timeout: 1000, dispatchBatchSize: 8 },
 );
 void completion;
 // Existing value-returning registered tasks are reusable; their values are discarded.
@@ -137,14 +139,14 @@ const stream: AsyncIterable<StreamRangeResult<number>> = runtime.streamRange(
   (partition) => ({ input: { partition, shared } }),
   {
     timeout: 1000,
-    experimentalDispatchBatchSize: 4,
-    experimentalMaxBufferedResults: 8,
+    dispatchBatchSize: 4,
+    maxBufferedResults: 8,
   },
 );
 void stream;
 
 const countOptions: CountOnlyStreamRangeOptions = {
-  experimentalMaxBufferedResults: 2,
+  maxBufferedResults: 2,
 };
 const directStream: PjsRangeStream<number> = runtime.streamRange(
   partitionTask,
@@ -208,7 +210,7 @@ runtime.streamRange(task, range, () => ({ input: 'bad' }));
 const binaryOptions: BinaryStreamRangeOptions = {
   experimentalResultBytes: (partition) => partition.end - partition.start,
   experimentalMaxReservedResultBytes: 1024,
-  experimentalMaxBufferedResults: 4,
+  maxBufferedResults: 4,
 };
 const binaryStream: AsyncIterable<StreamRangeResult<Uint8Array>> =
   runtime.streamRange(task, range, () => ({ input: data }), binaryOptions);
@@ -353,7 +355,7 @@ const sharedMapped: Promise<Uint8Array<ArrayBuffer>> = runtime.parallelMapRange(
   sharedMapTask,
   range,
   () => ({ input: new Uint8Array(new SharedArrayBuffer(8)) }),
-  { experimentalOutputConstructor: Uint8Array },
+  { outputConstructor: Uint8Array },
 );
 void sharedMapped;
 const sharedView = new DataView(new SharedArrayBuffer(8));
@@ -418,9 +420,99 @@ const typedMapTask = registry.register<
   Float64Array<ArrayBuffer>
 >('typed-map', new URL('./fixture.js', import.meta.url), 'typedMap');
 const typedOptions: TypedMapRangeOptions<Float64ArrayConstructor> = {
-  experimentalOutputConstructor: Float64Array,
-  experimentalDispatchBatchSize: 4,
+  outputConstructor: Float64Array,
+  dispatchBatchSize: 4,
 };
+const legacyTypedOptions: TypedMapRangeOptions<Float64ArrayConstructor> = {
+  experimentalOutputConstructor: Float64Array,
+  experimentalDispatchBatchSize: 1,
+};
+const legacyTypedMapped: Promise<Float64Array<ArrayBuffer>> =
+  runtime.parallelMapRange(
+    typedMapTask,
+    range,
+    (partition) => ({ input: { partition } }),
+    legacyTypedOptions,
+  );
+void legacyTypedMapped;
+const legacyCount: CountOnlyStreamRangeOptions = {
+  experimentalMaxBufferedResults: 1,
+  experimentalDispatchBatchSize: 1,
+};
+void runtime.streamRange(
+  partitionTask,
+  range,
+  (partition) => ({ input: { partition, shared } }),
+  legacyCount,
+);
+
+const bothBatches = { dispatchBatchSize: 1, experimentalDispatchBatchSize: 1 };
+const undefinedBatchAlias = {
+  dispatchBatchSize: 1,
+  experimentalDispatchBatchSize: undefined,
+};
+const bothCounts = { maxBufferedResults: 1, experimentalMaxBufferedResults: 1 };
+const undefinedCountAlias = {
+  maxBufferedResults: 1,
+  experimentalMaxBufferedResults: undefined,
+};
+const bothConstructors = {
+  outputConstructor: Float64Array,
+  experimentalOutputConstructor: Float64Array,
+};
+const undefinedConstructorAlias = {
+  outputConstructor: Float64Array,
+  experimentalOutputConstructor: undefined,
+};
+// @ts-expect-error Equal batch aliases are mutually exclusive even through a variable.
+const invalidBatchPair: PartitionOptions = bothBatches;
+// @ts-expect-error Presence of undefined is excluded under exact optional types.
+const invalidUndefinedBatch: PartitionOptions = undefinedBatchAlias;
+// @ts-expect-error Count aliases are mutually exclusive.
+const invalidCountPair: StreamRangeOptions = bothCounts;
+// @ts-expect-error Count-only also excludes both count spellings.
+const invalidCountOnlyPair: CountOnlyStreamRangeOptions = bothCounts;
+// @ts-expect-error Undefined still counts as present.
+const invalidUndefinedCount: StreamRangeOptions = undefinedCountAlias;
+// @ts-expect-error Constructor aliases are mutually exclusive.
+const invalidConstructorPair: TypedMapRangeOptions = bothConstructors;
+// @ts-expect-error Required new constructor does not permit an undefined legacy key.
+const invalidUndefinedConstructor: TypedMapRangeOptions =
+  undefinedConstructorAlias;
+// @ts-expect-error Exact mode inherits exclusive batch/count pairs.
+const invalidExactPair: BinaryStreamRangeOptions = {
+  ...bothCounts,
+  experimentalResultBytes: 1,
+  experimentalMaxReservedResultBytes: 1,
+};
+// @ts-expect-error Maximum mode inherits exclusive batch/count pairs.
+const invalidMaximumPair: UpperBoundBinaryStreamRangeOptions = {
+  ...bothBatches,
+  experimentalMaxResultBytes: 1,
+  experimentalMaxReservedResultBytes: 1,
+};
+void [
+  invalidBatchPair,
+  invalidUndefinedBatch,
+  invalidCountPair,
+  invalidCountOnlyPair,
+  invalidUndefinedCount,
+  invalidConstructorPair,
+  invalidUndefinedConstructor,
+  invalidExactPair,
+  invalidMaximumPair,
+];
+// @ts-expect-error run does not acquire batching support.
+runtime.run(task, data, { dispatchBatchSize: 1 });
+// @ts-expect-error collect rejects incompatible pairs through non-literal options.
+runtime.partitionRange(task, range, makeInput, bothBatches);
+// @ts-expect-error completion rejects incompatible batch pairs.
+runtime.parallelFor(task, range, makeInput, bothBatches);
+const typedInput = (partition: RangePartition) => ({ input: { partition } });
+// @ts-expect-error typed overload cannot fall back past incompatible constructors.
+runtime.parallelMapRange(typedMapTask, range, typedInput, bothConstructors);
+// @ts-expect-error no stream overload accepts both count spellings.
+runtime.streamRange(task, range, makeInput, bothCounts);
 const typedMapped: Promise<Float64Array<ArrayBuffer>> =
   runtime.parallelMapRange(
     typedMapTask,
@@ -432,7 +524,7 @@ void typedMapped;
 const typedUnion: PjsTypedArray = new Uint32Array(1);
 void typedUnion;
 const wrongTypedOptions: TypedMapRangeOptions<Uint32ArrayConstructor> = {
-  experimentalOutputConstructor: Uint32Array,
+  outputConstructor: Uint32Array,
 };
 runtime.parallelMapRange(
   // @ts-expect-error Typed task output must match the selected constructor.
@@ -492,7 +584,7 @@ const bigints: Promise<BigInt64Array<ArrayBuffer>> = runtime.parallelMapRange(
   bigintTask,
   range,
   (partition) => ({ input: { partition } }),
-  { experimentalOutputConstructor: BigInt64Array },
+  { outputConstructor: BigInt64Array },
 );
 void bigints;
 

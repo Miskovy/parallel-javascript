@@ -69,7 +69,7 @@ test('parallelFor handles empty, single, multiple, and batched ranges as Promise
         factories++;
         return input(partition, { counter, returnValue: 'uncloneable' });
       },
-      { experimentalDispatchBatchSize: batch },
+      { dispatchBatchSize: batch },
     );
     assert.ok(result instanceof Promise);
     assert.equal(await result, undefined);
@@ -90,7 +90,7 @@ test('completion protocol ignores large and uncloneable worker values without ou
       task,
       { start: 0, end: 16, grainSize: 1 },
       (partition) => input(partition, { returnValue }),
-      { experimentalDispatchBatchSize: 4 },
+      { dispatchBatchSize: 4 },
     );
   assert.equal(runtime.stats().tasks.failed, 0);
   assert.equal(runtime.stats().partitions.completed, 32);
@@ -117,7 +117,7 @@ test('completion preserves exclusive input transfer rules', async (t) => {
         input: { partition },
         transferList: [retained.buffer],
       }),
-      { experimentalDispatchBatchSize: 2 },
+      { dispatchBatchSize: 2 },
     ),
   );
   assert.equal(retained.byteLength, 3);
@@ -135,7 +135,7 @@ test('shared vector and matrix outputs use disjoint completion-only writes', asy
     task,
     { start: 0, end: source.length, grainSize: 37 },
     (partition) => input(partition, { input: source, output: transformed }),
-    { experimentalDispatchBatchSize: 4 },
+    { dispatchBatchSize: 4 },
   );
   for (const value of transformed) assert.ok(Math.abs(value - 1) < 1e-12);
 
@@ -159,7 +159,7 @@ test('shared vector and matrix outputs use disjoint completion-only writes', asy
         matrixSize: size,
         output: c,
       }),
-    { experimentalDispatchBatchSize: 4 },
+    { dispatchBatchSize: 4 },
   );
   for (let row = 0; row < size; row++)
     for (let column = 0; column < size; column++) {
@@ -182,7 +182,7 @@ test('first failure in a completion batch skips later items and leaves earlier e
           counter,
           fail: partition.index === 1,
         }),
-      { experimentalDispatchBatchSize: 4 },
+      { dispatchBatchSize: 4 },
     ),
     (error) =>
       error instanceof PjsTaskError &&
@@ -309,7 +309,7 @@ test('operation AsyncResource preserves isolated AsyncLocalStorage stores for fa
             seen.set(`${id}:${partition.index}`, storage.getStore()?.id);
             return input(partition);
           },
-          { experimentalDispatchBatchSize: 4 },
+          { dispatchBatchSize: 4 },
         );
         assert.equal(storage.getStore()?.id, id);
       }),

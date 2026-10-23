@@ -70,7 +70,7 @@ test('generic map covers empty, single, uneven, and negative ranges', async (t) 
       task,
       { start: -3, end: 8, grainSize: 4 },
       input,
-      { experimentalDispatchBatchSize: 2 },
+      { dispatchBatchSize: 2 },
     ),
     Array.from({ length: 11 }, (_, index) => (index - 3) * 2),
   );
@@ -116,13 +116,13 @@ test('map validates array and typed block cardinality and kind', async (t) => {
       task,
       { start: 0, end: 2, grainSize: 2 },
       (partition) => input(partition, { kind: 'uint32' }),
-      { experimentalOutputConstructor: Float64Array },
+      { outputConstructor: Float64Array },
     ),
     /must return Float64Array/,
   );
   await assert.rejects(
     runtime.parallelMapRange(task, { start: 0, end: 1, grainSize: 1 }, input, {
-      experimentalOutputConstructor: Array,
+      outputConstructor: Array,
     }),
     /built-in typed-array constructor/,
   );
@@ -183,8 +183,8 @@ test('typed map clones and transfers blocks without boxing the final output', as
       { start: 0, end: 17, grainSize: 4 },
       (partition) => input(partition, { kind: 'float64', move }),
       {
-        experimentalOutputConstructor: Float64Array,
-        experimentalDispatchBatchSize: move ? 1 : 4,
+        outputConstructor: Float64Array,
+        dispatchBatchSize: move ? 1 : 4,
       },
     );
     assert.ok(result instanceof Float64Array);
@@ -197,7 +197,7 @@ test('typed map clones and transfers blocks without boxing the final output', as
     task,
     { start: 0, end: 0, grainSize: 1 },
     input,
-    { experimentalOutputConstructor: Uint32Array },
+    { outputConstructor: Uint32Array },
   );
   assert.ok(empty instanceof Uint32Array);
   assert.equal(empty.length, 0);
@@ -209,7 +209,7 @@ test('generic object map preserves one object per element', async (t) => {
     task,
     { start: 5, end: 14, grainSize: 4 },
     (partition) => input(partition, { kind: 'objects' }),
-    { experimentalDispatchBatchSize: 3 },
+    { dispatchBatchSize: 3 },
   );
   assert.deepEqual(
     result,
@@ -268,7 +268,7 @@ test('map drains graceful shutdown and rejects non-draining shutdown', async (t)
   const first = setup(t);
   const range = { start: 0, end: 16, grainSize: 2 };
   const result = first.runtime.parallelMapRange(first.task, range, input, {
-    experimentalDispatchBatchSize: 4,
+    dispatchBatchSize: 4,
   });
   const drained = first.runtime.shutdown();
   assert.equal((await result).length, 16);

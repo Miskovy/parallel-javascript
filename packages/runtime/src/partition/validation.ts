@@ -1,4 +1,5 @@
 import { integer } from '../internal/integer.js';
+import { optionSpelling } from '../internal/option-spelling.js';
 import type { RangeResultMode } from './operation.js';
 import { planRange } from './range.js';
 import type {
@@ -43,9 +44,14 @@ export function validateRangeRequest(
     throw new TypeError('createInput must be a synchronous function');
   const timeout = options.timeout;
   const signal = options.signal;
-  const dispatchBatchSize = integer(
+  const batchName = optionSpelling(
+    options,
+    'dispatchBatchSize',
     'experimentalDispatchBatchSize',
-    options.experimentalDispatchBatchSize ?? 1,
+  );
+  const dispatchBatchSize = integer(
+    batchName ?? 'dispatchBatchSize',
+    (batchName === undefined ? undefined : options[batchName]) ?? 1,
     1,
     16,
   );
