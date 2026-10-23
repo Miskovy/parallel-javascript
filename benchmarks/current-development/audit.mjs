@@ -62,7 +62,7 @@ const historical = benchmarkFiles
     return {
       path: normalized,
       family,
-      role: /(?:run|compare|regression|fairness|pipeline|profile|report|refund|probe|analyze|prepare-consumer|lifecycle|native-diagnostic|bounds)\.mjs$/.test(
+      role: /(?:run|compare|regression|fairness|pipeline|profile|report|refund|probe|analyze|prepare-consumer|lifecycle|native-diagnostic|bounds|measure|profile-child)\.mjs$/.test(
         path,
       )
         ? 'executable or report entrypoint'

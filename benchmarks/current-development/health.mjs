@@ -101,6 +101,18 @@ try {
     }
   });
   await check('uneven-boundaries-and-batch-1-16', async () => {
+    assert.deepEqual(
+      await runtime.partitionRange(echo, range, (partition) => ({
+        input: partition,
+      })),
+      [
+        { index: 0, start: 3, end: 7 },
+        { index: 1, start: 7, end: 11 },
+        { index: 2, start: 11, end: 15 },
+        { index: 3, start: 15, end: 19 },
+        { index: 4, start: 19, end: 20 },
+      ],
+    );
     for (const dispatchBatchSize of [1, 16])
       assert.deepEqual(
         await runtime.partitionRange(task, range, factory, {

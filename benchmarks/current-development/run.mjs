@@ -25,7 +25,7 @@ import {
   source,
 } from './evidence.mjs';
 
-const root = fileURLToPath(new URL('../../', import.meta.url));
+const root = resolve(fileURLToPath(new URL('../../', import.meta.url)));
 const options = {};
 for (const arg of process.argv.slice(2)) {
   const match = /^--(baseline|output|profile|npm-cli)=(.+)$/.exec(arg);

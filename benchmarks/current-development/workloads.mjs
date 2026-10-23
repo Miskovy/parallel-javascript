@@ -176,6 +176,7 @@ export function workload(config, engine) {
     case 'stream':
     case 'pipeline': {
       invoke = async () => {
+        const beforeStats = engine.runtime.stats().streamResults;
         const maximum = c.bytes * (c.mode === 'upper' ? 2 : 1);
         const stream = engine.runtime.streamRange(
           task,
@@ -238,10 +239,11 @@ export function workload(config, engine) {
           results,
           arrival,
           firstResultMs,
+          beforeStats,
           stats: engine.runtime.stats(),
         };
       };
-      validate = ({ results, arrival, stats }) => {
+      validate = ({ results, arrival, stats, beforeStats }) => {
         assert.deepEqual(
           [...arrival].sort((a, b) => a - b),
           parts.map((p) => p.index),
@@ -259,8 +261,23 @@ export function workload(config, engine) {
             stats.streamResults.peakReservedResultBytes <=
               c.bytes * (c.mode === 'upper' ? 2 : 1) * c.capacity,
           );
-        if (c.mode === 'upper' && c.bytes)
-          assert.ok(stats.streamResults.resultByteRefunds > 0);
+        if (c.mode === 'upper' && c.bytes) {
+          assert.equal(
+            stats.streamResults.resultByteRefunds -
+              beforeStats.resultByteRefunds,
+            parts.length,
+          );
+          assert.equal(
+            stats.streamResults.refundedResultBytes -
+              beforeStats.refundedResultBytes,
+            c.bytes * parts.length,
+          );
+          assert.equal(
+            stats.streamResults.upperBoundResultsReconciled -
+              beforeStats.upperBoundResultsReconciled,
+            parts.length,
+          );
+        }
       };
       break;
     }

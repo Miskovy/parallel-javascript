@@ -163,6 +163,7 @@ try {
             arrival: result.arrival,
             firstResultMs: result.firstResultMs,
             stats: result.stats,
+            beforeStats: result.beforeStats,
           };
         if (result?.ordinary) sample.fairness = result;
         save();

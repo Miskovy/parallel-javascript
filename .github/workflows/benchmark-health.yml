@@ -34,7 +34,9 @@ jobs:
       - name: Harness regressions
         run: npm run benchmark:current:test
       - name: Provision pinned release CLI
-        run: npm run release:npm -- .node-tools/health-evidence/release-cli
+        run: |
+          node -e "require('node:fs').mkdirSync('.node-tools/health-evidence')"
+          npm run release:npm -- .node-tools/health-evidence/release-cli
       - name: Installed API and performance campaign (sequential children)
         run: node benchmarks/current-development/run.mjs --baseline=.node-tools/benchmark-baseline --output=.node-tools/health-evidence/campaign --profile=${{ matrix.node == '24.0.0' && 'health' || 'performance' }}
       - name: Ordinary qualification and unchanged standard R2/R3

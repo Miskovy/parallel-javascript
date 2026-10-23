@@ -1,0 +1,685 @@
+diff --git a/packages/runtime/src/types/index.ts b/packages/runtime/src/types/index.ts
+--- a/packages/runtime/src/types/index.ts
++++ b/packages/runtime/src/types/index.ts
+@@ -31,7 +31,7 @@ export interface TaskSnapshot {
+   scheduledAt?: number;
+   startedAt?: number;
+   completedAt?: number;
+-  /** Experimental parent/partition context, absent for ordinary run() tasks. */
++  /** Parent/partition context, absent for ordinary run() tasks. */
+   operationId?: string;
+   partitionIndex?: number;
+   rangeStart?: number;
+@@ -45,7 +45,7 @@ export interface RunOptions {
+   /** End-to-end deadline in milliseconds, including startup and queue time. */
+   timeout?: number;
+   /**
+-   * @experimental Physical dispatch lease; supported ordinary run() only.
++   * Physical dispatch lease; supported ordinary run() only.
+    * Integer milliseconds from 1 through 2147483647; undefined disables it.
+    * Starts after successful posting, excluding startup/queue wait before dispatch.
+    * Expiry requests asynchronous containment; it does not settle an already-settled caller again.
+@@ -57,7 +57,7 @@ export interface ShutdownOptions {
+   /** Defaults to true. False explicitly permits terminating active executions. */
+   drain?: boolean;
+   /**
+-   * @experimental Escalate the first graceful shutdown, including remaining startup.
++   * Escalate the first graceful shutdown, including remaining startup.
+    * Integer milliseconds from 1 through 2147483647; requires drain not to be false.
+    * First shutdown options/promise win. Resolution still requires confirmed worker exits;
+    * termination rejection cannot report successful cleanup. Undefined adds no escalation deadline.
+@@ -65,7 +65,7 @@ export interface ShutdownOptions {
+   forceAfter?: number;
+ }
+ 
+-/** @experimental Pool-wide monotonic rolling restart decision budget; replaces the lifetime budget. */
++/** Pool-wide monotonic rolling restart decision budget; replaces the lifetime budget. */
+ export interface RestartPolicy {
+   /** Nonnegative safe-integer recovery decision limit, not a replacement-spawn count. */
+   maxRestarts: number;
+diff --git a/packages/runtime/src/configuration/runtime-options.ts b/packages/runtime/src/configuration/runtime-options.ts
+--- a/packages/runtime/src/configuration/runtime-options.ts
++++ b/packages/runtime/src/configuration/runtime-options.ts
+@@ -13,7 +13,7 @@ export interface PjsRuntimeOptions {
+   /** Lifetime recovery decision budget without restartPolicy; defaults to workers * 4. Zero is valid. */
+   maxRestarts?: number;
+   /**
+-   * @experimental Rolling pool-wide restart budget, copied during construction.
++   * Rolling pool-wide restart budget, copied during construction.
+    * A defined value is mutually exclusive with defined maxRestarts; omitting policy uses the lifetime budget.
+    */
+   restartPolicy?: RestartPolicy;
+diff --git a/packages/runtime/src/errors/index.ts b/packages/runtime/src/errors/index.ts
+--- a/packages/runtime/src/errors/index.ts
++++ b/packages/runtime/src/errors/index.ts
+@@ -52,7 +52,7 @@ export class PjsTaskError extends PjsError {
+   }
+ }
+ export class PjsWorkerError extends PjsError {}
+-/** @experimental Containment initiated for an expired physical dispatch lease. */
++/** Containment initiated for an expired physical dispatch lease. */
+ export class PjsExecutionLeaseError extends PjsWorkerError {}
+ export class PjsQueueFullError extends PjsError {}
+ export class PjsTimeoutError extends PjsError {}
+diff --git a/packages/runtime/src/runtime.ts b/packages/runtime/src/runtime.ts
+--- a/packages/runtime/src/runtime.ts
++++ b/packages/runtime/src/runtime.ts
+@@ -36,7 +36,7 @@ export class PjsRuntime {
+   }
+ 
+   /**
+-   * @experimental Host-coordinated numeric ranges; this API is not yet stable.
++   * Host-coordinated numeric ranges with ordered retained results.
+    * The synchronous factory runs lazily on the main thread with reserved admission.
+    * Results are collected by partition index. maxQueue does not bound result bytes.
+    */
+@@ -56,7 +56,7 @@ export class PjsRuntime {
+   }
+ 
+   /**
+-   * @experimental Completion-only CPU work over a numeric range.
++   * Completion-only CPU work over a numeric range.
+    * Worker return values are ignored before result serialization.
+    */
+   parallelFor<Input>(
+@@ -74,14 +74,14 @@ export class PjsRuntime {
+     );
+   }
+ 
+-  /** @experimental Ordered element map assembled from validated typed blocks. */
++  /** Ordered element map assembled from validated typed blocks. */
+   parallelMapRange<Input, Constructor extends PjsTypedArrayConstructor>(
+     task: PjsTask<Input, InstanceType<Constructor>>,
+     range: PartitionRange,
+     createInput: (partition: RangePartition) => PartitionInput<Input>,
+     options: TypedMapRangeOptions<Constructor>,
+   ): Promise<InstanceType<Constructor>>;
+-  /** @experimental Ordered element map assembled from validated array blocks. */
++  /** Ordered element map assembled from validated array blocks. */
+   parallelMapRange<Input, Output>(
+     task: PjsTask<Input, readonly Output[]>,
+     range: PartitionRange,
+@@ -103,7 +103,7 @@ export class PjsRuntime {
+     );
+   }
+ 
+-  /** @experimental Bounded completion-order delivery of partition results. */
++  /** Bounded completion-order delivery of partition results. */
+   streamRange<Input, Output extends PjsBinaryResult>(
+     task: PjsTask<Input, Output>,
+     range: PartitionRange,
+diff --git a/packages/runtime/src/partition/range.ts b/packages/runtime/src/partition/range.ts
+--- a/packages/runtime/src/partition/range.ts
++++ b/packages/runtime/src/partition/range.ts
+@@ -1,24 +1,24 @@
+-/** @experimental Numeric half-open range with an explicit maximum chunk width. */
++/** Numeric half-open range with an explicit maximum chunk width. */
+ export interface PartitionRange {
+   start: number;
+   end: number;
+   grainSize: number;
+ }
+ 
+-/** @experimental Logical order is independent of worker completion order. */
++/** Logical order is independent of worker completion order. */
+ export interface RangePartition {
+   readonly index: number;
+   readonly start: number;
+   readonly end: number;
+ }
+ 
+-/** @experimental Built synchronously on the host, only when admission is available. */
++/** Built synchronously on the host, only when admission is available. */
+ export interface PartitionInput<Input> {
+   input: Input;
+   transferList?: readonly ArrayBuffer[];
+ }
+ 
+-/** @experimental One deadline and signal for the whole range, not each child. */
++/** One deadline and signal for the whole range, not each child. */
+ export type PartitionOptions = {
+   /** Physical execution leases are unsupported for range and batch operations. */
+   executionLease?: never;
+@@ -26,7 +26,7 @@ export type PartitionOptions = {
+   timeout?: number;
+ } & (
+   | {
+-      /** @experimental Group transfer-free partitions; integer 1–16, default 1. */
++      /** Group transfer-free partitions; integer 1–16, default 1. */
+       dispatchBatchSize?: number;
+       /** @deprecated Use dispatchBatchSize. Both spellings together reject. */
+       experimentalDispatchBatchSize?: never;
+@@ -38,11 +38,11 @@ export type PartitionOptions = {
+     }
+ );
+ 
+-/** @experimental Completion-order stream delivery options. */
++/** Completion-order stream delivery options. */
+ export type StreamRangeOptions = PartitionOptions &
+   (
+     | {
+-        /** @experimental Logical retained/in-flight results; defaults to workers. */
++        /** Logical retained/in-flight results; defaults to workers. */
+         maxBufferedResults?: number;
+         /** @deprecated Use maxBufferedResults. Both spellings together reject. */
+         experimentalMaxBufferedResults?: never;
+@@ -54,7 +54,7 @@ export type StreamRangeOptions = PartitionOptions &
+       }
+   );
+ 
+-/** @experimental Count-only delivery excludes every strict byte-mode property. */
++/** Count-only delivery excludes every strict byte-mode property. */
+ export type CountOnlyStreamRangeOptions = StreamRangeOptions & {
+   resultBytes?: never;
+   maxResultBytes?: never;
+@@ -65,7 +65,7 @@ export type CountOnlyStreamRangeOptions = StreamRangeOptions & {
+ };
+ 
+ /**
+- * @experimental Ordinary-backed views eligible for strict result-byte contracts.
++ * Ordinary-backed views eligible for strict result-byte contracts.
+  * Ownership here does not prove unique references or transferability.
+  */
+ export type PjsOwnedTypedArray =
+@@ -81,15 +81,15 @@ export type PjsOwnedTypedArray =
+   | BigInt64Array<ArrayBuffer>
+   | BigUint64Array<ArrayBuffer>;
+ 
+-/** @experimental Direct ordinary-backed values; worker validation still applies. */
++/** Direct ordinary-backed values; worker validation still applies. */
+ export type PjsBinaryResult =
+   ArrayBuffer | PjsOwnedTypedArray | DataView<ArrayBuffer>;
+ 
+-/** @experimental Synchronous visible-byte declaration for one logical partition. */
++/** Synchronous visible-byte declaration for one logical partition. */
+ export type ResultByteDeclaration =
+   number | ((partition: RangePartition) => number);
+ 
+-/** @experimental Exact visible bytes declared before each stream child is admitted. */
++/** Exact visible bytes declared before each stream child is admitted. */
+ export type BinaryStreamRangeOptions = StreamRangeOptions &
+   (
+     | {
+@@ -112,7 +112,7 @@ export type BinaryStreamRangeOptions = StreamRangeOptions &
+       }
+   ) & { maxResultBytes?: never; experimentalMaxResultBytes?: never };
+ 
+-/** @experimental Maximum visible bytes; successful unused credit refunds on arrival. */
++/** Maximum visible bytes; successful unused credit refunds on arrival. */
+ export type UpperBoundBinaryStreamRangeOptions = StreamRangeOptions &
+   (
+     | {
+@@ -135,7 +135,7 @@ export type UpperBoundBinaryStreamRangeOptions = StreamRangeOptions &
+       }
+   ) & { resultBytes?: never; experimentalResultBytes?: never };
+ 
+-/** @experimental Typed numeric blocks supported by element-range mapping. */
++/** Typed numeric blocks supported by element-range mapping. */
+ export type PjsTypedArray =
+   | Int8Array<ArrayBufferLike>
+   | Uint8Array<ArrayBufferLike>
+@@ -149,7 +149,7 @@ export type PjsTypedArray =
+   | BigInt64Array<ArrayBufferLike>
+   | BigUint64Array<ArrayBufferLike>;
+ 
+-/** @experimental Built-in typed-array constructors accepted by typed map mode. */
++/** Built-in typed-array constructors accepted by typed map mode. */
+ export type PjsTypedArrayConstructor =
+   | Int8ArrayConstructor
+   | Uint8ArrayConstructor
+@@ -163,13 +163,13 @@ export type PjsTypedArrayConstructor =
+   | BigInt64ArrayConstructor
+   | BigUint64ArrayConstructor;
+ 
+-/** @experimental Selects a stable flat typed result, including for empty ranges. */
++/** Selects a stable flat typed result, including for empty ranges. */
+ export type TypedMapRangeOptions<
+   Constructor extends PjsTypedArrayConstructor = PjsTypedArrayConstructor,
+ > = PartitionOptions &
+   (
+     | {
+-        /** @experimental Built-in typed-array constructor for the flat result. */
++        /** Built-in typed-array constructor for the flat result. */
+         outputConstructor: Constructor;
+         /** @deprecated Use outputConstructor. Both spellings together reject. */
+         experimentalOutputConstructor?: never;
+diff --git a/packages/runtime/src/partition/stream.ts b/packages/runtime/src/partition/stream.ts
+--- a/packages/runtime/src/partition/stream.ts
++++ b/packages/runtime/src/partition/stream.ts
+@@ -5,7 +5,7 @@ export interface StreamRangeResult<Output> {
+   readonly output: Output;
+ }
+ 
+-/** @experimental Eager, single-consumer range delivery with explicit cleanup. */
++/** Eager, single-consumer range delivery with explicit cleanup. */
+ export interface PjsRangeStream<Output> extends AsyncIterableIterator<
+   StreamRangeResult<Output>,
+   undefined,
+diff --git a/docs/stability.md b/docs/stability.md
+--- a/docs/stability.md
++++ b/docs/stability.md
+@@ -1,5 +1,7 @@
+ # API stability and compatibility
+ 
++**Promotion status:** P1/P2/P3 are promoted in development after reviewed benchmark acceptance; all six deprecated aliases remain. Publication, hold applicability, C4 and Stage F/G remain separate.
++
+ PJS is pre-1.0. As checked on **23 October 2026**, npm `latest` and `next`
+ select [`@pjavascript/runtime@1.0.0-rc.4`](https://registry.npmjs.org/@pjavascript%2fruntime),
+ and [GitHub RC4](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.4)
+@@ -16,8 +18,8 @@ B1 exposes the existing closeable stream contract; B2 narrows strict results to
+ ordinary backing; B3 removes unsupported registry.snapshot() access; B4 names
+ diagnostic/error types. C1-A/Q adds acceptance and installed-consumer evidence.
+ C2/C3 implement [six option spelling pairs](partitioning.md#c2-development-option-transition)
+-with deprecated aliases and exclusive presence rules. **All feature experimental
+-annotations and all six aliases remain.** The authoritative
++with deprecated aliases and exclusive presence rules. **P1/P2/P3 contracts are promoted in development;
++all six deprecated aliases remain.** The authoritative
+ [post-C3 decisions](research/v1-api-migration-plan.md#decisions-for-maintainer-review)
+ separate P1/P2/P3 promotion, the shared transition release, C4, F and publication.
+ Hold applicability remains unresolved; merged work and passing CI imply no
+@@ -29,12 +31,12 @@ promotion, eligibility or release clearance.
+ | ------------------------------------------------------------------------------------ | ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+ | Registry registration, runtime construction, ready/run/shutdown, base options/errors | Core candidate                                              | Stabilize with documented registration/admission/first-shutdown contracts; B3 encapsulation, B4 errors, installed core consumers                                             |
+ | transfer/sharedReadonly and ownership types                                          | Specialized supported                                       | Stabilize specialized helpers: dispatch detachment/alias effects, copy-visible-bytes shared input, immutability by contract; installed ownership and physical-boundary gates |
+-| executionLease, lease error, restartPolicy, forceAfter                               | Experimental development additions despite unprefixed names | Promote C1 after B4, containment/physical/R2 and installed JS/TS gates; ordinary exclusive run only, no replay or hard termination deadline                                  |
+-| partitionRange / parallelFor                                                         | Experimental                                                | Promote C2: ordered retained collection / completion-only pre-serialization discard, one parent deadline/context, partial side effects; range/batch/installed gates          |
+-| streamRange / result types                                                           | Experimental                                                | B1 closeable stream implemented; C2: eager completion order, single consumer, explicit abandonment cleanup; stream/context/memory/installed gates                            |
+-| parallelMapRange / array and typed overloads / map error                             | Experimental                                                | Promote C2: full flat target, logical ordering, built-in constructors, exact block kind/cardinality and reentrant validation-before-target lookup                            |
+-| Dispatch batching and count/output-constructor options                               | Experimental; C2 names and deprecated aliases               | C2 renames implemented; P2 promotion remains separate. Default 1, limit 16, sequential items, transfer/lease restrictions and skipped-item failure preserved                 |
+-| Exact / upper-bound binary output options, types and errors                          | Experimental                                                | B2 types and C3 renames implemented; separate P3 promotion after credit/worker/physical/installed negative TS gates; visible payload per stream, not RSS                     |
++| executionLease, lease error, restartPolicy, forceAfter                               | Promoted development contract                               | C1 accepted after B4, containment/physical/R2 and installed JS/TS gates; ordinary exclusive run only, no replay or hard termination deadline                                 |
++| partitionRange / parallelFor                                                         | Promoted development contract                               | C2 contract: ordered retained collection / completion-only pre-serialization discard, one parent deadline/context, partial side effects; range/batch/installed gates         |
++| streamRange / result types                                                           | Promoted development contract                               | B1 closeable stream implemented; C2: eager completion order, single consumer, explicit abandonment cleanup; stream/context/memory/installed gates                            |
++| parallelMapRange / array and typed overloads / map error                             | Promoted development contract                               | C2 contract: full flat target, logical ordering, built-in constructors, exact block kind/cardinality and reentrant validation-before-target lookup                           |
++| Dispatch batching and count/output-constructor options                               | Promoted development contract                               | C2 renames implemented; P2 promotion is accepted. Default 1, limit 16, sequential items, transfer/lease restrictions and skipped-item failure preserved                      |
++| Exact / upper-bound binary output options, types and errors                          | Promoted development contract                               | B2 types and C3 renames implemented; P3 accepted after credit/worker/physical/installed negative TS gates; visible payload per stream, not RSS                               |
+ | stats / task and worker snapshots / containment diagnostics                          | Supported diagnostics; explicit B4 contracts in development | B4 preserves all 158 inventoried fields and aliases with reviewed units/lifetimes; C1/C2/C3 gates for corresponding groups; no timing/performance guarantee                  |
+ | Registry.snapshot / TaskDescriptor                                                   | Internal; public method removed in B3                       | B3 implemented in development: module-private WeakMap, internal snapshot function, stable handles/copied descriptors; introspection callers retain their own metadata        |
+ | Error contexts, task-error details, status/mode and byte-declaration types           | Intentionally root-named in B1/B2/B4 development            | Preserve metadata, hierarchy and status vocabularies; TaskDescriptor remains internal after B3                                                                               |
+diff --git a/docs/research/v1-api-contract-inventory.md b/docs/research/v1-api-contract-inventory.md
+--- a/docs/research/v1-api-contract-inventory.md
++++ b/docs/research/v1-api-contract-inventory.md
+@@ -1,11 +1,13 @@
+ # Current API contract inventory and proposed v1 dispositions
+ 
++**Promotion status:** Development status: P1 containment, P2 range/count/map/batch and P3 strict-result contracts are promoted after reviewed benchmark acceptance. Historical inventory rows retain their execution attribution; all six aliases remain deprecated and accepted.
++
+ Current integrated development baseline:
+ `0f79db5e1192dd47db32d2e300fc382a0f431462` ([PR #28](https://github.com/Miskovy/parallel-javascript/pull/28)),
+ tree `6169704317bc1d2015eef4b64cd3c5d456683067`. C3 was implemented from
+ C2 integration main `24ad3a3f7a8d5f0900fcd85d7e89a47b3c68bce2`.
+ **S1, corrected Stage A, B1–B4, C1-A/Q, C2 and C3 are integrated. All six
+-deprecated aliases remain. No feature is promoted.** See the authoritative
++deprecated aliases remain. P1/P2/P3 are promoted in development.** See the authoritative
+ [post-C3 evidence and decisions](v1-api-migration-plan.md#decisions-for-maintainer-review).
+ 
+ This is the canonical current inventory. The [v0.15 inventory](v0.15-public-api-inventory.md)
+@@ -26,7 +28,7 @@ same tree `48bb493a6717dfbd2259af017937ca623110b044`. Those B4 revisions share
+ the reviewed/tested tree; this is historical tree equivalence, not qualification
+ of a later C1 candidate. The [Stage C qualification ledger](v1-api-migration-plan.md#verified-starting-state-and-qualification-ledger)
+ records the re-inspected four-cell B4 CI evidence and separate local results.
+-Current experimental annotations remain. C2 adds the three batch/count/constructor
++P1/P2/P3 experimental annotations are removed in development. C2 adds the three batch/count/constructor
+ names with deprecated aliases; C3 now implements the three byte spelling pairs. See the
+ [C2 engineering report](c2-range-option-transition.md) for the source/declaration
+ comparison and qualification procedure.
+@@ -147,52 +149,52 @@ and `types` conditions. `src/` and `dist/` files being packed does not authorize
+ package subpaths, CJS, browsers, bundlers or TypeScript loaders. Worker tasks are
+ compiled JavaScript local `file:` module exports; no closures or new language.
+ 
+-| ID / name                                 | Visibility       | Source; declaration                                                                                                                                   | Owner; current status                                                                | Proposed disposition / evidence                                                                                     |
+-| ----------------------------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
+-| `ROOT.BinaryStreamRangeOptions`           | TS only          | [src/partition/range.ts:93](../../packages/runtime/src/partition/range.ts#L93); `dist/partition/range.d.ts:64`                                        | Result credits / worker validation / stream API; Experimental binary result contract | B2 then P3/C3; binary-result, upper-bound-result, result-credit, physical-boundary; B2 negative TS                  |
+-| `ROOT.CountOnlyStreamRangeOptions`        | TS only          | [src/partition/range.ts:58](../../packages/runtime/src/partition/range.ts#L58); `dist/partition/range.d.ts:46`                                        | Stream API / delivery; experimental, B1 implemented in development                   | P2/C2 promotion pending; closeable-stream, stream and installed two-compiler consumers                              |
+-| `ROOT.PartitionInput`                     | TS only          | [src/partition/range.ts:16](../../packages/runtime/src/partition/range.ts#L16); `dist/partition/range.d.ts:14`                                        | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
+-| `ROOT.PartitionOptions`                   | TS only          | [src/partition/range.ts:22](../../packages/runtime/src/partition/range.ts#L22); `dist/partition/range.d.ts:19`                                        | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
+-| `ROOT.PartitionRange`                     | TS only          | [src/partition/range.ts:2](../../packages/runtime/src/partition/range.ts#L2); `dist/partition/range.d.ts:2`                                           | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
+-| `ROOT.PjsBinaryResult`                    | TS only          | [src/partition/range.ts:85](../../packages/runtime/src/partition/range.ts#L85); `dist/partition/range.d.ts:60`                                        | Result credits / worker validation / stream API; Experimental binary result contract | B2 then P3/C3; binary-result, upper-bound-result, result-credit, physical-boundary; B2 negative TS                  |
+-| `ROOT.PjsBinaryResultContractError`       | JS + TS class    | [src/errors/index.ts:64](../../packages/runtime/src/errors/index.ts#L64); `dist/errors/index.d.ts:54`                                                 | Result credits / worker validation / stream API; Experimental binary result contract | B2 then P3/C3; binary-result, upper-bound-result, result-credit, physical-boundary; B2 negative TS                  |
+-| `ROOT.PjsCancelledError`                  | JS + TS class    | [src/errors/index.ts:59](../../packages/runtime/src/errors/index.ts#L59); `dist/errors/index.d.ts:44`                                                 | Registry / task / errors; Core candidate                                             | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
+-| `ROOT.PjsError`                           | JS + TS class    | [src/errors/index.ts:24](../../packages/runtime/src/errors/index.ts#L24); `dist/errors/index.d.ts:21`                                                 | Registry / task / errors; Core candidate                                             | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
+-| `ROOT.PjsExecutionLeaseError`             | JS + TS class    | [src/errors/index.ts:56](../../packages/runtime/src/errors/index.ts#L56); `dist/errors/index.d.ts:38`                                                 | Containment; experimental; C1-A/Q acceptance implemented                             | P1 pending explicit approval/eligibility; C1 failure-path and installed JS/both emitted TS controls; see C1 report  |
+-| `ROOT.PjsMapContractError`                | JS + TS class    | [src/errors/index.ts:63](../../packages/runtime/src/errors/index.ts#L63); `dist/errors/index.d.ts:52`                                                 | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
+-| `ROOT.PjsOwnedTypedArray`                 | TS only          | [src/partition/range.ts:71](../../packages/runtime/src/partition/range.ts#L71); `dist/partition/range.d.ts:58`                                        | Result credits / stream API; experimental, B2 implemented in development             | P3/C3 promotion pending; both installed compilers and binary worker guards                                          |
+-| `ROOT.PjsQueueFullError`                  | JS + TS class    | [src/errors/index.ts:57](../../packages/runtime/src/errors/index.ts#L57); `dist/errors/index.d.ts:40`                                                 | Registry / task / errors; Core candidate                                             | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
+-| `ROOT.PjsRangeStream`                     | TS only          | [src/partition/stream.ts:9](../../packages/runtime/src/partition/stream.ts#L9); `dist/partition/stream.d.ts:7`                                        | Stream API / delivery; experimental, B1 implemented in development                   | P2/C2 promotion pending; closeable-stream, stream and installed two-compiler consumers                              |
+-| `ROOT.PjsResultCapacityError`             | JS + TS class    | [src/errors/index.ts:75](../../packages/runtime/src/errors/index.ts#L75); `dist/errors/index.d.ts:60`                                                 | Result credits / worker validation / stream API; Experimental binary result contract | B2 then P3/C3; binary-result, upper-bound-result, result-credit, physical-boundary; B2 negative TS                  |
+-| `ROOT.PjsRuntime`                         | JS + TS class    | [src/runtime.ts:29](../../packages/runtime/src/runtime.ts#L29); `dist/runtime.d.ts:9`                                                                 | API / controller / engine owners; Core plus experimental methods                     | S/P1/P2/P3/D by CALL rows; B1–B4; runtime, public-options, runtime-boundaries; B/C gates                            |
+-| `ROOT.PjsRuntimeOptions`                  | TS only          | [src/configuration/runtime-options.ts:6](../../packages/runtime/src/configuration/runtime-options.ts#L6); `dist/configuration/runtime-options.d.ts:3` | Configuration / task / controller; Core plus experimental R1 fields                  | S base; P1 R1 fields/C1; public-options, containment, runtime-boundaries; C1 installed fixture                      |
+-| `ROOT.PjsRuntimeStateError`               | JS + TS class    | [src/errors/index.ts:61](../../packages/runtime/src/errors/index.ts#L61); `dist/errors/index.d.ts:48`                                                 | Registry / task / errors; Core candidate                                             | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
+-| `ROOT.PjsSerializationError`              | JS + TS class    | [src/errors/index.ts:60](../../packages/runtime/src/errors/index.ts#L60); `dist/errors/index.d.ts:46`                                                 | Registry / task / errors; Core candidate                                             | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
+-| `ROOT.PjsTask`                            | TS only          | [src/tasks/registry.ts:6](../../packages/runtime/src/tasks/registry.ts#L6); `dist/tasks/registry.d.ts:3`                                              | Registry / task / errors; Core candidate                                             | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
+-| `ROOT.PjsTaskError`                       | JS + TS class    | [src/errors/index.ts:43](../../packages/runtime/src/errors/index.ts#L43); `dist/errors/index.d.ts:30`                                                 | Registry / task / errors; Core candidate                                             | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
+-| `ROOT.PjsTaskRegistrationError`           | JS + TS class    | [src/errors/index.ts:62](../../packages/runtime/src/errors/index.ts#L62); `dist/errors/index.d.ts:50`                                                 | Registry / task / errors; Core candidate                                             | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
+-| `ROOT.PjsTaskRegistry`                    | JS + TS class    | [src/tasks/registry.ts:27](../../packages/runtime/src/tasks/registry.ts#L27); `dist/tasks/registry.d.ts:12`                                           | Registry/composition; Core candidate; B3 encapsulation implemented in development    | S registration; unsupported snapshot removed; registry/runtime-boundaries and installed two-compiler absence checks |
+-| `ROOT.PjsTimeoutError`                    | JS + TS class    | [src/errors/index.ts:58](../../packages/runtime/src/errors/index.ts#L58); `dist/errors/index.d.ts:42`                                                 | Registry / task / errors; Core candidate                                             | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
+-| `ROOT.PjsTransfer`                        | TS only          | [src/tasks/transfer.ts:10](../../packages/runtime/src/tasks/transfer.ts#L10); `dist/tasks/transfer.d.ts:2`                                            | Transfer claims / shared helper; Specialized supported                               | S specialized; preserve ownership; transfer, shared, physical-boundary, package-smoke                               |
+-| `ROOT.PjsTypedArray`                      | TS only          | [src/partition/range.ts:139](../../packages/runtime/src/partition/range.ts#L139); `dist/partition/range.d.ts:98`                                      | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
+-| `ROOT.PjsTypedArrayConstructor`           | TS only          | [src/partition/range.ts:153](../../packages/runtime/src/partition/range.ts#L153); `dist/partition/range.d.ts:100`                                     | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
+-| `ROOT.PjsWorkerError`                     | JS + TS class    | [src/errors/index.ts:54](../../packages/runtime/src/errors/index.ts#L54); `dist/errors/index.d.ts:35`                                                 | Registry / task / errors; Core candidate                                             | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
+-| `ROOT.RangePartition`                     | TS only          | [src/partition/range.ts:9](../../packages/runtime/src/partition/range.ts#L9); `dist/partition/range.d.ts:8`                                           | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
+-| `ROOT.RestartPolicy`                      | TS only          | [src/types/index.ts:69](../../packages/runtime/src/types/index.ts#L69); `dist/types/index.d.ts:55`                                                    | Containment; experimental; C1-A/Q acceptance implemented                             | P1 pending explicit approval/eligibility; C1 failure-path and installed JS/both emitted TS controls; see C1 report  |
+-| `ROOT.ResultByteDeclaration`              | TS only          | [src/partition/range.ts:89](../../packages/runtime/src/partition/range.ts#L89); `dist/partition/range.d.ts:62`                                        | Result credits / stream API; experimental, B2 implemented in development             | P3/C3 promotion pending; both installed compilers and binary worker guards                                          |
+-| `ROOT.RunOptions`                         | TS only          | [src/types/index.ts:41](../../packages/runtime/src/types/index.ts#L41); `dist/types/index.d.ts:29`                                                    | Configuration / task / controller; Core plus experimental R1 fields                  | S base; P1 R1 fields/C1; public-options, containment, runtime-boundaries; C1 installed fixture                      |
+-| `ROOT.RuntimeState`                       | TS only          | [src/types/index.ts:1](../../packages/runtime/src/types/index.ts#L1); `dist/types/index.d.ts:1`                                                       | Telemetry / worker / task; Supported diagnostics; shape unfrozen                     | D/B4; preserve listed vocabulary; runtime, containment, memory-observability; B4 per-field assertions               |
+-| `ROOT.sharedReadonly`                     | JS + TS function | [src/tasks/shared.ts:16](../../packages/runtime/src/tasks/shared.ts#L16); `dist/tasks/shared.d.ts:7`                                                  | Transfer claims / shared helper; Specialized supported                               | S specialized; preserve ownership; transfer, shared, physical-boundary, package-smoke                               |
+-| `ROOT.ShutdownOptions`                    | TS only          | [src/types/index.ts:56](../../packages/runtime/src/types/index.ts#L56); `dist/types/index.d.ts:43`                                                    | Configuration / task / controller; Core plus experimental R1 fields                  | S base; P1 R1 fields/C1; public-options, containment, runtime-boundaries; C1 installed fixture                      |
+-| `ROOT.StreamRangeOptions`                 | TS only          | [src/partition/range.ts:42](../../packages/runtime/src/partition/range.ts#L42); `dist/partition/range.d.ts:35`                                        | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
+-| `ROOT.StreamRangeResult`                  | TS only          | [src/partition/stream.ts:3](../../packages/runtime/src/partition/stream.ts#L3); `dist/partition/stream.d.ts:2`                                        | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
+-| `ROOT.TaskSnapshot`                       | TS only          | [src/types/index.ts:24](../../packages/runtime/src/types/index.ts#L24); `dist/types/index.d.ts:13`                                                    | Telemetry / worker / task; Supported diagnostics; shape unfrozen                     | D/B4; preserve listed vocabulary; runtime, containment, memory-observability; B4 per-field assertions               |
+-| `ROOT.TaskStatus`                         | TS only          | [src/types/index.ts:4](../../packages/runtime/src/types/index.ts#L4); `dist/types/index.d.ts:3`                                                       | Telemetry / worker / task; Supported diagnostics; shape unfrozen                     | D/B4; preserve listed vocabulary; runtime, containment, memory-observability; B4 per-field assertions               |
+-| `ROOT.transfer`                           | JS + TS function | [src/tasks/transfer.ts:16](../../packages/runtime/src/tasks/transfer.ts#L16); `dist/tasks/transfer.d.ts:7`                                            | Transfer claims / shared helper; Specialized supported                               | S specialized; preserve ownership; transfer, shared, physical-boundary, package-smoke                               |
+-| `ROOT.TypedMapRangeOptions`               | TS only          | [src/partition/range.ts:167](../../packages/runtime/src/partition/range.ts#L167); `dist/partition/range.d.ts:102`                                     | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
+-| `ROOT.UpperBoundBinaryStreamRangeOptions` | TS only          | [src/partition/range.ts:116](../../packages/runtime/src/partition/range.ts#L116); `dist/partition/range.d.ts:81`                                      | Result credits / worker validation / stream API; Experimental binary result contract | B2 then P3/C3; binary-result, upper-bound-result, result-credit, physical-boundary; B2 negative TS                  |
+-| `ROOT.WorkerState`                        | TS only          | [src/types/index.ts:14](../../packages/runtime/src/types/index.ts#L14); `dist/types/index.d.ts:4`                                                     | Telemetry / worker / task; Supported diagnostics; shape unfrozen                     | D/B4; preserve listed vocabulary; runtime, containment, memory-observability; B4 per-field assertions               |
+-| `ROOT.WorkerStatus`                       | TS only          | [src/types/index.ts:3](../../packages/runtime/src/types/index.ts#L3); `dist/types/index.d.ts:2`                                                       | Telemetry / worker / task; Supported diagnostics; shape unfrozen                     | D/B4; preserve listed vocabulary; runtime, containment, memory-observability; B4 per-field assertions               |
++| ID / name                                 | Visibility       | Source; declaration                                                                                                                                   | Owner; current status                                                             | Proposed disposition / evidence                                                                                     |
++| ----------------------------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
++| `ROOT.BinaryStreamRangeOptions`           | TS only          | [src/partition/range.ts:93](../../packages/runtime/src/partition/range.ts#L93); `dist/partition/range.d.ts:64`                                        | Result credits / worker validation / stream API; promoted binary result contract  | B2 then P3/C3; binary-result, upper-bound-result, result-credit, physical-boundary; B2 negative TS                  |
++| `ROOT.CountOnlyStreamRangeOptions`        | TS only          | [src/partition/range.ts:58](../../packages/runtime/src/partition/range.ts#L58); `dist/partition/range.d.ts:46`                                        | Stream API / delivery; promoted, B1 implemented in development                    | P2 promoted in development; closeable-stream, stream and installed two-compiler consumers                           |
++| `ROOT.PartitionInput`                     | TS only          | [src/partition/range.ts:16](../../packages/runtime/src/partition/range.ts#L16); `dist/partition/range.d.ts:14`                                        | Range engine / API / map assembly; promoted range/result contract                 | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
++| `ROOT.PartitionOptions`                   | TS only          | [src/partition/range.ts:22](../../packages/runtime/src/partition/range.ts#L22); `dist/partition/range.d.ts:19`                                        | Range engine / API / map assembly; promoted range/result contract                 | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
++| `ROOT.PartitionRange`                     | TS only          | [src/partition/range.ts:2](../../packages/runtime/src/partition/range.ts#L2); `dist/partition/range.d.ts:2`                                           | Range engine / API / map assembly; promoted range/result contract                 | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
++| `ROOT.PjsBinaryResult`                    | TS only          | [src/partition/range.ts:85](../../packages/runtime/src/partition/range.ts#L85); `dist/partition/range.d.ts:60`                                        | Result credits / worker validation / stream API; promoted binary result contract  | B2 then P3/C3; binary-result, upper-bound-result, result-credit, physical-boundary; B2 negative TS                  |
++| `ROOT.PjsBinaryResultContractError`       | JS + TS class    | [src/errors/index.ts:64](../../packages/runtime/src/errors/index.ts#L64); `dist/errors/index.d.ts:54`                                                 | Result credits / worker validation / stream API; promoted binary result contract  | B2 then P3/C3; binary-result, upper-bound-result, result-credit, physical-boundary; B2 negative TS                  |
++| `ROOT.PjsCancelledError`                  | JS + TS class    | [src/errors/index.ts:59](../../packages/runtime/src/errors/index.ts#L59); `dist/errors/index.d.ts:44`                                                 | Registry / task / errors; Core candidate                                          | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
++| `ROOT.PjsError`                           | JS + TS class    | [src/errors/index.ts:24](../../packages/runtime/src/errors/index.ts#L24); `dist/errors/index.d.ts:21`                                                 | Registry / task / errors; Core candidate                                          | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
++| `ROOT.PjsExecutionLeaseError`             | JS + TS class    | [src/errors/index.ts:56](../../packages/runtime/src/errors/index.ts#L56); `dist/errors/index.d.ts:38`                                                 | Containment; promoted; C1-A/Q acceptance implemented                              | P1 promoted; hold applicability separate; C1 failure-path and installed JS/both emitted TS controls; see C1 report  |
++| `ROOT.PjsMapContractError`                | JS + TS class    | [src/errors/index.ts:63](../../packages/runtime/src/errors/index.ts#L63); `dist/errors/index.d.ts:52`                                                 | Range engine / API / map assembly; promoted range/result contract                 | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
++| `ROOT.PjsOwnedTypedArray`                 | TS only          | [src/partition/range.ts:71](../../packages/runtime/src/partition/range.ts#L71); `dist/partition/range.d.ts:58`                                        | Result credits / stream API; promoted, B2 implemented in development              | P3 promoted in development; both installed compilers and binary worker guards                                       |
++| `ROOT.PjsQueueFullError`                  | JS + TS class    | [src/errors/index.ts:57](../../packages/runtime/src/errors/index.ts#L57); `dist/errors/index.d.ts:40`                                                 | Registry / task / errors; Core candidate                                          | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
++| `ROOT.PjsRangeStream`                     | TS only          | [src/partition/stream.ts:9](../../packages/runtime/src/partition/stream.ts#L9); `dist/partition/stream.d.ts:7`                                        | Stream API / delivery; promoted, B1 implemented in development                    | P2 promoted in development; closeable-stream, stream and installed two-compiler consumers                           |
++| `ROOT.PjsResultCapacityError`             | JS + TS class    | [src/errors/index.ts:75](../../packages/runtime/src/errors/index.ts#L75); `dist/errors/index.d.ts:60`                                                 | Result credits / worker validation / stream API; promoted binary result contract  | B2 then P3/C3; binary-result, upper-bound-result, result-credit, physical-boundary; B2 negative TS                  |
++| `ROOT.PjsRuntime`                         | JS + TS class    | [src/runtime.ts:29](../../packages/runtime/src/runtime.ts#L29); `dist/runtime.d.ts:9`                                                                 | API / controller / engine owners; Core plus promoted methods                      | S/P1/P2/P3/D by CALL rows; B1–B4; runtime, public-options, runtime-boundaries; B/C gates                            |
++| `ROOT.PjsRuntimeOptions`                  | TS only          | [src/configuration/runtime-options.ts:6](../../packages/runtime/src/configuration/runtime-options.ts#L6); `dist/configuration/runtime-options.d.ts:3` | Configuration / task / controller; Core plus promoted R1 fields                   | S base; P1 R1 fields/C1; public-options, containment, runtime-boundaries; C1 installed fixture                      |
++| `ROOT.PjsRuntimeStateError`               | JS + TS class    | [src/errors/index.ts:61](../../packages/runtime/src/errors/index.ts#L61); `dist/errors/index.d.ts:48`                                                 | Registry / task / errors; Core candidate                                          | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
++| `ROOT.PjsSerializationError`              | JS + TS class    | [src/errors/index.ts:60](../../packages/runtime/src/errors/index.ts#L60); `dist/errors/index.d.ts:46`                                                 | Registry / task / errors; Core candidate                                          | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
++| `ROOT.PjsTask`                            | TS only          | [src/tasks/registry.ts:6](../../packages/runtime/src/tasks/registry.ts#L6); `dist/tasks/registry.d.ts:3`                                              | Registry / task / errors; Core candidate                                          | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
++| `ROOT.PjsTaskError`                       | JS + TS class    | [src/errors/index.ts:43](../../packages/runtime/src/errors/index.ts#L43); `dist/errors/index.d.ts:30`                                                 | Registry / task / errors; Core candidate                                          | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
++| `ROOT.PjsTaskRegistrationError`           | JS + TS class    | [src/errors/index.ts:62](../../packages/runtime/src/errors/index.ts#L62); `dist/errors/index.d.ts:50`                                                 | Registry / task / errors; Core candidate                                          | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
++| `ROOT.PjsTaskRegistry`                    | JS + TS class    | [src/tasks/registry.ts:27](../../packages/runtime/src/tasks/registry.ts#L27); `dist/tasks/registry.d.ts:12`                                           | Registry/composition; Core candidate; B3 encapsulation implemented in development | S registration; unsupported snapshot removed; registry/runtime-boundaries and installed two-compiler absence checks |
++| `ROOT.PjsTimeoutError`                    | JS + TS class    | [src/errors/index.ts:58](../../packages/runtime/src/errors/index.ts#L58); `dist/errors/index.d.ts:42`                                                 | Registry / task / errors; Core candidate                                          | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
++| `ROOT.PjsTransfer`                        | TS only          | [src/tasks/transfer.ts:10](../../packages/runtime/src/tasks/transfer.ts#L10); `dist/tasks/transfer.d.ts:2`                                            | Transfer claims / shared helper; Specialized supported                            | S specialized; preserve ownership; transfer, shared, physical-boundary, package-smoke                               |
++| `ROOT.PjsTypedArray`                      | TS only          | [src/partition/range.ts:139](../../packages/runtime/src/partition/range.ts#L139); `dist/partition/range.d.ts:98`                                      | Range engine / API / map assembly; promoted range/result contract                 | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
++| `ROOT.PjsTypedArrayConstructor`           | TS only          | [src/partition/range.ts:153](../../packages/runtime/src/partition/range.ts#L153); `dist/partition/range.d.ts:100`                                     | Range engine / API / map assembly; promoted range/result contract                 | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
++| `ROOT.PjsWorkerError`                     | JS + TS class    | [src/errors/index.ts:54](../../packages/runtime/src/errors/index.ts#L54); `dist/errors/index.d.ts:35`                                                 | Registry / task / errors; Core candidate                                          | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
++| `ROOT.RangePartition`                     | TS only          | [src/partition/range.ts:9](../../packages/runtime/src/partition/range.ts#L9); `dist/partition/range.d.ts:8`                                           | Range engine / API / map assembly; promoted range/result contract                 | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
++| `ROOT.RestartPolicy`                      | TS only          | [src/types/index.ts:69](../../packages/runtime/src/types/index.ts#L69); `dist/types/index.d.ts:55`                                                    | Containment; promoted; C1-A/Q acceptance implemented                              | P1 promoted; hold applicability separate; C1 failure-path and installed JS/both emitted TS controls; see C1 report  |
++| `ROOT.ResultByteDeclaration`              | TS only          | [src/partition/range.ts:89](../../packages/runtime/src/partition/range.ts#L89); `dist/partition/range.d.ts:62`                                        | Result credits / stream API; promoted, B2 implemented in development              | P3 promoted in development; both installed compilers and binary worker guards                                       |
++| `ROOT.RunOptions`                         | TS only          | [src/types/index.ts:41](../../packages/runtime/src/types/index.ts#L41); `dist/types/index.d.ts:29`                                                    | Configuration / task / controller; Core plus promoted R1 fields                   | S base; P1 R1 fields/C1; public-options, containment, runtime-boundaries; C1 installed fixture                      |
++| `ROOT.RuntimeState`                       | TS only          | [src/types/index.ts:1](../../packages/runtime/src/types/index.ts#L1); `dist/types/index.d.ts:1`                                                       | Telemetry / worker / task; Supported diagnostics; shape unfrozen                  | D/B4; preserve listed vocabulary; runtime, containment, memory-observability; B4 per-field assertions               |
++| `ROOT.sharedReadonly`                     | JS + TS function | [src/tasks/shared.ts:16](../../packages/runtime/src/tasks/shared.ts#L16); `dist/tasks/shared.d.ts:7`                                                  | Transfer claims / shared helper; Specialized supported                            | S specialized; preserve ownership; transfer, shared, physical-boundary, package-smoke                               |
++| `ROOT.ShutdownOptions`                    | TS only          | [src/types/index.ts:56](../../packages/runtime/src/types/index.ts#L56); `dist/types/index.d.ts:43`                                                    | Configuration / task / controller; Core plus promoted R1 fields                   | S base; P1 R1 fields/C1; public-options, containment, runtime-boundaries; C1 installed fixture                      |
++| `ROOT.StreamRangeOptions`                 | TS only          | [src/partition/range.ts:42](../../packages/runtime/src/partition/range.ts#L42); `dist/partition/range.d.ts:35`                                        | Range engine / API / map assembly; promoted range/result contract                 | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
++| `ROOT.StreamRangeResult`                  | TS only          | [src/partition/stream.ts:3](../../packages/runtime/src/partition/stream.ts#L3); `dist/partition/stream.d.ts:2`                                        | Range engine / API / map assembly; promoted range/result contract                 | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
++| `ROOT.TaskSnapshot`                       | TS only          | [src/types/index.ts:24](../../packages/runtime/src/types/index.ts#L24); `dist/types/index.d.ts:13`                                                    | Telemetry / worker / task; Supported diagnostics; shape unfrozen                  | D/B4; preserve listed vocabulary; runtime, containment, memory-observability; B4 per-field assertions               |
++| `ROOT.TaskStatus`                         | TS only          | [src/types/index.ts:4](../../packages/runtime/src/types/index.ts#L4); `dist/types/index.d.ts:3`                                                       | Telemetry / worker / task; Supported diagnostics; shape unfrozen                  | D/B4; preserve listed vocabulary; runtime, containment, memory-observability; B4 per-field assertions               |
++| `ROOT.transfer`                           | JS + TS function | [src/tasks/transfer.ts:16](../../packages/runtime/src/tasks/transfer.ts#L16); `dist/tasks/transfer.d.ts:7`                                            | Transfer claims / shared helper; Specialized supported                            | S specialized; preserve ownership; transfer, shared, physical-boundary, package-smoke                               |
++| `ROOT.TypedMapRangeOptions`               | TS only          | [src/partition/range.ts:167](../../packages/runtime/src/partition/range.ts#L167); `dist/partition/range.d.ts:102`                                     | Range engine / API / map assembly; promoted range/result contract                 | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
++| `ROOT.UpperBoundBinaryStreamRangeOptions` | TS only          | [src/partition/range.ts:116](../../packages/runtime/src/partition/range.ts#L116); `dist/partition/range.d.ts:81`                                      | Result credits / worker validation / stream API; promoted binary result contract  | B2 then P3/C3; binary-result, upper-bound-result, result-credit, physical-boundary; B2 negative TS                  |
++| `ROOT.WorkerState`                        | TS only          | [src/types/index.ts:14](../../packages/runtime/src/types/index.ts#L14); `dist/types/index.d.ts:4`                                                     | Telemetry / worker / task; Supported diagnostics; shape unfrozen                  | D/B4; preserve listed vocabulary; runtime, containment, memory-observability; B4 per-field assertions               |
++| `ROOT.WorkerStatus`                       | TS only          | [src/types/index.ts:3](../../packages/runtime/src/types/index.ts#L3); `dist/types/index.d.ts:2`                                                       | Telemetry / worker / task; Supported diagnostics; shape unfrozen                  | D/B4; preserve listed vocabulary; runtime, containment, memory-observability; B4 per-field assertions               |
+ 
+ | `ROOT.PjsBinaryResultErrorContext` | TS only | [src/errors/index.ts:11](../../packages/runtime/src/errors/index.ts#L11); `dist/errors/index.d.ts:10` | Diagnostic/error contracts; B4 implemented in development | D/B4; explicit preserved shapes; both installed compilers, diagnostics and lifecycle contracts; group promotion remains pending |
+ | `ROOT.PjsContainmentStats` | TS only | [src/diagnostics.ts:14](../../packages/runtime/src/diagnostics.ts#L14); `dist/diagnostics.d.ts:12` | Diagnostic/error contracts; B4 implemented in development | D/B4; explicit preserved shapes; both installed compilers, diagnostics and lifecycle contracts; group promotion remains pending |
+diff --git a/docs/adr/0023-v1-api-stability-decisions.md b/docs/adr/0023-v1-api-stability-decisions.md
+--- a/docs/adr/0023-v1-api-stability-decisions.md
++++ b/docs/adr/0023-v1-api-stability-decisions.md
+@@ -1,9 +1,11 @@
+ # ADR 0023: Proposed v1 API stability and migration decisions
+ 
++**Promotion status:** P1/P2/P3 development promotion accepted following benchmark review; this does not accept unrelated policy/release decisions in this ADR. All six aliases and separate hold/C4/F/G gates remain.
++
+ ## Status
+ 
+-**Proposed — implementation through C3 integrated; promotion/policy decisions pending.**
+-No surface is promoted and no final release is authorized. This records
++**Proposed — implementation through C3 integrated; remaining policy/release decisions pending.**
++P1/P2/P3 are promoted in development; no final release is authorized. This records
+ recommendations, not acceptance of the ADR as a whole. Preserve ADR 0022's S1
+ ownership and all physical-completion/containment constraints.
+ 
+@@ -11,7 +13,7 @@ As verified on 23 October 2026, main
+ `0f79db5e1192dd47db32d2e300fc382a0f431462` includes S1, corrected Stage A,
+ B1–B4, C1-A/Q, C2 and C3. The [Stage C decision table](../research/v1-api-migration-plan.md#decisions-for-maintainer-review)
+ is the current approval queue and exact proposed annotation/status scope. All six
+-deprecated aliases and experimental annotations remain. Promotion, the shared
++deprecated aliases remain; P1/P2/P3 annotations are removed. The shared
+ transition prerelease, C4, F and G require their separate decisions; unresolved
+ hold applicability is unchanged.
+ 
+diff --git a/docs/research/v1-api-migration-plan.md b/docs/research/v1-api-migration-plan.md
+--- a/docs/research/v1-api-migration-plan.md
++++ b/docs/research/v1-api-migration-plan.md
+@@ -1,5 +1,7 @@
+ # Stage C: proposed migration and controlled promotion
+ 
++**Promotion status:** P1/P2/P3 development annotations/status are promoted following benchmark acceptance review. The approved patch preserves all six aliases; transition release, hold applicability, C4 and F/G remain separate.
++
+ **Stage C engineering plan — implementation integrated; promotions and release decisions pending.**
+ The [inventory](v1-api-contract-inventory.md) records the current contract;
+ [ADR 0023](../adr/0023-v1-api-stability-decisions.md) retains the proposed v1 policy.
+diff --git a/docs/guide/core-api.md b/docs/guide/core-api.md
+--- a/docs/guide/core-api.md
++++ b/docs/guide/core-api.md
+@@ -1,5 +1,7 @@
+ # Core API guide
+ 
++**Promotion status:** Development P2 range/count/map/batch contracts are promoted following benchmark review; all six deprecated option aliases remain accepted through the actual shared transition window.
++
+ PJS runs explicitly registered CPU work in persistent Node worker isolates. Your
+ application keeps its event-loop/I/O plane; PJS supplies a bounded compute plane.
+ 
+@@ -38,7 +40,7 @@ checkout examples are tested against the packed development artifact.
+ | stats()                                                | Return copied current state and cumulative diagnostic counters without retaining completed-task history.                         | v0.13/14 measurements; no latency quantiles                                               |
+ | shutdown(options)                                      | Close admission and use the first chosen drain policy to finish or terminate accepted work and stop workers.                     | Cross-platform lifecycle suites; graceful drain can wait indefinitely                     |
+ 
+-All four range methods and their controls remain [experimental](../stability.md).
++All four range methods and their controls are [promoted in development](../stability.md).
+ 
+ ## Registration and runtime options
+ 
+@@ -69,7 +71,7 @@ optional `transferList` moves input buffers. `signal` and `timeout` affect calle
+ settlement, not preemption. Constructor/registration validation throws; ordinary
+ submission validation rejects. See [errors](errors.md) and [lifecycle](lifecycle.md).
+ 
+-R1 development adds experimental `run({ executionLease })`,
++R1 development adds `run({ executionLease })`,
+ constructor `restartPolicy` and graceful `shutdown({ forceAfter })`.
+ These opt-in controls are not part of the immutable RC4 publication.
+ See [physical containment](lifecycle.md#experimental-physical-execution-leases-r1-development)
+@@ -129,7 +131,7 @@ The [binary recipe](../../examples/streaming-binary.mjs) demonstrates reconstruc
+ Integrated development returns `PjsRangeStream<Output>` with required direct
+ `next()`, `return()` and `throw()`. `CountOnlyStreamRangeOptions` is also importable
+ from the root; it excludes all six strict byte spellings (three alias pairs). These type-only
+-exports are not in published RC4. Range streaming remains experimental.
++exports are not in published RC4. Range streaming is promoted in development.
+ 
+ ```ts
+ const stream = runtime.streamRange(task, range, createInput);
+diff --git a/docs/guide/lifecycle.md b/docs/guide/lifecycle.md
+--- a/docs/guide/lifecycle.md
++++ b/docs/guide/lifecycle.md
+@@ -1,5 +1,7 @@
+ # Lifecycle, cancellation and failure
+ 
++**Promotion status:** Development P1 containment contracts are promoted following benchmark review; caller settlement still does not release physical ownership before validated completion or confirmed exit.
++
+ Construction snapshots the registry and starts workers. `ready()` resolves after
+ initial imports; `run` and range operations may be accepted during startup.
+ Startup submissions occupy queue capacity, so with `maxQueue: 0` await ready and
+@@ -16,7 +18,7 @@ worker:                     occupied ─────────────→
+ ## Caller settlement is not physical completion
+ 
+ **Cancellation or timeout can reject the caller while the worker remains busy.**
+-Caller cancellation/timeout does not interrupt synchronous JS/native code or provide cooperative polling. The separate experimental physical lease initiates worker containment.
++Caller cancellation/timeout does not interrupt synchronous JS/native code or provide cooperative polling. The separate physical lease initiates worker containment.
+ An eventual late result is discarded, without a second settlement. The worker
+ slot is reusable only after execution returns or the worker ends. Side effects
+ and completed shared writes are not undone. A posted batch can finish all its
+@@ -52,11 +54,13 @@ to disable it; zero is invalid. Host event-loop progress is required for deliver
+ Parent progression also checks elapsed deadlines before delivering/reconciling
+ results. Ordinary run uses its host timer. Neither is a hard real-time guarantee.
+ 
+-## Experimental physical execution leases (R1 development)
++<a id="experimental-physical-execution-leases-r1-development"></a>
++
++## Physical execution leases (development)
+ 
+ These additions are not present in the immutable published RC4 package.
+ C1-A/Q adds focused acceptance and installed-package qualification without
+-changing these contracts or experimental status. See the
++changing these contracts; P1 status is recorded above. See the
+ [C1 engineering report](../research/c1-containment-acceptance.md) for source-bound
+ evidence and the separate promotion decision.
+ 
+diff --git a/docs/guide/errors.md b/docs/guide/errors.md
+--- a/docs/guide/errors.md
++++ b/docs/guide/errors.md
+@@ -1,5 +1,7 @@
+ # Public errors
+ 
++**Promotion status:** P1/P2/P3 error contracts retain their hierarchy, metadata and ownership semantics following development promotion; error text is not a protocol.
++
+ Import classes from `@pjavascript/runtime` and use `instanceof`, not exact message text.
+ All error classes inherit PjsError, which inherits Error and sets name to the
+ concrete class name. Messages are explanatory and contextual; their exact wording
+@@ -51,7 +53,7 @@ optional remote stacks are preserved; worker protocol records remain internal.
+ | PjsBinaryResultContractError | Invalid declaration/callback or nonbinary/shared/detached/wrong-size result    | Stream next rejection                                                   | Fix declaration/output; distinct from worker crash; exact requires equality                              |
+ | PjsResultCapacityError       | One declared result exceeds per-stream capacity                                | Stream next rejection                                                   | Increase explicit capacity or reduce grain/bound; runtime never waits for impossible capacity            |
+ 
+-R1 development adds experimental PjsExecutionLeaseError, a PjsWorkerError subclass,
++R1 development adds PjsExecutionLeaseError, a PjsWorkerError subclass,
+ for a still-pending ordinary run caller when its physical lease expires. It retains
+ small task/worker context. Previously settled callers keep their timeout/cancellation
+ error. Containment continues without replay, and credits stay held until exit.
+@@ -62,8 +64,8 @@ ordinary leased caller receives PjsExecutionLeaseError once; a later failed
+ replacement termination fails queued work without replay and makes cleanup
+ reject. It does not replace the original caller outcome or release a still-live
+ physical correlation. Even a subsequent actual exit does not convert the cached
+-rejected shutdown promise into success. Error classes, metadata and experimental
+-status are unchanged; see the [C1 report](../research/c1-containment-acceptance.md).
++rejected shutdown promise into success. Error classes and metadata are unchanged; P1/P2/P3
++status is recorded above; see the [C1 report](../research/c1-containment-acceptance.md).
+ 
+ Error context has optional taskId, workerId, operationId, partitionIndex,
+ rangeStart, rangeEnd and cause. Context is available only when known: errors before
+diff --git a/docs/guide/backpressure.md b/docs/guide/backpressure.md
+--- a/docs/guide/backpressure.md
++++ b/docs/guide/backpressure.md
+@@ -1,5 +1,7 @@
+ # Admission and result backpressure
+ 
++**Promotion status:** Development P2/P3 contracts are promoted following benchmark review; result-byte credits bound visible payload per stream and are not a process-memory limit.
++
+ There are three independent bounds. **Queue depth is not CPU capacity.**
+ 
+ | Bound                  | Controls                                                                  | Does not control                                                              |
+diff --git a/docs/partitioning.md b/docs/partitioning.md
+--- a/docs/partitioning.md
++++ b/docs/partitioning.md
+@@ -1,8 +1,10 @@
+-# Experimental numeric range operations
++# Numeric range operations
++
++**Promotion status:** Development P2/P3 range and strict-result contracts are promoted following benchmark review. All six deprecated aliases remain accepted; C4 needs the actual transition release and separate authorization.
+ 
+ For the integrated development contract and stability boundary, start with the
+ [core API guide](guide/core-api.md) and [stability policy](stability.md).
+-This reference describes experimental mechanics. Published RC4 predates the six
++This reference describes development mechanics. Published RC4 predates the six
+ new spellings and later declaration corrections; see the
+ [documentation index](README.md) for release versus development scope.
+ 
+@@ -12,7 +14,7 @@ Development source accepts `dispatchBatchSize`, `maxBufferedResults` and
+ `outputConstructor` on their existing range, stream and typed-map option shapes.
+ Their `experimentalDispatchBatchSize`, `experimentalMaxBufferedResults` and
+ `experimentalOutputConstructor` aliases remain accepted and are deprecated.
+-All these features remain experimental; P2 promotion requires separate approval.
++These P2 features are promoted in development following benchmark review.
+ Defaults, count limits, batching 1–16, ordering and ownership are unchanged.
+ 
+ C3 adds `resultBytes`, `maxResultBytes` and `maxReservedResultBytes` with
+@@ -61,7 +63,7 @@ range, dispatch, and result-credit owners without changing their contract.
+ chunk outputs, `parallelFor()` returns `Promise<void>` without transporting
+ successful values, `streamRange()` returns a closeable `PjsRangeStream` of identified
+ partition outputs, and map returns one flat ordered element array. All four APIs
+-and their derived admission limits remain experimental; no stable
++and their derived admission limits are promoted in development; no implicit
+ `parallel.for/map/reduce` family is exported. See the
+ [v0.11 decomposition proposal](proposal-v0.11.md),
+ [completion decision](adr/0012-completion-only-operations.md), and
+diff --git a/README.md b/README.md
+--- a/README.md
++++ b/README.md
+@@ -2,6 +2,8 @@
+   <img src="static/pjs-logo-square-1280x1280.png" width="200" height="200" alt="PJS logo: green circuit and hexagon mark">
+ </p>
+ 
++**Promotion status:** Development P1/P2/P3 contracts are promoted following benchmark review; this does not change published RC4, begin the alias window or authorize a release.
++
+ <h1 align="center">PJS</h1>
+ 
+ <p align="center"><strong>Parallel JavaScript Runtime</strong></p>
+@@ -85,10 +87,10 @@ Squaring one number teaches the contract; it is too small to benefit from worker
+ | ----------------------------- | ------------------------------------------------------------- | ----------------------------- |
+ | `run`                         | One explicit task, one promise                                | Core candidate                |
+ | `ready` / `shutdown`          | Startup and resource lifetime                                 | Core candidates               |
+-| `partitionRange`              | Ordered, retained per-partition results                       | Experimental                  |
+-| `parallelFor`                 | Completion-only ranges and deliberate side effects            | Experimental                  |
+-| `parallelMapRange`            | Flat ordered array or typed-array output                      | Experimental                  |
+-| `streamRange`                 | Completion-order results under count and optional byte limits | Experimental                  |
++| `partitionRange`              | Ordered, retained per-partition results                       | Promoted in development       |
++| `parallelFor`                 | Completion-only ranges and deliberate side effects            | Promoted in development       |
++| `parallelMapRange`            | Flat ordered array or typed-array output                      | Promoted in development       |
++| `streamRange`                 | Completion-order results under count and optional byte limits | Promoted in development       |
+ | `transfer` / `sharedReadonly` | Moved buffers or reusable shared input                        | Specialized supported helpers |
+ | `stats`                       | Copied state and cumulative counters                          | Diagnostic surface            |
+ 
+@@ -104,7 +106,7 @@ from published RC4 despite unchanged version fields. Checkout examples use the
+ six new development option names with deprecated aliases; RC4 uses the older
+ spellings and declarations. Later containment controls are also absent from RC4.
+ 
+-All feature experimental annotations and all six aliases remain. Promotion,
++P1/P2/P3 are promoted in development; all six aliases remain. The
+ one shared transition prerelease, C4 removal and final-candidate qualification
+ need the separate [maintainer decisions](docs/research/v1-api-migration-plan.md#decisions-for-maintainer-review).
+ See the [stability policy](docs/stability.md) and [current inventory](docs/research/v1-api-contract-inventory.md).
+@@ -122,7 +124,7 @@ credits do not bound RSS, worker allocations, inputs or consumer-retained values
+ See [backpressure](docs/guide/backpressure.md).
+ 
+ Cancellation or timeout can settle a caller while its worker stays busy. There
+-is no automatic retry or rollback. Development's experimental exclusive
++is no automatic retry or rollback. Development's exclusive
+ `run({ executionLease })`, rolling `restartPolicy` and graceful
+ `shutdown({ forceAfter })` initiate asynchronous containment; physical ownership
+ lasts until valid completion or confirmed exit. Without escalation, graceful
+diff --git a/packages/runtime/README.md b/packages/runtime/README.md
+--- a/packages/runtime/README.md
++++ b/packages/runtime/README.md
+@@ -1,5 +1,7 @@
+ # @pjavascript/runtime
+ 
++**Promotion status:** Development P1/P2/P3 contracts are promoted following benchmark review; all six deprecated aliases remain. Published RC4 and release authorization remain separate.
++
+ **PJS — Parallel JavaScript Runtime.** Explicit CPU tasks on persistent Node
+ workers, with bounded admission and clone/transfer/shared-input ownership.
+ ESM only; no production dependencies. Tasks are trusted local module exports
+@@ -60,7 +62,7 @@ belongs on Node's event loop.
+ `run`, registration and lifecycle are core candidates. `partitionRange` collects
+ ordered per-partition outputs, `parallelFor` discards successful outputs,
+ `parallelMapRange` assembles flat ordered results and `streamRange` yields
+-completion-order results. Range APIs and their controls remain experimental;
++completion-order results. Range APIs and their controls are promoted in development;
+ statistics are diagnostic. Only the root package import is supported.
+ 
+ Clone is the default. Explicit transfers detach sender views at dispatch.
+@@ -90,7 +92,7 @@ exit, without replay or a hard preemption guarantee. First shutdown options and
+ the shared promise are fixed; omitting escalation can leave drain waiting
+ indefinitely.
+ 
+-All feature experimental annotations and all six aliases remain. Promotion,
++P1/P2/P3 are promoted in development; all six aliases remain. The
+ the combined transition prerelease and later alias removal need separate
+ [maintainer decisions](https://github.com/Miskovy/parallel-javascript/blob/main/docs/research/v1-api-migration-plan.md#decisions-for-maintainer-review).
+ Checkout examples use the development spellings and are tested against a fresh
