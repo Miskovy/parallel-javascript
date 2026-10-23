@@ -130,10 +130,10 @@ export async function c3Contracts() {
           );
           const fields = {
             get [current]() {
-              assert.fail('duplicate value read');
+              return assert.fail('duplicate value read');
             },
             get [legacy]() {
-              assert.fail('duplicate alias read');
+              return assert.fail('duplicate alias read');
             },
           };
           // Values are deliberately irrelevant: presence must reject before reads.
