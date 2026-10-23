@@ -32,7 +32,10 @@ For changes to a particular contract, also read the relevant
 
 Use Node **22.13+ within Node 22.x**, or **Node 24.x**, with npm and Git. Other Node
 majors are outside the supported policy. The project uses ESM; compile TypeScript
-task modules to JavaScript before loading them in workers.
+task modules to JavaScript before loading them in workers. The manifest range
+does not mean every patch has been qualified: see the [exact evidence and proposed
+floor policy](docs/stability.md#proposed-node-and-platform-policy). Node 24.0.0
+remains unqualified.
 
 ```sh
 git clone https://github.com/Miskovy/parallel-javascript.git
@@ -69,14 +72,14 @@ submitting.
 
 ### Validation by change type
 
-| Change                           | Minimum expected validation                                                                                                                           |
-| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Documentation/community metadata | `npm run format:check`, `npm run test:docs`, and `git diff --check`; check issue-form YAML when changed. Run the documented example if you change it. |
-| Tests                            | Relevant tests plus `npm test`, lint, and format checks.                                                                                              |
-| Runtime implementation           | All normal validation gates listed above.                                                                                                             |
-| Public API/types                 | All normal gates, including type compatibility, contract, documentation, and installed-package checks.                                                |
-| Worker/lifecycle/backpressure    | All normal gates, with relevant regression coverage for affected contracts and terminal ownership.                                                    |
-| Performance claim                | Relevant correctness checks plus reproducible benchmark evidence.                                                                                     |
+| Change                           | Minimum expected validation                                                                                                                                                                                      |
+| -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Documentation/community metadata | `npm run format:check`, `npm run test:docs`, and `git diff --check`; check issue-form YAML when changed. Run the documented example if you change it; run `test:package` when the packed package README changes. |
+| Tests                            | Relevant tests plus `npm test`, lint, and format checks.                                                                                                                                                         |
+| Runtime implementation           | All normal validation gates listed above.                                                                                                                                                                        |
+| Public API/types                 | All normal gates, including type compatibility, contract, documentation, and installed-package checks.                                                                                                           |
+| Worker/lifecycle/backpressure    | All normal gates, with relevant regression coverage for affected contracts and terminal ownership.                                                                                                               |
+| Performance claim                | Relevant correctness checks plus reproducible benchmark evidence.                                                                                                                                                |
 
 To run one runtime test file while investigating a failure, build first, then use
 `node --test --test-timeout=20000 packages/runtime/test/runtime.test.mjs`, replacing
@@ -140,9 +143,11 @@ semantics, invariants, and installed-package behavior. Include the OS, architect
 and exact Node version you tested; reproduction on an additional platform is
 especially useful.
 
-RC1 has completed Windows and Fedora/Linux x64 qualification. macOS and ARM64
-remain unclaimed; a new reproduction is useful evidence, not automatic platform
-qualification. See the [RC readiness report](docs/research/v1-rc1-readiness.md).
+The [post-C3 ledger](docs/research/v1-api-migration-plan.md#reviewed-implementation-and-evidence)
+attributes accepted C1/C2/C3 runs to their exact Linux/Windows x64 Node patches
+and tested trees. The [RC1 readiness report](docs/research/v1-rc1-readiness.md)
+remains historical. macOS and ARM64 remain unclaimed; a new reproduction is useful
+evidence, not automatic platform qualification.
 
 ## Commits and pull requests
 

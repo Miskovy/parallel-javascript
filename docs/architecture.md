@@ -1,6 +1,6 @@
 # Runtime architecture
 
-The [v0.15 stability policy](stability.md) defines the public promise; the
+The [stability policy](stability.md) defines the public promise; the
 [initial proposal](proposal.md) records its origins. The package
 exports `PjsRuntime`, `PjsTaskRegistry`, `transfer`, `sharedReadonly`, public
 types, and errors. Pool, worker transport, FIFO implementation, coordinators,

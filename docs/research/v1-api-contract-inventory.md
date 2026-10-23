@@ -1,10 +1,13 @@
 # Current API contract inventory and proposed v1 dispositions
 
-C3 development transition inventory from main
-`24ad3a3f7a8d5f0900fcd85d7e89a47b3c68bce2` (PR #27 C2 integration).
-**S1, corrected Stage A and B1–B4 are integrated; C2's three alias pairs are
-implemented. Feature promotions and broader policy remain separately governed.
-No feature is promoted.**
+Current integrated development baseline:
+`0f79db5e1192dd47db32d2e300fc382a0f431462` ([PR #28](https://github.com/Miskovy/parallel-javascript/pull/28)),
+tree `6169704317bc1d2015eef4b64cd3c5d456683067`. C3 was implemented from
+C2 integration main `24ad3a3f7a8d5f0900fcd85d7e89a47b3c68bce2`.
+**S1, corrected Stage A, B1–B4, C1-A/Q, C2 and C3 are integrated. All six
+deprecated aliases remain. No feature is promoted.** See the authoritative
+[post-C3 evidence and decisions](v1-api-migration-plan.md#decisions-for-maintainer-review).
+
 This is the canonical current inventory. The [v0.15 inventory](v0.15-public-api-inventory.md)
 and [RC1 freeze inventory](v1-rc1-contract-inventory.md) are historical, including
 their old `@pjs/runtime` spelling and 38-export count.
@@ -67,12 +70,12 @@ The locally retained S1 Windows reports identify the same exact candidate and
 versions; their historical counts are not fresh Stage A runtime qualification.
 See the [S1 engineering report](s1-runtime-api-boundaries.md).
 
-Read-only public metadata checked on 22 October 2026 reports npm `latest` and
+Read-only public metadata checked on 23 October 2026 reports npm `latest` and
 `next` at `1.0.0-rc.4`, published 7 October, and GitHub's latest listed release
 as the [RC4 prerelease](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.4).
 The [registry metadata](https://registry.npmjs.org/@pjavascript%2fruntime)
 and historical repository PR listing distinguish published RC4 from development.
-S1/Stage A/B1–B3 are integrated at the current main base above. The unchanged `rc.4` manifest on development does not make it the
+S1/Stage A/B1–B4/C1-A/Q/C2/C3 are integrated at the current main base above. The unchanged `rc.4` manifest on development does not make it the
 published artifact; it must never be published as replacement RC4 bytes.
 
 ## Extraction and scope
@@ -464,11 +467,16 @@ encoded as TypeScript integer subtypes. Default time unit is milliseconds.
 | `ShutdownOptions.forceAfter`                             | Omitted; integer 1..2^31-1 from first call, includes startup; requires graceful mode. Early timer wakes reschedule remaining monotonic time                                                                                     | P1; deadline for requesting escalation, not a hard exit-latency bound                                                                                                     |
 | `PartitionRange.start/end/grainSize`                     | Safe integer endpoints, end >= start, safe span; grain >= 1. Half-open; chunks = ceiling(span/grain). Collect/map <=2^32-1 chunks, completion/stream <=MAX_SAFE_INTEGER; map span <=2^32-1 elements                             | P2; empty range valid; allocations may still fail before acceptance                                                                                                       |
 | `RangePartition.index/start/end`                         | Frozen zero-based chunk descriptor; end is clipped final endpoint                                                                                                                                                               | P2; immutable metadata; not a copy of mutable input range                                                                                                                 |
-| `experimentalDispatchBatchSize`                          | 1; integer 1..16. Sequential children from same parent/task. Live window workers × batch size, bounded physical production per turn                                                                                             | P2; reject child input transfers when configured >1, even a single physical item; first item failure skips rest, no rollback. C2 alias transition implemented; P2 pending |
-| `experimentalMaxBufferedResults`                         | workers; positive safe integer. Buffered + admitted-unsettled logical results per stream; bounded batch admission                                                                                                               | B1 implemented; P2/C2; not bytes or consumer-retained results                                                                                                             |
-| `experimentalResultBytes` / `experimentalMaxResultBytes` | No byte mode unless paired with byte capacity; exact vs maximum mutually exclusive by presence. Number >=0 safe integer or synchronous per-partition callback                                                                   | B2/P3; invalid literal wrapped binary-contract error; callback evaluated in parent AsyncResource and may fail lazily before that factory                                  |
-| `experimentalMaxReservedResultBytes`                     | No default; paired field, nonnegative safe integer. Per-stream declared/unreconciled maximum/reconciled actual visible bytes. Declaration over capacity rejected, no successful refund on failure                               | B2/P3; rename C3; 0 allows zero-byte results; not RSS/backing-store bound                                                                                                 |
-| `experimentalOutputConstructor`                          | Omitted: ordinary array. Exactly one of the eleven built-in typed constructors; no subclass. Array/typed blocks must match kind and partition span                                                                              | P2 pending; C2 aliases retained; mapping/input types remain shared-capable despite strict-binary narrowing                                                                |
+| `dispatchBatchSize`                                      | 1; integer 1..16. Sequential children from same parent/task. Live window workers × batch size, bounded physical production per turn                                                                                             | P2; reject child input transfers when configured >1, even a single physical item; first item failure skips rest, no rollback. C2 alias transition implemented; P2 pending |
+| `maxBufferedResults`                                     | workers; positive safe integer. Buffered + admitted-unsettled logical results per stream; bounded batch admission                                                                                                               | B1 implemented; P2/C2; not bytes or consumer-retained results                                                                                                             |
+| `resultBytes` / `maxResultBytes`                         | No byte mode unless paired with byte capacity; exact vs maximum mutually exclusive by presence. Number >=0 safe integer or synchronous per-partition callback                                                                   | B2/P3; invalid literal wrapped binary-contract error; callback evaluated in parent AsyncResource and may fail lazily before that factory                                  |
+| `maxReservedResultBytes`                                 | No default; paired field, nonnegative safe integer. Per-stream declared/unreconciled maximum/reconciled actual visible bytes. Declaration over capacity rejected, no successful refund on failure                               | B2/C3 implemented, P3 pending; 0 allows zero-byte results; not RSS/backing-store bound                                                                                    |
+| `outputConstructor`                                      | Omitted: ordinary array. Exactly one of the eleven built-in typed constructors; no subclass. Array/typed blocks must match kind and partition span                                                                              | P2 pending; C2 aliases retained; mapping/input types remain shared-capable despite strict-binary narrowing                                                                |
+
+All six overview spellings accept their deprecated `experimental...` aliases.
+Both-presence rejects by property presence, including inherited/undefined keys;
+strict modes require one declaration and one capacity, and count-only excludes
+all six byte spellings. See the [transition reference](../partitioning.md#c2-development-option-transition).
 
 `PjsTypedArray`/constructor enumerate Int8, Uint8, Uint8Clamped, Int16, Uint16,
 Int32, Uint32, Float32, Float64, BigInt64 and BigUint64, retaining ArrayBufferLike

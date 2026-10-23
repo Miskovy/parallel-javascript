@@ -15,6 +15,12 @@ replace the event loop, or make a tiny function inherently faster. Start with
 [basic-run.mjs](../../examples/basic-run.mjs) and its
 [task module](../../examples/tasks.mjs). The README's example uses the same files.
 
+This guide describes **integrated development source through C3**, including
+six new option names with [deprecated aliases](../partitioning.md#c2-development-option-transition).
+Published RC4 has older declarations/spellings and lacks later containment
+controls. The [README quickstart](../../README.md) works with RC4;
+checkout examples are tested against the packed development artifact.
+
 ## One-sentence contracts
 
 | API                                                    | Contract                                                                                                                         | Use / evidence / boundary                                                                 |
@@ -120,9 +126,9 @@ The [binary recipe](../../examples/streaming-binary.mjs) demonstrates reconstruc
 
 ### Explicit stream cleanup (B1 development)
 
-The development candidate returns `PjsRangeStream<Output>` with required direct
+Integrated development returns `PjsRangeStream<Output>` with required direct
 `next()`, `return()` and `throw()`. `CountOnlyStreamRangeOptions` is also importable
-from the root; it excludes all three strict byte-mode properties. These type-only
+from the root; it excludes all six strict byte spellings (three alias pairs). These type-only
 exports are not in published RC4. Range streaming remains experimental.
 
 ```ts
@@ -154,8 +160,10 @@ for terminal throw and synchronous reason-conversion details.
 Use `registry.register<Input, Output>(...)` to describe the caller-visible payload
 types, including when the worker returns `transfer(...)`. PJS infers outputs from
 that handle; generics do not verify a separately loaded export or validate schemas.
-Use `ReturnType<PjsRuntime['stats']>` for diagnostic typing; no stable Stats alias
-is exported. Errors reject JavaScript promises and need `instanceof` narrowing.
+Development exports the diagnostic type `PjsRuntimeStats` from the root (B4);
+`ReturnType<PjsRuntime['stats']>` also describes the returned snapshot. These
+diagnostics do not promise timing or performance bounds. Errors reject JavaScript
+promises and need `instanceof` narrowing.
 
 Tasks are trusted application code with Node's filesystem, network and process
 capabilities. Workers are not a sandbox. No closure serialization, source eval,

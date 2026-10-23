@@ -16,9 +16,10 @@ Choose the appropriate form from
 | Security vulnerability                              | [SECURITY.md](SECURITY.md), through a private report                                                                                                                |
 | Sensitive conduct report                            | Private maintainer contact described in [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)                                                                                    |
 
-General usage questions currently use the issue form; GitHub Discussions are not
-enabled. Search existing issues before opening a new one, describe what you are
-trying to achieve, and include a small reproduction when possible. Remove
+The question form is available for usage questions; [GitHub Discussions](https://github.com/Miskovy/parallel-javascript/discussions)
+are also enabled (verified 23 October 2026). Search existing issues and discussions
+before posting, describe what you are trying to achieve, and include a small
+reproduction when possible. Remove
 credentials and personal information from public code and logs.
 
 Functional bug reports do not need benchmark evidence. For performance claims,

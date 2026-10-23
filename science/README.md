@@ -50,6 +50,10 @@ not a new contract or a declaration that experimental APIs are stable. The
 boundaries. A historical v0.x measurement keeps its original version and scope.
 No new experiment was run for this book, and no runtime change follows from it.
 
+For current integrated behavior and post-C3 status, use the
+[product documentation index](../docs/README.md); this book retains its RC1 case-study
+baseline and the original versions of its measurements.
+
 ## How we make claims
 
 The [canonical bibliography](references.md) records source titles, verified

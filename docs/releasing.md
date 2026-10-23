@@ -5,11 +5,13 @@ served by `https://registry.npmjs.org/`. Current published prerelease:
 `v1.0.0-rc.4`, installed with `npm install @pjavascript/runtime@next`.
 Final v1.0.0 has not been released. Published versions are immutable; do not republish them.
 
-Public metadata rechecked 22 October 2026 reports both `latest` and `next` at RC4;
-GitHub lists it as a prerelease. Development main and unmerged S1 contain later
-source; unchanged RC4 version fields do not identify those bytes as the published
-artifact. [Stage A's decision package](research/v1-api-contract-inventory.md) and
-[ADR 0023](adr/0023-v1-api-stability-decisions.md) are proposed, not release approval.
+Public [npm metadata](https://registry.npmjs.org/@pjavascript%2fruntime) rechecked
+23 October 2026 reports both `latest` and `next` at RC4;
+[GitHub](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.4)
+lists it as a prerelease. Development main includes integrated S1, corrected
+Stage A, B1–B4, C1-A/Q, C2 and C3. Unchanged RC4 version fields do not identify
+those bytes as the published artifact. The [post-C3 decision table](research/v1-api-migration-plan.md#decisions-for-maintainer-review)
+and [ADR 0023](adr/0023-v1-api-stability-decisions.md) grant no release approval.
 
 The repository npm badge and install link make the package immediately discoverable.
 The new package `homepage` field appears beginning with the next published version;
@@ -59,13 +61,13 @@ The `release.published` workflow, OIDC binding and publication guards are unchan
 
 ## Proposed future candidate gates — Stage F remains separate
 
-S1, corrected Stage A and B1–B4 are integrated through PR #24 at main
-`35f2aacfe431516ed559409a3cba6bf2ccd2e6b7`. The [Stage C engineering plan](research/v1-api-migration-plan.md)
-now records controlled C1–C4 acceptance, qualification, promotion and option-window
-decisions. Planning, historical B4 CI and eventual individual feature promotion
-do not select a release version/baseline or authorize publication. C1 can close
-its acceptance evidence before unrelated C2/C3 implementation; separately tracked
-hold applicability remains unresolved and requires a maintainer decision.
+C1-A/Q, C2 and C3 are integrated at main
+`0f79db5e1192dd47db32d2e300fc382a0f431462`. The authoritative
+[Stage C decisions](research/v1-api-migration-plan.md#decisions-for-maintainer-review)
+keep P1/P2/P3 promotion, one combined six-alias transition prerelease and later C4
+removal separate. No window starts from a merge. Hold applicability remains
+unresolved; actual versions, support-floor changes and publication are unselected.
+Historical runtime evidence is not final-candidate qualification.
 
 The blocker is concrete: [baseline.mjs](../scripts/rc/baseline.mjs) selects
 `frozen-rc4.json` unconditionally. RC API/package/qualification/reproduction
@@ -102,7 +104,7 @@ standard R2/R3 raw-child reconciliation and required extended/reproduction gates
 The current publisher does not run those full campaigns; enforce source-bound
 evidence before final release authorization instead of assuming a successful CD
 job establishes them. No workflow, selector, version or frozen baseline changes
-in Stage A. Conditional internal cleanup/optimization must finish before F.
+in this documentation task. Conditional internal cleanup/optimization must finish before F.
 
 ## One-time maintainer configuration
 
