@@ -142,10 +142,10 @@ the reviewed [publication toolchain](../scripts/release/toolchain.json), and
 SHA-pinned official `actions/checkout` v7.0.1 and `actions/setup-node` v7.0.0.
 The shared release helper rejects any other publisher version before registry
 operations and disables package-manager caching. Runtime support for Node
-22.13.0 and Node 24 does not approve every bundled npm for publishing. Four-cell
+22.13.0 and Node 24 does not approve every bundled npm for publishing. Six-cell
 CI provisions the exact release npm archive after verifying its committed SHA-512,
 then tests the live CLI separately from ordinary runtime npm. Review Node/npm pins
-and archive integrity together when upgrading; repeat the four-cell qualification
+and archive integrity together when upgrading; repeat the runtime validation matrix
 and two-build reproduction. See upstream
 [trusted publishing guidance](https://docs.npmjs.com/trusted-publishers/),
 [checkout releases](https://github.com/actions/checkout/releases/tag/v7.0.1),

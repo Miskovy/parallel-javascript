@@ -67,13 +67,60 @@ reconcile with aggregates. Synthetic merge trees must match the reviewed head.
 
 ## Results and evidence status
 
-**Pending execution and independent audit.** The introduced matrix is coverage
-configuration, not a passing result. Neither floor cell is accepted by this
-initial report. Candidate SHAs, exact runs, cell outcomes and package hashes
-will be recorded after the clean committed candidate executes. Failed/incomplete
-attempts remain separate; an unavailable platform remains unqualified.
+**Both exact floor cells passed and were independently reconciled.** The tested
+clean candidate is `9e2068d437d70ae766d798913090d97412baf900`, tree
+`b3e9504316757e9724f006068cd60929356b44fb`, in
+[push run 39988041278](https://github.com/Miskovy/parallel-javascript/actions/runs/39988041278).
+This push execution tested the head itself, not a synthetic merge. These are
+executed results for that source, not relabeled runs of the later documentation
+commit recording them. Final branch CI and delivery receipts remain separately
+identified in the draft PR.
+
+| Accepted cell                                                                                           | Actual runtime / tools                                                                                                         | Ordinary and supplemental result                                                                   |
+| ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| [Linux x64](https://github.com/Miskovy/parallel-javascript/actions/runs/39988041278/job/120532232559)   | Node 24.0.0; V8 13.6.233.8-node.10; runtime npm 11.3.0; kernel 6.17.0-1022-azure; TS 7.0.2 / 6.0.3; release npm 11.19.0        | 339/339 contracts, zero skipped/cancelled; all ordinary gates and seven supplemental checks passed |
+| [Windows x64](https://github.com/Miskovy/parallel-javascript/actions/runs/39988041278/job/120532234555) | Node 24.0.0; V8 13.6.233.8-node.10; runtime npm 11.3.0; Windows Server 2025 Datacenter, 10.0.26100; same compilers/release npm | 339/339 contracts, zero skipped/cancelled; all ordinary gates and seven supplemental checks passed |
+
+Each floor cell independently reconciled:
+
+- **R2:** 162 original generated histories / 2,746 actions, every observation
+  against its expected state, aggregate invariant/transition counts, 162 cleanup
+  records, replay validation, three negative-detection records and eight
+  real-worker checks. Original standard seeds and corpora are unchanged.
+- **R3:** all 11 original standard child configs/results, 1,261 memory samples
+  and 612 ownership checkpoints. All checked terminal owners were quiescent;
+  **47 threads created / 47 confirmed exits** per cell. Measurement retention
+  does not assert that RSS must return to baseline; forced GC remains off.
+- **Installed package:** actual archive, JS/worker/containment paths, all six
+  examples, and both locked compiler fixtures plus emitted consumers without
+  skipLibCheck. All 34 dry-run release-tooling regressions passed.
+- **Equivalence:** all 38 production source files, 38 emitted JS files and 38
+  declarations matched the untouched baseline byte-for-byte in each floor cell.
+  Source/declaration inventory parity and tool regressions passed: 61 roots,
+  342 members, zero additional named reachable types and 158 diagnostic leaves.
+  All six aliases remain. No runtime or declaration change was needed.
+
+The actual tested development tarball has **193 files**, **116,674 bytes**
+(592,638 unpacked), SHA-256
+`00ecfac40befa2409b2d579011e1aca98b409fdc08fccd37087628462e5611a3`.
+Its changed README bytes give it a new identity; it is not a replacement published
+RC4 package. All six matrix cells produced that same archive hash. The retained
+actual archives were hashed independently, not accepted from report strings alone.
+
+All six jobs in the run passed: Linux/Windows x64 Node 22.13.0, the exact floor,
+and floating 24 resolving to Linux **24.21.0** / Windows **24.22.1**. Each cell's
+ordinary and raw campaign records were audited. All **20 GitHub artifact ZIPs**
+matched their API SHA-256 digests; all **2,260 extracted files** matched the
+corresponding archive entries. Large archives, child records, local official
+downloads and audit receipts remain ignored under `.node-tools/`.
+
+No CI qualification attempt failed or was incomplete in this run. The local
+Windows supplement passed under the verified official executable. Local Linux
+execution was unavailable due to WSL access denial; its accepted evidence is the
+Linux CI execution above. No timeouts, watchdogs, assertions, seeds or campaign
+bounds were changed. There was no existing-harness correction or production fix.
 
 Existing historical reports retain their conclusions, including incomplete B2
-Linux qualification. A floor pass would support only the named development
+Linux qualification. These floor passes support only the named development
 candidate on these exact cells; it would not establish every Node 24 patch,
 published RC4 compatibility, production readiness or Stage F closure.

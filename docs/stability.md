@@ -95,6 +95,17 @@ commit or proof of Node 24.0.0. Earlier S1/B1/B4 results and incomplete B2 Linux
 qualification retain their original attribution. No macOS, ARM64, other-major or
 every-patch guarantee follows.
 
+Subsequent [exact-floor qualification](research/node24-floor-qualification.md)
+accepted Node **24.0.0** on **Linux x64 and Windows x64** for development candidate
+`9e2068d437d70ae766d798913090d97412baf900`, tree
+`b3e9504316757e9724f006068cd60929356b44fb`, in
+[CI run 39988041278](https://github.com/Miskovy/parallel-javascript/actions/runs/39988041278).
+Both cells passed the ordinary gates, unchanged standard R2/R3, full compatibility
+fixtures and inventory checks; raw evidence and actual archives were reconciled.
+This supports the declared 24.0.0 floor for that development source, not every
+Node 24 patch, immutable published RC4 or a future final candidate. Ongoing CI
+now covers exact 22.13.0, exact 24.0.0 and floating 24 on both operating systems.
+
 Recommend retaining those engine floors only if final-candidate F qualifies the
 actual floor **22.13.0 / 24.0.0** and a deliberately selected current patch in
 each supported major on **both Linux x64 and Windows x64**. Record exact versions

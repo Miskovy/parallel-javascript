@@ -48,6 +48,12 @@ original deliveries; later successes do not repair the historical incomplete B2
 Linux qualification. This review consulted the retained audited receipts and
 merged source; it did not rerun those campaigns.
 
+Subsequent [Node 24.0.0 floor qualification](node24-floor-qualification.md) records
+the exact development candidate and Linux/Windows x64 results. It supplies floor
+evidence without promoting P1/P2/P3, starting the shared alias window or closing
+Stage F's final-candidate matrix and release gates. The decisions below remain
+pending.
+
 ### Decisions for maintainer review
 
 | Decision                                     | Complete / exact references                                                                                                                                                     | Unresolved                                                                                                                                                            | Concrete proposed action after approval                                                                                                                   | Explicit decision required                                                                                                                                 |
