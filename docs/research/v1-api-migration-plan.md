@@ -1,54 +1,122 @@
 # Stage C: proposed migration and controlled promotion
 
-**Stage C engineering plan — proposed, pending unit-specific maintainer decisions.**
-S1, corrected Stage A and B1–B4 are integrated; this does not accept every roadmap
-proposal. C2's three development spellings and deprecated aliases are implemented
-as described below. C3 byte spellings are now implemented in development, with deprecated aliases.
-The [inventory](v1-api-contract-inventory.md)
-is authoritative for today's behavior; [B](v1-api-corrections.md) specifies the
-four corrections before promotion. See [ADR 0023](../adr/0023-v1-api-stability-decisions.md).
+**Stage C engineering plan — implementation integrated; promotions and release decisions pending.**
+The [inventory](v1-api-contract-inventory.md) records the current contract;
+[ADR 0023](../adr/0023-v1-api-stability-decisions.md) retains the proposed v1 policy.
 
-C3 development migration is implemented: resultBytes, maxResultBytes and
-maxReservedResultBytes accept deprecated experimentalResultBytes,
-experimentalMaxResultBytes and experimentalMaxReservedResultBytes aliases.
-Each pair rejects both-presence, even equal, inherited or explicitly undefined.
-Mixed spellings across distinct declaration/capacity pairs are valid. Any exact
-spelling conflicts with any maximum spelling; one declaration and one capacity
-are required. Count-only types exclude all six byte properties. Features remain
-experimental; P3 approval and unresolved holds remain separate. No release window
-starts here, and C4 removal requires its later decision. See the
-[C3 engineering report](c3-byte-option-transition.md).
+## Post-C3 decisions — 23 October 2026
+
+Current main is `0f79db5e1192dd47db32d2e300fc382a0f431462`, the
+[PR #28](https://github.com/Miskovy/parallel-javascript/pull/28) merge. Its tree
+`6169704317bc1d2015eef4b64cd3c5d456683067` matches reviewed C3 head
+`26eb1e6028300b894908236842ebfe3a9abec6a5`. S1, corrected Stage A, B1–B4,
+C1-A/Q, C2 and C3 are integrated. C1-A/Q is acceptance/qualification; C2/C3
+implement the six spelling transitions. **P1/P2/P3 promotion, the transition
+release and C4 removal have not been approved by those merges.** All six
+deprecated aliases and all feature-level experimental annotations remain.
+
+This section is the current decision queue. The planning-base ledger, original
+handoffs, occurrence indexes and historical conclusions below retain their
+original attribution; they are not outstanding instructions to reimplement C1–C3.
+No separate implementation milestone is proposed. Hold applicability remains
+unresolved pending an explicit maintainer decision; no technical investigation,
+clearance or eligibility inference is part of this documentation review.
+
+### Reviewed implementation and evidence
+
+The following are earlier **runtime** executions, not new qualification of this
+documentation commit. Reports and retained audit receipts identify the actual
+tested sources. All three campaigns used Linux x64 Node **22.13.0 / 24.21.0**
+and Windows x64 Node **22.13.0 / 24.22.1**; neither the floating `24` selector
+nor these later patches establish the 24.0.0 floor. Each accepted cell reconciled
+162 R2 histories / 2,746 actions and 11 R3 children, including cleanup/confirmed
+exits. Compilers were 7.0.2 / 6.0.3 and the independent release npm was 11.19.0.
+
+| Reference   | Reviewed implementation / integration                                                                                                                                   | Actual tested source and tree                                                                                                             | Accepted evidence                                                                                                                                                              |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| E1 — C1-A/Q | Head `28c52a8688a783d882cd087f12a4c2b8b3c789e4`; [PR #26](https://github.com/Miskovy/parallel-javascript/pull/26), merged at `3e0381317fde3438e1a3008dc8c4e84257ff066a` | Tested head `28c52a8688a783d882cd087f12a4c2b8b3c789e4`; tree `8a3b8f3fd69b07c44d9749f8a69c34af3e701691`                                   | [Run 39846530853](https://github.com/Miskovy/parallel-javascript/actions/runs/39846530853), 315 contracts per cell; [C1 report](c1-containment-acceptance.md) and PR delivery  |
+| E2 — C2     | Head `714edd900ade218c804d92131dd1f90874483a32`; [PR #27](https://github.com/Miskovy/parallel-javascript/pull/27), merged at `24ad3a3f7a8d5f0900fcd85d7e89a47b3c68bce2` | CI synthetic merge `d9c5d6d56150af1015ab9c6d186a357ea0225dab`; tree `b5495f3ca494c79ea448f9cd8869551703d3b1e0`, matching head/integration | [Run 39944181728](https://github.com/Miskovy/parallel-javascript/actions/runs/39944181728), 338 contracts per cell; [C2 report](c2-range-option-transition.md) and PR delivery |
+| E3 — C3     | Head `26eb1e6028300b894908236842ebfe3a9abec6a5`; [PR #28](https://github.com/Miskovy/parallel-javascript/pull/28), merged at main above                                 | CI synthetic merge `8edc682e86ace99089a968797df5fc28f54ad179`; tree `6169704317bc1d2015eef4b64cd3c5d456683067`, matching head/integration | [Run 39948197256](https://github.com/Miskovy/parallel-javascript/actions/runs/39948197256), 339 contracts per cell; [C3 report](c3-byte-option-transition.md) and PR delivery  |
+
+E1, E2 and E3 respectively recorded package SHA-256
+`27b62145ad7e142e11cf281b8d121072edc53e7e4bd9a2172fef47bff8ab7730`,
+`8fadb0e7c8bad933dd0b362e12a9bd39c5236e05fa75b098ebcc1718396b3c5a` and
+`47a7a98002888e99eb3f52f17e732384c99fd4a2f9674d5b34d5e0313e7aa935`.
+They identify those development tarballs, not published RC4 or this documentation
+branch's newly packed README bytes. Failed attempts stay excluded in their
+original deliveries; later successes do not repair the historical incomplete B2
+Linux qualification. This review consulted the retained audited receipts and
+merged source; it did not rerun those campaigns.
+
+### Decisions for maintainer review
+
+| Decision                                     | Complete / exact references                                                                                                                                                     | Unresolved                                                                                                                                                            | Concrete proposed action after approval                                                                                                                   | Explicit decision required                                                                                                                                 |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| P1 containment                               | C1-A/Q integrated; E1 and the later E3 containment regressions retain ordinary exclusive leases, first-shutdown identity and confirmed-exit ownership                           | Hold applicability/eligibility and approval of the exact promotion candidate/evidence                                                                                 | Prepare a separate C1-P patch limited to the P1 annotation/status targets below; preserve all behavior and aliases                                        | Approve or defer P1 for a named candidate and record hold applicability; separately authorize that patch                                                   |
+| P2 ranges/count streams/map/batching         | C2 integrated; E2 plus E3 retain order, cleanup, context, batch/transfer/lease exclusions and constructor inference                                                             | Hold applicability/eligibility; precise count-only promotion boundary versus P3 strict modes                                                                          | Prepare only the P2 annotation/status patch below, keeping strict binary options/overloads experimental and all six deprecated aliases                    | Approve or defer P2 and its exact surface/evidence; authorize a scoped patch only after the eligibility decision                                           |
+| P3 strict results                            | C3 API migration integrated; E3 covers all declaration/capacity spellings, mixed pairs and existing strict-result regression boundaries                                         | Hold applicability/eligibility and approval of the strict-result contract; migration is not promotion                                                                 | Prepare only the P3 annotation/status patch below; preserve visible-byte scope, backing constraints and physical credit semantics                         | Approve or defer P3 for the named strict-result surface/candidate; separately authorize the patch                                                          |
+| Shared C2/C3 transition prerelease           | All six renames and deprecated aliases are implemented; E2/E3 establish development migration behavior                                                                          | Eligible release contents, actual unused version, release-baseline/tooling selection, candidate qualification and publication authorization                           | Prepare one combined transition artifact with all six aliases, migration notes and reviewed evidence; propose no partial migration publication            | Approve combined preparation/contents and select version/baseline in a later explicit review; publication needs its own authorization                      |
+| C4 alias-removal boundary                    | Six-name migration exists; no transition prerelease/window has occurred                                                                                                         | Actual shared release, selected following prerelease, removal authorization and closure evidence                                                                      | After the approved window, propose removing all six aliases and rejecting legacy presence, with installed/type/docs closure and affected qualification    | Approve the actual removal boundary and scoped C4 work later; merging C2/C3 or elapsed time alone cannot begin removal                                     |
+| Stage F qualification / separate publication | Current baseline selector, immutable RC4 inputs and publication guards are documented in [releasing](../releasing.md#proposed-future-candidate-gates--stage-f-remains-separate) | Accepted final contract/promotions, C4 closure, applicable holds, final source/version/baseline, floor/current patch matrix, extended/reproduction/rehearsal evidence | Prepare a separately reviewed selector/candidate package at F, then qualify and reproduce its exact staged artifact; G is a later publication-only action | Authorize F preparation and its exact matrix/identity separately; authorize G only after reviewing all required evidence. No date/version is selected here |
+
+### Exact scope of a future promotion patch
+
+These are proposals for review, **not changes made by this task**. Use the actual
+source markers, not a global removal of `@experimental`:
+
+- **P1:** `types/index.ts` — RunOptions.executionLease,
+  ShutdownOptions.forceAfter and RestartPolicy; `configuration/runtime-options.ts`
+  — PjsRuntimeOptions.restartPolicy; `errors/index.ts` — PjsExecutionLeaseError.
+- **P2:** `runtime.ts` — partitionRange, parallelFor and both parallelMapRange
+  overloads; `partition/range.ts` — PartitionRange, RangePartition,
+  PartitionInput, PartitionOptions and dispatchBatchSize, StreamRangeOptions and
+  maxBufferedResults, CountOnlyStreamRangeOptions, PjsTypedArray,
+  PjsTypedArrayConstructor, TypedMapRangeOptions and outputConstructor;
+  `partition/stream.ts` — PjsRangeStream. Approve the count-only streamRange
+  contract separately: its current count-only overload has no own experimental
+  marker, while the marker on the strict-binary overload must remain until P3.
+  A blanket method-wide promotion would obscure this distinction.
+- **P3:** `runtime.ts` — the strict-binary streamRange overload;
+  `partition/range.ts` — BinaryStreamRangeOptions,
+  UpperBoundBinaryStreamRangeOptions, PjsOwnedTypedArray, PjsBinaryResult and
+  ResultByteDeclaration. Map and binary error classes have no experimental
+  source marker to remove; their documented disposition still needs review.
+
+Paths above are relative to `packages/runtime/src/`. Each approved patch would
+update only its corresponding rows in the [inventory](v1-api-contract-inventory.md),
+[stability policy](../stability.md), [ADR 0023 status](../adr/0023-v1-api-stability-decisions.md),
+this decision table, relevant core/lifecycle/error/backpressure/partitioning
+guides and both READMEs. Diagnostic meanings, error identities, defaults and
+ownership do not change. Keep all six `@deprecated` aliases in declarations and
+runtime acceptance until C4's separate authorization. An unapproved group keeps
+its experimental annotations and status.
+
+Before applying a promotion, name its exact source/tree, review the supported
+declaration/comment/package diff and required ordinary, installed JS/both TS,
+inventory and relevant standard R2/R3 evidence under the matrix below. Fresh
+promotion-candidate campaigns remain the plan's default; any reuse requires an
+explicit review of exact relevant-input equivalence, never relabeled execution
+SHAs. Record the new package identity whenever comments/README/declarations
+change packed bytes. This documentation task runs docs/format/example/package
+checks, not manual R2/R3 qualification.
+
+**Smallest next action:** record approve/defer and hold applicability for each
+P1/P2/P3 row against the named evidence. Only then authorize the corresponding
+small annotation/status patch. Release version selection, the shared alias window,
+C4, Stage F and publication remain their own later decisions.
 
 ## C2 development implementation status
 
-The C2 handoff explicitly authorizes the shared alias-transition design from
-baseline main `3e0381317fde3438e1a3008dc8c4e84257ff066a` (PR #26).
-`dispatchBatchSize`, `maxBufferedResults` and `outputConstructor` now coexist
-with deprecated legacy aliases. Both-presence rejects, including equal values,
-inherited properties and explicit undefined. The
-[range reference](../partitioning.md#c2-development-option-transition) describes
-presence/getter order and transitional type compatibility; the
-[engineering report](c2-range-option-transition.md) records implementation,
-acceptance and source-bound qualification procedure. All feature-level
-experimental annotations remain; C2/P2 promotion is a separate approval.
-C3 migration is implemented; C4 remains unimplemented. C2 and C3 must land before the same eventual
-transition prerelease, which has not been selected or published. This work does
-not start the alias release window or authorize a partial migration publication.
-The historical planning-base ledger, occurrence audit and handoff below retain
-their original attribution. Separately tracked holds remain open and untouched.
+C2 is integrated through [PR #27](https://github.com/Miskovy/parallel-javascript/pull/27).
+Its three names and deprecated aliases, together with C3's three byte pairs, are
+documented in the [range transition reference](../partitioning.md#c2-development-option-transition).
+See E2/E3 above and the [C2 report](c2-range-option-transition.md).
 
 ## C1-A/Q implementation status
 
-The C1 handoff has now been invoked after this plan was integrated through PR #25
-at main `7533fbad82c3d80df80a6f6b633398b21dbcf827`. The
-[C1 engineering report](c1-containment-acceptance.md) records the acceptance,
-installed-consumer and comment/documentation changes, plus the clean-candidate
-qualification procedure. Source/environment/package receipts in delivery bind
-actual results to the final candidate. The planning-base ledger/findings and
-handoff text below remain their original reference; they are not newly executed
-B4 results or a second authorization. C1-A/Q does not remove experimental status,
-implement C2–C4 or decide unresolved release-hold applicability. C1-P remains a
-separate maintainer approval/action after evidence and eligibility review.
+C1-A/Q is integrated through [PR #26](https://github.com/Miskovy/parallel-javascript/pull/26).
+See E1/E3 above and the [C1 report](c1-containment-acceptance.md). C1-P remains a
+separate annotation/status action after promotion and eligibility approval.
 
 ## Verified starting state and qualification ledger
 
@@ -61,11 +129,11 @@ GitHub's commit metadata. The main-to-candidate tree diff is empty. Thus the
 merged implementation matches the reviewed/tested source tree; these remain
 historical B4 executions, not fresh runs at main or this documentation candidate.
 
-The current inventory records **61 roots, 17 runtime values, 44 type-only names,
+At this historical B4 planning base, the inventory recorded **61 roots, 17 runtime values, 44 type-only names,
 322 members, zero additional named reachable types and 158 diagnostic leaves**.
 B1 exposes existing closeable stream behavior; B2 constrains strict binary backing;
-B3 internalizes registry snapshots; B4 names diagnostic/error contracts. No proposed
-C2/C3 stable option spelling exists yet and no feature has been promoted. Preserve S1's facade,
+B3 internalizes registry snapshots; B4 names diagnostic/error contracts. At that base, no proposed
+C2/C3 option spelling existed and no feature had been promoted. Preserve S1's facade,
 configuration/composition/controller boundaries and existing state owners.
 
 The [B4 CI run 39837158296](https://github.com/Miskovy/parallel-javascript/actions/runs/39837158296)
@@ -117,6 +185,9 @@ can proceed; a promotion recommendation requires a maintainer's explicit
 applicability/eligibility decision. No blanket clearance is inferred from CI.
 
 ## C1 next: contract closure and qualification, then a separate promotion decision
+
+**Historical handoff, now implemented as C1-A/Q.** The original scope and findings
+are retained below; use the post-C3 decision table for the current next action.
 
 Code inspection identifies **no required C1 behavior change**. This is a scoped
 finding about the named contract, not proof that every possible defect is absent.
@@ -820,24 +891,14 @@ decision; do not delete useful APIs merely because the schedule is tight.
 
 ### Open maintainer decisions
 
-1. Authorize C1-A/Q as the next scoped acceptance/documentation/qualification
-   task; confirm that no new behavior or experimental-status removal is included.
-2. State which separately tracked holds apply to each unit and whether the named
-   C1 candidate is eligible for promotion review. Applicability is unresolved here;
-   no investigation or clearance is delegated by this plan.
-3. After the C1 checklist/evidence, approve or defer P1 for an exact candidate and
-   authorize the separate C1-P annotation/status patch. C2/P2 and C3/P3 remain
-   their own contract and promotion decisions.
-4. Approve the shared alias transition recommendation or explicitly choose/amend
-   to one breaking prerelease. Approve six mappings, presence/exclusion semantics,
-   transition type compatibility cost and the no-partial-publication boundary.
-   Choose actual unused release versions later; no alias window starts here.
-5. Approve C4's later removal boundary after a real transition, or its amended
-   closure scope under the breaking alternative. Separately approve F's exact
-   platform/patch/floor and source/artifact selection; G remains publication-only
-   authorization after all release gates, not an automatic consequence of C.
+Use the [post-C3 decision table](#decisions-for-maintainer-review) above. C1-A/Q,
+C2 and C3 implementation are complete; their merges do not authorize promotion,
+the shared transition publication, C4, F or G.
 
-### Ready-to-copy C1-A/Q prompt — future task, not executed by this plan
+### Ready-to-copy C1-A/Q prompt — historical handoff
+
+Invoked and integrated through PR #26. This retained prompt records the original
+authorization; it is not a new instruction to repeat the work.
 
 ```text
 Prepare PJS C1-A/Q acceptance and qualification from current verified main.

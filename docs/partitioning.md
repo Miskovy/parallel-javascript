@@ -1,19 +1,10 @@
 # Experimental numeric range operations
 
-C3 development migration is implemented: resultBytes, maxResultBytes and
-maxReservedResultBytes accept deprecated experimentalResultBytes,
-experimentalMaxResultBytes and experimentalMaxReservedResultBytes aliases.
-Each pair rejects both-presence, even equal, inherited or explicitly undefined.
-Mixed spellings across distinct declaration/capacity pairs are valid. Any exact
-spelling conflicts with any maximum spelling; one declaration and one capacity
-are required. Count-only types exclude all six byte properties. Features remain
-experimental; P3 approval and unresolved holds remain separate. No release window
-starts here, and C4 removal requires its later decision. See the
-[C3 engineering report](research/c3-byte-option-transition.md).
-
-For the current public contract and stability boundary, start with the
-[v0.15 user guide](guide/core-api.md) and [stability policy](stability.md).
-This detailed reference retains the experimental mechanics.
+For the integrated development contract and stability boundary, start with the
+[core API guide](guide/core-api.md) and [stability policy](stability.md).
+This reference describes experimental mechanics. Published RC4 predates the six
+new spellings and later declaration corrections; see the
+[documentation index](README.md) for release versus development scope.
 
 ## C2 development option transition
 
@@ -23,6 +14,14 @@ Their `experimentalDispatchBatchSize`, `experimentalMaxBufferedResults` and
 `experimentalOutputConstructor` aliases remain accepted and are deprecated.
 All these features remain experimental; P2 promotion requires separate approval.
 Defaults, count limits, batching 1–16, ordering and ownership are unchanged.
+
+C3 adds `resultBytes`, `maxResultBytes` and `maxReservedResultBytes` with
+deprecated `experimentalResultBytes`, `experimentalMaxResultBytes` and
+`experimentalMaxReservedResultBytes` aliases. Each pair rejects both-presence.
+Mixed spellings across distinct declaration/capacity pairs are valid; any exact
+declaration conflicts with any maximum declaration. Strict modes require one
+declaration and one capacity. Count-only types exclude all six byte spellings.
+P3 promotion remains separate; the unprefixed names do not establish stability.
 
 Each pair rejects when both properties are present, including equal values,
 explicit `undefined` and inherited properties. Neither spelling takes precedence.
@@ -44,8 +43,9 @@ overload order, shared-capable inputs/maps and closeable streams are preserved.
 Runtime presence checks remain authoritative, particularly without TypeScript's
 `exactOptionalPropertyTypes`, where an optional `never` can admit `undefined`.
 
-Strict binary contracts now accept the C3 development spellings and deprecated aliases. C2 and C3 must both land before the same eventual transition
-prerelease; this development change starts no release window. Publication and
+C2 and C3 are integrated, but the same eventual combined transition prerelease
+has not been selected or published. All six aliases remain; no merge starts the
+shared window. Publication and
 later C4 alias removal require separate decisions. See the
 [C2 report](research/c2-range-option-transition.md) and
 [migration plan](research/v1-api-migration-plan.md).
@@ -59,7 +59,7 @@ changing the API; v0.11 moves the same state machines behind explicit task,
 range, dispatch, and result-credit owners without changing their contract.
 `partitionRange()` returns ordered
 chunk outputs, `parallelFor()` returns `Promise<void>` without transporting
-successful values, `streamRange()` returns an `AsyncIterable` of identified
+successful values, `streamRange()` returns a closeable `PjsRangeStream` of identified
 partition outputs, and map returns one flat ordered element array. All four APIs
 and their derived admission limits remain experimental; no stable
 `parallel.for/map/reduce` family is exported. See the

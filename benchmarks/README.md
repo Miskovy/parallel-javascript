@@ -1,5 +1,9 @@
 # Benchmark methodology
 
+For the current package and API, use the [product documentation](../docs/README.md).
+Versioned benchmark commands, package names and observations below retain their
+original experiment scope; they are not current performance rankings.
+
 ## Flagship Monte Carlo public-package campaign
 
 The [preregistered Monte Carlo methodology](flagship-monte-carlo/README.md)

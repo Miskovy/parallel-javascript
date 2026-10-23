@@ -1,51 +1,38 @@
 # Security policy
 
-## Supported versions
+## Versions considered for triage
 
-As checked on 22 October 2026,
-[v1.0.0-rc.4](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.4)
-is the published prerelease; [npm metadata](https://registry.npmjs.org/@pjavascript%2fruntime)
-reports `latest` and `next` at RC4. It is the current published line for security
-triage, not final v1.0.0. Development-source additions and proposed v1 decisions
-must not be assumed present in that immutable package.
-Pre-1.0 releases do not carry a long-term security-support guarantee, and older
-releases are not promised backported fixes.
+As checked on 23 October 2026, [v1.0.0-rc.4](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.4)
+is the published prerelease and [npm `latest` and `next`](https://registry.npmjs.org/@pjavascript%2fruntime)
+both select it. It is the current published line for security triage. Identify
+development builds by their commit; later source is not part of immutable RC4.
+Pre-1.0 releases have no long-term security-support guarantee, and older releases
+are not promised backported fixes.
 
-## Report a vulnerability privately
+## Report privately
 
-**Do not open a public GitHub issue containing vulnerability details.** Do not
-publish exploit details in pull requests, logs, or other public discussions.
+Use [GitHub's private vulnerability reporting flow](https://github.com/Miskovy/parallel-javascript/security/advisories/new)
+from **Security → Report a vulnerability**. Reporting was verified enabled on
+23 October 2026. If the flow becomes unavailable, use the private contact method
+available from [@Miskovy's profile](https://github.com/Miskovy) to request a private
+channel. Do not put vulnerability or exploit details in public issues, pull
+requests, discussions or logs.
 
-When GitHub Private Vulnerability Reporting is available, open this repository's
-**Security → Report a vulnerability** flow to submit a private report and
-coordinate through a security advisory. Start at the
-[repository Security page](https://github.com/Miskovy/parallel-javascript/security).
+Please include:
 
-If that flow is not available, contact the project maintainer privately using the
-private contact method available from the
-[@Miskovy GitHub profile](https://github.com/Miskovy). Ask for a private reporting
-channel rather than publishing exploit details.
-
-Please provide:
-
-- Affected PJS version and installation source.
-- Node version, operating system, and architecture.
-- Potential impact and any conditions needed to trigger it.
-- Reproduction steps and a proof of concept if it is safe to share privately.
+- Affected version or commit and installation source.
+- Exact Node version, operating system and architecture.
+- Potential impact, required conditions and a minimal private reproduction.
 - A suggested mitigation, if known.
 
-Remove unrelated secrets and personal information from attachments. Please allow
-coordinated disclosure while the maintainer investigates and prepares a response.
-PJS has one primary maintainer; there are no guaranteed response or fix deadlines.
+Remove unrelated secrets and personal information from code, logs and attachments.
+Coordinate disclosure privately while the maintainer investigates and prepares a
+response. PJS has one primary maintainer; response and fix deadlines are not
+guaranteed.
 
-## Relevant security subjects
+## Execution boundary
 
-Examples include worker task loading, module path handling, serialization,
-transfer ownership, SharedArrayBuffer usage, resource exhaustion, queue or
-backpressure bypass, worker lifecycle, unexpected code execution, and package
-contents. These are areas worth examining, not claims of known vulnerabilities.
-
-PJS loads trusted task modules; worker isolates are not a sandbox for untrusted
-code. Include the trust boundary you believe was crossed in a report.
-Ordinary functional bugs and performance questions belong in the
-[support routes](SUPPORT.md) unless they involve a security impact.
+PJS loads trusted application task modules with Node's filesystem, network and
+process capabilities. Worker isolates are not a sandbox for untrusted code.
+Explain the trust boundary involved in your report. Ordinary functional bugs
+and performance questions belong in the [support routes](SUPPORT.md).

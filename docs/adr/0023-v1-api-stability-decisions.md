@@ -2,30 +2,22 @@
 
 ## Status
 
-**Proposed — Stage B integrated; Stage C decisions/promotion still pending.** No surface
-is promoted and no final release is authorized. This records recommendations,
-not an accepted replacement of earlier contracts. It preserves ADR 0022's S1
-ownership and all existing physical-completion/containment constraints.
+**Proposed — implementation through C3 integrated; promotion/policy decisions pending.**
+No surface is promoted and no final release is authorized. This records
+recommendations, not acceptance of the ADR as a whole. Preserve ADR 0022's S1
+ownership and all physical-completion/containment constraints.
 
-S1, corrected Stage A, B1 and B2 are integrated through PR #22 at main
-`2ae078b93c8b819d2d843ecb32ffb1fc5e6728f7`. B3 is separately authorized and
-implemented in development: snapshot storage/access is internal and the unsupported
-public method/declaration is removed. B3 is integrated through PR #23 at main
-`e58e792a2069a9ac72cc13fe2309eb1e3c2b7dab`. B4's explicit diagnostic/error
-contracts are integrated through PR #24 at current main
-`35f2aacfe431516ed559409a3cba6bf2ccd2e6b7`, with a tree identical to reviewed
-e78b773 and its tested synthetic merge. The [Stage C engineering plan](../research/v1-api-migration-plan.md)
-records the evidence ledger, next C1 acceptance/qualification unit and distinct
-C1–C4 promotion/migration decisions. No runtime change or experimental-status
-removal is implemented by that planning update.
-This does not accept C promotion or this ADR as a whole. The context and counts below retain the
-historical Stage A baseline; the canonical inventory records current B1–B4
-changes and the explicit pre-v1 snapshot migration.
+As verified on 23 October 2026, main
+`0f79db5e1192dd47db32d2e300fc382a0f431462` includes S1, corrected Stage A,
+B1–B4, C1-A/Q, C2 and C3. The [Stage C decision table](../research/v1-api-migration-plan.md#decisions-for-maintainer-review)
+is the current approval queue and exact proposed annotation/status scope. All six
+deprecated aliases and experimental annotations remain. Promotion, the shared
+transition prerelease, C4, F and G require their separate decisions; unresolved
+hold applicability is unchanged.
 
-C3 development update: the three byte-option alias transitions are implemented
-under the explicitly authorized migration handoff. All six aliases and feature
-experimental status remain. This accepts no promotion, release window, version
-or C4 removal. See the [C3 report](../research/c3-byte-option-transition.md).
+The [inventory](../research/v1-api-contract-inventory.md) records today's contract.
+The context and counts below retain the historical Stage A baseline; later C2
+notes describe that unit's integration point, before C3.
 
 ## Historical Stage A context and baseline
 
