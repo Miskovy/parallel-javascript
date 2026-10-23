@@ -1,0 +1,1626 @@
+{
+  "sourceCommit": "78189574cdaa5b814a02b562b52c33a7745252bc",
+  "workflowRun": 40015092066,
+  "workflowUrl": "https://github.com/Miskovy/parallel-javascript/actions/runs/40015092066",
+  "archiveDigests": [
+    {
+      "id": 12528780492,
+      "name": "r3-memory-ubuntu-latest-node-24.0.0",
+      "sha256": "a38cede0e31370b349fd2c9c1d60eb99eb02eed82c36d090e332c736243c1fde",
+      "size": 97286
+    },
+    {
+      "id": 12528765687,
+      "name": "r3-memory-windows-latest-node-24",
+      "sha256": "dcbd73642f87274ecff990dc456c396d971c101b3be2753ffd11e6e32233c34f",
+      "size": 96144
+    },
+    {
+      "id": 12528745926,
+      "name": "runtime-contracts-ubuntu-latest-node-22.13.0",
+      "sha256": "df0d6e458d91fe9de8ab14179228bf3e354498a8c0b6c862f9f9984a71a71182",
+      "size": 153333
+    },
+    {
+      "id": 12528715991,
+      "name": "r3-memory-ubuntu-latest-node-22.13.0",
+      "sha256": "a1122adafee3d9c89b83695cf6dd3b2794ce19b77483ded26f63cd0029e7763b",
+      "size": 94552
+    },
+    {
+      "id": 12528606238,
+      "name": "r3-memory-ubuntu-latest-node-24",
+      "sha256": "aaaa869a0c570ffb9a9c4f388e53476147b76d9e9c74f698d2bc897c3dc30561",
+      "size": 97313
+    },
+    {
+      "id": 12528601499,
+      "name": "r2-lifecycle-windows-latest-node-24.0.0",
+      "sha256": "1879455e5b29b4098934f599e520e352b07020851dbd8ba3c18458110ac520f2",
+      "size": 550852
+    },
+    {
+      "id": 12528506152,
+      "name": "runtime-contracts-windows-latest-node-24",
+      "sha256": "2a2e9bf34f95ef29a50cee84356267f1d4d01dbfa23e3aa82066a1c3f8f4a61a",
+      "size": 149447
+    },
+    {
+      "id": 12528411722,
+      "name": "r2-lifecycle-ubuntu-latest-node-24",
+      "sha256": "709812be402a7a075214904afff787ad8ba226cdc1dda8f978c284edf4c4dae9",
+      "size": 550897
+    },
+    {
+      "id": 12528277359,
+      "name": "node24-floor-windows-latest",
+      "sha256": "74170fe5816de71cb00d4a1a6f0075e4bb45c4f3e3a910a2553d949706be5565",
+      "size": 27043
+    },
+    {
+      "id": 12528166786,
+      "name": "r2-lifecycle-ubuntu-latest-node-24.0.0",
+      "sha256": "5828e67c7ea1d65b14256838fc226b38f7bd0a8e05efa4ceec4499b67dedc32c",
+      "size": 550893
+    },
+    {
+      "id": 12528057848,
+      "name": "r3-memory-windows-latest-node-24.0.0",
+      "sha256": "b1d980f28ca2f3e444f94478eb9c75c36418e1bd11897401719a66bdf1902337",
+      "size": 97308
+    },
+    {
+      "id": 12528007460,
+      "name": "runtime-contracts-windows-latest-node-24.0.0",
+      "sha256": "cbfa70b5ae64bdfe648485cdd8ed3cac5b3cf590933a69a21134cc3cbb56ab9d",
+      "size": 149409
+    },
+    {
+      "id": 12527852449,
+      "name": "runtime-contracts-windows-latest-node-22.13.0",
+      "sha256": "cd17dab786d213bac571b6b845e40328c52678e1659e37651726b9d8b26d1580",
+      "size": 152886
+    },
+    {
+      "id": 12527782727,
+      "name": "r2-lifecycle-windows-latest-node-22.13.0",
+      "sha256": "89f70e5aaf8a38929eda619b67816f6ded781cee648982063eeba8a69cfb3d3f",
+      "size": 551080
+    },
+    {
+      "id": 12527648111,
+      "name": "runtime-contracts-ubuntu-latest-node-24",
+      "sha256": "addd6dd4644ff59663e7a6a15a91334bf6e333ad10b4fd8cc432696f38c26ed0",
+      "size": 149888
+    },
+    {
+      "id": 12527519295,
+      "name": "r2-lifecycle-ubuntu-latest-node-22.13.0",
+      "sha256": "afa8d56159c312789cc60550ba33b65f56d214e40b992c36c3b5994de22e8bc3",
+      "size": 551129
+    },
+    {
+      "id": 12527279151,
+      "name": "runtime-contracts-ubuntu-latest-node-24.0.0",
+      "sha256": "727a802d916fa0245a1e4a1ad12c359511ef91b5333bca3191df24706c668195",
+      "size": 149880
+    },
+    {
+      "id": 12527244306,
+      "name": "node24-floor-ubuntu-latest",
+      "sha256": "b0b22853fb0b1afef43e404fae172e12b642623057042adaa816c7bdaf402f91",
+      "size": 27064
+    },
+    {
+      "id": 12527224407,
+      "name": "r3-memory-windows-latest-node-22.13.0",
+      "sha256": "1a5f0bbae459955589419fcd6c224d7d6bd70f9ffa7c2ad9f1db6a726ec17513",
+      "size": 94754
+    },
+    {
+      "id": 12527154560,
+      "name": "r2-lifecycle-windows-latest-node-24",
+      "sha256": "924eac5103812fd840ae808c282273514aabfb145cd3489d0552c91b2ac2cc65",
+      "size": 550867
+    }
+  ],
+  "zipCrcAndSafePathsVerified": true,
+  "extractedFiles": 2260,
+  "cells": [
+    {
+      "artifact": "runtime-contracts-ubuntu-latest-node-22.13.0",
+      "node": "v22.13.0",
+      "platform": "linux",
+      "arch": "x64",
+      "runtimeNpm": "10.9.2",
+      "releaseNpm": "11.19.0",
+      "contracts": {
+        "tests": 339,
+        "pass": 339,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "r2": {
+        "histories": 162,
+        "actions": 2746,
+        "cleanup": 162,
+        "realWorkers": 8,
+        "negativeDetection": [
+          {
+            "invariant": "I1",
+            "fault": "premature physical completion observation",
+            "passed": true
+          },
+          {
+            "invariant": "I3",
+            "fault": "duplicate settlement observation",
+            "passed": true,
+            "reduction": {
+              "history": {
+                "seed": 123456,
+                "caseId": 1,
+                "generatorVersion": "r2-generator-1",
+                "profile": "smoke",
+                "config": {
+                  "workers": 1,
+                  "maxQueue": 1,
+                  "rolling": true,
+                  "maxRestarts": 2
+                },
+                "actions": [
+                  {
+                    "type": "CREATE_RUNTIME"
+                  },
+                  {
+                    "type": "OBSERVE_READY"
+                  },
+                  {
+                    "type": "SUBMIT_TASK",
+                    "task": "t0",
+                    "leased": true
+                  },
+                  {
+                    "type": "CANCEL_TASK",
+                    "task": "t0"
+                  },
+                  {
+                    "type": "INJECT_PROTOCOL_FAILURE",
+                    "worker": 1
+                  },
+                  {
+                    "type": "CONFIRM_WORKER_EXIT",
+                    "worker": 1
+                  },
+                  {
+                    "type": "BEGIN_FORCED_SHUTDOWN"
+                  },
+                  {
+                    "type": "CONFIRM_WORKER_EXIT",
+                    "worker": 2
+                  },
+                  {
+                    "type": "OBSERVE_SHUTDOWN_COMPLETION"
+                  }
+                ]
+              },
+              "attempts": 46,
+              "property": "I3",
+              "signature": "I3:duplicate settlement t0",
+              "originalActions": 17,
+              "reducedActions": 9
+            },
+            "replayCommand": "node packages/runtime/test/model-lifecycle.test.mjs"
+          },
+          {
+            "invariants": ["I2", "I7"],
+            "fault": "population/stale-lease observation doubles",
+            "passed": true
+          }
+        ],
+        "replay": [
+          {
+            "seed": 7,
+            "caseId": 0,
+            "passed": true
+          }
+        ]
+      },
+      "r3": {
+        "children": 11,
+        "samples": 1261,
+        "checkpoints": 612,
+        "created": 47,
+        "confirmedExits": 47
+      },
+      "packageSha256": "9a449fa83c2472197d021f845d89dbe57dfc5e1771c3afccf50db9ad9d3aeacc",
+      "packageFiles": 193,
+      "checks": [
+        {
+          "name": "build",
+          "exitCode": 0
+        },
+        {
+          "name": "test:contracts",
+          "exitCode": 0
+        },
+        {
+          "name": "test:types",
+          "exitCode": 0
+        },
+        {
+          "name": "typecheck:compat",
+          "exitCode": 0
+        },
+        {
+          "name": "test:package",
+          "exitCode": 0
+        },
+        {
+          "name": "test:release",
+          "exitCode": 0
+        },
+        {
+          "name": "lint",
+          "exitCode": 0
+        },
+        {
+          "name": "format:check",
+          "exitCode": 0
+        },
+        {
+          "name": "test:docs",
+          "exitCode": 0
+        },
+        {
+          "name": "diff",
+          "exitCode": 0
+        }
+      ],
+      "packageChecks": [
+        {
+          "label": "pack dry run",
+          "exitCode": 0
+        },
+        {
+          "label": "pack",
+          "exitCode": 0
+        },
+        {
+          "label": "install tarball offline",
+          "exitCode": 0
+        },
+        {
+          "label": "ESM public contract and worker paths",
+          "exitCode": 0
+        },
+        {
+          "label": "installed closeable range streams and unchanged runtime root keys",
+          "exitCode": 0
+        },
+        {
+          "label": "installed strict binary outputs, envelopes and JavaScript rejection guards",
+          "exitCode": 0
+        },
+        {
+          "label": "installed physical containment and recovery",
+          "exitCode": 0
+        },
+        {
+          "label": "example basic-run",
+          "exitCode": 0
+        },
+        {
+          "label": "example range-work",
+          "exitCode": 0
+        },
+        {
+          "label": "example shared-input",
+          "exitCode": 0
+        },
+        {
+          "label": "example streaming-binary",
+          "exitCode": 0
+        },
+        {
+          "label": "example cancellation",
+          "exitCode": 0
+        },
+        {
+          "label": "example transfer",
+          "exitCode": 0
+        },
+        {
+          "label": "primary compiler version",
+          "exitCode": 0
+        },
+        {
+          "label": "primary installed declaration regression tests",
+          "exitCode": 0
+        },
+        {
+          "label": "primary TypeScript consumer build",
+          "exitCode": 0
+        },
+        {
+          "label": "primary TypeScript emitted consumer run",
+          "exitCode": 0
+        },
+        {
+          "label": "compatibility compiler version",
+          "exitCode": 0
+        },
+        {
+          "label": "compatibility installed declaration regression tests",
+          "exitCode": 0
+        },
+        {
+          "label": "compatibility TypeScript consumer build",
+          "exitCode": 0
+        },
+        {
+          "label": "compatibility TypeScript emitted consumer run",
+          "exitCode": 0
+        }
+      ]
+    },
+    {
+      "artifact": "runtime-contracts-ubuntu-latest-node-24",
+      "node": "v24.21.0",
+      "platform": "linux",
+      "arch": "x64",
+      "runtimeNpm": "11.19.0",
+      "releaseNpm": "11.19.0",
+      "contracts": {
+        "tests": 339,
+        "pass": 339,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "r2": {
+        "histories": 162,
+        "actions": 2746,
+        "cleanup": 162,
+        "realWorkers": 8,
+        "negativeDetection": [
+          {
+            "invariant": "I1",
+            "fault": "premature physical completion observation",
+            "passed": true
+          },
+          {
+            "invariant": "I3",
+            "fault": "duplicate settlement observation",
+            "passed": true,
+            "reduction": {
+              "history": {
+                "seed": 123456,
+                "caseId": 1,
+                "generatorVersion": "r2-generator-1",
+                "profile": "smoke",
+                "config": {
+                  "workers": 1,
+                  "maxQueue": 1,
+                  "rolling": true,
+                  "maxRestarts": 2
+                },
+                "actions": [
+                  {
+                    "type": "CREATE_RUNTIME"
+                  },
+                  {
+                    "type": "OBSERVE_READY"
+                  },
+                  {
+                    "type": "SUBMIT_TASK",
+                    "task": "t0",
+                    "leased": true
+                  },
+                  {
+                    "type": "CANCEL_TASK",
+                    "task": "t0"
+                  },
+                  {
+                    "type": "INJECT_PROTOCOL_FAILURE",
+                    "worker": 1
+                  },
+                  {
+                    "type": "CONFIRM_WORKER_EXIT",
+                    "worker": 1
+                  },
+                  {
+                    "type": "BEGIN_FORCED_SHUTDOWN"
+                  },
+                  {
+                    "type": "CONFIRM_WORKER_EXIT",
+                    "worker": 2
+                  },
+                  {
+                    "type": "OBSERVE_SHUTDOWN_COMPLETION"
+                  }
+                ]
+              },
+              "attempts": 46,
+              "property": "I3",
+              "signature": "I3:duplicate settlement t0",
+              "originalActions": 17,
+              "reducedActions": 9
+            },
+            "replayCommand": "node packages/runtime/test/model-lifecycle.test.mjs"
+          },
+          {
+            "invariants": ["I2", "I7"],
+            "fault": "population/stale-lease observation doubles",
+            "passed": true
+          }
+        ],
+        "replay": [
+          {
+            "seed": 7,
+            "caseId": 0,
+            "passed": true
+          }
+        ]
+      },
+      "r3": {
+        "children": 11,
+        "samples": 1261,
+        "checkpoints": 612,
+        "created": 47,
+        "confirmedExits": 47
+      },
+      "packageSha256": "9a449fa83c2472197d021f845d89dbe57dfc5e1771c3afccf50db9ad9d3aeacc",
+      "packageFiles": 193,
+      "checks": [
+        {
+          "name": "build",
+          "exitCode": 0
+        },
+        {
+          "name": "test:contracts",
+          "exitCode": 0
+        },
+        {
+          "name": "test:types",
+          "exitCode": 0
+        },
+        {
+          "name": "typecheck:compat",
+          "exitCode": 0
+        },
+        {
+          "name": "test:package",
+          "exitCode": 0
+        },
+        {
+          "name": "test:release",
+          "exitCode": 0
+        },
+        {
+          "name": "lint",
+          "exitCode": 0
+        },
+        {
+          "name": "format:check",
+          "exitCode": 0
+        },
+        {
+          "name": "test:docs",
+          "exitCode": 0
+        },
+        {
+          "name": "diff",
+          "exitCode": 0
+        }
+      ],
+      "packageChecks": [
+        {
+          "label": "pack dry run",
+          "exitCode": 0
+        },
+        {
+          "label": "pack",
+          "exitCode": 0
+        },
+        {
+          "label": "install tarball offline",
+          "exitCode": 0
+        },
+        {
+          "label": "ESM public contract and worker paths",
+          "exitCode": 0
+        },
+        {
+          "label": "installed closeable range streams and unchanged runtime root keys",
+          "exitCode": 0
+        },
+        {
+          "label": "installed strict binary outputs, envelopes and JavaScript rejection guards",
+          "exitCode": 0
+        },
+        {
+          "label": "installed physical containment and recovery",
+          "exitCode": 0
+        },
+        {
+          "label": "example basic-run",
+          "exitCode": 0
+        },
+        {
+          "label": "example range-work",
+          "exitCode": 0
+        },
+        {
+          "label": "example shared-input",
+          "exitCode": 0
+        },
+        {
+          "label": "example streaming-binary",
+          "exitCode": 0
+        },
+        {
+          "label": "example cancellation",
+          "exitCode": 0
+        },
+        {
+          "label": "example transfer",
+          "exitCode": 0
+        },
+        {
+          "label": "primary compiler version",
+          "exitCode": 0
+        },
+        {
+          "label": "primary installed declaration regression tests",
+          "exitCode": 0
+        },
+        {
+          "label": "primary TypeScript consumer build",
+          "exitCode": 0
+        },
+        {
+          "label": "primary TypeScript emitted consumer run",
+          "exitCode": 0
+        },
+        {
+          "label": "compatibility compiler version",
+          "exitCode": 0
+        },
+        {
+          "label": "compatibility installed declaration regression tests",
+          "exitCode": 0
+        },
+        {
+          "label": "compatibility TypeScript consumer build",
+          "exitCode": 0
+        },
+        {
+          "label": "compatibility TypeScript emitted consumer run",
+          "exitCode": 0
+        }
+      ]
+    },
+    {
+      "artifact": "runtime-contracts-ubuntu-latest-node-24.0.0",
+      "node": "v24.0.0",
+      "platform": "linux",
+      "arch": "x64",
+      "runtimeNpm": "11.3.0",
+      "releaseNpm": "11.19.0",
+      "contracts": {
+        "tests": 339,
+        "pass": 339,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "r2": {
+        "histories": 162,
+        "actions": 2746,
+        "cleanup": 162,
+        "realWorkers": 8,
+        "negativeDetection": [
+          {
+            "invariant": "I1",
+            "fault": "premature physical completion observation",
+            "passed": true
+          },
+          {
+            "invariant": "I3",
+            "fault": "duplicate settlement observation",
+            "passed": true,
+            "reduction": {
+              "history": {
+                "seed": 123456,
+                "caseId": 1,
+                "generatorVersion": "r2-generator-1",
+                "profile": "smoke",
+                "config": {
+                  "workers": 1,
+                  "maxQueue": 1,
+                  "rolling": true,
+                  "maxRestarts": 2
+                },
+                "actions": [
+                  {
+                    "type": "CREATE_RUNTIME"
+                  },
+                  {
+                    "type": "OBSERVE_READY"
+                  },
+                  {
+                    "type": "SUBMIT_TASK",
+                    "task": "t0",
+                    "leased": true
+                  },
+                  {
+                    "type": "CANCEL_TASK",
+                    "task": "t0"
+                  },
+                  {
+                    "type": "INJECT_PROTOCOL_FAILURE",
+                    "worker": 1
+                  },
+                  {
+                    "type": "CONFIRM_WORKER_EXIT",
+                    "worker": 1
+                  },
+                  {
+                    "type": "BEGIN_FORCED_SHUTDOWN"
+                  },
+                  {
+                    "type": "CONFIRM_WORKER_EXIT",
+                    "worker": 2
+                  },
+                  {
+                    "type": "OBSERVE_SHUTDOWN_COMPLETION"
+                  }
+                ]
+              },
+              "attempts": 46,
+              "property": "I3",
+              "signature": "I3:duplicate settlement t0",
+              "originalActions": 17,
+              "reducedActions": 9
+            },
+            "replayCommand": "node packages/runtime/test/model-lifecycle.test.mjs"
+          },
+          {
+            "invariants": ["I2", "I7"],
+            "fault": "population/stale-lease observation doubles",
+            "passed": true
+          }
+        ],
+        "replay": [
+          {
+            "seed": 7,
+            "caseId": 0,
+            "passed": true
+          }
+        ]
+      },
+      "r3": {
+        "children": 11,
+        "samples": 1261,
+        "checkpoints": 612,
+        "created": 47,
+        "confirmedExits": 47
+      },
+      "packageSha256": "9a449fa83c2472197d021f845d89dbe57dfc5e1771c3afccf50db9ad9d3aeacc",
+      "packageFiles": 193,
+      "checks": [
+        {
+          "name": "build",
+          "exitCode": 0
+        },
+        {
+          "name": "test:contracts",
+          "exitCode": 0
+        },
+        {
+          "name": "test:types",
+          "exitCode": 0
+        },
+        {
+          "name": "typecheck:compat",
+          "exitCode": 0
+        },
+        {
+          "name": "test:package",
+          "exitCode": 0
+        },
+        {
+          "name": "test:release",
+          "exitCode": 0
+        },
+        {
+          "name": "lint",
+          "exitCode": 0
+        },
+        {
+          "name": "format:check",
+          "exitCode": 0
+        },
+        {
+          "name": "test:docs",
+          "exitCode": 0
+        },
+        {
+          "name": "diff",
+          "exitCode": 0
+        }
+      ],
+      "packageChecks": [
+        {
+          "label": "pack dry run",
+          "exitCode": 0
+        },
+        {
+          "label": "pack",
+          "exitCode": 0
+        },
+        {
+          "label": "install tarball offline",
+          "exitCode": 0
+        },
+        {
+          "label": "ESM public contract and worker paths",
+          "exitCode": 0
+        },
+        {
+          "label": "installed closeable range streams and unchanged runtime root keys",
+          "exitCode": 0
+        },
+        {
+          "label": "installed strict binary outputs, envelopes and JavaScript rejection guards",
+          "exitCode": 0
+        },
+        {
+          "label": "installed physical containment and recovery",
+          "exitCode": 0
+        },
+        {
+          "label": "example basic-run",
+          "exitCode": 0
+        },
+        {
+          "label": "example range-work",
+          "exitCode": 0
+        },
+        {
+          "label": "example shared-input",
+          "exitCode": 0
+        },
+        {
+          "label": "example streaming-binary",
+          "exitCode": 0
+        },
+        {
+          "label": "example cancellation",
+          "exitCode": 0
+        },
+        {
+          "label": "example transfer",
+          "exitCode": 0
+        },
+        {
+          "label": "primary compiler version",
+          "exitCode": 0
+        },
+        {
+          "label": "primary installed declaration regression tests",
+          "exitCode": 0
+        },
+        {
+          "label": "primary TypeScript consumer build",
+          "exitCode": 0
+        },
+        {
+          "label": "primary TypeScript emitted consumer run",
+          "exitCode": 0
+        },
+        {
+          "label": "compatibility compiler version",
+          "exitCode": 0
+        },
+        {
+          "label": "compatibility installed declaration regression tests",
+          "exitCode": 0
+        },
+        {
+          "label": "compatibility TypeScript consumer build",
+          "exitCode": 0
+        },
+        {
+          "label": "compatibility TypeScript emitted consumer run",
+          "exitCode": 0
+        }
+      ]
+    },
+    {
+      "artifact": "runtime-contracts-windows-latest-node-22.13.0",
+      "node": "v22.13.0",
+      "platform": "win32",
+      "arch": "x64",
+      "runtimeNpm": "10.9.2",
+      "releaseNpm": "11.19.0",
+      "contracts": {
+        "tests": 339,
+        "pass": 339,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "r2": {
+        "histories": 162,
+        "actions": 2746,
+        "cleanup": 162,
+        "realWorkers": 8,
+        "negativeDetection": [
+          {
+            "invariant": "I1",
+            "fault": "premature physical completion observation",
+            "passed": true
+          },
+          {
+            "invariant": "I3",
+            "fault": "duplicate settlement observation",
+            "passed": true,
+            "reduction": {
+              "history": {
+                "seed": 123456,
+                "caseId": 1,
+                "generatorVersion": "r2-generator-1",
+                "profile": "smoke",
+                "config": {
+                  "workers": 1,
+                  "maxQueue": 1,
+                  "rolling": true,
+                  "maxRestarts": 2
+                },
+                "actions": [
+                  {
+                    "type": "CREATE_RUNTIME"
+                  },
+                  {
+                    "type": "OBSERVE_READY"
+                  },
+                  {
+                    "type": "SUBMIT_TASK",
+                    "task": "t0",
+                    "leased": true
+                  },
+                  {
+                    "type": "CANCEL_TASK",
+                    "task": "t0"
+                  },
+                  {
+                    "type": "INJECT_PROTOCOL_FAILURE",
+                    "worker": 1
+                  },
+                  {
+                    "type": "CONFIRM_WORKER_EXIT",
+                    "worker": 1
+                  },
+                  {
+                    "type": "BEGIN_FORCED_SHUTDOWN"
+                  },
+                  {
+                    "type": "CONFIRM_WORKER_EXIT",
+                    "worker": 2
+                  },
+                  {
+                    "type": "OBSERVE_SHUTDOWN_COMPLETION"
+                  }
+                ]
+              },
+              "attempts": 46,
+              "property": "I3",
+              "signature": "I3:duplicate settlement t0",
+              "originalActions": 17,
+              "reducedActions": 9
+            },
+            "replayCommand": "node packages/runtime/test/model-lifecycle.test.mjs"
+          },
+          {
+            "invariants": ["I2", "I7"],
+            "fault": "population/stale-lease observation doubles",
+            "passed": true
+          }
+        ],
+        "replay": [
+          {
+            "seed": 7,
+            "caseId": 0,
+            "passed": true
+          }
+        ]
+      },
+      "r3": {
+        "children": 11,
+        "samples": 1261,
+        "checkpoints": 612,
+        "created": 47,
+        "confirmedExits": 47
+      },
+      "packageSha256": "9a449fa83c2472197d021f845d89dbe57dfc5e1771c3afccf50db9ad9d3aeacc",
+      "packageFiles": 193,
+      "checks": [
+        {
+          "name": "build",
+          "exitCode": 0
+        },
+        {
+          "name": "test:contracts",
+          "exitCode": 0
+        },
+        {
+          "name": "test:types",
+          "exitCode": 0
+        },
+        {
+          "name": "typecheck:compat",
+          "exitCode": 0
+        },
+        {
+          "name": "test:package",
+          "exitCode": 0
+        },
+        {
+          "name": "test:release",
+          "exitCode": 0
+        },
+        {
+          "name": "lint",
+          "exitCode": 0
+        },
+        {
+          "name": "format:check",
+          "exitCode": 0
+        },
+        {
+          "name": "test:docs",
+          "exitCode": 0
+        },
+        {
+          "name": "diff",
+          "exitCode": 0
+        }
+      ],
+      "packageChecks": [
+        {
+          "label": "pack dry run",
+          "exitCode": 0
+        },
+        {
+          "label": "pack",
+          "exitCode": 0
+        },
+        {
+          "label": "install tarball offline",
+          "exitCode": 0
+        },
+        {
+          "label": "ESM public contract and worker paths",
+          "exitCode": 0
+        },
+        {
+          "label": "installed closeable range streams and unchanged runtime root keys",
+          "exitCode": 0
+        },
+        {
+          "label": "installed strict binary outputs, envelopes and JavaScript rejection guards",
+          "exitCode": 0
+        },
+        {
+          "label": "installed physical containment and recovery",
+          "exitCode": 0
+        },
+        {
+          "label": "example basic-run",
+          "exitCode": 0
+        },
+        {
+          "label": "example range-work",
+          "exitCode": 0
+        },
+        {
+          "label": "example shared-input",
+          "exitCode": 0
+        },
+        {
+          "label": "example streaming-binary",
+          "exitCode": 0
+        },
+        {
+          "label": "example cancellation",
+          "exitCode": 0
+        },
+        {
+          "label": "example transfer",
+          "exitCode": 0
+        },
+        {
+          "label": "primary compiler version",
+          "exitCode": 0
+        },
+        {
+          "label": "primary installed declaration regression tests",
+          "exitCode": 0
+        },
+        {
+          "label": "primary TypeScript consumer build",
+          "exitCode": 0
+        },
+        {
+          "label": "primary TypeScript emitted consumer run",
+          "exitCode": 0
+        },
+        {
+          "label": "compatibility compiler version",
+          "exitCode": 0
+        },
+        {
+          "label": "compatibility installed declaration regression tests",
+          "exitCode": 0
+        },
+        {
+          "label": "compatibility TypeScript consumer build",
+          "exitCode": 0
+        },
+        {
+          "label": "compatibility TypeScript emitted consumer run",
+          "exitCode": 0
+        }
+      ]
+    },
+    {
+      "artifact": "runtime-contracts-windows-latest-node-24",
+      "node": "v24.22.1",
+      "platform": "win32",
+      "arch": "x64",
+      "runtimeNpm": "11.19.1",
+      "releaseNpm": "11.19.0",
+      "contracts": {
+        "tests": 339,
+        "pass": 339,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "r2": {
+        "histories": 162,
+        "actions": 2746,
+        "cleanup": 162,
+        "realWorkers": 8,
+        "negativeDetection": [
+          {
+            "invariant": "I1",
+            "fault": "premature physical completion observation",
+            "passed": true
+          },
+          {
+            "invariant": "I3",
+            "fault": "duplicate settlement observation",
+            "passed": true,
+            "reduction": {
+              "history": {
+                "seed": 123456,
+                "caseId": 1,
+                "generatorVersion": "r2-generator-1",
+                "profile": "smoke",
+                "config": {
+                  "workers": 1,
+                  "maxQueue": 1,
+                  "rolling": true,
+                  "maxRestarts": 2
+                },
+                "actions": [
+                  {
+                    "type": "CREATE_RUNTIME"
+                  },
+                  {
+                    "type": "OBSERVE_READY"
+                  },
+                  {
+                    "type": "SUBMIT_TASK",
+                    "task": "t0",
+                    "leased": true
+                  },
+                  {
+                    "type": "CANCEL_TASK",
+                    "task": "t0"
+                  },
+                  {
+                    "type": "INJECT_PROTOCOL_FAILURE",
+                    "worker": 1
+                  },
+                  {
+                    "type": "CONFIRM_WORKER_EXIT",
+                    "worker": 1
+                  },
+                  {
+                    "type": "BEGIN_FORCED_SHUTDOWN"
+                  },
+                  {
+                    "type": "CONFIRM_WORKER_EXIT",
+                    "worker": 2
+                  },
+                  {
+                    "type": "OBSERVE_SHUTDOWN_COMPLETION"
+                  }
+                ]
+              },
+              "attempts": 46,
+              "property": "I3",
+              "signature": "I3:duplicate settlement t0",
+              "originalActions": 17,
+              "reducedActions": 9
+            },
+            "replayCommand": "node packages/runtime/test/model-lifecycle.test.mjs"
+          },
+          {
+            "invariants": ["I2", "I7"],
+            "fault": "population/stale-lease observation doubles",
+            "passed": true
+          }
+        ],
+        "replay": [
+          {
+            "seed": 7,
+            "caseId": 0,
+            "passed": true
+          }
+        ]
+      },
+      "r3": {
+        "children": 11,
+        "samples": 1261,
+        "checkpoints": 612,
+        "created": 47,
+        "confirmedExits": 47
+      },
+      "packageSha256": "9a449fa83c2472197d021f845d89dbe57dfc5e1771c3afccf50db9ad9d3aeacc",
+      "packageFiles": 193,
+      "checks": [
+        {
+          "name": "build",
+          "exitCode": 0
+        },
+        {
+          "name": "test:contracts",
+          "exitCode": 0
+        },
+        {
+          "name": "test:types",
+          "exitCode": 0
+        },
+        {
+          "name": "typecheck:compat",
+          "exitCode": 0
+        },
+        {
+          "name": "test:package",
+          "exitCode": 0
+        },
+        {
+          "name": "test:release",
+          "exitCode": 0
+        },
+        {
+          "name": "lint",
+          "exitCode": 0
+        },
+        {
+          "name": "format:check",
+          "exitCode": 0
+        },
+        {
+          "name": "test:docs",
+          "exitCode": 0
+        },
+        {
+          "name": "diff",
+          "exitCode": 0
+        }
+      ],
+      "packageChecks": [
+        {
+          "label": "pack dry run",
+          "exitCode": 0
+        },
+        {
+          "label": "pack",
+          "exitCode": 0
+        },
+        {
+          "label": "install tarball offline",
+          "exitCode": 0
+        },
+        {
+          "label": "ESM public contract and worker paths",
+          "exitCode": 0
+        },
+        {
+          "label": "installed closeable range streams and unchanged runtime root keys",
+          "exitCode": 0
+        },
+        {
+          "label": "installed strict binary outputs, envelopes and JavaScript rejection guards",
+          "exitCode": 0
+        },
+        {
+          "label": "installed physical containment and recovery",
+          "exitCode": 0
+        },
+        {
+          "label": "example basic-run",
+          "exitCode": 0
+        },
+        {
+          "label": "example range-work",
+          "exitCode": 0
+        },
+        {
+          "label": "example shared-input",
+          "exitCode": 0
+        },
+        {
+          "label": "example streaming-binary",
+          "exitCode": 0
+        },
+        {
+          "label": "example cancellation",
+          "exitCode": 0
+        },
+        {
+          "label": "example transfer",
+          "exitCode": 0
+        },
+        {
+          "label": "primary compiler version",
+          "exitCode": 0
+        },
+        {
+          "label": "primary installed declaration regression tests",
+          "exitCode": 0
+        },
+        {
+          "label": "primary TypeScript consumer build",
+          "exitCode": 0
+        },
+        {
+          "label": "primary TypeScript emitted consumer run",
+          "exitCode": 0
+        },
+        {
+          "label": "compatibility compiler version",
+          "exitCode": 0
+        },
+        {
+          "label": "compatibility installed declaration regression tests",
+          "exitCode": 0
+        },
+        {
+          "label": "compatibility TypeScript consumer build",
+          "exitCode": 0
+        },
+        {
+          "label": "compatibility TypeScript emitted consumer run",
+          "exitCode": 0
+        }
+      ]
+    },
+    {
+      "artifact": "runtime-contracts-windows-latest-node-24.0.0",
+      "node": "v24.0.0",
+      "platform": "win32",
+      "arch": "x64",
+      "runtimeNpm": "11.3.0",
+      "releaseNpm": "11.19.0",
+      "contracts": {
+        "tests": 339,
+        "pass": 339,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "r2": {
+        "histories": 162,
+        "actions": 2746,
+        "cleanup": 162,
+        "realWorkers": 8,
+        "negativeDetection": [
+          {
+            "invariant": "I1",
+            "fault": "premature physical completion observation",
+            "passed": true
+          },
+          {
+            "invariant": "I3",
+            "fault": "duplicate settlement observation",
+            "passed": true,
+            "reduction": {
+              "history": {
+                "seed": 123456,
+                "caseId": 1,
+                "generatorVersion": "r2-generator-1",
+                "profile": "smoke",
+                "config": {
+                  "workers": 1,
+                  "maxQueue": 1,
+                  "rolling": true,
+                  "maxRestarts": 2
+                },
+                "actions": [
+                  {
+                    "type": "CREATE_RUNTIME"
+                  },
+                  {
+                    "type": "OBSERVE_READY"
+                  },
+                  {
+                    "type": "SUBMIT_TASK",
+                    "task": "t0",
+                    "leased": true
+                  },
+                  {
+                    "type": "CANCEL_TASK",
+                    "task": "t0"
+                  },
+                  {
+                    "type": "INJECT_PROTOCOL_FAILURE",
+                    "worker": 1
+                  },
+                  {
+                    "type": "CONFIRM_WORKER_EXIT",
+                    "worker": 1
+                  },
+                  {
+                    "type": "BEGIN_FORCED_SHUTDOWN"
+                  },
+                  {
+                    "type": "CONFIRM_WORKER_EXIT",
+                    "worker": 2
+                  },
+                  {
+                    "type": "OBSERVE_SHUTDOWN_COMPLETION"
+                  }
+                ]
+              },
+              "attempts": 46,
+              "property": "I3",
+              "signature": "I3:duplicate settlement t0",
+              "originalActions": 17,
+              "reducedActions": 9
+            },
+            "replayCommand": "node packages/runtime/test/model-lifecycle.test.mjs"
+          },
+          {
+            "invariants": ["I2", "I7"],
+            "fault": "population/stale-lease observation doubles",
+            "passed": true
+          }
+        ],
+        "replay": [
+          {
+            "seed": 7,
+            "caseId": 0,
+            "passed": true
+          }
+        ]
+      },
+      "r3": {
+        "children": 11,
+        "samples": 1261,
+        "checkpoints": 612,
+        "created": 47,
+        "confirmedExits": 47
+      },
+      "packageSha256": "9a449fa83c2472197d021f845d89dbe57dfc5e1771c3afccf50db9ad9d3aeacc",
+      "packageFiles": 193,
+      "checks": [
+        {
+          "name": "build",
+          "exitCode": 0
+        },
+        {
+          "name": "test:contracts",
+          "exitCode": 0
+        },
+        {
+          "name": "test:types",
+          "exitCode": 0
+        },
+        {
+          "name": "typecheck:compat",
+          "exitCode": 0
+        },
+        {
+          "name": "test:package",
+          "exitCode": 0
+        },
+        {
+          "name": "test:release",
+          "exitCode": 0
+        },
+        {
+          "name": "lint",
+          "exitCode": 0
+        },
+        {
+          "name": "format:check",
+          "exitCode": 0
+        },
+        {
+          "name": "test:docs",
+          "exitCode": 0
+        },
+        {
+          "name": "diff",
+          "exitCode": 0
+        }
+      ],
+      "packageChecks": [
+        {
+          "label": "pack dry run",
+          "exitCode": 0
+        },
+        {
+          "label": "pack",
+          "exitCode": 0
+        },
+        {
+          "label": "install tarball offline",
+          "exitCode": 0
+        },
+        {
+          "label": "ESM public contract and worker paths",
+          "exitCode": 0
+        },
+        {
+          "label": "installed closeable range streams and unchanged runtime root keys",
+          "exitCode": 0
+        },
+        {
+          "label": "installed strict binary outputs, envelopes and JavaScript rejection guards",
+          "exitCode": 0
+        },
+        {
+          "label": "installed physical containment and recovery",
+          "exitCode": 0
+        },
+        {
+          "label": "example basic-run",
+          "exitCode": 0
+        },
+        {
+          "label": "example range-work",
+          "exitCode": 0
+        },
+        {
+          "label": "example shared-input",
+          "exitCode": 0
+        },
+        {
+          "label": "example streaming-binary",
+          "exitCode": 0
+        },
+        {
+          "label": "example cancellation",
+          "exitCode": 0
+        },
+        {
+          "label": "example transfer",
+          "exitCode": 0
+        },
+        {
+          "label": "primary compiler version",
+          "exitCode": 0
+        },
+        {
+          "label": "primary installed declaration regression tests",
+          "exitCode": 0
+        },
+        {
+          "label": "primary TypeScript consumer build",
+          "exitCode": 0
+        },
+        {
+          "label": "primary TypeScript emitted consumer run",
+          "exitCode": 0
+        },
+        {
+          "label": "compatibility compiler version",
+          "exitCode": 0
+        },
+        {
+          "label": "compatibility installed declaration regression tests",
+          "exitCode": 0
+        },
+        {
+          "label": "compatibility TypeScript consumer build",
+          "exitCode": 0
+        },
+        {
+          "label": "compatibility TypeScript emitted consumer run",
+          "exitCode": 0
+        }
+      ]
+    }
+  ],
+  "floor": [
+    {
+      "artifact": "node24-floor-ubuntu-latest",
+      "node": "v24.0.0",
+      "platform": "linux",
+      "checks": [
+        {
+          "name": "runtime npm",
+          "exitCode": 0
+        },
+        {
+          "name": "release npm",
+          "exitCode": 0
+        },
+        {
+          "name": "primary compiler",
+          "exitCode": 0
+        },
+        {
+          "name": "compatibility compiler",
+          "exitCode": 0
+        },
+        {
+          "name": "complete compatibility public fixtures",
+          "exitCode": 0
+        },
+        {
+          "name": "source/declaration inventory parity",
+          "exitCode": 0
+        },
+        {
+          "name": "inventory tool regressions",
+          "exitCode": 0
+        }
+      ]
+    },
+    {
+      "artifact": "node24-floor-windows-latest",
+      "node": "v24.0.0",
+      "platform": "win32",
+      "checks": [
+        {
+          "name": "runtime npm",
+          "exitCode": 0
+        },
+        {
+          "name": "release npm",
+          "exitCode": 0
+        },
+        {
+          "name": "primary compiler",
+          "exitCode": 0
+        },
+        {
+          "name": "compatibility compiler",
+          "exitCode": 0
+        },
+        {
+          "name": "complete compatibility public fixtures",
+          "exitCode": 0
+        },
+        {
+          "name": "source/declaration inventory parity",
+          "exitCode": 0
+        },
+        {
+          "name": "inventory tool regressions",
+          "exitCode": 0
+        }
+      ]
+    }
+  ],
+  "passed": true
+}

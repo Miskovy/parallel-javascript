@@ -1,0 +1,237 @@
+{
+  "sourceCommit": "78189574cdaa5b814a02b562b52c33a7745252bc",
+  "sourceTree": "b7e41bab533a78b4492c19ab04f023f3fa497fa6",
+  "node": "v24.22.1",
+  "platform": "win32",
+  "arch": "x64",
+  "runtimeNpm": "11.19.1",
+  "releaseNpm": "11.19.0",
+  "nodeExecutableSha256": "d702daa815eabbff763c7d3808e235cf031cf2ca70211b56847bc72f51e240e5",
+  "releaseNpmArchiveSha256": "31e9770f7dc71119a58509353b27917557aaf0ac9b5ef1a0465ee7d8ec67ae75",
+  "releaseNpmArchiveIntegrityVerified": true,
+  "ordinaryPassed": true,
+  "contracts": {
+    "tests": 339,
+    "pass": 339,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "r2": {
+    "histories": 162,
+    "actions": 2746,
+    "passed": true
+  },
+  "r3": {
+    "children": 11,
+    "passed": true
+  },
+  "ordinaryChecks": [
+    {
+      "name": "build",
+      "exitCode": 0
+    },
+    {
+      "name": "test:contracts",
+      "exitCode": 0
+    },
+    {
+      "name": "test:types",
+      "exitCode": 0
+    },
+    {
+      "name": "typecheck:compat",
+      "exitCode": 0
+    },
+    {
+      "name": "test:package",
+      "exitCode": 0
+    },
+    {
+      "name": "test:release",
+      "exitCode": 0
+    },
+    {
+      "name": "lint",
+      "exitCode": 0
+    },
+    {
+      "name": "format:check",
+      "exitCode": 0
+    },
+    {
+      "name": "test:docs",
+      "exitCode": 0
+    },
+    {
+      "name": "diff",
+      "exitCode": 0
+    }
+  ],
+  "supplementalChecks": [
+    {
+      "label": "primary compiler version",
+      "exitCode": 0
+    },
+    {
+      "label": "compatibility compiler version",
+      "exitCode": 0
+    },
+    {
+      "label": "complete primary public fixture",
+      "exitCode": 0
+    },
+    {
+      "label": "complete compatibility public fixture",
+      "exitCode": 0
+    },
+    {
+      "label": "checker-derived API inventory parity",
+      "exitCode": 0
+    },
+    {
+      "label": "inventory regressions",
+      "exitCode": 0
+    }
+  ],
+  "installedConsumer": {
+    "import": true,
+    "ready": true,
+    "run": true,
+    "workerRecoveryAfterTaskError": true,
+    "errorIdentity": true,
+    "sourceMappedStack": true,
+    "blockedSubpaths": true,
+    "esmOnly": true,
+    "shutdown": true
+  },
+  "installedChecks": [
+    {
+      "label": "pack dry run",
+      "exitCode": 0
+    },
+    {
+      "label": "pack",
+      "exitCode": 0
+    },
+    {
+      "label": "install tarball offline",
+      "exitCode": 0
+    },
+    {
+      "label": "ESM public contract and worker paths",
+      "exitCode": 0
+    },
+    {
+      "label": "installed closeable range streams and unchanged runtime root keys",
+      "exitCode": 0
+    },
+    {
+      "label": "installed strict binary outputs, envelopes and JavaScript rejection guards",
+      "exitCode": 0
+    },
+    {
+      "label": "installed physical containment and recovery",
+      "exitCode": 0
+    },
+    {
+      "label": "example basic-run",
+      "exitCode": 0
+    },
+    {
+      "label": "example range-work",
+      "exitCode": 0
+    },
+    {
+      "label": "example shared-input",
+      "exitCode": 0
+    },
+    {
+      "label": "example streaming-binary",
+      "exitCode": 0
+    },
+    {
+      "label": "example cancellation",
+      "exitCode": 0
+    },
+    {
+      "label": "example transfer",
+      "exitCode": 0
+    },
+    {
+      "label": "primary compiler version",
+      "exitCode": 0
+    },
+    {
+      "label": "primary installed declaration regression tests",
+      "exitCode": 0
+    },
+    {
+      "label": "primary TypeScript consumer build",
+      "exitCode": 0
+    },
+    {
+      "label": "primary TypeScript emitted consumer run",
+      "exitCode": 0
+    },
+    {
+      "label": "compatibility compiler version",
+      "exitCode": 0
+    },
+    {
+      "label": "compatibility installed declaration regression tests",
+      "exitCode": 0
+    },
+    {
+      "label": "compatibility TypeScript consumer build",
+      "exitCode": 0
+    },
+    {
+      "label": "compatibility TypeScript emitted consumer run",
+      "exitCode": 0
+    }
+  ],
+  "inventoryCounts": {
+    "rootExports": 61,
+    "values": 17,
+    "typeOnly": 44,
+    "reachableNamedTypes": 0,
+    "statsLeafPaths": 158
+  },
+  "packageSha256": "9a449fa83c2472197d021f845d89dbe57dfc5e1771c3afccf50db9ad9d3aeacc",
+  "packageFiles": 193,
+  "preparedPatchSha256": "e86baea491405d22d771a5a5cdf9386896fe73cee83880541fa48e97ffc4aee6",
+  "preservedFailedAttempt": {
+    "directory": "windows-node24",
+    "checks": [
+      {
+        "name": "build",
+        "exitCode": 0
+      },
+      {
+        "name": "test:contracts",
+        "exitCode": 0
+      },
+      {
+        "name": "test:types",
+        "exitCode": 0
+      },
+      {
+        "name": "typecheck:compat",
+        "exitCode": 0
+      },
+      {
+        "name": "test:package",
+        "exitCode": 0
+      },
+      {
+        "name": "test:release",
+        "exitCode": 1
+      }
+    ],
+    "failure": "Credential-free synthetic npm publish --dry-run timed out with ETIMEDOUT in network-restricted sandbox; no source or timeout changes; clean full qualifier passed with network access at windows-node24-network."
+  },
+  "productionJsByteIdentity": false,
+  "promotionVerdict": "FAIL: strict production JavaScript byte-identity gate",
+  "publication": false
+}

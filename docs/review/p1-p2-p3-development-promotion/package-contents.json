@@ -1,0 +1,1169 @@
+{
+  "sourceCommit": "78189574cdaa5b814a02b562b52c33a7745252bc",
+  "sha256": "9a449fa83c2472197d021f845d89dbe57dfc5e1771c3afccf50db9ad9d3aeacc",
+  "size": 116691,
+  "unpackedSize": 591999,
+  "entryCount": 193,
+  "allFilesMatchBuiltPackage": true,
+  "updatedDeclarationsAndReadmeVerified": true,
+  "files": [
+    {
+      "path": "LICENSE",
+      "size": 1073,
+      "mode": 420,
+      "sha256": "7977502d5d3bdd267520de1cce1176142296dd2a0d00309206703c7bba990135"
+    },
+    {
+      "path": "README.md",
+      "size": 5191,
+      "mode": 420,
+      "sha256": "921a9e4ec8a58a8f456aa29ede85f1928705c5ab27d96a0ff513f968345fdbfb"
+    },
+    {
+      "path": "dist/api/range/contracts.d.ts",
+      "size": 1262,
+      "mode": 420,
+      "sha256": "40bccfd4fd93555515dfbd64b52e99ae86bf541be82350973896978ba42574b2"
+    },
+    {
+      "path": "dist/api/range/contracts.d.ts.map",
+      "size": 1019,
+      "mode": 420,
+      "sha256": "a2120d87e12d4efa77e82f073fd66566aeef88d767e456dd3c51bfd5c234df94"
+    },
+    {
+      "path": "dist/api/range/contracts.js",
+      "size": 48,
+      "mode": 420,
+      "sha256": "427a6852d1b4fbc59c12b396120836e73895fb11bee3ec3841f58f9c9f32499d"
+    },
+    {
+      "path": "dist/api/range/contracts.js.map",
+      "size": 126,
+      "mode": 420,
+      "sha256": "f7e711d16dde183661fc200eb8dba7ce8c229b9fa19c30694e11f4ec1151d736"
+    },
+    {
+      "path": "dist/api/range/parallel-for.d.ts",
+      "size": 504,
+      "mode": 420,
+      "sha256": "e251ef6738282aa73c66a7b6e82726703b39ef61840ce5738f2d3cde81de925d"
+    },
+    {
+      "path": "dist/api/range/parallel-for.d.ts.map",
+      "size": 540,
+      "mode": 420,
+      "sha256": "990af0a21bc9391787ff0f314564e67ad5dbe5c122517309ea8c998383bf66de"
+    },
+    {
+      "path": "dist/api/range/parallel-for.js",
+      "size": 199,
+      "mode": 420,
+      "sha256": "4834c61228ddf64d5f61227f7d437c9c87d68b4899e12359406e617851f3504c"
+    },
+    {
+      "path": "dist/api/range/parallel-for.js.map",
+      "size": 319,
+      "mode": 420,
+      "sha256": "6b243c328a48513bdb9cd04f11af883d1c25cbeeec7d23d27ef776b30712fcc6"
+    },
+    {
+      "path": "dist/api/range/parallel-map-range.d.ts",
+      "size": 1383,
+      "mode": 420,
+      "sha256": "b0e6cdbf8999b6b110e13d2448f0dc0ce84c6c066f33d6f4607375369c2979ec"
+    },
+    {
+      "path": "dist/api/range/parallel-map-range.d.ts.map",
+      "size": 1252,
+      "mode": 420,
+      "sha256": "215402c4f03628a026d106ac17538c2d45146dd55d3a83ffc6c3ac5140a94d94"
+    },
+    {
+      "path": "dist/api/range/parallel-map-range.js",
+      "size": 511,
+      "mode": 420,
+      "sha256": "a32458166666ab0869ec0c4b9d3e78f7da5d420863c60044df397431017970b9"
+    },
+    {
+      "path": "dist/api/range/parallel-map-range.js.map",
+      "size": 569,
+      "mode": 420,
+      "sha256": "925dc5c953aa08fe1ec686329d10686a3ab55f3fa0f6bec6b14254a69164d88f"
+    },
+    {
+      "path": "dist/api/range/partition-range.d.ts",
+      "size": 521,
+      "mode": 420,
+      "sha256": "2bd03e324bd355fdf71df89138010db5db9c642111b815eaffc933d0edffd19c"
+    },
+    {
+      "path": "dist/api/range/partition-range.d.ts.map",
+      "size": 562,
+      "mode": 420,
+      "sha256": "711ddf8e4a91e495d7bdcaa2000846128b9b752f71032939189137d920e7f780"
+    },
+    {
+      "path": "dist/api/range/partition-range.js",
+      "size": 205,
+      "mode": 420,
+      "sha256": "0c4a1ab2825ca18793470888824485c9e429eb5258cffe5c882e7a96a318894b"
+    },
+    {
+      "path": "dist/api/range/partition-range.js.map",
+      "size": 325,
+      "mode": 420,
+      "sha256": "cb003a0caa6250b36e092ce77980f3bf09d99cb8daf97c10dd908cb32c6ff0fb"
+    },
+    {
+      "path": "dist/api/range/stream-range.d.ts",
+      "size": 1417,
+      "mode": 420,
+      "sha256": "05aff8e1f60f1594471e6de51939feca41195288c51ff64f9c540345c9e09559"
+    },
+    {
+      "path": "dist/api/range/stream-range.d.ts.map",
+      "size": 1229,
+      "mode": 420,
+      "sha256": "d80a89e8b6b635acef606b2c93101c4f5f64a606b48cf0acbd0a2e0c2f6c2d23"
+    },
+    {
+      "path": "dist/api/range/stream-range.js",
+      "size": 3606,
+      "mode": 420,
+      "sha256": "5ac2ca9f1850b526c16480256012c0cc14b713ffda0a0e426d48e0accf3ca4f2"
+    },
+    {
+      "path": "dist/api/range/stream-range.js.map",
+      "size": 2758,
+      "mode": 420,
+      "sha256": "09e898488eecdaabbbc26ef119d3d7056614826761500dcca04bafbf3f711b6c"
+    },
+    {
+      "path": "dist/api/run.d.ts",
+      "size": 518,
+      "mode": 420,
+      "sha256": "790a8bfa61a70c6b53ca580d3f64d931eb198f9e41fc0fbc00b48cf935cad0a6"
+    },
+    {
+      "path": "dist/api/run.d.ts.map",
+      "size": 567,
+      "mode": 420,
+      "sha256": "9eb9fd8aa7fed9ae81751a7b8c5bc67810ed11689bf84a5ca235c3bb609034bf"
+    },
+    {
+      "path": "dist/api/run.js",
+      "size": 146,
+      "mode": 420,
+      "sha256": "fcddeefbaed3182d054160dfd000c123f7d993b3713419a0eb229e4fc8a2aed4"
+    },
+    {
+      "path": "dist/api/run.js.map",
+      "size": 256,
+      "mode": 420,
+      "sha256": "87262b2665732c03b5cf3d45a5a53c9b93230cbb625791a02d84e77d9b6e4569"
+    },
+    {
+      "path": "dist/composition/create-runtime-components.d.ts",
+      "size": 1100,
+      "mode": 420,
+      "sha256": "20c5f530e8b3656dcbcfad5debd5ad22d1e116a6ba482991b7e3d7c1ff99f2c5"
+    },
+    {
+      "path": "dist/composition/create-runtime-components.d.ts.map",
+      "size": 595,
+      "mode": 420,
+      "sha256": "0b3a43e6bb627252e2772665486421c8d61b2f17dad7d1abd17c3a8046e921c0"
+    },
+    {
+      "path": "dist/composition/create-runtime-components.js",
+      "size": 3596,
+      "mode": 420,
+      "sha256": "84f2ae04c7f9500a15117099ebc2adc1a64568f21ec2bfdc87f55dcb4528fdae"
+    },
+    {
+      "path": "dist/composition/create-runtime-components.js.map",
+      "size": 3453,
+      "mode": 420,
+      "sha256": "f8116ed8128a21259ccfff619479e4ee5a0479ace46916cb51132a1ca433803e"
+    },
+    {
+      "path": "dist/configuration/runtime-options.d.ts",
+      "size": 1079,
+      "mode": 420,
+      "sha256": "a53502ffbc0d4b74072054af0602f409236a1bb22112a378a6f0c512d46ca1fe"
+    },
+    {
+      "path": "dist/configuration/runtime-options.d.ts.map",
+      "size": 595,
+      "mode": 420,
+      "sha256": "0fcbe3f60e7c8276d0715772bce0cd9660df5b374c4a5a788e937d017aff5038"
+    },
+    {
+      "path": "dist/configuration/runtime-options.js",
+      "size": 1489,
+      "mode": 420,
+      "sha256": "0e19d8c91d1be6fb904f0d2e8819e73357ade4aae931dead7079a7d2915aaee4"
+    },
+    {
+      "path": "dist/configuration/runtime-options.js.map",
+      "size": 1375,
+      "mode": 420,
+      "sha256": "256aefed0774a453e2e7efb3a45637acdda7f163e909dea3190365015d48cbd7"
+    },
+    {
+      "path": "dist/diagnostics.d.ts",
+      "size": 4678,
+      "mode": 420,
+      "sha256": "f49ca41d6053f98c99a94a29031866cdbe57b5a93935d18646ee9f405f960a4a"
+    },
+    {
+      "path": "dist/diagnostics.d.ts.map",
+      "size": 3771,
+      "mode": 420,
+      "sha256": "9a480c2d5b016e0b9323eb60d9566e2dbba97410aec9139c9e2bf7125af8eb9e"
+    },
+    {
+      "path": "dist/diagnostics.js",
+      "size": 50,
+      "mode": 420,
+      "sha256": "b84fc4bac1fa2a4554cbc33b8b20f56908a2de8c302e63178c2981bfd185dc08"
+    },
+    {
+      "path": "dist/diagnostics.js.map",
+      "size": 114,
+      "mode": 420,
+      "sha256": "586767e9755130baa6ae03af82a29b4fa183d42a35cf4e0d21479fe25f97a031"
+    },
+    {
+      "path": "dist/dispatch/dispatcher.d.ts",
+      "size": 3403,
+      "mode": 420,
+      "sha256": "19188526cc754fc2c2b1dbdc9e363c8bf9e9cb9d1040266d9d7e60f76b9d27d9"
+    },
+    {
+      "path": "dist/dispatch/dispatcher.d.ts.map",
+      "size": 2799,
+      "mode": 420,
+      "sha256": "6d498b98e8ba6900d7ab9643b57dd50f5fbb59eec5f1a283a146aa8ce33afc89"
+    },
+    {
+      "path": "dist/dispatch/dispatcher.js",
+      "size": 8613,
+      "mode": 420,
+      "sha256": "c6d5f42a83fe271b008c3956652034d79ad9a90ca677de14bbe90d5c14dac973"
+    },
+    {
+      "path": "dist/dispatch/dispatcher.js.map",
+      "size": 8514,
+      "mode": 420,
+      "sha256": "0667683e951db9192dca477004ae3309105932a1b6b51ea909b3c54514031b89"
+    },
+    {
+      "path": "dist/errors/index.d.ts",
+      "size": 2259,
+      "mode": 420,
+      "sha256": "24a80aacf18e3587eac13cd59904ac8556af07584edc6be814e3506bab11f67a"
+    },
+    {
+      "path": "dist/errors/index.d.ts.map",
+      "size": 1879,
+      "mode": 420,
+      "sha256": "804773b7450b3116007b6a68d378f424007fd9d6c86551696d2e2cf1574f872c"
+    },
+    {
+      "path": "dist/errors/index.js",
+      "size": 2115,
+      "mode": 420,
+      "sha256": "b220f71b368e12d7769934a7ab562cacd9eec3d717e6d975ee5c8c5af71a611d"
+    },
+    {
+      "path": "dist/errors/index.js.map",
+      "size": 1993,
+      "mode": 420,
+      "sha256": "da3b89685aa2bed8e1b637b21b8d9868b28bf94f81060a243aa57a0443fb926b"
+    },
+    {
+      "path": "dist/index.d.ts",
+      "size": 1686,
+      "mode": 420,
+      "sha256": "6bd2cb8f4662c71115d382ffa11fb4ac1f15435e3964e478da371fbfa0b339d2"
+    },
+    {
+      "path": "dist/index.d.ts.map",
+      "size": 1228,
+      "mode": 420,
+      "sha256": "6cd3f616ecf3c64fc091a30eca891a3cb201738615faa8f00ecc33ec31e6d972"
+    },
+    {
+      "path": "dist/index.js",
+      "size": 533,
+      "mode": 420,
+      "sha256": "7c98dcad3823d3054b470e5cf144f8424443df3a1e27cb9ce84280397b142736"
+    },
+    {
+      "path": "dist/index.js.map",
+      "size": 462,
+      "mode": 420,
+      "sha256": "709b497b214ee7438dcb8def4662e9c3150bea6f7e0d0bfdd6a4e77a8f9ce898"
+    },
+    {
+      "path": "dist/internal/integer.d.ts",
+      "size": 142,
+      "mode": 420,
+      "sha256": "5753b8818139e38ce3cca56a5c4418392ff80f87aab5e6cb913f6fbc8f63663d"
+    },
+    {
+      "path": "dist/internal/integer.d.ts.map",
+      "size": 229,
+      "mode": 420,
+      "sha256": "86197bb7bb9ec384fa9bd02c5b0dab8b3a58212c89af0b5d79c3174df1da22d4"
+    },
+    {
+      "path": "dist/internal/integer.js",
+      "size": 308,
+      "mode": 420,
+      "sha256": "e30e3850679a0f8e19d3139d8acb1d84a6295322d293137cb2a9917eafc85f36"
+    },
+    {
+      "path": "dist/internal/integer.js.map",
+      "size": 391,
+      "mode": 420,
+      "sha256": "59ae3e52e096703f2aa46792552ba529418476e4b2a7f5a427c0b68f45b3cea0"
+    },
+    {
+      "path": "dist/internal/option-spelling.d.ts",
+      "size": 298,
+      "mode": 420,
+      "sha256": "a69787f824d0ddbca6f002192de8c55b4fe6c5508cec4819c34f383e2a7f7d2a"
+    },
+    {
+      "path": "dist/internal/option-spelling.d.ts.map",
+      "size": 303,
+      "mode": 420,
+      "sha256": "0c0ca031cd9b90c434ca8b95bbb11b7b3a9da2f7324723c921717760bd3dd963"
+    },
+    {
+      "path": "dist/internal/option-spelling.js",
+      "size": 452,
+      "mode": 420,
+      "sha256": "d9916c73b7ec99a821c4a303101af0d5fa9245fb6f1b9698f4bc7eebb8b56303"
+    },
+    {
+      "path": "dist/internal/option-spelling.js.map",
+      "size": 481,
+      "mode": 420,
+      "sha256": "753bf6a0c52dc79f1049f69b2625c7efb5871ad75cb0c0acad18ef3ddbe6f52c"
+    },
+    {
+      "path": "dist/lifecycle/runtime-controller.d.ts",
+      "size": 1556,
+      "mode": 420,
+      "sha256": "26c689e9e722bd8a3d42f3df6f2196090486e6e19f8129d2e648cc2aadc81139"
+    },
+    {
+      "path": "dist/lifecycle/runtime-controller.d.ts.map",
+      "size": 1341,
+      "mode": 420,
+      "sha256": "f14414a90fd541cbe225a88e42edab220c1df2f4bc964ede46575a77ab0c83ab"
+    },
+    {
+      "path": "dist/lifecycle/runtime-controller.js",
+      "size": 7547,
+      "mode": 420,
+      "sha256": "82ab942ddae193336cbb987d3ba195bf296df231f4ba82bde0953794510bf96d"
+    },
+    {
+      "path": "dist/lifecycle/runtime-controller.js.map",
+      "size": 6654,
+      "mode": 420,
+      "sha256": "daf7cfafd00dce2435a162663a548bc753c80a77115415c4c957e8164b62dfd5"
+    },
+    {
+      "path": "dist/partition/binary.d.ts",
+      "size": 341,
+      "mode": 420,
+      "sha256": "db4cbdfe0dd5aa5b61813e58a8e3b657815382fe9491f78819e7af1521dbdd8a"
+    },
+    {
+      "path": "dist/partition/binary.d.ts.map",
+      "size": 325,
+      "mode": 420,
+      "sha256": "2b65f605ef19aa8357ac96e605963632a17e48f4100446a3c0f134fea2f3350b"
+    },
+    {
+      "path": "dist/partition/binary.js",
+      "size": 1520,
+      "mode": 420,
+      "sha256": "8f781cf8cdb0e443b8722669d3d75d8fc94390160c0d6efbe0e127b5b11f5803"
+    },
+    {
+      "path": "dist/partition/binary.js.map",
+      "size": 1691,
+      "mode": 420,
+      "sha256": "98431783d23b666b3d0a0a2c0af1a5c27390e7fb3e6f03710efe24ed327311d8"
+    },
+    {
+      "path": "dist/partition/coordinator.d.ts",
+      "size": 7380,
+      "mode": 420,
+      "sha256": "53713f44f9121b1c5b97fc1b2f3e3619b0a61df72d1963f782f7ab59d7f58232"
+    },
+    {
+      "path": "dist/partition/coordinator.d.ts.map",
+      "size": 3066,
+      "mode": 420,
+      "sha256": "84960a33d260c12a08872d3e01086189607ecf0847412d27ed835c0f98d067d2"
+    },
+    {
+      "path": "dist/partition/coordinator.js",
+      "size": 28664,
+      "mode": 420,
+      "sha256": "6fbf36ed8655c722639d47bf5cc10f84598de509e5033598aa140c0527c5a22c"
+    },
+    {
+      "path": "dist/partition/coordinator.js.map",
+      "size": 23154,
+      "mode": 420,
+      "sha256": "e092856807b557a79fce194dac433870fd3db45c5f3e36fc878e6194a694d2cf"
+    },
+    {
+      "path": "dist/partition/operation.d.ts",
+      "size": 2832,
+      "mode": 420,
+      "sha256": "788f5c6ead0493eb41c0248b705456c7f224acf5af67b3a1bda81b235dc5977f"
+    },
+    {
+      "path": "dist/partition/operation.d.ts.map",
+      "size": 2405,
+      "mode": 420,
+      "sha256": "fcd50a3550e35aefaf5ae2e8729baa0a375206bcdb79f7b6c218725c9c56ed0a"
+    },
+    {
+      "path": "dist/partition/operation.js",
+      "size": 1547,
+      "mode": 420,
+      "sha256": "de5ef2831590835b4091ad8fdc53261308710e76b3ec1a3ca9d9d7589bc61184"
+    },
+    {
+      "path": "dist/partition/operation.js.map",
+      "size": 1126,
+      "mode": 420,
+      "sha256": "6629cb6dc25997a340f1d4c571de29b9e5727e890d8b95ec99e8d469ea20683e"
+    },
+    {
+      "path": "dist/partition/range.d.ts",
+      "size": 6334,
+      "mode": 420,
+      "sha256": "7b95e09b070786520c9639230aaf44337bdf7f9c564b5923f72c191d85b8738c"
+    },
+    {
+      "path": "dist/partition/range.d.ts.map",
+      "size": 3842,
+      "mode": 420,
+      "sha256": "03f201cfc67916fe1e7c334d62d2cb4437016d6ca2332d16588ba6f79e43097a"
+    },
+    {
+      "path": "dist/partition/range.js",
+      "size": 1246,
+      "mode": 420,
+      "sha256": "c337bdfe20b39ca9525a7ffaea71e375ce768072fe303cc8e204bf883372acae"
+    },
+    {
+      "path": "dist/partition/range.js.map",
+      "size": 1285,
+      "mode": 420,
+      "sha256": "78964f31c6749cd8ec4a731a327b2b7f83673a6c2e21402522269b025159ee9a"
+    },
+    {
+      "path": "dist/partition/results/map-assembly.d.ts",
+      "size": 696,
+      "mode": 420,
+      "sha256": "6bc0d04a8da70f02a7882f284fe5ff3d5bfd91a4195cd08c2cfcc1d0950891ff"
+    },
+    {
+      "path": "dist/partition/results/map-assembly.d.ts.map",
+      "size": 559,
+      "mode": 420,
+      "sha256": "22dc7a1f0312e8c4efdcfde1233648c02e68d8687b1fd2fe8e2c3eb9b91d0e51"
+    },
+    {
+      "path": "dist/partition/results/map-assembly.js",
+      "size": 1894,
+      "mode": 420,
+      "sha256": "822715808e1aab783f95b481af14050236eadbaeb8c71ec3d4faa93d440e25dc"
+    },
+    {
+      "path": "dist/partition/results/map-assembly.js.map",
+      "size": 1706,
+      "mode": 420,
+      "sha256": "343f32335bef5a6eb830aef858e7375aebc75f752cbc53f987b0b7c025b33f12"
+    },
+    {
+      "path": "dist/partition/stream.d.ts",
+      "size": 1924,
+      "mode": 420,
+      "sha256": "fc0a493fe9cff1a39f49903ec3e72264731332eb35acba57df0e9dbbbdb41955"
+    },
+    {
+      "path": "dist/partition/stream.d.ts.map",
+      "size": 1854,
+      "mode": 420,
+      "sha256": "c94178ad892d746f87c2b37c7422c488d4fbd318295259b725c596a700596760"
+    },
+    {
+      "path": "dist/partition/stream.js",
+      "size": 4641,
+      "mode": 420,
+      "sha256": "6f85fc6d158ebafd1dd444a2c30a5e8810f7004dd5f63019477bf8b2fa919b72"
+    },
+    {
+      "path": "dist/partition/stream.js.map",
+      "size": 4839,
+      "mode": 420,
+      "sha256": "04ad357fd7492aeaf4dc3e0419da61a7fdde3c630dcb8b42adaaead18703e6d7"
+    },
+    {
+      "path": "dist/partition/validation.d.ts",
+      "size": 613,
+      "mode": 420,
+      "sha256": "92c581979212cc557eff9bf5caaf8f0852cda56add2267e807717e1e9ec88612"
+    },
+    {
+      "path": "dist/partition/validation.d.ts.map",
+      "size": 406,
+      "mode": 420,
+      "sha256": "80653aa548430817429db67e0668be3d12571719c52083e9b6c3bbea28416f44"
+    },
+    {
+      "path": "dist/partition/validation.js",
+      "size": 1707,
+      "mode": 420,
+      "sha256": "f2044a3db887c2093b38711129c07462ac68c955a8c6aac61488ccfc198d6aaf"
+    },
+    {
+      "path": "dist/partition/validation.js.map",
+      "size": 1469,
+      "mode": 420,
+      "sha256": "52f33a1e84c6abaa8dae43f437a66dae3a528a31acc72b2c4feea0a749acfaed"
+    },
+    {
+      "path": "dist/pool/pool.d.ts",
+      "size": 1901,
+      "mode": 420,
+      "sha256": "95faf202baaccd20aafaeaf770098fd7a53f77a8b4f858bde771dc1a84e6572a"
+    },
+    {
+      "path": "dist/pool/pool.d.ts.map",
+      "size": 1616,
+      "mode": 420,
+      "sha256": "1f9ecfaccb5d2e1c947a6b418018482c4c1c14fd8a549c71f6588cc08bede8cc"
+    },
+    {
+      "path": "dist/pool/pool.js",
+      "size": 5235,
+      "mode": 420,
+      "sha256": "43f57b00660ad7baa65741c8db156acc508c76976c018eb0952efbe70fe920d2"
+    },
+    {
+      "path": "dist/pool/pool.js.map",
+      "size": 5231,
+      "mode": 420,
+      "sha256": "44b25d7824bc6372afce8483255f2584a96e3c27f755657f914a1d4209a68567"
+    },
+    {
+      "path": "dist/results/credit.d.ts",
+      "size": 3103,
+      "mode": 420,
+      "sha256": "515f1634982d89073bc6ea1b21792b287f1296bdc65826f94c160fe808aa2d8b"
+    },
+    {
+      "path": "dist/results/credit.d.ts.map",
+      "size": 2130,
+      "mode": 420,
+      "sha256": "7f47fab31155b6774769c58c6dbceca486d46e39727100f9fdf1a37307bd0dd0"
+    },
+    {
+      "path": "dist/results/credit.js",
+      "size": 14486,
+      "mode": 420,
+      "sha256": "779bdaa737c074e6aa0f178bfc853ba1758565b3fad69228c2a4bf5efbd22dd5"
+    },
+    {
+      "path": "dist/results/credit.js.map",
+      "size": 11488,
+      "mode": 420,
+      "sha256": "2ba589bdddf15a9581898a62022479a7bc5687fb0fbd067f14c09148843ae751"
+    },
+    {
+      "path": "dist/runtime.d.ts",
+      "size": 3111,
+      "mode": 420,
+      "sha256": "c3edb2009e64e9617dfd2f3f1b73dcfc3336c6b826a2147e6421c8e62396fd61"
+    },
+    {
+      "path": "dist/runtime.d.ts.map",
+      "size": 2387,
+      "mode": 420,
+      "sha256": "b4edcb9b0d1a24e5186f965dedf19fa0bfc57907afa4376ce55a4fe30de9252a"
+    },
+    {
+      "path": "dist/runtime.js",
+      "size": 2172,
+      "mode": 420,
+      "sha256": "9452bc730c392c6aa9e19a83d7cc1e81852dc017e0e5e00b95f91d936967c862"
+    },
+    {
+      "path": "dist/runtime.js.map",
+      "size": 1710,
+      "mode": 420,
+      "sha256": "965df9a6f7ca7bcf92a3c24275e4b7b21e00d77d663555a6fd2ebf4da8b4e602"
+    },
+    {
+      "path": "dist/scheduler/fifo.d.ts",
+      "size": 832,
+      "mode": 420,
+      "sha256": "746ea23fe020bad0f3a0b644f47fd39142b9f58ab61b48cde15151ce184bc7e5"
+    },
+    {
+      "path": "dist/scheduler/fifo.d.ts.map",
+      "size": 916,
+      "mode": 420,
+      "sha256": "a48e1cb6f847a18fa5e8f7a3fe8d04a714ff8fc0dd474e866cae6f44da1e2c5e"
+    },
+    {
+      "path": "dist/scheduler/fifo.js",
+      "size": 1639,
+      "mode": 420,
+      "sha256": "e534524a4a212c1a9bdbef6cded48faaf9b8baf4c809bc32ae1f33dd9a3e6050"
+    },
+    {
+      "path": "dist/scheduler/fifo.js.map",
+      "size": 1657,
+      "mode": 420,
+      "sha256": "a00e7ef359f5ba78a8761e393dba52bc87b415dd91256a37acfaa1cbafec3b7d"
+    },
+    {
+      "path": "dist/tasks/coordinator.d.ts",
+      "size": 3182,
+      "mode": 420,
+      "sha256": "1501d014de6b2d5847f1738dd0e624de41791f5ac25f0345d3b4ee26e5a7d1c9"
+    },
+    {
+      "path": "dist/tasks/coordinator.d.ts.map",
+      "size": 2716,
+      "mode": 420,
+      "sha256": "ca2d2560fff3933db651030a722fd90d94960350d577ee97256fc735070ae8e5"
+    },
+    {
+      "path": "dist/tasks/coordinator.js",
+      "size": 13969,
+      "mode": 420,
+      "sha256": "9c6d26410e6d4594a8f3cfa5a48fedf4a5e8ddfe514cc139c4e32837205c3963"
+    },
+    {
+      "path": "dist/tasks/coordinator.js.map",
+      "size": 12584,
+      "mode": 420,
+      "sha256": "60e7693f085bb57dda579df29e84a16cd9e6af3a5eac8bc97ce872795f4cf658"
+    },
+    {
+      "path": "dist/tasks/registry.d.ts",
+      "size": 728,
+      "mode": 420,
+      "sha256": "2caa38d1d3a6557bade66bb94785861bb92fe5632dbf6b2d865818e3ce80c7b3"
+    },
+    {
+      "path": "dist/tasks/registry.d.ts.map",
+      "size": 693,
+      "mode": 420,
+      "sha256": "0cc72da30d0fc5cc94757719964b8676caba50d04c62c3ca2d397bd0598023e2"
+    },
+    {
+      "path": "dist/tasks/registry.js",
+      "size": 1344,
+      "mode": 420,
+      "sha256": "86808c9880c19006135d393bfddfb8720fe802c4e109ee9247711b791d9e9af0"
+    },
+    {
+      "path": "dist/tasks/registry.js.map",
+      "size": 1374,
+      "mode": 420,
+      "sha256": "7fe08a4c6f328c5e4f4255ed91cd516cdbec9fd727ca062ecbb1ebde84dd05bd"
+    },
+    {
+      "path": "dist/tasks/shared.d.ts",
+      "size": 815,
+      "mode": 420,
+      "sha256": "2b5f60e704be1d1b71ab9bc708e01801dbb7517b30fcb588139b98ac3b171b15"
+    },
+    {
+      "path": "dist/tasks/shared.d.ts.map",
+      "size": 487,
+      "mode": 420,
+      "sha256": "e36097662b4d7efbd7335f6e7c3a955b633649b11a92a7cd801163df055ed359"
+    },
+    {
+      "path": "dist/tasks/shared.js",
+      "size": 965,
+      "mode": 420,
+      "sha256": "5ea6c4b88f8592262fddd4e1379eee02c13fdada599cb70c42d332182c5a4236"
+    },
+    {
+      "path": "dist/tasks/shared.js.map",
+      "size": 909,
+      "mode": 420,
+      "sha256": "a424d0a26ba1bf5f37f15626ba6d760670cd8cdf97b786e75a37016caa69716b"
+    },
+    {
+      "path": "dist/tasks/task.d.ts",
+      "size": 906,
+      "mode": 420,
+      "sha256": "79ec3ca3a19d0efc9140f93bd5bc60dacbb82db6639ede6103a45b51fe37d5d2"
+    },
+    {
+      "path": "dist/tasks/task.d.ts.map",
+      "size": 879,
+      "mode": 420,
+      "sha256": "efefd43a081675defc3c78825547d27afb5111e8a501843a9a5ec640b829b10a"
+    },
+    {
+      "path": "dist/tasks/task.js",
+      "size": 43,
+      "mode": 420,
+      "sha256": "058a2c45e24e915dd86989a39da0d72b42d01a54e0f7bb7505f0e04cbc8b6c38"
+    },
+    {
+      "path": "dist/tasks/task.js.map",
+      "size": 109,
+      "mode": 420,
+      "sha256": "428f07462b00248528f498598e77ef959f275c26b7600b8f907cb44620de6df7"
+    },
+    {
+      "path": "dist/tasks/transfer.d.ts",
+      "size": 1152,
+      "mode": 420,
+      "sha256": "58c9722e65a602a64207adcc3cdc2453ad0082c806fe930a6ced1387e660de27"
+    },
+    {
+      "path": "dist/tasks/transfer.d.ts.map",
+      "size": 795,
+      "mode": 420,
+      "sha256": "0ff67cc331b3334ff45fa5272f46b9f53b224127bcf8829940fe359453132ac4"
+    },
+    {
+      "path": "dist/tasks/transfer.js",
+      "size": 3074,
+      "mode": 420,
+      "sha256": "6a581330be59e19d5e584de7d669a9a597e6b3360f2cc72c5e48ae94a0591ea6"
+    },
+    {
+      "path": "dist/tasks/transfer.js.map",
+      "size": 2407,
+      "mode": 420,
+      "sha256": "79fb998432cacb02e91bbdf22255364c8d0e2827e62ee227b81bc1e45df12951"
+    },
+    {
+      "path": "dist/telemetry/metrics.d.ts",
+      "size": 698,
+      "mode": 420,
+      "sha256": "7145c8861d7e0e90ffa522d535cec3dc8431f4b9a43c5ebfc944d37af2560e74"
+    },
+    {
+      "path": "dist/telemetry/metrics.d.ts.map",
+      "size": 610,
+      "mode": 420,
+      "sha256": "4e8c003e673756e906a5903a7e12daa090e8054a11c0aa6d7e1f77b11881a63d"
+    },
+    {
+      "path": "dist/telemetry/metrics.js",
+      "size": 1192,
+      "mode": 420,
+      "sha256": "ad6d810e300d1ea100d1230948cb820cab6afcfab05a19d81f8ad3d19ecf2324"
+    },
+    {
+      "path": "dist/telemetry/metrics.js.map",
+      "size": 1203,
+      "mode": 420,
+      "sha256": "3685505ab7c2d39173a33726951ba8ba8b6ff7648072283f97f96c81ca5adb1b"
+    },
+    {
+      "path": "dist/telemetry/profile.d.ts",
+      "size": 439,
+      "mode": 420,
+      "sha256": "81b3fd387783a87ad070694511582ce17835186a931b80e3604d50fda7403f52"
+    },
+    {
+      "path": "dist/telemetry/profile.d.ts.map",
+      "size": 388,
+      "mode": 420,
+      "sha256": "2f810472eaab5031cccb39eef71d0bdc8aadda583d5c68060f6306a46de12111"
+    },
+    {
+      "path": "dist/telemetry/profile.js",
+      "size": 283,
+      "mode": 420,
+      "sha256": "2ff1f354516c4b3b18ad72d9743f85ddc411bfba24a2f344442af19f0eeb1874"
+    },
+    {
+      "path": "dist/telemetry/profile.js.map",
+      "size": 373,
+      "mode": 420,
+      "sha256": "43b8490771b46ef7733cff7a23794bd8a552d72ccc139e89e0e0c134a6af4a07"
+    },
+    {
+      "path": "dist/telemetry/runtime.d.ts",
+      "size": 820,
+      "mode": 420,
+      "sha256": "b103b18d4eef4de1def2fc03fb316421f7b6c37c31b8c5ea78edfbd493800208"
+    },
+    {
+      "path": "dist/telemetry/runtime.d.ts.map",
+      "size": 717,
+      "mode": 420,
+      "sha256": "e86344ef167049e4c3515bde35b9ae34a934242cfa775fd4c4fcb76b632afaad"
+    },
+    {
+      "path": "dist/telemetry/runtime.js",
+      "size": 2008,
+      "mode": 420,
+      "sha256": "43bf66c539762c531ac9d3c6a8464897f40bfa8d45c46fc0eed30afc93dcbcca"
+    },
+    {
+      "path": "dist/telemetry/runtime.js.map",
+      "size": 1564,
+      "mode": 420,
+      "sha256": "c7a732cb090ebc607b9477dcb794ba28e3e4c57ba46358240997dce7afee4048"
+    },
+    {
+      "path": "dist/types/index.d.ts",
+      "size": 2526,
+      "mode": 420,
+      "sha256": "3161d2574c701aabff14fc6d80946642d1286a0d7f2cccd2ecb06c959abf68b7"
+    },
+    {
+      "path": "dist/types/index.d.ts.map",
+      "size": 1449,
+      "mode": 420,
+      "sha256": "f9d171466cacbefa97553046576bfc009cc000a287b4e825dfc63c9b7467d6b8"
+    },
+    {
+      "path": "dist/types/index.js",
+      "size": 44,
+      "mode": 420,
+      "sha256": "827c148a2159c5d098f9fe33185b555382ad63931193dda5f41f6af38a6a4445"
+    },
+    {
+      "path": "dist/types/index.js.map",
+      "size": 111,
+      "mode": 420,
+      "sha256": "c4ac53ade294b76aa27a4b8b63477beeecc81827655f68f64c9bc4c7bbeeb817"
+    },
+    {
+      "path": "dist/workers/bootstrap.d.ts",
+      "size": 50,
+      "mode": 420,
+      "sha256": "089fbfd7f9aada2383c495bbddcbf2d09578b973df7790d71e455bd6b6f5c04d"
+    },
+    {
+      "path": "dist/workers/bootstrap.d.ts.map",
+      "size": 123,
+      "mode": 420,
+      "sha256": "0c56b103e4b14e120788ae73443838b77025de8cbf720d34a256e3bad3852f2b"
+    },
+    {
+      "path": "dist/workers/bootstrap.js",
+      "size": 11710,
+      "mode": 420,
+      "sha256": "540e244a1c7f93fcd179923fc4485f0fe98d13c0c4484268ed1c689359c83002"
+    },
+    {
+      "path": "dist/workers/bootstrap.js.map",
+      "size": 10193,
+      "mode": 420,
+      "sha256": "fd6e6c3e044fc216ce6c814580787ffd938a081475c8645aa9208c5a4c5b9cc2"
+    },
+    {
+      "path": "dist/workers/protocol.d.ts",
+      "size": 2928,
+      "mode": 420,
+      "sha256": "6872b8f302e35449b5d8f512a3910d6bd5d86779023a6f3e93dbb7f0dbad90e9"
+    },
+    {
+      "path": "dist/workers/protocol.d.ts.map",
+      "size": 2982,
+      "mode": 420,
+      "sha256": "6065d5e8542343b36e8ea0d81c1d524e81addaf98cec18486467b0bbdb685018"
+    },
+    {
+      "path": "dist/workers/protocol.js",
+      "size": 5837,
+      "mode": 420,
+      "sha256": "704508fdf13e027de1786523f50183aaac6845754b042e7c0ef61e0fbc149b54"
+    },
+    {
+      "path": "dist/workers/protocol.js.map",
+      "size": 5874,
+      "mode": 420,
+      "sha256": "75b1857e710d8dd8d86b11b8490d9061f69030768972edbffd962eb0769e33b0"
+    },
+    {
+      "path": "dist/workers/worker.d.ts",
+      "size": 2348,
+      "mode": 420,
+      "sha256": "2473d5b325ed8868f4e78c4e786bcc8bef5cf72b27b878482d2e5bd4955f8157"
+    },
+    {
+      "path": "dist/workers/worker.d.ts.map",
+      "size": 2071,
+      "mode": 420,
+      "sha256": "cb36941f128b478784b3a0cb99d01937469a335b6f9c943f9fc390e254863837"
+    },
+    {
+      "path": "dist/workers/worker.js",
+      "size": 13570,
+      "mode": 420,
+      "sha256": "d4ea88e7778f4afde3f3b01533bb7967d08b77fd1b14a883449806857cc2c4e6"
+    },
+    {
+      "path": "dist/workers/worker.js.map",
+      "size": 12658,
+      "mode": 420,
+      "sha256": "216efc4b5d84d709a0f4c10a2aeab4a2b5dbae0c0ca274e620ca2e62cec75482"
+    },
+    {
+      "path": "package.json",
+      "size": 836,
+      "mode": 420,
+      "sha256": "7ec6311940906ad70a3517b5e81a89eec11ba375c8f469dea21b15147be487ea"
+    },
+    {
+      "path": "src/api/range/contracts.ts",
+      "size": 1277,
+      "mode": 420,
+      "sha256": "b53ff95b329c9788ddf72a97a8604215abfef2f2cd735a8931bb758fd8801850"
+    },
+    {
+      "path": "src/api/range/parallel-for.ts",
+      "size": 599,
+      "mode": 420,
+      "sha256": "4e1550c92d0dbcb6f60cf5aa87b9fc7dc344229783bbd1fe020b8e7af6a752e4"
+    },
+    {
+      "path": "src/api/range/parallel-map-range.ts",
+      "size": 2258,
+      "mode": 420,
+      "sha256": "7a40c2af98d1918382321d4a39720306b40d19dd0f7a9dce8fc35f6c6404537e"
+    },
+    {
+      "path": "src/api/range/partition-range.ts",
+      "size": 617,
+      "mode": 420,
+      "sha256": "3a2daf128ae30deedab250d3e8d94c79b55a14dcf74c0b0d1d2825b0544fd2d6"
+    },
+    {
+      "path": "src/api/range/stream-range.ts",
+      "size": 5753,
+      "mode": 420,
+      "sha256": "d97119ccc53e88d89ec0995ccf6582ee6b97c29be051a60dc30d25dbcf8d6daa"
+    },
+    {
+      "path": "src/api/run.ts",
+      "size": 562,
+      "mode": 420,
+      "sha256": "15c99df23bbab92a29c223ad65338c32ecd0caff8f2dc1947f802b2dfe5d4206"
+    },
+    {
+      "path": "src/composition/create-runtime-components.ts",
+      "size": 3839,
+      "mode": 420,
+      "sha256": "4023b3f3fc4d7fa337d9b71e67ab05fc87694a4641446d1459c417c19565b946"
+    },
+    {
+      "path": "src/configuration/runtime-options.ts",
+      "size": 2235,
+      "mode": 420,
+      "sha256": "03e4fc7242ece36fe759f9a7562aa816ef2d21836add4a3f01fdcc03cfad760e"
+    },
+    {
+      "path": "src/diagnostics.ts",
+      "size": 4430,
+      "mode": 420,
+      "sha256": "43e0ea8adb4524148e31bce4673360e39be7b9b91ae5cc12551030626073aa5c"
+    },
+    {
+      "path": "src/dispatch/dispatcher.ts",
+      "size": 9642,
+      "mode": 420,
+      "sha256": "3ba84dbcc533b3007389b5a8f44709290d1522bb7ad9f7ffe880c493b475a9c5"
+    },
+    {
+      "path": "src/errors/index.ts",
+      "size": 2917,
+      "mode": 420,
+      "sha256": "ad2ceeea8dc3bc6e51bb1bc596d1a492d2a735e6d73a7a39946ecb42dd9b302c"
+    },
+    {
+      "path": "src/index.ts",
+      "size": 1755,
+      "mode": 420,
+      "sha256": "cb5af701561f66a1ccadcded451f66b8694cc67bbe83d73f67249cd8b825c0b0"
+    },
+    {
+      "path": "src/internal/integer.ts",
+      "size": 321,
+      "mode": 420,
+      "sha256": "c1d5f34cd7a4d6aa228910e0a7e7f7929e21bea0f84e231d5984a3b7e7d51b6c"
+    },
+    {
+      "path": "src/internal/option-spelling.ts",
+      "size": 508,
+      "mode": 420,
+      "sha256": "cf09938f50e539e24380a3e644a64bdb1e9832543b5d0d9525172a4f261cca76"
+    },
+    {
+      "path": "src/lifecycle/runtime-controller.ts",
+      "size": 7489,
+      "mode": 420,
+      "sha256": "17e44e9d541e1ade94a899d851ce40e9de6822a42f63bfd9ec4ccc60e34f677e"
+    },
+    {
+      "path": "src/partition/binary.ts",
+      "size": 1549,
+      "mode": 420,
+      "sha256": "20e4ff84ea39912befa189a5a3e5f57739e249d3954c3d7aea6cfa45e1b97120"
+    },
+    {
+      "path": "src/partition/coordinator.ts",
+      "size": 29149,
+      "mode": 420,
+      "sha256": "008c6dd96f3b5005be5b21628e9a6986109dc728105ae562b7259483f98866cc"
+    },
+    {
+      "path": "src/partition/operation.ts",
+      "size": 2317,
+      "mode": 420,
+      "sha256": "6e4f9a4d3de9382d0aaa20665f27e621bbe5b1295ad0dc37b401a57044212a6a"
+    },
+    {
+      "path": "src/partition/range.ts",
+      "size": 7678,
+      "mode": 420,
+      "sha256": "cda0f603a173d33c15c8015f237a97876dd13892b0da0dacf15ed6cd6213de43"
+    },
+    {
+      "path": "src/partition/results/map-assembly.ts",
+      "size": 2371,
+      "mode": 420,
+      "sha256": "d0355e9c1eb6d54ae41531bcfe93d3000424b399b64785da7b66efca69f7b4a9"
+    },
+    {
+      "path": "src/partition/stream.ts",
+      "size": 5597,
+      "mode": 420,
+      "sha256": "b3e1e990a3b07f3bf47adb2faf496efab658c96aa78e69719ffbafca2ea3537f"
+    },
+    {
+      "path": "src/partition/validation.ts",
+      "size": 1964,
+      "mode": 420,
+      "sha256": "022f5a231190e293f9c8c1398b4792848268ea0eefb4cf86f51fbd0075d15441"
+    },
+    {
+      "path": "src/pool/pool.ts",
+      "size": 5709,
+      "mode": 420,
+      "sha256": "3548f84099d74629d7595d213bfa5d61961789b91496f7a6cce76f6f217c7d55"
+    },
+    {
+      "path": "src/results/credit.ts",
+      "size": 14768,
+      "mode": 420,
+      "sha256": "06ca132cae8475aca816cce82e7243ebcf3b2dca10216042805f1b2510e24cf8"
+    },
+    {
+      "path": "src/runtime.ts",
+      "size": 5237,
+      "mode": 420,
+      "sha256": "c3b0f984fcfaea524719e642002563452a27ab8a77d3070b38b628f05079744e"
+    },
+    {
+      "path": "src/scheduler/fifo.ts",
+      "size": 1932,
+      "mode": 420,
+      "sha256": "caa0307b7ce3b71d412ae9b432ad90cd946eed209958d88a1d6f9a13d481e014"
+    },
+    {
+      "path": "src/tasks/coordinator.ts",
+      "size": 14821,
+      "mode": 420,
+      "sha256": "40626ec83b3fc0cd08a5bde94a099083a60f0db2c0a4ce376addd96238897bf0"
+    },
+    {
+      "path": "src/tasks/registry.ts",
+      "size": 1825,
+      "mode": 420,
+      "sha256": "a6c09e940b9210a4e919c52b2d980f1853dbec73ce223112d3f7fcd504552302"
+    },
+    {
+      "path": "src/tasks/shared.ts",
+      "size": 2162,
+      "mode": 420,
+      "sha256": "d3a6b371f5b20657bf47d6b84f6c7d7bd4cfec0f0395b6bade2ac828ee5a3ca5"
+    },
+    {
+      "path": "src/tasks/task.ts",
+      "size": 840,
+      "mode": 420,
+      "sha256": "3ec0f9c7e4189641da2c8b49874a828438ca0a5dd2c41748a26f7522c278f332"
+    },
+    {
+      "path": "src/tasks/transfer.ts",
+      "size": 3474,
+      "mode": 420,
+      "sha256": "9de35965f11f40ab7697ca8e5439af634fe8122829c357c3b36f310dbfd278ac"
+    },
+    {
+      "path": "src/telemetry/metrics.ts",
+      "size": 1092,
+      "mode": 420,
+      "sha256": "031d1994dd4fec40d50b265f4e59c00dd9348d089d507ed87019bb1fef7b088e"
+    },
+    {
+      "path": "src/telemetry/profile.ts",
+      "size": 508,
+      "mode": 420,
+      "sha256": "831b42554f3dcb74a45ae42bdfca5811eab921d8c248986ca1859af26f9496f7"
+    },
+    {
+      "path": "src/telemetry/runtime.ts",
+      "size": 2016,
+      "mode": 420,
+      "sha256": "a7c190a1b90d1f74f9ca074c0c66bba8a8ec895a8511fcf115d367faa86817ee"
+    },
+    {
+      "path": "src/types/index.ts",
+      "size": 2424,
+      "mode": 420,
+      "sha256": "a9afc8311833dcb690b3601d4ff4f13e8eb854c6e4f48327874190bcfe32c7fd"
+    },
+    {
+      "path": "src/workers/bootstrap.ts",
+      "size": 11011,
+      "mode": 420,
+      "sha256": "f19fbfb8f0a27d1e3e97cc7599bdfc8922d7502557af9a71c4bf2e9cf0c6d2e9"
+    },
+    {
+      "path": "src/workers/protocol.ts",
+      "size": 8458,
+      "mode": 420,
+      "sha256": "d8f66b337c21563d0c510b2bc72ae1db3a70d065da22d2374583d1bd8d1f5d90"
+    },
+    {
+      "path": "src/workers/worker.ts",
+      "size": 14292,
+      "mode": 420,
+      "sha256": "57c6db88f4d17fcfbd6d3b2afae6963b985f45434484be70cf8d51b821830d5b"
+    }
+  ]
+}
