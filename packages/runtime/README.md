@@ -1,5 +1,7 @@
 # @pjavascript/runtime
 
+**Promotion status:** Development P1/P2/P3 contracts are promoted following benchmark review; all six deprecated aliases remain. Published RC4 and release authorization remain separate.
+
 **PJS — Parallel JavaScript Runtime.** Explicit CPU tasks on persistent Node
 workers, with bounded admission and clone/transfer/shared-input ownership.
 ESM only; no production dependencies. Tasks are trusted local module exports
@@ -60,7 +62,7 @@ belongs on Node's event loop.
 `run`, registration and lifecycle are core candidates. `partitionRange` collects
 ordered per-partition outputs, `parallelFor` discards successful outputs,
 `parallelMapRange` assembles flat ordered results and `streamRange` yields
-completion-order results. Range APIs and their controls remain experimental;
+completion-order results. Range APIs and their controls are promoted in development;
 statistics are diagnostic. Only the root package import is supported.
 
 Clone is the default. Explicit transfers detach sender views at dispatch.
@@ -90,8 +92,8 @@ exit, without replay or a hard preemption guarantee. First shutdown options and
 the shared promise are fixed; omitting escalation can leave drain waiting
 indefinitely.
 
-All feature experimental annotations and all six aliases remain. Promotion,
-the combined transition prerelease and later alias removal need separate
+P1/P2/P3 are promoted in development; all six aliases remain. The combined
+transition prerelease is not yet authorized; it and later alias removal need separate
 [maintainer decisions](https://github.com/Miskovy/parallel-javascript/blob/main/docs/research/v1-api-migration-plan.md#decisions-for-maintainer-review).
 Checkout examples use the development spellings and are tested against a fresh
 packed artifact.

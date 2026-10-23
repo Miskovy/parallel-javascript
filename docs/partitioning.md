@@ -1,8 +1,10 @@
-# Experimental numeric range operations
+# Numeric range operations
+
+**Promotion status:** Development P2/P3 range and strict-result contracts are promoted following benchmark review. All six deprecated aliases remain accepted; C4 needs the actual transition release and separate authorization.
 
 For the integrated development contract and stability boundary, start with the
 [core API guide](guide/core-api.md) and [stability policy](stability.md).
-This reference describes experimental mechanics. Published RC4 predates the six
+This reference describes development mechanics. Published RC4 predates the six
 new spellings and later declaration corrections; see the
 [documentation index](README.md) for release versus development scope.
 
@@ -12,7 +14,7 @@ Development source accepts `dispatchBatchSize`, `maxBufferedResults` and
 `outputConstructor` on their existing range, stream and typed-map option shapes.
 Their `experimentalDispatchBatchSize`, `experimentalMaxBufferedResults` and
 `experimentalOutputConstructor` aliases remain accepted and are deprecated.
-All these features remain experimental; P2 promotion requires separate approval.
+These P2 features are promoted in development following benchmark review.
 Defaults, count limits, batching 1–16, ordering and ownership are unchanged.
 
 C3 adds `resultBytes`, `maxResultBytes` and `maxReservedResultBytes` with
@@ -21,7 +23,8 @@ deprecated `experimentalResultBytes`, `experimentalMaxResultBytes` and
 Mixed spellings across distinct declaration/capacity pairs are valid; any exact
 declaration conflicts with any maximum declaration. Strict modes require one
 declaration and one capacity. Count-only types exclude all six byte spellings.
-P3 promotion remains separate; the unprefixed names do not establish stability.
+P3 is now promoted in development by explicit approval following benchmark review;
+the spelling transition alone did not establish that status.
 
 Each pair rejects when both properties are present, including equal values,
 explicit `undefined` and inherited properties. Neither spelling takes precedence.
@@ -61,7 +64,7 @@ range, dispatch, and result-credit owners without changing their contract.
 chunk outputs, `parallelFor()` returns `Promise<void>` without transporting
 successful values, `streamRange()` returns a closeable `PjsRangeStream` of identified
 partition outputs, and map returns one flat ordered element array. All four APIs
-and their derived admission limits remain experimental; no stable
+and their derived admission limits are promoted in development; no implicit
 `parallel.for/map/reduce` family is exported. See the
 [v0.11 decomposition proposal](proposal-v0.11.md),
 [completion decision](adr/0012-completion-only-operations.md), and

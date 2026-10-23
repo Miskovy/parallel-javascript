@@ -1,5 +1,7 @@
 # Public errors
 
+**Promotion status:** P1/P2/P3 error contracts retain their hierarchy, metadata and ownership semantics following development promotion; error text is not a protocol.
+
 Import classes from `@pjavascript/runtime` and use `instanceof`, not exact message text.
 All error classes inherit PjsError, which inherits Error and sets name to the
 concrete class name. Messages are explanatory and contextual; their exact wording
@@ -51,7 +53,7 @@ optional remote stacks are preserved; worker protocol records remain internal.
 | PjsBinaryResultContractError | Invalid declaration/callback or nonbinary/shared/detached/wrong-size result    | Stream next rejection                                                   | Fix declaration/output; distinct from worker crash; exact requires equality                              |
 | PjsResultCapacityError       | One declared result exceeds per-stream capacity                                | Stream next rejection                                                   | Increase explicit capacity or reduce grain/bound; runtime never waits for impossible capacity            |
 
-R1 development adds experimental PjsExecutionLeaseError, a PjsWorkerError subclass,
+R1 development adds PjsExecutionLeaseError, a PjsWorkerError subclass,
 for a still-pending ordinary run caller when its physical lease expires. It retains
 small task/worker context. Previously settled callers keep their timeout/cancellation
 error. Containment continues without replay, and credits stay held until exit.
@@ -62,8 +64,8 @@ ordinary leased caller receives PjsExecutionLeaseError once; a later failed
 replacement termination fails queued work without replay and makes cleanup
 reject. It does not replace the original caller outcome or release a still-live
 physical correlation. Even a subsequent actual exit does not convert the cached
-rejected shutdown promise into success. Error classes, metadata and experimental
-status are unchanged; see the [C1 report](../research/c1-containment-acceptance.md).
+rejected shutdown promise into success. Error classes and metadata are unchanged; P1/P2/P3
+status is recorded above; see the [C1 report](../research/c1-containment-acceptance.md).
 
 Error context has optional taskId, workerId, operationId, partitionIndex,
 rangeStart, rangeEnd and cause. Context is available only when known: errors before

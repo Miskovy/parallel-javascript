@@ -1,0 +1,141 @@
+{
+  "baselineCommit": "102ae49bec616be960bf1e3d63a727dea1731eae",
+  "productionJsFiles": 38,
+  "pathsIdentical": true,
+  "byteIdentical": false,
+  "changedJavaScript": [
+    {
+      "path": "errors/index.js",
+      "baselineSha256": "03ba022ff23f20564ddee9d23ab4d1d4ffc378c88d7778e588a9ddd4348b82a1",
+      "candidateSha256": "b220f71b368e12d7769934a7ab562cacd9eec3d717e6d975ee5c8c5af71a611d",
+      "nonTriviaTokensIdentical": true
+    },
+    {
+      "path": "runtime.js",
+      "baselineSha256": "43f84c93009e897e1c293aa4f18900900d855353a3ba7ff97dd7367d30370acd",
+      "candidateSha256": "9452bc730c392c6aa9e19a83d7cc1e81852dc017e0e5e00b95f91d936967c862",
+      "nonTriviaTokensIdentical": true
+    }
+  ],
+  "changedDeclarations": [
+    {
+      "path": "configuration/runtime-options.d.ts",
+      "baselineSha256": "be48fa5889c9d2fca0c2edd30221e89983b017ae8cd47d91a84326e9b616465e",
+      "candidateSha256": "a53502ffbc0d4b74072054af0602f409236a1bb22112a378a6f0c512d46ca1fe",
+      "nonTriviaTokensIdentical": true
+    },
+    {
+      "path": "errors/index.d.ts",
+      "baselineSha256": "88bfdbd389837b4c6d46fa7b924499b862124b46eb947bed823bd71716883726",
+      "candidateSha256": "24a80aacf18e3587eac13cd59904ac8556af07584edc6be814e3506bab11f67a",
+      "nonTriviaTokensIdentical": true
+    },
+    {
+      "path": "partition/range.d.ts",
+      "baselineSha256": "ed79294fad8a67eb954fe87b502936f971f4da04d885fdbdf213e1e27dc1faa6",
+      "candidateSha256": "7b95e09b070786520c9639230aaf44337bdf7f9c564b5923f72c191d85b8738c",
+      "nonTriviaTokensIdentical": true
+    },
+    {
+      "path": "partition/stream.d.ts",
+      "baselineSha256": "d6f2399b766032bd82fd4e31a8b30a2440bbc4ae0b8446089b91278a50e2eed9",
+      "candidateSha256": "fc0a493fe9cff1a39f49903ec3e72264731332eb35acba57df0e9dbbbdb41955",
+      "nonTriviaTokensIdentical": true
+    },
+    {
+      "path": "runtime.d.ts",
+      "baselineSha256": "d234ad6e19bd4d7b92f87396b8267dd0e5a1e0b77746fa22c35a516bfe0c89ca",
+      "candidateSha256": "c3edb2009e64e9617dfd2f3f1b73dcfc3336c6b826a2147e6421c8e62396fd61",
+      "nonTriviaTokensIdentical": true
+    },
+    {
+      "path": "types/index.d.ts",
+      "baselineSha256": "c0ef79b83e48bec3e3d60987a533a4fc9b561e8ba166bdb16f1f9ec78a8598fb",
+      "candidateSha256": "3161d2574c701aabff14fc6d80946642d1286a0d7f2cccd2ecb06c959abf68b7",
+      "nonTriviaTokensIdentical": true
+    }
+  ],
+  "changedMaps": [
+    "errors/index.d.ts.map",
+    "errors/index.js.map",
+    "partition/range.d.ts.map",
+    "partition/stream.d.ts.map",
+    "runtime.d.ts.map",
+    "types/index.d.ts.map"
+  ],
+  "unchangedFiles": 138,
+  "sourceReview": [
+    {
+      "path": "packages/runtime/src/types/index.ts",
+      "reviewedMarkers": 3,
+      "removedMarkers": 3,
+      "nonTriviaTokensIdentical": true
+    },
+    {
+      "path": "packages/runtime/src/configuration/runtime-options.ts",
+      "reviewedMarkers": 1,
+      "removedMarkers": 1,
+      "nonTriviaTokensIdentical": true
+    },
+    {
+      "path": "packages/runtime/src/errors/index.ts",
+      "reviewedMarkers": 1,
+      "removedMarkers": 1,
+      "nonTriviaTokensIdentical": true
+    },
+    {
+      "path": "packages/runtime/src/runtime.ts",
+      "reviewedMarkers": 5,
+      "removedMarkers": 5,
+      "nonTriviaTokensIdentical": true
+    },
+    {
+      "path": "packages/runtime/src/partition/range.ts",
+      "reviewedMarkers": 17,
+      "removedMarkers": 17,
+      "nonTriviaTokensIdentical": true
+    },
+    {
+      "path": "packages/runtime/src/partition/stream.ts",
+      "reviewedMarkers": 1,
+      "removedMarkers": 1,
+      "nonTriviaTokensIdentical": true
+    }
+  ],
+  "aliases": [
+    {
+      "name": "experimentalDispatchBatchSize",
+      "sourceOccurrences": 2,
+      "declarationPresent": true
+    },
+    {
+      "name": "experimentalMaxBufferedResults",
+      "sourceOccurrences": 2,
+      "declarationPresent": true
+    },
+    {
+      "name": "experimentalOutputConstructor",
+      "sourceOccurrences": 2,
+      "declarationPresent": true
+    },
+    {
+      "name": "experimentalResultBytes",
+      "sourceOccurrences": 4,
+      "declarationPresent": true
+    },
+    {
+      "name": "experimentalMaxResultBytes",
+      "sourceOccurrences": 4,
+      "declarationPresent": true
+    },
+    {
+      "name": "experimentalMaxReservedResultBytes",
+      "sourceOccurrences": 5,
+      "declarationPresent": true
+    }
+  ],
+  "deprecatedMarkersPreserved": 14,
+  "forbiddenInputsUnchanged": true,
+  "baselineManifestSha256": "fbfe1f04b3fe17daa2fbea1ceef8f676a6f39fdfeab0ece5b1de474f4c12145c",
+  "candidateManifestSha256": "ed712b127fca1d49015e11c7ba6bfcf643c3bed084a47590641736e4e81be765"
+}

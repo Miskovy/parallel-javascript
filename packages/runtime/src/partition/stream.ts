@@ -5,7 +5,7 @@ export interface StreamRangeResult<Output> {
   readonly output: Output;
 }
 
-/** @experimental Eager, single-consumer range delivery with explicit cleanup. */
+/** Eager, single-consumer range delivery with explicit cleanup. */
 export interface PjsRangeStream<Output> extends AsyncIterableIterator<
   StreamRangeResult<Output>,
   undefined,

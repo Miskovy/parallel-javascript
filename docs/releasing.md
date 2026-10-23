@@ -69,8 +69,12 @@ The `release.published` workflow, OIDC binding and publication guards are unchan
 C1-A/Q, C2 and C3 are integrated at main
 `0f79db5e1192dd47db32d2e300fc382a0f431462`. The authoritative
 [Stage C decisions](research/v1-api-migration-plan.md#decisions-for-maintainer-review)
-keep P1/P2/P3 promotion, one combined six-alias transition prerelease and later C4
-removal separate. No window starts from a merge. Hold applicability remains
+record approved P1/P2/P3 development promotion while keeping the combined
+six-alias transition prerelease and later C4 removal separate. The
+[promotion report](research/p1-p2-p3-development-promotion.md) records fresh
+qualification, the historical strict JavaScript byte-identity failure and the
+explicit maintainer-approved revised acceptance. No transition
+prerelease is authorized and no window starts from a promotion commit or merge. Hold applicability remains
 unresolved; actual versions, support-floor changes and publication are unselected.
 Historical runtime evidence is not final-candidate qualification.
 

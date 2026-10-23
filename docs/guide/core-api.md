@@ -1,5 +1,7 @@
 # Core API guide
 
+**Promotion status:** Development P2 range/count/map/batch contracts are promoted following benchmark review; all six deprecated option aliases remain accepted through the actual shared transition window.
+
 PJS runs explicitly registered CPU work in persistent Node worker isolates. Your
 application keeps its event-loop/I/O plane; PJS supplies a bounded compute plane.
 
@@ -38,7 +40,7 @@ checkout examples are tested against the packed development artifact.
 | stats()                                                | Return copied current state and cumulative diagnostic counters without retaining completed-task history.                         | v0.13/14 measurements; no latency quantiles                                               |
 | shutdown(options)                                      | Close admission and use the first chosen drain policy to finish or terminate accepted work and stop workers.                     | Cross-platform lifecycle suites; graceful drain can wait indefinitely                     |
 
-All four range methods and their controls remain [experimental](../stability.md).
+All four range methods and their controls are [promoted in development](../stability.md).
 
 ## Registration and runtime options
 
@@ -69,7 +71,7 @@ optional `transferList` moves input buffers. `signal` and `timeout` affect calle
 settlement, not preemption. Constructor/registration validation throws; ordinary
 submission validation rejects. See [errors](errors.md) and [lifecycle](lifecycle.md).
 
-R1 development adds experimental `run({ executionLease })`,
+R1 development adds `run({ executionLease })`,
 constructor `restartPolicy` and graceful `shutdown({ forceAfter })`.
 These opt-in controls are not part of the immutable RC4 publication.
 See [physical containment](lifecycle.md#experimental-physical-execution-leases-r1-development)
@@ -129,7 +131,7 @@ The [binary recipe](../../examples/streaming-binary.mjs) demonstrates reconstruc
 Integrated development returns `PjsRangeStream<Output>` with required direct
 `next()`, `return()` and `throw()`. `CountOnlyStreamRangeOptions` is also importable
 from the root; it excludes all six strict byte spellings (three alias pairs). These type-only
-exports are not in published RC4. Range streaming remains experimental.
+exports are not in published RC4. Range streaming is promoted in development.
 
 ```ts
 const stream = runtime.streamRange(task, range, createInput);
