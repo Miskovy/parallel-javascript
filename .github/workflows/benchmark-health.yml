@@ -40,8 +40,12 @@ jobs:
       - name: Installed API and performance campaign (sequential children)
         run: node benchmarks/current-development/run.mjs --baseline=.node-tools/benchmark-baseline --output=.node-tools/health-evidence/campaign --profile=${{ matrix.node == '24.0.0' && 'health' || 'performance' }}
       - name: Ordinary qualification and unchanged standard R2/R3
-        if: always()
+        if: always() && runner.os != 'Windows'
         run: npm run runtime:qualify -- --release-npm-cli="${{ github.workspace }}/.node-tools/health-evidence/release-cli/node_modules/npm/bin/npm-cli.js" --output=.node-tools/health-evidence/ordinary.json
+      - name: Ordinary qualification and unchanged standard R2/R3 (Windows)
+        if: always() && runner.os == 'Windows'
+        shell: cmd
+        run: npm.cmd run runtime:qualify -- --release-npm-cli="${{ github.workspace }}/.node-tools/health-evidence/release-cli/node_modules/npm/bin/npm-cli.js" --output=.node-tools/health-evidence/ordinary.json
       - name: Both-compiler complete fixtures, inventory and evidence reconciliation
         if: always()
         run: node benchmarks/current-development/qualify.mjs .node-tools/health-evidence
