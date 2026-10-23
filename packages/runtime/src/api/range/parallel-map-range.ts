@@ -6,6 +6,7 @@ import type {
   RangePartition,
 } from '../../partition/range.js';
 import type { RangeSubmission } from './contracts.js';
+import { optionSpelling } from '../../internal/option-spelling.js';
 import type {
   PjsTypedArray,
   PjsTypedArrayConstructor,
@@ -42,12 +43,18 @@ export function parallelMapRange<Input>(
   task: PjsTask<Input, readonly unknown[] | PjsTypedArray>,
   range: PartitionRange,
   createInput: (partition: RangePartition) => PartitionInput<Input>,
-  options: PartitionOptions | TypedMapRangeOptions = {},
+  options: PartitionOptions & {
+    outputConstructor?: PjsTypedArrayConstructor;
+    experimentalOutputConstructor?: PjsTypedArrayConstructor;
+  } = {},
 ): Promise<unknown[] | PjsTypedArray> {
+  const constructorName = optionSpelling(
+    options,
+    'outputConstructor',
+    'experimentalOutputConstructor',
+  );
   const outputConstructor =
-    'experimentalOutputConstructor' in options
-      ? options.experimentalOutputConstructor
-      : undefined;
+    constructorName === undefined ? undefined : options[constructorName];
   return submission.start(
     task,
     range,

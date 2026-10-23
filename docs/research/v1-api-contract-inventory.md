@@ -1,9 +1,10 @@
 # Current API contract inventory and proposed v1 dispositions
 
-C1-A/Q acceptance inventory from main `7533fbad82c3d80df80a6f6b633398b21dbcf827`
-(PR #25 plan integration), retaining the integrated B4 public graph.
-**S1, corrected Stage A and B1–B4 are integrated; broader policy and Stage C remain proposed. No feature
-is promoted.**
+C2 development transition inventory from main
+`3e0381317fde3438e1a3008dc8c4e84257ff066a` (PR #26 C1-A/Q integration).
+**S1, corrected Stage A and B1–B4 are integrated; C2's three alias pairs are
+implemented. Feature promotions and broader policy remain separately governed.
+No feature is promoted.**
 This is the canonical current inventory. The [v0.15 inventory](v0.15-public-api-inventory.md)
 and [RC1 freeze inventory](v1-rc1-contract-inventory.md) are historical, including
 their old `@pjs/runtime` spelling and 38-export count.
@@ -16,15 +17,22 @@ same tree `48bb493a6717dfbd2259af017937ca623110b044`. Those B4 revisions share
 the reviewed/tested tree; this is historical tree equivalence, not qualification
 of a later C1 candidate. The [Stage C qualification ledger](v1-api-migration-plan.md#verified-starting-state-and-qualification-ledger)
 records the re-inspected four-cell B4 CI evidence and separate local results.
-Current experimental annotations/options remain unchanged pending unit-specific
-C1–C4 decisions.
+Current experimental annotations remain. C2 adds the three batch/count/constructor
+names with deprecated aliases; C3 byte names remain unavailable. See the
+[C2 engineering report](c2-range-option-transition.md) for the source/declaration
+comparison and qualification procedure.
 
-C1-A/Q adds acceptance and installed-package evidence and clarifies declaration
+Historically, C1-A/Q added acceptance and installed-package evidence and clarified declaration
 comments without changing any supported signature/field/modifier. All 37
 pre-existing production JS files remain identical to its untouched main baseline;
 all 37 declaration token streams are unchanged, with comments changing only in
 types/index.d.ts and configuration/runtime-options.d.ts. The 61/322/0/158 graph
-and seventeen runtime values remain intact. Locations below are refreshed from
+and seventeen runtime values remained intact. C2 adds eleven inherited/public
+member entries, retaining every root, diagnostic leaf and pre-existing field.
+The five transition option interfaces become exclusive-pair type aliases;
+individual constructor fields are optional in the union but one spelling is
+required. Runtime checks reject both spellings even when TypeScript's optional
+never rules admit undefined without exact optional types. Locations below are refreshed from
 the checker; historical reports and the existing field meanings remain untouched.
 See [C1 evidence and pending promotion](c1-containment-acceptance.md). C1-P is not
 approved by this acceptance work, and hold applicability remains unresolved.
@@ -93,7 +101,7 @@ JSON includes exact source and declaration locations, signatures and optionality
 
 Reconciled current counts: **61 root names = 17 JavaScript values (15 classes,
 two functions) + 44 type-only names; 0 additional named reachable types;
-158 statistics leaf paths; 322 repository-owned member entries**. Each public class value also has a TypeScript
+158 statistics leaf paths; 333 repository-owned member entries**. Each public class value also has a TypeScript
 instance type; those are not counted twice. Constructor overloads inherited
 from a base class remain visible. `PjsRuntime` has eight methods, ten declared
 method overloads and one constructor; `sharedReadonly` has five overloads.
@@ -132,18 +140,18 @@ compiled JavaScript local `file:` module exports; no closures or new language.
 
 | ID / name                                 | Visibility       | Source; declaration                                                                                                                                   | Owner; current status                                                                | Proposed disposition / evidence                                                                                     |
 | ----------------------------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
-| `ROOT.BinaryStreamRangeOptions`           | TS only          | [src/partition/range.ts:73](../../packages/runtime/src/partition/range.ts#L73); `dist/partition/range.d.ts:51`                                        | Result credits / worker validation / stream API; Experimental binary result contract | B2 then P3/C3; binary-result, upper-bound-result, result-credit, physical-boundary; B2 negative TS                  |
-| `ROOT.CountOnlyStreamRangeOptions`        | TS only          | [src/partition/range.ts:41](../../packages/runtime/src/partition/range.ts#L41); `dist/partition/range.d.ts:36`                                        | Stream API / delivery; experimental, B1 implemented in development                   | P2/C2 promotion pending; closeable-stream, stream and installed two-compiler consumers                              |
+| `ROOT.BinaryStreamRangeOptions`           | TS only          | [src/partition/range.ts:90](../../packages/runtime/src/partition/range.ts#L90); `dist/partition/range.d.ts:61`                                        | Result credits / worker validation / stream API; Experimental binary result contract | B2 then P3/C3; binary-result, upper-bound-result, result-credit, physical-boundary; B2 negative TS                  |
+| `ROOT.CountOnlyStreamRangeOptions`        | TS only          | [src/partition/range.ts:58](../../packages/runtime/src/partition/range.ts#L58); `dist/partition/range.d.ts:46`                                        | Stream API / delivery; experimental, B1 implemented in development                   | P2/C2 promotion pending; closeable-stream, stream and installed two-compiler consumers                              |
 | `ROOT.PartitionInput`                     | TS only          | [src/partition/range.ts:16](../../packages/runtime/src/partition/range.ts#L16); `dist/partition/range.d.ts:14`                                        | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
 | `ROOT.PartitionOptions`                   | TS only          | [src/partition/range.ts:22](../../packages/runtime/src/partition/range.ts#L22); `dist/partition/range.d.ts:19`                                        | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
 | `ROOT.PartitionRange`                     | TS only          | [src/partition/range.ts:2](../../packages/runtime/src/partition/range.ts#L2); `dist/partition/range.d.ts:2`                                           | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
-| `ROOT.PjsBinaryResult`                    | TS only          | [src/partition/range.ts:65](../../packages/runtime/src/partition/range.ts#L65); `dist/partition/range.d.ts:47`                                        | Result credits / worker validation / stream API; Experimental binary result contract | B2 then P3/C3; binary-result, upper-bound-result, result-credit, physical-boundary; B2 negative TS                  |
+| `ROOT.PjsBinaryResult`                    | TS only          | [src/partition/range.ts:82](../../packages/runtime/src/partition/range.ts#L82); `dist/partition/range.d.ts:57`                                        | Result credits / worker validation / stream API; Experimental binary result contract | B2 then P3/C3; binary-result, upper-bound-result, result-credit, physical-boundary; B2 negative TS                  |
 | `ROOT.PjsBinaryResultContractError`       | JS + TS class    | [src/errors/index.ts:64](../../packages/runtime/src/errors/index.ts#L64); `dist/errors/index.d.ts:54`                                                 | Result credits / worker validation / stream API; Experimental binary result contract | B2 then P3/C3; binary-result, upper-bound-result, result-credit, physical-boundary; B2 negative TS                  |
 | `ROOT.PjsCancelledError`                  | JS + TS class    | [src/errors/index.ts:59](../../packages/runtime/src/errors/index.ts#L59); `dist/errors/index.d.ts:44`                                                 | Registry / task / errors; Core candidate                                             | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
 | `ROOT.PjsError`                           | JS + TS class    | [src/errors/index.ts:24](../../packages/runtime/src/errors/index.ts#L24); `dist/errors/index.d.ts:21`                                                 | Registry / task / errors; Core candidate                                             | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
 | `ROOT.PjsExecutionLeaseError`             | JS + TS class    | [src/errors/index.ts:56](../../packages/runtime/src/errors/index.ts#L56); `dist/errors/index.d.ts:38`                                                 | Containment; experimental; C1-A/Q acceptance implemented                             | P1 pending explicit approval/eligibility; C1 failure-path and installed JS/both emitted TS controls; see C1 report  |
 | `ROOT.PjsMapContractError`                | JS + TS class    | [src/errors/index.ts:63](../../packages/runtime/src/errors/index.ts#L63); `dist/errors/index.d.ts:52`                                                 | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
-| `ROOT.PjsOwnedTypedArray`                 | TS only          | [src/partition/range.ts:51](../../packages/runtime/src/partition/range.ts#L51); `dist/partition/range.d.ts:45`                                        | Result credits / stream API; experimental, B2 implemented in development             | P3/C3 promotion pending; both installed compilers and binary worker guards                                          |
+| `ROOT.PjsOwnedTypedArray`                 | TS only          | [src/partition/range.ts:68](../../packages/runtime/src/partition/range.ts#L68); `dist/partition/range.d.ts:55`                                        | Result credits / stream API; experimental, B2 implemented in development             | P3/C3 promotion pending; both installed compilers and binary worker guards                                          |
 | `ROOT.PjsQueueFullError`                  | JS + TS class    | [src/errors/index.ts:57](../../packages/runtime/src/errors/index.ts#L57); `dist/errors/index.d.ts:40`                                                 | Registry / task / errors; Core candidate                                             | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
 | `ROOT.PjsRangeStream`                     | TS only          | [src/partition/stream.ts:9](../../packages/runtime/src/partition/stream.ts#L9); `dist/partition/stream.d.ts:7`                                        | Stream API / delivery; experimental, B1 implemented in development                   | P2/C2 promotion pending; closeable-stream, stream and installed two-compiler consumers                              |
 | `ROOT.PjsResultCapacityError`             | JS + TS class    | [src/errors/index.ts:75](../../packages/runtime/src/errors/index.ts#L75); `dist/errors/index.d.ts:60`                                                 | Result credits / worker validation / stream API; Experimental binary result contract | B2 then P3/C3; binary-result, upper-bound-result, result-credit, physical-boundary; B2 negative TS                  |
@@ -157,23 +165,23 @@ compiled JavaScript local `file:` module exports; no closures or new language.
 | `ROOT.PjsTaskRegistry`                    | JS + TS class    | [src/tasks/registry.ts:27](../../packages/runtime/src/tasks/registry.ts#L27); `dist/tasks/registry.d.ts:12`                                           | Registry/composition; Core candidate; B3 encapsulation implemented in development    | S registration; unsupported snapshot removed; registry/runtime-boundaries and installed two-compiler absence checks |
 | `ROOT.PjsTimeoutError`                    | JS + TS class    | [src/errors/index.ts:58](../../packages/runtime/src/errors/index.ts#L58); `dist/errors/index.d.ts:42`                                                 | Registry / task / errors; Core candidate                                             | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
 | `ROOT.PjsTransfer`                        | TS only          | [src/tasks/transfer.ts:10](../../packages/runtime/src/tasks/transfer.ts#L10); `dist/tasks/transfer.d.ts:2`                                            | Transfer claims / shared helper; Specialized supported                               | S specialized; preserve ownership; transfer, shared, physical-boundary, package-smoke                               |
-| `ROOT.PjsTypedArray`                      | TS only          | [src/partition/range.ts:89](../../packages/runtime/src/partition/range.ts#L89); `dist/partition/range.d.ts:65`                                        | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
-| `ROOT.PjsTypedArrayConstructor`           | TS only          | [src/partition/range.ts:103](../../packages/runtime/src/partition/range.ts#L103); `dist/partition/range.d.ts:67`                                      | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
+| `ROOT.PjsTypedArray`                      | TS only          | [src/partition/range.ts:104](../../packages/runtime/src/partition/range.ts#L104); `dist/partition/range.d.ts:73`                                      | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
+| `ROOT.PjsTypedArrayConstructor`           | TS only          | [src/partition/range.ts:118](../../packages/runtime/src/partition/range.ts#L118); `dist/partition/range.d.ts:75`                                      | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
 | `ROOT.PjsWorkerError`                     | JS + TS class    | [src/errors/index.ts:54](../../packages/runtime/src/errors/index.ts#L54); `dist/errors/index.d.ts:35`                                                 | Registry / task / errors; Core candidate                                             | S; B4 intentional error names; runtime, public-options, transfer, package-smoke; B4 errors                          |
 | `ROOT.RangePartition`                     | TS only          | [src/partition/range.ts:9](../../packages/runtime/src/partition/range.ts#L9); `dist/partition/range.d.ts:8`                                           | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
 | `ROOT.RestartPolicy`                      | TS only          | [src/types/index.ts:69](../../packages/runtime/src/types/index.ts#L69); `dist/types/index.d.ts:55`                                                    | Containment; experimental; C1-A/Q acceptance implemented                             | P1 pending explicit approval/eligibility; C1 failure-path and installed JS/both emitted TS controls; see C1 report  |
-| `ROOT.ResultByteDeclaration`              | TS only          | [src/partition/range.ts:69](../../packages/runtime/src/partition/range.ts#L69); `dist/partition/range.d.ts:49`                                        | Result credits / stream API; experimental, B2 implemented in development             | P3/C3 promotion pending; both installed compilers and binary worker guards                                          |
+| `ROOT.ResultByteDeclaration`              | TS only          | [src/partition/range.ts:86](../../packages/runtime/src/partition/range.ts#L86); `dist/partition/range.d.ts:59`                                        | Result credits / stream API; experimental, B2 implemented in development             | P3/C3 promotion pending; both installed compilers and binary worker guards                                          |
 | `ROOT.RunOptions`                         | TS only          | [src/types/index.ts:41](../../packages/runtime/src/types/index.ts#L41); `dist/types/index.d.ts:29`                                                    | Configuration / task / controller; Core plus experimental R1 fields                  | S base; P1 R1 fields/C1; public-options, containment, runtime-boundaries; C1 installed fixture                      |
 | `ROOT.RuntimeState`                       | TS only          | [src/types/index.ts:1](../../packages/runtime/src/types/index.ts#L1); `dist/types/index.d.ts:1`                                                       | Telemetry / worker / task; Supported diagnostics; shape unfrozen                     | D/B4; preserve listed vocabulary; runtime, containment, memory-observability; B4 per-field assertions               |
 | `ROOT.sharedReadonly`                     | JS + TS function | [src/tasks/shared.ts:16](../../packages/runtime/src/tasks/shared.ts#L16); `dist/tasks/shared.d.ts:7`                                                  | Transfer claims / shared helper; Specialized supported                               | S specialized; preserve ownership; transfer, shared, physical-boundary, package-smoke                               |
 | `ROOT.ShutdownOptions`                    | TS only          | [src/types/index.ts:56](../../packages/runtime/src/types/index.ts#L56); `dist/types/index.d.ts:43`                                                    | Configuration / task / controller; Core plus experimental R1 fields                  | S base; P1 R1 fields/C1; public-options, containment, runtime-boundaries; C1 installed fixture                      |
-| `ROOT.StreamRangeOptions`                 | TS only          | [src/partition/range.ts:35](../../packages/runtime/src/partition/range.ts#L35); `dist/partition/range.d.ts:31`                                        | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
+| `ROOT.StreamRangeOptions`                 | TS only          | [src/partition/range.ts:42](../../packages/runtime/src/partition/range.ts#L42); `dist/partition/range.d.ts:35`                                        | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
 | `ROOT.StreamRangeResult`                  | TS only          | [src/partition/stream.ts:3](../../packages/runtime/src/partition/stream.ts#L3); `dist/partition/stream.d.ts:2`                                        | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
 | `ROOT.TaskSnapshot`                       | TS only          | [src/types/index.ts:24](../../packages/runtime/src/types/index.ts#L24); `dist/types/index.d.ts:13`                                                    | Telemetry / worker / task; Supported diagnostics; shape unfrozen                     | D/B4; preserve listed vocabulary; runtime, containment, memory-observability; B4 per-field assertions               |
 | `ROOT.TaskStatus`                         | TS only          | [src/types/index.ts:4](../../packages/runtime/src/types/index.ts#L4); `dist/types/index.d.ts:3`                                                       | Telemetry / worker / task; Supported diagnostics; shape unfrozen                     | D/B4; preserve listed vocabulary; runtime, containment, memory-observability; B4 per-field assertions               |
 | `ROOT.transfer`                           | JS + TS function | [src/tasks/transfer.ts:16](../../packages/runtime/src/tasks/transfer.ts#L16); `dist/tasks/transfer.d.ts:7`                                            | Transfer claims / shared helper; Specialized supported                               | S specialized; preserve ownership; transfer, shared, physical-boundary, package-smoke                               |
-| `ROOT.TypedMapRangeOptions`               | TS only          | [src/partition/range.ts:117](../../packages/runtime/src/partition/range.ts#L117); `dist/partition/range.d.ts:69`                                      | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
-| `ROOT.UpperBoundBinaryStreamRangeOptions` | TS only          | [src/partition/range.ts:81](../../packages/runtime/src/partition/range.ts#L81); `dist/partition/range.d.ts:58`                                        | Result credits / worker validation / stream API; Experimental binary result contract | B2 then P3/C3; binary-result, upper-bound-result, result-credit, physical-boundary; B2 negative TS                  |
+| `ROOT.TypedMapRangeOptions`               | TS only          | [src/partition/range.ts:132](../../packages/runtime/src/partition/range.ts#L132); `dist/partition/range.d.ts:77`                                      | Range engine / API / map assembly; Experimental range/result contract                | P2/C2 (strict byte additions P3/C3); partition, completion, stream, map, batch; installed B1/C2/C3 fixtures         |
+| `ROOT.UpperBoundBinaryStreamRangeOptions` | TS only          | [src/partition/range.ts:97](../../packages/runtime/src/partition/range.ts#L97); `dist/partition/range.d.ts:67`                                        | Result credits / worker validation / stream API; Experimental binary result contract | B2 then P3/C3; binary-result, upper-bound-result, result-credit, physical-boundary; B2 negative TS                  |
 | `ROOT.WorkerState`                        | TS only          | [src/types/index.ts:14](../../packages/runtime/src/types/index.ts#L14); `dist/types/index.d.ts:4`                                                     | Telemetry / worker / task; Supported diagnostics; shape unfrozen                     | D/B4; preserve listed vocabulary; runtime, containment, memory-observability; B4 per-field assertions               |
 | `ROOT.WorkerStatus`                       | TS only          | [src/types/index.ts:3](../../packages/runtime/src/types/index.ts#L3); `dist/types/index.d.ts:2`                                                       | Telemetry / worker / task; Supported diagnostics; shape unfrozen                     | D/B4; preserve listed vocabulary; runtime, containment, memory-observability; B4 per-field assertions               |
 
@@ -411,6 +419,11 @@ promise; stream adaptation instead returns a failed iterator. Range getters are
 read `start`, `end`, `grainSize`; options read timeout, signal, batch size. Stream
 count/byte normalization comes first; rejected accounting precedes catch-path
 property tests. A map output-constructor getter runs before range rejection.
+C2 probes each current spelling followed by its deprecated alias, by presence,
+at these same boundaries; both presence rejects before either value read. Only
+the selected property is read once; absent pairs use their existing defaults
+without reading either value. These additional Proxy has operations are
+intentional. There are no warning reads or eager reads of unrelated properties.
 Application proxies/getters can throw outside catch scopes; the stable API must
 not advertise that every invalid JavaScript value becomes an async rejection.
 
@@ -428,28 +441,28 @@ All optional fields below are omitted by default; explicit `undefined` does not
 mean omission for `in`-based exclusion rules. Numbers are runtime validated, not
 encoded as TypeScript integer subtypes. Default time unit is milliseconds.
 
-| Field                                                    | Current default, limit and delivery                                                                                                                                                                                             | Target / gate                                                                                                                            |
-| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `PjsRuntimeOptions.registry`                             | Required actual registry; internal snapshotRegistry synchronously after scalar normalization                                                                                                                                    | B3 implemented: public registration retained, invalid snapshot receivers reject with TypeError                                           |
-| `minWorkers`, `maxWorkers`, `workers`                    | Min defaults 1; max defaults `max(min, workers ?? availableParallelism())`; workers defaults clamped available parallelism. Safe integers, `1 <= min <= workers <= max`, each <= MAX_SAFE_INTEGER. Validate min → max → workers | S, fixed initial population; no dynamic scaling promise                                                                                  |
-| `maxQueue`                                               | 1024; safe integer 0..MAX_SAFE_INTEGER; scheduler validates after registry snapshot. Counts queued logical tasks, including batch weight                                                                                        | S; 0 permits direct idle admission, not a waiting slot                                                                                   |
-| `startupTimeout`                                         | 30,000; integer 1..2^31-1 per initial/replacement bootstrap                                                                                                                                                                     | S; startup failure async via readiness/runtime                                                                                           |
-| `maxRestarts`                                            | `workers * 4`; integer 0..MAX_SAFE_INTEGER, lifetime pool replacement-decision budget                                                                                                                                           | S compatibility; reject simultaneous defined restartPolicy                                                                               |
-| `restartPolicy.maxRestarts`, `.windowMs`                 | No policy by default; max >= 0, window >= 1, both safe integers; copied at construction; rolling monotonic age >= window expires                                                                                                | P1; counts decisions before exit, replacement only after exit; no replay. Type currently permits a combination runtime rejects           |
-| `RunOptions.signal`, `PartitionOptions.signal`           | Omitted; AbortSignal pre-abort rejected; listener removed once. Timeout/cancel settles caller only while physical execution can continue                                                                                        | S / P2; no worker AsyncLocalStorage inheritance                                                                                          |
-| `timeout`                                                | Omitted: no caller/parent deadline. Integer 1..2^31-1; run includes startup/queue; range includes factory, children, stream consumer delivery                                                                                   | S / P2; a deadline is not execution termination                                                                                          |
-| `RunOptions.executionLease`                              | Omitted: no physical lease. Integer 1..2^31-1; starts after successful posting/credit claim, before start acknowledgement; excludes queue wait                                                                                  | P1; ordinary exclusive run only; presence of batching property rejected with a defined lease                                             |
-| `PartitionOptions.executionLease?: never`                | Any property presence, including undefined/inherited, rejected before factory/execution                                                                                                                                         | P2; keep exclusion                                                                                                                       |
-| `RunOptions.transferList`, `PartitionInput.transferList` | Omitted: clone. Copied live unique ordinary buffer list; no SAB, views, marked/untransferable/detached buffers. Rechecked before posting; posted sender views detach                                                            | S / P2; queued cancellation releases claims without detachment, posted failure never restores them                                       |
-| `ShutdownOptions.drain`                                  | true; false explicitly forces cancellation/termination. First options win, later getters never read                                                                                                                             | S/P1; no implicit escalation when omitted                                                                                                |
-| `ShutdownOptions.forceAfter`                             | Omitted; integer 1..2^31-1 from first call, includes startup; requires graceful mode. Early timer wakes reschedule remaining monotonic time                                                                                     | P1; deadline for requesting escalation, not a hard exit-latency bound                                                                    |
-| `PartitionRange.start/end/grainSize`                     | Safe integer endpoints, end >= start, safe span; grain >= 1. Half-open; chunks = ceiling(span/grain). Collect/map <=2^32-1 chunks, completion/stream <=MAX_SAFE_INTEGER; map span <=2^32-1 elements                             | P2; empty range valid; allocations may still fail before acceptance                                                                      |
-| `RangePartition.index/start/end`                         | Frozen zero-based chunk descriptor; end is clipped final endpoint                                                                                                                                                               | P2; immutable metadata; not a copy of mutable input range                                                                                |
-| `experimentalDispatchBatchSize`                          | 1; integer 1..16. Sequential children from same parent/task. Live window workers × batch size, bounded physical production per turn                                                                                             | P2; reject child input transfers when configured >1, even a single physical item; first item failure skips rest, no rollback. Rename C2  |
-| `experimentalMaxBufferedResults`                         | workers; positive safe integer. Buffered + admitted-unsettled logical results per stream; bounded batch admission                                                                                                               | B1 implemented; P2/C2; not bytes or consumer-retained results                                                                            |
-| `experimentalResultBytes` / `experimentalMaxResultBytes` | No byte mode unless paired with byte capacity; exact vs maximum mutually exclusive by presence. Number >=0 safe integer or synchronous per-partition callback                                                                   | B2/P3; invalid literal wrapped binary-contract error; callback evaluated in parent AsyncResource and may fail lazily before that factory |
-| `experimentalMaxReservedResultBytes`                     | No default; paired field, nonnegative safe integer. Per-stream declared/unreconciled maximum/reconciled actual visible bytes. Declaration over capacity rejected, no successful refund on failure                               | B2/P3; rename C3; 0 allows zero-byte results; not RSS/backing-store bound                                                                |
-| `experimentalOutputConstructor`                          | Omitted: ordinary array. Exactly one of the eleven built-in typed constructors; no subclass. Array/typed blocks must match kind and partition span                                                                              | P2; rename C2; mapping/input types remain shared-capable despite strict-binary narrowing                                                 |
+| Field                                                    | Current default, limit and delivery                                                                                                                                                                                             | Target / gate                                                                                                                                                             |
+| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PjsRuntimeOptions.registry`                             | Required actual registry; internal snapshotRegistry synchronously after scalar normalization                                                                                                                                    | B3 implemented: public registration retained, invalid snapshot receivers reject with TypeError                                                                            |
+| `minWorkers`, `maxWorkers`, `workers`                    | Min defaults 1; max defaults `max(min, workers ?? availableParallelism())`; workers defaults clamped available parallelism. Safe integers, `1 <= min <= workers <= max`, each <= MAX_SAFE_INTEGER. Validate min → max → workers | S, fixed initial population; no dynamic scaling promise                                                                                                                   |
+| `maxQueue`                                               | 1024; safe integer 0..MAX_SAFE_INTEGER; scheduler validates after registry snapshot. Counts queued logical tasks, including batch weight                                                                                        | S; 0 permits direct idle admission, not a waiting slot                                                                                                                    |
+| `startupTimeout`                                         | 30,000; integer 1..2^31-1 per initial/replacement bootstrap                                                                                                                                                                     | S; startup failure async via readiness/runtime                                                                                                                            |
+| `maxRestarts`                                            | `workers * 4`; integer 0..MAX_SAFE_INTEGER, lifetime pool replacement-decision budget                                                                                                                                           | S compatibility; reject simultaneous defined restartPolicy                                                                                                                |
+| `restartPolicy.maxRestarts`, `.windowMs`                 | No policy by default; max >= 0, window >= 1, both safe integers; copied at construction; rolling monotonic age >= window expires                                                                                                | P1; counts decisions before exit, replacement only after exit; no replay. Type currently permits a combination runtime rejects                                            |
+| `RunOptions.signal`, `PartitionOptions.signal`           | Omitted; AbortSignal pre-abort rejected; listener removed once. Timeout/cancel settles caller only while physical execution can continue                                                                                        | S / P2; no worker AsyncLocalStorage inheritance                                                                                                                           |
+| `timeout`                                                | Omitted: no caller/parent deadline. Integer 1..2^31-1; run includes startup/queue; range includes factory, children, stream consumer delivery                                                                                   | S / P2; a deadline is not execution termination                                                                                                                           |
+| `RunOptions.executionLease`                              | Omitted: no physical lease. Integer 1..2^31-1; starts after successful posting/credit claim, before start acknowledgement; excludes queue wait                                                                                  | P1; ordinary exclusive run only; presence of batching property rejected with a defined lease                                                                              |
+| `PartitionOptions.executionLease?: never`                | Any property presence, including undefined/inherited, rejected before factory/execution                                                                                                                                         | P2; keep exclusion                                                                                                                                                        |
+| `RunOptions.transferList`, `PartitionInput.transferList` | Omitted: clone. Copied live unique ordinary buffer list; no SAB, views, marked/untransferable/detached buffers. Rechecked before posting; posted sender views detach                                                            | S / P2; queued cancellation releases claims without detachment, posted failure never restores them                                                                        |
+| `ShutdownOptions.drain`                                  | true; false explicitly forces cancellation/termination. First options win, later getters never read                                                                                                                             | S/P1; no implicit escalation when omitted                                                                                                                                 |
+| `ShutdownOptions.forceAfter`                             | Omitted; integer 1..2^31-1 from first call, includes startup; requires graceful mode. Early timer wakes reschedule remaining monotonic time                                                                                     | P1; deadline for requesting escalation, not a hard exit-latency bound                                                                                                     |
+| `PartitionRange.start/end/grainSize`                     | Safe integer endpoints, end >= start, safe span; grain >= 1. Half-open; chunks = ceiling(span/grain). Collect/map <=2^32-1 chunks, completion/stream <=MAX_SAFE_INTEGER; map span <=2^32-1 elements                             | P2; empty range valid; allocations may still fail before acceptance                                                                                                       |
+| `RangePartition.index/start/end`                         | Frozen zero-based chunk descriptor; end is clipped final endpoint                                                                                                                                                               | P2; immutable metadata; not a copy of mutable input range                                                                                                                 |
+| `experimentalDispatchBatchSize`                          | 1; integer 1..16. Sequential children from same parent/task. Live window workers × batch size, bounded physical production per turn                                                                                             | P2; reject child input transfers when configured >1, even a single physical item; first item failure skips rest, no rollback. C2 alias transition implemented; P2 pending |
+| `experimentalMaxBufferedResults`                         | workers; positive safe integer. Buffered + admitted-unsettled logical results per stream; bounded batch admission                                                                                                               | B1 implemented; P2/C2; not bytes or consumer-retained results                                                                                                             |
+| `experimentalResultBytes` / `experimentalMaxResultBytes` | No byte mode unless paired with byte capacity; exact vs maximum mutually exclusive by presence. Number >=0 safe integer or synchronous per-partition callback                                                                   | B2/P3; invalid literal wrapped binary-contract error; callback evaluated in parent AsyncResource and may fail lazily before that factory                                  |
+| `experimentalMaxReservedResultBytes`                     | No default; paired field, nonnegative safe integer. Per-stream declared/unreconciled maximum/reconciled actual visible bytes. Declaration over capacity rejected, no successful refund on failure                               | B2/P3; rename C3; 0 allows zero-byte results; not RSS/backing-store bound                                                                                                 |
+| `experimentalOutputConstructor`                          | Omitted: ordinary array. Exactly one of the eleven built-in typed constructors; no subclass. Array/typed blocks must match kind and partition span                                                                              | P2 pending; C2 aliases retained; mapping/input types remain shared-capable despite strict-binary narrowing                                                                |
 
 `PjsTypedArray`/constructor enumerate Int8, Uint8, Uint8Clamped, Int16, Uint16,
 Int32, Uint32, Float32, Float64, BigInt64 and BigUint64, retaining ArrayBufferLike
@@ -473,12 +486,14 @@ statistics sections, rather than a second policy in these lookup rows.
 
 | ID                                                                | Current type / modifiers                                                                     | Source; declaration                                                                                            |
 | ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `MEM.BinaryStreamRangeOptions.dispatchBatchSize`                  | optional; `number`                                                                           | [src/partition/range.ts:30](../../packages/runtime/src/partition/range.ts#L30); `dist/partition/range.d.ts:26` |
+| `MEM.BinaryStreamRangeOptions.maxBufferedResults`                 | optional; `number`                                                                           | [src/partition/range.ts:46](../../packages/runtime/src/partition/range.ts#L46); `dist/partition/range.d.ts:37` |
 | `MEM.BinaryStreamRangeOptions.executionLease`                     | optional; `never`                                                                            | [src/partition/range.ts:24](../../packages/runtime/src/partition/range.ts#L24); `dist/partition/range.d.ts:21` |
-| `MEM.BinaryStreamRangeOptions.experimentalDispatchBatchSize`      | optional; `number`                                                                           | [src/partition/range.ts:31](../../packages/runtime/src/partition/range.ts#L31); `dist/partition/range.d.ts:28` |
-| `MEM.BinaryStreamRangeOptions.experimentalMaxBufferedResults`     | optional; `number`                                                                           | [src/partition/range.ts:74](../../packages/runtime/src/partition/range.ts#L74); `dist/partition/range.d.ts:52` |
-| `MEM.BinaryStreamRangeOptions.experimentalMaxReservedResultBytes` | required; `number`                                                                           | [src/partition/range.ts:77](../../packages/runtime/src/partition/range.ts#L77); `dist/partition/range.d.ts:55` |
-| `MEM.BinaryStreamRangeOptions.experimentalMaxResultBytes`         | optional; `never`                                                                            | [src/partition/range.ts:76](../../packages/runtime/src/partition/range.ts#L76); `dist/partition/range.d.ts:54` |
-| `MEM.BinaryStreamRangeOptions.experimentalResultBytes`            | required; `number \| ((partition: import("./partition/range.js").RangePartition) => number)` | [src/partition/range.ts:75](../../packages/runtime/src/partition/range.ts#L75); `dist/partition/range.d.ts:53` |
+| `MEM.BinaryStreamRangeOptions.experimentalDispatchBatchSize`      | optional; `number`                                                                           | [src/partition/range.ts:32](../../packages/runtime/src/partition/range.ts#L32); `dist/partition/range.d.ts:28` |
+| `MEM.BinaryStreamRangeOptions.experimentalMaxBufferedResults`     | optional; `number`                                                                           | [src/partition/range.ts:48](../../packages/runtime/src/partition/range.ts#L48); `dist/partition/range.d.ts:39` |
+| `MEM.BinaryStreamRangeOptions.experimentalMaxReservedResultBytes` | required; `number`                                                                           | [src/partition/range.ts:93](../../packages/runtime/src/partition/range.ts#L93); `dist/partition/range.d.ts:64` |
+| `MEM.BinaryStreamRangeOptions.experimentalMaxResultBytes`         | optional; `never`                                                                            | [src/partition/range.ts:92](../../packages/runtime/src/partition/range.ts#L92); `dist/partition/range.d.ts:63` |
+| `MEM.BinaryStreamRangeOptions.experimentalResultBytes`            | required; `number \| ((partition: import("./partition/range.js").RangePartition) => number)` | [src/partition/range.ts:91](../../packages/runtime/src/partition/range.ts#L91); `dist/partition/range.d.ts:62` |
 | `MEM.BinaryStreamRangeOptions.signal`                             | optional; `AbortSignal`                                                                      | [src/partition/range.ts:25](../../packages/runtime/src/partition/range.ts#L25); `dist/partition/range.d.ts:22` |
 | `MEM.BinaryStreamRangeOptions.timeout`                            | optional; `number`                                                                           | [src/partition/range.ts:26](../../packages/runtime/src/partition/range.ts#L26); `dist/partition/range.d.ts:23` |
 
@@ -486,12 +501,14 @@ statistics sections, rather than a second policy in these lookup rows.
 
 | ID                                                                   | Current type / modifiers | Source; declaration                                                                                            |
 | -------------------------------------------------------------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| `MEM.CountOnlyStreamRangeOptions.dispatchBatchSize`                  | optional; `number`       | [src/partition/range.ts:30](../../packages/runtime/src/partition/range.ts#L30); `dist/partition/range.d.ts:26` |
+| `MEM.CountOnlyStreamRangeOptions.maxBufferedResults`                 | optional; `number`       | [src/partition/range.ts:46](../../packages/runtime/src/partition/range.ts#L46); `dist/partition/range.d.ts:37` |
 | `MEM.CountOnlyStreamRangeOptions.executionLease`                     | optional; `never`        | [src/partition/range.ts:24](../../packages/runtime/src/partition/range.ts#L24); `dist/partition/range.d.ts:21` |
-| `MEM.CountOnlyStreamRangeOptions.experimentalDispatchBatchSize`      | optional; `number`       | [src/partition/range.ts:31](../../packages/runtime/src/partition/range.ts#L31); `dist/partition/range.d.ts:28` |
-| `MEM.CountOnlyStreamRangeOptions.experimentalMaxBufferedResults`     | optional; `number`       | [src/partition/range.ts:37](../../packages/runtime/src/partition/range.ts#L37); `dist/partition/range.d.ts:33` |
-| `MEM.CountOnlyStreamRangeOptions.experimentalMaxReservedResultBytes` | optional; `never`        | [src/partition/range.ts:44](../../packages/runtime/src/partition/range.ts#L44); `dist/partition/range.d.ts:39` |
-| `MEM.CountOnlyStreamRangeOptions.experimentalMaxResultBytes`         | optional; `never`        | [src/partition/range.ts:43](../../packages/runtime/src/partition/range.ts#L43); `dist/partition/range.d.ts:38` |
-| `MEM.CountOnlyStreamRangeOptions.experimentalResultBytes`            | optional; `never`        | [src/partition/range.ts:42](../../packages/runtime/src/partition/range.ts#L42); `dist/partition/range.d.ts:37` |
+| `MEM.CountOnlyStreamRangeOptions.experimentalDispatchBatchSize`      | optional; `number`       | [src/partition/range.ts:32](../../packages/runtime/src/partition/range.ts#L32); `dist/partition/range.d.ts:28` |
+| `MEM.CountOnlyStreamRangeOptions.experimentalMaxBufferedResults`     | optional; `number`       | [src/partition/range.ts:48](../../packages/runtime/src/partition/range.ts#L48); `dist/partition/range.d.ts:39` |
+| `MEM.CountOnlyStreamRangeOptions.experimentalMaxReservedResultBytes` | optional; `never`        | [src/partition/range.ts:61](../../packages/runtime/src/partition/range.ts#L61); `dist/partition/range.d.ts:49` |
+| `MEM.CountOnlyStreamRangeOptions.experimentalMaxResultBytes`         | optional; `never`        | [src/partition/range.ts:60](../../packages/runtime/src/partition/range.ts#L60); `dist/partition/range.d.ts:48` |
+| `MEM.CountOnlyStreamRangeOptions.experimentalResultBytes`            | optional; `never`        | [src/partition/range.ts:59](../../packages/runtime/src/partition/range.ts#L59); `dist/partition/range.d.ts:47` |
 | `MEM.CountOnlyStreamRangeOptions.signal`                             | optional; `AbortSignal`  | [src/partition/range.ts:25](../../packages/runtime/src/partition/range.ts#L25); `dist/partition/range.d.ts:22` |
 | `MEM.CountOnlyStreamRangeOptions.timeout`                            | optional; `number`       | [src/partition/range.ts:26](../../packages/runtime/src/partition/range.ts#L26); `dist/partition/range.d.ts:23` |
 
@@ -506,8 +523,9 @@ statistics sections, rather than a second policy in these lookup rows.
 
 | ID                                                   | Current type / modifiers | Source; declaration                                                                                            |
 | ---------------------------------------------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| `MEM.PartitionOptions.dispatchBatchSize`             | optional; `number`       | [src/partition/range.ts:30](../../packages/runtime/src/partition/range.ts#L30); `dist/partition/range.d.ts:26` |
 | `MEM.PartitionOptions.executionLease`                | optional; `never`        | [src/partition/range.ts:24](../../packages/runtime/src/partition/range.ts#L24); `dist/partition/range.d.ts:21` |
-| `MEM.PartitionOptions.experimentalDispatchBatchSize` | optional; `number`       | [src/partition/range.ts:31](../../packages/runtime/src/partition/range.ts#L31); `dist/partition/range.d.ts:28` |
+| `MEM.PartitionOptions.experimentalDispatchBatchSize` | optional; `number`       | [src/partition/range.ts:32](../../packages/runtime/src/partition/range.ts#L32); `dist/partition/range.d.ts:28` |
 | `MEM.PartitionOptions.signal`                        | optional; `AbortSignal`  | [src/partition/range.ts:25](../../packages/runtime/src/partition/range.ts#L25); `dist/partition/range.d.ts:22` |
 | `MEM.PartitionOptions.timeout`                       | optional; `number`       | [src/partition/range.ts:26](../../packages/runtime/src/partition/range.ts#L26); `dist/partition/range.d.ts:23` |
 
@@ -523,15 +541,15 @@ statistics sections, rather than a second policy in these lookup rows.
 
 | ID                                                | Current type / modifiers                  | Source; declaration                                                                                   |
 | ------------------------------------------------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `MEM.PjsBinaryResultContractError.actualBytes`    | readonly; required; `number \| undefined` | [src/errors/index.ts:66](../../packages/runtime/src/errors/index.ts#L66); `dist/errors/index.d.ts:56` |
-| `MEM.PjsBinaryResultContractError.actualType`     | readonly; required; `string \| undefined` | [src/errors/index.ts:67](../../packages/runtime/src/errors/index.ts#L67); `dist/errors/index.d.ts:57` |
-| `MEM.PjsBinaryResultContractError.declaredBytes`  | readonly; required; `number \| undefined` | [src/errors/index.ts:65](../../packages/runtime/src/errors/index.ts#L65); `dist/errors/index.d.ts:55` |
-| `MEM.PjsBinaryResultContractError.operationId`    | readonly; required; `string \| undefined` | [src/errors/index.ts:27](../../packages/runtime/src/errors/index.ts#L27); `dist/errors/index.d.ts:24` |
-| `MEM.PjsBinaryResultContractError.partitionIndex` | readonly; required; `number \| undefined` | [src/errors/index.ts:28](../../packages/runtime/src/errors/index.ts#L28); `dist/errors/index.d.ts:25` |
-| `MEM.PjsBinaryResultContractError.rangeEnd`       | readonly; required; `number \| undefined` | [src/errors/index.ts:30](../../packages/runtime/src/errors/index.ts#L30); `dist/errors/index.d.ts:27` |
-| `MEM.PjsBinaryResultContractError.rangeStart`     | readonly; required; `number \| undefined` | [src/errors/index.ts:29](../../packages/runtime/src/errors/index.ts#L29); `dist/errors/index.d.ts:26` |
-| `MEM.PjsBinaryResultContractError.taskId`         | readonly; required; `string \| undefined` | [src/errors/index.ts:25](../../packages/runtime/src/errors/index.ts#L25); `dist/errors/index.d.ts:22` |
-| `MEM.PjsBinaryResultContractError.workerId`       | readonly; required; `number \| undefined` | [src/errors/index.ts:26](../../packages/runtime/src/errors/index.ts#L26); `dist/errors/index.d.ts:23` |
+| `MEM.PjsBinaryResultContractError.actualBytes`    | required; readonly; `number \| undefined` | [src/errors/index.ts:66](../../packages/runtime/src/errors/index.ts#L66); `dist/errors/index.d.ts:56` |
+| `MEM.PjsBinaryResultContractError.actualType`     | required; readonly; `string \| undefined` | [src/errors/index.ts:67](../../packages/runtime/src/errors/index.ts#L67); `dist/errors/index.d.ts:57` |
+| `MEM.PjsBinaryResultContractError.declaredBytes`  | required; readonly; `number \| undefined` | [src/errors/index.ts:65](../../packages/runtime/src/errors/index.ts#L65); `dist/errors/index.d.ts:55` |
+| `MEM.PjsBinaryResultContractError.operationId`    | required; readonly; `string \| undefined` | [src/errors/index.ts:27](../../packages/runtime/src/errors/index.ts#L27); `dist/errors/index.d.ts:24` |
+| `MEM.PjsBinaryResultContractError.partitionIndex` | required; readonly; `number \| undefined` | [src/errors/index.ts:28](../../packages/runtime/src/errors/index.ts#L28); `dist/errors/index.d.ts:25` |
+| `MEM.PjsBinaryResultContractError.rangeEnd`       | required; readonly; `number \| undefined` | [src/errors/index.ts:30](../../packages/runtime/src/errors/index.ts#L30); `dist/errors/index.d.ts:27` |
+| `MEM.PjsBinaryResultContractError.rangeStart`     | required; readonly; `number \| undefined` | [src/errors/index.ts:29](../../packages/runtime/src/errors/index.ts#L29); `dist/errors/index.d.ts:26` |
+| `MEM.PjsBinaryResultContractError.taskId`         | required; readonly; `string \| undefined` | [src/errors/index.ts:25](../../packages/runtime/src/errors/index.ts#L25); `dist/errors/index.d.ts:22` |
+| `MEM.PjsBinaryResultContractError.workerId`       | required; readonly; `number \| undefined` | [src/errors/index.ts:26](../../packages/runtime/src/errors/index.ts#L26); `dist/errors/index.d.ts:23` |
 
 ### PjsBinaryResultErrorContext
 
@@ -553,12 +571,12 @@ statistics sections, rather than a second policy in these lookup rows.
 
 | ID                                     | Current type / modifiers                  | Source; declaration                                                                                   |
 | -------------------------------------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `MEM.PjsCancelledError.operationId`    | readonly; required; `string \| undefined` | [src/errors/index.ts:27](../../packages/runtime/src/errors/index.ts#L27); `dist/errors/index.d.ts:24` |
-| `MEM.PjsCancelledError.partitionIndex` | readonly; required; `number \| undefined` | [src/errors/index.ts:28](../../packages/runtime/src/errors/index.ts#L28); `dist/errors/index.d.ts:25` |
-| `MEM.PjsCancelledError.rangeEnd`       | readonly; required; `number \| undefined` | [src/errors/index.ts:30](../../packages/runtime/src/errors/index.ts#L30); `dist/errors/index.d.ts:27` |
-| `MEM.PjsCancelledError.rangeStart`     | readonly; required; `number \| undefined` | [src/errors/index.ts:29](../../packages/runtime/src/errors/index.ts#L29); `dist/errors/index.d.ts:26` |
-| `MEM.PjsCancelledError.taskId`         | readonly; required; `string \| undefined` | [src/errors/index.ts:25](../../packages/runtime/src/errors/index.ts#L25); `dist/errors/index.d.ts:22` |
-| `MEM.PjsCancelledError.workerId`       | readonly; required; `number \| undefined` | [src/errors/index.ts:26](../../packages/runtime/src/errors/index.ts#L26); `dist/errors/index.d.ts:23` |
+| `MEM.PjsCancelledError.operationId`    | required; readonly; `string \| undefined` | [src/errors/index.ts:27](../../packages/runtime/src/errors/index.ts#L27); `dist/errors/index.d.ts:24` |
+| `MEM.PjsCancelledError.partitionIndex` | required; readonly; `number \| undefined` | [src/errors/index.ts:28](../../packages/runtime/src/errors/index.ts#L28); `dist/errors/index.d.ts:25` |
+| `MEM.PjsCancelledError.rangeEnd`       | required; readonly; `number \| undefined` | [src/errors/index.ts:30](../../packages/runtime/src/errors/index.ts#L30); `dist/errors/index.d.ts:27` |
+| `MEM.PjsCancelledError.rangeStart`     | required; readonly; `number \| undefined` | [src/errors/index.ts:29](../../packages/runtime/src/errors/index.ts#L29); `dist/errors/index.d.ts:26` |
+| `MEM.PjsCancelledError.taskId`         | required; readonly; `string \| undefined` | [src/errors/index.ts:25](../../packages/runtime/src/errors/index.ts#L25); `dist/errors/index.d.ts:22` |
+| `MEM.PjsCancelledError.workerId`       | required; readonly; `number \| undefined` | [src/errors/index.ts:26](../../packages/runtime/src/errors/index.ts#L26); `dist/errors/index.d.ts:23` |
 
 ### PjsContainmentStats
 
@@ -587,12 +605,12 @@ statistics sections, rather than a second policy in these lookup rows.
 
 | ID                            | Current type / modifiers                  | Source; declaration                                                                                   |
 | ----------------------------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `MEM.PjsError.operationId`    | readonly; required; `string \| undefined` | [src/errors/index.ts:27](../../packages/runtime/src/errors/index.ts#L27); `dist/errors/index.d.ts:24` |
-| `MEM.PjsError.partitionIndex` | readonly; required; `number \| undefined` | [src/errors/index.ts:28](../../packages/runtime/src/errors/index.ts#L28); `dist/errors/index.d.ts:25` |
-| `MEM.PjsError.rangeEnd`       | readonly; required; `number \| undefined` | [src/errors/index.ts:30](../../packages/runtime/src/errors/index.ts#L30); `dist/errors/index.d.ts:27` |
-| `MEM.PjsError.rangeStart`     | readonly; required; `number \| undefined` | [src/errors/index.ts:29](../../packages/runtime/src/errors/index.ts#L29); `dist/errors/index.d.ts:26` |
-| `MEM.PjsError.taskId`         | readonly; required; `string \| undefined` | [src/errors/index.ts:25](../../packages/runtime/src/errors/index.ts#L25); `dist/errors/index.d.ts:22` |
-| `MEM.PjsError.workerId`       | readonly; required; `number \| undefined` | [src/errors/index.ts:26](../../packages/runtime/src/errors/index.ts#L26); `dist/errors/index.d.ts:23` |
+| `MEM.PjsError.operationId`    | required; readonly; `string \| undefined` | [src/errors/index.ts:27](../../packages/runtime/src/errors/index.ts#L27); `dist/errors/index.d.ts:24` |
+| `MEM.PjsError.partitionIndex` | required; readonly; `number \| undefined` | [src/errors/index.ts:28](../../packages/runtime/src/errors/index.ts#L28); `dist/errors/index.d.ts:25` |
+| `MEM.PjsError.rangeEnd`       | required; readonly; `number \| undefined` | [src/errors/index.ts:30](../../packages/runtime/src/errors/index.ts#L30); `dist/errors/index.d.ts:27` |
+| `MEM.PjsError.rangeStart`     | required; readonly; `number \| undefined` | [src/errors/index.ts:29](../../packages/runtime/src/errors/index.ts#L29); `dist/errors/index.d.ts:26` |
+| `MEM.PjsError.taskId`         | required; readonly; `string \| undefined` | [src/errors/index.ts:25](../../packages/runtime/src/errors/index.ts#L25); `dist/errors/index.d.ts:22` |
+| `MEM.PjsError.workerId`       | required; readonly; `number \| undefined` | [src/errors/index.ts:26](../../packages/runtime/src/errors/index.ts#L26); `dist/errors/index.d.ts:23` |
 
 ### PjsErrorContext
 
@@ -610,23 +628,23 @@ statistics sections, rather than a second policy in these lookup rows.
 
 | ID                                          | Current type / modifiers                  | Source; declaration                                                                                   |
 | ------------------------------------------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `MEM.PjsExecutionLeaseError.operationId`    | readonly; required; `string \| undefined` | [src/errors/index.ts:27](../../packages/runtime/src/errors/index.ts#L27); `dist/errors/index.d.ts:24` |
-| `MEM.PjsExecutionLeaseError.partitionIndex` | readonly; required; `number \| undefined` | [src/errors/index.ts:28](../../packages/runtime/src/errors/index.ts#L28); `dist/errors/index.d.ts:25` |
-| `MEM.PjsExecutionLeaseError.rangeEnd`       | readonly; required; `number \| undefined` | [src/errors/index.ts:30](../../packages/runtime/src/errors/index.ts#L30); `dist/errors/index.d.ts:27` |
-| `MEM.PjsExecutionLeaseError.rangeStart`     | readonly; required; `number \| undefined` | [src/errors/index.ts:29](../../packages/runtime/src/errors/index.ts#L29); `dist/errors/index.d.ts:26` |
-| `MEM.PjsExecutionLeaseError.taskId`         | readonly; required; `string \| undefined` | [src/errors/index.ts:25](../../packages/runtime/src/errors/index.ts#L25); `dist/errors/index.d.ts:22` |
-| `MEM.PjsExecutionLeaseError.workerId`       | readonly; required; `number \| undefined` | [src/errors/index.ts:26](../../packages/runtime/src/errors/index.ts#L26); `dist/errors/index.d.ts:23` |
+| `MEM.PjsExecutionLeaseError.operationId`    | required; readonly; `string \| undefined` | [src/errors/index.ts:27](../../packages/runtime/src/errors/index.ts#L27); `dist/errors/index.d.ts:24` |
+| `MEM.PjsExecutionLeaseError.partitionIndex` | required; readonly; `number \| undefined` | [src/errors/index.ts:28](../../packages/runtime/src/errors/index.ts#L28); `dist/errors/index.d.ts:25` |
+| `MEM.PjsExecutionLeaseError.rangeEnd`       | required; readonly; `number \| undefined` | [src/errors/index.ts:30](../../packages/runtime/src/errors/index.ts#L30); `dist/errors/index.d.ts:27` |
+| `MEM.PjsExecutionLeaseError.rangeStart`     | required; readonly; `number \| undefined` | [src/errors/index.ts:29](../../packages/runtime/src/errors/index.ts#L29); `dist/errors/index.d.ts:26` |
+| `MEM.PjsExecutionLeaseError.taskId`         | required; readonly; `string \| undefined` | [src/errors/index.ts:25](../../packages/runtime/src/errors/index.ts#L25); `dist/errors/index.d.ts:22` |
+| `MEM.PjsExecutionLeaseError.workerId`       | required; readonly; `number \| undefined` | [src/errors/index.ts:26](../../packages/runtime/src/errors/index.ts#L26); `dist/errors/index.d.ts:23` |
 
 ### PjsMapContractError
 
 | ID                                       | Current type / modifiers                  | Source; declaration                                                                                   |
 | ---------------------------------------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `MEM.PjsMapContractError.operationId`    | readonly; required; `string \| undefined` | [src/errors/index.ts:27](../../packages/runtime/src/errors/index.ts#L27); `dist/errors/index.d.ts:24` |
-| `MEM.PjsMapContractError.partitionIndex` | readonly; required; `number \| undefined` | [src/errors/index.ts:28](../../packages/runtime/src/errors/index.ts#L28); `dist/errors/index.d.ts:25` |
-| `MEM.PjsMapContractError.rangeEnd`       | readonly; required; `number \| undefined` | [src/errors/index.ts:30](../../packages/runtime/src/errors/index.ts#L30); `dist/errors/index.d.ts:27` |
-| `MEM.PjsMapContractError.rangeStart`     | readonly; required; `number \| undefined` | [src/errors/index.ts:29](../../packages/runtime/src/errors/index.ts#L29); `dist/errors/index.d.ts:26` |
-| `MEM.PjsMapContractError.taskId`         | readonly; required; `string \| undefined` | [src/errors/index.ts:25](../../packages/runtime/src/errors/index.ts#L25); `dist/errors/index.d.ts:22` |
-| `MEM.PjsMapContractError.workerId`       | readonly; required; `number \| undefined` | [src/errors/index.ts:26](../../packages/runtime/src/errors/index.ts#L26); `dist/errors/index.d.ts:23` |
+| `MEM.PjsMapContractError.operationId`    | required; readonly; `string \| undefined` | [src/errors/index.ts:27](../../packages/runtime/src/errors/index.ts#L27); `dist/errors/index.d.ts:24` |
+| `MEM.PjsMapContractError.partitionIndex` | required; readonly; `number \| undefined` | [src/errors/index.ts:28](../../packages/runtime/src/errors/index.ts#L28); `dist/errors/index.d.ts:25` |
+| `MEM.PjsMapContractError.rangeEnd`       | required; readonly; `number \| undefined` | [src/errors/index.ts:30](../../packages/runtime/src/errors/index.ts#L30); `dist/errors/index.d.ts:27` |
+| `MEM.PjsMapContractError.rangeStart`     | required; readonly; `number \| undefined` | [src/errors/index.ts:29](../../packages/runtime/src/errors/index.ts#L29); `dist/errors/index.d.ts:26` |
+| `MEM.PjsMapContractError.taskId`         | required; readonly; `string \| undefined` | [src/errors/index.ts:25](../../packages/runtime/src/errors/index.ts#L25); `dist/errors/index.d.ts:22` |
+| `MEM.PjsMapContractError.workerId`       | required; readonly; `number \| undefined` | [src/errors/index.ts:26](../../packages/runtime/src/errors/index.ts#L26); `dist/errors/index.d.ts:23` |
 
 ### PjsMapResultStats
 
@@ -712,12 +730,12 @@ statistics sections, rather than a second policy in these lookup rows.
 
 | ID                                     | Current type / modifiers                  | Source; declaration                                                                                   |
 | -------------------------------------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `MEM.PjsQueueFullError.operationId`    | readonly; required; `string \| undefined` | [src/errors/index.ts:27](../../packages/runtime/src/errors/index.ts#L27); `dist/errors/index.d.ts:24` |
-| `MEM.PjsQueueFullError.partitionIndex` | readonly; required; `number \| undefined` | [src/errors/index.ts:28](../../packages/runtime/src/errors/index.ts#L28); `dist/errors/index.d.ts:25` |
-| `MEM.PjsQueueFullError.rangeEnd`       | readonly; required; `number \| undefined` | [src/errors/index.ts:30](../../packages/runtime/src/errors/index.ts#L30); `dist/errors/index.d.ts:27` |
-| `MEM.PjsQueueFullError.rangeStart`     | readonly; required; `number \| undefined` | [src/errors/index.ts:29](../../packages/runtime/src/errors/index.ts#L29); `dist/errors/index.d.ts:26` |
-| `MEM.PjsQueueFullError.taskId`         | readonly; required; `string \| undefined` | [src/errors/index.ts:25](../../packages/runtime/src/errors/index.ts#L25); `dist/errors/index.d.ts:22` |
-| `MEM.PjsQueueFullError.workerId`       | readonly; required; `number \| undefined` | [src/errors/index.ts:26](../../packages/runtime/src/errors/index.ts#L26); `dist/errors/index.d.ts:23` |
+| `MEM.PjsQueueFullError.operationId`    | required; readonly; `string \| undefined` | [src/errors/index.ts:27](../../packages/runtime/src/errors/index.ts#L27); `dist/errors/index.d.ts:24` |
+| `MEM.PjsQueueFullError.partitionIndex` | required; readonly; `number \| undefined` | [src/errors/index.ts:28](../../packages/runtime/src/errors/index.ts#L28); `dist/errors/index.d.ts:25` |
+| `MEM.PjsQueueFullError.rangeEnd`       | required; readonly; `number \| undefined` | [src/errors/index.ts:30](../../packages/runtime/src/errors/index.ts#L30); `dist/errors/index.d.ts:27` |
+| `MEM.PjsQueueFullError.rangeStart`     | required; readonly; `number \| undefined` | [src/errors/index.ts:29](../../packages/runtime/src/errors/index.ts#L29); `dist/errors/index.d.ts:26` |
+| `MEM.PjsQueueFullError.taskId`         | required; readonly; `string \| undefined` | [src/errors/index.ts:25](../../packages/runtime/src/errors/index.ts#L25); `dist/errors/index.d.ts:22` |
+| `MEM.PjsQueueFullError.workerId`       | required; readonly; `number \| undefined` | [src/errors/index.ts:26](../../packages/runtime/src/errors/index.ts#L26); `dist/errors/index.d.ts:23` |
 
 ### PjsQueueStats
 
@@ -739,14 +757,14 @@ statistics sections, rather than a second policy in these lookup rows.
 
 | ID                                              | Current type / modifiers                  | Source; declaration                                                                                   |
 | ----------------------------------------------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `MEM.PjsResultCapacityError.declaredBytes`      | readonly; required; `number \| undefined` | [src/errors/index.ts:76](../../packages/runtime/src/errors/index.ts#L76); `dist/errors/index.d.ts:61` |
-| `MEM.PjsResultCapacityError.operationId`        | readonly; required; `string \| undefined` | [src/errors/index.ts:27](../../packages/runtime/src/errors/index.ts#L27); `dist/errors/index.d.ts:24` |
-| `MEM.PjsResultCapacityError.partitionIndex`     | readonly; required; `number \| undefined` | [src/errors/index.ts:28](../../packages/runtime/src/errors/index.ts#L28); `dist/errors/index.d.ts:25` |
-| `MEM.PjsResultCapacityError.rangeEnd`           | readonly; required; `number \| undefined` | [src/errors/index.ts:30](../../packages/runtime/src/errors/index.ts#L30); `dist/errors/index.d.ts:27` |
-| `MEM.PjsResultCapacityError.rangeStart`         | readonly; required; `number \| undefined` | [src/errors/index.ts:29](../../packages/runtime/src/errors/index.ts#L29); `dist/errors/index.d.ts:26` |
-| `MEM.PjsResultCapacityError.resultByteCapacity` | readonly; required; `number \| undefined` | [src/errors/index.ts:77](../../packages/runtime/src/errors/index.ts#L77); `dist/errors/index.d.ts:62` |
-| `MEM.PjsResultCapacityError.taskId`             | readonly; required; `string \| undefined` | [src/errors/index.ts:25](../../packages/runtime/src/errors/index.ts#L25); `dist/errors/index.d.ts:22` |
-| `MEM.PjsResultCapacityError.workerId`           | readonly; required; `number \| undefined` | [src/errors/index.ts:26](../../packages/runtime/src/errors/index.ts#L26); `dist/errors/index.d.ts:23` |
+| `MEM.PjsResultCapacityError.declaredBytes`      | required; readonly; `number \| undefined` | [src/errors/index.ts:76](../../packages/runtime/src/errors/index.ts#L76); `dist/errors/index.d.ts:61` |
+| `MEM.PjsResultCapacityError.operationId`        | required; readonly; `string \| undefined` | [src/errors/index.ts:27](../../packages/runtime/src/errors/index.ts#L27); `dist/errors/index.d.ts:24` |
+| `MEM.PjsResultCapacityError.partitionIndex`     | required; readonly; `number \| undefined` | [src/errors/index.ts:28](../../packages/runtime/src/errors/index.ts#L28); `dist/errors/index.d.ts:25` |
+| `MEM.PjsResultCapacityError.rangeEnd`           | required; readonly; `number \| undefined` | [src/errors/index.ts:30](../../packages/runtime/src/errors/index.ts#L30); `dist/errors/index.d.ts:27` |
+| `MEM.PjsResultCapacityError.rangeStart`         | required; readonly; `number \| undefined` | [src/errors/index.ts:29](../../packages/runtime/src/errors/index.ts#L29); `dist/errors/index.d.ts:26` |
+| `MEM.PjsResultCapacityError.resultByteCapacity` | required; readonly; `number \| undefined` | [src/errors/index.ts:77](../../packages/runtime/src/errors/index.ts#L77); `dist/errors/index.d.ts:62` |
+| `MEM.PjsResultCapacityError.taskId`             | required; readonly; `string \| undefined` | [src/errors/index.ts:25](../../packages/runtime/src/errors/index.ts#L25); `dist/errors/index.d.ts:22` |
+| `MEM.PjsResultCapacityError.workerId`           | required; readonly; `number \| undefined` | [src/errors/index.ts:26](../../packages/runtime/src/errors/index.ts#L26); `dist/errors/index.d.ts:23` |
 
 ### PjsRuntime
 
@@ -778,12 +796,12 @@ statistics sections, rather than a second policy in these lookup rows.
 
 | ID                                        | Current type / modifiers                  | Source; declaration                                                                                   |
 | ----------------------------------------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `MEM.PjsRuntimeStateError.operationId`    | readonly; required; `string \| undefined` | [src/errors/index.ts:27](../../packages/runtime/src/errors/index.ts#L27); `dist/errors/index.d.ts:24` |
-| `MEM.PjsRuntimeStateError.partitionIndex` | readonly; required; `number \| undefined` | [src/errors/index.ts:28](../../packages/runtime/src/errors/index.ts#L28); `dist/errors/index.d.ts:25` |
-| `MEM.PjsRuntimeStateError.rangeEnd`       | readonly; required; `number \| undefined` | [src/errors/index.ts:30](../../packages/runtime/src/errors/index.ts#L30); `dist/errors/index.d.ts:27` |
-| `MEM.PjsRuntimeStateError.rangeStart`     | readonly; required; `number \| undefined` | [src/errors/index.ts:29](../../packages/runtime/src/errors/index.ts#L29); `dist/errors/index.d.ts:26` |
-| `MEM.PjsRuntimeStateError.taskId`         | readonly; required; `string \| undefined` | [src/errors/index.ts:25](../../packages/runtime/src/errors/index.ts#L25); `dist/errors/index.d.ts:22` |
-| `MEM.PjsRuntimeStateError.workerId`       | readonly; required; `number \| undefined` | [src/errors/index.ts:26](../../packages/runtime/src/errors/index.ts#L26); `dist/errors/index.d.ts:23` |
+| `MEM.PjsRuntimeStateError.operationId`    | required; readonly; `string \| undefined` | [src/errors/index.ts:27](../../packages/runtime/src/errors/index.ts#L27); `dist/errors/index.d.ts:24` |
+| `MEM.PjsRuntimeStateError.partitionIndex` | required; readonly; `number \| undefined` | [src/errors/index.ts:28](../../packages/runtime/src/errors/index.ts#L28); `dist/errors/index.d.ts:25` |
+| `MEM.PjsRuntimeStateError.rangeEnd`       | required; readonly; `number \| undefined` | [src/errors/index.ts:30](../../packages/runtime/src/errors/index.ts#L30); `dist/errors/index.d.ts:27` |
+| `MEM.PjsRuntimeStateError.rangeStart`     | required; readonly; `number \| undefined` | [src/errors/index.ts:29](../../packages/runtime/src/errors/index.ts#L29); `dist/errors/index.d.ts:26` |
+| `MEM.PjsRuntimeStateError.taskId`         | required; readonly; `string \| undefined` | [src/errors/index.ts:25](../../packages/runtime/src/errors/index.ts#L25); `dist/errors/index.d.ts:22` |
+| `MEM.PjsRuntimeStateError.workerId`       | required; readonly; `number \| undefined` | [src/errors/index.ts:26](../../packages/runtime/src/errors/index.ts#L26); `dist/errors/index.d.ts:23` |
 
 ### PjsRuntimeStats
 
@@ -809,12 +827,12 @@ statistics sections, rather than a second policy in these lookup rows.
 
 | ID                                         | Current type / modifiers                  | Source; declaration                                                                                   |
 | ------------------------------------------ | ----------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `MEM.PjsSerializationError.operationId`    | readonly; required; `string \| undefined` | [src/errors/index.ts:27](../../packages/runtime/src/errors/index.ts#L27); `dist/errors/index.d.ts:24` |
-| `MEM.PjsSerializationError.partitionIndex` | readonly; required; `number \| undefined` | [src/errors/index.ts:28](../../packages/runtime/src/errors/index.ts#L28); `dist/errors/index.d.ts:25` |
-| `MEM.PjsSerializationError.rangeEnd`       | readonly; required; `number \| undefined` | [src/errors/index.ts:30](../../packages/runtime/src/errors/index.ts#L30); `dist/errors/index.d.ts:27` |
-| `MEM.PjsSerializationError.rangeStart`     | readonly; required; `number \| undefined` | [src/errors/index.ts:29](../../packages/runtime/src/errors/index.ts#L29); `dist/errors/index.d.ts:26` |
-| `MEM.PjsSerializationError.taskId`         | readonly; required; `string \| undefined` | [src/errors/index.ts:25](../../packages/runtime/src/errors/index.ts#L25); `dist/errors/index.d.ts:22` |
-| `MEM.PjsSerializationError.workerId`       | readonly; required; `number \| undefined` | [src/errors/index.ts:26](../../packages/runtime/src/errors/index.ts#L26); `dist/errors/index.d.ts:23` |
+| `MEM.PjsSerializationError.operationId`    | required; readonly; `string \| undefined` | [src/errors/index.ts:27](../../packages/runtime/src/errors/index.ts#L27); `dist/errors/index.d.ts:24` |
+| `MEM.PjsSerializationError.partitionIndex` | required; readonly; `number \| undefined` | [src/errors/index.ts:28](../../packages/runtime/src/errors/index.ts#L28); `dist/errors/index.d.ts:25` |
+| `MEM.PjsSerializationError.rangeEnd`       | required; readonly; `number \| undefined` | [src/errors/index.ts:30](../../packages/runtime/src/errors/index.ts#L30); `dist/errors/index.d.ts:27` |
+| `MEM.PjsSerializationError.rangeStart`     | required; readonly; `number \| undefined` | [src/errors/index.ts:29](../../packages/runtime/src/errors/index.ts#L29); `dist/errors/index.d.ts:26` |
+| `MEM.PjsSerializationError.taskId`         | required; readonly; `string \| undefined` | [src/errors/index.ts:25](../../packages/runtime/src/errors/index.ts#L25); `dist/errors/index.d.ts:22` |
+| `MEM.PjsSerializationError.workerId`       | required; readonly; `number \| undefined` | [src/errors/index.ts:26](../../packages/runtime/src/errors/index.ts#L26); `dist/errors/index.d.ts:23` |
 
 ### PjsStreamResultStats
 
@@ -842,21 +860,21 @@ statistics sections, rather than a second policy in these lookup rows.
 
 | ID                         | Current type / modifiers                       | Source; declaration                                                                                      |
 | -------------------------- | ---------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `MEM.PjsTask.__@taskTypes` | readonly; optional; `(input: Input) => Output` | [src/tasks/registry.ts:8](../../packages/runtime/src/tasks/registry.ts#L8); `dist/tasks/registry.d.ts:5` |
-| `MEM.PjsTask.id`           | readonly; required; `string`                   | [src/tasks/registry.ts:7](../../packages/runtime/src/tasks/registry.ts#L7); `dist/tasks/registry.d.ts:4` |
+| `MEM.PjsTask.__@taskTypes` | optional; readonly; `(input: Input) => Output` | [src/tasks/registry.ts:8](../../packages/runtime/src/tasks/registry.ts#L8); `dist/tasks/registry.d.ts:5` |
+| `MEM.PjsTask.id`           | required; readonly; `string`                   | [src/tasks/registry.ts:7](../../packages/runtime/src/tasks/registry.ts#L7); `dist/tasks/registry.d.ts:4` |
 
 ### PjsTaskError
 
 | ID                                | Current type / modifiers                  | Source; declaration                                                                                   |
 | --------------------------------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `MEM.PjsTaskError.operationId`    | readonly; required; `string \| undefined` | [src/errors/index.ts:27](../../packages/runtime/src/errors/index.ts#L27); `dist/errors/index.d.ts:24` |
-| `MEM.PjsTaskError.partitionIndex` | readonly; required; `number \| undefined` | [src/errors/index.ts:28](../../packages/runtime/src/errors/index.ts#L28); `dist/errors/index.d.ts:25` |
-| `MEM.PjsTaskError.rangeEnd`       | readonly; required; `number \| undefined` | [src/errors/index.ts:30](../../packages/runtime/src/errors/index.ts#L30); `dist/errors/index.d.ts:27` |
-| `MEM.PjsTaskError.rangeStart`     | readonly; required; `number \| undefined` | [src/errors/index.ts:29](../../packages/runtime/src/errors/index.ts#L29); `dist/errors/index.d.ts:26` |
-| `MEM.PjsTaskError.remoteName`     | readonly; required; `string`              | [src/errors/index.ts:44](../../packages/runtime/src/errors/index.ts#L44); `dist/errors/index.d.ts:31` |
-| `MEM.PjsTaskError.remoteStack`    | readonly; required; `string \| undefined` | [src/errors/index.ts:45](../../packages/runtime/src/errors/index.ts#L45); `dist/errors/index.d.ts:32` |
-| `MEM.PjsTaskError.taskId`         | readonly; required; `string \| undefined` | [src/errors/index.ts:25](../../packages/runtime/src/errors/index.ts#L25); `dist/errors/index.d.ts:22` |
-| `MEM.PjsTaskError.workerId`       | readonly; required; `number \| undefined` | [src/errors/index.ts:26](../../packages/runtime/src/errors/index.ts#L26); `dist/errors/index.d.ts:23` |
+| `MEM.PjsTaskError.operationId`    | required; readonly; `string \| undefined` | [src/errors/index.ts:27](../../packages/runtime/src/errors/index.ts#L27); `dist/errors/index.d.ts:24` |
+| `MEM.PjsTaskError.partitionIndex` | required; readonly; `number \| undefined` | [src/errors/index.ts:28](../../packages/runtime/src/errors/index.ts#L28); `dist/errors/index.d.ts:25` |
+| `MEM.PjsTaskError.rangeEnd`       | required; readonly; `number \| undefined` | [src/errors/index.ts:30](../../packages/runtime/src/errors/index.ts#L30); `dist/errors/index.d.ts:27` |
+| `MEM.PjsTaskError.rangeStart`     | required; readonly; `number \| undefined` | [src/errors/index.ts:29](../../packages/runtime/src/errors/index.ts#L29); `dist/errors/index.d.ts:26` |
+| `MEM.PjsTaskError.remoteName`     | required; readonly; `string`              | [src/errors/index.ts:44](../../packages/runtime/src/errors/index.ts#L44); `dist/errors/index.d.ts:31` |
+| `MEM.PjsTaskError.remoteStack`    | required; readonly; `string \| undefined` | [src/errors/index.ts:45](../../packages/runtime/src/errors/index.ts#L45); `dist/errors/index.d.ts:32` |
+| `MEM.PjsTaskError.taskId`         | required; readonly; `string \| undefined` | [src/errors/index.ts:25](../../packages/runtime/src/errors/index.ts#L25); `dist/errors/index.d.ts:22` |
+| `MEM.PjsTaskError.workerId`       | required; readonly; `number \| undefined` | [src/errors/index.ts:26](../../packages/runtime/src/errors/index.ts#L26); `dist/errors/index.d.ts:23` |
 
 ### PjsTaskErrorDetails
 
@@ -870,12 +888,12 @@ statistics sections, rather than a second policy in these lookup rows.
 
 | ID                                            | Current type / modifiers                  | Source; declaration                                                                                   |
 | --------------------------------------------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `MEM.PjsTaskRegistrationError.operationId`    | readonly; required; `string \| undefined` | [src/errors/index.ts:27](../../packages/runtime/src/errors/index.ts#L27); `dist/errors/index.d.ts:24` |
-| `MEM.PjsTaskRegistrationError.partitionIndex` | readonly; required; `number \| undefined` | [src/errors/index.ts:28](../../packages/runtime/src/errors/index.ts#L28); `dist/errors/index.d.ts:25` |
-| `MEM.PjsTaskRegistrationError.rangeEnd`       | readonly; required; `number \| undefined` | [src/errors/index.ts:30](../../packages/runtime/src/errors/index.ts#L30); `dist/errors/index.d.ts:27` |
-| `MEM.PjsTaskRegistrationError.rangeStart`     | readonly; required; `number \| undefined` | [src/errors/index.ts:29](../../packages/runtime/src/errors/index.ts#L29); `dist/errors/index.d.ts:26` |
-| `MEM.PjsTaskRegistrationError.taskId`         | readonly; required; `string \| undefined` | [src/errors/index.ts:25](../../packages/runtime/src/errors/index.ts#L25); `dist/errors/index.d.ts:22` |
-| `MEM.PjsTaskRegistrationError.workerId`       | readonly; required; `number \| undefined` | [src/errors/index.ts:26](../../packages/runtime/src/errors/index.ts#L26); `dist/errors/index.d.ts:23` |
+| `MEM.PjsTaskRegistrationError.operationId`    | required; readonly; `string \| undefined` | [src/errors/index.ts:27](../../packages/runtime/src/errors/index.ts#L27); `dist/errors/index.d.ts:24` |
+| `MEM.PjsTaskRegistrationError.partitionIndex` | required; readonly; `number \| undefined` | [src/errors/index.ts:28](../../packages/runtime/src/errors/index.ts#L28); `dist/errors/index.d.ts:25` |
+| `MEM.PjsTaskRegistrationError.rangeEnd`       | required; readonly; `number \| undefined` | [src/errors/index.ts:30](../../packages/runtime/src/errors/index.ts#L30); `dist/errors/index.d.ts:27` |
+| `MEM.PjsTaskRegistrationError.rangeStart`     | required; readonly; `number \| undefined` | [src/errors/index.ts:29](../../packages/runtime/src/errors/index.ts#L29); `dist/errors/index.d.ts:26` |
+| `MEM.PjsTaskRegistrationError.taskId`         | required; readonly; `string \| undefined` | [src/errors/index.ts:25](../../packages/runtime/src/errors/index.ts#L25); `dist/errors/index.d.ts:22` |
+| `MEM.PjsTaskRegistrationError.workerId`       | required; readonly; `number \| undefined` | [src/errors/index.ts:26](../../packages/runtime/src/errors/index.ts#L26); `dist/errors/index.d.ts:23` |
 
 ### PjsTaskRegistry
 
@@ -887,12 +905,12 @@ statistics sections, rather than a second policy in these lookup rows.
 
 | ID                                   | Current type / modifiers                  | Source; declaration                                                                                   |
 | ------------------------------------ | ----------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `MEM.PjsTimeoutError.operationId`    | readonly; required; `string \| undefined` | [src/errors/index.ts:27](../../packages/runtime/src/errors/index.ts#L27); `dist/errors/index.d.ts:24` |
-| `MEM.PjsTimeoutError.partitionIndex` | readonly; required; `number \| undefined` | [src/errors/index.ts:28](../../packages/runtime/src/errors/index.ts#L28); `dist/errors/index.d.ts:25` |
-| `MEM.PjsTimeoutError.rangeEnd`       | readonly; required; `number \| undefined` | [src/errors/index.ts:30](../../packages/runtime/src/errors/index.ts#L30); `dist/errors/index.d.ts:27` |
-| `MEM.PjsTimeoutError.rangeStart`     | readonly; required; `number \| undefined` | [src/errors/index.ts:29](../../packages/runtime/src/errors/index.ts#L29); `dist/errors/index.d.ts:26` |
-| `MEM.PjsTimeoutError.taskId`         | readonly; required; `string \| undefined` | [src/errors/index.ts:25](../../packages/runtime/src/errors/index.ts#L25); `dist/errors/index.d.ts:22` |
-| `MEM.PjsTimeoutError.workerId`       | readonly; required; `number \| undefined` | [src/errors/index.ts:26](../../packages/runtime/src/errors/index.ts#L26); `dist/errors/index.d.ts:23` |
+| `MEM.PjsTimeoutError.operationId`    | required; readonly; `string \| undefined` | [src/errors/index.ts:27](../../packages/runtime/src/errors/index.ts#L27); `dist/errors/index.d.ts:24` |
+| `MEM.PjsTimeoutError.partitionIndex` | required; readonly; `number \| undefined` | [src/errors/index.ts:28](../../packages/runtime/src/errors/index.ts#L28); `dist/errors/index.d.ts:25` |
+| `MEM.PjsTimeoutError.rangeEnd`       | required; readonly; `number \| undefined` | [src/errors/index.ts:30](../../packages/runtime/src/errors/index.ts#L30); `dist/errors/index.d.ts:27` |
+| `MEM.PjsTimeoutError.rangeStart`     | required; readonly; `number \| undefined` | [src/errors/index.ts:29](../../packages/runtime/src/errors/index.ts#L29); `dist/errors/index.d.ts:26` |
+| `MEM.PjsTimeoutError.taskId`         | required; readonly; `string \| undefined` | [src/errors/index.ts:25](../../packages/runtime/src/errors/index.ts#L25); `dist/errors/index.d.ts:22` |
+| `MEM.PjsTimeoutError.workerId`       | required; readonly; `number \| undefined` | [src/errors/index.ts:26](../../packages/runtime/src/errors/index.ts#L26); `dist/errors/index.d.ts:23` |
 
 ### PjsTimingStats
 
@@ -909,19 +927,19 @@ statistics sections, rather than a second policy in these lookup rows.
 
 | ID                                 | Current type / modifiers     | Source; declaration                                                                                        |
 | ---------------------------------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `MEM.PjsTransfer.__@transferBrand` | readonly; required; `true`   | [src/tasks/transfer.ts:12](../../packages/runtime/src/tasks/transfer.ts#L12); `dist/tasks/transfer.d.ts:4` |
-| `MEM.PjsTransfer.value`            | readonly; required; `Output` | [src/tasks/transfer.ts:11](../../packages/runtime/src/tasks/transfer.ts#L11); `dist/tasks/transfer.d.ts:3` |
+| `MEM.PjsTransfer.__@transferBrand` | required; readonly; `true`   | [src/tasks/transfer.ts:12](../../packages/runtime/src/tasks/transfer.ts#L12); `dist/tasks/transfer.d.ts:4` |
+| `MEM.PjsTransfer.value`            | required; readonly; `Output` | [src/tasks/transfer.ts:11](../../packages/runtime/src/tasks/transfer.ts#L11); `dist/tasks/transfer.d.ts:3` |
 
 ### PjsWorkerError
 
 | ID                                  | Current type / modifiers                  | Source; declaration                                                                                   |
 | ----------------------------------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `MEM.PjsWorkerError.operationId`    | readonly; required; `string \| undefined` | [src/errors/index.ts:27](../../packages/runtime/src/errors/index.ts#L27); `dist/errors/index.d.ts:24` |
-| `MEM.PjsWorkerError.partitionIndex` | readonly; required; `number \| undefined` | [src/errors/index.ts:28](../../packages/runtime/src/errors/index.ts#L28); `dist/errors/index.d.ts:25` |
-| `MEM.PjsWorkerError.rangeEnd`       | readonly; required; `number \| undefined` | [src/errors/index.ts:30](../../packages/runtime/src/errors/index.ts#L30); `dist/errors/index.d.ts:27` |
-| `MEM.PjsWorkerError.rangeStart`     | readonly; required; `number \| undefined` | [src/errors/index.ts:29](../../packages/runtime/src/errors/index.ts#L29); `dist/errors/index.d.ts:26` |
-| `MEM.PjsWorkerError.taskId`         | readonly; required; `string \| undefined` | [src/errors/index.ts:25](../../packages/runtime/src/errors/index.ts#L25); `dist/errors/index.d.ts:22` |
-| `MEM.PjsWorkerError.workerId`       | readonly; required; `number \| undefined` | [src/errors/index.ts:26](../../packages/runtime/src/errors/index.ts#L26); `dist/errors/index.d.ts:23` |
+| `MEM.PjsWorkerError.operationId`    | required; readonly; `string \| undefined` | [src/errors/index.ts:27](../../packages/runtime/src/errors/index.ts#L27); `dist/errors/index.d.ts:24` |
+| `MEM.PjsWorkerError.partitionIndex` | required; readonly; `number \| undefined` | [src/errors/index.ts:28](../../packages/runtime/src/errors/index.ts#L28); `dist/errors/index.d.ts:25` |
+| `MEM.PjsWorkerError.rangeEnd`       | required; readonly; `number \| undefined` | [src/errors/index.ts:30](../../packages/runtime/src/errors/index.ts#L30); `dist/errors/index.d.ts:27` |
+| `MEM.PjsWorkerError.rangeStart`     | required; readonly; `number \| undefined` | [src/errors/index.ts:29](../../packages/runtime/src/errors/index.ts#L29); `dist/errors/index.d.ts:26` |
+| `MEM.PjsWorkerError.taskId`         | required; readonly; `string \| undefined` | [src/errors/index.ts:25](../../packages/runtime/src/errors/index.ts#L25); `dist/errors/index.d.ts:22` |
+| `MEM.PjsWorkerError.workerId`       | required; readonly; `number \| undefined` | [src/errors/index.ts:26](../../packages/runtime/src/errors/index.ts#L26); `dist/errors/index.d.ts:23` |
 
 ### PjsWorkerStats
 
@@ -939,9 +957,9 @@ statistics sections, rather than a second policy in these lookup rows.
 
 | ID                         | Current type / modifiers     | Source; declaration                                                                                            |
 | -------------------------- | ---------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| `MEM.RangePartition.end`   | readonly; required; `number` | [src/partition/range.ts:12](../../packages/runtime/src/partition/range.ts#L12); `dist/partition/range.d.ts:11` |
-| `MEM.RangePartition.index` | readonly; required; `number` | [src/partition/range.ts:10](../../packages/runtime/src/partition/range.ts#L10); `dist/partition/range.d.ts:9`  |
-| `MEM.RangePartition.start` | readonly; required; `number` | [src/partition/range.ts:11](../../packages/runtime/src/partition/range.ts#L11); `dist/partition/range.d.ts:10` |
+| `MEM.RangePartition.end`   | required; readonly; `number` | [src/partition/range.ts:12](../../packages/runtime/src/partition/range.ts#L12); `dist/partition/range.d.ts:11` |
+| `MEM.RangePartition.index` | required; readonly; `number` | [src/partition/range.ts:10](../../packages/runtime/src/partition/range.ts#L10); `dist/partition/range.d.ts:9`  |
+| `MEM.RangePartition.start` | required; readonly; `number` | [src/partition/range.ts:11](../../packages/runtime/src/partition/range.ts#L11); `dist/partition/range.d.ts:10` |
 
 ### RestartPolicy
 
@@ -970,9 +988,11 @@ statistics sections, rather than a second policy in these lookup rows.
 
 | ID                                                      | Current type / modifiers | Source; declaration                                                                                            |
 | ------------------------------------------------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| `MEM.StreamRangeOptions.dispatchBatchSize`              | optional; `number`       | [src/partition/range.ts:30](../../packages/runtime/src/partition/range.ts#L30); `dist/partition/range.d.ts:26` |
+| `MEM.StreamRangeOptions.maxBufferedResults`             | optional; `number`       | [src/partition/range.ts:46](../../packages/runtime/src/partition/range.ts#L46); `dist/partition/range.d.ts:37` |
 | `MEM.StreamRangeOptions.executionLease`                 | optional; `never`        | [src/partition/range.ts:24](../../packages/runtime/src/partition/range.ts#L24); `dist/partition/range.d.ts:21` |
-| `MEM.StreamRangeOptions.experimentalDispatchBatchSize`  | optional; `number`       | [src/partition/range.ts:31](../../packages/runtime/src/partition/range.ts#L31); `dist/partition/range.d.ts:28` |
-| `MEM.StreamRangeOptions.experimentalMaxBufferedResults` | optional; `number`       | [src/partition/range.ts:37](../../packages/runtime/src/partition/range.ts#L37); `dist/partition/range.d.ts:33` |
+| `MEM.StreamRangeOptions.experimentalDispatchBatchSize`  | optional; `number`       | [src/partition/range.ts:32](../../packages/runtime/src/partition/range.ts#L32); `dist/partition/range.d.ts:28` |
+| `MEM.StreamRangeOptions.experimentalMaxBufferedResults` | optional; `number`       | [src/partition/range.ts:48](../../packages/runtime/src/partition/range.ts#L48); `dist/partition/range.d.ts:39` |
 | `MEM.StreamRangeOptions.signal`                         | optional; `AbortSignal`  | [src/partition/range.ts:25](../../packages/runtime/src/partition/range.ts#L25); `dist/partition/range.d.ts:22` |
 | `MEM.StreamRangeOptions.timeout`                        | optional; `number`       | [src/partition/range.ts:26](../../packages/runtime/src/partition/range.ts#L26); `dist/partition/range.d.ts:23` |
 
@@ -980,8 +1000,8 @@ statistics sections, rather than a second policy in these lookup rows.
 
 | ID                                | Current type / modifiers                                            | Source; declaration                                                                                            |
 | --------------------------------- | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| `MEM.StreamRangeResult.output`    | readonly; required; `Output`                                        | [src/partition/stream.ts:5](../../packages/runtime/src/partition/stream.ts#L5); `dist/partition/stream.d.ts:4` |
-| `MEM.StreamRangeResult.partition` | readonly; required; `import("./partition/range.js").RangePartition` | [src/partition/stream.ts:4](../../packages/runtime/src/partition/stream.ts#L4); `dist/partition/stream.d.ts:3` |
+| `MEM.StreamRangeResult.output`    | required; readonly; `Output`                                        | [src/partition/stream.ts:5](../../packages/runtime/src/partition/stream.ts#L5); `dist/partition/stream.d.ts:4` |
+| `MEM.StreamRangeResult.partition` | required; readonly; `import("./partition/range.js").RangePartition` | [src/partition/stream.ts:4](../../packages/runtime/src/partition/stream.ts#L4); `dist/partition/stream.d.ts:3` |
 
 ### TaskSnapshot
 
@@ -1005,24 +1025,28 @@ statistics sections, rather than a second policy in these lookup rows.
 
 | ID                                                       | Current type / modifiers | Source; declaration                                                                                              |
 | -------------------------------------------------------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| `MEM.TypedMapRangeOptions.dispatchBatchSize`             | optional; `number`       | [src/partition/range.ts:30](../../packages/runtime/src/partition/range.ts#L30); `dist/partition/range.d.ts:26`   |
+| `MEM.TypedMapRangeOptions.outputConstructor`             | optional; `Constructor`  | [src/partition/range.ts:138](../../packages/runtime/src/partition/range.ts#L138); `dist/partition/range.d.ts:79` |
 | `MEM.TypedMapRangeOptions.executionLease`                | optional; `never`        | [src/partition/range.ts:24](../../packages/runtime/src/partition/range.ts#L24); `dist/partition/range.d.ts:21`   |
-| `MEM.TypedMapRangeOptions.experimentalDispatchBatchSize` | optional; `number`       | [src/partition/range.ts:31](../../packages/runtime/src/partition/range.ts#L31); `dist/partition/range.d.ts:28`   |
-| `MEM.TypedMapRangeOptions.experimentalOutputConstructor` | required; `Constructor`  | [src/partition/range.ts:120](../../packages/runtime/src/partition/range.ts#L120); `dist/partition/range.d.ts:70` |
+| `MEM.TypedMapRangeOptions.experimentalDispatchBatchSize` | optional; `number`       | [src/partition/range.ts:32](../../packages/runtime/src/partition/range.ts#L32); `dist/partition/range.d.ts:28`   |
+| `MEM.TypedMapRangeOptions.experimentalOutputConstructor` | optional; `Constructor`  | [src/partition/range.ts:140](../../packages/runtime/src/partition/range.ts#L140); `dist/partition/range.d.ts:81` |
 | `MEM.TypedMapRangeOptions.signal`                        | optional; `AbortSignal`  | [src/partition/range.ts:25](../../packages/runtime/src/partition/range.ts#L25); `dist/partition/range.d.ts:22`   |
 | `MEM.TypedMapRangeOptions.timeout`                       | optional; `number`       | [src/partition/range.ts:26](../../packages/runtime/src/partition/range.ts#L26); `dist/partition/range.d.ts:23`   |
 
 ### UpperBoundBinaryStreamRangeOptions
 
-| ID                                                                          | Current type / modifiers                                                                     | Source; declaration                                                                                            |
-| --------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| `MEM.UpperBoundBinaryStreamRangeOptions.executionLease`                     | optional; `never`                                                                            | [src/partition/range.ts:24](../../packages/runtime/src/partition/range.ts#L24); `dist/partition/range.d.ts:21` |
-| `MEM.UpperBoundBinaryStreamRangeOptions.experimentalDispatchBatchSize`      | optional; `number`                                                                           | [src/partition/range.ts:31](../../packages/runtime/src/partition/range.ts#L31); `dist/partition/range.d.ts:28` |
-| `MEM.UpperBoundBinaryStreamRangeOptions.experimentalMaxBufferedResults`     | optional; `number`                                                                           | [src/partition/range.ts:82](../../packages/runtime/src/partition/range.ts#L82); `dist/partition/range.d.ts:59` |
-| `MEM.UpperBoundBinaryStreamRangeOptions.experimentalMaxReservedResultBytes` | required; `number`                                                                           | [src/partition/range.ts:85](../../packages/runtime/src/partition/range.ts#L85); `dist/partition/range.d.ts:62` |
-| `MEM.UpperBoundBinaryStreamRangeOptions.experimentalMaxResultBytes`         | required; `number \| ((partition: import("./partition/range.js").RangePartition) => number)` | [src/partition/range.ts:83](../../packages/runtime/src/partition/range.ts#L83); `dist/partition/range.d.ts:60` |
-| `MEM.UpperBoundBinaryStreamRangeOptions.experimentalResultBytes`            | optional; `never`                                                                            | [src/partition/range.ts:84](../../packages/runtime/src/partition/range.ts#L84); `dist/partition/range.d.ts:61` |
-| `MEM.UpperBoundBinaryStreamRangeOptions.signal`                             | optional; `AbortSignal`                                                                      | [src/partition/range.ts:25](../../packages/runtime/src/partition/range.ts#L25); `dist/partition/range.d.ts:22` |
-| `MEM.UpperBoundBinaryStreamRangeOptions.timeout`                            | optional; `number`                                                                           | [src/partition/range.ts:26](../../packages/runtime/src/partition/range.ts#L26); `dist/partition/range.d.ts:23` |
+| ID                                                                          | Current type / modifiers                                                                     | Source; declaration                                                                                              |
+| --------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `MEM.UpperBoundBinaryStreamRangeOptions.dispatchBatchSize`                  | optional; `number`                                                                           | [src/partition/range.ts:30](../../packages/runtime/src/partition/range.ts#L30); `dist/partition/range.d.ts:26`   |
+| `MEM.UpperBoundBinaryStreamRangeOptions.maxBufferedResults`                 | optional; `number`                                                                           | [src/partition/range.ts:46](../../packages/runtime/src/partition/range.ts#L46); `dist/partition/range.d.ts:37`   |
+| `MEM.UpperBoundBinaryStreamRangeOptions.executionLease`                     | optional; `never`                                                                            | [src/partition/range.ts:24](../../packages/runtime/src/partition/range.ts#L24); `dist/partition/range.d.ts:21`   |
+| `MEM.UpperBoundBinaryStreamRangeOptions.experimentalDispatchBatchSize`      | optional; `number`                                                                           | [src/partition/range.ts:32](../../packages/runtime/src/partition/range.ts#L32); `dist/partition/range.d.ts:28`   |
+| `MEM.UpperBoundBinaryStreamRangeOptions.experimentalMaxBufferedResults`     | optional; `number`                                                                           | [src/partition/range.ts:48](../../packages/runtime/src/partition/range.ts#L48); `dist/partition/range.d.ts:39`   |
+| `MEM.UpperBoundBinaryStreamRangeOptions.experimentalMaxReservedResultBytes` | required; `number`                                                                           | [src/partition/range.ts:100](../../packages/runtime/src/partition/range.ts#L100); `dist/partition/range.d.ts:70` |
+| `MEM.UpperBoundBinaryStreamRangeOptions.experimentalMaxResultBytes`         | required; `number \| ((partition: import("./partition/range.js").RangePartition) => number)` | [src/partition/range.ts:98](../../packages/runtime/src/partition/range.ts#L98); `dist/partition/range.d.ts:68`   |
+| `MEM.UpperBoundBinaryStreamRangeOptions.experimentalResultBytes`            | optional; `never`                                                                            | [src/partition/range.ts:99](../../packages/runtime/src/partition/range.ts#L99); `dist/partition/range.d.ts:69`   |
+| `MEM.UpperBoundBinaryStreamRangeOptions.signal`                             | optional; `AbortSignal`                                                                      | [src/partition/range.ts:25](../../packages/runtime/src/partition/range.ts#L25); `dist/partition/range.d.ts:22`   |
+| `MEM.UpperBoundBinaryStreamRangeOptions.timeout`                            | optional; `number`                                                                           | [src/partition/range.ts:26](../../packages/runtime/src/partition/range.ts#L26); `dist/partition/range.d.ts:23`   |
 
 ### WorkerState
 

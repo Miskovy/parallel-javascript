@@ -4,6 +4,44 @@ For the current public contract and stability boundary, start with the
 [v0.15 user guide](guide/core-api.md) and [stability policy](stability.md).
 This detailed reference retains the experimental mechanics.
 
+## C2 development option transition
+
+Development source accepts `dispatchBatchSize`, `maxBufferedResults` and
+`outputConstructor` on their existing range, stream and typed-map option shapes.
+Their `experimentalDispatchBatchSize`, `experimentalMaxBufferedResults` and
+`experimentalOutputConstructor` aliases remain accepted and are deprecated.
+All these features remain experimental; P2 promotion requires separate approval.
+Defaults, count limits, batching 1–16, ordering and ownership are unchanged.
+
+Each pair rejects when both properties are present, including equal values,
+explicit `undefined` and inherited properties. Neither spelling takes precedence.
+Proxy `has` traps now observe the new name followed by its legacy name, at the
+existing validation boundary. Only the selected property is read, once; absent
+pairs use the existing default without a value read. Batch selection follows
+timeout/signal getters, count selection precedes byte validation, and constructor
+selection precedes range submission. Constructor selection failures still throw
+synchronously; common range validation rejects its Promise; count normalization
+returns a failed stream with sticky iteration failure. Reentrant application
+code retains the existing cancellation/state checks and physical ownership.
+
+PartitionOptions, StreamRangeOptions, BinaryStreamRangeOptions,
+UpperBoundBinaryStreamRangeOptions and TypedMapRangeOptions are now type aliases
+with exclusive-pair unions/intersections and optional `never` alternatives.
+They no longer support interface declaration merging or extension by an interface;
+use an intersection type to add application fields. Generic constructor inference,
+overload order, shared-capable inputs/maps and closeable streams are preserved.
+Runtime presence checks remain authoritative, particularly without TypeScript's
+`exactOptionalPropertyTypes`, where an optional `never` can admit `undefined`.
+
+Strict binary contracts retain `experimentalResultBytes`,
+`experimentalMaxResultBytes` and `experimentalMaxReservedResultBytes`. C3's
+`resultBytes`, `maxResultBytes` and `maxReservedResultBytes` remain proposed and
+unavailable. C2 and C3 must both land before the same eventual transition
+prerelease; this development change starts no release window. Publication and
+later C4 alias removal require separate decisions. See the
+[C2 report](research/c2-range-option-transition.md) and
+[migration plan](research/v1-api-migration-plan.md).
+
 v0.4 added `runtime.partitionRange(task, range, createInput, options?)`; v0.5
 added bounded transport batches; v0.6 added completion-only `parallelFor()`;
 v0.7 added bounded completion-order `streamRange()` over the same engine; v0.8
@@ -68,7 +106,7 @@ try {
     sum,
     { start: 0, end: data.length, grainSize: 10_000 },
     (partition) => ({ input: { partition, data } }),
-    { timeout: 5_000, experimentalDispatchBatchSize: 4 },
+    { timeout: 5_000, dispatchBatchSize: 4 },
   );
   console.log(chunks); // Logical range order, regardless of completion order.
 } finally {
@@ -88,7 +126,7 @@ await runtime.parallelFor(
   transform,
   { start: 0, end: output.length, grainSize: 10_000 },
   (partition) => ({ input: { partition, input, output } }),
-  { experimentalDispatchBatchSize: 4 },
+  { dispatchBatchSize: 4 },
 );
 ```
 
@@ -107,8 +145,8 @@ const result = await runtime.parallelMapRange(
   { start: -100, end: 100, grainSize: 32 },
   (partition) => ({ input: { partition, input } }),
   {
-    experimentalDispatchBatchSize: 4,
-    experimentalOutputConstructor: Float64Array,
+    dispatchBatchSize: 4,
+    outputConstructor: Float64Array,
   },
 );
 ```
@@ -132,8 +170,8 @@ for await (const { partition, output } of runtime.streamRange(
   (partition) => ({ input: { partition, input } }),
   {
     timeout: 5_000,
-    experimentalDispatchBatchSize: 4,
-    experimentalMaxBufferedResults: 8,
+    dispatchBatchSize: 4,
+    maxBufferedResults: 8,
   },
 )) {
   consume(partition, output);
@@ -145,7 +183,7 @@ the loop cancels unconsumed work. If the task returns a transferred buffer, the
 consumer owns it after yield. Userland can reorder or collect results, but doing
 so owns the corresponding retention cost.
 
-`grainSize` defines logical range boundaries. `experimentalDispatchBatchSize`
+`grainSize` defines logical range boundaries. `dispatchBatchSize`
 only groups adjacent logical children into one worker round trip. Values are
 integers from 1 through 16; 1 preserves the v0.4 transport path. One batch runs
 sequentially on one worker, so larger values can reduce message overhead while
@@ -216,7 +254,7 @@ factory's captured data can still be large. Neither mode allocates all
 descriptors or child promises at acceptance.
 
 `streamRange()` adds a separate positive logical-result bound,
-`experimentalMaxBufferedResults`, defaulting to the worker count. Each admitted
+`maxBufferedResults`, defaulting to the worker count. Each admitted
 unsettled child reserves one result credit. Buffered results plus such children
 cannot exceed the capacity, including when a physical batch contains multiple
 items. Reading releases a credit and production resumes. The count does not
@@ -260,7 +298,7 @@ for await (const { output } of runtime.streamRange(
     experimentalMaxResultBytes: (partition) =>
       2 * (partition.end - partition.start),
     experimentalMaxReservedResultBytes: 4 * 1024 * 1024,
-    experimentalMaxBufferedResults: 16,
+    maxBufferedResults: 16,
   },
 )) {
   await writeBlock(output);

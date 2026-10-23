@@ -5,7 +5,7 @@ There are three independent bounds. **Queue depth is not CPU capacity.**
 | Bound                              | Controls                                                                  | Does not control                                                              |
 | ---------------------------------- | ------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
 | maxQueue                           | Waiting logical tasks; active physical slots are separate                 | CPU throughput, input bytes, retained results                                 |
-| experimentalMaxBufferedResults     | Buffered + admitted-unsettled logical results per stream; default workers | Bytes or consumer-retained outputs                                            |
+| maxBufferedResults                 | Buffered + admitted-unsettled logical results per stream; default workers | Bytes or consumer-retained outputs                                            |
 | experimentalMaxReservedResultBytes | Occupied declared/actual visible binary result credit per stream          | Heap/RSS, backing size, scratch/native memory, inputs or post-yield retention |
 
 FIFO means dispatch order among queued work, not result completion order. A full
@@ -47,7 +47,7 @@ length is a real v0.14 example; PJS does not discover that length.
 
 ```js
 const options = {
-  experimentalMaxBufferedResults: 4,
+  maxBufferedResults: 4,
   experimentalResultBytes: (partition) => partition.end - partition.start,
   experimentalMaxReservedResultBytes: 16384,
 };

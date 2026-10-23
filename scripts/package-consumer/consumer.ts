@@ -8,6 +8,11 @@ import type {
   StreamRangeResult,
   PjsBinaryResult,
   ResultByteDeclaration,
+  RangePartition,
+  PartitionOptions,
+  TypedMapRangeOptions,
+  BinaryStreamRangeOptions,
+  UpperBoundBinaryStreamRangeOptions,
 } from '@pjavascript/runtime';
 
 const registry = new PjsTaskRegistry();
@@ -21,19 +26,84 @@ const binaryTask = registry.register<{ move: boolean }, PjsBinaryResult>(
   new URL('./task.js', import.meta.url),
   'ownedBinary',
 );
+const arrayTask = registry.register<RangePartition, number[]>(
+  'array',
+  new URL('./task.js', import.meta.url),
+  'arrayBlock',
+);
+const typedTask = registry.register<RangePartition, Float64Array<ArrayBuffer>>(
+  'typed',
+  new URL('./task.js', import.meta.url),
+  'typedBlock',
+);
 const runtime = new PjsRuntime({ registry, workers: 1 });
 try {
+  const range = { start: 0, end: 5, grainSize: 2 };
+  const batchOptions: PartitionOptions[] = [
+    { dispatchBatchSize: 16 },
+    { experimentalDispatchBatchSize: 1 },
+  ];
+  for (const option of batchOptions) {
+    const collected: number[][] = await runtime.partitionRange(
+      arrayTask,
+      range,
+      (partition) => ({ input: partition }),
+      option,
+    );
+    assert.deepEqual(collected.flat(), [0, 2, 4, 6, 8]);
+    const completed: void = await runtime.parallelFor(
+      arrayTask,
+      range,
+      (partition) => ({ input: partition }),
+      option,
+    );
+    assert.equal(completed, undefined);
+    const mapped: number[] = await runtime.parallelMapRange(
+      arrayTask,
+      range,
+      (partition) => ({ input: partition }),
+      option,
+    );
+    assert.deepEqual(mapped, [0, 2, 4, 6, 8]);
+  }
+  const constructors: TypedMapRangeOptions<Float64ArrayConstructor>[] = [
+    { outputConstructor: Float64Array, dispatchBatchSize: 2 },
+    {
+      experimentalOutputConstructor: Float64Array,
+      experimentalDispatchBatchSize: 2,
+    },
+  ];
+  for (const option of constructors) {
+    const mapped: Float64Array<ArrayBuffer> = await runtime.parallelMapRange(
+      typedTask,
+      range,
+      (partition) => ({ input: partition }),
+      option,
+    );
+    assert.deepEqual(mapped, new Float64Array([0, 2, 4, 6, 8]));
+  }
   const bytes: ResultByteDeclaration = (partition) =>
     (partition.end - partition.start) * 16;
   for (const move of [false, true]) {
+    const binaryOptions:
+      BinaryStreamRangeOptions | UpperBoundBinaryStreamRangeOptions = move
+      ? {
+          experimentalMaxResultBytes: bytes,
+          experimentalMaxReservedResultBytes: 16,
+          dispatchBatchSize: 2,
+          maxBufferedResults: 1,
+        }
+      : {
+          experimentalResultBytes: bytes,
+          experimentalMaxReservedResultBytes: 16,
+          dispatchBatchSize: 1,
+          maxBufferedResults: 1,
+        };
     const binary: PjsRangeStream<PjsBinaryResult> = runtime.streamRange(
       binaryTask,
       { start: 0, end: 1, grainSize: 1 },
       () => ({ input: { move } }),
-      {
-        experimentalResultBytes: bytes,
-        experimentalMaxReservedResultBytes: 16,
-      },
+      binaryOptions,
     );
     for await (const { output } of binary) {
       assert.ok(output instanceof BigInt64Array);
@@ -49,7 +119,7 @@ try {
   diagnosticContracts(runtime);
   errorContracts();
   const options: CountOnlyStreamRangeOptions = {
-    experimentalMaxBufferedResults: 1,
+    maxBufferedResults: 1,
   };
   const stream: PjsRangeStream<number> = runtime.streamRange(
     task,
@@ -91,4 +161,17 @@ try {
 } finally {
   await runtime.shutdown();
 }
+console.log(
+  JSON.stringify({
+    c2TypeConsumer: true,
+    methods: [
+      'partitionRange',
+      'parallelFor',
+      'streamRange',
+      'parallelMapRange',
+    ],
+    overloads: ['count', 'exact', 'upper-bound', 'array', 'typed'],
+    aliasesRetained: true,
+  }),
+);
 await containmentContracts();

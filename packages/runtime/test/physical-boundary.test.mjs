@@ -121,7 +121,7 @@ function stream(runtime, task, shared, mode, extra = {}, count = 1) {
     { start: 0, end: count, grainSize: 1 },
     () => ({ input: { shared } }),
     {
-      experimentalMaxBufferedResults: count,
+      maxBufferedResults: count,
       experimentalMaxReservedResultBytes: count * 8,
       ...(mode === 'exact'
         ? { experimentalResultBytes: 8 }
@@ -163,7 +163,7 @@ test(
       shared,
       'exact',
       {
-        experimentalDispatchBatchSize: 3,
+        dispatchBatchSize: 3,
       },
       3,
     );
@@ -273,7 +273,7 @@ for (const mode of ['exact', 'upper-bound']) {
           shared,
           mode,
           {
-            experimentalDispatchBatchSize: batch,
+            dispatchBatchSize: batch,
           },
           batch,
         );

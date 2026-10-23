@@ -2,11 +2,29 @@
 
 **Stage C engineering plan — proposed, pending unit-specific maintainer decisions.**
 S1, corrected Stage A and B1–B4 are integrated; this does not accept every roadmap
-proposal. Current consumers must
-use existing declarations and experimental spellings. Nothing in these examples
-is a runnable current-source replacement. The [inventory](v1-api-contract-inventory.md)
+proposal. C2's three development spellings and deprecated aliases are implemented
+as described below. C3 examples using proposed byte spellings remain unavailable.
+The [inventory](v1-api-contract-inventory.md)
 is authoritative for today's behavior; [B](v1-api-corrections.md) specifies the
 four corrections before promotion. See [ADR 0023](../adr/0023-v1-api-stability-decisions.md).
+
+## C2 development implementation status
+
+The C2 handoff explicitly authorizes the shared alias-transition design from
+baseline main `3e0381317fde3438e1a3008dc8c4e84257ff066a` (PR #26).
+`dispatchBatchSize`, `maxBufferedResults` and `outputConstructor` now coexist
+with deprecated legacy aliases. Both-presence rejects, including equal values,
+inherited properties and explicit undefined. The
+[range reference](../partitioning.md#c2-development-option-transition) describes
+presence/getter order and transitional type compatibility; the
+[engineering report](c2-range-option-transition.md) records implementation,
+acceptance and source-bound qualification procedure. All feature-level
+experimental annotations remain; C2/P2 promotion is a separate approval.
+C3/C4 remain unimplemented. C2 and C3 must land before the same eventual
+transition prerelease, which has not been selected or published. This work does
+not start the alias release window or authorize a partial migration publication.
+The historical planning-base ledger, occurrence audit and handoff below retain
+their original attribution. Separately tracked holds remain open and untouched.
 
 ## C1-A/Q implementation status
 

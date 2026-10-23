@@ -24,7 +24,7 @@ try {
     range,
     factory,
     {
-      experimentalMaxBufferedResults: 4,
+      maxBufferedResults: 4,
       experimentalResultBytes: (partition) => partition.end - partition.start,
       experimentalMaxReservedResultBytes: 16384,
     },
@@ -42,7 +42,7 @@ try {
     range,
     factory,
     {
-      experimentalMaxBufferedResults: 4,
+      maxBufferedResults: 4,
       experimentalMaxResultBytes: (partition) =>
         partition.end - partition.start,
       experimentalMaxReservedResultBytes: 16384,

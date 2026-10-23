@@ -85,7 +85,7 @@ const partialSums = await runtime.partitionRange(sumTask, range, factory);
 
 await runtime.parallelFor(writeTask, range, writeFactory);
 const flat = await runtime.parallelMapRange(mapTask, range, factory, {
-  experimentalOutputConstructor: Float64Array,
+  outputConstructor: Float64Array,
 });
 for await (const { partition, output } of runtime.streamRange(
   sumTask,

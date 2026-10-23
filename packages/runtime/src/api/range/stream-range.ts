@@ -6,6 +6,7 @@ import type {
 } from '../../partition/range.js';
 import type { StreamRangeSubmission } from './contracts.js';
 import { integer } from '../../internal/integer.js';
+import { optionSpelling } from '../../internal/option-spelling.js';
 import { PjsBinaryResultContractError } from '../../errors/index.js';
 import { RangeStream } from '../../partition/stream.js';
 import type { PjsRangeStream } from '../../partition/stream.js';
@@ -57,9 +58,21 @@ export function streamRange<Input, Output>(
   let resultByteCapacity: number | undefined;
   let resultByteMode: ResultByteMode = 'exact';
   try {
+    // Preserve the previous property-read behavior for invalid primitive/null
+    // options before the existing byte-presence validation/rejection path.
+    const countName =
+      options !== null &&
+      (typeof options === 'object' || typeof options === 'function')
+        ? optionSpelling(
+            options,
+            'maxBufferedResults',
+            'experimentalMaxBufferedResults',
+          )
+        : 'experimentalMaxBufferedResults';
     capacity = integer(
-      'experimentalMaxBufferedResults',
-      options.experimentalMaxBufferedResults ?? submission.workerCount,
+      countName ?? 'maxBufferedResults',
+      (countName === undefined ? undefined : options[countName]) ??
+        submission.workerCount,
       1,
     );
     const hasExact = 'experimentalResultBytes' in options;

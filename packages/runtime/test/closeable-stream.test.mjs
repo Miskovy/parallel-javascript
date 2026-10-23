@@ -40,7 +40,7 @@ async function setup(t) {
 }
 const done = { value: undefined, done: true };
 const bytes = {
-  experimentalMaxBufferedResults: 2,
+  maxBufferedResults: 2,
   experimentalResultBytes: 8,
   experimentalMaxReservedResultBytes: 16,
 };
@@ -243,7 +243,7 @@ test('buffered reads, full consumption and empty streams expose undefined comple
     tasks.binary,
     range(2),
     () => ({ input: {} }),
-    { experimentalMaxBufferedResults: 2 },
+    { maxBufferedResults: 2 },
   );
   await until(() => stream.buffered === 2);
   const results = await Promise.all([stream.next(), stream.next()]);
