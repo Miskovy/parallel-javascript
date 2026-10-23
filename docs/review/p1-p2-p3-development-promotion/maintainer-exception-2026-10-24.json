@@ -360,11 +360,7 @@
       },
       {
         "name": "diff",
-        "command": [
-          "git",
-          "diff",
-          "--check"
-        ],
+        "command": ["git", "diff", "--check"],
         "exitCode": 0,
         "output": ""
       }
