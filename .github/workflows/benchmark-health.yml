@@ -1,0 +1,58 @@
+name: Development benchmark and API health
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - benchmarks/current-development/**
+      - docs/research/benchmark-health*.md
+      - .github/workflows/benchmark-health.yml
+
+jobs:
+  qualify:
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [22.13.0, 24.0.0, 24.22.1]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm ci --prefix benchmarks/real-world/crypto --ignore-scripts
+      - uses: actions/checkout@v4
+        with:
+          ref: 9dec3ba422b1649d478ae520439a1a70dc34b8c8
+          path: .node-tools/benchmark-baseline
+      - run: npm ci --prefix .node-tools/benchmark-baseline
+      - name: Harness regressions
+        run: npm run benchmark:current:test
+      - name: Provision pinned release CLI
+        run: |
+          node -e "require('node:fs').mkdirSync('.node-tools/health-evidence')"
+          npm run release:npm -- .node-tools/health-evidence/release-cli
+      - name: Installed API and performance campaign (sequential children)
+        run: node benchmarks/current-development/run.mjs --baseline=.node-tools/benchmark-baseline --output=.node-tools/health-evidence/campaign --profile=${{ matrix.node == '24.0.0' && 'health' || 'performance' }}
+      - name: Ordinary qualification and unchanged standard R2/R3
+        if: always() && runner.os != 'Windows'
+        run: npm run runtime:qualify -- --release-npm-cli="${{ github.workspace }}/.node-tools/health-evidence/release-cli/node_modules/npm/bin/npm-cli.js" --output=.node-tools/health-evidence/ordinary.json
+      - name: Ordinary qualification and unchanged standard R2/R3 (Windows)
+        if: always() && runner.os == 'Windows'
+        shell: cmd
+        run: npm.cmd run runtime:qualify -- --release-npm-cli="${{ github.workspace }}/.node-tools/health-evidence/release-cli/node_modules/npm/bin/npm-cli.js" --output=.node-tools/health-evidence/ordinary.json
+      - name: Both-compiler complete fixtures, inventory and evidence reconciliation
+        if: always()
+        run: node benchmarks/current-development/qualify.mjs .node-tools/health-evidence
+      - name: Retain raw evidence including failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-health-${{ matrix.os }}-node-${{ matrix.node }}
+          path: .node-tools/health-evidence/
+          include-hidden-files: true

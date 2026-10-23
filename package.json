@@ -11,6 +11,8 @@
     "node": "^22.13.0 || ^24.0.0"
   },
   "scripts": {
+    "benchmark:current": "node benchmarks/current-development/run.mjs",
+    "benchmark:current:test": "node --test benchmarks/current-development/harness.test.mjs",
     "build": "tsc -p packages/runtime/tsconfig.json",
     "typecheck:compat": "tsc6 --noEmit -p packages/runtime/tsconfig.json",
     "test": "npm run build && npm run test:types && node --test --test-timeout=20000 packages/runtime/test/*.test.mjs",
