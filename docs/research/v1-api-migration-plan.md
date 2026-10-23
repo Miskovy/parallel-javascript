@@ -4,6 +4,14 @@
 The [inventory](v1-api-contract-inventory.md) records the current contract;
 [ADR 0023](../adr/0023-v1-api-stability-decisions.md) retains the proposed v1 policy.
 
+**Maintainer instruction, 23 October 2026:** P1/P2/P3 promotion is explicitly
+approved. The [benchmark health campaign](benchmark-health-spec.md) records
+that approval; benchmark acceptance and the resulting exact promotion patch
+remain subject to review. The campaign leaves feature annotations in place
+and prepares the patch without applying it. Separately tracked hold
+applicability, the transition release, C4 and Stage F/G gates remain unchanged.
+The older approval queue below retains its historical attribution.
+
 ## Post-C3 decisions — 23 October 2026
 
 Current main is `0f79db5e1192dd47db32d2e300fc382a0f431462`, the
