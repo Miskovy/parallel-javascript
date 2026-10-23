@@ -13,9 +13,10 @@ npm install @pjavascript/runtime@next
 
 As verified on 23 October 2026, [npm `next` and `latest`](https://registry.npmjs.org/@pjavascript%2fruntime)
 select **1.0.0-rc.4**, also a [GitHub prerelease](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.4).
-Final v1.0.0 has not been released. Manifests declare Node `^22.13.0 || ^24.0.0`;
-exact Linux/Windows x64 development evidence does not establish the 24.0.0 floor.
-macOS and ARM64 remain unclaimed. See the [platform policy](https://github.com/Miskovy/parallel-javascript/blob/main/docs/stability.md#proposed-node-and-platform-policy).
+Final v1.0.0 has not been released. Manifests declare Node `^22.13.0 || ^24.0.0`.
+Consult the [exact Node/platform evidence](https://github.com/Miskovy/parallel-javascript/blob/main/docs/stability.md#proposed-node-and-platform-policy)
+for tested development candidates; an engine range is not evidence for every
+patch or qualification of published RC4. macOS and ARM64 remain unclaimed.
 Compile TypeScript tasks to JavaScript before registration.
 
 ## Quickstart

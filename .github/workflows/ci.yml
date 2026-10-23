@@ -10,7 +10,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-        node: [22.13.0, 24]
+        node: [22.13.0, 24.0.0, 24]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -60,6 +60,18 @@ jobs:
         if: runner.os == 'Windows'
         shell: cmd
         run: npm.cmd run runtime:qualify -- --release-npm-cli="${{ steps.release-cli-windows.outputs.path }}" --r2-report=.node-tools/r2/ci/report.json --r3-report=.node-tools/r3/ci/report.json --output=.node-tools/runtime-ci.json
+      - name: Exact Node 24 floor identity and supplemental compatibility checks
+        if: always() && matrix.node == '24.0.0'
+        run: node scripts/node24-floor-checks.mjs
+        env:
+          PJS_RELEASE_NPM_CLI: ${{ steps.release-cli.outputs.path || steps.release-cli-windows.outputs.path }}
+      - name: Retain Node 24 floor identity and supplemental evidence
+        if: always() && matrix.node == '24.0.0'
+        uses: actions/upload-artifact@v4
+        with:
+          name: node24-floor-${{ matrix.os }}
+          path: .node-tools/node24-floor/
+          include-hidden-files: true
       - name: Retain qualification evidence
         if: always()
         uses: actions/upload-artifact@v4
