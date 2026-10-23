@@ -43,6 +43,11 @@ try {
     '--test',
     'scripts/api-contract-inventory.test.mjs',
   ]);
+  run('retained result tables', [
+    'benchmarks/current-development/summarize.mjs',
+    join(root, 'campaign/report.json'),
+    join(root, 'results.md'),
+  ]);
   const ordinary = read(join(root, 'ordinary.json'));
   assert.equal(ordinary.sourceCommit, report.source.commit);
   assert.equal(ordinary.node, process.version);

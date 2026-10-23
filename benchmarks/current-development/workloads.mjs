@@ -457,7 +457,35 @@ export function workload(config, engine) {
     default:
       throw new Error('Unknown family ' + c.family);
   }
-  return { invoke, validate, skip };
+  let workUnits = c.size,
+    unit = 'range elements';
+  if (c.family === 'matrix') {
+    workUnits = c.size ** 3;
+    unit = 'multiply-adds';
+  }
+  if (['transport', 'compression'].includes(c.family)) unit = 'input bytes';
+  if (['dispatch', 'completion'].includes(c.family)) {
+    workUnits = parts.length;
+    unit = 'partitions';
+  }
+  if (['stream', 'pipeline'].includes(c.family)) {
+    workUnits = c.bytes * parts.length;
+    unit = 'delivered bytes';
+  }
+  if (c.family === 'fairness') {
+    workUnits = 3 * parts.length + 16;
+    unit = 'completed tasks';
+  }
+  if (c.family === 'crypto') {
+    workUnits = ['sha', 'aes'].includes(c.kind)
+      ? 4 * c.size * (c.kind === 'sha' ? 8 : 1)
+      : 4;
+    unit = ['sha', 'aes'].includes(c.kind)
+      ? 'processed bytes'
+      : 'crypto operations';
+  }
+  if (c.family === 'monte-carlo') unit = 'simulation paths';
+  return { invoke, validate, skip, workUnits, unit };
 }
 
 export function serialEngine() {

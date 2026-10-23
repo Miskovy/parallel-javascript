@@ -16,6 +16,19 @@ export const policy = Object.freeze({
   additionalBlocks: 1,
 });
 
+export function estimatedPayloadBytes(c) {
+  if (c.family === 'cpu') return c.size * 2;
+  if (c.family === 'matrix') return c.size ** 2 * 8 * 8;
+  if (c.family === 'crypto')
+    return c.kind === 'argon2' || c.kind === 'scrypt'
+      ? c.workers * 64 * 1024 ** 2
+      : c.size * 16;
+  if (c.family === 'stream' || c.family === 'pipeline')
+    return c.bytes * (c.capacity + c.workers + 2) * 2;
+  if (c.family === 'transport') return c.size * (c.workers + 3);
+  return c.size * 64;
+}
+
 export function configurations(
   profile = 'performance',
   parallelism = availableParallelism(),

@@ -6,7 +6,7 @@ import { setTimeout as delay } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
 import { PjsRuntime, PjsTaskRegistry } from '@pjavascript/runtime';
 import { workload, serialEngine } from './workloads.mjs';
-import { policy } from './config.mjs';
+import { estimatedPayloadBytes, policy } from './config.mjs';
 
 const [configPath, output] = process.argv.slice(2);
 const config = JSON.parse(readFileSync(configPath, 'utf8'));
@@ -29,7 +29,7 @@ try {
     report.reason = 'Less than 1 GiB free memory before allocation';
   } else {
     assert.ok(config.workers <= policy.maxWorkers);
-    assert.ok((config.bytes ?? config.size * 8) * 32 < policy.maxPayloadBytes);
+    assert.ok(estimatedPayloadBytes(config) < policy.maxPayloadBytes);
     const cold = performance.now();
     if (config.backend === 'pjs') {
       const registry = new PjsTaskRegistry();
@@ -125,6 +125,9 @@ try {
         const wallMs = performance.now() - start;
         const cpuUsage = process.cpuUsage(cpu),
           memoryAfter = process.memoryUsage();
+        // Let a timer scheduled during synchronous serial work observe its delay.
+        // This observation turn is excluded from wall/CPU time and useful work.
+        await delay(0);
         const eventLoop = performance.eventLoopUtilization(utilization);
         clearInterval(timer);
         histogram.disable();
@@ -133,7 +136,9 @@ try {
         const sample = {
           phase,
           wallMs,
-          unitsPerSecond: config.size / (wallMs / 1000),
+          workUnits: work.workUnits,
+          unit: work.unit,
+          unitsPerSecond: work.workUnits / (wallMs / 1000),
           cpuUsage,
           memoryBefore,
           memoryAfter,

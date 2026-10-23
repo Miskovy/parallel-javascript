@@ -3,12 +3,15 @@ import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
-import { configurations, policy } from './config.mjs';
+import { configurations, estimatedPayloadBytes, policy } from './config.mjs';
 import { assess, command, manifest, sha256 } from './evidence.mjs';
 
 test('bounded configuration covers every family and preserves required controls', () => {
   const cases = configurations('performance', 128);
   assert.ok(cases.every((c) => c.workers >= 1 && c.workers <= 4));
+  assert.ok(
+    cases.every((c) => estimatedPayloadBytes(c) < policy.maxPayloadBytes),
+  );
   assert.equal(new Set(cases.map((c) => c.id)).size, cases.length);
   for (const family of [
     'cpu',

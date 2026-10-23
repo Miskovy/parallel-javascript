@@ -278,6 +278,11 @@ function executeChild(arm, config, block, position) {
   return child;
 }
 try {
+  assert.notEqual(
+    process.env.PJS_DEBUG_RESERVATION_INVARIANTS,
+    '1',
+    'Private invariant instrumentation must stay outside timed primary samples',
+  );
   report.power =
     process.platform === 'win32'
       ? optionalObservation('powercfg', ['/getactivescheme'])
