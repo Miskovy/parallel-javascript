@@ -1,101 +1,106 @@
 # @pjavascript/runtime
 
-Explicit CPU tasks on persistent Node workers, with bounded admission and explicit
-clone/transfer/shared-input ownership. ESM only; manifests declare Node
-`^22.13.0 || ^24.0.0`. No production dependencies.
-
-PJS is pre-1.0. run, registration and lifecycle are core candidates. Range APIs
-and result-credit options remain experimental. Statistics are diagnostic.
+**PJS — Parallel JavaScript Runtime.** Explicit CPU tasks on persistent Node
+workers, with bounded admission and clone/transfer/shared-input ownership.
+ESM only; no production dependencies. Tasks are trusted local module exports
+with Node capabilities. Worker isolates are not an untrusted-code sandbox.
 
 ## Install
-
-As checked on 22 October 2026, **1.0.0-rc.4** is published as
-[`@pjavascript/runtime`](https://www.npmjs.com/package/@pjavascript/runtime);
-[registry metadata](https://registry.npmjs.org/@pjavascript%2fruntime) reports
-both `next` and `latest` at RC4. Its [GitHub release](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.4)
-is a prerelease. Final v1.0.0 has not been released. Development source contains
-later R1/R2/R3 and integrated S1/Stage A/B1–B4 absent from immutable RC4, despite
-unchanged version fields. B1 development adds type-only PjsRangeStream and
-CountOnlyStreamRangeOptions exports, exposing existing stream cleanup behavior.
-B2 adds PjsOwnedTypedArray and ResultByteDeclaration type-only exports; strict
-PjsBinaryResult views now require ordinary ArrayBuffer backing. Shared-capable
-inputs and mapping types are preserved. Those declarations are absent from RC4;
-ranges remain experimental. B3 development removes unsupported registry.snapshot()
-access and keeps configuration snapshots internal; callers needing introspection
-must retain their own registration metadata. B4 development adds seventeen
-type-only diagnostic/error contracts, including PjsRuntimeStats and PjsErrorContext,
-preserving all 158 diagnostic leaves and runtime behavior. Broader promotion
-decisions and option renames remain proposed.
 
 ```sh
 npm install @pjavascript/runtime@next
 ```
 
-Recent S1 evidence covers exact Node 22.13.0/24.21.0 on Windows/Linux x64; it does
-not establish Node 24.0.0. Final-candidate policy requires floor/current-patch
-qualification in both majors on both platforms; see the
-[stability policy](https://github.com/Miskovy/parallel-javascript/blob/main/docs/stability.md).
-macOS and ARM64 are not claimed. Compile TypeScript tasks to ordinary JavaScript
-and register file URLs; no CommonJS/browser/bundler/loader support is promised.
+As verified on 23 October 2026, [npm `next` and `latest`](https://registry.npmjs.org/@pjavascript%2fruntime)
+select **1.0.0-rc.4**, also a [GitHub prerelease](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.4).
+Final v1.0.0 has not been released. Manifests declare Node `^22.13.0 || ^24.0.0`;
+exact Linux/Windows x64 development evidence does not establish the 24.0.0 floor.
+macOS and ARM64 remain unclaimed. See the [platform policy](https://github.com/Miskovy/parallel-javascript/blob/main/docs/stability.md#proposed-node-and-platform-policy).
+Compile TypeScript tasks to JavaScript before registration.
 
-## Example and contracts
+## Quickstart
 
-Create a local task module:
+Create `tasks.mjs`:
 
 ```js
-// task.mjs
 export function square(value) {
   return value * value;
 }
 ```
 
+Create `basic-run.mjs`:
+
 ```js
 import { PjsRuntime, PjsTaskRegistry } from '@pjavascript/runtime';
+
 const registry = new PjsTaskRegistry();
 const square = registry.register(
   'square',
-  new URL('./task.mjs', import.meta.url),
+  new URL('./tasks.mjs', import.meta.url),
   'square',
 );
 const runtime = new PjsRuntime({ registry, workers: 1 });
+
 try {
   await runtime.ready();
-  console.log(await runtime.run(square, 12));
+  console.log(await runtime.run(square, 12)); // 144
 } finally {
   await runtime.shutdown();
 }
 ```
 
-The tiny example teaches the API, not a performance benefit. Use coarse CPU work;
-ordinary async I/O generally belongs on Node's event loop. Tasks are trusted local
-module exports, not serialized closures or a sandbox. Compile TypeScript tasks
-before registration.
+Run `node basic-run.mjs`. This example works with published RC4. It teaches the
+contract; one square is too small to benefit from workers. Coarse CPU work can
+amortize messaging and scheduling costs; ordinary asynchronous I/O usually
+belongs on Node's event loop.
 
-Cancellation/timeout can reject a caller while execution still occupies a worker.
-There is no automatic retry or rollback. Omitted physical leases leave execution
-unbounded. The experimental development API supports exclusive ordinary
-`run({ executionLease })` in integer milliseconds, pool-wide rolling
-`restartPolicy: { maxRestarts, windowMs }` and graceful `shutdown({ forceAfter })`.
-These additions are not in the published RC4 artifact. Expiry initiates asynchronous
-termination; it does not promise hard realtime preemption or native/OOM protection.
-Ranges and physical batches reject leases before execution. Transferred buffers
-stay detached, shared writes may be partial, and held Atomics locks may be abandoned.
-Graceful shutdown without escalation waits for physical work and stream delivery.
-The first shutdown call fixes options and the shared promise. An abnormal worker failure rejects affected callers
-without proving execution ended: binary result credits and physical busy occupancy
-remain held until confirmed thread exit. A valid final result ends its own physical
-correlation immediately. Worker replacement waits for exit; work is never replayed.
+## APIs and ownership
 
-Clone is default. Explicit transfers detach all sender-side views at dispatch.
-Shared readonly input is immutable by contract, not frozen. Queue limits count
-waiting tasks; result credits bound visible binary payloads only, not process RSS
-or consumer-retained values. More workers or queue depth is not always better.
+`run`, registration and lifecycle are core candidates. `partitionRange` collects
+ordered per-partition outputs, `parallelFor` discards successful outputs,
+`parallelMapRange` assembles flat ordered results and `streamRange` yields
+completion-order results. Range APIs and their controls remain experimental;
+statistics are diagnostic. Only the root package import is supported.
 
-See the [full guide](https://github.com/Miskovy/parallel-javascript/blob/main/docs/guide/core-api.md),
+Clone is the default. Explicit transfers detach sender views at dispatch.
+Shared readonly input is immutable by contract. Queue limits count waiting
+tasks; stream result credits bound visible binary payloads, not RSS or
+consumer-retained values. Cancellation and timeout can settle a caller while
+its worker remains busy. There is no automatic retry, rollback or restoration
+of transferred buffers. Await shutdown for final resource cleanup.
+
+## Development versus published RC4
+
+This README in a locally packed development build may describe later source.
+Merged main includes S1, corrected Stage A, B1–B4, C1-A/Q, C2 and C3; unchanged
+`rc.4` version fields do not make it the published artifact. Later development
+adds closeable stream and ordinary-backed binary types, removes unsupported
+registry.snapshot() access, and names diagnostic/error types including
+PjsRuntimeStats. Those corrections are absent from immutable RC4.
+
+C2/C3 accept `dispatchBatchSize`, `maxBufferedResults`, `outputConstructor`,
+`resultBytes`, `maxResultBytes` and `maxReservedResultBytes` with six deprecated
+`experimental...` aliases. Each pair rejects simultaneous presence, including
+undefined or inherited properties. The later containment controls
+`run({ executionLease })`, rolling `restartPolicy` and graceful
+`shutdown({ forceAfter })` are also absent from published RC4. They initiate
+asynchronous containment; ownership lasts until valid completion or confirmed
+exit, without replay or a hard preemption guarantee. First shutdown options and
+the shared promise are fixed; omitting escalation can leave drain waiting
+indefinitely.
+
+All feature experimental annotations and all six aliases remain. Promotion,
+the combined transition prerelease and later alias removal need separate
+[maintainer decisions](https://github.com/Miskovy/parallel-javascript/blob/main/docs/research/v1-api-migration-plan.md#decisions-for-maintainer-review).
+Checkout examples use the development spellings and are tested against a fresh
+packed artifact.
+
+See the [documentation index](https://github.com/Miskovy/parallel-javascript/blob/main/docs/README.md),
+[core API](https://github.com/Miskovy/parallel-javascript/blob/main/docs/guide/core-api.md),
 [ownership](https://github.com/Miskovy/parallel-javascript/blob/main/docs/guide/memory-ownership.md),
-[lifecycle](https://github.com/Miskovy/parallel-javascript/blob/main/docs/guide/lifecycle.md) and
-[stability policy](https://github.com/Miskovy/parallel-javascript/blob/main/docs/stability.md).
-The tarball includes compiled JS/declarations/maps and their TypeScript source
-for stack traces and editor navigation. Only the root import is supported.
+[lifecycle](https://github.com/Miskovy/parallel-javascript/blob/main/docs/guide/lifecycle.md)
+and [stability policy](https://github.com/Miskovy/parallel-javascript/blob/main/docs/stability.md).
+The tarball includes compiled JavaScript, declarations, maps and their TypeScript
+source for editor navigation and stack traces; internal subpaths are unsupported.
 
-MIT licensed; see LICENSE. RC4 remains a prerelease candidate.
+MIT licensed; see LICENSE.
