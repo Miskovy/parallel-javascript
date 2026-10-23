@@ -44,6 +44,8 @@ const output = resolve(options.output),
 assert.ok(isAbsolute(output));
 mkdirSync(dirname(output), { recursive: true });
 mkdirSync(output); // Refuse all reuse, even empty directories.
+// npm pack also uses its cache; keep every npm write within this campaign.
+process.env.npm_config_cache = join(output, 'npm-cache');
 const npm =
   options['npm-cli'] ??
   process.env.npm_execpath ??
