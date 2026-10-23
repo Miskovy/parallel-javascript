@@ -56,6 +56,9 @@ export type StreamRangeOptions = PartitionOptions &
 
 /** @experimental Count-only delivery excludes every strict byte-mode property. */
 export type CountOnlyStreamRangeOptions = StreamRangeOptions & {
+  resultBytes?: never;
+  maxResultBytes?: never;
+  maxReservedResultBytes?: never;
   experimentalResultBytes?: never;
   experimentalMaxResultBytes?: never;
   experimentalMaxReservedResultBytes?: never;
@@ -87,18 +90,50 @@ export type ResultByteDeclaration =
   number | ((partition: RangePartition) => number);
 
 /** @experimental Exact visible bytes declared before each stream child is admitted. */
-export type BinaryStreamRangeOptions = StreamRangeOptions & {
-  experimentalResultBytes: ResultByteDeclaration;
-  experimentalMaxResultBytes?: never;
-  experimentalMaxReservedResultBytes: number;
-};
+export type BinaryStreamRangeOptions = StreamRangeOptions &
+  (
+    | {
+        resultBytes: ResultByteDeclaration;
+        /** @deprecated Use resultBytes. Both spellings reject together. */ experimentalResultBytes?: never;
+      }
+    | {
+        resultBytes?: never;
+        /** @deprecated Use resultBytes. Both spellings reject together. */ experimentalResultBytes: ResultByteDeclaration;
+      }
+  ) &
+  (
+    | {
+        maxReservedResultBytes: number;
+        /** @deprecated Use maxReservedResultBytes. Both spellings reject together. */ experimentalMaxReservedResultBytes?: never;
+      }
+    | {
+        maxReservedResultBytes?: never;
+        /** @deprecated Use maxReservedResultBytes. Both spellings reject together. */ experimentalMaxReservedResultBytes: number;
+      }
+  ) & { maxResultBytes?: never; experimentalMaxResultBytes?: never };
 
 /** @experimental Maximum visible bytes; successful unused credit refunds on arrival. */
-export type UpperBoundBinaryStreamRangeOptions = StreamRangeOptions & {
-  experimentalMaxResultBytes: ResultByteDeclaration;
-  experimentalResultBytes?: never;
-  experimentalMaxReservedResultBytes: number;
-};
+export type UpperBoundBinaryStreamRangeOptions = StreamRangeOptions &
+  (
+    | {
+        maxResultBytes: ResultByteDeclaration;
+        /** @deprecated Use maxResultBytes. Both spellings reject together. */ experimentalMaxResultBytes?: never;
+      }
+    | {
+        maxResultBytes?: never;
+        /** @deprecated Use maxResultBytes. Both spellings reject together. */ experimentalMaxResultBytes: ResultByteDeclaration;
+      }
+  ) &
+  (
+    | {
+        maxReservedResultBytes: number;
+        /** @deprecated Use maxReservedResultBytes. Both spellings reject together. */ experimentalMaxReservedResultBytes?: never;
+      }
+    | {
+        maxReservedResultBytes?: never;
+        /** @deprecated Use maxReservedResultBytes. Both spellings reject together. */ experimentalMaxReservedResultBytes: number;
+      }
+  ) & { resultBytes?: never; experimentalResultBytes?: never };
 
 /** @experimental Typed numeric blocks supported by element-range mapping. */
 export type PjsTypedArray =

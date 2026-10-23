@@ -3,10 +3,21 @@
 **Stage C engineering plan — proposed, pending unit-specific maintainer decisions.**
 S1, corrected Stage A and B1–B4 are integrated; this does not accept every roadmap
 proposal. C2's three development spellings and deprecated aliases are implemented
-as described below. C3 examples using proposed byte spellings remain unavailable.
+as described below. C3 byte spellings are now implemented in development, with deprecated aliases.
 The [inventory](v1-api-contract-inventory.md)
 is authoritative for today's behavior; [B](v1-api-corrections.md) specifies the
 four corrections before promotion. See [ADR 0023](../adr/0023-v1-api-stability-decisions.md).
+
+C3 development migration is implemented: resultBytes, maxResultBytes and
+maxReservedResultBytes accept deprecated experimentalResultBytes,
+experimentalMaxResultBytes and experimentalMaxReservedResultBytes aliases.
+Each pair rejects both-presence, even equal, inherited or explicitly undefined.
+Mixed spellings across distinct declaration/capacity pairs are valid. Any exact
+spelling conflicts with any maximum spelling; one declaration and one capacity
+are required. Count-only types exclude all six byte properties. Features remain
+experimental; P3 approval and unresolved holds remain separate. No release window
+starts here, and C4 removal requires its later decision. See the
+[C3 engineering report](c3-byte-option-transition.md).
 
 ## C2 development implementation status
 
@@ -20,7 +31,7 @@ presence/getter order and transitional type compatibility; the
 [engineering report](c2-range-option-transition.md) records implementation,
 acceptance and source-bound qualification procedure. All feature-level
 experimental annotations remain; C2/P2 promotion is a separate approval.
-C3/C4 remain unimplemented. C2 and C3 must land before the same eventual
+C3 migration is implemented; C4 remains unimplemented. C2 and C3 must land before the same eventual
 transition prerelease, which has not been selected or published. This work does
 not start the alias release window or authorize a partial migration publication.
 The historical planning-base ledger, occurrence audit and handoff below retain
@@ -686,7 +697,7 @@ runtime.streamRange(bytesTask, range, createBytesInput, {
   experimentalMaxReservedResultBytes: 32,
 });
 
-// PROPOSED AFTER C3: all six renames appear in the table above.
+// C3 DEVELOPMENT: all six renames appear in the table above.
 const stream = runtime.streamRange(bytesTask, range, createBytesInput, {
   maxBufferedResults: 2,
   resultBytes: 16,

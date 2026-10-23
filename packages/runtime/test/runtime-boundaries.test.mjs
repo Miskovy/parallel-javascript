@@ -453,8 +453,11 @@ test('range validation retains getter order before state rejection and never inv
           ? [
               'has:maxBufferedResults',
               'has:experimentalMaxBufferedResults',
+              'has:resultBytes',
               'has:experimentalResultBytes',
+              'has:maxResultBytes',
               'has:experimentalMaxResultBytes',
+              'has:maxReservedResultBytes',
               'has:experimentalMaxReservedResultBytes',
             ]
           : [];

@@ -16,6 +16,7 @@ import type {
   UpperBoundBinaryStreamRangeOptions,
   StreamRangeOptions,
   PjsBinaryResult,
+  ResultByteDeclaration,
 } from '../../partition/range.js';
 import type { ResultByteMode } from '../../results/credit.js';
 export function streamRange<Input, Output extends PjsBinaryResult>(
@@ -47,10 +48,14 @@ export function streamRange<Input, Output>(
   task: PjsTask<Input, Output>,
   range: PartitionRange,
   createInput: (partition: RangePartition) => PartitionInput<Input>,
-  options:
-    | StreamRangeOptions
-    | BinaryStreamRangeOptions
-    | UpperBoundBinaryStreamRangeOptions = {},
+  options: StreamRangeOptions & {
+    resultBytes?: ResultByteDeclaration;
+    experimentalResultBytes?: ResultByteDeclaration;
+    maxResultBytes?: ResultByteDeclaration;
+    experimentalMaxResultBytes?: ResultByteDeclaration;
+    maxReservedResultBytes?: number;
+    experimentalMaxReservedResultBytes?: number;
+  } = {},
 ): PjsRangeStream<Output> {
   let capacity: number;
   let resultByteDeclaration:
@@ -75,32 +80,38 @@ export function streamRange<Input, Output>(
         submission.workerCount,
       1,
     );
-    const hasExact = 'experimentalResultBytes' in options;
-    const hasMaximum = 'experimentalMaxResultBytes' in options;
+    const exactName = optionSpelling(
+      options,
+      'resultBytes',
+      'experimentalResultBytes',
+    );
+    const maximumName = optionSpelling(
+      options,
+      'maxResultBytes',
+      'experimentalMaxResultBytes',
+    );
+    const hasExact = exactName !== undefined;
+    const hasMaximum = maximumName !== undefined;
     if (hasExact && hasMaximum)
       throw new TypeError(
         'Exact and upper-bound result declarations are mutually exclusive',
       );
     const hasDeclaration = hasExact || hasMaximum;
-    const hasByteCapacity = 'experimentalMaxReservedResultBytes' in options;
+    const capacityName = optionSpelling(
+      options,
+      'maxReservedResultBytes',
+      'experimentalMaxReservedResultBytes',
+    );
+    const hasByteCapacity = capacityName !== undefined;
     if (hasDeclaration !== hasByteCapacity)
       throw new TypeError(
-        'One result-byte declaration and experimentalMaxReservedResultBytes must be provided together',
+        'One result-byte declaration and maxReservedResultBytes must be provided together',
       );
     if (hasDeclaration && hasByteCapacity) {
       resultByteMode = hasMaximum ? 'upper-bound' : 'exact';
-      const declarationName = hasMaximum
-        ? 'experimentalMaxResultBytes'
-        : 'experimentalResultBytes';
-      resultByteDeclaration = hasMaximum
-        ? (options as UpperBoundBinaryStreamRangeOptions)
-            .experimentalMaxResultBytes
-        : (options as BinaryStreamRangeOptions).experimentalResultBytes;
-      resultByteCapacity = integer(
-        'experimentalMaxReservedResultBytes',
-        options.experimentalMaxReservedResultBytes,
-        0,
-      );
+      const declarationName = maximumName ?? exactName!;
+      resultByteDeclaration = options[declarationName];
+      resultByteCapacity = integer(capacityName, options[capacityName]!, 0);
       if (typeof resultByteDeclaration === 'number') {
         try {
           integer(declarationName, resultByteDeclaration, 0);
@@ -119,8 +130,11 @@ export function streamRange<Input, Output>(
     submission.rejectedOptions();
     if (
       'experimentalResultBytes' in options ||
+      'resultBytes' in options ||
       'experimentalMaxResultBytes' in options ||
-      'experimentalMaxReservedResultBytes' in options
+      'maxResultBytes' in options ||
+      'experimentalMaxReservedResultBytes' in options ||
+      'maxReservedResultBytes' in options
     )
       submission.rejectedResultBytes();
     const failed = new RangeStream<Output>(1);
