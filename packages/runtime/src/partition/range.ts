@@ -22,7 +22,8 @@ export interface PartitionInput<Input> {
 export type PartitionOptions = {
   /** Physical execution leases are unsupported for range and batch operations. */
   executionLease?: never;
-  cancellation?: never;
+  /** Default settle; terminate stops active batches on parent abort/timeout/cleanup. */
+  cancellation?: 'settle' | 'terminate';
   repeatable?: never;
   retry?: never;
   fallback?: never;

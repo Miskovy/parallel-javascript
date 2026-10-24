@@ -74,7 +74,8 @@ export function assertOwners(runtime, { quiescent = false } = {}) {
   assert.equal(runtime.stats().workers.busy, physical.length);
   assert.ok(
     workers.length <=
-      runtimeComponents(runtime).dispatcher.pool.options.workers,
+      (runtimeComponents(runtime).dispatcher.pool.options.maxWorkers ??
+        runtimeComponents(runtime).dispatcher.pool.options.workers),
   );
   const credits = runtimeComponents(runtime).resultCredits;
   for (const correlation of credits.executions.keys())

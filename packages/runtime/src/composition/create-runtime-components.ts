@@ -12,8 +12,16 @@ import { snapshotRegistry } from '../tasks/registry.js';
 /** Passive constructors store callbacks; operational callbacks begin only at start. */
 export function createRuntimeComponents(options: PjsRuntimeOptions) {
   const resultCredits = new ResultCreditManager();
-  const { workers, startupTimeout, maxRestarts, restartPolicy } =
-    normalizeRuntimeOptions(options);
+  const {
+    workers,
+    minimum,
+    maximum,
+    idleTimeout,
+    resourceLimits,
+    startupTimeout,
+    maxRestarts,
+    restartPolicy,
+  } = normalizeRuntimeOptions(options);
   const registry = snapshotRegistry(options.registry);
   const dispatcher: ExecutionDispatcher = new ExecutionDispatcher(
     {
@@ -21,6 +29,10 @@ export function createRuntimeComponents(options: PjsRuntimeOptions) {
       maxQueue: options.maxQueue ?? 1024,
       startupTimeout,
       maxRestarts,
+      ...(idleTimeout === undefined
+        ? {}
+        : { idleTimeout, minWorkers: minimum, maxWorkers: maximum }),
+      ...(resourceLimits ? { resourceLimits } : {}),
       ...(restartPolicy ? { restartPolicy } : {}),
     },
     [...registry.values()],
@@ -64,8 +76,12 @@ export function createRuntimeComponents(options: PjsRuntimeOptions) {
   );
   const rangeCoordinator: RangeCoordinator = new RangeCoordinator(
     registry,
-    workers,
-    Math.min(Number.MAX_SAFE_INTEGER, workers + dispatcher.queueCapacity),
+    idleTimeout === undefined ? workers : maximum,
+    Math.min(
+      Number.MAX_SAFE_INTEGER,
+      (idleTimeout === undefined ? workers : maximum) +
+        dispatcher.queueCapacity,
+    ),
     dispatcher,
     taskCoordinator,
     resultCredits,
@@ -90,7 +106,7 @@ export function createRuntimeComponents(options: PjsRuntimeOptions) {
   );
 
   const streamRange: StreamRangeSubmission = {
-    workerCount: workers,
+    workerCount: idleTimeout === undefined ? workers : maximum,
     start: rangeCoordinator.start.bind(rangeCoordinator),
     rejectedOptions: () => rangeCoordinator.rejectStreamOptions(),
     rejectedResultBytes: () => resultCredits.recordRejected(),

@@ -23,6 +23,7 @@ export type {
 
 /** Host-owned state only. No worker slot and no preallocated child Promise list. */
 export class RangeOperation extends AsyncResource {
+  cancellation: 'settle' | 'terminate' = 'settle';
   status: OperationStatus = 'created';
   generated = 0;
   admitted = 0;

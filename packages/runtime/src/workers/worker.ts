@@ -10,7 +10,7 @@ import {
   internalProfilingEnabled,
   recordInternalProfile,
 } from '../telemetry/profile.js';
-import type { WorkerState } from '../types/index.js';
+import type { WorkerResourceLimits, WorkerState } from '../types/index.js';
 import { isWorkerMessage } from './protocol.js';
 import type {
   BatchInput,
@@ -62,6 +62,7 @@ export class PjsWorker {
     tasks: TaskDescriptor[],
     startupTimeout: number,
     private readonly callbacks: WorkerCallbacks,
+    resourceLimits?: WorkerResourceLimits,
   ) {
     this.ready = new Promise((resolve, reject) => {
       this.resolveReady = resolve;
@@ -71,6 +72,7 @@ export class PjsWorker {
     void this.ready.catch(() => {});
     this.thread = new Worker(new URL('./bootstrap.js', import.meta.url), {
       workerData: { version: 2, tasks } satisfies BootstrapData,
+      ...(resourceLimits ? { resourceLimits: { ...resourceLimits } } : {}),
     });
     this.state = {
       id,

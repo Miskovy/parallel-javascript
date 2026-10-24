@@ -152,15 +152,17 @@ export class RangeCoordinator implements TaskParentPort {
     let timeout: number | undefined;
     let signal: AbortSignal | undefined;
     let dispatchBatchSize: number;
+    let cancellation: 'settle' | 'terminate' | undefined;
     let outputs: unknown[] | PjsTypedArray | undefined;
     try {
-      ({ plan, timeout, signal, dispatchBatchSize } = validateRangeRequest(
-        range,
-        createInput,
-        options,
-        resultMode,
-        mapOutputConstructor,
-      ));
+      ({ plan, timeout, signal, cancellation, dispatchBatchSize } =
+        validateRangeRequest(
+          range,
+          createInput,
+          options,
+          resultMode,
+          mapOutputConstructor,
+        ));
     } catch (error) {
       return reject(error as Error);
     }
@@ -225,6 +227,7 @@ export class RangeCoordinator implements TaskParentPort {
         resolve,
         reject,
       );
+      operation.cancellation = cancellation ?? 'settle';
       operation.status = 'running';
       this.operations.set(id, operation);
       this.operationMetrics.accepted++;
@@ -675,8 +678,15 @@ export class RangeCoordinator implements TaskParentPort {
       this.operationTypeMetrics[kind][status]++;
     }
     // Set terminal state before cancelling siblings; their settlement is reentrant.
+    const terminations = new Set<string>();
     for (const id of operation.children.keys()) {
       const task = this.tasks.get(id);
+      if (
+        task &&
+        operation.cancellation === 'terminate' &&
+        status !== 'completed'
+      )
+        terminations.add(task.batchLeaderId ?? task.executionId ?? task.id);
       if (task)
         this.tasks.settle(
           task,
@@ -694,6 +704,8 @@ export class RangeCoordinator implements TaskParentPort {
           ),
         );
     }
+    for (const correlationId of terminations)
+      this.dispatcher.terminateExecution(correlationId);
     operation.pendingResultDeclaration = undefined;
     this.resultCredits.cancelOperation(operation);
     const outputs = operation.outputs;

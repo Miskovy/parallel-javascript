@@ -24,6 +24,7 @@ import type {
   RunOptions,
   RecoveryCause,
   RetryOptions,
+  WorkerResourceLimits,
   RestartPolicy,
   ShutdownOptions,
 } from '../dist/index.js';
@@ -1041,6 +1042,54 @@ runtime.partitionRange(task, range, () => ({ input: data }), {
   retry: resilienceRetry,
 });
 runtime.parallelFor(task, range, () => ({ input: data }), {
-  // @ts-expect-error Physical cancellation is ordinary run only.
   cancellation: 'terminate',
+});
+
+const checkpointLimits: WorkerResourceLimits = {
+  maxOldGenerationSizeMb: 64,
+  maxYoungGenerationSizeMb: 8,
+  codeRangeSizeMb: 16,
+  stackSizeMb: 2,
+};
+void new PjsRuntime({
+  registry,
+  minWorkers: 1,
+  maxWorkers: 4,
+  idleTimeout: 1000,
+  resourceLimits: checkpointLimits,
+});
+void runtime.partitionRange(task, range, () => ({ input: data }), {
+  cancellation: 'terminate',
+});
+void runtime.parallelMapRange(task, range, () => ({ input: data }), {
+  outputConstructor: Uint8Array,
+  cancellation: 'terminate',
+});
+void runtime.streamRange(task, range, () => ({ input: data }), {
+  cancellation: 'terminate',
+  resultBytes: 8,
+  maxReservedResultBytes: 32,
+});
+void new PjsRuntime({
+  registry,
+  // @ts-expect-error Idle timeout uses integer milliseconds, not a string policy.
+  idleTimeout: '1s',
+});
+void new PjsRuntime({
+  registry,
+  resourceLimits: {
+    // @ts-expect-error Resource limits do not expose a total RSS cap.
+    rss: 128,
+  },
+});
+void new PjsRuntime({
+  registry,
+  resourceLimits: {
+    // @ts-expect-error Node engine limits use numbers in MiB.
+    stackSizeMb: '2MB',
+  },
+});
+void runtime.parallelFor(task, range, () => ({ input: data }), {
+  // @ts-expect-error Range retries remain unsupported.
+  retry: resilienceRetry,
 });

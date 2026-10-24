@@ -76,6 +76,7 @@ test('construction preserves getter/snapshot/start order and starts the complete
       'minWorkers',
       'maxWorkers',
       'workers',
+      'idleTimeout',
       'startupTimeout',
       'maxRestarts',
       'restartPolicy',
@@ -84,6 +85,7 @@ test('construction preserves getter/snapshot/start order and starts the complete
       'policy.maxRestarts',
       'restartPolicy',
       'policy.windowMs',
+      'resourceLimits',
       'registry',
       'maxQueue',
       'start',
@@ -464,7 +466,6 @@ test('range validation retains getter order before state rejection and never inv
     assert.deepEqual(events, [
       ...prefix,
       'has:executionLease',
-      'has:cancellation',
       'has:repeatable',
       'has:retry',
       'has:fallback',
@@ -473,6 +474,7 @@ test('range validation retains getter order before state rejection and never inv
       'range.grainSize',
       'get:timeout',
       'get:signal',
+      'get:cancellation',
       'has:dispatchBatchSize',
       'has:experimentalDispatchBatchSize',
     ]);

@@ -1,5 +1,13 @@
 import type { PjsTask } from '../tasks/registry.js';
 
+/** Node JS-engine limits in MiB; excludes ArrayBuffers, native allocations and RSS. */
+export interface WorkerResourceLimits {
+  maxOldGenerationSizeMb?: number;
+  maxYoungGenerationSizeMb?: number;
+  codeRangeSizeMb?: number;
+  stackSizeMb?: number;
+}
+
 export type RuntimeState =
   'created' | 'starting' | 'running' | 'stopping' | 'stopped' | 'failed';
 export type WorkerStatus = 'starting' | 'idle' | 'busy' | 'stopped' | 'failed';

@@ -4,7 +4,11 @@ import { PjsScheduler } from '../scheduler/fifo.js';
 import type { PendingTask } from '../tasks/task.js';
 import { internalProfilingEnabled } from '../telemetry/profile.js';
 import type { TaskDescriptor } from '../tasks/registry.js';
-import type { RestartPolicy, WorkerState } from '../types/index.js';
+import type {
+  RestartPolicy,
+  WorkerResourceLimits,
+  WorkerState,
+} from '../types/index.js';
 import type { ExecutionResultMessage } from '../workers/protocol.js';
 import type { PjsWorker, WorkerFailureReason } from '../workers/worker.js';
 import type { ResultCreditManager } from '../results/credit.js';
@@ -15,6 +19,10 @@ export interface ExecutionDispatcherOptions {
   startupTimeout: number;
   maxRestarts: number;
   restartPolicy?: RestartPolicy;
+  minWorkers?: number;
+  maxWorkers?: number;
+  idleTimeout?: number;
+  resourceLimits?: WorkerResourceLimits;
 }
 
 export interface ExecutionDispatcherCallbacks {
@@ -84,6 +92,18 @@ export class ExecutionDispatcher {
         workers: options.workers,
         startupTimeout: options.startupTimeout,
         maxRestarts: options.maxRestarts,
+        ...(options.minWorkers === undefined
+          ? {}
+          : { minWorkers: options.minWorkers }),
+        ...(options.maxWorkers === undefined
+          ? {}
+          : { maxWorkers: options.maxWorkers }),
+        ...(options.idleTimeout === undefined
+          ? {}
+          : { idleTimeout: options.idleTimeout }),
+        ...(options.resourceLimits
+          ? { resourceLimits: options.resourceLimits }
+          : {}),
         ...(options.restartPolicy
           ? { restartPolicy: options.restartPolicy }
           : {}),
@@ -249,7 +269,11 @@ export class ExecutionDispatcher {
       this.scheduler.capacity -
       this.scheduler.size -
       this.admissionReservations;
-    if (!worker && queueCapacity <= 0) return undefined;
+    if (!worker && queueCapacity <= 0) {
+      // A lazy accepted range is outstanding demand even with no queue slots.
+      if (maximum > 0) this.updateDemand(1);
+      return undefined;
+    }
     const capacity = worker ? maximum : Math.min(maximum, queueCapacity);
     if (capacity < 1) return undefined;
     if (worker) this.reservedWorkers.add(worker.id);
@@ -284,6 +308,7 @@ export class ExecutionDispatcher {
 
   dispatchQueued(dispatchAllowed: () => boolean): void {
     this.moveRecoveriesToQueue();
+    this.updateDemand();
     for (const worker of this.unreservedIdleWorkers()) {
       while (dispatchAllowed() && worker.status === 'idle') {
         const task = this.scheduler.next(worker.snapshot());
@@ -301,6 +326,23 @@ export class ExecutionDispatcher {
         }
       }
     }
+    this.updateDemand();
+  }
+
+  private updateDemand(productionDemand = 0): void {
+    const slots = [...this.recoveries.values()].filter(
+      (entry) => entry.kind === 'slot',
+    ).length;
+    const protectedWorkers = new Set(this.reservedWorkers);
+    for (const worker of this.unreservedIdleWorkers().slice(0, slots))
+      protectedWorkers.add(worker.id);
+    this.pool.setDemand(
+      this.pool.busy +
+        this.reservedWorkers.size +
+        slots +
+        Math.max(this.scheduler.dispatchCount, productionDemand),
+      protectedWorkers,
+    );
   }
 
   snapshot() {

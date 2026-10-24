@@ -76,6 +76,13 @@ credit split; internal research diagnostics must not be presented as exported st
 
 ## Recovery observations
 
+With opt-in elasticity, `workers.total/idle/starting` change as the pool grows and
+retires excess idle workers. Retirement holds a population slot until exit; it
+does not increment crash/restart counters or worker replacement spawns. Failure
+replacement spawns are still recorded when actually needed. Physically idle
+workers can remain protected by recovery reservations. Memory-limit failures use
+normal worker failure counters; these diagnostics do not measure or cap RSS.
+
 With opt-in recovery, `tasks` still counts one accepted caller and one final outcome.
 Physical dispatch and worker outcome counters count each attempt, so they may exceed
 caller totals. `activeTasks[].id/taskName` retain the logical origin; `attempt`,

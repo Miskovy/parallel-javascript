@@ -34,7 +34,7 @@ export function validateRangeRequest(
     throw new TypeError(
       'executionLease is unsupported for range and batch operations',
     );
-  for (const name of ['cancellation', 'repeatable', 'retry', 'fallback'])
+  for (const name of ['repeatable', 'retry', 'fallback'])
     if (name in options)
       throw new TypeError(
         `${name} requires an exclusive ordinary run() dispatch`,
@@ -49,6 +49,13 @@ export function validateRangeRequest(
     throw new TypeError('createInput must be a synchronous function');
   const timeout = options.timeout;
   const signal = options.signal;
+  const cancellation = options.cancellation;
+  if (
+    cancellation !== undefined &&
+    cancellation !== 'settle' &&
+    cancellation !== 'terminate'
+  )
+    throw new TypeError('cancellation must be settle or terminate');
   const batchName = optionSpelling(
     options,
     'dispatchBatchSize',
@@ -69,5 +76,5 @@ export function validateRangeRequest(
     throw new TypeError(
       'experimentalOutputConstructor must be a built-in typed-array constructor',
     );
-  return { plan, timeout, signal, dispatchBatchSize };
+  return { plan, timeout, signal, cancellation, dispatchBatchSize };
 }

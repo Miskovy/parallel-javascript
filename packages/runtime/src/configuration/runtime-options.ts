@@ -1,13 +1,17 @@
 import { availableParallelism } from 'node:os';
 import { integer } from '../internal/integer.js';
 import type { PjsTaskRegistry } from '../tasks/registry.js';
-import type { RestartPolicy } from '../types/index.js';
+import type { RestartPolicy, WorkerResourceLimits } from '../types/index.js';
 
 export interface PjsRuntimeOptions {
   registry: PjsTaskRegistry;
   workers?: number;
   minWorkers?: number;
   maxWorkers?: number;
+  /** Opt into elasticity; retire excess idle workers after these milliseconds. */
+  idleTimeout?: number;
+  /** Copied JS-engine limits, applied to every initial, grown and replacement worker. */
+  resourceLimits?: WorkerResourceLimits;
   maxQueue?: number;
   startupTimeout?: number;
   /** Lifetime recovery decision budget without restartPolicy; defaults to workers * 4. Zero is valid. */
@@ -30,13 +34,21 @@ export function normalizeRuntimeOptions(options: PjsRuntimeOptions) {
       Math.max(minimum, options.workers ?? availableParallelism()),
     minimum,
   );
-  const workers = integer(
+  const configuredWorkers = options.workers;
+  const selectedWorkers = integer(
     'workers',
-    options.workers ??
+    configuredWorkers ??
       Math.max(minimum, Math.min(maximum, availableParallelism())),
     minimum,
     maximum,
   );
+  const idleTimeout = options.idleTimeout;
+  if (idleTimeout !== undefined)
+    integer('idleTimeout', idleTimeout, 1, 2 ** 31 - 1);
+  const workers =
+    idleTimeout !== undefined && configuredWorkers === undefined
+      ? minimum
+      : selectedWorkers;
   const startupTimeout = integer(
     'startupTimeout',
     options.startupTimeout ?? 30_000,
@@ -67,8 +79,38 @@ export function normalizeRuntimeOptions(options: PjsRuntimeOptions) {
       ),
     };
   }
+  let resourceLimits: WorkerResourceLimits | undefined;
+  const limits = options.resourceLimits;
+  if (limits !== undefined) {
+    if (limits === null || typeof limits !== 'object' || Array.isArray(limits))
+      throw new TypeError('resourceLimits must be an object');
+    const names = [
+      'maxOldGenerationSizeMb',
+      'maxYoungGenerationSizeMb',
+      'codeRangeSizeMb',
+      'stackSizeMb',
+    ] as const;
+    for (const key of Object.keys(limits))
+      if (!(names as readonly string[]).includes(key))
+        throw new TypeError(`Unsupported worker resource limit: ${key}`);
+    resourceLimits = {};
+    for (const key of names) {
+      const value = limits[key];
+      if (value === undefined) continue;
+      if (!Number.isFinite(value) || value <= 0 || value > 2 ** 31 - 1)
+        throw new RangeError(
+          `resourceLimits.${key} must be a positive finite number at most 2147483647`,
+        );
+      resourceLimits[key] = value;
+    }
+    Object.freeze(resourceLimits);
+  }
   return {
     workers,
+    minimum,
+    maximum,
+    ...(idleTimeout === undefined ? {} : { idleTimeout }),
+    ...(resourceLimits ? { resourceLimits } : {}),
     startupTimeout,
     maxRestarts,
     ...(restartPolicy ? { restartPolicy } : {}),

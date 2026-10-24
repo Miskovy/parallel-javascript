@@ -21,6 +21,10 @@ export class PjsScheduler<T extends ScheduledTask> implements Scheduler<T> {
   get size(): number {
     return this.queuedWeight;
   }
+  /** Number of physical dispatch entries, distinct from weighted logical credit. */
+  get dispatchCount(): number {
+    return this.queue.size;
+  }
   enqueue(task: T): void {
     const weight = task.admissionWeight ?? 1;
     if (!Number.isSafeInteger(weight) || weight < 1)

@@ -65,6 +65,13 @@ See [shared-input.mjs](../../examples/shared-input.mjs) and the detailed histori
 
 ## Result ownership and credits
 
+Runtime `resourceLimits` constrain selected Node JS-engine heaps/code/stack for
+every worker, including grown/replacement workers. They exclude ArrayBuffers,
+SharedArrayBuffers, native allocations, consumer-retained values and total RSS.
+Limit-triggered exits follow normal worker failure/recovery; shared writes remain
+partial and transferred input remains detached. Global process OOM can still abort
+the process. See [the configuration contract](core-api.md#elastic-workers-and-resource-limits-development).
+
 ```text
 worker-owned output → posting → PJS buffered result → yield → consumer-owned value
           reserved credit ──────────────────────────┘ release

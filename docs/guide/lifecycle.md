@@ -19,7 +19,7 @@ worker:                     occupied ─────────────→ 
 
 **Cancellation or timeout can reject the caller while the worker remains busy.**
 Default cancellation/timeout does not interrupt synchronous JS/native code or provide
-cooperative polling. Ordinary `run({ cancellation: 'terminate' })` requests targeted
+cooperative polling. `run()` and all four range APIs with `cancellation: 'terminate'` request targeted
 worker termination on signal abort or call timeout; the independent physical lease
 also initiates containment. Queued/waiting cancellation removes only that caller's
 work and admission claims. Abort during posting defers targeted termination until
@@ -28,6 +28,12 @@ An eventual late result is discarded, without a second settlement. The worker
 slot is reusable only after execution returns or the worker ends. Side effects
 and completed shared writes are not undone. A posted batch can finish all its
 items after cancellation; queued batches can be removed.
+
+With range termination enabled, parent cleanup targets distinct batch correlations
+before any worker is reused. Fail-fast sibling cancellation and stream `return()`/
+`throw()` use that same policy. Batches only contain children of one parent, so
+unrelated operations are not interrupted. Credit and physical occupancy end only
+on validated final completion or confirmed exit; no range retry is attempted.
 
 | Event                           | Caller/parent                               | Queue / physical work / credit                                                                   |
 | ------------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------ |

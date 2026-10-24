@@ -129,7 +129,7 @@ The pool has no queue knowledge. Future policies can use task metadata and worke
 
 Runtime: `created → starting → running → stopping → stopped`. Fatal infrastructure errors lead to `failed`; resources are stopped automatically, and an awaited shutdown finishes in `stopped`. Readiness means every initial worker imported every registered export, not merely that OS threads were launched. Startup can accept bounded work, but normal dispatch waits for readiness. Graceful shutdown during startup may dispatch as workers become ready while the remaining workers start.
 
-Pool: `created → active → stopping → stopped`. A fixed population is selected within min/max bounds at construction. Workers persist until shutdown or failure. There is no idle shrinking, per-task spawning, or hidden nested pool.
+Pool: `created → active → stopping → stopped`. By default a fixed population is selected within construction bounds. A defined idleTimeout opts into demand-driven growth up to maxWorkers and idle retirement down to minWorkers, starting at the minimum unless workers is explicit. Running/claimed slots cannot be retired. Retiring threads count toward the maximum until exit; fixed-pool behavior is unchanged when idleTimeout is omitted.
 
 Worker: `starting → idle ↔ busy`; crash/protocol/bootstrap error → `failed`; termination request → `stopped`. Status is separate from physical occupancy: a failed/stopped worker retains its current physical correlation until confirmed exit. `workers.busy` counts occupied correlations, including those awaiting termination. Replacement has a fresh monotonically increasing runtime worker ID and a Node thread ID. The old thread exits before the new one is spawned. An error followed by an exit counts as one failure. Historical worker objects are discarded on replacement; lifetime failure counters remain.
 
@@ -169,6 +169,26 @@ Timeouts start at acceptance, include queue delay, and use Node timers with inte
 
 ## Ordinary execution resilience
 
+Range physical cancellation belongs to `RangeCoordinator`: after recording terminal
+parent state, collect/deduplicate child batch correlations, cancel child callers and
+request containment for only those correlations. Reentrant posting uses the existing
+dispatcher termination intent; result-credit ownership still ends at validated final
+completion or confirmed exit. Consumer stream cleanup and fail-fast siblings follow
+the parent's mode. No range retries are added.
+
+Elasticity remains split by ownership. `ExecutionDispatcher` supplies physical FIFO
+demand, retained recovery slots and protected idle-worker claims; `PjsPool` owns
+creation, monotonic idle timers and retirement promises. Lazy range producers can
+request capacity without eager inputs, including with zero queue slots. Retirement
+and cancellation do not charge crash budgets; unexpected/bootstrap failures keep
+their existing failure/fatal paths. All live/terminating threads remain within the
+configured maximum. Forced shutdown clears timers and blocks spawning.
+
+`WorkerResourceLimits` is a portable configuration shape. Validation/snapshotting
+lives in configuration, while only `workers/worker.ts` maps it into Node's Worker
+constructor options. Initial, grown and replacement workers share that path. FIFO
+logic remains free of Node transport APIs; no browser backend is implemented here.
+
 Ordinary execution resilience reuses the existing owners. `TaskCoordinator` owns
 one logical caller, retained replay input, attempt correlation lookup, original
 deadline and at most one backoff timer. It selects bounded retries and one registered
@@ -184,7 +204,7 @@ it for a queue credit. Runnable FIFO entries receive reserved slots first, freei
 queue credit for recovery; zero-queue recovery retains its slot through replacement
 and backoff. Waiting recovery remains bounded by worker/queue capacity. Neither
 fallback nor retry creates a new caller, bypasses global pool failure, or replays
-input transfers. Range/batch operations reject these controls. See the
+input transfers. Range/batch operations reject retry and fallback; range cancellation supports the same explicit termination policy. See the
 [approved design](proposals/execution-resilience.md) and
 [run guide](guide/core-api.md#ordinary-execution-resilience-development).
 
@@ -194,7 +214,7 @@ input transfers. Range/batch operations reject these controls. See the
 
 Parents follow `created → running → completed | failed | cancelled | timed_out`, with running including startup/capacity waiting. Parents occupy no worker or FIFO slot. At most `min(MAX_SAFE_INTEGER, workers + maxQueue)` parent records are accepted. Batch size 1 retains the v0.4 worker-count live-child window. A configured batch size `B` permits at most `workers × B` live logical children for that parent, while the FIFO counts each queued batch by its logical weight. Thus waiting logical work remains at most `maxQueue`; physical queue nodes may be fewer. Production stages at most `B` descriptors per physical dispatch and at most worker-count physical batches per synchronous turn. It never materializes a whole range.
 
-One physical batch contains only children from the same parent operation and registered task. Its items execute sequentially in one worker. Successes settle by logical task ID and parent outputs remain ordered by partition index. On first item failure, later items do not execute; the parent fails once and other sibling callers are cancelled. A crash is attributed to the batch leader and follows the existing no-retry rule because partial side effects are unknowable. Cancellation removes queued weighted batches but cannot preempt a posted one; the full posted batch finishes unless an item fails.
+One physical batch contains only children from the same parent operation and registered task. Its items execute sequentially in one worker. Successes settle by logical task ID and parent outputs remain ordered by partition index. On first item failure, later items do not execute; the parent fails once and other sibling callers are cancelled. A crash is attributed to the batch leader and follows the existing no-retry rule because partial side effects are unknowable. Cancellation removes queued weighted batches but cannot preempt a posted one; the full posted batch finishes unless an item fails or the parent explicitly enables physical termination.
 
 Input transfer lists are rejected before detachment whenever configured batch size exceeds one. This preserves per-child transfer ownership rather than moving buffers for logical items that may never execute. Shared and cloned inputs batch normally. Output transfer envelopes may be combined in one result message because those buffers are worker-owned. Use batch size one for transfer-owned matrix inputs.
 
@@ -202,7 +222,7 @@ Collecting results are stored by logical index and returned only after every chu
 
 Stream success includes delivery of every result. Consumer close cancels remaining work, while producer failure preserves already-yielded values and discards buffered ones. Streams begin eagerly at API call. Directly buffered ArrayBuffer/SAB/view results contribute visible `byteLength` diagnostics; scalars, arrays, objects, and nested graphs count as unknown without traversal.
 
-v0.9 strict binary streams additionally reserve an exact declared visible byte length before each logical child is admitted. Count and byte credits are independent and per operation. The worker validates live direct ArrayBuffer or ArrayBuffer-backed view output after unwrapping a transfer envelope and before posting success. Shared backing and nested graphs are rejected in this mode. A queued cancellation releases immediately; a posted execution retains its reservation until result, failure, crash, or termination proves execution ended. Physical batches retain one reservation per logical item. The guarantee bounds declared result payloads, not RSS, heap, backing allocation, worker temporaries, inputs, or consumer-owned values. See [ADR 0017](adr/0017-binary-result-reservations.md).
+v0.9 strict binary streams additionally reserve an exact declared visible byte length before each logical child is admitted. Count and byte credits are independent and per operation. The worker validates live direct ArrayBuffer or ArrayBuffer-backed view output after unwrapping a transfer envelope and before posting success. Shared backing and nested graphs are rejected in this mode. A queued cancellation releases immediately; a posted execution retains its reservation until validated final completion or confirmed exit. Physical batches retain one reservation per logical item. The guarantee bounds declared result payloads, not RSS, heap, backing allocation, worker temporaries, inputs, or consumer-owned values. See [ADR 0017](adr/0017-binary-result-reservations.md).
 
 A single deadline covers consumer waiting, and graceful shutdown waits for delivery; an abandoned, unclosed iterator can therefore prevent a draining shutdown from finishing. First failure cancels siblings without freeing occupied workers or their binary reservations. Worker-created range operations reject explicitly; no parent compute slot waits for children. General nested parallelism is unsupported.
 

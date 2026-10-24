@@ -51,6 +51,7 @@ export type {
   ShutdownOptions,
   RuntimeState,
   WorkerState,
+  WorkerResourceLimits,
   WorkerStatus,
   TaskStatus,
   TaskSnapshot,

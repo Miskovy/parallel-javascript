@@ -9,7 +9,7 @@ application keeps its event-loop/I/O plane; PJS supplies a bounded compute plane
 Node application
   ├─ event loop / ordinary asynchronous I/O
   └─ PJS compute plane
-       bounded admission → scheduler / fixed pool → worker isolates → module tasks
+       bounded admission → scheduler / bounded pool → worker isolates → module tasks
 ```
 
 PJS does not discover parallelism in arbitrary JavaScript, capture closures,
@@ -28,7 +28,7 @@ checkout examples are tested against the packed development artifact.
 | API                                                    | Contract                                                                                                                         | Use / evidence / boundary                                                                 |
 | ------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
 | registry.register(id, fileURL, exportName = 'default') | Bind a unique name to a local module function and return an immutable typed identity handle.                                     | All workloads; cannot serialize closures or infer the export's schema                     |
-| new PjsRuntime(options)                                | Snapshot registered tasks and start a fixed worker population with bounded admission.                                            | Runtime/lifecycle tests; min/max are construction bounds, not elasticity                  |
+| new PjsRuntime(options)                                | Snapshot registered tasks and start a bounded worker pool; elasticity is opt-in.                                                 | Runtime/lifecycle tests; idleTimeout opts into runtime min/max bounds                     |
 | ready()                                                | Resolve once initial workers import all registered tasks, or reject startup failure.                                             | Runtime tests; readiness is more than thread creation                                     |
 | run(task, input, options)                              | Execute one registered task through bounded admission and settle its caller independently of physical worker occupancy.          | v0.13 crypto and v0.14 queue controls; no retry by default; bounded opt-in recovery       |
 | partitionRange(task, range, factory, options)          | Lazily divide a numeric range and collect one output per partition in logical order.                                             | v0.4 and v0.12 controls; entire result retained, no result byte cap                       |
@@ -57,7 +57,7 @@ queue getter; later registrations cannot change existing runtimes or replacement
 worker configuration. Internal snapshot access and TaskDescriptor are not root
 exports or supported package subpaths. This pre-v1 removal is absent from RC4.
 
-`registry` is required. `workers` chooses the fixed population; `minWorkers`
+`registry` is required. By default `workers` chooses a fixed population; `minWorkers`
 defaults to 1 and `maxWorkers` to the larger of minimum and explicit workers or
 availableParallelism(). Without explicit workers the available value is clamped
 to those bounds. This is a default, not a sizing recommendation.
@@ -65,6 +65,52 @@ to those bounds. This is a default, not a sizing recommendation.
 30000 ms per worker; `maxRestarts` defaults to four times workers over the
 runtime's lifetime. Integer ranges and invalid-value behavior are in the
 [current option inventory](../research/v1-api-contract-inventory.md).
+
+### Elastic workers and resource limits (development)
+
+Define `idleTimeout` to opt into a dynamic pool, in integer milliseconds from 1
+through 2147483647. Omission retains fixed-pool behavior. With elasticity,
+`minWorkers` and `maxWorkers` bound the running population; omitted `workers` starts
+at the minimum, while an explicit `workers` sets the initial population within
+those bounds. Accepted queued work and lazy range demand grow the pool, counting
+physical batches rather than their logical item weight. Only excess idle workers
+retire after the timeout; running tasks and retained recovery slots are protected.
+Retiring threads keep their population slots until exit, so new growth cannot
+exceed `maxWorkers` while termination is pending.
+
+```ts
+const runtime = new PjsRuntime({
+  registry,
+  minWorkers: 1,
+  maxWorkers: 4,
+  idleTimeout: 1000,
+  resourceLimits: {
+    maxOldGenerationSizeMb: 128,
+    maxYoungGenerationSizeMb: 16,
+    codeRangeSizeMb: 32,
+    stackSizeMb: 4,
+  },
+});
+```
+
+`resourceLimits` is copied and validated at construction. The four optional
+`WorkerResourceLimits` fields accept positive finite numbers up to 2147483647,
+in MiB; fractional values are permitted. Unknown keys reject. Every initial,
+grown and replacement worker receives the same limits. These are
+[Node JS-engine limits](https://nodejs.org/docs/latest-v24.x/api/worker_threads.html#new-workerfilename-options),
+not ArrayBuffer, native-allocation or total RSS caps. Node command-line heap flags
+can override heap limits; very small limits can prevent worker bootstrap.
+Limit-triggered worker failure keeps the normal error, confirmed-exit ownership,
+restart budget and explicitly opted-in retry/fallback behavior.
+
+New ordinary calls still need idle or bounded queue capacity. With `maxQueue: 0`,
+a rejected offer does not trigger speculative growth or hidden admission waits;
+accepted ranges can request additional workers without materializing all inputs.
+Growing workers must bootstrap before dispatch. Elastic stream defaults use
+`maxWorkers` for their count/window capacity. Idle retirement does not charge the
+crash budget; unexpected crashes do, even above the minimum. Forced shutdown
+cancels idle timers and prevents further growth; graceful drain can grow/recover
+to finish accepted work. Retirement recreates module state/caches on later growth.
 
 `run` takes one input and returns a promise of one output. Clone is default;
 optional `transferList` moves input buffers. `signal` and `timeout` affect caller
@@ -75,7 +121,8 @@ submission validation rejects. See [errors](errors.md) and [lifecycle](lifecycle
 ## Ordinary execution resilience (development)
 
 These options are available in development source, not published RC4. They apply
-only to exclusive `run()`; range/map/stream and batch combinations reject them.
+to exclusive `run()`; retry/fallback remain unsupported on ranges and batches.
+Range APIs additionally support the cancellation mode described below.
 
 ```ts
 const result = await runtime.run(primaryTask, input, {
@@ -122,6 +169,24 @@ See [physical containment](lifecycle.md#experimental-physical-execution-leases-r
 for units, unsupported range/batch combinations and recovery limits.
 
 ## Choosing a range result
+
+All four range APIs accept `cancellation: 'settle' | 'terminate'`, default `'settle'`.
+In terminate mode parent abort/timeout, fail-fast sibling cancellation and stream
+consumer close/throw stop that parent's active physical batches. Other operations
+sharing the pool are unaffected. Cancellation during posting waits for successful
+posting before containment; queued input transfers stay attached. Posted transfers
+remain detached, shared side effects may be partial, and binary credits/worker
+occupancy persist until validated completion or confirmed exit. No range retries
+or range fallback are introduced.
+
+```ts
+await runtime.parallelFor(task, range, createInput, {
+  signal: controller.signal,
+  timeout: 5000,
+  cancellation: 'terminate',
+  dispatchBatchSize: 2,
+});
+```
 
 Use a half-open `{ start, end, grainSize }` range with safe integer endpoints and
 positive grain. The synchronous factory runs on the host only as admission

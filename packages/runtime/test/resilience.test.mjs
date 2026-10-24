@@ -782,7 +782,7 @@ test(
       'parallelMapRange',
       'streamRange',
     ])
-      for (const key of ['cancellation', 'repeatable', 'retry', 'fallback']) {
+      for (const key of ['repeatable', 'retry', 'fallback']) {
         const result = runtime[method](
           tasks.echo,
           { start: 0, end: 1, grainSize: 1 },
