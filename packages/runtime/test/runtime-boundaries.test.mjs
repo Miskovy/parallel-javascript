@@ -464,6 +464,10 @@ test('range validation retains getter order before state rejection and never inv
     assert.deepEqual(events, [
       ...prefix,
       'has:executionLease',
+      'has:cancellation',
+      'has:repeatable',
+      'has:retry',
+      'has:fallback',
       'range.start',
       'range.end',
       'range.grainSize',

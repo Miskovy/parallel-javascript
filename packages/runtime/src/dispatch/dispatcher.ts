@@ -6,7 +6,7 @@ import { internalProfilingEnabled } from '../telemetry/profile.js';
 import type { TaskDescriptor } from '../tasks/registry.js';
 import type { RestartPolicy, WorkerState } from '../types/index.js';
 import type { ExecutionResultMessage } from '../workers/protocol.js';
-import type { PjsWorker } from '../workers/worker.js';
+import type { PjsWorker, WorkerFailureReason } from '../workers/worker.js';
 import type { ResultCreditManager } from '../results/credit.js';
 
 export interface ExecutionDispatcherOptions {
@@ -19,6 +19,7 @@ export interface ExecutionDispatcherOptions {
 
 export interface ExecutionDispatcherCallbacks {
   ready(): void;
+  prepareDispatch?(task: PendingTask): boolean;
   scheduled(
     worker: PjsWorker,
     task: PendingTask,
@@ -28,8 +29,8 @@ export interface ExecutionDispatcherCallbacks {
   dispatched(task: PendingTask): void;
   started(worker: PjsWorker, taskId: string): void;
   result(worker: PjsWorker, message: ExecutionResultMessage): void;
-  failed(error: PjsWorkerError): void;
-  exited(): void;
+  failed(error: PjsWorkerError, reason: WorkerFailureReason): void;
+  exited(correlationId?: string): void;
   dispatchFailed(task: PendingTask, error: Error): void;
   fatal(error: PjsWorkerError): void;
 }
@@ -53,6 +54,16 @@ export class ExecutionDispatcher {
   private readonly pool: PjsPool;
   private readonly reservedWorkers = new Set<number>();
   private admissionReservations = 0;
+  // Each continuation owns either a vacated execution slot or one queue credit.
+  private readonly recoveries = new Map<
+    string,
+    {
+      task: PendingTask;
+      kind: 'slot' | 'queue';
+      ready: boolean;
+    }
+  >();
+  private readonly postings = new Map<string, { terminate: boolean }>();
   private readonly metrics = {
     executeMessages: 0,
     resultMessages: 0,
@@ -88,11 +99,12 @@ export class ExecutionDispatcher {
           );
           this.callbacks.result(worker, message);
         },
-        failed: (_worker, error) => this.callbacks.failed(error),
+        failed: (_worker, error, _wasStarting, reason) =>
+          this.callbacks.failed(error, reason),
         exited: (_worker, correlationId) => {
           if (correlationId)
             this.resultCredits.markExecutionEnded(correlationId);
-          this.callbacks.exited();
+          this.callbacks.exited(correlationId);
         },
         fatal: (error) => this.callbacks.fatal(error),
       },
@@ -168,7 +180,57 @@ export class ExecutionDispatcher {
   }
 
   remove(taskId: string): PendingTask | undefined {
+    const recovery = this.recoveries.get(taskId);
+    if (recovery) {
+      this.recoveries.delete(taskId);
+      if (recovery.kind === 'queue') this.admissionReservations--;
+    }
     return this.scheduler.remove(taskId);
+  }
+
+  terminateExecution(correlationId: string): void {
+    const posting = this.postings.get(correlationId);
+    if (posting) posting.terminate = true;
+    else this.pool.terminateExecution(correlationId);
+  }
+
+  /** Called synchronously at physical completion, before capacity is pumped. */
+  retainRecovery(task: PendingTask): void {
+    if (this.recoveries.has(task.id))
+      throw new Error('Duplicate recovery claim');
+    this.recoveries.set(task.id, { task, kind: 'slot', ready: false });
+    this.moveRecoveriesToQueue();
+  }
+
+  readyRecovery(taskId: string): void {
+    const recovery = this.recoveries.get(taskId);
+    if (!recovery) return;
+    recovery.ready = true;
+    if (recovery.kind === 'queue') this.enqueueRecovery(recovery);
+  }
+
+  private enqueueRecovery(recovery: {
+    task: PendingTask;
+    kind: 'slot' | 'queue';
+    ready: boolean;
+  }): void {
+    this.recoveries.delete(recovery.task.id);
+    this.admissionReservations--;
+    this.scheduler.enqueue(recovery.task);
+  }
+
+  private moveRecoveriesToQueue(): void {
+    for (const recovery of this.recoveries.values()) {
+      if (
+        this.scheduler.size + this.admissionReservations >=
+        this.scheduler.capacity
+      )
+        break;
+      if (recovery.kind !== 'slot') continue;
+      recovery.kind = 'queue';
+      this.admissionReservations++;
+      if (recovery.ready) this.enqueueRecovery(recovery);
+    }
   }
 
   availableAdmission(dispatchAllowed: boolean): number {
@@ -205,6 +267,7 @@ export class ExecutionDispatcher {
       if (claim.worker) this.dispatch(claim.worker, leader);
       else {
         this.admissionReservations -= claim.capacity;
+        claim.released = true;
         this.scheduler.enqueue(leader);
       }
     } finally {
@@ -216,16 +279,26 @@ export class ExecutionDispatcher {
     if (claim.released) return;
     claim.released = true;
     if (claim.worker) this.reservedWorkers.delete(claim.worker.id);
-    else if (this.admissionReservations >= claim.capacity)
-      this.admissionReservations -= claim.capacity;
+    else this.admissionReservations -= claim.capacity;
   }
 
   dispatchQueued(dispatchAllowed: () => boolean): void {
-    for (const worker of this.idleWorkers()) {
+    this.moveRecoveriesToQueue();
+    for (const worker of this.unreservedIdleWorkers()) {
       while (dispatchAllowed() && worker.status === 'idle') {
         const task = this.scheduler.next(worker.snapshot());
-        if (!task) break;
-        this.dispatch(worker, task);
+        if (task) {
+          // Give FIFO work the slot, and recovery the credit freed by dequeue.
+          this.moveRecoveriesToQueue();
+          this.dispatch(worker, task);
+        } else {
+          const recovery = [...this.recoveries.values()].find(
+            (entry) => entry.kind === 'slot' && entry.ready,
+          );
+          if (!recovery) break;
+          this.recoveries.delete(recovery.task.id);
+          this.dispatch(worker, recovery.task);
+        }
       }
     }
   }
@@ -240,6 +313,13 @@ export class ExecutionDispatcher {
   }
 
   private idleWorkers(): PjsWorker[] {
+    const slots = [...this.recoveries.values()].filter(
+      (entry) => entry.kind === 'slot',
+    ).length;
+    return this.unreservedIdleWorkers().slice(slots);
+  }
+
+  private unreservedIdleWorkers(): PjsWorker[] {
     const idle = this.pool.idle();
     return this.reservedWorkers.size === 0
       ? idle
@@ -247,7 +327,9 @@ export class ExecutionDispatcher {
   }
 
   private dispatch(worker: PjsWorker, task: PendingTask): void {
+    if (this.callbacks.prepareDispatch?.(task) === false) return;
     const items = task.batch;
+    const executionId = task.executionId ?? task.id;
     const taskIds = items ? items.map((item) => item.id) : [task.id];
     const scheduledAt = Date.now();
     const monotonicNow = performance.now();
@@ -257,20 +339,22 @@ export class ExecutionDispatcher {
           worker,
           item,
           scheduledAt,
-          monotonicNow - item.admittedAt,
+          monotonicNow - (item.attemptQueuedAt ?? item.admittedAt),
         );
     } else
       this.callbacks.scheduled(
         worker,
         task,
         scheduledAt,
-        monotonicNow - task.admittedAt,
+        monotonicNow - (task.attemptQueuedAt ?? task.admittedAt),
       );
+    const posting = { terminate: false };
+    this.postings.set(executionId, posting);
     try {
-      this.resultCredits.markDispatching(task.id, taskIds);
+      this.resultCredits.markDispatching(executionId, taskIds);
       if (items && items.length > 1)
         worker.executeBatch(
-          task.id,
+          executionId,
           task.snapshot.taskName,
           items.map((item) => ({
             taskId: item.id,
@@ -286,8 +370,8 @@ export class ExecutionDispatcher {
         );
       else
         worker.execute(
-          task.id,
-          task.snapshot.taskName,
+          executionId,
+          task.snapshot.implementation ?? task.snapshot.taskName,
           task.input,
           task.transferList,
           Boolean(task.child && internalProfilingEnabled()),
@@ -295,9 +379,10 @@ export class ExecutionDispatcher {
           task.expectedResultBytes,
           task.resultByteContract,
         );
-      this.resultCredits.markDispatched(task.id, taskIds);
+      this.resultCredits.markDispatched(executionId, taskIds);
       if (task.executionLease !== undefined)
-        worker.armExecutionLease(task.id, task.executionLease);
+        worker.armExecutionLease(executionId, task.executionLease);
+      if (posting.terminate) this.pool.terminateExecution(executionId);
       this.metrics.executeMessages++;
       this.metrics.logicalTasks += items?.length ?? 1;
       this.metrics.logicalPartitions += items
@@ -307,9 +392,10 @@ export class ExecutionDispatcher {
           : 0;
       if (items && items.length > 1) this.metrics.batchedExecuteMessages++;
     } catch (error) {
-      this.resultCredits.rollbackDispatch(task.id);
+      this.resultCredits.rollbackDispatch(executionId);
       this.callbacks.dispatchFailed(task, error as Error);
     } finally {
+      this.postings.delete(executionId);
       this.callbacks.dispatched(task);
     }
   }

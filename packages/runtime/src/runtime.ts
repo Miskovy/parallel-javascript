@@ -137,7 +137,7 @@ export class PjsRuntime {
   run<Input, Output>(
     task: PjsTask<Input, Output>,
     input: Input,
-    options: RunOptions = {},
+    options: RunOptions<NoInfer<Input>, NoInfer<Output>> = {},
   ): Promise<Output> {
     return adaptRun(this.components.taskCoordinator, task, input, options);
   }

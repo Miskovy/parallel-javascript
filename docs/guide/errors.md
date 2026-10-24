@@ -38,26 +38,37 @@ gain resultByteCapacity, and a capacity error does not gain actualBytes/actualTy
 Readonly declarations do not freeze JavaScript instances. Empty messages and
 optional remote stacks are preserved; worker protocol records remain internal.
 
-| Class                        | Trigger / associated API                                                       | Delivery                                                                | Recovery / retry                                                                                         |
-| ---------------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| PjsError                     | Base error; host range input factory throws or returns malformed payload       | Parent rejection / stream next rejection                                | Fix factory; no blind retry after partial range side effects                                             |
-| PjsTaskError                 | Registered task throws or rejects                                              | run/parent/stream rejection                                             | Worker normally remains usable; retry only with application knowledge of idempotence                     |
-| PjsWorkerError               | Startup/import/protocol failure, worker exit, restart exhaustion               | ready/run/parent/stream rejection                                       | A normal crash may be replaced; fatal state requires a new runtime after correction; no automatic replay |
-| PjsQueueFullError            | Waiting task or parent operation capacity exhausted                            | Submission promise or stream next rejection                             | This offer was not accepted; reduce offers, shed load or use bounded backoff                             |
-| PjsTimeoutError              | Task/parent deadline expires                                                   | Promise / stream next rejection                                         | Physical work may still run; retry can duplicate side effects                                            |
-| PjsCancelledError            | Pre-abort, queued/active abort, sibling cleanup or non-draining shutdown       | Promise / stream next rejection; consumer return itself resolves done   | Treat cancellation as caller settlement, not rollback                                                    |
-| PjsSerializationError        | Invalid/reserved transfer buffer, clone/posting failure                        | transfer() throws synchronously; run/child/output failures reject       | Fix transport; queued input usually remains attached, dispatched ownership is irreversible               |
-| PjsRuntimeStateError         | Runtime not accepting work; range called from worker thread                    | Promise / stream next rejection; ready may reject if stopped in startup | Use a running runtime; nested range execution unsupported                                                |
-| PjsTaskRegistrationError     | Duplicate/empty ID, invalid file URL/export name; unknown handle at submission | register throws synchronously; submission rejects                       | Fix registration before constructing runtime; no retry of unchanged input                                |
-| PjsMapContractError          | Wrong map block kind/length or host assembly failure                           | Parent rejection                                                        | Correct worker block; failure is a workload contract error                                               |
-| PjsBinaryResultContractError | Invalid declaration/callback or nonbinary/shared/detached/wrong-size result    | Stream next rejection                                                   | Fix declaration/output; distinct from worker crash; exact requires equality                              |
-| PjsResultCapacityError       | One declared result exceeds per-stream capacity                                | Stream next rejection                                                   | Increase explicit capacity or reduce grain/bound; runtime never waits for impossible capacity            |
+| Class                        | Trigger / associated API                                                       | Delivery                                                                | Recovery / retry                                                                                                  |
+| ---------------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| PjsError                     | Base error; host range input factory throws or returns malformed payload       | Parent rejection / stream next rejection                                | Fix factory; no blind retry after partial range side effects                                                      |
+| PjsTaskError                 | Registered task throws or rejects                                              | run/parent/stream rejection                                             | Worker normally remains usable; retry only with application knowledge of idempotence                              |
+| PjsWorkerError               | Startup/import/protocol failure, worker exit, restart exhaustion               | ready/run/parent/stream rejection                                       | A normal crash may be replaced; fatal state requires a new runtime; retry requires explicit repetition permission |
+| PjsQueueFullError            | Waiting task or parent operation capacity exhausted                            | Submission promise or stream next rejection                             | This offer was not accepted; reduce offers, shed load or use bounded backoff                                      |
+| PjsTimeoutError              | Task/parent deadline expires                                                   | Promise / stream next rejection                                         | Physical work may still run; retry can duplicate side effects                                                     |
+| PjsCancelledError            | Pre-abort, queued/active abort, sibling cleanup or non-draining shutdown       | Promise / stream next rejection; consumer return itself resolves done   | Treat cancellation as caller settlement, not rollback                                                             |
+| PjsSerializationError        | Invalid/reserved transfer buffer, clone/posting failure                        | transfer() throws synchronously; run/child/output failures reject       | Fix transport; queued input usually remains attached, dispatched ownership is irreversible                        |
+| PjsRuntimeStateError         | Runtime not accepting work; range called from worker thread                    | Promise / stream next rejection; ready may reject if stopped in startup | Use a running runtime; nested range execution unsupported                                                         |
+| PjsTaskRegistrationError     | Duplicate/empty ID, invalid file URL/export name; unknown handle at submission | register throws synchronously; submission rejects                       | Fix registration before constructing runtime; no retry of unchanged input                                         |
+| PjsMapContractError          | Wrong map block kind/length or host assembly failure                           | Parent rejection                                                        | Correct worker block; failure is a workload contract error                                                        |
+| PjsBinaryResultContractError | Invalid declaration/callback or nonbinary/shared/detached/wrong-size result    | Stream next rejection                                                   | Fix declaration/output; distinct from worker crash; exact requires equality                                       |
+| PjsResultCapacityError       | One declared result exceeds per-stream capacity                                | Stream next rejection                                                   | Increase explicit capacity or reduce grain/bound; runtime never waits for impossible capacity                     |
 
 R1 development adds PjsExecutionLeaseError, a PjsWorkerError subclass,
 for a still-pending ordinary run caller when its physical lease expires. It retains
 small task/worker context. Previously settled callers keep their timeout/cancellation
-error. Containment continues without replay, and credits stay held until exit.
+error. Containment continues; credits stay held until exit and only eligible opt-in recovery can repeat work.
 This error is not present in the immutable RC4 publication.
+
+Development execution resilience preserves normal PJS errors when recovery is
+disabled or exhausted. Eligible retries require `repeatable: true`; startup,
+protocol, serialization and fatal pool errors do not become retryable merely by
+being worker-related. Abort/timeout always end recovery with their normal error.
+If the one registered fallback also fails, the caller receives a native
+`AggregateError` with `[lastPrimaryError, fallbackError]`; contained PJS errors
+retain the same logical task ID and each attempt's worker context. Invalid
+policies or missing repetition permission reject with TypeError/RangeError before
+admission. An invalid/identical fallback handle rejects PjsTaskRegistrationError;
+input transfers combined with repetition reject PjsSerializationError.
 
 C1-A/Q exercises the distinct lease-repair termination-rejection path. A pending
 ordinary leased caller receives PjsExecutionLeaseError once; a later failed

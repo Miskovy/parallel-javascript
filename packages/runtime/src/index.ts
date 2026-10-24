@@ -46,6 +46,8 @@ export type { PjsRangeStream, StreamRangeResult } from './partition/stream.js';
 export type {
   RestartPolicy,
   RunOptions,
+  RetryOptions,
+  RecoveryCause,
   ShutdownOptions,
   RuntimeState,
   WorkerState,

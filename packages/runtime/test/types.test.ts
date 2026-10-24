@@ -22,6 +22,8 @@ import type {
   PjsOwnedTypedArray,
   ResultByteDeclaration,
   RunOptions,
+  RecoveryCause,
+  RetryOptions,
   RestartPolicy,
   ShutdownOptions,
 } from '../dist/index.js';
@@ -970,3 +972,75 @@ const c3BadValue13 = { experimentalMaxReservedResultBytes: undefined };
 // @ts-expect-error C3 exclusive presence/mode/required-field contract.
 const c3Bad13: CountOnlyStreamRangeOptions = c3BadValue13;
 void c3Bad13;
+
+const resilienceCause: RecoveryCause = 'worker-crash';
+const resilienceRetry: RetryOptions = {
+  maxAttempts: 3,
+  backoffMs: 100,
+  on: [resilienceCause, 'execution-lease'],
+};
+const alternativeBytes = registry.register<Uint8Array, Uint8Array<ArrayBuffer>>(
+  'alternative-bytes',
+  new URL('./fixture.js', import.meta.url),
+);
+const resilienceOptions: RunOptions<Uint8Array, Uint8Array<ArrayBuffer>> = {
+  repeatable: true,
+  cancellation: 'terminate',
+  retry: resilienceRetry,
+  fallback: { task: alternativeBytes, on: ['task-error'] },
+};
+const resilientBytes: Promise<Uint8Array<ArrayBuffer>> = runtime.run(
+  task,
+  data,
+  resilienceOptions,
+);
+// Existing non-generic options and interface extensions remain accepted.
+interface LegacyRunOptions extends RunOptions {
+  applicationLabel?: string;
+}
+const legacyOptions: LegacyRunOptions = {
+  timeout: 1000,
+  cancellation: 'settle',
+};
+void runtime.run(task, data, legacyOptions);
+void resilientBytes;
+const wrongFallbackInput = registry.register<string, Uint8Array<ArrayBuffer>>(
+  'wrong-fallback-input',
+  new URL('./fixture.js', import.meta.url),
+);
+const wrongFallbackOutput = registry.register<Uint8Array, string>(
+  'wrong-fallback-output',
+  new URL('./fixture.js', import.meta.url),
+);
+runtime.run(task, data, {
+  repeatable: true,
+  // @ts-expect-error Fallback cannot widen the primary input schema.
+  fallback: { task: wrongFallbackInput },
+});
+runtime.run(task, data, {
+  repeatable: true,
+  // @ts-expect-error Fallback cannot widen the primary output schema.
+  fallback: { task: wrongFallbackOutput },
+});
+runtime.run(task, data, {
+  repeatable: true,
+  // @ts-expect-error Host functions are not registered fallback handles.
+  fallback: { task: async () => data },
+});
+runtime.run(task, data, {
+  // @ts-expect-error Cancellation is an explicit closed policy.
+  cancellation: 'cooperate',
+});
+runtime.run(task, data, {
+  repeatable: true,
+  // @ts-expect-error Serialization failures are never recovery causes.
+  retry: { maxAttempts: 2, on: ['serialization'] },
+});
+runtime.partitionRange(task, range, () => ({ input: data }), {
+  // @ts-expect-error Recovery is ordinary run only.
+  retry: resilienceRetry,
+});
+runtime.parallelFor(task, range, () => ({ input: data }), {
+  // @ts-expect-error Physical cancellation is ordinary run only.
+  cancellation: 'terminate',
+});

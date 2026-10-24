@@ -38,6 +38,16 @@ if a task would ordinarily return it. Budget replacements in the application.
 Metadata and enclosing objects still serialize; do not describe the entire task
 path as universally zero-copy.
 
+## Recovery input lifetime
+
+Opt-in retry/fallback retains the original input reference until logical settlement,
+and each attempt clones it again. Do not mutate, resize or externally transfer it
+between attempts. Recovery with a nonempty input transfer list rejects before
+admission when multiple attempts or fallback are configured; detached input cannot
+be reconstructed. Worker output transfers remain supported. Shared input can be
+reused only under an application protocol safe after partial execution; neither
+`repeatable: true` nor worker termination undoes shared writes or repairs locks.
+
 ## Shared readonly input
 
 `sharedReadonly` accepts Uint8Array (including Buffer as an input view), Int32Array,

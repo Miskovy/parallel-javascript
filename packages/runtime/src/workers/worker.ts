@@ -20,11 +20,19 @@ import type {
   UpperBoundResultByteContract,
 } from './protocol.js';
 
+export type WorkerFailureReason =
+  'worker-crash' | 'execution-lease' | 'protocol' | 'bootstrap';
+
 export interface WorkerCallbacks {
   ready(worker: PjsWorker): void;
   started(worker: PjsWorker, taskId: string): void;
   result(worker: PjsWorker, message: ExecutionResultMessage): void;
-  failed(worker: PjsWorker, error: PjsWorkerError, wasStarting: boolean): void;
+  failed(
+    worker: PjsWorker,
+    error: PjsWorkerError,
+    wasStarting: boolean,
+    reason: WorkerFailureReason,
+  ): void;
   exited(worker: PjsWorker, correlationId: string | undefined): void;
   leaseTerminationRequested?(worker: PjsWorker): void;
 }
@@ -81,7 +89,12 @@ export class PjsWorker {
       this.fail('Worker message could not be deserialized', cause),
     );
     this.thread.on('error', (cause: Error) =>
-      this.fail(`Worker error: ${cause.message}`, cause),
+      this.fail(
+        `Worker error: ${cause.message}`,
+        cause,
+        undefined,
+        'worker-crash',
+      ),
     );
     this.thread.on('exit', (code) => this.exited(code));
   }
@@ -316,7 +329,12 @@ export class PjsWorker {
     const correlationId = this.state.currentTaskId;
     // A direct exit reports logical failure before releasing physical ownership.
     if (this.state.status !== 'stopped' && this.state.status !== 'failed')
-      this.fail(`Worker unexpectedly exited with code ${code}`);
+      this.fail(
+        `Worker unexpectedly exited with code ${code}`,
+        undefined,
+        undefined,
+        'worker-crash',
+      );
     delete this.state.currentTaskId;
     this.currentTaskIds = [];
     this.executionPhase = 'none';
@@ -431,6 +449,7 @@ export class PjsWorker {
     message: string,
     cause?: unknown,
     leaseError?: PjsExecutionLeaseError,
+    reason: WorkerFailureReason = 'protocol',
   ): void {
     if (this.state.status === 'failed' || this.state.status === 'stopped')
       return;
@@ -448,6 +467,11 @@ export class PjsWorker {
         cause,
       });
     this.rejectReady(error);
-    this.callbacks.failed(this, error, wasStarting);
+    this.callbacks.failed(
+      this,
+      error,
+      wasStarting,
+      wasStarting ? 'bootstrap' : leaseError ? 'execution-lease' : reason,
+    );
   }
 }

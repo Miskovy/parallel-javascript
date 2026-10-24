@@ -6,7 +6,7 @@ export interface RunSubmission {
   submit<Input, Output>(
     task: PjsTask<Input, Output>,
     input: Input,
-    options: RunOptions,
+    options: RunOptions<NoInfer<Input>, NoInfer<Output>>,
   ): Promise<Output>;
 }
 
@@ -14,7 +14,7 @@ export function run<Input, Output>(
   submission: RunSubmission,
   task: PjsTask<Input, Output>,
   input: Input,
-  options: RunOptions = {},
+  options: RunOptions<NoInfer<Input>, NoInfer<Output>> = {},
 ): Promise<Output> {
   return submission.submit(task, input, options);
 }

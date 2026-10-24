@@ -1,3 +1,5 @@
+import type { PjsTask } from '../tasks/registry.js';
+
 export type RuntimeState =
   'created' | 'starting' | 'running' | 'stopping' | 'stopped' | 'failed';
 export type WorkerStatus = 'starting' | 'idle' | 'busy' | 'stopped' | 'failed';
@@ -6,6 +8,7 @@ export type TaskStatus =
   | 'queued'
   | 'scheduled'
   | 'running'
+  | 'recovering'
   | 'completed'
   | 'failed'
   | 'cancelled'
@@ -24,6 +27,10 @@ export interface WorkerState {
 export interface TaskSnapshot {
   id: string;
   taskName: string;
+  /** Present for opt-in recovery; taskName and id retain logical identity. */
+  attempt?: number;
+  executionId?: string;
+  implementation?: string;
   status: TaskStatus;
   workerId?: number;
   createdAt: number;
@@ -38,7 +45,19 @@ export interface TaskSnapshot {
   rangeEnd?: number;
 }
 
-export interface RunOptions {
+export type RecoveryCause = 'worker-crash' | 'execution-lease' | 'task-error';
+
+export interface RetryOptions {
+  /** Includes the initial primary attempt; positive safe integer. */
+  maxAttempts: number;
+  /** Fixed delay after physical completion, default zero. */
+  backoffMs?: number;
+  /** Defaults to worker-crash. Serialization and admission failures are terminal. */
+  on?: readonly RecoveryCause[];
+}
+
+// A never output keeps legacy non-generic options assignable to every run schema.
+export interface RunOptions<Input = unknown, Output = never> {
   signal?: AbortSignal;
   /** Move these buffers at dispatch. All sender-side views detach on a successful post. */
   transferList?: readonly ArrayBuffer[];
@@ -51,6 +70,16 @@ export interface RunOptions {
    * Expiry requests asynchronous containment; it does not settle an already-settled caller again.
    */
   executionLease?: number;
+  /** Applies to both signal abort and timeout; defaults to settle. */
+  cancellation?: 'settle' | 'terminate';
+  /** Required with retry/fallback: partial and repeated execution must be safe. */
+  repeatable?: true;
+  retry?: RetryOptions;
+  /** One alternative implementation in this runtime's pool; never retried. */
+  fallback?: {
+    task: PjsTask<Input, Output>;
+    on?: readonly RecoveryCause[];
+  };
 }
 
 export interface ShutdownOptions {

@@ -165,7 +165,28 @@ Payload serialization lives in `PjsWorker.execute()` and bootstrap result postin
 
 `maxQueue` bounds waiting task count, not bytes. Accepted work is bounded by queue capacity plus execution slots. Large inputs still require application memory budgeting. Ordinary run() has no admission waiters. Overflow returns `PjsQueueFullError`. During startup, work consumes waiting capacity.
 
-Timeouts start at acceptance, include queue delay, and use Node timers with integer delays from 1 to 2³¹−1 ms. Delivery depends on event-loop progress; deadlines are not hard real-time CPU preemption. Abort before admission rejects without accepting work. Queued cancellation/deadline removes work. Active cancellation/deadline settles the caller but preserves the slot. No task is retried automatically; side effects may already have occurred.
+Timeouts start at acceptance, include queue delay, and use Node timers with integer delays from 1 to 2³¹−1 ms. Delivery depends on event-loop progress; deadlines are not hard real-time CPU preemption. Abort before admission rejects without accepting work. Queued cancellation/deadline removes work. Active cancellation/deadline settles the caller but preserves the slot. No task repeats by default; ordinary retry/fallback requires explicit repetition permission because side effects may already have occurred.
+
+## Ordinary execution resilience
+
+Ordinary execution resilience reuses the existing owners. `TaskCoordinator` owns
+one logical caller, retained replay input, attempt correlation lookup, original
+deadline and at most one backoff timer. It selects bounded retries and one registered
+worker fallback only with explicit `repeatable: true`. `ExecutionDispatcher` routes
+physical correlations separately from logical IDs, preserving protocol v2 and the
+credit owner's transitions. Worker failure reasons distinguish crashes/leases from
+protocol/bootstrap faults. Physical cancellation routes through the pool's existing
+repair promises, exempts intentional retirement from failure budgets, and defers
+termination during posting until ownership is established.
+
+After physical completion, a recovery retains the old admission slot or exchanges
+it for a queue credit. Runnable FIFO entries receive reserved slots first, freeing
+queue credit for recovery; zero-queue recovery retains its slot through replacement
+and backoff. Waiting recovery remains bounded by worker/queue capacity. Neither
+fallback nor retry creates a new caller, bypasses global pool failure, or replays
+input transfers. Range/batch operations reject these controls. See the
+[approved design](proposals/execution-resilience.md) and
+[run guide](guide/core-api.md#ordinary-execution-resilience-development).
 
 ## Range coordinator, result policies, and batching (experimental)
 

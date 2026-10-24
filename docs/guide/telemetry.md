@@ -32,7 +32,7 @@ Pjs-prefixed Stats names. PjsOperationSnapshot retains optional mode fields,
 including optional typedOutput with a string or undefined value. PjsOperationStatus
 retains created/running/completed/failed/cancelled/timed_out; PjsRangeResultMode
 retains collect/discard/stream/map. Existing TaskSnapshot, WorkerState and their
-status types are unchanged. The [canonical inventory](../research/v1-api-contract-inventory.md)
+status types retain their default behavior; recovery-enabled TaskSnapshot additionally exposes attempt, executionId and implementation, with recovering status between attempts. The [canonical inventory](../research/v1-api-contract-inventory.md)
 lists every field's units, owner and lifetime. Mutating a returned copy does not
 change runtime state. Multiple subsystem observations are not an atomic sample.
 
@@ -73,6 +73,22 @@ children's tasks.cancelled. Worker crash/replacement changes current worker deta
 while preserving lifetime failure totals. Aggregate peaks across concurrent streams
 are not one stream's configured cap. There is no public reconciled-versus-unreconciled
 credit split; internal research diagnostics must not be presented as exported stats.
+
+## Recovery observations
+
+With opt-in recovery, `tasks` still counts one accepted caller and one final outcome.
+Physical dispatch and worker outcome counters count each attempt, so they may exceed
+caller totals. `activeTasks[].id/taskName` retain the logical origin; `attempt`,
+`executionId` and `implementation` identify the current physical execution.
+`recovering` includes exit/backoff/replacement/admission waits. Queue timing samples
+each posting attempt; later samples start at the preceding physical completion and
+include backoff. Total timing still covers the whole accepted call.
+
+Queue size counts FIFO weight; delayed recovery queue credits are admission
+reservations and do not appear as FIFO entries. Recovery slot claims may leave
+workers physically idle but unavailable for new admission. Intentional cancellation
+increments replacement spawns when they occur, without incrementing crash/restart
+budget counters. None of these counts implies that result credits cap total RSS.
 
 ## Glossary
 

@@ -1,7 +1,10 @@
 import { PjsExecutionLeaseError, PjsWorkerError } from '../errors/index.js';
 import type { TaskDescriptor } from '../tasks/registry.js';
 import { PjsWorker } from '../workers/worker.js';
-import type { WorkerCallbacks } from '../workers/worker.js';
+import type {
+  WorkerCallbacks,
+  WorkerFailureReason,
+} from '../workers/worker.js';
 import type { RestartPolicy, WorkerState } from '../types/index.js';
 
 export interface PoolOptions {
@@ -11,7 +14,12 @@ export interface PoolOptions {
   restartPolicy?: RestartPolicy;
 }
 interface PoolCallbacks extends Omit<WorkerCallbacks, 'failed'> {
-  failed(worker: PjsWorker, error: PjsWorkerError, wasStarting: boolean): void;
+  failed(
+    worker: PjsWorker,
+    error: PjsWorkerError,
+    wasStarting: boolean,
+    reason: WorkerFailureReason,
+  ): void;
   fatal(error: PjsWorkerError): void;
 }
 
@@ -57,6 +65,22 @@ export class PjsPool {
     return [...this.workers.values()].filter(
       (worker) => worker.hasPhysicalExecution,
     ).length;
+  }
+
+  /** Intentional containment restores capacity without charging a failure budget. */
+  terminateExecution(correlationId: string): void {
+    if (this.state !== 'active') return;
+    for (const worker of this.workers.values()) {
+      if (
+        worker.status !== 'busy' ||
+        worker.snapshot().currentTaskId !== correlationId ||
+        this.handledFailures.has(worker)
+      )
+        continue;
+      this.handledFailures.add(worker);
+      this.repair(worker);
+      return;
+    }
   }
 
   private monotonicNow(): number {
@@ -105,8 +129,8 @@ export class PjsPool {
         ready: (worker) => this.callbacks.ready(worker),
         started: (worker, taskId) => this.callbacks.started(worker, taskId),
         result: (worker, message) => this.callbacks.result(worker, message),
-        failed: (worker, error, wasStarting) =>
-          this.failed(worker, error, wasStarting),
+        failed: (worker, error, wasStarting, reason) =>
+          this.failed(worker, error, wasStarting, reason),
         leaseTerminationRequested: () => this.leaseTerminationRequests++,
         exited: (worker, correlationId) => {
           if (worker.leaseExpired) this.confirmedLeaseExits++;
@@ -121,12 +145,13 @@ export class PjsPool {
     worker: PjsWorker,
     error: PjsWorkerError,
     wasStarting: boolean,
+    reason: WorkerFailureReason,
   ): void {
     if (this.handledFailures.has(worker)) return;
     this.handledFailures.add(worker);
     this.failures++;
     if (error instanceof PjsExecutionLeaseError) this.leaseExpirations++;
-    this.callbacks.failed(worker, error, wasStarting);
+    this.callbacks.failed(worker, error, wasStarting, reason);
     if (this.state !== 'active') return;
     // Bootstrap failures are configuration failures. Never enter an import/respawn loop.
     const policy = this.options.restartPolicy;
@@ -145,6 +170,10 @@ export class PjsPool {
     }
     this.restarts++;
     if (policy) this.restartHistory.push(this.monotonicNow());
+    this.repair(worker);
+  }
+
+  private repair(worker: PjsWorker): void {
     const repair = this.replace(worker);
     this.repairs.add(repair);
     void repair.finally(() => this.repairs.delete(repair));

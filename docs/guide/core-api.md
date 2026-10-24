@@ -17,7 +17,7 @@ replace the event loop, or make a tiny function inherently faster. Start with
 [basic-run.mjs](../../examples/basic-run.mjs) and its
 [task module](../../examples/tasks.mjs). The README's example uses the same files.
 
-This guide describes **integrated development source through C3**, including
+This guide describes **integrated development source**, including execution resilience and
 six new option names with [deprecated aliases](../partitioning.md#c2-development-option-transition).
 Published RC4 has older declarations/spellings and lacks later containment
 controls. The [README quickstart](../../README.md) works with RC4;
@@ -30,7 +30,7 @@ checkout examples are tested against the packed development artifact.
 | registry.register(id, fileURL, exportName = 'default') | Bind a unique name to a local module function and return an immutable typed identity handle.                                     | All workloads; cannot serialize closures or infer the export's schema                     |
 | new PjsRuntime(options)                                | Snapshot registered tasks and start a fixed worker population with bounded admission.                                            | Runtime/lifecycle tests; min/max are construction bounds, not elasticity                  |
 | ready()                                                | Resolve once initial workers import all registered tasks, or reject startup failure.                                             | Runtime tests; readiness is more than thread creation                                     |
-| run(task, input, options)                              | Execute one registered task through bounded admission and settle its caller independently of physical worker occupancy.          | v0.13 crypto and v0.14 queue controls; no automatic retry or hidden admission wait        |
+| run(task, input, options)                              | Execute one registered task through bounded admission and settle its caller independently of physical worker occupancy.          | v0.13 crypto and v0.14 queue controls; no retry by default; bounded opt-in recovery       |
 | partitionRange(task, range, factory, options)          | Lazily divide a numeric range and collect one output per partition in logical order.                                             | v0.4 and v0.12 controls; entire result retained, no result byte cap                       |
 | parallelFor(task, range, factory, options)             | Execute range children and resolve when all succeed, discarding worker return values before serialization.                       | v0.6 and v0.12 controls; writes/side effects cannot be rolled back                        |
 | streamRange(task, range, factory, options)             | Eagerly start a range and deliver identified partition outputs in completion order under count and optional binary-byte credits. | v0.14 pipeline; single consumer, not ordered delivery                                     |
@@ -68,8 +68,52 @@ runtime's lifetime. Integer ranges and invalid-value behavior are in the
 
 `run` takes one input and returns a promise of one output. Clone is default;
 optional `transferList` moves input buffers. `signal` and `timeout` affect caller
-settlement, not preemption. Constructor/registration validation throws; ordinary
+settlement by default; `cancellation: 'terminate'` also stops active execution.
+Constructor/registration validation throws; ordinary
 submission validation rejects. See [errors](errors.md) and [lifecycle](lifecycle.md).
+
+## Ordinary execution resilience (development)
+
+These options are available in development source, not published RC4. They apply
+only to exclusive `run()`; range/map/stream and batch combinations reject them.
+
+```ts
+const result = await runtime.run(primaryTask, input, {
+  signal,
+  timeout: 5000,
+  cancellation: 'terminate',
+  repeatable: true,
+  retry: { maxAttempts: 3, backoffMs: 100, on: ['worker-crash'] },
+  fallback: { task: alternativeTask, on: ['worker-crash', 'task-error'] },
+});
+```
+
+`cancellation` defaults to `'settle'`; `'terminate'` applies to abort and timeout.
+Rejection still precedes confirmed worker exit. Intentional cancellation replaces
+the worker without consuming its failure restart budget; module state/caches are lost.
+
+`retry` and `fallback` require `repeatable: true`, checked before admission. This
+asserts application safety after partial execution; PJS cannot guarantee exactly-once
+side effects. `maxAttempts` is a positive safe integer including the initial primary
+attempt. Fixed `backoffMs` defaults to zero (integer 0–2147483647); `on` defaults to
+`['worker-crash']`. Other explicit causes are `'task-error'` and `'execution-lease'`.
+Serialization, admission, protocol/bootstrap errors, cancellation, timeout and fatal
+runtime failure never trigger recovery. Lease/crash replacements still use pool budgets.
+
+Fallback is one different registered task from the same registry snapshot, defaulting
+to `['task-error']` eligibility. It follows eligible primary retries, uses the same
+input/output schema, and is never retried. It is algorithmic fallback inside the pool;
+it cannot rescue total pool failure or execute a function on the host event loop.
+One signal/deadline covers every attempt, backoff and replacement wait.
+
+Recovery retains bounded slot/queue admission, so an accepted call can recover with
+`workers: 1, maxQueue: 0`; new work rejects while the slot is reserved. Runnable FIFO
+work takes precedence through slot/queue-credit exchanges. Backoff can leave reserved
+capacity idle. Nonempty input transfer lists reject with multiple attempts or fallback;
+keep retained cloned/shared input unchanged through logical settlement. Use generic
+`RunOptions<Input, Output>` for typed fallback options; legacy `RunOptions` annotations
+and interface extensions remain usable without fallback. See
+[lifecycle](lifecycle.md#recovery-and-shutdown) and [ownership](memory-ownership.md).
 
 R1 development adds `run({ executionLease })`,
 constructor `restartPolicy` and graceful `shutdown({ forceAfter })`.

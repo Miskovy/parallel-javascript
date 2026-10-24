@@ -22,6 +22,10 @@ export interface PartitionInput<Input> {
 export type PartitionOptions = {
   /** Physical execution leases are unsupported for range and batch operations. */
   executionLease?: never;
+  cancellation?: never;
+  repeatable?: never;
+  retry?: never;
+  fallback?: never;
   signal?: AbortSignal;
   timeout?: number;
 } & (

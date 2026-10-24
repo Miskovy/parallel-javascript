@@ -27,15 +27,19 @@ export function createRuntimeComponents(options: PjsRuntimeOptions) {
     resultCredits,
     {
       ready: () => controller.pump(),
+      prepareDispatch: (task) => taskCoordinator.prepareDispatch(task),
       scheduled: (worker, task, scheduledAt, queueMs) =>
         taskCoordinator.scheduled(worker, task, scheduledAt, queueMs),
       dispatched: (task) => taskCoordinator.dispatched(task),
       started: (worker, taskId) => taskCoordinator.started(worker, taskId),
       result: (worker, message) => taskCoordinator.result(worker, message),
-      failed: (error) => taskCoordinator.failTask(error),
-      exited: () => controller.pump(),
+      failed: (error, reason) => taskCoordinator.failTask(error, reason),
+      exited: (correlationId) => {
+        if (correlationId) taskCoordinator.exited(correlationId);
+        controller.pump();
+      },
       dispatchFailed: (task, error) =>
-        taskCoordinator.settle(task, 'failed', error),
+        taskCoordinator.dispatchFailed(task, error),
       fatal: (error) => controller.fail(error),
     },
   );

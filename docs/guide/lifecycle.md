@@ -18,7 +18,12 @@ worker:                     occupied ─────────────→ 
 ## Caller settlement is not physical completion
 
 **Cancellation or timeout can reject the caller while the worker remains busy.**
-Caller cancellation/timeout does not interrupt synchronous JS/native code or provide cooperative polling. The separate physical lease initiates worker containment.
+Default cancellation/timeout does not interrupt synchronous JS/native code or provide
+cooperative polling. Ordinary `run({ cancellation: 'terminate' })` requests targeted
+worker termination on signal abort or call timeout; the independent physical lease
+also initiates containment. Queued/waiting cancellation removes only that caller's
+work and admission claims. Abort during posting defers targeted termination until
+the post succeeds, preserving transfer ownership throughout serialization.
 An eventual late result is discarded, without a second settlement. The worker
 slot is reusable only after execution returns or the worker ends. Side effects
 and completed shared writes are not undone. A posted batch can finish all its
@@ -52,7 +57,9 @@ to disable it; zero is invalid. Host event-loop progress is required for deliver
 | startupTimeout                                  | Per initial/replacement worker creation through ready/import completion                                                                                      | Separate from operation deadlines; cannot terminate blocked host code promptly                                                                |
 
 Parent progression also checks elapsed deadlines before delivering/reconciling
-results. Ordinary run uses its host timer. Neither is a hard real-time guarantee.
+results. Ordinary run uses its host timer; recovery-enabled runs additionally check
+their original monotonic deadline before dispatch, continuation and delivery. Neither
+is a hard real-time guarantee.
 
 <a id="experimental-physical-execution-leases-r1-development"></a>
 
@@ -79,7 +86,7 @@ batching support.
 
 Expiry checks the worker, correlation and unique token, fails a pending caller once
 with PjsExecutionLeaseError, then initiates asynchronous termination. A caller that
-already timed out/aborted retains its original outcome. No task is retried. The worker
+already timed out/aborted retains its original outcome. Without an eligible opt-in retry/fallback, no task repeats. The worker
 and binary reservations remain physically occupied until confirmed exit; a stale timer
 cannot affect a later dispatch. Normal validated completion clears the lease.
 
@@ -138,7 +145,7 @@ while buffered results are discarded. See [backpressure](backpressure.md).
 
 An unexpected exit (including exit code zero), protocol violation or uncaught
 worker error fails affected work with PjsWorkerError. A failed range cancels its
-siblings. There is no automatic replay; arbitrary tasks are not known idempotent.
+siblings. There is no replay by default; ordinary retries/fallback require explicit repetition permission.
 While the pool remains active, it waits for the old thread to exit before creating
 a replacement with fresh module globals and worker ID. Unaffected queued work can
 continue. Initial/replacement bootstrap failure is fatal; exhausting the lifetime
@@ -166,6 +173,25 @@ defect in this abnormal-failure interval: binary `streamRange()` reservations
 confirmed exit. R1A repairs that boundary without adding execution leases or
 changing the lifetime restart policy. Security impact has not been established;
 workers continue to execute trusted application modules.
+
+## Recovery and shutdown
+
+Opt-in retries and the single registered-task fallback remain one accepted logical
+call. Each post has a distinct correlation; a failed worker's successor attempt waits
+for confirmed old exit. Caller outcomes count once, even across multiple executions.
+See [the run controls](core-api.md#ordinary-execution-resilience-development).
+
+Backoff/replacement waits retain a bounded queue or execution-slot claim. Graceful
+shutdown permits accepted continuations and waits for them, including with zero queue
+capacity. Forced shutdown, escalation, abort, deadline and fatal runtime failure clear
+recovery waits/claims; no later timer may reenqueue. Intentional cancellation restores
+capacity without charging failure budgets; crash/lease containment retains its existing
+budget. All replacements await old exit, and termination rejection remains fatal.
+
+One call timeout includes all attempts and recovery waits. Neither shared writes nor
+external effects roll back, and a caller rejection does not establish physical
+quiescence. Worker recreation discards module state/caches; cooperative cancellation
+remains outside this implementation.
 
 ## Shutdown
 

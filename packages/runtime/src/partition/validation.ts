@@ -34,6 +34,11 @@ export function validateRangeRequest(
     throw new TypeError(
       'executionLease is unsupported for range and batch operations',
     );
+  for (const name of ['cancellation', 'repeatable', 'retry', 'fallback'])
+    if (name in options)
+      throw new TypeError(
+        `${name} requires an exclusive ordinary run() dispatch`,
+      );
   const plan = planRange(
     range,
     resultMode === 'collect' || resultMode === 'map'
