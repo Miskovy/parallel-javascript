@@ -23,6 +23,8 @@ import type {
   ResultByteDeclaration,
   RunOptions,
   RecoveryCause,
+  RecoveryAttempt,
+  TaskContext,
   RetryOptions,
   WorkerResourceLimits,
   RestartPolicy,
@@ -1038,7 +1040,7 @@ runtime.run(task, data, {
   retry: { maxAttempts: 2, on: ['serialization'] },
 });
 runtime.partitionRange(task, range, () => ({ input: data }), {
-  // @ts-expect-error Recovery is ordinary run only.
+  repeatable: true,
   retry: resilienceRetry,
 });
 runtime.parallelFor(task, range, () => ({ input: data }), {
@@ -1090,6 +1092,70 @@ void new PjsRuntime({
   },
 });
 void runtime.parallelFor(task, range, () => ({ input: data }), {
-  // @ts-expect-error Range retries remain unsupported.
+  repeatable: true,
   retry: resilienceRetry,
 });
+
+// Checkpoint 2: infer reconstruction and fallback from the registered task schema.
+const rebuildOptions: RunOptions<
+  Uint8Array<ArrayBufferLike>,
+  Uint8Array<ArrayBuffer>
+> = {
+  repeatable: true,
+  retry: { maxAttempts: 2 },
+  rebuildInput: (next: RecoveryAttempt) => {
+    const implementation: 'primary' | 'fallback' = next.implementation;
+    void implementation;
+    return { input: data, transferList: [new ArrayBuffer(8)] };
+  },
+};
+runtime.run(task, data, rebuildOptions);
+runtime.run(task, data, {
+  repeatable: true,
+  retry: { maxAttempts: 2 },
+  // @ts-expect-error Reconstruction must return the original input schema.
+  rebuildInput: () => ({ input: 'wrong' }),
+});
+runtime.run(task, data, {
+  repeatable: true,
+  retry: { maxAttempts: 2 },
+  // @ts-expect-error Reconstruction is synchronous.
+  rebuildInput: async () => ({ input: data }),
+});
+runtime.partitionRange(task, range, () => ({ input: data }), {
+  repeatable: true,
+  retry: { maxAttempts: 2 },
+  fallback: { task },
+  rebuildInput: (partition, next) => {
+    const index: number = partition.index;
+    const attempt: number = next.attempt;
+    void index;
+    void attempt;
+    return { input: data };
+  },
+});
+runtime.partitionRange(task, range, () => ({ input: data }), {
+  repeatable: true,
+  // @ts-expect-error A range fallback cannot widen the primary output.
+  fallback: { task: wrongFallbackOutput },
+});
+// @ts-expect-error Typed mapping fallback must return the same block kind.
+runtime.parallelMapRange(task, range, () => ({ input: data }), {
+  outputConstructor: Uint8Array,
+  repeatable: true,
+  fallback: { task: wrongFallbackOutput },
+});
+runtime.streamRange(task, range, () => ({ input: data }), {
+  resultBytes: 8,
+  maxReservedResultBytes: 32,
+  repeatable: true,
+  fallback: { task },
+  rebuildInput: () => ({ input: data }),
+});
+const contextFunction = (input: number, context: TaskContext): number => {
+  context.throwIfCancelled();
+  const signal: AbortSignal = context.signal;
+  void signal;
+  return input;
+};
+void contextFunction;

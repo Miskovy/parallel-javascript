@@ -54,6 +54,7 @@ export class PjsWorker {
   private executionPhase: 'none' | 'scheduled' | 'running' = 'none';
   private currentTaskIds: string[] = [];
   private exitObserved = false;
+  private cancellation: Int32Array<SharedArrayBuffer> | undefined;
   private lease: ExecutionLease | undefined;
   leaseExpired = false;
 
@@ -190,12 +191,14 @@ export class PjsWorker {
     completionOnly = false,
     expectedResultBytes?: number,
     resultByteContract?: UpperBoundResultByteContract,
+    cancellation?: Int32Array<SharedArrayBuffer>,
   ): void {
     if (this.state.status !== 'idle')
       throw new PjsWorkerError('Worker is not idle', {
         taskId,
         workerId: this.id,
       });
+    this.cancellation = cancellation;
     this.state.status = 'busy';
     this.state.currentTaskId = taskId;
     this.executionPhase = 'scheduled';
@@ -206,6 +209,9 @@ export class PjsWorker {
         this.thread.postMessage(
           {
             type: 'execute',
+            ...(cancellation
+              ? { cancellationBuffer: cancellation.buffer }
+              : {}),
             taskId,
             taskName,
             input,
@@ -222,6 +228,9 @@ export class PjsWorker {
         this.thread.postMessage(
           {
             type: 'execute',
+            ...(cancellation
+              ? { cancellationBuffer: cancellation.buffer }
+              : {}),
             taskId,
             taskName,
             input,
@@ -240,6 +249,7 @@ export class PjsWorker {
         );
     } catch (cause) {
       this.state.status = 'idle';
+      this.cancellation = undefined;
       delete this.state.currentTaskId;
       this.currentTaskIds = [];
       this.executionPhase = 'none';
@@ -259,6 +269,7 @@ export class PjsWorker {
     taskName: string,
     items: BatchInput[],
     completionOnly = false,
+    cancellation?: Int32Array<SharedArrayBuffer>,
   ): void {
     if (this.state.status !== 'idle')
       throw new PjsWorkerError('Worker is not idle', {
@@ -270,6 +281,7 @@ export class PjsWorker {
         taskId: batchId,
         workerId: this.id,
       });
+    this.cancellation = cancellation;
     this.state.status = 'busy';
     this.state.currentTaskId = batchId;
     this.currentTaskIds = items.map((item) => item.taskId);
@@ -279,6 +291,7 @@ export class PjsWorker {
       const postStarted = profile ? performance.now() : 0;
       this.thread.postMessage({
         type: 'executeBatch',
+        ...(cancellation ? { cancellationBuffer: cancellation.buffer } : {}),
         batchId,
         taskName,
         items,
@@ -292,6 +305,7 @@ export class PjsWorker {
         );
     } catch (cause) {
       this.state.status = 'idle';
+      this.cancellation = undefined;
       delete this.state.currentTaskId;
       this.currentTaskIds = [];
       this.executionPhase = 'none';
@@ -299,6 +313,20 @@ export class PjsWorker {
         `Batch input could not be serialized: ${cause instanceof Error ? cause.message : 'unknown cause'}`,
         { taskId: batchId, workerId: this.id, cause },
       );
+    }
+  }
+
+  requestCancellation(correlationId: string): void {
+    if (this.state.currentTaskId !== correlationId || !this.cancellation)
+      return;
+    Atomics.store(this.cancellation, 0, 1);
+    try {
+      this.thread.postMessage({
+        type: 'cancel',
+        correlationId,
+      } satisfies HostMessage);
+    } catch (cause) {
+      this.fail('Could not notify cooperative cancellation', cause);
     }
   }
 
@@ -338,6 +366,7 @@ export class PjsWorker {
         'worker-crash',
       );
     delete this.state.currentTaskId;
+    this.cancellation = undefined;
     this.currentTaskIds = [];
     this.executionPhase = 'none';
     this.callbacks.exited(this, correlationId);
@@ -397,13 +426,15 @@ export class PjsWorker {
         ...value.skippedTaskIds,
       ];
       const failureIndex = value.items.findIndex(
-        (item) => item.type === 'failure',
+        (item) => item.type === 'failure' || item.type === 'cancelled',
       );
       if (
         ids.length !== this.currentTaskIds.length ||
         new Set(ids).size !== ids.length ||
         ids.some((id, index) => id !== this.currentTaskIds[index]) ||
-        value.items.filter((item) => item.type === 'failure').length > 1 ||
+        value.items.filter(
+          (item) => item.type === 'failure' || item.type === 'cancelled',
+        ).length > 1 ||
         (failureIndex >= 0 && failureIndex !== value.items.length - 1) ||
         (value.skippedTaskIds.length > 0 && failureIndex < 0)
       ) {
@@ -411,9 +442,21 @@ export class PjsWorker {
         return;
       }
     }
+    const hasCancellation =
+      value.type === 'cancelled' ||
+      (value.type === 'batchResult' &&
+        value.items.some((item) => item.type === 'cancelled'));
+    if (
+      hasCancellation &&
+      (!this.cancellation || Atomics.load(this.cancellation, 0) === 0)
+    ) {
+      this.fail('Unrequested cooperative cancellation result');
+      return;
+    }
     this.clearLease();
     this.state.status = 'idle';
     delete this.state.currentTaskId;
+    this.cancellation = undefined;
     this.currentTaskIds = [];
     this.executionPhase = 'none';
     if (value.type === 'batchResult') {
@@ -430,7 +473,7 @@ export class PjsWorker {
     } else {
       if (value.type === 'success' || value.type === 'completed')
         this.state.completedTasks++;
-      else this.state.failedTasks++;
+      else if (value.type === 'failure') this.state.failedTasks++;
       this.state.totalExecutionTimeMs += value.executionMs;
     }
     if (value.profile) {

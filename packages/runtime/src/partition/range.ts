@@ -1,3 +1,9 @@
+import type { PjsTask } from '../tasks/registry.js';
+import type {
+  RetryOptions,
+  RecoveryCause,
+  RecoveryAttempt,
+} from '../types/index.js';
 /** Numeric half-open range with an explicit maximum chunk width. */
 export interface PartitionRange {
   start: number;
@@ -19,14 +25,25 @@ export interface PartitionInput<Input> {
 }
 
 /** One deadline and signal for the whole range, not each child. */
-export type PartitionOptions = {
+export type PartitionOptions<Input = unknown, Output = never> = {
   /** Physical execution leases are unsupported for range and batch operations. */
   executionLease?: never;
   /** Default settle; terminate stops active batches on parent abort/timeout/cleanup. */
-  cancellation?: 'settle' | 'terminate';
-  repeatable?: never;
-  retry?: never;
-  fallback?: never;
+  cancellation?: 'settle' | 'cooperative' | 'terminate';
+  repeatable?: true;
+  retry?: RetryOptions;
+  fallback?: {
+    task: PjsTask<[Input] extends [never] ? unknown : Input, Output>;
+    on?: readonly RecoveryCause[];
+  };
+  rebuildInput?: [Input] extends [never]
+    ? never
+    : [Output] extends [never]
+      ? never
+      : (
+          partition: RangePartition,
+          next: RecoveryAttempt,
+        ) => PartitionInput<Input>;
   signal?: AbortSignal;
   timeout?: number;
 } & (
@@ -44,7 +61,10 @@ export type PartitionOptions = {
 );
 
 /** Completion-order stream delivery options. */
-export type StreamRangeOptions = PartitionOptions &
+export type StreamRangeOptions<
+  Input = unknown,
+  Output = never,
+> = PartitionOptions<Input, Output> &
   (
     | {
         /** Logical retained/in-flight results; defaults to workers. */
@@ -60,7 +80,10 @@ export type StreamRangeOptions = PartitionOptions &
   );
 
 /** Count-only delivery excludes every strict byte-mode property. */
-export type CountOnlyStreamRangeOptions = StreamRangeOptions & {
+export type CountOnlyStreamRangeOptions<
+  Input = unknown,
+  Output = never,
+> = StreamRangeOptions<Input, Output> & {
   resultBytes?: never;
   maxResultBytes?: never;
   maxReservedResultBytes?: never;
@@ -95,7 +118,10 @@ export type ResultByteDeclaration =
   number | ((partition: RangePartition) => number);
 
 /** Exact visible bytes declared before each stream child is admitted. */
-export type BinaryStreamRangeOptions = StreamRangeOptions &
+export type BinaryStreamRangeOptions<
+  Input = unknown,
+  Output = never,
+> = StreamRangeOptions<Input, Output> &
   (
     | {
         resultBytes: ResultByteDeclaration;
@@ -118,7 +144,10 @@ export type BinaryStreamRangeOptions = StreamRangeOptions &
   ) & { maxResultBytes?: never; experimentalMaxResultBytes?: never };
 
 /** Maximum visible bytes; successful unused credit refunds on arrival. */
-export type UpperBoundBinaryStreamRangeOptions = StreamRangeOptions &
+export type UpperBoundBinaryStreamRangeOptions<
+  Input = unknown,
+  Output = never,
+> = StreamRangeOptions<Input, Output> &
   (
     | {
         maxResultBytes: ResultByteDeclaration;
@@ -171,7 +200,8 @@ export type PjsTypedArrayConstructor =
 /** Selects a stable flat typed result, including for empty ranges. */
 export type TypedMapRangeOptions<
   Constructor extends PjsTypedArrayConstructor = PjsTypedArrayConstructor,
-> = PartitionOptions &
+  Input = never,
+> = PartitionOptions<Input, InstanceType<Constructor>> &
   (
     | {
         /** Built-in typed-array constructor for the flat result. */

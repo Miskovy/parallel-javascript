@@ -5,16 +5,16 @@ import type { RunOptions } from '../types/index.js';
 export interface RunSubmission {
   submit<Input, Output>(
     task: PjsTask<Input, Output>,
-    input: Input,
-    options: RunOptions<NoInfer<Input>, NoInfer<Output>>,
+    input: NoInfer<Input>,
+    options: RunOptions<NoInfer<Input>, NoInfer<Output>> | RunOptions,
   ): Promise<Output>;
 }
 
 export function run<Input, Output>(
   submission: RunSubmission,
   task: PjsTask<Input, Output>,
-  input: Input,
-  options: RunOptions<NoInfer<Input>, NoInfer<Output>> = {},
+  input: NoInfer<Input>,
+  options: RunOptions<NoInfer<Input>, NoInfer<Output>> | RunOptions = {},
 ): Promise<Output> {
   return submission.submit(task, input, options);
 }

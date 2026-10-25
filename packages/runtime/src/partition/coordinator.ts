@@ -20,7 +20,7 @@ import type {
   TaskParentPort,
   TaskTerminalStatus,
 } from '../tasks/coordinator.js';
-import type { PendingTask } from '../tasks/task.js';
+import type { PendingTask, TaskRecovery } from '../tasks/task.js';
 import {
   internalProfilingEnabled,
   recordInternalProfile,
@@ -125,7 +125,7 @@ export class RangeCoordinator implements TaskParentPort {
     task: PjsTask<Input, unknown>,
     range: { start: number; end: number; grainSize: number },
     createInput: (partition: RangePartition) => PartitionInput<Input>,
-    options: PartitionOptions,
+    options: PartitionOptions<Input, unknown>,
     resultMode: RangeResultMode,
     stream?: RangeStream<unknown>,
     mapOutputConstructor?: PjsTypedArrayConstructor,
@@ -152,7 +152,9 @@ export class RangeCoordinator implements TaskParentPort {
     let timeout: number | undefined;
     let signal: AbortSignal | undefined;
     let dispatchBatchSize: number;
-    let cancellation: 'settle' | 'terminate' | undefined;
+    let cancellation: 'settle' | 'cooperative' | 'terminate' | undefined;
+    let recovery: TaskRecovery | undefined;
+    let rebuildInput: RangeOperation['rebuildInput'];
     let outputs: unknown[] | PjsTypedArray | undefined;
     try {
       ({ plan, timeout, signal, cancellation, dispatchBatchSize } =
@@ -194,6 +196,20 @@ export class RangeCoordinator implements TaskParentPort {
       );
 
     try {
+      const rebuild = options.rebuildInput;
+      if (rebuild !== undefined && typeof rebuild !== 'function')
+        throw new TypeError('rebuildInput must be a function');
+      recovery = this.tasks.createRecovery(
+        task,
+        options.retry,
+        options.fallback,
+        options.repeatable,
+        undefined,
+        { operationId: id },
+      );
+      if (rebuild !== undefined && !recovery)
+        throw new TypeError('rebuildInput requires retry or fallback');
+      rebuildInput = rebuild;
       if (resultMode === 'collect') outputs = [];
       else if (resultMode === 'map') {
         const length = plan.end - plan.start;
@@ -208,6 +224,31 @@ export class RangeCoordinator implements TaskParentPort {
     } catch (error) {
       return reject(error as Error);
     }
+
+    // Policy getters may abort, shut down or submit another parent reentrantly.
+    if (signal?.aborted)
+      return reject(
+        new PjsCancelledError(
+          'Partition operation was aborted during validation',
+          { operationId: id, cause: signal.reason },
+        ),
+      );
+    if (
+      this.runtime.state() !== 'starting' &&
+      this.runtime.state() !== 'running'
+    )
+      return reject(
+        new PjsRuntimeStateError(`Runtime is ${this.runtime.state()}`, {
+          operationId: id,
+        }),
+      );
+    if (this.operations.size >= this.operationLimit)
+      return reject(
+        new PjsQueueFullError(
+          `Partition operation capacity ${this.operationLimit} exhausted`,
+          { operationId: id },
+        ),
+      );
 
     return new Promise<unknown[] | PjsTypedArray | void>((resolve, reject) => {
       const operation = new RangeOperation(
@@ -227,6 +268,8 @@ export class RangeCoordinator implements TaskParentPort {
         resolve,
         reject,
       );
+      if (recovery) operation.recovery = recovery;
+      if (rebuildInput) operation.rebuildInput = rebuildInput;
       operation.cancellation = cancellation ?? 'settle';
       operation.status = 'running';
       this.operations.set(id, operation);
@@ -412,6 +455,15 @@ export class RangeCoordinator implements TaskParentPort {
       this.operations.delete(operation.id);
       this.operations.set(operation.id, operation);
       if (this.expireOperation(operation)) continue;
+      const continuing = this.readyContinuation(operation);
+      if (continuing) {
+        const claim = this.dispatcher.claimProduction(1);
+        if (!claim) break;
+        continuing.snapshot.status = 'queued';
+        delete continuing.recovery!.ready;
+        this.dispatcher.finishProductionClaim(claim, [continuing]);
+        continue;
+      }
       let maximum = Math.min(
         operation.dispatchBatchSize,
         operation.plan.chunkCount - operation.generated,
@@ -681,11 +733,7 @@ export class RangeCoordinator implements TaskParentPort {
     const terminations = new Set<string>();
     for (const id of operation.children.keys()) {
       const task = this.tasks.get(id);
-      if (
-        task &&
-        operation.cancellation === 'terminate' &&
-        status !== 'completed'
-      )
+      if (task && operation.cancellation !== 'settle' && status !== 'completed')
         terminations.add(task.batchLeaderId ?? task.executionId ?? task.id);
       if (task)
         this.tasks.settle(
@@ -704,8 +752,11 @@ export class RangeCoordinator implements TaskParentPort {
           ),
         );
     }
-    for (const correlationId of terminations)
-      this.dispatcher.terminateExecution(correlationId);
+    for (const correlationId of terminations) {
+      if (operation.cancellation === 'cooperative')
+        this.dispatcher.cooperateExecution(correlationId);
+      else this.dispatcher.terminateExecution(correlationId);
+    }
     operation.pendingResultDeclaration = undefined;
     this.resultCredits.cancelOperation(operation);
     const outputs = operation.outputs;
@@ -787,6 +838,16 @@ export class RangeCoordinator implements TaskParentPort {
     return operation.pendingResultDeclaration;
   }
 
+  private readyContinuation(
+    operation: RangeOperation,
+  ): PendingTask | undefined {
+    for (const id of operation.children.keys()) {
+      const task = this.tasks.get(id);
+      if (task?.recovery?.ready) return task;
+    }
+    return undefined;
+  }
+
   private operationHasCountCredit(operation: RangeOperation): boolean {
     return (
       operation.generated < operation.plan.chunkCount &&
@@ -802,6 +863,7 @@ export class RangeCoordinator implements TaskParentPort {
 
   private nextProducer(): RangeOperation | undefined {
     for (const operation of [...this.operations.values()]) {
+      if (this.readyContinuation(operation)) return operation;
       if (!this.operationHasCountCredit(operation)) continue;
       if (operation.resultByteDeclaration !== undefined) {
         const declaration = this.prepareResultDeclaration(operation);

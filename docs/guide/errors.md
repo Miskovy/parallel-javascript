@@ -98,3 +98,12 @@ These are programming errors, not queue or crash signals.
 The [installed-package test](../../scripts/package-smoke.mjs) checks exported
 class identity, name, message and stack context from an actual tarball. Unit and
 lifecycle tests cover context propagation and worker recovery separately.
+
+Checkpoint 2 applies eligible recovery per range partition. Host map validation and
+worker binary/serialization contract errors remain terminal. A fallback's worker
+failure retains AggregateError([lastPrimaryError, fallbackError]); map validation
+after a successful child response remains the parent's PjsMapContractError. A
+reconstruction exception is PjsError with its original cause; malformed reconstruction
+or transfer intent is PjsSerializationError. Neither is retried. Cooperative
+throwIfCancelled() uses a worker-local AbortError, while the caller retains its
+original PjsCancelledError/PjsTimeoutError. No caller outcome implies rollback.

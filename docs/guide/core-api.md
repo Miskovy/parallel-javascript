@@ -121,8 +121,8 @@ submission validation rejects. See [errors](errors.md) and [lifecycle](lifecycle
 ## Ordinary execution resilience (development)
 
 These options are available in development source, not published RC4. They apply
-to exclusive `run()`; retry/fallback remain unsupported on ranges and batches.
-Range APIs additionally support the cancellation mode described below.
+to `run()`; all range forms also support per-partition recovery as described below.
+Ordinary `run()` remains a single-task dispatch.
 
 ```ts
 const result = await runtime.run(primaryTask, input, {
@@ -156,9 +156,10 @@ One signal/deadline covers every attempt, backoff and replacement wait.
 Recovery retains bounded slot/queue admission, so an accepted call can recover with
 `workers: 1, maxQueue: 0`; new work rejects while the slot is reserved. Runnable FIFO
 work takes precedence through slot/queue-credit exchanges. Backoff can leave reserved
-capacity idle. Nonempty input transfer lists reject with multiple attempts or fallback;
+capacity idle. Nonempty input transfer lists require explicit `rebuildInput` with
+multiple attempts or fallback;
 keep retained cloned/shared input unchanged through logical settlement. Use generic
-`RunOptions<Input, Output>` for typed fallback options; legacy `RunOptions` annotations
+`RunOptions<Input, Output>` for typed fallback/reconstruction option variables; legacy `RunOptions` annotations
 and interface extensions remain usable without fallback. See
 [lifecycle](lifecycle.md#recovery-and-shutdown) and [ownership](memory-ownership.md).
 
@@ -168,16 +169,122 @@ These opt-in controls are not part of the immutable RC4 publication.
 See [physical containment](lifecycle.md#experimental-physical-execution-leases-r1-development)
 for units, unsupported range/batch combinations and recovery limits.
 
+## Cooperative task cancellation (development)
+
+Choose `cancellation: 'cooperative'` explicitly to pass a second task argument,
+`TaskContext`. Settle/terminate modes retain exactly `execute(input)`, including
+argument count and rest-parameter behavior. Context is available only in cooperative
+mode; registered handles still describe the input/output schema as before.
+
+```ts
+import type { TaskContext } from '@pjavascript/runtime';
+// Export from a registered task module.
+export function count(input: number, context: TaskContext): number {
+  let sum = 0;
+  for (let n = 0; n < input; n++) {
+    if (n % 1024 === 0) context.throwIfCancelled();
+    sum += n;
+  }
+  return sum;
+}
+// Host: countTask was registered before constructing the runtime.
+await runtime.run(countTask, 100_000_000, {
+  signal: controller.signal,
+  cancellation: 'cooperative',
+  timeout: 2000,
+});
+```
+
+`throwIfCancelled()` atomically polls shared cancellation state and throws AbortError.
+For asynchronous work, pass `context.signal` to abortable APIs; catch/finally cleanup
+must be awaited before the task returns. Checking only signal.aborted does not poll
+shared state in a synchronous loop. Caller rejection still precedes physical completion.
+Ignoring cooperation leaves the worker busy. There is no automatic grace-period
+escalation; an ordinary executionLease or forced shutdown provides independent
+containment. Parent abort/deadline, fail-fast cleanup and stream return/throw notify
+active cooperative children and prevent later batch items from starting. Completion
+preserves worker state/caches; it does not undo side effects.
+
+## Reconstructing transferred recovery input (development)
+
+`rebuildInput` is a synchronous callback after old physical completion/backoff and
+worker admission, immediately before recovery posting. It returns
+`{ input, transferList? }` for every selected retry or fallback. Initial input and
+its transfer list stay explicit; no hidden backup copies or transfer reversal occur.
+
+```ts
+const prepare = () => {
+  const bytes = immutableSource.slice(); // Explicit application-owned copy.
+  return { input: bytes, transferList: [bytes.buffer] };
+};
+const first = prepare();
+const result = await runtime.run(primaryTask, first.input, {
+  transferList: first.transferList,
+  repeatable: true,
+  retry: { maxAttempts: 2 },
+  fallback: { task: alternativeTask, on: ['worker-crash'] },
+  rebuildInput: (next) => prepare(), // next: { attempt, implementation }.
+  timeout: 5000,
+});
+```
+
+Factory errors, promises, invalid/detached/duplicate/reserved buffers and serialization
+failures are terminal. Factories run on the host: keep them cheap and retain stable
+source data. No callback runs without a claimed worker or after terminal cancellation.
+An abort from a factory/getter wins over later posting. Explicit repeatability still
+covers effects of the original computation and the factory itself.
+
+## Per-partition range recovery (development)
+
+All four range methods, both map forms and all stream modes accept repeatable,
+retry, fallback and rebuildInput options. Max attempts and fallback limits apply
+**per logical partition**, not to a whole range or physical batch. Use generic
+`PartitionOptions<Input, PartitionOutput>` and corresponding stream option types;
+`TypedMapRangeOptions<Constructor, Input>` retains its existing constructor-first form.
+Fallback accepts the original input and returns the original partition/block schema.
+
+```ts
+await runtime.partitionRange(primaryTask, range, createInput, {
+  repeatable: true,
+  retry: { maxAttempts: 3, backoffMs: 50, on: ['task-error', 'worker-crash'] },
+  fallback: { task: alternativeTask },
+  dispatchBatchSize: 4,
+  timeout: 5000,
+});
+```
+
+Confirmed successful partitions, collected map blocks and already-yielded values
+never replay. A valid task-failure envelope confirms the later items were uninvoked;
+they resume without consuming an attempt or rebuilding initial input. A worker crash
+before that envelope makes all unresolved members ambiguous, even if some effects
+already happened. The serialization-error path's skipped IDs are not safe evidence.
+Recovery and skipped continuations dispatch singly; normal batching stays unchanged.
+
+Range backoff retains its parent's bounded child window and stream count/full-byte
+reservation, but releases worker capacity. Ready continuations rejoin the existing
+producer after runnable FIFO work; this also works with workers:1/maxQueue:0. No
+reserved-worker latency/starvation guarantee is added. Deferred records/replay inputs
+can total operation capacity × per-parent window. Upper-bound credit refunds once
+on successful deliverable output; retries/fallback preserve the original byte contract.
+Map or binary contract mistakes are terminal, not task-error recovery causes.
+
+For transferred inputs choose dispatchBatchSize:1 and provide
+`rebuildInput: (partition, next) => preparePartition(partition)`. The original range
+factory runs once per generated partition. Nonempty transfer lists remain forbidden
+with configured batching >1, including singleton recovery. One parent signal/deadline
+covers factories, all attempts, backoff and stream delivery. Cancellation/shutdown
+prevents further recovery; there are still no range execution leases. Shared writes
+and external effects must tolerate partial/repeated execution despite reconstruction.
+
 ## Choosing a range result
 
-All four range APIs accept `cancellation: 'settle' | 'terminate'`, default `'settle'`.
+All four range APIs accept `cancellation: 'settle' | 'cooperative' | 'terminate'`, default `'settle'`.
 In terminate mode parent abort/timeout, fail-fast sibling cancellation and stream
 consumer close/throw stop that parent's active physical batches. Other operations
 sharing the pool are unaffected. Cancellation during posting waits for successful
 posting before containment; queued input transfers stay attached. Posted transfers
 remain detached, shared side effects may be partial, and binary credits/worker
-occupancy persist until validated completion or confirmed exit. No range retries
-or range fallback are introduced.
+occupancy persist until validated completion or confirmed exit.
 
 ```ts
 await runtime.parallelFor(task, range, createInput, {

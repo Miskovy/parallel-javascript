@@ -1,3 +1,5 @@
+import type { TaskRecovery } from '../tasks/task.js';
+import type { RecoveryAttempt } from '../types/index.js';
 import { AsyncResource } from 'node:async_hooks';
 import type { PjsTask } from '../tasks/registry.js';
 import type {
@@ -23,7 +25,12 @@ export type {
 
 /** Host-owned state only. No worker slot and no preallocated child Promise list. */
 export class RangeOperation extends AsyncResource {
-  cancellation: 'settle' | 'terminate' = 'settle';
+  recovery?: TaskRecovery;
+  rebuildInput?: (
+    partition: RangePartition,
+    next: RecoveryAttempt,
+  ) => PartitionInput<unknown>;
+  cancellation: 'settle' | 'cooperative' | 'terminate' = 'settle';
   status: OperationStatus = 'created';
   generated = 0;
   admitted = 0;

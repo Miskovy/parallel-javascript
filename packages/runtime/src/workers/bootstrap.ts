@@ -1,3 +1,4 @@
+import type { TaskContext } from '../types/index.js';
 import { parentPort, workerData } from 'node:worker_threads';
 import {
   PjsBinaryResultContractError,
@@ -21,7 +22,7 @@ const send = (
   message: WorkerMessage,
   transferList: readonly ArrayBuffer[] = [],
 ): void => port.postMessage(message, transferList);
-type Execute = (input: unknown) => unknown;
+type Execute = (input: unknown, context?: TaskContext) => unknown;
 const tasks = new Map<string, Execute>();
 let state: 'starting' | 'idle' | 'busy' | 'stopped' = 'starting';
 
@@ -107,8 +108,45 @@ function binaryFailure(
   };
 }
 
+// Invocation-local contexts; no ambient task context or shared/reused controller.
+const contexts = new Map<string, AbortController>();
+function cancelled(buffer: SharedArrayBuffer | undefined): boolean {
+  return buffer !== undefined && Atomics.load(new Int32Array(buffer), 0) !== 0;
+}
+async function invoke(
+  execute: Execute,
+  input: unknown,
+  correlationId: string,
+  buffer?: SharedArrayBuffer,
+): Promise<unknown> {
+  // Argument count is observable: existing modes must continue passing exactly one.
+  if (!buffer) return execute(input);
+  const controller = new AbortController();
+  contexts.set(correlationId, controller);
+  const context: TaskContext = Object.freeze({
+    signal: controller.signal,
+    throwIfCancelled() {
+      if (cancelled(buffer) && !controller.signal.aborted)
+        controller.abort(new DOMException('Task cancelled', 'AbortError'));
+      controller.signal.throwIfAborted();
+    },
+  });
+  try {
+    context.throwIfCancelled();
+    return await execute(input, context);
+  } finally {
+    contexts.delete(correlationId);
+  }
+}
+
 async function handle(value: unknown): Promise<void> {
   if (!isHostMessage(value)) throw new Error('Invalid PJS host message');
+  if (value.type === 'cancel') {
+    contexts
+      .get(value.correlationId)
+      ?.abort(new DOMException('Task cancelled', 'AbortError'));
+    return;
+  }
   if (value.type === 'shutdown') {
     if (state !== 'idle')
       throw new Error('Shutdown received while worker is not idle');
@@ -130,7 +168,20 @@ async function handle(value: unknown): Promise<void> {
   try {
     const execute = tasks.get(value.taskName);
     if (!execute) throw new Error(`Unknown task ${value.taskName}`);
-    const output = await execute(value.input);
+    const output = await invoke(
+      execute,
+      value.input,
+      value.taskId,
+      value.cancellationBuffer,
+    );
+    if (cancelled(value.cancellationBuffer)) {
+      send({
+        type: 'cancelled',
+        taskId: value.taskId,
+        executionMs: performance.now() - started,
+      });
+      return;
+    }
     const executionMs = performance.now() - started;
     if (value.completionOnly) {
       send({
@@ -215,6 +266,14 @@ async function handle(value: unknown): Promise<void> {
       });
     }
   } catch (cause) {
+    if (cancelled(value.cancellationBuffer)) {
+      send({
+        type: 'cancelled',
+        taskId: value.taskId,
+        executionMs: performance.now() - started,
+      });
+      return;
+    }
     send({
       type: 'failure',
       taskId: value.taskId,
@@ -249,7 +308,14 @@ async function executeBatch(
     try {
       const execute = tasks.get(value.taskName);
       if (!execute) throw new Error(`Unknown task ${value.taskName}`);
-      const output = await execute(item.input);
+      const output = await invoke(
+        execute,
+        item.input,
+        value.batchId,
+        value.cancellationBuffer,
+      );
+      if (cancelled(value.cancellationBuffer))
+        throw new DOMException('Task cancelled', 'AbortError');
       const executionMs = performance.now() - started;
       if (value.completionOnly) {
         items.push({
@@ -305,6 +371,15 @@ async function executeBatch(
         break;
       }
     } catch (cause) {
+      if (cancelled(value.cancellationBuffer)) {
+        items.push({
+          type: 'cancelled',
+          taskId: item.taskId,
+          executionMs: performance.now() - started,
+        });
+        next++;
+        break;
+      }
       items.push({
         type: 'failure',
         taskId: item.taskId,

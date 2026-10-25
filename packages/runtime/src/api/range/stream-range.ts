@@ -24,14 +24,16 @@ export function streamRange<Input, Output extends PjsBinaryResult>(
   task: PjsTask<Input, Output>,
   range: PartitionRange,
   createInput: (partition: RangePartition) => PartitionInput<Input>,
-  options: BinaryStreamRangeOptions | UpperBoundBinaryStreamRangeOptions,
+  options:
+    | BinaryStreamRangeOptions<NoInfer<Input>, NoInfer<Output>>
+    | UpperBoundBinaryStreamRangeOptions<NoInfer<Input>, NoInfer<Output>>,
 ): PjsRangeStream<Output>;
 export function streamRange<Input, Output>(
   submission: StreamRangeSubmission,
   task: PjsTask<Input, Output>,
   range: PartitionRange,
   createInput: (partition: RangePartition) => PartitionInput<Input>,
-  options?: CountOnlyStreamRangeOptions,
+  options?: CountOnlyStreamRangeOptions<NoInfer<Input>, NoInfer<Output>>,
 ): PjsRangeStream<Output>;
 export function streamRange<Input, Output>(
   submission: StreamRangeSubmission,
@@ -39,16 +41,16 @@ export function streamRange<Input, Output>(
   range: PartitionRange,
   createInput: (partition: RangePartition) => PartitionInput<Input>,
   options:
-    | StreamRangeOptions
-    | BinaryStreamRangeOptions
-    | UpperBoundBinaryStreamRangeOptions,
+    | StreamRangeOptions<NoInfer<Input>, NoInfer<Output>>
+    | BinaryStreamRangeOptions<NoInfer<Input>, NoInfer<Output>>
+    | UpperBoundBinaryStreamRangeOptions<NoInfer<Input>, NoInfer<Output>>,
 ): PjsRangeStream<Output>;
 export function streamRange<Input, Output>(
   submission: StreamRangeSubmission,
   task: PjsTask<Input, Output>,
   range: PartitionRange,
   createInput: (partition: RangePartition) => PartitionInput<Input>,
-  options: StreamRangeOptions & {
+  options: StreamRangeOptions<NoInfer<Input>, NoInfer<Output>> & {
     resultBytes?: ResultByteDeclaration;
     experimentalResultBytes?: ResultByteDeclaration;
     maxResultBytes?: ResultByteDeclaration;

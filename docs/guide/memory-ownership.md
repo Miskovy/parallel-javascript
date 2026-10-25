@@ -40,13 +40,35 @@ path as universally zero-copy.
 
 ## Recovery input lifetime
 
-Opt-in retry/fallback retains the original input reference until logical settlement,
+Without rebuildInput, opt-in retry/fallback retains the original input reference until logical settlement,
 and each attempt clones it again. Do not mutate, resize or externally transfer it
 between attempts. Recovery with a nonempty input transfer list rejects before
-admission when multiple attempts or fallback are configured; detached input cannot
-be reconstructed. Worker output transfers remain supported. Shared input can be
+admission when multiple attempts or fallback are configured unless explicit
+rebuildInput reconstruction is supplied. Detached input cannot be restored. Worker output transfers remain supported. Shared input can be
 reused only under an application protocol safe after partial execution; neither
 `repeatable: true` nor worker termination undoes shared writes or repairs locks.
+
+`rebuildInput(next)` returns fresh `{ input, transferList? }` for ordinary recovery;
+ranges use rebuildInput(partition, next). It runs synchronously with a claimed worker,
+after the previous attempt has physically ended and backoff has elapsed. It applies
+to retry and fallback, not initial input or a confirmed uninvoked batch suffix.
+Callbacks must rebuild equivalent logical input from stable application-owned data;
+PJS takes no backup copy. Previously transferred backing remains detached even with
+a new list wrapper. Invalid reconstruction/serialization is terminal.
+
+Hold transfer claims through posting/rollback, including reentrant abort. Hook-based
+recovery drops consumed host payload references after posting, retaining its callback;
+initial batched inputs stay until final classification of the skipped suffix. Shared
+aliases can remain in use after caller rejection; wait for physical completion before
+repurposing them. Configured batching >1 still forbids input transfers, even on a
+singleton recovery dispatch. Result transfers remain supported.
+
+Unfinished range partitions retain one stream count/full-byte position across
+backoff and attempts. No failed-attempt refund or duplicate reservation is made.
+Only a final deliverable upper-bound success refunds slack; exact credit remains
+until yield. Reposting resets physical attempt flags before claiming ownership so
+old completion cannot release a later attempt's reservation. Cooperative cancellation
+also holds credits and occupancy until final response or confirmed exit.
 
 ## Shared readonly input
 

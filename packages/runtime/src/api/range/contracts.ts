@@ -18,7 +18,7 @@ export interface RangeSubmission {
     task: PjsTask<Input, unknown>,
     range: PartitionRange,
     createInput: (partition: RangePartition) => PartitionInput<Input>,
-    options: PartitionOptions,
+    options: PartitionOptions<Input, unknown>,
     resultMode: RangeResultMode,
     stream?: RangeStream<unknown>,
     mapOutputConstructor?: PjsTypedArrayConstructor,

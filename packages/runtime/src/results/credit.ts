@@ -127,6 +127,19 @@ export class ResultCreditManager {
     this.assertInvariants('reserve');
   }
 
+  /** Reuse a logical reservation only after its previous physical attempt ended. */
+  beginAttempt(taskIds: readonly string[]): void {
+    for (const id of taskIds) {
+      const reservation = this.reservations.get(id);
+      if (!reservation?.executionDone) continue;
+      if (reservation.callerSettled || reservation.reconciled)
+        throw new Error('Cannot replay a terminal result reservation');
+      reservation.dispatched = false;
+      reservation.dispatching = false;
+      reservation.executionDone = false;
+    }
+  }
+
   /** Hold credit before structured clone can reenter caller settlement. */
   markDispatching(correlationId: string, taskIds: readonly string[]): void {
     if (this.reservations.size === 0) return;

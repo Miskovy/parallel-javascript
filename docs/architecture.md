@@ -155,7 +155,9 @@ a single-item response cannot complete an occupied batch.
 
 ## Task contract and protocol
 
-Registration binds a typed handle to a local file URL and named/default function export. Each runtime snapshots the registry; later registrations require a new runtime. Bootstrap imports once per isolate and checks exports are callable. TypeScript handles assert types; they cannot prove the module matches. Tasks accept one serializable input and return a result, a `transfer(value, buffers)` envelope, or a promise of either. The registered output type describes the caller-visible value. All task-owned async work must finish before the task returns.
+Registration binds a typed handle to a local file URL and named/default function export. Each runtime snapshots the registry; later registrations require a new runtime. Bootstrap imports once per isolate and checks exports are callable. TypeScript handles assert types; they cannot prove the module matches. Tasks accept one serializable input and return a result, a `transfer(value, buffers)` envelope, or a promise of either. The registered output type describes the caller-visible value. All task-owned async work must finish before the task returns. Only explicit
+cooperative mode adds TaskContext as a second argument; every existing mode keeps
+the observable one-argument calling convention.
 
 Protocol version 2 retains ordinary `execute`, internal `executeBatch { batchId, taskName, items }`, and an explicit completion-only marker. Collecting workers answer with ordinary success values. Completion workers answer `completed` without inspecting, transferring, or serializing the task return value. Batch results contain ordered per-task success/completion records, at most one final failure, and any later skipped IDs. `ready`, `started`, shutdown, and bootstrap failure remain versioned and validated. Batch IDs identify physical occupancy; task IDs retain logical identity. Missing, duplicate, reordered, or unknown IDs, an invalid failure shape, or any response for the wrong occupied slot fails the worker. Registered module exports remain the only executable code.
 
@@ -283,3 +285,30 @@ profiling and opt-in reservation invariant scans remain research/test facilities
 no benchmark imports or codec-specific behavior enter the production graph.
 Read the [readiness matrix](research/v0.15-v1-readiness.md) for the proposed stable
 core and release gates. Future execution features are not readiness blockers.
+
+## Checkpoint 2 recovery and cooperation
+
+TaskCoordinator owns shared recovery policy validation and per-child attempt state;
+RangeCoordinator retains unfinished logical children in its existing bounded window.
+After physical completion and backoff it resumes them through production claims as
+single-item posts, without multiplying one batch slot into per-item slot claims.
+Normal weighted FIFO batching is unchanged; sleeping range recovery reserves no
+worker and ready recovery yields to queued work. Ordinary recovery retains its prior
+slot/queue exchange. A separate physical membership map of logical IDs survives
+leader settlement; ResultCreditManager remains a binary-credit owner, not the attempt
+registry. Its next-attempt transition keeps logical credit while resetting physical
+posting/completion flags. Successful partitions never replay; only genuine task-error
+suffixes prove uninvoked children, not combined serialization-error envelopes.
+
+Reconstruction runs in TaskCoordinator with a dispatcher-protected worker before
+posting, and range callbacks retain their parent AsyncResource scope. Both the
+factory and payload/list getters can reenter cancellation/shutdown; liveness is
+rechecked before posting. No overlap or hidden buffer backup is introduced.
+
+PjsWorker owns each cooperative execution's shared flag; bootstrap supplies a fresh
+invocation context only in cooperative mode. Atomics polling handles CPU loops;
+correlated control messages abort the local async signal while execute is awaiting.
+Control messages bypass the overlapping-execution guard. Final cancelled envelopes
+still require exact correlation/coverage and a requested cancellation; they are not
+retryable failures. The same pool/lifecycle owners handle replacement and forced
+shutdown, with no new manager, scheduler policy or concurrency backend.

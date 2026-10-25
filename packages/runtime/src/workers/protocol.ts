@@ -30,6 +30,7 @@ export type HostMessage =
       taskId: string;
       taskName: string;
       input: unknown;
+      cancellationBuffer?: SharedArrayBuffer;
       profile?: boolean;
       completionOnly?: boolean;
       expectedResultBytes?: number;
@@ -40,11 +41,19 @@ export type HostMessage =
       batchId: string;
       taskName: string;
       items: BatchInput[];
+      cancellationBuffer?: SharedArrayBuffer;
       profile?: boolean;
       completionOnly?: boolean;
     }
+  | { type: 'cancel'; correlationId: string }
   | { type: 'shutdown' };
 export type TaskResultMessage =
+  | {
+      type: 'cancelled';
+      taskId: string;
+      executionMs: number;
+      profile?: InternalWorkerProfile;
+    }
   | {
       type: 'success';
       taskId: string;
@@ -69,6 +78,7 @@ export type TaskResultMessage =
       profile?: InternalWorkerProfile;
     };
 export type BatchItemResult =
+  | { type: 'cancelled'; taskId: string; executionMs: number }
   | {
       type: 'success';
       taskId: string;
@@ -163,6 +173,7 @@ function result(value: unknown): value is BatchItemResult {
       (value.actualResultBytes === undefined ||
         safeBytes(value.actualResultBytes))) ||
     value.type === 'completed' ||
+    value.type === 'cancelled' ||
     (value.type === 'failure' && error(value.error) && failureKind(value))
   );
 }
@@ -208,7 +219,8 @@ export function isWorkerMessage(value: unknown): value is WorkerMessage {
       profile(value.profile) &&
       (value.actualResultBytes === undefined ||
         safeBytes(value.actualResultBytes))) ||
-    (value.type === 'completed' && profile(value.profile)) ||
+    ((value.type === 'completed' || value.type === 'cancelled') &&
+      profile(value.profile)) ||
     (value.type === 'failure' &&
       error(value.error) &&
       profile(value.profile) &&
@@ -218,8 +230,12 @@ export function isWorkerMessage(value: unknown): value is WorkerMessage {
 export function isHostMessage(value: unknown): value is HostMessage {
   if (!record(value)) return false;
   if (value.type === 'shutdown') return true;
+  if (value.type === 'cancel') return typeof value.correlationId === 'string';
   const common =
     typeof value.taskName === 'string' &&
+    (value.cancellationBuffer === undefined ||
+      (value.cancellationBuffer instanceof SharedArrayBuffer &&
+        value.cancellationBuffer.byteLength === 4)) &&
     (value.profile === undefined || typeof value.profile === 'boolean') &&
     (value.completionOnly === undefined ||
       typeof value.completionOnly === 'boolean') &&
