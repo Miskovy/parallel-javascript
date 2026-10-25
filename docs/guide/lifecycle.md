@@ -19,7 +19,9 @@ worker:                     occupied ─────────────→ 
 
 **Cancellation or timeout can reject the caller while the worker remains busy.**
 Default cancellation/timeout does not interrupt synchronous JS/native code or provide
-cooperative polling. `run()` and all four range APIs with `cancellation: 'terminate'` request targeted
+cooperative polling. Explicit `cancellation: 'cooperative'` supplies TaskContext
+only to participating invocations; CPU code polls throwIfCancelled(), async code
+uses its local signal, and cleanup must finish before physical ownership ends. `run()` and all four range APIs with `cancellation: 'terminate'` request targeted
 worker termination on signal abort or call timeout; the independent physical lease
 also initiates containment. Queued/waiting cancellation removes only that caller's
 work and admission claims. Abort during posting defers targeted termination until
@@ -33,7 +35,8 @@ With range termination enabled, parent cleanup targets distinct batch correlatio
 before any worker is reused. Fail-fast sibling cancellation and stream `return()`/
 `throw()` use that same policy. Batches only contain children of one parent, so
 unrelated operations are not interrupted. Credit and physical occupancy end only
-on validated final completion or confirmed exit; no range retry is attempted.
+on validated final completion or confirmed exit. Opt-in range recovery keeps
+unresolved partitions and their result reservations across successive attempts.
 
 | Event                           | Caller/parent                               | Queue / physical work / credit                                                                   |
 | ------------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------ |
@@ -150,8 +153,9 @@ while buffered results are discarded. See [backpressure](backpressure.md).
 ## Worker failures and replacement
 
 An unexpected exit (including exit code zero), protocol violation or uncaught
-worker error fails affected work with PjsWorkerError. A failed range cancels its
-siblings. There is no replay by default; ordinary retries/fallback require explicit repetition permission.
+worker error fails affected work with PjsWorkerError. A terminal failed range cancels its
+siblings. There is no replay by default; run/range retries and fallback require
+explicit repeatable permission. Confirmed successful partitions never replay.
 While the pool remains active, it waits for the old thread to exit before creating
 a replacement with fresh module globals and worker ID. Unaffected queued work can
 continue. Initial/replacement bootstrap failure is fatal; exhausting the lifetime
@@ -196,8 +200,24 @@ budget. All replacements await old exit, and termination rejection remains fatal
 
 One call timeout includes all attempts and recovery waits. Neither shared writes nor
 external effects roll back, and a caller rejection does not establish physical
-quiescence. Worker recreation discards module state/caches; cooperative cancellation
-remains outside this implementation.
+quiescence. Worker recreation discards module state/caches. Cooperative cancellation preserves
+the worker if task cleanup returns; ignored requests leave it busy with no automatic
+cooperative escalation. Existing leases (ordinary calls) and forced shutdown remain
+independent termination mechanisms.
+
+Range continuations reuse accepted parent production, not one reserved execution
+slot per failed batch member. Backoff releases physical capacity but retains the
+bounded child window and stream credits. New ordinary work can run meanwhile;
+ready continuations obtain fresh production claims after runnable FIFO entries.
+Confirmed uninvoked suffixes resume their unused primary attempt; crash-ambiguous
+members spend attempts and require explicit crash eligibility. Serialization-failure
+skipped IDs never authorize replay. Singleton recovery does not relax the configured
+batching transfer prohibition. One parent deadline includes reconstruction and waits.
+
+In cooperative mode only, bootstrap calls execute(input, context); default settle
+and terminate modes keep execute(input). A shared flag makes CPU polling possible;
+a correlated message aborts the local async signal. Contexts/flags do not carry over
+to another execution, and a delivered request is not a completion acknowledgement.
 
 ## Shutdown
 

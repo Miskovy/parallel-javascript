@@ -772,7 +772,7 @@ test(
 );
 
 test(
-  'range APIs reject resilience property presence before factories, including inherited undefined',
+  'range APIs validate recovery permission before factories, including inherited policies',
   bounded,
   async (t) => {
     const { runtime, tasks } = await setup(t);
@@ -782,12 +782,16 @@ test(
       'parallelMapRange',
       'streamRange',
     ])
-      for (const key of ['repeatable', 'retry', 'fallback']) {
+      for (const [key, value] of [
+        ['repeatable', false],
+        ['retry', { maxAttempts: 2 }],
+        ['fallback', { task: tasks.fallback }],
+      ]) {
         const result = runtime[method](
           tasks.echo,
           { start: 0, end: 1, grainSize: 1 },
           () => assert.fail('unsupported range factory ran'),
-          Object.create({ [key]: undefined }),
+          Object.create({ [key]: value }),
         );
         await assert.rejects(
           method === 'streamRange' ? result.next() : result,

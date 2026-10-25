@@ -12,7 +12,7 @@ export function parallelFor<Input>(
   task: PjsTask<Input, unknown>,
   range: PartitionRange,
   createInput: (partition: RangePartition) => PartitionInput<Input>,
-  options: PartitionOptions = {},
+  options: PartitionOptions<NoInfer<Input>, unknown> = {},
 ): Promise<void> {
   return submission.start(
     task,

@@ -48,6 +48,8 @@ export type {
   RunOptions,
   RetryOptions,
   RecoveryCause,
+  RecoveryAttempt,
+  TaskContext,
   ShutdownOptions,
   RuntimeState,
   WorkerState,

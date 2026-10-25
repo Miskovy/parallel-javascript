@@ -199,6 +199,15 @@ export class PjsPool {
     ).length;
   }
 
+  cooperateExecution(correlationId: string): void {
+    for (const worker of this.workers.values())
+      if (
+        worker.status === 'busy' &&
+        worker.snapshot().currentTaskId === correlationId
+      )
+        worker.requestCancellation(correlationId);
+  }
+
   /** Intentional containment restores capacity without charging a failure budget. */
   terminateExecution(correlationId: string): void {
     if (this.state !== 'active') return;

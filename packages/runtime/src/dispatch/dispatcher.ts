@@ -71,7 +71,10 @@ export class ExecutionDispatcher {
       ready: boolean;
     }
   >();
-  private readonly postings = new Map<string, { terminate: boolean }>();
+  private readonly postings = new Map<
+    string,
+    { terminate: boolean; cancellation?: Int32Array<SharedArrayBuffer> }
+  >();
   private readonly metrics = {
     executeMessages: 0,
     resultMessages: 0,
@@ -208,6 +211,12 @@ export class ExecutionDispatcher {
     return this.scheduler.remove(taskId);
   }
 
+  cooperateExecution(correlationId: string): void {
+    const posting = this.postings.get(correlationId);
+    if (posting?.cancellation) Atomics.store(posting.cancellation, 0, 1);
+    else this.pool.cooperateExecution(correlationId);
+  }
+
   terminateExecution(correlationId: string): void {
     const posting = this.postings.get(correlationId);
     if (posting) posting.terminate = true;
@@ -338,7 +347,8 @@ export class ExecutionDispatcher {
       protectedWorkers.add(worker.id);
     this.pool.setDemand(
       this.pool.busy +
-        this.reservedWorkers.size +
+        this.pool.idle().filter((worker) => this.reservedWorkers.has(worker.id))
+          .length +
         slots +
         Math.max(this.scheduler.dispatchCount, productionDemand),
       protectedWorkers,
@@ -369,9 +379,19 @@ export class ExecutionDispatcher {
   }
 
   private dispatch(worker: PjsWorker, task: PendingTask): void {
-    if (this.callbacks.prepareDispatch?.(task) === false) return;
+    // Preparation can invoke application code while the worker is still idle.
+    this.reservedWorkers.add(worker.id);
+    try {
+      if (this.callbacks.prepareDispatch?.(task) === false) return;
+      this.post(worker, task);
+    } finally {
+      this.reservedWorkers.delete(worker.id);
+    }
+  }
+
+  private post(worker: PjsWorker, task: PendingTask): void {
     const items = task.batch;
-    const executionId = task.executionId ?? task.id;
+    const executionId = task.batchLeaderId ?? task.executionId ?? task.id;
     const taskIds = items ? items.map((item) => item.id) : [task.id];
     const scheduledAt = Date.now();
     const monotonicNow = performance.now();
@@ -390,16 +410,25 @@ export class ExecutionDispatcher {
         scheduledAt,
         monotonicNow - (task.attemptQueuedAt ?? task.admittedAt),
       );
-    const posting = { terminate: false };
+    const mode = task.child?.operation.cancellation ?? task.cancellation;
+    const cancellation =
+      mode === 'cooperative'
+        ? new Int32Array(new SharedArrayBuffer(4))
+        : undefined;
+    const posting = {
+      terminate: false,
+      ...(cancellation ? { cancellation } : {}),
+    };
     this.postings.set(executionId, posting);
     try {
+      this.resultCredits.beginAttempt(taskIds);
       this.resultCredits.markDispatching(executionId, taskIds);
       if (items && items.length > 1)
         worker.executeBatch(
           executionId,
           task.snapshot.taskName,
           items.map((item) => ({
-            taskId: item.id,
+            taskId: item.executionId ?? item.id,
             input: item.input,
             ...(item.expectedResultBytes === undefined
               ? {}
@@ -409,6 +438,7 @@ export class ExecutionDispatcher {
               : { resultByteContract: item.resultByteContract }),
           })),
           task.child?.operation.resultMode === 'discard',
+          cancellation,
         );
       else
         worker.execute(
@@ -420,11 +450,14 @@ export class ExecutionDispatcher {
           task.child?.operation.resultMode === 'discard',
           task.expectedResultBytes,
           task.resultByteContract,
+          cancellation,
         );
       this.resultCredits.markDispatched(executionId, taskIds);
       if (task.executionLease !== undefined)
         worker.armExecutionLease(executionId, task.executionLease);
       if (posting.terminate) this.pool.terminateExecution(executionId);
+      else if (cancellation && Atomics.load(cancellation, 0) !== 0)
+        this.pool.cooperateExecution(executionId);
       this.metrics.executeMessages++;
       this.metrics.logicalTasks += items?.length ?? 1;
       this.metrics.logicalPartitions += items

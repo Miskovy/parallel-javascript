@@ -1,9 +1,11 @@
 import { randomUUID } from 'node:crypto';
+import { types } from 'node:util';
 import type { ExecutionDispatcher } from '../dispatch/dispatcher.js';
 import {
   PjsBinaryResultContractError,
   PjsCancelledError,
   PjsExecutionLeaseError,
+  PjsError,
   PjsQueueFullError,
   PjsRuntimeStateError,
   PjsSerializationError,
@@ -19,6 +21,7 @@ import { Metrics } from '../telemetry/metrics.js';
 import { recordInternalProfile } from '../telemetry/profile.js';
 import type {
   RecoveryCause,
+  RetryOptions,
   RunOptions,
   RuntimeState,
   TaskSnapshot,
@@ -66,6 +69,7 @@ export class TaskCoordinator {
   private readonly tasks = new Map<string, PendingTask>();
   private readonly attempts = new Map<string, PendingTask>();
   private readonly metrics = new Metrics();
+  private readonly executions = new Map<string, string[]>();
 
   constructor(
     private readonly registry: ReadonlyMap<object, TaskDescriptor>,
@@ -105,29 +109,113 @@ export class TaskCoordinator {
 
   dispatched(task: PendingTask): void {
     for (const item of task.batch ?? [task]) {
-      if (!item.recovery || !this.tasks.has(item.id)) item.input = undefined;
+      if (
+        !item.recovery ||
+        (item.recovery.rebuildInput && (task.batch?.length ?? 1) === 1) ||
+        !this.tasks.has(item.id)
+      )
+        item.input = undefined;
       this.releaseTransfers(item);
     }
   }
 
   /** Gate each recovery-enabled posting against the original caller lifetime. */
   prepareDispatch(task: PendingTask): boolean {
-    const recovery = task.recovery;
-    if (!recovery) return true;
-    if (!this.canContinue(task)) return false;
-    const executionId = recovery.attempts === 0 ? task.id : randomUUID();
-    task.executionId = executionId;
-    this.attempts.set(executionId, task);
-    if (!recovery.fallbackUsed) recovery.attempts++;
-    task.snapshot.attempt = recovery.attempts + (recovery.fallbackUsed ? 1 : 0);
-    task.snapshot.executionId = executionId;
+    const members = task.batch ?? [task];
+    for (const task of members) {
+      if (!this.tasks.has(task.id) || (task.child && !this.canContinue(task)))
+        return false;
+      const recovery = task.recovery;
+      if (!recovery) continue;
+      if (!this.canContinue(task)) return false;
+      if (recovery.attempts > 0 && !recovery.skipped && recovery.rebuildInput) {
+        try {
+          const prepared = recovery.rebuildInput({
+            attempt: recovery.attempts + 1,
+            implementation: recovery.fallbackUsed ? 'fallback' : 'primary',
+          });
+          // Invalid async factories must not leak an unhandled rejection on the host.
+          if (types.isPromise(prepared)) {
+            void prepared.catch(() => {});
+            if (!this.canContinue(task)) return false;
+            throw new PjsSerializationError(
+              'rebuildInput must synchronously return { input, transferList? }',
+              { taskId: task.id },
+            );
+          }
+          if (!this.canContinue(task)) return false;
+          if (
+            !prepared ||
+            typeof prepared !== 'object' ||
+            !('input' in prepared) ||
+            'then' in prepared
+          )
+            throw new PjsSerializationError(
+              'rebuildInput must synchronously return { input, transferList? }',
+              { taskId: task.id },
+            );
+          const input = prepared.input;
+          if (!this.canContinue(task)) return false;
+          const requestedTransfers = prepared.transferList;
+          if (!this.canContinue(task)) return false;
+          const transferList = snapshotTransferList(requestedTransfers ?? []);
+          if (!this.canContinue(task)) return false;
+          if (
+            task.child &&
+            task.child.operation.dispatchBatchSize > 1 &&
+            transferList.length > 0
+          )
+            throw new PjsSerializationError(
+              'Batched partition dispatch does not accept input transfer lists; use batch size 1',
+              { taskId: task.id },
+            );
+          const release = reserveTransfers(transferList, task.id);
+          task.input = input;
+          task.transferList = transferList;
+          task.releaseTransfers = release;
+        } catch (cause) {
+          if (this.canContinue(task))
+            this.finishFailure(
+              task,
+              cause instanceof PjsSerializationError
+                ? cause
+                : new PjsError('Recovery input factory failed', {
+                    taskId: task.id,
+                    cause,
+                  }),
+            );
+          return false;
+        }
+      }
+      const executionId = !recovery.posted ? task.id : randomUUID();
+      task.executionId = executionId;
+      this.attempts.set(executionId, task);
+      recovery.posted = true;
+      if (!recovery.fallbackUsed) recovery.attempts++;
+      task.snapshot.attempt =
+        recovery.attempts + (recovery.fallbackUsed ? 1 : 0);
+      task.snapshot.executionId = executionId;
+      delete recovery.ready;
+      delete recovery.skipped;
+    }
+    const correlationId =
+      members.length > 1
+        ? task.recovery
+          ? randomUUID()
+          : task.id
+        : (task.executionId ?? task.id);
+    for (const member of members) member.batchLeaderId = correlationId;
+    this.executions.set(
+      correlationId,
+      members.map((member) => member.id),
+    );
     return true;
   }
 
   submit<Input, Output>(
     task: PjsTask<Input, Output>,
     input: Input,
-    options: RunOptions<NoInfer<Input>, NoInfer<Output>>,
+    options: RunOptions<NoInfer<Input>, NoInfer<Output>> | RunOptions,
     child?: PartitionChild,
     deferred?: PendingTask[],
   ): Promise<Output> {
@@ -152,7 +240,7 @@ export class TaskCoordinator {
         ),
       );
     let recovery: TaskRecovery | undefined;
-    let cancellation: 'terminate' | undefined;
+    let cancellation: 'terminate' | 'cooperative' | undefined;
     let timeout: number | undefined;
     let signal: AbortSignal | undefined;
     try {
@@ -160,6 +248,15 @@ export class TaskCoordinator {
       const retry = options.retry;
       const fallback = options.fallback;
       const repeatable = options.repeatable;
+      const rebuildInput = options.rebuildInput;
+      if (
+        rebuildInput !== undefined &&
+        (typeof rebuildInput !== 'function' ||
+          (retry === undefined && fallback === undefined))
+      )
+        throw new TypeError(
+          'rebuildInput requires a function and retry or fallback',
+        );
       const controlled = [
         'cancellation',
         'repeatable',
@@ -168,50 +265,41 @@ export class TaskCoordinator {
       ].some((name) => name in options);
       if (
         controlled &&
-        (child ||
-          'dispatchBatchSize' in options ||
+        ('dispatchBatchSize' in options ||
           'experimentalDispatchBatchSize' in options)
       )
         throw new TypeError(
           'Execution resilience requires an exclusive ordinary run() dispatch',
         );
-      if (mode !== undefined && mode !== 'settle' && mode !== 'terminate')
-        throw new TypeError('cancellation must be settle or terminate');
-      if (mode === 'terminate') cancellation = mode;
-      if (repeatable !== undefined && repeatable !== true)
-        throw new TypeError('repeatable must be true');
-      if (retry !== undefined || fallback !== undefined) {
-        if (repeatable !== true)
-          throw new TypeError('retry and fallback require repeatable: true');
-        const maxAttempts =
-          retry === undefined
-            ? 1
-            : integer('retry.maxAttempts', retry.maxAttempts, 1);
-        const backoffMs = integer(
-          'retry.backoffMs',
-          retry?.backoffMs ?? 0,
-          0,
-          2 ** 31 - 1,
+      if (
+        mode !== undefined &&
+        mode !== 'settle' &&
+        mode !== 'terminate' &&
+        mode !== 'cooperative'
+      )
+        throw new TypeError(
+          'cancellation must be settle, cooperative or terminate',
         );
-        recovery = {
-          maxAttempts,
-          backoffMs,
-          on: this.recoveryCauses(retry?.on, ['worker-crash']),
-          attempts: 0,
-          fallbackUsed: false,
-        };
-        if (fallback !== undefined) {
-          const alternative = this.registry.get(fallback.task);
-          if (!alternative || alternative === descriptor)
-            throw new PjsTaskRegistrationError(
-              'Fallback must be a different task in this runtime registry snapshot',
-              { taskId: id },
+      if (mode === 'terminate' || mode === 'cooperative') cancellation = mode;
+      recovery = this.createRecovery(
+        task,
+        retry,
+        fallback,
+        repeatable,
+        rebuildInput,
+        { taskId: id },
+      );
+      if (child?.operation.recovery) {
+        recovery = { ...child.operation.recovery };
+        const rebuild = child.operation.rebuildInput;
+        if (rebuild)
+          recovery.rebuildInput = (next) =>
+            child.operation.runInAsyncScope(
+              rebuild,
+              undefined,
+              child.partition,
+              next,
             );
-          recovery.fallback = {
-            descriptor: alternative,
-            on: this.recoveryCauses(fallback.on, ['task-error']),
-          };
-        }
       }
       timeout = options.timeout;
       if (timeout !== undefined) integer('timeout', timeout, 1, 2 ** 31 - 1);
@@ -252,7 +340,8 @@ export class TaskCoordinator {
       if (
         transferList.length > 0 &&
         recovery &&
-        (recovery.maxAttempts > 1 || recovery.fallback)
+        (recovery.maxAttempts > 1 || recovery.fallback) &&
+        !recovery.rebuildInput
       )
         throw new PjsSerializationError(
           'Input transfer lists cannot be combined with retries or fallback',
@@ -377,7 +466,8 @@ export class TaskCoordinator {
         // A getter may abort during postMessage. Hold ownership until posting finishes.
         if (
           pending.snapshot.status === 'created' ||
-          pending.snapshot.status === 'queued'
+          pending.snapshot.status === 'queued' ||
+          pending.snapshot.status === 'recovering'
         )
           this.releaseTransfers(pending);
       };
@@ -395,14 +485,11 @@ export class TaskCoordinator {
   }
 
   started(worker: PjsWorker, taskId: string): void {
-    const task = this.executionTask(taskId);
-    if (task?.batch) {
-      for (const item of task.batch) {
-        item.snapshot.status = 'running';
-        item.snapshot.startedAt = Date.now();
-        item.snapshot.workerId = worker.id;
-      }
-    } else if (task) {
+    const single = this.executionTask(taskId);
+    for (const id of this.executions.get(taskId) ??
+      (single ? [single.id] : [])) {
+      const task = this.tasks.get(id);
+      if (!task) continue;
       task.snapshot.status = 'running';
       task.snapshot.startedAt = Date.now();
       task.snapshot.workerId = worker.id;
@@ -411,9 +498,24 @@ export class TaskCoordinator {
 
   result(worker: PjsWorker, message: ExecutionResultMessage): void {
     const profileStarted = message.profile ? performance.now() : 0;
+    const correlationId =
+      message.type === 'batchResult' ? message.batchId : message.taskId;
     if (message.type === 'batchResult') {
       for (const item of message.items) this.resultItem(worker, item);
+      // Only a task-failure suffix proves these functions were never invoked.
+      const failure = message.items.at(-1);
+      if (failure?.type === 'failure' && failure.kind === 'task') {
+        for (const id of message.skippedTaskIds) {
+          const task = this.executionTask(id);
+          if (!task?.recovery || !this.canContinue(task)) continue;
+          task.recovery.attempts--;
+          task.recovery.skipped = true;
+          task.snapshot.status = 'recovering';
+          this.queueRecovery(task, 0);
+        }
+      }
     } else this.resultItem(worker, message);
+    this.executions.delete(correlationId);
     if (profileStarted)
       recordInternalProfile(
         'hostResultSettlement',
@@ -423,39 +525,42 @@ export class TaskCoordinator {
   }
 
   failTask(error: PjsWorkerError, reason?: WorkerFailureReason): void {
-    const task = error.taskId ? this.executionTask(error.taskId) : undefined;
-    if (!task) return;
-    const logical =
-      error.taskId === task.id
-        ? error
-        : error instanceof PjsExecutionLeaseError
-          ? new PjsExecutionLeaseError(error.message, {
-              taskId: task.id,
-              ...(error.workerId === undefined
-                ? {}
-                : { workerId: error.workerId }),
-              cause: error.cause,
-            })
-          : new PjsWorkerError(error.message, {
-              taskId: task.id,
-              ...(error.workerId === undefined
-                ? {}
-                : { workerId: error.workerId }),
-              cause: error.cause,
-            });
-    this.failedAttempt(
-      task,
-      logical,
-      reason === 'worker-crash' || reason === 'execution-lease'
-        ? reason
-        : undefined,
-      false,
-    );
+    const members = error.taskId
+      ? this.executions.get(error.taskId)
+      : undefined;
+    const single = error.taskId ? this.executionTask(error.taskId) : undefined;
+    for (const id of members ?? (single ? [single.id] : [])) {
+      const task = this.tasks.get(id);
+      if (!task) continue;
+      const context = {
+        taskId: task.id,
+        ...(error.workerId === undefined ? {} : { workerId: error.workerId }),
+        cause: error.cause,
+      };
+      const logical =
+        error.taskId === task.id
+          ? error
+          : error instanceof PjsExecutionLeaseError
+            ? new PjsExecutionLeaseError(error.message, context)
+            : new PjsWorkerError(error.message, context);
+      this.failedAttempt(
+        task,
+        logical,
+        reason === 'worker-crash' || reason === 'execution-lease'
+          ? reason
+          : undefined,
+        false,
+      );
+    }
   }
 
   exited(correlationId: string): void {
-    const task = this.executionTask(correlationId);
-    if (task?.recovery?.pendingFailure) this.queueRecovery(task);
+    const members = this.executions.get(correlationId);
+    this.executions.delete(correlationId);
+    for (const id of members ?? []) {
+      const task = this.tasks.get(id);
+      if (task?.recovery?.pendingFailure) this.queueRecovery(task);
+    }
   }
 
   dispatchFailed(task: PendingTask, error: Error): void {
@@ -469,7 +574,9 @@ export class TaskCoordinator {
             cause: error.cause,
           })
         : error;
-    this.finishFailure(task, logical);
+    this.executions.delete(task.batchLeaderId ?? task.executionId ?? task.id);
+    for (const member of task.batch ?? [task])
+      if (this.tasks.has(member.id)) this.finishFailure(member, logical);
   }
 
   settle(
@@ -525,6 +632,55 @@ export class TaskCoordinator {
     return this.runtime.canAccept(child !== undefined);
   }
 
+  createRecovery(
+    task: object,
+    retry: RetryOptions | undefined,
+    fallback: { task: object; on?: readonly RecoveryCause[] } | undefined,
+    repeatable: unknown,
+    rebuildInput: TaskRecovery['rebuildInput'],
+    context: { taskId?: string; operationId?: string },
+  ): TaskRecovery | undefined {
+    const descriptor = this.registry.get(task);
+    let recovery: TaskRecovery | undefined;
+    if (repeatable !== undefined && repeatable !== true)
+      throw new TypeError('repeatable must be true');
+    if (retry !== undefined || fallback !== undefined) {
+      if (repeatable !== true)
+        throw new TypeError('retry and fallback require repeatable: true');
+      const maxAttempts =
+        retry === undefined
+          ? 1
+          : integer('retry.maxAttempts', retry.maxAttempts, 1);
+      const backoffMs = integer(
+        'retry.backoffMs',
+        retry?.backoffMs ?? 0,
+        0,
+        2 ** 31 - 1,
+      );
+      recovery = {
+        ...(rebuildInput ? { rebuildInput } : {}),
+        maxAttempts,
+        backoffMs,
+        on: this.recoveryCauses(retry?.on, ['worker-crash']),
+        attempts: 0,
+        fallbackUsed: false,
+      };
+      if (fallback !== undefined) {
+        const alternative = this.registry.get(fallback.task);
+        if (!alternative || alternative === descriptor)
+          throw new PjsTaskRegistrationError(
+            'Fallback must be a different task in this runtime registry snapshot',
+            context,
+          );
+        recovery.fallback = {
+          descriptor: alternative,
+          on: this.recoveryCauses(fallback.on, ['task-error']),
+        };
+      }
+    }
+    return recovery;
+  }
+
   private recoveryCauses(
     value: readonly RecoveryCause[] | undefined,
     defaults: RecoveryCause[],
@@ -572,7 +728,9 @@ export class TaskCoordinator {
     const detail =
       task.cancellation === 'terminate'
         ? '; physical cancellation enabled'
-        : '; an active execution may still finish';
+        : task.cancellation === 'cooperative'
+          ? '; cooperative cancellation requested'
+          : '; an active execution may still finish';
     const error =
       status === 'cancelled'
         ? new PjsCancelledError(message + detail, context)
@@ -580,10 +738,13 @@ export class TaskCoordinator {
     this.settle(task, status, error);
     if (task.cancellation === 'terminate')
       this.dispatcher.terminateExecution(correlationId);
+    else if (task.cancellation === 'cooperative')
+      this.dispatcher.cooperateExecution(correlationId);
   }
 
   private canContinue(task: PendingTask): boolean {
     if (!this.tasks.has(task.id)) return false;
+    if (task.child && !this.parents.canSubmit(task.child)) return false;
     const recovery = task.recovery;
     if (recovery?.signal?.aborted) {
       this.cancel(task, 'cancelled', recovery.signal.reason);
@@ -655,7 +816,7 @@ export class TaskCoordinator {
     if (ended) this.queueRecovery(task);
   }
 
-  private queueRecovery(task: PendingTask): void {
+  private queueRecovery(task: PendingTask, overrideDelay?: number): void {
     if (!this.canContinue(task)) return;
     const recovery = task.recovery!;
     if (task.executionId) this.attempts.delete(task.executionId);
@@ -666,14 +827,21 @@ export class TaskCoordinator {
     delete task.snapshot.startedAt;
     delete recovery.pendingFailure;
     task.attemptQueuedAt = performance.now();
-    this.dispatcher.retainRecovery(task);
-    const delay = recovery.fallbackUsed ? 0 : recovery.backoffMs;
-    if (delay === 0) this.dispatcher.readyRecovery(task.id);
+    delete task.batch;
+    delete task.batchLeaderId;
+    if (!task.child) this.dispatcher.retainRecovery(task);
+    const ready = () => {
+      if (task.child) recovery.ready = true;
+      else this.dispatcher.readyRecovery(task.id);
+    };
+    const delay =
+      overrideDelay ?? (recovery.fallbackUsed ? 0 : recovery.backoffMs);
+    if (delay === 0) ready();
     else {
       const timer = setTimeout(() => {
         if (recovery.timer !== timer || !this.tasks.has(task.id)) return;
         delete recovery.timer;
-        if (this.canContinue(task)) this.dispatcher.readyRecovery(task.id);
+        if (this.canContinue(task)) ready();
         this.runtime.requestPump();
       }, delay);
       recovery.timer = timer;
@@ -706,6 +874,7 @@ export class TaskCoordinator {
       }
       this.settle(task, 'completed', undefined, message.output);
     } else if (message.type === 'completed') this.settle(task, 'completed');
+    else if (message.type === 'cancelled') this.cancel(task, 'cancelled');
     else {
       const context = { taskId: task.id, workerId: worker.id };
       const error =

@@ -21,7 +21,7 @@ export function parallelMapRange<
   task: PjsTask<Input, InstanceType<Constructor>>,
   range: PartitionRange,
   createInput: (partition: RangePartition) => PartitionInput<Input>,
-  options: TypedMapRangeOptions<Constructor>,
+  options: TypedMapRangeOptions<Constructor, NoInfer<Input>>,
 ): Promise<InstanceType<Constructor>>;
 /** @experimental Ordered element map assembled from validated array blocks. */
 export function parallelMapRange<Input, Output>(
@@ -29,21 +29,23 @@ export function parallelMapRange<Input, Output>(
   task: PjsTask<Input, readonly Output[]>,
   range: PartitionRange,
   createInput: (partition: RangePartition) => PartitionInput<Input>,
-  options?: PartitionOptions,
+  options?: PartitionOptions<NoInfer<Input>, readonly NoInfer<Output>[]>,
 ): Promise<Output[]>;
 export function parallelMapRange<Input>(
   submission: RangeSubmission,
   task: PjsTask<Input, readonly unknown[] | PjsTypedArray>,
   range: PartitionRange,
   createInput: (partition: RangePartition) => PartitionInput<Input>,
-  options: PartitionOptions | TypedMapRangeOptions,
+  options:
+    | PartitionOptions<Input, readonly unknown[] | PjsTypedArray>
+    | TypedMapRangeOptions<PjsTypedArrayConstructor, Input>,
 ): Promise<unknown[] | PjsTypedArray>;
 export function parallelMapRange<Input>(
   submission: RangeSubmission,
   task: PjsTask<Input, readonly unknown[] | PjsTypedArray>,
   range: PartitionRange,
   createInput: (partition: RangePartition) => PartitionInput<Input>,
-  options: PartitionOptions & {
+  options: PartitionOptions<Input, readonly unknown[] | PjsTypedArray> & {
     outputConstructor?: PjsTypedArrayConstructor;
     experimentalOutputConstructor?: PjsTypedArrayConstructor;
   } = {},

@@ -12,7 +12,7 @@ export function partitionRange<Input, Output>(
   task: PjsTask<Input, Output>,
   range: PartitionRange,
   createInput: (partition: RangePartition) => PartitionInput<Input>,
-  options: PartitionOptions = {},
+  options: PartitionOptions<NoInfer<Input>, NoInfer<Output>> = {},
 ): Promise<Output[]> {
   return submission.start(
     task,

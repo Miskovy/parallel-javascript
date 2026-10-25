@@ -23,10 +23,10 @@ const typedArrayConstructors = new Set<PjsTypedArrayConstructor>([
 ]);
 
 /** Preserves option access order without creating accepted-operation state. */
-export function validateRangeRequest(
+export function validateRangeRequest<Input, Output>(
   range: PartitionRange,
   createInput: unknown,
-  options: PartitionOptions,
+  options: PartitionOptions<Input, Output>,
   resultMode: RangeResultMode,
   mapOutputConstructor?: PjsTypedArrayConstructor,
 ) {
@@ -34,11 +34,6 @@ export function validateRangeRequest(
     throw new TypeError(
       'executionLease is unsupported for range and batch operations',
     );
-  for (const name of ['repeatable', 'retry', 'fallback'])
-    if (name in options)
-      throw new TypeError(
-        `${name} requires an exclusive ordinary run() dispatch`,
-      );
   const plan = planRange(
     range,
     resultMode === 'collect' || resultMode === 'map'
@@ -53,9 +48,12 @@ export function validateRangeRequest(
   if (
     cancellation !== undefined &&
     cancellation !== 'settle' &&
+    cancellation !== 'cooperative' &&
     cancellation !== 'terminate'
   )
-    throw new TypeError('cancellation must be settle or terminate');
+    throw new TypeError(
+      'cancellation must be settle, cooperative or terminate',
+    );
   const batchName = optionSpelling(
     options,
     'dispatchBatchSize',

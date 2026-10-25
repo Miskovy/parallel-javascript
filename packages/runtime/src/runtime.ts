@@ -44,7 +44,7 @@ export class PjsRuntime {
     task: PjsTask<Input, Output>,
     range: PartitionRange,
     createInput: (partition: RangePartition) => PartitionInput<Input>,
-    options: PartitionOptions = {},
+    options: PartitionOptions<NoInfer<Input>, NoInfer<Output>> = {},
   ): Promise<Output[]> {
     return adaptPartitionRange(
       this.components.rangeCoordinator,
@@ -63,7 +63,7 @@ export class PjsRuntime {
     task: PjsTask<Input, unknown>,
     range: PartitionRange,
     createInput: (partition: RangePartition) => PartitionInput<Input>,
-    options: PartitionOptions = {},
+    options: PartitionOptions<NoInfer<Input>, unknown> = {},
   ): Promise<void> {
     return adaptParallelFor(
       this.components.rangeCoordinator,
@@ -79,20 +79,22 @@ export class PjsRuntime {
     task: PjsTask<Input, InstanceType<Constructor>>,
     range: PartitionRange,
     createInput: (partition: RangePartition) => PartitionInput<Input>,
-    options: TypedMapRangeOptions<Constructor>,
+    options: TypedMapRangeOptions<Constructor, NoInfer<Input>>,
   ): Promise<InstanceType<Constructor>>;
   /** Ordered element map assembled from validated array blocks. */
   parallelMapRange<Input, Output>(
     task: PjsTask<Input, readonly Output[]>,
     range: PartitionRange,
     createInput: (partition: RangePartition) => PartitionInput<Input>,
-    options?: PartitionOptions,
+    options?: PartitionOptions<NoInfer<Input>, readonly NoInfer<Output>[]>,
   ): Promise<Output[]>;
   parallelMapRange<Input>(
     task: PjsTask<Input, readonly unknown[] | PjsTypedArray>,
     range: PartitionRange,
     createInput: (partition: RangePartition) => PartitionInput<Input>,
-    options: PartitionOptions | TypedMapRangeOptions = {},
+    options:
+      | PartitionOptions<Input, readonly unknown[] | PjsTypedArray>
+      | TypedMapRangeOptions<PjsTypedArrayConstructor, Input> = {},
   ): Promise<unknown[] | PjsTypedArray> {
     return adaptParallelMapRange(
       this.components.rangeCoordinator,
@@ -108,22 +110,24 @@ export class PjsRuntime {
     task: PjsTask<Input, Output>,
     range: PartitionRange,
     createInput: (partition: RangePartition) => PartitionInput<Input>,
-    options: BinaryStreamRangeOptions | UpperBoundBinaryStreamRangeOptions,
+    options:
+      | BinaryStreamRangeOptions<NoInfer<Input>, NoInfer<Output>>
+      | UpperBoundBinaryStreamRangeOptions<NoInfer<Input>, NoInfer<Output>>,
   ): PjsRangeStream<Output>;
   streamRange<Input, Output>(
     task: PjsTask<Input, Output>,
     range: PartitionRange,
     createInput: (partition: RangePartition) => PartitionInput<Input>,
-    options?: CountOnlyStreamRangeOptions,
+    options?: CountOnlyStreamRangeOptions<NoInfer<Input>, NoInfer<Output>>,
   ): PjsRangeStream<Output>;
   streamRange<Input, Output>(
     task: PjsTask<Input, Output>,
     range: PartitionRange,
     createInput: (partition: RangePartition) => PartitionInput<Input>,
     options:
-      | StreamRangeOptions
-      | BinaryStreamRangeOptions
-      | UpperBoundBinaryStreamRangeOptions = {},
+      | StreamRangeOptions<Input, Output>
+      | BinaryStreamRangeOptions<Input, Output>
+      | UpperBoundBinaryStreamRangeOptions<Input, Output> = {},
   ): PjsRangeStream<Output> {
     return adaptStreamRange(
       this.components.streamRange,
@@ -136,8 +140,8 @@ export class PjsRuntime {
 
   run<Input, Output>(
     task: PjsTask<Input, Output>,
-    input: Input,
-    options: RunOptions<NoInfer<Input>, NoInfer<Output>> = {},
+    input: NoInfer<Input>,
+    options: RunOptions<NoInfer<Input>, NoInfer<Output>> | RunOptions = {},
   ): Promise<Output> {
     return adaptRun(this.components.taskCoordinator, task, input, options);
   }

@@ -1,4 +1,5 @@
 import type { PjsTask } from '../tasks/registry.js';
+import type { PartitionInput } from '../partition/range.js';
 
 /** Node JS-engine limits in MiB; excludes ArrayBuffers, native allocations and RSS. */
 export interface WorkerResourceLimits {
@@ -64,6 +65,19 @@ export interface RetryOptions {
   on?: readonly RecoveryCause[];
 }
 
+/** Supplied as the second task argument only in explicit cooperative mode. */
+export interface TaskContext {
+  readonly signal: AbortSignal;
+  /** Poll shared cancellation state, abort the local signal and throw AbortError. */
+  throwIfCancelled(): void;
+}
+
+/** Metadata for a selected recovery execution, including the single fallback. */
+export interface RecoveryAttempt {
+  readonly attempt: number;
+  readonly implementation: 'primary' | 'fallback';
+}
+
 // A never output keeps legacy non-generic options assignable to every run schema.
 export interface RunOptions<Input = unknown, Output = never> {
   signal?: AbortSignal;
@@ -79,9 +93,13 @@ export interface RunOptions<Input = unknown, Output = never> {
    */
   executionLease?: number;
   /** Applies to both signal abort and timeout; defaults to settle. */
-  cancellation?: 'settle' | 'terminate';
+  cancellation?: 'settle' | 'cooperative' | 'terminate';
   /** Required with retry/fallback: partial and repeated execution must be safe. */
   repeatable?: true;
+  /** Synchronous reconstruction after capacity is claimed; never used for initial input. */
+  rebuildInput?: [Output] extends [never]
+    ? never
+    : (next: RecoveryAttempt) => PartitionInput<Input>;
   retry?: RetryOptions;
   /** One alternative implementation in this runtime's pool; never retried. */
   fallback?: {
