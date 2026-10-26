@@ -118,6 +118,151 @@ settlement by default; `cancellation: 'terminate'` also stops active execution.
 Constructor/registration validation throws; ordinary
 submission validation rejects. See [errors](errors.md) and [lifecycle](lifecycle.md).
 
+## Priorities and custom scheduling (development)
+
+`priority` is an optional signed 32-bit integer on run() and every range API.
+Higher values dispatch first; the default is zero, with stable FIFO ties. Priority
+ranks eligible queued physical executions, never preempts running JavaScript and
+does not bypass maxQueue. Retries/fallback retain priority but join at a fresh queue
+position when runnable. A physical batch retains one priority and its logical
+queue weight. Lazy range production and deferred continuations remain round-robin,
+so priority is not an end-to-end range latency guarantee. Strict priority can starve
+lower ranks; there is no automatic aging.
+
+```ts
+const runtime = new PjsRuntime({ registry, workers: 2, maxQueue: 32 });
+await runtime.run(task, input, { priority: 10 });
+
+// Optional comparator replaces the built-in ranking; zero retains FIFO ties.
+const custom = new PjsRuntime({
+  registry,
+  workers: 2,
+  scheduling: (a, b) => b.priority - a.priority || a.weight - b.weight,
+});
+```
+
+The comparator receives frozen SchedulingTask metadata: taskId, taskName, priority,
+queuedAt (epoch milliseconds for this entry), weight, exclusive, and optional
+operationId/partitionIndex. It cannot mutate internal records or authorize dispatch.
+Keep it synchronous, cheap and free of side effects. Throws, invalid returns or
+reentrant scheduling mutations disable it for that runtime, increment
+stats().scheduling.policyErrors and restore built-in priority/FIFO. Capacity and
+cancellation still belong to PJS.
+
+## Asynchronous concurrency per worker (development)
+
+`concurrency` is a positive safe integer, default one. It permits overlapping async
+invocations within each isolate, not extra JavaScript CPU threads. Task modules and
+their mutable globals must tolerate interleaving. A CPU loop blocks that worker's
+other invocations until it yields/returns; resourceLimits apply to the entire isolate.
+
+```ts
+const io = new PjsRuntime({
+  registry,
+  workers: 1,
+  concurrency: 2,
+  maxQueue: 0,
+});
+await io.ready();
+const responses = await Promise.all([
+  io.run(fetchTask, firstUrl),
+  io.run(fetchTask, secondUrl),
+]);
+```
+
+A third ordinary call rejects when both slots are occupied with maxQueue:0. Queued
+batches still cost one logical queue credit per partition and execute their members
+sequentially in one physical slot. Range child windows use execution capacity;
+stream count/byte limits still apply, and the default stream count remains worker
+count. Raise maxBufferedResults explicitly when more overlap is useful.
+
+Terminate-mode work and ordinary executionLease calls automatically require an
+empty worker exclusively. A selected waiting exclusive job drains one worker by
+stopping new shared posts there while existing work finishes; other workers can
+continue. Cancelling that waiter restores sharing. With maxQueue:0, a new ordinary
+exclusive call rejects if no empty compatible worker exists; accepted range parents
+can wait through bounded lazy production. Ignored/never-ending existing work can
+prevent draining indefinitely. Cooperation can target one shared invocation, without
+automatic escalation. Forced shutdown can terminate every hosted invocation.
+
+An unexpected worker exit fails every physical invocation on that thread, each with
+its own retry/fallback eligibility, but consumes one worker restart decision.
+Logical cancellation never frees an active slot before final response/confirmed exit.
+
+## Progress notifications (development)
+
+An optional third registration generic declares the application progress schema.
+Ordinary interfaces need no index signature. Registration does not inspect the
+export's signature or verify that schema at runtime.
+
+```ts
+// download-task.ts
+import type { TaskContext } from '@pjavascript/runtime';
+interface DownloadProgress {
+  done: number;
+  total: number;
+}
+export async function download(
+  urls: string[],
+  context: TaskContext<DownloadProgress>,
+) {
+  const values: string[] = [];
+  for (const url of urls) {
+    context.throwIfCancelled();
+    values.push(await (await fetch(url, { signal: context.signal })).text());
+    context.reportProgress({ done: values.length, total: urls.length });
+  }
+  return values;
+}
+
+// Host; register before constructing this runtime.
+const downloads = registry.register<string[], string[], DownloadProgress>(
+  'downloads',
+  new URL('./download-task.js', import.meta.url),
+  'download',
+);
+const runtime = new PjsRuntime({ registry, workers: 1, concurrency: 2 });
+const values = await runtime.run(downloads, urls, {
+  signal: controller.signal,
+  cancellation: 'cooperative',
+  onProgress(event) {
+    console.log(event.attempt, event.value.done, event.value.total);
+  },
+});
+```
+
+Calls without onProgress or cooperative mode still invoke execute(input) with
+exactly one argument. Either explicit opt-in supplies execute(input, context).
+For progress-only settle/terminate calls, context.signal remains un-aborted and
+throwIfCancelled is a no-op; reporting does not implicitly enable cooperation.
+Contexts/reporters are invocation-local, including concurrent async work and batch
+items. onProgress on a range receives child notifications, not an aggregate percent.
+
+The unconstrained schema generic defaults to ProgressValue, but actual wire values
+must be small JSON data: finite numbers, strings, booleans, null, dense arrays and
+plain records. Binary/shared buffers, functions, accessors, cycles and class
+instances are unsupported. The incremental encoder enforces 16 KiB UTF-8 and depth
+16 before producing a large serialized copy. reportProgress returns false for an
+unsupported/oversized value or a closed/unsubscribed reporter; it does not fail the
+task. A declared type is not a guarantee that its runtime value is permitted.
+
+Reporting is bounded and deliberately lossy: one in-flight frame and one coalesced
+latest pending frame per physical execution, with bounded host callback delivery.
+True means accepted for possible delivery, not delivered. Sequences increase within
+one invocation with gaps; there is no guaranteed final 100% notification. Results
+are authoritative. Events carry stable taskId, original taskName, fresh executionId,
+physical correlationId, actual implementation name, attempt, sequence, workerId and
+optional operationId/partitionIndex. Retries/fallback can repeat work and restart
+sequence numbering; do not sum progress across attempts blindly.
+
+No notification is delivered after its logical child/call settles, cancellation,
+stream close or worker failure. Old attempt notifications cannot reach a successor.
+Progress neither settles callers nor releases result credits. Observers must be cheap
+and synchronous: a throw or returned Promise/thenable disables that logical observer
+(the whole parent observer for a range), increments stats().progress.callbackErrors,
+and leaves computation/recovery unchanged. Promise rejections are consumed, not
+awaited. Callback work/retained values remain application-owned.
+
 ## Ordinary execution resilience (development)
 
 These options are available in development source, not published RC4. They apply
@@ -172,9 +317,11 @@ for units, unsupported range/batch combinations and recovery limits.
 ## Cooperative task cancellation (development)
 
 Choose `cancellation: 'cooperative'` explicitly to pass a second task argument,
-`TaskContext`. Settle/terminate modes retain exactly `execute(input)`, including
-argument count and rest-parameter behavior. Context is available only in cooperative
-mode; registered handles still describe the input/output schema as before.
+`TaskContext`. Without onProgress, settle/terminate modes retain exactly
+execute(input), including argument count and rest-parameter behavior. Explicit
+progress also supplies context, but only cooperative mode enables its cancellation
+signal and polling. Registered handles declare input, output and optional progress
+schemas without runtime application-schema validation.
 
 ```ts
 import type { TaskContext } from '@pjavascript/runtime';

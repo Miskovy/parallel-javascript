@@ -11,12 +11,14 @@ import {
   recordInternalProfile,
 } from '../telemetry/profile.js';
 import type { WorkerResourceLimits, WorkerState } from '../types/index.js';
+import { encodeProgress, MAX_PROGRESS_BYTES } from './progress.js';
 import { isWorkerMessage } from './protocol.js';
 import type {
   BatchInput,
   BootstrapData,
   ExecutionResultMessage,
   HostMessage,
+  ProgressMessage,
   UpperBoundResultByteContract,
 } from './protocol.js';
 
@@ -33,7 +35,13 @@ export interface WorkerCallbacks {
     wasStarting: boolean,
     reason: WorkerFailureReason,
   ): void;
-  exited(worker: PjsWorker, correlationId: string | undefined): void;
+  exited(worker: PjsWorker, correlationIds: readonly string[]): void;
+  progress?(
+    worker: PjsWorker,
+    message: ProgressMessage,
+    value: unknown,
+    acknowledge: () => void,
+  ): void;
   leaseTerminationRequested?(worker: PjsWorker): void;
 }
 
@@ -46,15 +54,29 @@ interface ExecutionLease {
 export class PjsWorker {
   readonly ready: Promise<void>;
   private readonly thread: Worker;
-  private readonly state: WorkerState;
+  private readonly state: WorkerState & {
+    currentTaskIds: string[];
+    exclusive: boolean;
+  };
   private readonly startupTimer: ReturnType<typeof setTimeout>;
   private resolveReady!: () => void;
   private rejectReady!: (error: Error) => void;
   private stopPromise: Promise<void> | undefined;
-  private executionPhase: 'none' | 'scheduled' | 'running' = 'none';
-  private currentTaskIds: string[] = [];
+  private readonly executions = new Map<
+    string,
+    {
+      phase: 'scheduled' | 'running';
+      itemIds: string[];
+      cancellation?: Int32Array<SharedArrayBuffer>;
+      exclusive: boolean;
+      progress?: {
+        flag: Int32Array<SharedArrayBuffer>;
+        sequences: Map<string, number>;
+        pending: boolean;
+      };
+    }
+  >();
   private exitObserved = false;
-  private cancellation: Int32Array<SharedArrayBuffer> | undefined;
   private lease: ExecutionLease | undefined;
   leaseExpired = false;
 
@@ -64,6 +86,7 @@ export class PjsWorker {
     startupTimeout: number,
     private readonly callbacks: WorkerCallbacks,
     resourceLimits?: WorkerResourceLimits,
+    readonly concurrency = 1,
   ) {
     this.ready = new Promise((resolve, reject) => {
       this.resolveReady = resolve;
@@ -72,13 +95,17 @@ export class PjsWorker {
     // A replacement can fail before the pool attaches a readiness waiter.
     void this.ready.catch(() => {});
     this.thread = new Worker(new URL('./bootstrap.js', import.meta.url), {
-      workerData: { version: 2, tasks } satisfies BootstrapData,
+      workerData: { version: 2, tasks, concurrency } satisfies BootstrapData,
       ...(resourceLimits ? { resourceLimits: { ...resourceLimits } } : {}),
     });
     this.state = {
       id,
       threadId: this.thread.threadId,
       status: 'starting',
+      concurrency,
+      currentTaskIds: [],
+      exclusive: false,
+      draining: false,
       completedTasks: 0,
       failedTasks: 0,
       totalExecutionTimeMs: 0,
@@ -103,7 +130,7 @@ export class PjsWorker {
   }
 
   snapshot(): WorkerState {
-    return { ...this.state };
+    return { ...this.state, currentTaskIds: [...this.executions.keys()] };
   }
 
   /** Internal hot-path state check; public snapshots remain defensive copies. */
@@ -113,16 +140,79 @@ export class PjsWorker {
 
   /** Failure and termination intent do not end an occupied physical slot. */
   get hasPhysicalExecution(): boolean {
-    return this.state.currentTaskId !== undefined;
+    return this.executions.size > 0;
+  }
+
+  /** Existing internal inspection hooks remain useful for default single execution. */
+  get executionPhase(): 'none' | 'scheduled' | 'running' {
+    return this.executions.values().next().value?.phase ?? 'none';
+  }
+  get currentTaskIds(): string[] {
+    return [...this.executions.values()].flatMap((entry) => entry.itemIds);
+  }
+  get activeExecutions(): number {
+    return this.executions.size;
+  }
+  get exclusive(): boolean {
+    return this.state.exclusive;
+  }
+  get availableSlots(): number {
+    return (this.status === 'idle' || this.status === 'busy') && !this.exclusive
+      ? this.concurrency - this.executions.size
+      : 0;
+  }
+  correlations(): string[] {
+    return [...this.executions.keys()];
+  }
+  owns(correlationId: string): boolean {
+    return this.executions.has(correlationId);
+  }
+  canExecute(exclusive = false): boolean {
+    return (
+      this.availableSlots > 0 && (!exclusive || this.executions.size === 0)
+    );
+  }
+  private refreshOccupancy(): void {
+    this.state.currentTaskIds = this.correlations();
+    if (this.executions.size === 1)
+      this.state.currentTaskId = this.state.currentTaskIds[0]!;
+    else delete this.state.currentTaskId;
+    this.state.exclusive = [...this.executions.values()].some(
+      (entry) => entry.exclusive,
+    );
+    if (this.status === 'idle' || this.status === 'busy')
+      this.state.status = this.executions.size ? 'busy' : 'idle';
+  }
+  private begin(
+    correlationId: string,
+    itemIds: string[],
+    cancellation: Int32Array<SharedArrayBuffer> | undefined,
+    exclusive: boolean,
+    progress?: Int32Array<SharedArrayBuffer>,
+  ): void {
+    if (!this.canExecute(exclusive) || this.executions.has(correlationId))
+      throw new PjsWorkerError('Worker has no compatible execution slot', {
+        taskId: correlationId,
+        workerId: this.id,
+      });
+    this.executions.set(correlationId, {
+      phase: 'scheduled',
+      itemIds,
+      exclusive,
+      ...(cancellation ? { cancellation } : {}),
+      ...(progress
+        ? { progress: { flag: progress, sequences: new Map(), pending: false } }
+        : {}),
+    });
+    this.refreshOccupancy();
   }
 
   /** Called only after successful posting and the dispatcher credit claim. */
   armExecutionLease(correlationId: string, duration: number): void {
-    if (
-      this.state.status !== 'busy' ||
-      this.state.currentTaskId !== correlationId
-    )
+    if (this.state.status !== 'busy' || !this.executions.has(correlationId))
       return; // Reentrant shutdown during posting has already initiated containment.
+    if (this.executions.size !== 1 || (!this.exclusive && this.concurrency > 1))
+      throw new PjsWorkerError('Execution leases require exclusive placement');
     const lease: ExecutionLease = {
       correlationId,
       deadline: this.monotonicNow() + duration,
@@ -160,7 +250,7 @@ export class PjsWorker {
     if (
       this.lease !== lease ||
       this.state.status !== 'busy' ||
-      this.state.currentTaskId !== lease.correlationId
+      !this.executions.has(lease.correlationId)
     )
       return;
     const remaining = lease.deadline - this.monotonicNow();
@@ -192,16 +282,15 @@ export class PjsWorker {
     expectedResultBytes?: number,
     resultByteContract?: UpperBoundResultByteContract,
     cancellation?: Int32Array<SharedArrayBuffer>,
+    exclusive = false,
+    progress?: Int32Array<SharedArrayBuffer>,
   ): void {
-    if (this.state.status !== 'idle')
+    if (!this.canExecute(exclusive))
       throw new PjsWorkerError('Worker is not idle', {
         taskId,
         workerId: this.id,
       });
-    this.cancellation = cancellation;
-    this.state.status = 'busy';
-    this.state.currentTaskId = taskId;
-    this.executionPhase = 'scheduled';
+    this.begin(taskId, [], cancellation, exclusive, progress);
     try {
       validateTransferList(transferList);
       const postStarted = profile ? performance.now() : 0;
@@ -209,6 +298,8 @@ export class PjsWorker {
         this.thread.postMessage(
           {
             type: 'execute',
+            exclusive,
+            ...(progress ? { progressBuffer: progress.buffer } : {}),
             ...(cancellation
               ? { cancellationBuffer: cancellation.buffer }
               : {}),
@@ -228,6 +319,8 @@ export class PjsWorker {
         this.thread.postMessage(
           {
             type: 'execute',
+            exclusive,
+            ...(progress ? { progressBuffer: progress.buffer } : {}),
             ...(cancellation
               ? { cancellationBuffer: cancellation.buffer }
               : {}),
@@ -248,11 +341,9 @@ export class PjsWorker {
           performance.now() - postStarted,
         );
     } catch (cause) {
-      this.state.status = 'idle';
-      this.cancellation = undefined;
-      delete this.state.currentTaskId;
-      this.currentTaskIds = [];
-      this.executionPhase = 'none';
+      this.closeProgress(taskId);
+      this.executions.delete(taskId);
+      this.refreshOccupancy();
       throw new PjsSerializationError(
         `Task input could not be serialized: ${cause instanceof Error ? cause.message : 'unknown cause'}`,
         {
@@ -270,8 +361,10 @@ export class PjsWorker {
     items: BatchInput[],
     completionOnly = false,
     cancellation?: Int32Array<SharedArrayBuffer>,
+    exclusive = false,
+    progress?: Int32Array<SharedArrayBuffer>,
   ): void {
-    if (this.state.status !== 'idle')
+    if (!this.canExecute(exclusive))
       throw new PjsWorkerError('Worker is not idle', {
         taskId: batchId,
         workerId: this.id,
@@ -281,16 +374,20 @@ export class PjsWorker {
         taskId: batchId,
         workerId: this.id,
       });
-    this.cancellation = cancellation;
-    this.state.status = 'busy';
-    this.state.currentTaskId = batchId;
-    this.currentTaskIds = items.map((item) => item.taskId);
-    this.executionPhase = 'scheduled';
+    this.begin(
+      batchId,
+      items.map((item) => item.taskId),
+      cancellation,
+      exclusive,
+      progress,
+    );
     try {
       const profile = internalProfilingEnabled();
       const postStarted = profile ? performance.now() : 0;
       this.thread.postMessage({
         type: 'executeBatch',
+        exclusive,
+        ...(progress ? { progressBuffer: progress.buffer } : {}),
         ...(cancellation ? { cancellationBuffer: cancellation.buffer } : {}),
         batchId,
         taskName,
@@ -304,11 +401,9 @@ export class PjsWorker {
           performance.now() - postStarted,
         );
     } catch (cause) {
-      this.state.status = 'idle';
-      this.cancellation = undefined;
-      delete this.state.currentTaskId;
-      this.currentTaskIds = [];
-      this.executionPhase = 'none';
+      this.closeProgress(batchId);
+      this.executions.delete(batchId);
+      this.refreshOccupancy();
       throw new PjsSerializationError(
         `Batch input could not be serialized: ${cause instanceof Error ? cause.message : 'unknown cause'}`,
         { taskId: batchId, workerId: this.id, cause },
@@ -316,10 +411,73 @@ export class PjsWorker {
     }
   }
 
+  closeProgress(correlationId: string): void {
+    const progress = this.executions.get(correlationId)?.progress;
+    if (progress) Atomics.store(progress.flag, 0, -1);
+  }
+  private receiveProgress(value: unknown): void {
+    if (!value || typeof value !== 'object') return;
+    const raw = value as Partial<ProgressMessage>;
+    const execution =
+      typeof raw.correlationId === 'string'
+        ? this.executions.get(raw.correlationId)
+        : undefined;
+    const progress = execution?.progress;
+    if (!progress || !execution || Atomics.load(progress.flag, 0) < 0) return;
+    try {
+      if (
+        !isWorkerMessage(value) ||
+        value.type !== 'progress' ||
+        execution.phase !== 'running' ||
+        progress.pending ||
+        Atomics.load(progress.flag, 0) !== 0 ||
+        !Number.isSafeInteger(value.sequence) ||
+        (execution.itemIds.length
+          ? !execution.itemIds.includes(value.taskId)
+          : value.taskId !== value.correlationId) ||
+        value.sequence <= (progress.sequences.get(value.taskId) ?? 0) ||
+        Buffer.byteLength(value.payload, 'utf8') > MAX_PROGRESS_BYTES
+      )
+        throw new Error('Invalid progress frame');
+      const decoded: unknown = JSON.parse(value.payload);
+      if (encodeProgress(decoded) === undefined)
+        throw new Error('Invalid progress payload');
+      progress.sequences.set(value.taskId, value.sequence);
+      progress.pending = true;
+      let acknowledged = false;
+      const acknowledge = () => {
+        if (acknowledged) return;
+        acknowledged = true;
+        progress.pending = false;
+        if (
+          this.executions.get(value.correlationId) !== execution ||
+          Atomics.compareExchange(progress.flag, 0, 0, 1) !== 0
+        )
+          return;
+        // Atomic permits can be consumed by CPU code; latch control-message wakeups separately.
+        if (Atomics.compareExchange(progress.flag, 1, 0, 1) === 0) {
+          try {
+            this.thread.postMessage({
+              type: 'progressAck',
+              correlationId: value.correlationId,
+            } satisfies HostMessage);
+          } catch {
+            this.closeProgress(value.correlationId);
+          }
+        }
+      };
+      if (this.callbacks.progress)
+        this.callbacks.progress(this, value, decoded, acknowledge);
+      else acknowledge();
+    } catch {
+      if (raw.correlationId) this.closeProgress(raw.correlationId);
+    }
+  }
+
   requestCancellation(correlationId: string): void {
-    if (this.state.currentTaskId !== correlationId || !this.cancellation)
-      return;
-    Atomics.store(this.cancellation, 0, 1);
+    const cancellation = this.executions.get(correlationId)?.cancellation;
+    if (!cancellation) return;
+    Atomics.store(cancellation, 0, 1);
     try {
       this.thread.postMessage({
         type: 'cancel',
@@ -339,6 +497,7 @@ export class PjsWorker {
     );
     if (this.state.status === 'idle')
       this.thread.postMessage({ type: 'shutdown' } satisfies HostMessage);
+    for (const id of this.executions.keys()) this.closeProgress(id);
     this.state.status = 'stopped';
     if (this.leaseExpired) this.callbacks.leaseTerminationRequested?.(this);
     this.stopPromise = this.terminateThread().then(() => {
@@ -356,7 +515,7 @@ export class PjsWorker {
     if (this.exitObserved) return;
     this.exitObserved = true;
     this.clearLease();
-    const correlationId = this.state.currentTaskId;
+    const correlationIds = this.correlations();
     // A direct exit reports logical failure before releasing physical ownership.
     if (this.state.status !== 'stopped' && this.state.status !== 'failed')
       this.fail(
@@ -365,20 +524,28 @@ export class PjsWorker {
         undefined,
         'worker-crash',
       );
-    delete this.state.currentTaskId;
-    this.cancellation = undefined;
-    this.currentTaskIds = [];
-    this.executionPhase = 'none';
-    this.callbacks.exited(this, correlationId);
+    this.executions.clear();
+    this.refreshOccupancy();
+    this.callbacks.exited(this, correlationIds);
   }
 
   private receive(value: unknown): void {
     if (this.state.status === 'failed' || this.state.status === 'stopped')
       return;
+    if (
+      value &&
+      typeof value === 'object' &&
+      'type' in value &&
+      value.type === 'progress'
+    ) {
+      this.receiveProgress(value);
+      return;
+    }
     if (!isWorkerMessage(value)) {
       this.fail('Invalid worker protocol message');
       return;
     }
+    if (value.type === 'progress') return;
     if (value.type === 'bootstrapFailure') {
       this.fail(`Worker bootstrap failed: ${value.error.message}`, value.error);
       return;
@@ -396,27 +563,25 @@ export class PjsWorker {
     }
     const correlationId =
       value.type === 'batchResult' ? value.batchId : value.taskId;
-    if (
-      this.state.status !== 'busy' ||
-      this.state.currentTaskId !== correlationId
-    ) {
+    if (this.state.status !== 'busy' || !this.executions.has(correlationId)) {
       this.fail(`Unexpected task message for ${correlationId}`);
       return;
     }
+    const execution = this.executions.get(correlationId)!;
     if (value.type === 'started') {
-      if (this.executionPhase !== 'scheduled') {
+      if (execution.phase !== 'scheduled') {
         this.fail('Duplicate task start');
         return;
       }
-      this.executionPhase = 'running';
+      execution.phase = 'running';
       this.callbacks.started(this, value.taskId);
       return;
     }
-    if (this.executionPhase !== 'running') {
+    if (execution.phase !== 'running') {
       this.fail('Task result arrived before start');
       return;
     }
-    if (this.currentTaskIds.length > 0 !== (value.type === 'batchResult')) {
+    if (execution.itemIds.length > 0 !== (value.type === 'batchResult')) {
       this.fail('Unexpected final response kind for physical execution');
       return;
     }
@@ -429,9 +594,9 @@ export class PjsWorker {
         (item) => item.type === 'failure' || item.type === 'cancelled',
       );
       if (
-        ids.length !== this.currentTaskIds.length ||
+        ids.length !== execution.itemIds.length ||
         new Set(ids).size !== ids.length ||
-        ids.some((id, index) => id !== this.currentTaskIds[index]) ||
+        ids.some((id, index) => id !== execution.itemIds[index]) ||
         value.items.filter(
           (item) => item.type === 'failure' || item.type === 'cancelled',
         ).length > 1 ||
@@ -448,17 +613,15 @@ export class PjsWorker {
         value.items.some((item) => item.type === 'cancelled'));
     if (
       hasCancellation &&
-      (!this.cancellation || Atomics.load(this.cancellation, 0) === 0)
+      (!execution.cancellation || Atomics.load(execution.cancellation, 0) === 0)
     ) {
       this.fail('Unrequested cooperative cancellation result');
       return;
     }
-    this.clearLease();
-    this.state.status = 'idle';
-    delete this.state.currentTaskId;
-    this.cancellation = undefined;
-    this.currentTaskIds = [];
-    this.executionPhase = 'none';
+    if (this.lease?.correlationId === correlationId) this.clearLease();
+    this.closeProgress(correlationId);
+    this.executions.delete(correlationId);
+    this.refreshOccupancy();
     if (value.type === 'batchResult') {
       this.state.completedTasks += value.items.filter(
         (item) => item.type === 'success' || item.type === 'completed',
@@ -500,7 +663,8 @@ export class PjsWorker {
       return;
     const wasStarting = this.state.status === 'starting';
     const taskId = this.state.currentTaskId;
-    if (taskId) this.state.failedTasks++;
+    this.state.failedTasks += this.executions.size;
+    for (const id of this.executions.keys()) this.closeProgress(id);
     this.state.status = 'failed';
     this.clearLease();
     clearTimeout(this.startupTimer);

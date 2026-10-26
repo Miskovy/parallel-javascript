@@ -14,6 +14,8 @@ export function createRuntimeComponents(options: PjsRuntimeOptions) {
   const resultCredits = new ResultCreditManager();
   const {
     workers,
+    concurrency,
+    scheduling,
     minimum,
     maximum,
     idleTimeout,
@@ -26,6 +28,8 @@ export function createRuntimeComponents(options: PjsRuntimeOptions) {
   const dispatcher: ExecutionDispatcher = new ExecutionDispatcher(
     {
       workers,
+      concurrency,
+      ...(scheduling ? { scheduling } : {}),
       maxQueue: options.maxQueue ?? 1024,
       startupTimeout,
       maxRestarts,
@@ -44,10 +48,13 @@ export function createRuntimeComponents(options: PjsRuntimeOptions) {
         taskCoordinator.scheduled(worker, task, scheduledAt, queueMs),
       dispatched: (task) => taskCoordinator.dispatched(task),
       started: (worker, taskId) => taskCoordinator.started(worker, taskId),
+      progress: (worker, message, value, acknowledge) =>
+        taskCoordinator.progress(worker, message, value, acknowledge),
       result: (worker, message) => taskCoordinator.result(worker, message),
       failed: (error, reason) => taskCoordinator.failTask(error, reason),
-      exited: (correlationId) => {
-        if (correlationId) taskCoordinator.exited(correlationId);
+      exited: (correlationIds) => {
+        for (const correlationId of correlationIds)
+          taskCoordinator.exited(correlationId);
         controller.pump();
       },
       dispatchFailed: (task, error) =>
@@ -90,6 +97,7 @@ export function createRuntimeComponents(options: PjsRuntimeOptions) {
       dispatchAllowed: () => controller.dispatchAllowed(),
       requestPump: () => controller.pump(),
     },
+    concurrency,
   );
   const controller: RuntimeController = new RuntimeController(
     dispatcher,

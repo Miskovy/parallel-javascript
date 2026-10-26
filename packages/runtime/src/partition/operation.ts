@@ -1,4 +1,4 @@
-import type { TaskRecovery } from '../tasks/task.js';
+import type { TaskRecovery, ProgressSubscription } from '../tasks/task.js';
 import type { RecoveryAttempt } from '../types/index.js';
 import { AsyncResource } from 'node:async_hooks';
 import type { PjsTask } from '../tasks/registry.js';
@@ -26,6 +26,8 @@ export type {
 /** Host-owned state only. No worker slot and no preallocated child Promise list. */
 export class RangeOperation extends AsyncResource {
   recovery?: TaskRecovery;
+  priority = 0;
+  progress?: ProgressSubscription;
   rebuildInput?: (
     partition: RangePartition,
     next: RecoveryAttempt,
@@ -46,7 +48,7 @@ export class RangeOperation extends AsyncResource {
 
   constructor(
     readonly id: string,
-    readonly task: PjsTask<unknown, unknown>,
+    readonly task: PjsTask<unknown, unknown, unknown>,
     readonly plan: RangePlan,
     readonly dispatchBatchSize: number,
     readonly resultMode: RangeResultMode,

@@ -1,3 +1,4 @@
+import type { ProgressValue } from '../../types/index.js';
 import type { ResultByteMode } from '../../results/credit.js';
 import type { RangeResultMode } from '../../partition/operation.js';
 import type {
@@ -14,11 +15,11 @@ import type { PjsTask } from '../../tasks/registry.js';
 
 /** Accepted-operation state and settlement remain behind this engine boundary. */
 export interface RangeSubmission {
-  start<Input>(
-    task: PjsTask<Input, unknown>,
+  start<Input, Progress = ProgressValue>(
+    task: PjsTask<Input, unknown, Progress>,
     range: PartitionRange,
     createInput: (partition: RangePartition) => PartitionInput<Input>,
-    options: PartitionOptions<Input, unknown>,
+    options: PartitionOptions<Input, unknown, Progress>,
     resultMode: RangeResultMode,
     stream?: RangeStream<unknown>,
     mapOutputConstructor?: PjsTypedArrayConstructor,

@@ -233,3 +233,20 @@ Task-created async finalizers are not shutdown hooks. **The first shutdown call
 fixes the options**; repeated calls return the same promise. R1 development allows
 forceAfter on that first graceful call; later calls cannot add escalation. Submissions during/after shutdown reject
 PjsRuntimeStateError. Use try/finally around the runtime lifetime.
+
+## Concurrent invocations and progress (development)
+
+With concurrency greater than one, caller settlement and physical ownership are
+tracked independently for every invocation on a worker. Terminate-mode and leased
+work is placed exclusively; a waiting exclusive job drains one worker without
+interrupting its existing work. Every terminal waiter path releases that placement
+pin and restores shared admission. A queued deadline includes that wait. Cooperative
+cancellation targets only its own context/flag; a synchronous loop can still delay
+other async work in that isolate. There is no targeted native-thread termination.
+
+A shared worker's crash/protocol/resource-limit exit affects all its outstanding
+physical correlations. Each caller follows its own recovery policy, one thread
+failure consumes one restart decision, and no correlation/credit releases before
+validated final response or confirmed exit. Graceful shutdown waits for all of them;
+forced shutdown terminates each thread once. Progress is discarded on logical
+settlement/stream closure/failure, never delays shutdown and never proves completion.

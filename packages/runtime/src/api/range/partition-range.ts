@@ -1,3 +1,4 @@
+import type { ProgressValue } from '../../types/index.js';
 import type { PjsTask } from '../../tasks/registry.js';
 import type {
   PartitionInput,
@@ -7,12 +8,16 @@ import type {
 } from '../../partition/range.js';
 import type { RangeSubmission } from './contracts.js';
 
-export function partitionRange<Input, Output>(
+export function partitionRange<Input, Output, Progress = ProgressValue>(
   submission: RangeSubmission,
-  task: PjsTask<Input, Output>,
+  task: PjsTask<Input, Output, Progress>,
   range: PartitionRange,
   createInput: (partition: RangePartition) => PartitionInput<Input>,
-  options: PartitionOptions<NoInfer<Input>, NoInfer<Output>> = {},
+  options: PartitionOptions<
+    NoInfer<Input>,
+    NoInfer<Output>,
+    NoInfer<Progress>
+  > = {},
 ): Promise<Output[]> {
   return submission.start(
     task,

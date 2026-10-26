@@ -1,11 +1,22 @@
 import { availableParallelism } from 'node:os';
 import { integer } from '../internal/integer.js';
 import type { PjsTaskRegistry } from '../tasks/registry.js';
-import type { RestartPolicy, WorkerResourceLimits } from '../types/index.js';
+import type {
+  RestartPolicy,
+  WorkerResourceLimits,
+  SchedulingTask,
+} from '../types/index.js';
 
 export interface PjsRuntimeOptions {
   registry: PjsTaskRegistry;
   workers?: number;
+  /** Async invocations per worker; default one. Does not add CPU parallelism. */
+  concurrency?: number;
+  /** Synchronous ranking of immutable eligible work; stable FIFO on ties. */
+  scheduling?: (
+    a: Readonly<SchedulingTask>,
+    b: Readonly<SchedulingTask>,
+  ) => number;
   minWorkers?: number;
   maxWorkers?: number;
   /** Opt into elasticity; retire excess idle workers after these milliseconds. */
@@ -105,7 +116,21 @@ export function normalizeRuntimeOptions(options: PjsRuntimeOptions) {
     }
     Object.freeze(resourceLimits);
   }
+  const concurrency = integer(
+    'concurrency',
+    'concurrency' in options ? (options.concurrency ?? 1) : 1,
+    1,
+  );
+  if (!Number.isSafeInteger(maximum * concurrency * 16))
+    throw new RangeError(
+      'Worker concurrency/window capacity exceeds safe integer bounds',
+    );
+  const scheduling = 'scheduling' in options ? options.scheduling : undefined;
+  if (scheduling !== undefined && typeof scheduling !== 'function')
+    throw new TypeError('scheduling must be a function');
   return {
+    concurrency,
+    ...(scheduling ? { scheduling } : {}),
     workers,
     minimum,
     maximum,

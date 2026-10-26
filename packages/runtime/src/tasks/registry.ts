@@ -1,10 +1,13 @@
+import type { ProgressValue } from '../types/index.js';
 import { PjsTaskRegistrationError } from '../errors/index.js';
 
 declare const taskTypes: unique symbol;
+declare const progressTypes: unique symbol;
 
 /** A reference to executable code, never a transferable closure. */
-export interface PjsTask<Input, Output> {
+export interface PjsTask<Input, Output, Progress = ProgressValue> {
   readonly id: string;
+  readonly [progressTypes]?: Progress;
   readonly [taskTypes]?: (input: Input) => Output;
 }
 
@@ -29,11 +32,11 @@ export class PjsTaskRegistry {
     entries.set(this, new Map());
   }
 
-  register<Input, Output>(
+  register<Input, Output, Progress = ProgressValue>(
     id: string,
     module: URL,
     exportName = 'default',
-  ): PjsTask<Input, Output> {
+  ): PjsTask<Input, Output, Progress> {
     const registered = registryEntries(this);
     if (!id || [...registered.values()].some((entry) => entry.id === id)) {
       throw new PjsTaskRegistrationError(

@@ -22,7 +22,17 @@ export interface PjsContainmentStats {
   shutdownEscalations: number;
 }
 
+export interface PjsSchedulingStats {
+  policyErrors: number;
+}
+
+export interface PjsProgressStats {
+  callbackErrors: number;
+}
+
 export interface PjsWorkerStats {
+  /** Occupied physical executions, distinct from occupied threads. */
+  activeExecutions: number;
   total: number;
   busy: number;
   idle: number;
@@ -144,6 +154,8 @@ export interface PjsRuntimeStats {
   containment: PjsContainmentStats;
   workers: PjsWorkerStats;
   queue: PjsQueueStats;
+  scheduling: PjsSchedulingStats;
+  progress: PjsProgressStats;
   tasks: PjsOutcomeStats;
   timing: PjsTimingStats;
   operations: PjsOperationStats;

@@ -8,6 +8,7 @@ export interface SerializedError {
 export interface BootstrapData {
   version: 2;
   tasks: TaskDescriptor[];
+  concurrency?: number;
 }
 export interface InternalWorkerProfile {
   workerIngressMs: number;
@@ -29,6 +30,8 @@ export type HostMessage =
       type: 'execute';
       taskId: string;
       taskName: string;
+      exclusive?: boolean;
+      progressBuffer?: SharedArrayBuffer;
       input: unknown;
       cancellationBuffer?: SharedArrayBuffer;
       profile?: boolean;
@@ -40,12 +43,15 @@ export type HostMessage =
       type: 'executeBatch';
       batchId: string;
       taskName: string;
+      exclusive?: boolean;
+      progressBuffer?: SharedArrayBuffer;
       items: BatchInput[];
       cancellationBuffer?: SharedArrayBuffer;
       profile?: boolean;
       completionOnly?: boolean;
     }
   | { type: 'cancel'; correlationId: string }
+  | { type: 'progressAck'; correlationId: string }
   | { type: 'shutdown' };
 export type TaskResultMessage =
   | {
@@ -110,7 +116,15 @@ export interface BinaryContractFailure {
   actualType: string;
 }
 export type ExecutionResultMessage = TaskResultMessage | BatchResultMessage;
+export interface ProgressMessage {
+  type: 'progress';
+  correlationId: string;
+  taskId: string;
+  sequence: number;
+  payload: string;
+}
 export type WorkerMessage =
+  | ProgressMessage
   | { type: 'ready'; version: 2 }
   | { type: 'started'; taskId: string }
   | ExecutionResultMessage
@@ -179,6 +193,15 @@ function result(value: unknown): value is BatchItemResult {
 }
 export function isWorkerMessage(value: unknown): value is WorkerMessage {
   if (!record(value)) return false;
+  if (value.type === 'progress')
+    return (
+      typeof value.correlationId === 'string' &&
+      typeof value.taskId === 'string' &&
+      Number.isSafeInteger(value.sequence) &&
+      (value.sequence as number) > 0 &&
+      typeof value.payload === 'string' &&
+      value.payload.length <= 16 * 1024
+    );
   if (value.type === 'ready') return value.version === 2;
   if (value.type === 'bootstrapFailure') return error(value.error);
   if (value.type === 'batchResult') {
@@ -230,9 +253,14 @@ export function isWorkerMessage(value: unknown): value is WorkerMessage {
 export function isHostMessage(value: unknown): value is HostMessage {
   if (!record(value)) return false;
   if (value.type === 'shutdown') return true;
-  if (value.type === 'cancel') return typeof value.correlationId === 'string';
+  if (value.type === 'cancel' || value.type === 'progressAck')
+    return typeof value.correlationId === 'string';
   const common =
     typeof value.taskName === 'string' &&
+    (value.exclusive === undefined || typeof value.exclusive === 'boolean') &&
+    (value.progressBuffer === undefined ||
+      (value.progressBuffer instanceof SharedArrayBuffer &&
+        value.progressBuffer.byteLength === 8)) &&
     (value.cancellationBuffer === undefined ||
       (value.cancellationBuffer instanceof SharedArrayBuffer &&
         value.cancellationBuffer.byteLength === 4)) &&

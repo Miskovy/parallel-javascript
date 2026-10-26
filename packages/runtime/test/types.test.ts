@@ -1159,3 +1159,132 @@ const contextFunction = (input: number, context: TaskContext): number => {
   return input;
 };
 void contextFunction;
+
+// Checkpoint 3: ordinary interfaces need no recursive index signature.
+interface DownloadProgress {
+  done: number;
+  total: number;
+}
+const progressTask = registry.register<
+  Uint8Array,
+  Uint8Array<ArrayBuffer>,
+  DownloadProgress
+>('progress-interface', new URL('./fixture.js', import.meta.url));
+const progressFallback = registry.register<
+  Uint8Array,
+  Uint8Array<ArrayBuffer>,
+  DownloadProgress
+>('progress-fallback', new URL('./fixture.js', import.meta.url));
+void runtime.run(progressTask, data, {
+  priority: 10,
+  repeatable: true,
+  fallback: { task: progressFallback },
+  onProgress(event) {
+    const done: number = event.value.done;
+    const partition: number | undefined = event.partitionIndex;
+    void done;
+    void partition;
+    // @ts-expect-error Infer the declared application interface, not any.
+    void event.value.missing;
+  },
+});
+void runtime.partitionRange(progressTask, range, () => ({ input: data }), {
+  onProgress(event) {
+    const total: number = event.value.total;
+    void total;
+  },
+});
+void runtime.parallelFor(progressTask, range, () => ({ input: data }), {
+  onProgress(event) {
+    const done: number = event.value.done;
+    void done;
+  },
+});
+void runtime.streamRange(progressTask, range, () => ({ input: data }), {
+  resultBytes: data.byteLength,
+  maxReservedResultBytes: 1024,
+  onProgress(event) {
+    const done: number = event.value.done;
+    void done;
+  },
+});
+const incompatibleProgress = registry.register<
+  Uint8Array,
+  Uint8Array<ArrayBuffer>,
+  { message: string }
+>('progress-incompatible', new URL('./fixture.js', import.meta.url));
+void runtime.run(progressTask, data, {
+  repeatable: true,
+  // @ts-expect-error Fallback cannot widen the primary's progress schema.
+  fallback: { task: incompatibleProgress },
+});
+const declaredDate = registry.register<Uint8Array, void, Date>(
+  'declared-date',
+  new URL('./fixture.js', import.meta.url),
+);
+// Declared application types are unconstrained; Date is still rejected on the wire.
+void runtime.run(declaredDate, data, {
+  onProgress(event) {
+    event.value.getTime();
+  },
+});
+const progressContext: import('../dist/index.js').TaskContext<DownloadProgress> =
+  {} as import('../dist/index.js').TaskContext<DownloadProgress>;
+const reportAccepted: boolean = progressContext.reportProgress({
+  done: 1,
+  total: 2,
+});
+void reportAccepted;
+// @ts-expect-error Reporting checks the declared application schema.
+progressContext.reportProgress({ message: 'wrong' });
+void new PjsRuntime({
+  registry,
+  workers: 1,
+  concurrency: 2,
+  scheduling(a, b) {
+    const priority: number = a.priority;
+    const exclusive: boolean = b.exclusive;
+    void exclusive;
+    // @ts-expect-error Scheduling descriptors are immutable.
+    a.priority = 5;
+    return b.priority - priority;
+  },
+});
+
+const progressBlocks = registry.register<
+  Uint8Array,
+  readonly number[],
+  DownloadProgress
+>('progress-blocks', new URL('./fixture.js', import.meta.url));
+void runtime.parallelMapRange(progressBlocks, range, () => ({ input: data }), {
+  onProgress(event) {
+    const done: number = event.value.done;
+    void done;
+  },
+});
+const progressTyped = registry.register<
+  Uint8Array,
+  Float64Array<ArrayBuffer>,
+  DownloadProgress
+>('progress-typed', new URL('./fixture.js', import.meta.url));
+void runtime.parallelMapRange(progressTyped, range, () => ({ input: data }), {
+  outputConstructor: Float64Array,
+  onProgress(event) {
+    const done: number = event.value.done;
+    void done;
+  },
+});
+void runtime.streamRange(progressTask, range, () => ({ input: data }), {
+  onProgress(event) {
+    const done: number = event.value.done;
+    void done;
+  },
+});
+void runtime.streamRange(progressTask, range, () => ({ input: data }), {
+  maxResultBytes: data.byteLength,
+  maxReservedResultBytes: 1024,
+  onProgress(event) {
+    const total: number = event.value.total;
+    void total;
+  },
+});

@@ -1,3 +1,4 @@
+import { encodeProgress, ProgressReporter } from './progress.js';
 import type { TaskContext } from '../types/index.js';
 import { parentPort, workerData } from 'node:worker_threads';
 import {
@@ -24,12 +25,18 @@ const send = (
 ): void => port.postMessage(message, transferList);
 type Execute = (input: unknown, context?: TaskContext) => unknown;
 const tasks = new Map<string, Execute>();
-let state: 'starting' | 'idle' | 'busy' | 'stopped' = 'starting';
+let state: 'starting' | 'idle' | 'stopped' = 'starting';
+let concurrency = 1;
+const active = new Map<string, boolean>();
+const reporters = new Map<string, ProgressReporter>();
 
 try {
   const data = workerData as BootstrapData;
   if (data.version !== 2 || !Array.isArray(data.tasks))
     throw new Error('Unsupported PJS bootstrap data');
+  concurrency = data.concurrency ?? 1;
+  if (!Number.isSafeInteger(concurrency) || concurrency < 1)
+    throw new Error('Invalid worker concurrency');
   for (const task of data.tasks) {
     const exports = (await import(task.module)) as Record<string, unknown>;
     const execute = exports[task.exportName];
@@ -118,13 +125,30 @@ async function invoke(
   input: unknown,
   correlationId: string,
   buffer?: SharedArrayBuffer,
+  itemId = correlationId,
 ): Promise<unknown> {
   // Argument count is observable: existing modes must continue passing exactly one.
-  if (!buffer) return execute(input);
+  const reporter = reporters.get(correlationId);
+  if (!buffer && !reporter) return execute(input);
+  let open = true;
+  let sequence = 0;
   const controller = new AbortController();
   contexts.set(correlationId, controller);
   const context: TaskContext = Object.freeze({
     signal: controller.signal,
+    reportProgress(value: unknown) {
+      if (!open || !reporter || Atomics.load(reporter.flag, 0) < 0)
+        return false;
+      const payload = encodeProgress(value);
+      if (payload === undefined || !open) return false;
+      return reporter.report({
+        type: 'progress',
+        correlationId,
+        taskId: itemId,
+        sequence: ++sequence,
+        payload,
+      });
+    },
     throwIfCancelled() {
       if (cancelled(buffer) && !controller.signal.aborted)
         controller.abort(new DOMException('Task cancelled', 'AbortError'));
@@ -135,12 +159,17 @@ async function invoke(
     context.throwIfCancelled();
     return await execute(input, context);
   } finally {
+    open = false;
     contexts.delete(correlationId);
   }
 }
 
 async function handle(value: unknown): Promise<void> {
   if (!isHostMessage(value)) throw new Error('Invalid PJS host message');
+  if (value.type === 'progressAck') {
+    reporters.get(value.correlationId)?.wake();
+    return;
+  }
   if (value.type === 'cancel') {
     contexts
       .get(value.correlationId)
@@ -148,20 +177,43 @@ async function handle(value: unknown): Promise<void> {
     return;
   }
   if (value.type === 'shutdown') {
-    if (state !== 'idle')
+    if (state !== 'idle' || active.size > 0)
       throw new Error('Shutdown received while worker is not idle');
     state = 'stopped';
     port.close();
     return;
   }
   const receivedAt = value.profile ? performance.now() : 0;
-  if (state !== 'idle') throw new Error('Overlapping PJS executions');
-  state = 'busy';
-  if (value.type === 'executeBatch') {
-    await executeBatch(value, receivedAt);
-    state = 'idle';
-    return;
+  const correlationId =
+    value.type === 'executeBatch' ? value.batchId : value.taskId;
+  if (
+    state !== 'idle' ||
+    active.size >= concurrency ||
+    active.has(correlationId) ||
+    [...active.values()].some(Boolean) ||
+    (value.exclusive && active.size > 0)
+  )
+    throw new Error('Incompatible or overlapping PJS execution');
+  active.set(correlationId, value.exclusive ?? false);
+  if (value.progressBuffer)
+    reporters.set(
+      correlationId,
+      new ProgressReporter(new Int32Array(value.progressBuffer), send),
+    );
+  try {
+    if (value.type === 'executeBatch') await executeBatch(value, receivedAt);
+    else await executeSingle(value, receivedAt);
+  } finally {
+    reporters.get(correlationId)?.close();
+    reporters.delete(correlationId);
+    active.delete(correlationId);
   }
+}
+
+async function executeSingle(
+  value: Extract<HostMessage, { type: 'execute' }>,
+  receivedAt: number,
+): Promise<void> {
   send({ type: 'started', taskId: value.taskId });
   const started = performance.now();
   const workerIngressMs = started - receivedAt;
@@ -286,8 +338,6 @@ async function handle(value: unknown): Promise<void> {
           }
         : {}),
     });
-  } finally {
-    state = 'idle';
   }
 }
 
@@ -313,6 +363,7 @@ async function executeBatch(
         item.input,
         value.batchId,
         value.cancellationBuffer,
+        item.taskId,
       );
       if (cancelled(value.cancellationBuffer))
         throw new DOMException('Task cancelled', 'AbortError');

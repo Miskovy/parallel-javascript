@@ -1,3 +1,4 @@
+import type { ProgressValue } from '../types/index.js';
 import { integer } from '../internal/integer.js';
 import { optionSpelling } from '../internal/option-spelling.js';
 import type { RangeResultMode } from './operation.js';
@@ -23,10 +24,10 @@ const typedArrayConstructors = new Set<PjsTypedArrayConstructor>([
 ]);
 
 /** Preserves option access order without creating accepted-operation state. */
-export function validateRangeRequest<Input, Output>(
+export function validateRangeRequest<Input, Output, Progress = ProgressValue>(
   range: PartitionRange,
   createInput: unknown,
-  options: PartitionOptions<Input, Output>,
+  options: PartitionOptions<Input, Output, Progress>,
   resultMode: RangeResultMode,
   mapOutputConstructor?: PjsTypedArrayConstructor,
 ) {
@@ -74,5 +75,22 @@ export function validateRangeRequest<Input, Output>(
     throw new TypeError(
       'experimentalOutputConstructor must be a built-in typed-array constructor',
     );
-  return { plan, timeout, signal, cancellation, dispatchBatchSize };
+  const priority = integer(
+    'priority',
+    'priority' in options ? (options.priority ?? 0) : 0,
+    -(2 ** 31),
+    2 ** 31 - 1,
+  );
+  const onProgress = 'onProgress' in options ? options.onProgress : undefined;
+  if (onProgress !== undefined && typeof onProgress !== 'function')
+    throw new TypeError('onProgress must be a function');
+  return {
+    plan,
+    timeout,
+    signal,
+    cancellation,
+    dispatchBatchSize,
+    priority,
+    onProgress,
+  };
 }
