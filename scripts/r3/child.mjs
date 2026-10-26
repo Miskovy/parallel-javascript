@@ -370,9 +370,7 @@ async function workerSample(phase) {
     };
     if (available)
       observation.heapStatistics = await worker.thread.getHeapStatistics();
-    else
-      observation.reason =
-        'API unavailable; not required by Node 22.13.0 contract';
+    else observation.reason = 'API unavailable; optional worker diagnostic';
     report.optionalWorkerHeapStatistics.push(observation);
   }
 }

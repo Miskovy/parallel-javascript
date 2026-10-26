@@ -273,17 +273,21 @@ test('publisher npm is an exact reviewed pin; Node 22 bundled npm 10 is unsuppor
 });
 
 test('publication Node pin is separate from runtime compatibility qualification', () => {
-  assertPublicationToolchain('24.21.0', '11.19.0');
+  assertPublicationToolchain('24.22.1', '11.19.0');
   assert.throws(
-    () => assertPublicationToolchain('22.13.0', '11.19.0'),
+    () => assertPublicationToolchain('22.23.4', '11.19.0'),
     /Publication requires reviewed Node/,
   );
   assert.throws(
-    () => assertPublicationToolchain('24.22.0', '11.19.0'),
+    () => assertPublicationToolchain('24.21.0', '11.19.0'),
     /Publication requires reviewed Node/,
   );
   assert.throws(
-    () => assertPublicationToolchain('24.21.0', '10.9.2'),
+    () => assertPublicationToolchain('26.12.1', '11.19.0'),
+    /Publication requires reviewed Node/,
+  );
+  assert.throws(
+    () => assertPublicationToolchain('24.22.1', '10.9.2'),
     /Unsupported publisher npm/,
   );
   assert.equal(

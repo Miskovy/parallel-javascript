@@ -15,7 +15,11 @@ npm install @pjavascript/runtime@next
 
 As verified on 23 October 2026, [npm `next` and `latest`](https://registry.npmjs.org/@pjavascript%2fruntime)
 select **1.0.0-rc.4**, also a [GitHub prerelease](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.4).
-Final v1.0.0 has not been released. Manifests declare Node `^22.13.0 || ^24.0.0`.
+Final v1.0.0 has not been released. Development manifests support Node
+**22.23.4+, 24.22.1+, or 26.12.1+**, within those majors
+(`^22.23.4 || ^24.22.1 || ^26.12.1`). Use current patched releases; installing
+PJS does not upgrade Node. Node 26 is Current as of 26 October 2026, with LTS
+scheduled for 28 October; published RC4 retains its original metadata.
 Consult the [exact Node/platform evidence](https://github.com/Miskovy/parallel-javascript/blob/main/docs/stability.md#proposed-node-and-platform-policy)
 for tested development candidates; an engine range is not evidence for every
 patch or qualification of published RC4. macOS and ARM64 remain unclaimed.

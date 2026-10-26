@@ -41,10 +41,13 @@ it does not establish stable-release or production-readiness approval.
 npm install @pjavascript/runtime@next
 ```
 
-PJS is ESM. Manifests declare Node `^22.13.0 || ^24.0.0`. Consult the exact
-[Node and platform evidence](docs/stability.md#proposed-node-and-platform-policy),
-including the [24.0.0 floor report](docs/research/node24-floor-qualification.md),
-for tested development candidates; an engine range is not evidence for every patch.
+PJS is ESM. Development manifests support Node **22.23.4+, 24.22.1+, or 26.12.1+**
+within those majors (`^22.23.4 || ^24.22.1 || ^26.12.1`). Stay on current patched
+releases; updating PJS does not upgrade your Node executable. Node 26 is Current
+as of 26 October 2026, with LTS scheduled for 28 October. Consult the
+[support policy and exact evidence](docs/stability.md#proposed-node-and-platform-policy).
+The [24.0.0 floor report](docs/research/node24-floor-qualification.md) is historical;
+it does not establish the new minimums or change published RC4.
 macOS and ARM64 remain unclaimed. Compile TypeScript tasks to JavaScript before
 registration.
 

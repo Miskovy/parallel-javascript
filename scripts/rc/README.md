@@ -73,7 +73,7 @@ Ordinary npm (including Node 22.13.0's npm 10.9.2) performs dependency installat
 packing and installed-consumer validation. Publication-specific operations must
 select the separately provisioned npm 11.19.0; unsupported publisher versions fail
 before executing the fixture's lifecycle traps. Production publication additionally
-requires Node 24.21.0. The version/integrity policy lives in
+requires Node 24.22.1. The version/integrity policy lives in
 [`toolchain.json`](../release/toolchain.json) and its shared helper. CI exercises the
 same publisher CLI on every runtime cell rather than skipping npm 10 cells.
 Reports record both npm versions and whether live release qualification ran.
@@ -108,9 +108,11 @@ npm run soak:rc -- --output=/absolute/new/standard.json
 node scripts/rc/soak.mjs --profile=extended --seed=20261003 --output=/absolute/new/extended.json
 ```
 
-CI runs Linux/Windows Node 22.13.0 and 24 in four jobs, each with all gates,
-actual installed consumers and standard soak. workflow_dispatch selects standard or
-extended. Evidence from CI is separate qualification, never inferred from this
+Active CI runs Linux/Windows x64 Node 22.23.4, 24.22.1 and 26.12.1 in six jobs,
+using ordinary runtime validation; the RC4 examples and frozen reports above are
+historical. Each job retains actual installed consumers and the existing standard
+R2/R3 profiles; manual RC commands above do not replace active CI. Evidence from
+CI is separate qualification, never inferred from this
 host. See the [proposal](../../docs/proposal-v1.0.0-rc.1.md),
 [contract inventory](../../docs/research/v1-rc1-contract-inventory.md),
 [error matrix](../../docs/research/v1-rc1-error-matrix.md) and

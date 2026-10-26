@@ -47,14 +47,15 @@ npm run runtime:qualify -- --release-npm-cli=/absolute/path/to/provisioned/npm-c
 ```
 
 The provisioner prints the selected path. Start from a clean committed tree and
-choose a new output filename. The six Linux/Windows x64 Node 22.13.0/24.0.0/24 CI cells
+choose a new output filename. The six Linux/Windows x64 Node 22.23.4/24.22.1/26.12.1 CI cells
 use this path: build, all contracts (including the bounded containment soak),
 types, compatibility compiler, installed package, release tooling, lint, formatting,
 documentation and diff checks. Reports retain exact versions, source commit and outputs.
 This is not approval to publish the unchanged version or a new candidate.
 
-The [24.0.0 floor report](research/node24-floor-qualification.md) records exact
-development-candidate outcomes and supplemental compiler/inventory checks.
+The [24.0.0 floor report](research/node24-floor-qualification.md) records historical
+development-candidate outcomes, not the new support minimums. Active supplemental
+compiler/inventory and executable-identity checks now run on all six cells.
 Floor evidence does not qualify a later final release or replace Stage F's
 selected floor/current-patch matrix, extended campaigns and reproduction gates.
 
@@ -104,16 +105,17 @@ that exact staged archive with recorded SHA-256. Recheck it immediately before
 any later authorized publication.
 
 Follow S1 integration → A decision review → B fixes → C promotions/alias removal
-→ F final qualification/rehearsal → G separate authorization. F qualifies both
-promised Node floors (22.13.0 and 24.0.0 unless deliberately narrowed) and selected
+→ F final qualification/rehearsal → G separate authorization. F qualifies the
+promised Node floors (currently 22.23.4, 24.22.1 and 26.12.1) and selected
 current patches in each major, Linux/Windows x64, with exact versions and reviewed
 release npm. S1's 22.13.0/24.21.0 results do not prove 24.0.0 or qualify future
 source. Apply the [floor failure decision](stability.md#proposed-node-and-platform-policy),
 standard R2/R3 raw-child reconciliation and required extended/reproduction gates.
 The current publisher does not run those full campaigns; enforce source-bound
 evidence before final release authorization instead of assuming a successful CD
-job establishes them. No workflow, selector, version or frozen baseline changes
-in this documentation task. Conditional internal cleanup/optimization must finish before F.
+job establishes them. Node support maintenance does not change RC selectors, PJS
+versions, frozen baselines or release authorization. Conditional internal
+cleanup/optimization must finish before F.
 
 ## One-time maintainer configuration
 
@@ -141,12 +143,12 @@ required human approval is recommended when supported. Allow the intended releas
 tags through any environment deployment restrictions. These protections are not
 assumed to exist already.
 
-The workflow uses GitHub-hosted Ubuntu, exactly Node 24.21.0 / npm 11.19.0 from
+The workflow uses GitHub-hosted Ubuntu, exactly Node 24.22.1 / npm 11.19.0 from
 the reviewed [publication toolchain](../scripts/release/toolchain.json), and
 SHA-pinned official `actions/checkout` v7.0.1 and `actions/setup-node` v7.0.0.
 The shared release helper rejects any other publisher version before registry
 operations and disables package-manager caching. Runtime support for Node
-22.13.0 and Node 24 does not approve every bundled npm for publishing. Six-cell
+22.23.4, 24.22.1 and 26.12.1 does not approve every bundled npm for publishing. Six-cell
 CI provisions the exact release npm archive after verifying its committed SHA-512,
 then tests the live CLI separately from ordinary runtime npm. Review Node/npm pins
 and archive integrity together when upgrading; repeat the runtime validation matrix
@@ -161,7 +163,7 @@ and two-build reproduction. See upstream
 1. Update the chosen package/workspace version and synchronize the lockfile in a
    normal PR. Review release notes and any version-specific qualification gates.
    Version selection remains a human decision.
-2. Pass existing CI, including Ubuntu/Windows Node 22.13/24 qualification, and
+2. Pass existing CI, including Ubuntu/Windows Node 22.23.4/24.22.1/26.12.1 validation, and
    merge the reviewed change.
 3. Tag the approved commit with exactly `v` plus the runtime package version.
    Create its GitHub Release: e.g. `1.0.0-rc.4` requires `v1.0.0-rc.4`, whereas

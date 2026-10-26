@@ -31,9 +31,29 @@ Declared ranges allow compatible updates; the lockfile records the tested resolu
 
 ## Node runtime versus development tools
 
-Both runtime and workspace manifests declare **`^22.13.0 || ^24.0.0`**. The validation workflow runs exact 22.13.0, exact 24.0.0 and floating 24 on Linux/Windows x64 with the locked development tools. The [floor qualification report](research/node24-floor-qualification.md) identifies exact tested candidates and verifies the 24.0.0 executable against official archive bytes. Node typings and engine declarations alone cannot establish runtime compatibility.
+Both runtime and workspace manifests declare **`^22.23.4 || ^24.22.1 || ^26.12.1`**.
+The existing six validation cells run these exact minimums on Linux/Windows x64
+with the locked development tools and unchanged R2/R3 checks. Each cell records
+its executing Node version. `scripts/node-floor-checks.mjs` additionally verifies
+the expected version/executable SHA-256, both compilers' public fixtures and API
+inventory. Its [binary identities](../scripts/node-floor-binaries.json) come from
+official archives verified against the
+[22.23.4](https://nodejs.org/dist/v22.23.4/SHASUMS256.txt),
+[24.22.1](https://nodejs.org/dist/v24.22.1/SHASUMS256.txt) and
+[26.12.1](https://nodejs.org/dist/v26.12.1/SHASUMS256.txt) manifests.
 
-The original compiler-migration validation used Node 24.21.0 on Windows. Later development evidence retains its own source and environment attribution; it does not retroactively qualify the original migration or published RC4. Runtime npm and the independently integrity-pinned release npm **11.19.0** are recorded separately. Exact floor passes do not establish every Node 22/24 patch or Stage F release qualification.
+Prefer current patched releases within those majors; changing engines does not
+upgrade installed Node. See the [support policy](stability.md#proposed-node-and-platform-policy)
+for lifecycle status. The [24.0.0 report](research/node24-floor-qualification.md)
+is historical evidence for its named candidate, not proof for these minimums.
+Node typings and declarations alone cannot establish runtime compatibility.
+
+The original compiler-migration validation used Node 24.21.0 on Windows. Later
+evidence retains its own attribution and does not qualify published RC4. The
+publication toolchain now pins patched **Node 24.22.1** while retaining independent
+release npm **11.19.0** and its existing SHA-512 integrity. Runtime npm is recorded
+separately; bundled npm versions are not publication pins. Exact passes do not
+establish every patch or grant release approval.
 
 ## Scope of the migration
 

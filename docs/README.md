@@ -38,7 +38,7 @@ the alias window has not started.
 Unchanged manifest versions do not make development bytes published RC4.
 
 - [Stability and exact Node/platform evidence](stability.md).
-- [Exact Node 24.0.0 development-floor qualification](research/node24-floor-qualification.md).
+- [Historical Node 24.0.0 development-floor qualification](research/node24-floor-qualification.md).
 - [Canonical current API inventory](research/v1-api-contract-inventory.md).
 - [Authoritative post-C3 maintainer decisions](research/v1-api-migration-plan.md#decisions-for-maintainer-review).
 - [Proposed v1 policy, ADR 0023](adr/0023-v1-api-stability-decisions.md).
