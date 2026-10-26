@@ -1,3 +1,4 @@
+import type { ProgressValue } from '../../types/index.js';
 import type { PjsTask } from '../../tasks/registry.js';
 import type {
   PartitionInput,
@@ -16,36 +17,45 @@ import type {
 export function parallelMapRange<
   Input,
   Constructor extends PjsTypedArrayConstructor,
+  Progress = ProgressValue,
 >(
   submission: RangeSubmission,
-  task: PjsTask<Input, InstanceType<Constructor>>,
+  task: PjsTask<Input, InstanceType<Constructor>, Progress>,
   range: PartitionRange,
   createInput: (partition: RangePartition) => PartitionInput<Input>,
-  options: TypedMapRangeOptions<Constructor, NoInfer<Input>>,
+  options: TypedMapRangeOptions<Constructor, NoInfer<Input>, NoInfer<Progress>>,
 ): Promise<InstanceType<Constructor>>;
 /** @experimental Ordered element map assembled from validated array blocks. */
-export function parallelMapRange<Input, Output>(
+export function parallelMapRange<Input, Output, Progress = ProgressValue>(
   submission: RangeSubmission,
-  task: PjsTask<Input, readonly Output[]>,
+  task: PjsTask<Input, readonly Output[], Progress>,
   range: PartitionRange,
   createInput: (partition: RangePartition) => PartitionInput<Input>,
-  options?: PartitionOptions<NoInfer<Input>, readonly NoInfer<Output>[]>,
+  options?: PartitionOptions<
+    NoInfer<Input>,
+    readonly NoInfer<Output>[],
+    NoInfer<Progress>
+  >,
 ): Promise<Output[]>;
-export function parallelMapRange<Input>(
+export function parallelMapRange<Input, Progress = ProgressValue>(
   submission: RangeSubmission,
-  task: PjsTask<Input, readonly unknown[] | PjsTypedArray>,
+  task: PjsTask<Input, readonly unknown[] | PjsTypedArray, Progress>,
   range: PartitionRange,
   createInput: (partition: RangePartition) => PartitionInput<Input>,
   options:
-    | PartitionOptions<Input, readonly unknown[] | PjsTypedArray>
-    | TypedMapRangeOptions<PjsTypedArrayConstructor, Input>,
+    | PartitionOptions<Input, readonly unknown[] | PjsTypedArray, Progress>
+    | TypedMapRangeOptions<PjsTypedArrayConstructor, Input, Progress>,
 ): Promise<unknown[] | PjsTypedArray>;
-export function parallelMapRange<Input>(
+export function parallelMapRange<Input, Progress = ProgressValue>(
   submission: RangeSubmission,
-  task: PjsTask<Input, readonly unknown[] | PjsTypedArray>,
+  task: PjsTask<Input, readonly unknown[] | PjsTypedArray, Progress>,
   range: PartitionRange,
   createInput: (partition: RangePartition) => PartitionInput<Input>,
-  options: PartitionOptions<Input, readonly unknown[] | PjsTypedArray> & {
+  options: PartitionOptions<
+    Input,
+    readonly unknown[] | PjsTypedArray,
+    Progress
+  > & {
     outputConstructor?: PjsTypedArrayConstructor;
     experimentalOutputConstructor?: PjsTypedArrayConstructor;
   } = {},

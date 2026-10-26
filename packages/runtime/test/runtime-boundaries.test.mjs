@@ -474,6 +474,8 @@ test('range validation retains getter order before state rejection and never inv
       'get:cancellation',
       'has:dispatchBatchSize',
       'has:experimentalDispatchBatchSize',
+      'has:priority',
+      'has:onProgress',
     ]);
   }
 });

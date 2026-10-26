@@ -2,10 +2,11 @@
 
 `runtime.stats(): PjsRuntimeStats` returns writable defensive copies with current
 state and cumulative counters. B4 development root-exports explicit diagnostic
-types while preserving all 158 inventoried leaves and their meanings. Broader v1
+types; B4 historically preserved 158 leaves, with later additions recorded in the
+canonical inventory below. Broader v1
 stabilization remains pending; P1/P2/P3 feature contracts are promoted in development.
 These declarations are absent
-from published RC4. It has no completed-task history, histograms, p50/p95/p99 or observer hooks.
+from published RC4. It has no completed-task history, histograms, p50/p95/p99 or general event-observer hooks; opt-in task progress is described in the core API guide.
 Do not derive unavailable quantiles from averages.
 
 Containment diagnostics retain the same seven PjsContainmentStats fields in
@@ -97,14 +98,32 @@ workers physically idle but unavailable for new admission. Intentional cancellat
 increments replacement spawns when they occur, without incrementing crash/restart
 budget counters. None of these counts implies that result credits cap total RSS.
 
+## Scheduling, concurrency and progress (development)
+
+workers.busy remains occupied thread count; workers.activeExecutions counts physical
+executions, which may exceed it. Both include caller-settled work awaiting physical
+completion/exit. Worker details add concurrency, currentTaskIds (all physical
+correlations), exclusive and draining. currentTaskId is present only for exactly one
+execution. These added WorkerState fields are filled in runtime snapshots but
+optional in the interface to preserve existing constructed diagnostic copies.
+All arrays are defensive copies. An idle worker may be reserved/draining
+and unavailable for new admission; spare slots do not make a busy thread idle.
+
+scheduling.policyErrors counts custom-policy failures that disable the comparator;
+progress.callbackErrors counts observers disabled for throwing/returning an async
+result. Progress frames do not count as execute/result messages, successful tasks
+or credit refunds. Execution-duration sums can overlap and are not wall time or
+thread utilization. Worker restart/failure counters remain per thread, not per
+hosted invocation.
+
 ## Glossary
 
 | Term                        | Meaning                                                                                |
 | --------------------------- | -------------------------------------------------------------------------------------- |
 | Task                        | One accepted invocation of a registered module export; logical work                    |
 | Operation                   | Parent coordinating children over one numeric range                                    |
-| Worker                      | Persistent Node isolate/thread with one physical execution at a time                   |
-| Queue                       | FIFO waiting logical work, bounded by maxQueue                                         |
+| Worker                      | Persistent Node isolate/thread; one execution by default, configurable async overlap   |
+| Queue                       | Waiting logical work, bounded by maxQueue; FIFO by default                             |
 | Range / partition           | Half-open numeric interval / one identified chunk of it                                |
 | Batch                       | Several transfer-free input partitions posted/executed sequentially in one worker turn |
 | Caller settlement           | Promise/parent success, error, cancellation or timeout observed by the caller          |

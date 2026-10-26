@@ -13,6 +13,7 @@ import type {
 
 export interface PoolOptions {
   workers: number;
+  concurrency?: number;
   startupTimeout: number;
   maxRestarts: number;
   restartPolicy?: RestartPolicy;
@@ -190,6 +191,22 @@ export class PjsPool {
       (worker) => worker.status === 'idle',
     );
   }
+  worker(id: number): PjsWorker | undefined {
+    return this.workers.get(id);
+  }
+  dispatchable(): PjsWorker[] {
+    return [...this.workers.values()].filter(
+      (worker) =>
+        !this.handledFailures.has(worker) &&
+        (worker.status === 'idle' || worker.status === 'busy'),
+    );
+  }
+  get activeExecutions(): number {
+    return [...this.workers.values()].reduce(
+      (sum, worker) => sum + worker.activeExecutions,
+      0,
+    );
+  }
   snapshots(): WorkerState[] {
     return [...this.workers.values()].map((worker) => worker.snapshot());
   }
@@ -199,12 +216,14 @@ export class PjsPool {
     ).length;
   }
 
+  closeProgress(correlationId: string): void {
+    for (const worker of this.workers.values())
+      worker.closeProgress(correlationId);
+  }
+
   cooperateExecution(correlationId: string): void {
     for (const worker of this.workers.values())
-      if (
-        worker.status === 'busy' &&
-        worker.snapshot().currentTaskId === correlationId
-      )
+      if (worker.status === 'busy' && worker.owns(correlationId))
         worker.requestCancellation(correlationId);
   }
 
@@ -214,10 +233,11 @@ export class PjsPool {
     for (const worker of this.workers.values()) {
       if (
         worker.status !== 'busy' ||
-        worker.snapshot().currentTaskId !== correlationId ||
+        !worker.owns(correlationId) ||
         this.handledFailures.has(worker)
       )
         continue;
+      if (!worker.exclusive || worker.activeExecutions !== 1) return;
       this.handledFailures.add(worker);
       this.repair(worker);
       return;
@@ -273,6 +293,11 @@ export class PjsPool {
           this.callbacks.ready(worker);
           this.reconcile();
         },
+        progress: (worker, message, value, acknowledge) => {
+          if (this.callbacks.progress)
+            this.callbacks.progress(worker, message, value, acknowledge);
+          else acknowledge();
+        },
         started: (worker, taskId) => this.callbacks.started(worker, taskId),
         result: (worker, message) => {
           this.callbacks.result(worker, message);
@@ -287,6 +312,7 @@ export class PjsPool {
         },
       },
       this.options.resourceLimits,
+      this.options.concurrency ?? 1,
     );
     this.workers.set(worker.id, worker);
   }

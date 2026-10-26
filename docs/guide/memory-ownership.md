@@ -130,3 +130,11 @@ input. Even after full cleanup, V8 and native allocators may keep RSS above its
 initial value. Measure main/worker isolate heap and external allocations
 separately; RSS is process-wide and `arrayBuffers` overlaps `external`.
 See the [R3 ownership inventory and research methodology](../research/r3-memory-resource-qualification.md).
+
+With opt-in per-worker concurrency, invocations share module state and isolate
+resource limits. Each physical correlation retains its own input/result ownership;
+terminating/leased executions are placed exclusively. More simultaneous invocations
+can increase live inputs, scratch memory and output pressure without adding a memory
+cap. Progress uses a separate bounded JSON channel, has no transfer-list support,
+and never consumes or releases final-result credits. Its 16 KiB payload bound does
+not cap application allocations, callback retention or process RSS.

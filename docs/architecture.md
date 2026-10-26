@@ -3,7 +3,7 @@
 The [stability policy](stability.md) defines the public promise; the
 [initial proposal](proposal.md) records its origins. The package
 exports `PjsRuntime`, `PjsTaskRegistry`, `transfer`, `sharedReadonly`, public
-types, and errors. Pool, worker transport, FIFO implementation, coordinators,
+types, and errors. Pool, worker transport, scheduling implementation, coordinators,
 mutable records, telemetry, profiling hooks, and protocol remain internal.
 
 The v0.11 decomposition established task, range, physical-dispatch, result-credit,
@@ -50,7 +50,7 @@ flowchart TD
 | FIFO ordering               | `PjsScheduler`        | weighted queued entries                                                              |
 | Result byte credit          | `ResultCreditManager` | reservations, execution correlations, per-operation credit, invariant scanner        |
 | Worker population           | `PjsPool`             | workers, repair promises, restart budget                                             |
-| Worker execution            | `PjsWorker`           | one physical correlation and protocol phase                                          |
+| Worker execution            | `PjsWorker`           | bounded physical-correlation map with independent protocol phases                    |
 | Stream delivery             | `RangeStream`         | buffer, waiter, single-consumer terminal state                                       |
 | Stats                       | `RuntimeTelemetry`    | no correctness state; read-only aggregation only                                     |
 
@@ -115,15 +115,23 @@ terminal state is stored before sibling cancellation.
 ## Ownership and scheduling
 
 The main isolate coordinates the component owners. `TaskCoordinator` owns task
-settlement, `ExecutionDispatcher` owns assignment, and each worker owns one
-active execution plus a private module registry. Promise continuations, worker
+settlement, `ExecutionDispatcher` owns assignment, and each worker owns a private module registry and bounded active-execution map
+(default capacity one). Promise continuations, worker
 messages, timer callbacks, and abort callbacks serialize through the main event
 loop. Input getters invoked by structured clone can re-enter the public API
 synchronously, so dispatch claims its slot before cloning.
 
-`PjsScheduler` implements a `Scheduler<T>` interface with enqueue, next(worker snapshot), removal, size, and capacity. A Map supplies insertion-order FIFO and direct queued cancellation without an ever-growing tombstone array. Idle slots can accept tasks directly only when the queue is empty. A serialization failure frees its slot synchronously and dispatch continues. Completion order across workers is deliberately unspecified; FIFO describes dispatch order.
+PjsScheduler retains its bounded Map, logical weights and direct queued removal.
+Default equal priorities preserve FIFO. Its selection scan ranks dispatcher-approved
+candidates using immutable metadata and stable sequence ties; the optional custom
+comparator never receives internal records. Dispatcher alone authorizes a shared
+slot, an empty exclusive worker or the single drain pin. Compatible slots accept
+direct work only when the queue is empty. A failed post rolls back only its slot;
+completion order across physical executions remains unspecified.
 
-The pool has no queue knowledge. Future policies can use task metadata and worker snapshots without changing worker transport. Priority queues need admission/removal semantics preserved. Work stealing will require a larger dispatch-ownership change; the FIFO interface alone is not a claim that distributed deques are a drop-in replacement.
+The pool has no queue knowledge. Dispatcher computes thread demand from actual
+shared/exclusive capacity and recovery/production claims; PjsPool alone changes
+worker population. Lazy range production remains bounded and round-robin.
 
 ## Lifecycle and invariants
 
@@ -131,7 +139,7 @@ Runtime: `created → starting → running → stopping → stopped`. Fatal infr
 
 Pool: `created → active → stopping → stopped`. By default a fixed population is selected within construction bounds. A defined idleTimeout opts into demand-driven growth up to maxWorkers and idle retirement down to minWorkers, starting at the minimum unless workers is explicit. Running/claimed slots cannot be retired. Retiring threads count toward the maximum until exit; fixed-pool behavior is unchanged when idleTimeout is omitted.
 
-Worker: `starting → idle ↔ busy`; crash/protocol/bootstrap error → `failed`; termination request → `stopped`. Status is separate from physical occupancy: a failed/stopped worker retains its current physical correlation until confirmed exit. `workers.busy` counts occupied correlations, including those awaiting termination. Replacement has a fresh monotonically increasing runtime worker ID and a Node thread ID. The old thread exits before the new one is spawned. An error followed by an exit counts as one failure. Historical worker objects are discarded on replacement; lifetime failure counters remain.
+Worker: `starting → idle ↔ busy`; crash/protocol/bootstrap error → `failed`; termination request → `stopped`. Status is separate from physical occupancy: a failed/stopped worker retains all current physical correlations until confirmed exit. workers.busy counts occupied threads; workers.activeExecutions counts their occupied correlations, including those awaiting termination. Replacement has a fresh monotonically increasing runtime worker ID and a Node thread ID. The old thread exits before the new one is spawned. An error followed by an exit counts as one failure. Historical worker objects are discarded on replacement; lifetime failure counters remain.
 
 Task: `created → queued → scheduled → running → completed | failed`; any nonterminal accepted state may become `cancelled | timed_out`. `started` is an explicit protocol acknowledgement. Every accepted task has a UUID. Terminal settlement deletes the runtime record, removes it from the queue, removes its abort listener, clears its timer, releases the retained input, and resolves or rejects once. Returned errors retain task IDs. Completed records are not retained indefinitely.
 
@@ -155,9 +163,8 @@ a single-item response cannot complete an occupied batch.
 
 ## Task contract and protocol
 
-Registration binds a typed handle to a local file URL and named/default function export. Each runtime snapshots the registry; later registrations require a new runtime. Bootstrap imports once per isolate and checks exports are callable. TypeScript handles assert types; they cannot prove the module matches. Tasks accept one serializable input and return a result, a `transfer(value, buffers)` envelope, or a promise of either. The registered output type describes the caller-visible value. All task-owned async work must finish before the task returns. Only explicit
-cooperative mode adds TaskContext as a second argument; every existing mode keeps
-the observable one-argument calling convention.
+Registration binds a typed handle to a local file URL and named/default function export. Each runtime snapshots the registry; later registrations require a new runtime. Bootstrap imports once per isolate and checks exports are callable. TypeScript handles assert types; they cannot prove the module matches. Tasks accept one serializable input and return a result, a `transfer(value, buffers)` envelope, or a promise of either. The registered output type describes the caller-visible value. All task-owned async work must finish before the task returns. Only explicit cooperative mode or onProgress adds TaskContext as a second argument;
+other calls keep the observable one-argument calling convention.
 
 Protocol version 2 retains ordinary `execute`, internal `executeBatch { batchId, taskName, items }`, and an explicit completion-only marker. Collecting workers answer with ordinary success values. Completion workers answer `completed` without inspecting, transferring, or serializing the task return value. Batch results contain ordered per-task success/completion records, at most one final failure, and any later skipped IDs. `ready`, `started`, shutdown, and bootstrap failure remain versioned and validated. Batch IDs identify physical occupancy; task IDs retain logical identity. Missing, duplicate, reordered, or unknown IDs, an invalid failure shape, or any response for the wrong occupied slot fails the worker. Registered module exports remain the only executable code.
 
@@ -312,3 +319,29 @@ Control messages bypass the overlapping-execution guard. Final cancelled envelop
 still require exact correlation/coverage and a requested cancellation; they are not
 retryable failures. The same pool/lifecycle owners handle replacement and forced
 shutdown, with no new manager, scheduler policy or concurrency backend.
+
+## Scheduling, async execution and progress (Checkpoint 3 development)
+
+PjsScheduler keeps weighted storage/removal and stable ties; it ranks eligible
+entries by priority or an optional comparator over frozen scalar metadata.
+ExecutionDispatcher owns admission, shared-slot/exclusive-worker claims, recovery
+credit exchanges and the one waiting exclusive drain pin. Priority does not change
+lazy round-robin range production or preempt running code. Callback reentrancy
+invalidates selection before dispatch; comparator failure restores built-in ranking.
+
+PjsWorker tracks each posted single/batch independently; bootstrap permits bounded
+overlap at await points while batch members remain sequential. PjsPool alone owns
+threads, elastic retirement and one restart decision per failed thread. Failure/exit
+fans out to every physical correlation before pumping; TaskCoordinator applies each
+logical recovery policy. Terminate-mode and leased work obtains an empty worker
+exclusively, preventing destructive cancellation of unrelated invocations. Legacy
+single-execution internal inspection views remain for existing lifecycle tests.
+
+TaskCoordinator owns logical progress subscriptions and the bounded callback drain.
+Invocation-local contexts capture exact item/physical IDs. A bounded incremental
+JSON encoder, shared atomic frame permit and latched acknowledgement wakeup bound
+both transport directions, including CPU loops. Final responses never await progress;
+logical settlement closes reporting without ending physical/result ownership.
+ResultCreditManager and RangeStream retain their existing correlation/yield rules.
+See the [Checkpoint 3 design](proposals/checkpoint-3-scheduling-concurrency-progress.md)
+and [current API](guide/core-api.md).

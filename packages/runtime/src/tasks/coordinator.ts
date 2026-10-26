@@ -1,3 +1,4 @@
+import type { ProgressValue } from '../types/index.js';
 import { randomUUID } from 'node:crypto';
 import { types } from 'node:util';
 import type { ExecutionDispatcher } from '../dispatch/dispatcher.js';
@@ -25,15 +26,21 @@ import type {
   RunOptions,
   RuntimeState,
   TaskSnapshot,
+  TaskProgress,
 } from '../types/index.js';
 import type {
   BatchItemResult,
   ExecutionResultMessage,
   TaskResultMessage,
+  ProgressMessage,
 } from '../workers/protocol.js';
 import type { PjsWorker, WorkerFailureReason } from '../workers/worker.js';
 import type { PjsTask, TaskDescriptor } from './registry.js';
-import type { PendingTask, TaskRecovery } from './task.js';
+import type {
+  PendingTask,
+  TaskRecovery,
+  ProgressSubscription,
+} from './task.js';
 import { reserveTransfers, snapshotTransferList } from './transfer.js';
 
 export type TaskTerminalStatus =
@@ -70,6 +77,19 @@ export class TaskCoordinator {
   private readonly attempts = new Map<string, PendingTask>();
   private readonly metrics = new Metrics();
   private readonly executions = new Map<string, string[]>();
+  private readonly pendingProgress = new Map<
+    string,
+    {
+      worker: PjsWorker;
+      message: ProgressMessage;
+      value: unknown;
+      acknowledge: () => void;
+      subscription: ProgressSubscription;
+      logicalId: string;
+    }
+  >();
+  private progressTick: ReturnType<typeof setImmediate> | undefined;
+  progressErrors = 0;
 
   constructor(
     private readonly registry: ReadonlyMap<object, TaskDescriptor>,
@@ -212,10 +232,12 @@ export class TaskCoordinator {
     return true;
   }
 
-  submit<Input, Output>(
-    task: PjsTask<Input, Output>,
+  submit<Input, Output, Progress = ProgressValue>(
+    task: PjsTask<Input, Output, Progress>,
     input: Input,
-    options: RunOptions<NoInfer<Input>, NoInfer<Output>> | RunOptions,
+    options:
+      | RunOptions<NoInfer<Input>, NoInfer<Output>, NoInfer<Progress>>
+      | RunOptions<unknown, never, NoInfer<Progress>>,
     child?: PartitionChild,
     deferred?: PendingTask[],
   ): Promise<Output> {
@@ -240,6 +262,8 @@ export class TaskCoordinator {
         ),
       );
     let recovery: TaskRecovery | undefined;
+    let priority = 0;
+    let progress: ProgressSubscription | undefined;
     let cancellation: 'terminate' | 'cooperative' | undefined;
     let timeout: number | undefined;
     let signal: AbortSignal | undefined;
@@ -304,6 +328,19 @@ export class TaskCoordinator {
       timeout = options.timeout;
       if (timeout !== undefined) integer('timeout', timeout, 1, 2 ** 31 - 1);
       signal = options.signal;
+      priority = child
+        ? child.operation.priority
+        : integer(
+            'priority',
+            'priority' in options ? (options.priority ?? 0) : 0,
+            -(2 ** 31),
+            2 ** 31 - 1,
+          );
+      progress = child
+        ? child.operation.progress
+        : this.createProgress(
+            'onProgress' in options ? options.onProgress : undefined,
+          );
       if (recovery && signal) recovery.signal = signal;
     } catch (error) {
       return rejectSubmission(error as Error);
@@ -382,6 +419,8 @@ export class TaskCoordinator {
       deferred !== undefined,
       child !== undefined,
       this.runtime.dispatchAllowed(),
+      (child?.operation.cancellation ?? cancellation) === 'terminate' ||
+        executionLease !== undefined,
     );
     if (!admission)
       return rejectSubmission(
@@ -401,6 +440,8 @@ export class TaskCoordinator {
     return new Promise<Output>((resolve, reject) => {
       const pending: PendingTask = {
         id,
+        priority,
+        ...(progress ? { progress } : {}),
         ...(recovery ? { recovery } : {}),
         ...(cancellation ? { cancellation } : {}),
         ...(executionLease === undefined ? {} : { executionLease }),
@@ -427,8 +468,10 @@ export class TaskCoordinator {
         reject,
         cleanup: () => {},
       };
-      if (recovery && timeout !== undefined)
-        recovery.deadline = pending.admittedAt + timeout;
+      if (timeout !== undefined) {
+        pending.deadline = pending.admittedAt + timeout;
+        if (recovery) recovery.deadline = pending.deadline;
+      }
       if (
         child &&
         (child.expectedResultBytes !== undefined || child.resultByteContract)
@@ -484,6 +527,133 @@ export class TaskCoordinator {
     });
   }
 
+  progress(
+    worker: PjsWorker,
+    message: ProgressMessage,
+    value: unknown,
+    acknowledge: () => void,
+  ): void {
+    const task = this.executionTask(message.taskId);
+    const subscription = task?.progress;
+    if (
+      !task ||
+      !subscription?.active ||
+      (task.batchLeaderId ?? task.executionId ?? task.id) !==
+        message.correlationId
+    ) {
+      acknowledge();
+      return;
+    }
+    this.pendingProgress.set(message.correlationId, {
+      worker,
+      message,
+      value,
+      acknowledge,
+      subscription,
+      logicalId: task.id,
+    });
+    this.scheduleProgress();
+  }
+  private scheduleProgress(): void {
+    if (this.progressTick || !this.pendingProgress.size) return;
+    this.progressTick = setImmediate(() => {
+      this.progressTick = undefined;
+      for (let count = 0; count < 64; count++) {
+        const entry = this.pendingProgress.values().next().value;
+        if (!entry) break;
+        this.pendingProgress.delete(entry.message.correlationId);
+        const { worker, message, subscription, acknowledge } = entry;
+        try {
+          const task = this.executionTask(message.taskId);
+          if (
+            !task ||
+            !subscription.active ||
+            task.progress !== subscription ||
+            (task.batchLeaderId ?? task.executionId ?? task.id) !==
+              message.correlationId
+          )
+            continue;
+          if (task.child && !this.parents.canSubmit(task.child)) continue;
+          if (
+            task.deadline !== undefined &&
+            performance.now() >= task.deadline
+          ) {
+            this.cancel(task, 'timed_out');
+            this.runtime.requestPump();
+            continue;
+          }
+          const event: TaskProgress<unknown> = Object.freeze({
+            value: entry.value,
+            taskId: task.id,
+            taskName: task.snapshot.taskName,
+            executionId: message.taskId,
+            correlationId: message.correlationId,
+            implementation:
+              task.snapshot.implementation ?? task.snapshot.taskName,
+            attempt: task.snapshot.attempt ?? 1,
+            sequence: message.sequence,
+            workerId: worker.id,
+            ...(task.child
+              ? {
+                  operationId: task.child.operation.id,
+                  partitionIndex: task.child.partition.index,
+                }
+              : {}),
+          });
+          try {
+            const result: unknown = subscription.callback(event);
+            if (
+              result &&
+              (typeof result === 'object' || typeof result === 'function') &&
+              'then' in result &&
+              typeof result.then === 'function'
+            ) {
+              void Promise.resolve(result).catch(() => {});
+              throw new TypeError('onProgress must be synchronous');
+            }
+          } catch {
+            this.progressErrors++;
+            this.disableProgress(subscription);
+          }
+        } finally {
+          acknowledge();
+        }
+      }
+      this.scheduleProgress();
+    });
+  }
+  private disableProgress(subscription: ProgressSubscription): void {
+    subscription.active = false;
+    for (const task of this.tasks.values())
+      if (task.progress === subscription)
+        this.dispatcher.closeProgress(
+          task.batchLeaderId ?? task.executionId ?? task.id,
+        );
+    for (const [id, entry] of this.pendingProgress)
+      if (entry.subscription === subscription) {
+        this.pendingProgress.delete(id);
+        entry.acknowledge();
+      }
+    this.clearProgressTick();
+  }
+  private discardProgress(task: PendingTask): void {
+    this.dispatcher.closeProgress(
+      task.batchLeaderId ?? task.executionId ?? task.id,
+    );
+    for (const [id, entry] of this.pendingProgress)
+      if (entry.logicalId === task.id) {
+        this.pendingProgress.delete(id);
+        entry.acknowledge();
+      }
+    this.clearProgressTick();
+  }
+  private clearProgressTick(): void {
+    if (!this.pendingProgress.size && this.progressTick) {
+      clearImmediate(this.progressTick);
+      this.progressTick = undefined;
+    }
+  }
+
   started(worker: PjsWorker, taskId: string): void {
     const single = this.executionTask(taskId);
     for (const id of this.executions.get(taskId) ??
@@ -532,6 +702,7 @@ export class TaskCoordinator {
     for (const id of members ?? (single ? [single.id] : [])) {
       const task = this.tasks.get(id);
       if (!task) continue;
+      this.discardProgress(task);
       const context = {
         taskId: task.id,
         ...(error.workerId === undefined ? {} : { workerId: error.workerId }),
@@ -586,6 +757,8 @@ export class TaskCoordinator {
     output?: unknown,
   ): void {
     if (!this.tasks.delete(task.id)) return;
+    this.discardProgress(task);
+    if (!task.child && task.progress) task.progress.active = false;
     if (task.executionId) this.attempts.delete(task.executionId);
     const recovery = task.recovery;
     if (recovery) {
@@ -630,6 +803,16 @@ export class TaskCoordinator {
   private canSubmit(child?: PartitionChild): boolean {
     if (child && !this.parents.canSubmit(child)) return false;
     return this.runtime.canAccept(child !== undefined);
+  }
+
+  createProgress(callback: unknown): ProgressSubscription | undefined {
+    if (callback === undefined) return undefined;
+    if (typeof callback !== 'function')
+      throw new TypeError('onProgress must be a function');
+    return {
+      active: true,
+      callback: callback as ProgressSubscription['callback'],
+    };
   }
 
   createRecovery(

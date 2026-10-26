@@ -26,6 +26,7 @@ export class RuntimeTelemetry {
       },
       workers: {
         total: workers.length,
+        activeExecutions: this.dispatcher.activeExecutions,
         busy: this.dispatcher.busy,
         idle: workers.filter((worker) => worker.status === 'idle').length,
         starting: workers.filter((worker) => worker.status === 'starting')
@@ -38,6 +39,8 @@ export class RuntimeTelemetry {
         size: this.dispatcher.queueSize,
         capacity: this.dispatcher.queueCapacity,
       },
+      scheduling: { policyErrors: this.dispatcher.policyErrors },
+      progress: { callbackErrors: this.tasks.progressErrors },
       tasks: taskSnapshot.metrics,
       timing: taskSnapshot.timing,
       operations: rangeSnapshot.operations,

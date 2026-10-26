@@ -28,6 +28,12 @@ export interface WorkerState {
   threadId: number;
   status: WorkerStatus;
   currentTaskId?: string;
+  /** Present in runtime snapshots; optional to preserve legacy constructed copies.
+   * All occupied physical correlations, including termination waits. */
+  currentTaskIds?: string[];
+  concurrency?: number;
+  exclusive?: boolean;
+  draining?: boolean;
   completedTasks: number;
   failedTasks: number;
   totalExecutionTimeMs: number;
@@ -65,11 +71,48 @@ export interface RetryOptions {
   on?: readonly RecoveryCause[];
 }
 
-/** Supplied as the second task argument only in explicit cooperative mode. */
-export interface TaskContext {
+/** Default progress shape; application progress generics are deliberately unconstrained. */
+export type ProgressValue =
+  | null
+  | boolean
+  | number
+  | string
+  | readonly ProgressValue[]
+  | { readonly [key: string]: ProgressValue };
+
+export interface SchedulingTask {
+  readonly taskId: string;
+  readonly taskName: string;
+  readonly priority: number;
+  /** Epoch milliseconds at this runnable entry's enqueue. */
+  readonly queuedAt: number;
+  readonly weight: number;
+  readonly exclusive: boolean;
+  readonly operationId?: string;
+  readonly partitionIndex?: number;
+}
+
+export interface TaskProgress<Progress = ProgressValue> {
+  readonly value: Progress;
+  readonly taskId: string;
+  readonly taskName: string;
+  readonly executionId: string;
+  readonly correlationId: string;
+  readonly implementation: string;
+  readonly attempt: number;
+  readonly sequence: number;
+  readonly workerId: number;
+  readonly operationId?: string;
+  readonly partitionIndex?: number;
+}
+
+/** Second argument only for cooperative or explicitly progress-enabled calls. */
+export interface TaskContext<Progress = ProgressValue> {
   readonly signal: AbortSignal;
   /** Poll shared cancellation state, abort the local signal and throw AbortError. */
   throwIfCancelled(): void;
+  /** Bounded, lossy reporting. True means accepted, not guaranteed delivery. */
+  reportProgress(value: Progress): boolean;
 }
 
 /** Metadata for a selected recovery execution, including the single fallback. */
@@ -79,7 +122,15 @@ export interface RecoveryAttempt {
 }
 
 // A never output keeps legacy non-generic options assignable to every run schema.
-export interface RunOptions<Input = unknown, Output = never> {
+export interface RunOptions<
+  Input = unknown,
+  Output = never,
+  Progress = ProgressValue,
+> {
+  /** Signed 32-bit priority; higher first, default zero. No preemption. */
+  priority?: number;
+  /** Synchronous observer; errors disable reporting without failing computation. */
+  onProgress?: (event: TaskProgress<Progress>) => void;
   signal?: AbortSignal;
   /** Move these buffers at dispatch. All sender-side views detach on a successful post. */
   transferList?: readonly ArrayBuffer[];
@@ -103,7 +154,7 @@ export interface RunOptions<Input = unknown, Output = never> {
   retry?: RetryOptions;
   /** One alternative implementation in this runtime's pool; never retried. */
   fallback?: {
-    task: PjsTask<Input, Output>;
+    task: PjsTask<Input, Output, Progress>;
     on?: readonly RecoveryCause[];
   };
 }

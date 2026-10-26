@@ -1,3 +1,4 @@
+import type { ProgressValue } from '../../types/index.js';
 import type { PjsTask } from '../../tasks/registry.js';
 import type {
   PartitionInput,
@@ -19,38 +20,66 @@ import type {
   ResultByteDeclaration,
 } from '../../partition/range.js';
 import type { ResultByteMode } from '../../results/credit.js';
-export function streamRange<Input, Output extends PjsBinaryResult>(
+export function streamRange<
+  Input,
+  Output extends PjsBinaryResult,
+  Progress = ProgressValue,
+>(
   submission: StreamRangeSubmission,
-  task: PjsTask<Input, Output>,
+  task: PjsTask<Input, Output, Progress>,
   range: PartitionRange,
   createInput: (partition: RangePartition) => PartitionInput<Input>,
   options:
-    | BinaryStreamRangeOptions<NoInfer<Input>, NoInfer<Output>>
-    | UpperBoundBinaryStreamRangeOptions<NoInfer<Input>, NoInfer<Output>>,
+    | BinaryStreamRangeOptions<
+        NoInfer<Input>,
+        NoInfer<Output>,
+        NoInfer<Progress>
+      >
+    | UpperBoundBinaryStreamRangeOptions<
+        NoInfer<Input>,
+        NoInfer<Output>,
+        NoInfer<Progress>
+      >,
 ): PjsRangeStream<Output>;
-export function streamRange<Input, Output>(
+export function streamRange<Input, Output, Progress = ProgressValue>(
   submission: StreamRangeSubmission,
-  task: PjsTask<Input, Output>,
+  task: PjsTask<Input, Output, Progress>,
   range: PartitionRange,
   createInput: (partition: RangePartition) => PartitionInput<Input>,
-  options?: CountOnlyStreamRangeOptions<NoInfer<Input>, NoInfer<Output>>,
+  options?: CountOnlyStreamRangeOptions<
+    NoInfer<Input>,
+    NoInfer<Output>,
+    NoInfer<Progress>
+  >,
 ): PjsRangeStream<Output>;
-export function streamRange<Input, Output>(
+export function streamRange<Input, Output, Progress = ProgressValue>(
   submission: StreamRangeSubmission,
-  task: PjsTask<Input, Output>,
+  task: PjsTask<Input, Output, Progress>,
   range: PartitionRange,
   createInput: (partition: RangePartition) => PartitionInput<Input>,
   options:
-    | StreamRangeOptions<NoInfer<Input>, NoInfer<Output>>
-    | BinaryStreamRangeOptions<NoInfer<Input>, NoInfer<Output>>
-    | UpperBoundBinaryStreamRangeOptions<NoInfer<Input>, NoInfer<Output>>,
+    | StreamRangeOptions<NoInfer<Input>, NoInfer<Output>, NoInfer<Progress>>
+    | BinaryStreamRangeOptions<
+        NoInfer<Input>,
+        NoInfer<Output>,
+        NoInfer<Progress>
+      >
+    | UpperBoundBinaryStreamRangeOptions<
+        NoInfer<Input>,
+        NoInfer<Output>,
+        NoInfer<Progress>
+      >,
 ): PjsRangeStream<Output>;
-export function streamRange<Input, Output>(
+export function streamRange<Input, Output, Progress = ProgressValue>(
   submission: StreamRangeSubmission,
-  task: PjsTask<Input, Output>,
+  task: PjsTask<Input, Output, Progress>,
   range: PartitionRange,
   createInput: (partition: RangePartition) => PartitionInput<Input>,
-  options: StreamRangeOptions<NoInfer<Input>, NoInfer<Output>> & {
+  options: StreamRangeOptions<
+    NoInfer<Input>,
+    NoInfer<Output>,
+    NoInfer<Progress>
+  > & {
     resultBytes?: ResultByteDeclaration;
     experimentalResultBytes?: ResultByteDeclaration;
     maxResultBytes?: ResultByteDeclaration;

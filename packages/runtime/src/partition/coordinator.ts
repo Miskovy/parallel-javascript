@@ -1,3 +1,4 @@
+import type { ProgressValue } from '../types/index.js';
 import { randomUUID } from 'node:crypto';
 import { isMainThread } from 'node:worker_threads';
 import type { ExecutionDispatcher } from '../dispatch/dispatcher.js';
@@ -115,17 +116,18 @@ export class RangeCoordinator implements TaskParentPort {
     private readonly tasks: TaskCoordinator,
     private readonly resultCredits: ResultCreditManager,
     private readonly runtime: RangeRuntimePort,
+    private readonly concurrency = 1,
   ) {}
 
   get size(): number {
     return this.operations.size;
   }
 
-  start<Input>(
-    task: PjsTask<Input, unknown>,
+  start<Input, Progress = ProgressValue>(
+    task: PjsTask<Input, unknown, Progress>,
     range: { start: number; end: number; grainSize: number },
     createInput: (partition: RangePartition) => PartitionInput<Input>,
-    options: PartitionOptions<Input, unknown>,
+    options: PartitionOptions<Input, unknown, Progress>,
     resultMode: RangeResultMode,
     stream?: RangeStream<unknown>,
     mapOutputConstructor?: PjsTypedArrayConstructor,
@@ -152,19 +154,28 @@ export class RangeCoordinator implements TaskParentPort {
     let timeout: number | undefined;
     let signal: AbortSignal | undefined;
     let dispatchBatchSize: number;
+    let priority = 0;
+    let onProgress: PartitionOptions<Input, unknown, Progress>['onProgress'];
     let cancellation: 'settle' | 'cooperative' | 'terminate' | undefined;
     let recovery: TaskRecovery | undefined;
     let rebuildInput: RangeOperation['rebuildInput'];
     let outputs: unknown[] | PjsTypedArray | undefined;
     try {
-      ({ plan, timeout, signal, cancellation, dispatchBatchSize } =
-        validateRangeRequest(
-          range,
-          createInput,
-          options,
-          resultMode,
-          mapOutputConstructor,
-        ));
+      ({
+        plan,
+        timeout,
+        signal,
+        cancellation,
+        dispatchBatchSize,
+        priority,
+        onProgress,
+      } = validateRangeRequest(
+        range,
+        createInput,
+        options,
+        resultMode,
+        mapOutputConstructor,
+      ));
     } catch (error) {
       return reject(error as Error);
     }
@@ -253,7 +264,7 @@ export class RangeCoordinator implements TaskParentPort {
     return new Promise<unknown[] | PjsTypedArray | void>((resolve, reject) => {
       const operation = new RangeOperation(
         id,
-        task as PjsTask<unknown, unknown>,
+        task as PjsTask<unknown, unknown, Progress>,
         plan,
         dispatchBatchSize,
         resultMode,
@@ -271,6 +282,15 @@ export class RangeCoordinator implements TaskParentPort {
       if (recovery) operation.recovery = recovery;
       if (rebuildInput) operation.rebuildInput = rebuildInput;
       operation.cancellation = cancellation ?? 'settle';
+      operation.priority = priority;
+      if (onProgress) {
+        const subscription = this.tasks.createProgress(onProgress)!;
+        const callback = subscription.callback;
+        subscription.callback = (event) =>
+          operation.runInAsyncScope(callback, undefined, event);
+        operation.progress = subscription;
+      }
+      this.dispatcher.invalidate();
       operation.status = 'running';
       this.operations.set(id, operation);
       this.operationMetrics.accepted++;
@@ -457,7 +477,11 @@ export class RangeCoordinator implements TaskParentPort {
       if (this.expireOperation(operation)) continue;
       const continuing = this.readyContinuation(operation);
       if (continuing) {
-        const claim = this.dispatcher.claimProduction(1);
+        const claim = this.dispatcher.claimProduction(
+          1,
+          operation.cancellation === 'terminate',
+          operation.id,
+        );
         if (!claim) break;
         continuing.snapshot.status = 'queued';
         delete continuing.recovery!.ready;
@@ -467,8 +491,7 @@ export class RangeCoordinator implements TaskParentPort {
       let maximum = Math.min(
         operation.dispatchBatchSize,
         operation.plan.chunkCount - operation.generated,
-        this.workerCount * operation.dispatchBatchSize -
-          operation.children.size,
+        this.childWindow(operation) - operation.children.size,
       );
       if (operation.stream)
         maximum = Math.min(
@@ -477,7 +500,11 @@ export class RangeCoordinator implements TaskParentPort {
             operation.stream.buffered -
             operation.children.size,
         );
-      const claim = this.dispatcher.claimProduction(maximum);
+      const claim = this.dispatcher.claimProduction(
+        maximum,
+        operation.cancellation === 'terminate',
+        operation.id,
+      );
       if (!claim) break;
       const staged: PendingTask[] = [];
       try {
@@ -717,6 +744,8 @@ export class RangeCoordinator implements TaskParentPort {
     const profileStarted = internalProfilingEnabled() ? performance.now() : 0;
     if (operation.status !== 'running') return;
     operation.status = status;
+    this.dispatcher.cancelProduction(operation.id);
+    if (operation.progress) operation.progress.active = false;
     this.operations.delete(operation.id);
     operation.cleanup();
     operation.cleanup = () => {};
@@ -848,11 +877,18 @@ export class RangeCoordinator implements TaskParentPort {
     return undefined;
   }
 
+  private childWindow(operation: RangeOperation): number {
+    return (
+      this.workerCount *
+      (operation.cancellation === 'terminate' ? 1 : this.concurrency) *
+      operation.dispatchBatchSize
+    );
+  }
+
   private operationHasCountCredit(operation: RangeOperation): boolean {
     return (
       operation.generated < operation.plan.chunkCount &&
-      operation.children.size <
-        this.workerCount * operation.dispatchBatchSize &&
+      operation.children.size < this.childWindow(operation) &&
       (!operation.stream ||
         operation.stream.capacity -
           operation.stream.buffered -
@@ -862,13 +898,24 @@ export class RangeCoordinator implements TaskParentPort {
   }
 
   private nextProducer(): RangeOperation | undefined {
-    for (const operation of [...this.operations.values()]) {
+    const preferred = this.dispatcher.productionOwner;
+    const operations = [...this.operations.values()];
+    operations.sort(
+      (a, b) => Number(b.id === preferred) - Number(a.id === preferred),
+    );
+    for (const operation of operations) {
       if (this.readyContinuation(operation)) return operation;
-      if (!this.operationHasCountCredit(operation)) continue;
+      if (!this.operationHasCountCredit(operation)) {
+        if (operation.id === preferred)
+          this.dispatcher.cancelProduction(operation.id);
+        continue;
+      }
       if (operation.resultByteDeclaration !== undefined) {
         const declaration = this.prepareResultDeclaration(operation);
         if (!declaration || operation.status !== 'running') continue;
         if (!this.resultCredits.canReserve(operation, declaration.bytes)) {
+          if (operation.id === preferred)
+            this.dispatcher.cancelProduction(operation.id);
           if (!declaration.waited) {
             declaration.waited = true;
             this.resultCredits.recordWait();

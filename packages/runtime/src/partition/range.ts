@@ -3,6 +3,8 @@ import type {
   RetryOptions,
   RecoveryCause,
   RecoveryAttempt,
+  ProgressValue,
+  TaskProgress,
 } from '../types/index.js';
 /** Numeric half-open range with an explicit maximum chunk width. */
 export interface PartitionRange {
@@ -25,7 +27,13 @@ export interface PartitionInput<Input> {
 }
 
 /** One deadline and signal for the whole range, not each child. */
-export type PartitionOptions<Input = unknown, Output = never> = {
+export type PartitionOptions<
+  Input = unknown,
+  Output = never,
+  Progress = ProgressValue,
+> = {
+  priority?: number;
+  onProgress?: (event: TaskProgress<Progress>) => void;
   /** Physical execution leases are unsupported for range and batch operations. */
   executionLease?: never;
   /** Default settle; terminate stops active batches on parent abort/timeout/cleanup. */
@@ -33,7 +41,7 @@ export type PartitionOptions<Input = unknown, Output = never> = {
   repeatable?: true;
   retry?: RetryOptions;
   fallback?: {
-    task: PjsTask<[Input] extends [never] ? unknown : Input, Output>;
+    task: PjsTask<[Input] extends [never] ? unknown : Input, Output, Progress>;
     on?: readonly RecoveryCause[];
   };
   rebuildInput?: [Input] extends [never]
@@ -64,7 +72,8 @@ export type PartitionOptions<Input = unknown, Output = never> = {
 export type StreamRangeOptions<
   Input = unknown,
   Output = never,
-> = PartitionOptions<Input, Output> &
+  Progress = ProgressValue,
+> = PartitionOptions<Input, Output, Progress> &
   (
     | {
         /** Logical retained/in-flight results; defaults to workers. */
@@ -83,7 +92,8 @@ export type StreamRangeOptions<
 export type CountOnlyStreamRangeOptions<
   Input = unknown,
   Output = never,
-> = StreamRangeOptions<Input, Output> & {
+  Progress = ProgressValue,
+> = StreamRangeOptions<Input, Output, Progress> & {
   resultBytes?: never;
   maxResultBytes?: never;
   maxReservedResultBytes?: never;
@@ -121,7 +131,8 @@ export type ResultByteDeclaration =
 export type BinaryStreamRangeOptions<
   Input = unknown,
   Output = never,
-> = StreamRangeOptions<Input, Output> &
+  Progress = ProgressValue,
+> = StreamRangeOptions<Input, Output, Progress> &
   (
     | {
         resultBytes: ResultByteDeclaration;
@@ -147,7 +158,8 @@ export type BinaryStreamRangeOptions<
 export type UpperBoundBinaryStreamRangeOptions<
   Input = unknown,
   Output = never,
-> = StreamRangeOptions<Input, Output> &
+  Progress = ProgressValue,
+> = StreamRangeOptions<Input, Output, Progress> &
   (
     | {
         maxResultBytes: ResultByteDeclaration;
@@ -201,7 +213,8 @@ export type PjsTypedArrayConstructor =
 export type TypedMapRangeOptions<
   Constructor extends PjsTypedArrayConstructor = PjsTypedArrayConstructor,
   Input = never,
-> = PartitionOptions<Input, InstanceType<Constructor>> &
+  Progress = ProgressValue,
+> = PartitionOptions<Input, InstanceType<Constructor>, Progress> &
   (
     | {
         /** Built-in typed-array constructor for the flat result. */
