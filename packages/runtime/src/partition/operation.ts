@@ -1,6 +1,6 @@
 import type { TaskRecovery, ProgressSubscription } from '../tasks/task.js';
 import type { RecoveryAttempt } from '../types/index.js';
-import { AsyncResource } from 'node:async_hooks';
+import type { ExecutionScope } from '../hosts/contracts.js';
 import type { PjsTask } from '../tasks/registry.js';
 import type {
   PartitionInput,
@@ -24,7 +24,7 @@ export type {
 } from '../diagnostics.js';
 
 /** Host-owned state only. No worker slot and no preallocated child Promise list. */
-export class RangeOperation extends AsyncResource {
+export class RangeOperation {
   recovery?: TaskRecovery;
   priority = 0;
   progress?: ProgressSubscription;
@@ -63,9 +63,19 @@ export class RangeOperation extends AsyncResource {
     readonly deadline: number | undefined,
     readonly resolve: (outputs: unknown[] | PjsTypedArray | undefined) => void,
     readonly reject: (error: Error) => void,
+    private readonly scope: ExecutionScope,
   ) {
-    super('PjsRangeOperation', { requireManualDestroy: true });
     this.outputs = outputs;
+  }
+  runInAsyncScope<T, Args extends unknown[]>(
+    callback: (...args: Args) => T,
+    receiver: unknown,
+    ...args: Args
+  ): T {
+    return this.scope.runInAsyncScope(callback, receiver, ...args);
+  }
+  emitDestroy(): void {
+    this.scope.emitDestroy();
   }
 }
 

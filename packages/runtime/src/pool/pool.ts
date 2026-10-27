@@ -1,6 +1,7 @@
 import { PjsExecutionLeaseError, PjsWorkerError } from '../errors/index.js';
 import type { TaskDescriptor } from '../tasks/registry.js';
 import { PjsWorker } from '../workers/worker.js';
+import type { RuntimeHost } from '../hosts/contracts.js';
 import type {
   WorkerCallbacks,
   WorkerFailureReason,
@@ -56,6 +57,7 @@ export class PjsPool {
   leaseExpirations = 0;
   leaseTerminationRequests = 0;
   confirmedLeaseExits = 0;
+  private unconfirmedRetirements = 0;
   private stopPromise: Promise<void> | undefined;
   failures = 0;
   restarts = 0;
@@ -64,6 +66,7 @@ export class PjsPool {
     private readonly options: PoolOptions,
     private readonly tasks: TaskDescriptor[],
     private readonly callbacks: PoolCallbacks,
+    private readonly host: RuntimeHost,
   ) {
     this.desired = options.workers;
   }
@@ -157,7 +160,7 @@ export class PjsPool {
     delay: number,
   ): ReturnType<typeof setTimeout> {
     const timer = setTimeout(callback, delay);
-    timer.unref();
+    this.host.unref(timer);
     return timer;
   }
 
@@ -262,6 +265,9 @@ export class PjsPool {
       leaseExpirations: this.leaseExpirations,
       leaseTerminationRequests: this.leaseTerminationRequests,
       confirmedLeaseExits: this.confirmedLeaseExits,
+      ...(this.host.kind === 'browser'
+        ? { unconfirmedRetirements: this.unconfirmedRetirements }
+        : {}),
       workerReplacements: this.replacements,
       restartWindowUtilization: this.restartWindowUtilization,
       restartBudgetExhaustions: this.budgetExhaustions,
@@ -278,6 +284,7 @@ export class PjsPool {
         [...this.workers.values()].map((worker) => worker.stop()),
       );
       await Promise.all(this.repairs);
+      if (this.host.kind === 'browser') this.workers.clear();
       this.state = 'stopped';
     })();
     return this.stopPromise;
@@ -306,11 +313,19 @@ export class PjsPool {
         failed: (worker, error, wasStarting, reason) =>
           this.failed(worker, error, wasStarting, reason),
         leaseTerminationRequested: () => this.leaseTerminationRequests++,
+        postingQuiescent: (worker) =>
+          this.callbacks.postingQuiescent?.(worker) ??
+          Promise.reject(new Error('Missing posting barrier')),
+        revoked: (worker, ids) => {
+          if (ids.length) this.unconfirmedRetirements++;
+          this.callbacks.revoked?.(worker, ids);
+        },
         exited: (worker, correlationId) => {
           if (worker.leaseExpired) this.confirmedLeaseExits++;
           this.callbacks.exited(worker, correlationId);
         },
       },
+      this.host.worker,
       this.options.resourceLimits,
       this.options.concurrency ?? 1,
     );

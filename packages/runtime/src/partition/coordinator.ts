@@ -1,6 +1,5 @@
 import type { ProgressValue } from '../types/index.js';
-import { randomUUID } from 'node:crypto';
-import { isMainThread } from 'node:worker_threads';
+import type { RuntimeHost } from '../hosts/contracts.js';
 import type { ExecutionDispatcher } from '../dispatch/dispatcher.js';
 import {
   PjsBinaryResultContractError,
@@ -106,7 +105,7 @@ export class RangeCoordinator implements TaskParentPort {
     failed: 0,
     cancelled: 0,
   };
-  private productionTick: ReturnType<typeof setImmediate> | undefined;
+  private productionTick: (() => void) | undefined;
 
   constructor(
     private readonly registry: ReadonlyMap<object, unknown>,
@@ -116,7 +115,8 @@ export class RangeCoordinator implements TaskParentPort {
     private readonly tasks: TaskCoordinator,
     private readonly resultCredits: ResultCreditManager,
     private readonly runtime: RangeRuntimePort,
-    private readonly concurrency = 1,
+    private readonly concurrency: number,
+    private readonly host: RuntimeHost,
   ) {}
 
   get size(): number {
@@ -135,7 +135,7 @@ export class RangeCoordinator implements TaskParentPort {
     resultByteCapacity?: number,
     resultByteMode: ResultByteMode = 'exact',
   ): Promise<unknown[] | PjsTypedArray | void> {
-    const id = randomUUID();
+    const id = this.host.id();
     const acceptedAt = performance.now();
     const kind = operationKind(resultMode);
     const reject = (error: Error): Promise<never> => {
@@ -143,7 +143,7 @@ export class RangeCoordinator implements TaskParentPort {
       this.operationTypeMetrics[kind].rejected++;
       return Promise.reject(error);
     };
-    if (!isMainThread)
+    if (!this.host.isHostThread())
       return reject(
         new PjsRuntimeStateError(
           'Partition operations require the main thread; nested worker partitioning is unsupported',
@@ -179,6 +179,12 @@ export class RangeCoordinator implements TaskParentPort {
     } catch (error) {
       return reject(error as Error);
     }
+    if (cancellation === 'cooperative' && !this.host.sharedMemory)
+      return reject(
+        new TypeError(
+          'Cooperative cancellation requires usable shared memory in page and worker',
+        ),
+      );
     const state = this.runtime.state();
     if (state !== 'starting' && state !== 'running')
       return reject(
@@ -278,6 +284,7 @@ export class RangeCoordinator implements TaskParentPort {
         timeout === undefined ? undefined : acceptedAt + timeout,
         resolve,
         reject,
+        this.host.createScope(),
       );
       if (recovery) operation.recovery = recovery;
       if (rebuildInput) operation.rebuildInput = rebuildInput;
@@ -330,7 +337,7 @@ export class RangeCoordinator implements TaskParentPort {
       };
       let timer: ReturnType<typeof setTimeout> | undefined;
       operation.cleanup = () => {
-        if (timer) clearTimeout(timer);
+        if (timer) this.host.clearTimer(timer);
         signal?.removeEventListener('abort', abort);
       };
       signal?.addEventListener('abort', abort, { once: true });
@@ -340,13 +347,13 @@ export class RangeCoordinator implements TaskParentPort {
             !this.expireOperation(operation) &&
             operation.status === 'running'
           )
-            timer = setTimeout(
+            timer = this.host.setTimer(
               onDeadline,
               Math.max(1, Math.ceil(operation.deadline! - performance.now())),
             );
           this.runtime.requestPump();
         };
-        timer = setTimeout(
+        timer = this.host.setTimer(
           onDeadline,
           Math.max(1, Math.ceil(timeout - (performance.now() - acceptedAt))),
         );
@@ -633,7 +640,7 @@ export class RangeCoordinator implements TaskParentPort {
       this.nextProducer() &&
       !this.productionTick
     ) {
-      this.productionTick = setImmediate(() => {
+      this.productionTick = this.host.defer(() => {
         this.productionTick = undefined;
         this.runtime.requestPump();
       });
@@ -649,7 +656,7 @@ export class RangeCoordinator implements TaskParentPort {
   }
 
   stopProduction(): void {
-    if (this.productionTick) clearImmediate(this.productionTick);
+    if (this.productionTick) this.productionTick();
     this.productionTick = undefined;
   }
 

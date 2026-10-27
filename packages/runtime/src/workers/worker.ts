@@ -1,17 +1,21 @@
-import { Worker } from 'node:worker_threads';
+import type {
+  WorkerServices,
+  WorkerConnection,
+  WorkerThread,
+} from '../hosts/contracts.js';
 import {
   PjsExecutionLeaseError,
   PjsSerializationError,
   PjsWorkerError,
 } from '../errors/index.js';
 import type { TaskDescriptor } from '../tasks/registry.js';
-import { validateTransferList } from '../tasks/transfer.js';
 import {
   internalProfilingEnabled,
   recordInternalProfile,
 } from '../telemetry/profile.js';
 import type { WorkerResourceLimits, WorkerState } from '../types/index.js';
-import { encodeProgress, MAX_PROGRESS_BYTES } from './progress.js';
+import type { ProgressControl } from './progress.js';
+import { encodeProgress, MAX_PROGRESS_BYTES, utf8Bytes } from './progress.js';
 import { isWorkerMessage } from './protocol.js';
 import type {
   BatchInput,
@@ -43,6 +47,8 @@ export interface WorkerCallbacks {
     acknowledge: () => void,
   ): void;
   leaseTerminationRequested?(worker: PjsWorker): void;
+  postingQuiescent?(worker: PjsWorker): Promise<void>;
+  revoked?(worker: PjsWorker, correlations: readonly string[]): void;
 }
 
 interface ExecutionLease {
@@ -53,7 +59,8 @@ interface ExecutionLease {
 
 export class PjsWorker {
   readonly ready: Promise<void>;
-  private readonly thread: Worker;
+  private readonly thread: WorkerThread;
+  private readonly connection: WorkerConnection;
   private readonly state: WorkerState & {
     currentTaskIds: string[];
     exclusive: boolean;
@@ -66,11 +73,13 @@ export class PjsWorker {
     string,
     {
       phase: 'scheduled' | 'running';
+      posted: boolean;
       itemIds: string[];
       cancellation?: Int32Array<SharedArrayBuffer>;
       exclusive: boolean;
       progress?: {
-        flag: Int32Array<SharedArrayBuffer>;
+        control: ProgressControl;
+        closeSent: boolean;
         sequences: Map<string, number>;
         pending: boolean;
       };
@@ -85,6 +94,7 @@ export class PjsWorker {
     tasks: TaskDescriptor[],
     startupTimeout: number,
     private readonly callbacks: WorkerCallbacks,
+    private readonly services: WorkerServices,
     resourceLimits?: WorkerResourceLimits,
     readonly concurrency = 1,
   ) {
@@ -94,13 +104,16 @@ export class PjsWorker {
     });
     // A replacement can fail before the pool attaches a readiness waiter.
     void this.ready.catch(() => {});
-    this.thread = new Worker(new URL('./bootstrap.js', import.meta.url), {
-      workerData: { version: 2, tasks, concurrency } satisfies BootstrapData,
-      ...(resourceLimits ? { resourceLimits: { ...resourceLimits } } : {}),
-    });
+    this.connection = services.create(
+      { version: 2, tasks, concurrency } satisfies BootstrapData,
+      resourceLimits,
+    );
+    this.thread = this.connection.thread;
     this.state = {
       id,
-      threadId: this.thread.threadId,
+      ...(this.thread.threadId === undefined
+        ? {}
+        : { threadId: this.thread.threadId }),
       status: 'starting',
       concurrency,
       currentTaskIds: [],
@@ -109,24 +122,24 @@ export class PjsWorker {
       completedTasks: 0,
       failedTasks: 0,
       totalExecutionTimeMs: 0,
-    };
+    } as typeof this.state;
     this.startupTimer = setTimeout(
       () => this.fail('Worker startup deadline exceeded'),
       startupTimeout,
     );
-    this.thread.on('message', (message: unknown) => this.receive(message));
-    this.thread.on('messageerror', (cause: Error) =>
-      this.fail('Worker message could not be deserialized', cause),
-    );
-    this.thread.on('error', (cause: Error) =>
-      this.fail(
-        `Worker error: ${cause.message}`,
-        cause,
-        undefined,
-        'worker-crash',
-      ),
-    );
-    this.thread.on('exit', (code) => this.exited(code));
+    this.connection.listen({
+      message: (message) => this.receive(message),
+      messageError: (cause) =>
+        this.fail('Worker message could not be deserialized', cause),
+      error: (cause) =>
+        this.fail(
+          `Worker error: ${cause.message}`,
+          cause,
+          undefined,
+          'worker-crash',
+        ),
+      exit: (code) => this.exited(code),
+    });
   }
 
   snapshot(): WorkerState {
@@ -188,7 +201,7 @@ export class PjsWorker {
     itemIds: string[],
     cancellation: Int32Array<SharedArrayBuffer> | undefined,
     exclusive: boolean,
-    progress?: Int32Array<SharedArrayBuffer>,
+    progress?: ProgressControl,
   ): void {
     if (!this.canExecute(exclusive) || this.executions.has(correlationId))
       throw new PjsWorkerError('Worker has no compatible execution slot', {
@@ -197,11 +210,19 @@ export class PjsWorker {
       });
     this.executions.set(correlationId, {
       phase: 'scheduled',
+      posted: false,
       itemIds,
       exclusive,
       ...(cancellation ? { cancellation } : {}),
       ...(progress
-        ? { progress: { flag: progress, sequences: new Map(), pending: false } }
+        ? {
+            progress: {
+              control: progress,
+              closeSent: false,
+              sequences: new Map(),
+              pending: false,
+            },
+          }
         : {}),
     });
     this.refreshOccupancy();
@@ -283,7 +304,7 @@ export class PjsWorker {
     resultByteContract?: UpperBoundResultByteContract,
     cancellation?: Int32Array<SharedArrayBuffer>,
     exclusive = false,
-    progress?: Int32Array<SharedArrayBuffer>,
+    progress?: ProgressControl,
   ): void {
     if (!this.canExecute(exclusive))
       throw new PjsWorkerError('Worker is not idle', {
@@ -292,14 +313,18 @@ export class PjsWorker {
       });
     this.begin(taskId, [], cancellation, exclusive, progress);
     try {
-      validateTransferList(transferList);
+      this.services.validateTransferList(transferList);
       const postStarted = profile ? performance.now() : 0;
       if (profile)
         this.thread.postMessage(
           {
             type: 'execute',
             exclusive,
-            ...(progress ? { progressBuffer: progress.buffer } : {}),
+            ...(progress
+              ? progress.flag
+                ? { progressBuffer: progress.flag.buffer }
+                : { progressMode: 'message' as const }
+              : {}),
             ...(cancellation
               ? { cancellationBuffer: cancellation.buffer }
               : {}),
@@ -320,7 +345,11 @@ export class PjsWorker {
           {
             type: 'execute',
             exclusive,
-            ...(progress ? { progressBuffer: progress.buffer } : {}),
+            ...(progress
+              ? progress.flag
+                ? { progressBuffer: progress.flag.buffer }
+                : { progressMode: 'message' as const }
+              : {}),
             ...(cancellation
               ? { cancellationBuffer: cancellation.buffer }
               : {}),
@@ -335,6 +364,7 @@ export class PjsWorker {
           } satisfies HostMessage,
           transferList,
         );
+      this.markPosted(taskId);
       if (profile)
         recordInternalProfile(
           'hostPostMessage',
@@ -362,7 +392,7 @@ export class PjsWorker {
     completionOnly = false,
     cancellation?: Int32Array<SharedArrayBuffer>,
     exclusive = false,
-    progress?: Int32Array<SharedArrayBuffer>,
+    progress?: ProgressControl,
   ): void {
     if (!this.canExecute(exclusive))
       throw new PjsWorkerError('Worker is not idle', {
@@ -382,12 +412,17 @@ export class PjsWorker {
       progress,
     );
     try {
-      const profile = internalProfilingEnabled();
+      const profile =
+        this.services.kind === 'node' && internalProfilingEnabled();
       const postStarted = profile ? performance.now() : 0;
       this.thread.postMessage({
         type: 'executeBatch',
         exclusive,
-        ...(progress ? { progressBuffer: progress.buffer } : {}),
+        ...(progress
+          ? progress.flag
+            ? { progressBuffer: progress.flag.buffer }
+            : { progressMode: 'message' as const }
+          : {}),
         ...(cancellation ? { cancellationBuffer: cancellation.buffer } : {}),
         batchId,
         taskName,
@@ -395,6 +430,7 @@ export class PjsWorker {
         ...(profile ? { profile: true } : {}),
         ...(completionOnly ? { completionOnly: true } : {}),
       } satisfies HostMessage);
+      this.markPosted(batchId);
       if (profile)
         recordInternalProfile(
           'hostPostMessage',
@@ -411,9 +447,30 @@ export class PjsWorker {
     }
   }
 
+  private markPosted(correlationId: string): void {
+    const execution = this.executions.get(correlationId);
+    if (!execution) return;
+    execution.posted = true;
+    if (execution.progress?.control.closed) this.closeProgress(correlationId);
+  }
+
   closeProgress(correlationId: string): void {
-    const progress = this.executions.get(correlationId)?.progress;
-    if (progress) Atomics.store(progress.flag, 0, -1);
+    const execution = this.executions.get(correlationId);
+    const progress = execution?.progress;
+    if (!progress || !execution) return;
+    progress.control.closed = true;
+    if (progress.control.flag) Atomics.store(progress.control.flag, 0, -1);
+    else if (execution.posted && !progress.closeSent) {
+      progress.closeSent = true;
+      try {
+        this.thread.postMessage({
+          type: 'progressClose',
+          correlationId,
+        } satisfies HostMessage);
+      } catch {
+        /* Retirement/serialization cleanup already owns failure. */
+      }
+    }
   }
   private receiveProgress(value: unknown): void {
     if (!value || typeof value !== 'object') return;
@@ -423,20 +480,27 @@ export class PjsWorker {
         ? this.executions.get(raw.correlationId)
         : undefined;
     const progress = execution?.progress;
-    if (!progress || !execution || Atomics.load(progress.flag, 0) < 0) return;
+    if (
+      !progress ||
+      !execution ||
+      progress.control.closed ||
+      (progress.control.flag && Atomics.load(progress.control.flag, 0) < 0)
+    )
+      return;
     try {
       if (
         !isWorkerMessage(value) ||
         value.type !== 'progress' ||
         execution.phase !== 'running' ||
         progress.pending ||
-        Atomics.load(progress.flag, 0) !== 0 ||
+        (progress.control.flag &&
+          Atomics.load(progress.control.flag, 0) !== 0) ||
         !Number.isSafeInteger(value.sequence) ||
         (execution.itemIds.length
           ? !execution.itemIds.includes(value.taskId)
           : value.taskId !== value.correlationId) ||
         value.sequence <= (progress.sequences.get(value.taskId) ?? 0) ||
-        Buffer.byteLength(value.payload, 'utf8') > MAX_PROGRESS_BYTES
+        utf8Bytes(value.payload) > MAX_PROGRESS_BYTES
       )
         throw new Error('Invalid progress frame');
       const decoded: unknown = JSON.parse(value.payload);
@@ -451,19 +515,25 @@ export class PjsWorker {
         progress.pending = false;
         if (
           this.executions.get(value.correlationId) !== execution ||
-          Atomics.compareExchange(progress.flag, 0, 0, 1) !== 0
+          progress.control.closed
         )
           return;
-        // Atomic permits can be consumed by CPU code; latch control-message wakeups separately.
-        if (Atomics.compareExchange(progress.flag, 1, 0, 1) === 0) {
-          try {
-            this.thread.postMessage({
-              type: 'progressAck',
-              correlationId: value.correlationId,
-            } satisfies HostMessage);
-          } catch {
-            this.closeProgress(value.correlationId);
-          }
+        const flag = progress.control.flag;
+        if (flag) {
+          if (Atomics.compareExchange(flag, 0, 0, 1) !== 0) return;
+          // CPU polling can consume the permit before the control turn; latch wakeups.
+          if (Atomics.compareExchange(flag, 1, 0, 1) !== 0) return;
+        }
+        try {
+          this.thread.postMessage({
+            type: 'progressAck',
+            correlationId: value.correlationId,
+            ...(!flag
+              ? { taskId: value.taskId, sequence: value.sequence }
+              : {}),
+          } satisfies HostMessage);
+        } catch {
+          this.closeProgress(value.correlationId);
         }
       };
       if (this.callbacks.progress)
@@ -495,20 +565,35 @@ export class PjsWorker {
     this.rejectReady(
       new PjsWorkerError('Worker stopped before ready', { workerId: this.id }),
     );
-    if (this.state.status === 'idle')
+    if (this.services.kind === 'node' && this.state.status === 'idle')
       this.thread.postMessage({ type: 'shutdown' } satisfies HostMessage);
     for (const id of this.executions.keys()) this.closeProgress(id);
     this.state.status = 'stopped';
     if (this.leaseExpired) this.callbacks.leaseTerminationRequested?.(this);
-    this.stopPromise = this.terminateThread().then(() => {
-      this.thread.removeAllListeners();
-    });
+    if (this.services.kind === 'browser') {
+      // This promise confirms local posting/retirement only, never native exit.
+      this.stopPromise = Promise.resolve().then(async () => {
+        if (!this.callbacks.postingQuiescent || !this.callbacks.revoked)
+          throw new Error('Browser retirement requires dispatcher ownership');
+        await this.callbacks.postingQuiescent(this);
+        this.thread.terminate(); // A throwing native terminate leaves claims intact.
+        const correlations = this.correlations();
+        this.connection.detach();
+        this.callbacks.revoked(this, correlations);
+        this.executions.clear();
+        this.refreshOccupancy();
+      });
+    } else {
+      this.stopPromise = this.terminateThread().then(() => {
+        this.connection.detach();
+      });
+    }
     return this.stopPromise;
   }
 
   /** Internal Node boundary; tests can delay termination on one worker instance. */
   private terminateThread(): Promise<number> {
-    return this.thread.terminate();
+    return this.thread.terminate() as Promise<number>;
   }
 
   private exited(code: number): void {
@@ -548,6 +633,15 @@ export class PjsWorker {
     if (value.type === 'progress') return;
     if (value.type === 'bootstrapFailure') {
       this.fail(`Worker bootstrap failed: ${value.error.message}`, value.error);
+      return;
+    }
+    if (value.type === 'workerFailure') {
+      this.fail(
+        'Worker error: ' + value.error.message,
+        value.error,
+        undefined,
+        this.services.kind === 'browser' ? 'worker-crash' : 'protocol',
+      );
       return;
     }
     if (value.type === 'ready') {
@@ -639,6 +733,10 @@ export class PjsWorker {
       else if (value.type === 'failure') this.state.failedTasks++;
       this.state.totalExecutionTimeMs += value.executionMs;
     }
+    if (value.profile && this.services.kind !== 'node') {
+      this.fail('Worker profiling is unsupported on this host');
+      return;
+    }
     if (value.profile) {
       recordInternalProfile('workerIngress', value.profile.workerIngressMs);
       recordInternalProfile(
@@ -647,7 +745,7 @@ export class PjsWorker {
       );
       recordInternalProfile(
         'workerResultTransport',
-        Number(process.hrtime.bigint() - value.profile.postedAtNs) / 1e6,
+        Number(this.services.timestampNs() - value.profile.postedAtNs) / 1e6,
       );
     }
     this.callbacks.result(this, value);

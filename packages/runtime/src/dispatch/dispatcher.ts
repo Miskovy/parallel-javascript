@@ -1,4 +1,6 @@
 import { PjsExecutionLeaseError, PjsWorkerError } from '../errors/index.js';
+import type { ProgressControl } from '../workers/progress.js';
+import type { RuntimeHost } from '../hosts/contracts.js';
 import { PjsPool } from '../pool/pool.js';
 import { PjsScheduler } from '../scheduler/fifo.js';
 import type { PendingTask } from '../tasks/task.js';
@@ -54,6 +56,7 @@ export interface ExecutionDispatcherCallbacks {
   ): void;
   failed(error: PjsWorkerError, reason: WorkerFailureReason): void;
   exited(correlationIds: readonly string[]): void;
+  revoked(correlationIds: readonly string[]): void;
   dispatchFailed(task: PendingTask, error: Error): void;
   fatal(error: PjsWorkerError): void;
 }
@@ -105,7 +108,10 @@ export class ExecutionDispatcher {
     {
       terminate: boolean;
       cancellation?: Int32Array<SharedArrayBuffer>;
-      progress?: Int32Array<SharedArrayBuffer>;
+      progress?: ProgressControl;
+      worker: PjsWorker;
+      done?: Promise<void>;
+      finish?: () => void;
     }
   >();
   private readonly metrics = {
@@ -121,6 +127,7 @@ export class ExecutionDispatcher {
     tasks: TaskDescriptor[],
     private readonly resultCredits: ResultCreditManager,
     private readonly callbacks: ExecutionDispatcherCallbacks,
+    private readonly host: RuntimeHost,
   ) {
     this.scheduler = new PjsScheduler(options.maxQueue, options.scheduling);
     this.pool = new PjsPool(
@@ -187,8 +194,15 @@ export class ExecutionDispatcher {
             this.resultCredits.markExecutionEnded(id);
           this.callbacks.exited(correlationIds);
         },
+        postingQuiescent: (worker) => this.postingQuiescent(worker),
+        revoked: (_worker, correlations) => {
+          for (const id of correlations)
+            this.resultCredits.abandonExecution(id);
+          this.callbacks.revoked(correlations);
+        },
         fatal: (error) => this.callbacks.fatal(error),
       },
+      host,
     );
   }
 
@@ -399,13 +413,27 @@ export class ExecutionDispatcher {
   }
   closeProgress(correlationId: string): void {
     const progress = this.postings.get(correlationId)?.progress;
-    if (progress) Atomics.store(progress, 0, -1);
+    if (progress) {
+      progress.closed = true;
+      if (progress.flag) Atomics.store(progress.flag, 0, -1);
+    }
     this.pool.closeProgress(correlationId);
   }
   cooperateExecution(correlationId: string): void {
     const posting = this.postings.get(correlationId);
     if (posting?.cancellation) Atomics.store(posting.cancellation, 0, 1);
     else this.pool.cooperateExecution(correlationId);
+  }
+  private async postingQuiescent(worker: PjsWorker): Promise<void> {
+    if (this.host.kind !== 'browser')
+      throw new Error('Node cannot revoke endpoints');
+    await Promise.all(
+      [...this.postings.values()]
+        .filter((p) => p.worker === worker)
+        .map((p) => p.done),
+    );
+    if ([...this.postings.values()].some((p) => p.worker === worker))
+      throw new Error('Endpoint still owns a posting transaction');
   }
   terminateExecution(correlationId: string): void {
     const posting = this.postings.get(correlationId);
@@ -760,12 +788,28 @@ export class ExecutionDispatcher {
       mode === 'cooperative'
         ? new Int32Array(new SharedArrayBuffer(4))
         : undefined;
-    const progress = task.progress
-      ? new Int32Array(new SharedArrayBuffer(8))
+    const progress: ProgressControl | undefined = task.progress
+      ? {
+          ...(this.host.sharedMemory
+            ? { flag: new Int32Array(new SharedArrayBuffer(8)) }
+            : {}),
+          closed: !task.progress.active,
+        }
       : undefined;
-    if (progress) Atomics.store(progress, 0, task.progress!.active ? 1 : -1);
+    if (progress?.flag)
+      Atomics.store(progress.flag, 0, progress.closed ? -1 : 1);
+    let finish: (() => void) | undefined;
+    const done =
+      this.host.kind === 'browser'
+        ? new Promise<void>((resolve) => {
+            finish = resolve;
+          })
+        : undefined;
     const posting = {
       terminate: false,
+      worker,
+      ...(done ? { done } : {}),
+      ...(finish ? { finish } : {}),
       ...(progress ? { progress } : {}),
       ...(cancellation ? { cancellation } : {}),
     };
@@ -800,7 +844,11 @@ export class ExecutionDispatcher {
           task.snapshot.implementation ?? task.snapshot.taskName,
           task.input,
           task.transferList,
-          Boolean(task.child && internalProfilingEnabled()),
+          Boolean(
+            this.host.kind === 'node' &&
+            task.child &&
+            internalProfilingEnabled(),
+          ),
           task.child?.operation.resultMode === 'discard',
           task.expectedResultBytes,
           task.resultByteContract,
@@ -826,8 +874,17 @@ export class ExecutionDispatcher {
       this.resultCredits.rollbackDispatch(executionId);
       this.callbacks.dispatchFailed(task, error as Error);
     } finally {
-      this.postings.delete(executionId);
-      this.callbacks.dispatched(task);
+      if (this.host.kind === 'browser') {
+        try {
+          this.callbacks.dispatched(task);
+        } finally {
+          this.postings.delete(executionId);
+          finish?.();
+        }
+      } else {
+        this.postings.delete(executionId);
+        this.callbacks.dispatched(task);
+      }
     }
   }
 }

@@ -37,24 +37,14 @@ export class PjsTaskRegistry {
     module: URL,
     exportName = 'default',
   ): PjsTask<Input, Output, Progress> {
-    const registered = registryEntries(this);
-    if (!id || [...registered.values()].some((entry) => entry.id === id)) {
-      throw new PjsTaskRegistrationError(
-        `Task ID must be nonempty and unique: ${id}`,
-      );
-    }
-    if (
-      !(module instanceof URL) ||
-      module.protocol !== 'file:' ||
-      !exportName
-    ) {
-      throw new PjsTaskRegistrationError(
-        'Tasks require a file: URL and a nonempty export name',
-      );
-    }
-    const handle = Object.freeze({ id });
-    registered.set(handle, { id, module: module.href, exportName });
-    return handle;
+    return registerTask(
+      this,
+      id,
+      module,
+      exportName,
+      ['file:'],
+      'Tasks require a file: URL and a nonempty export name',
+    );
   }
 }
 
@@ -68,4 +58,31 @@ export function snapshotRegistry(
       { ...descriptor },
     ]),
   );
+}
+
+/** @internal Host-bound registration policy; storage/identity has one owner. */
+export function registerTask<Input, Output, Progress = ProgressValue>(
+  registry: PjsTaskRegistry,
+  id: string,
+  module: URL,
+  exportName: string,
+  protocols: readonly string[],
+  message: string,
+): PjsTask<Input, Output, Progress> {
+  const registered = registryEntries(registry);
+  if (!id || [...registered.values()].some((entry) => entry.id === id)) {
+    throw new PjsTaskRegistrationError(
+      `Task ID must be nonempty and unique: ${id}`,
+    );
+  }
+  if (
+    !(module instanceof URL) ||
+    !protocols.includes(module.protocol) ||
+    !exportName
+  ) {
+    throw new PjsTaskRegistrationError(message);
+  }
+  const handle = Object.freeze({ id });
+  registered.set(handle, { id, module: module.href, exportName });
+  return handle;
 }

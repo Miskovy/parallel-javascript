@@ -127,12 +127,17 @@ try {
   const installed = join(consumer, 'node_modules/@pjavascript/runtime');
   const manifest = JSON.parse(readFileSync(join(installed, 'package.json')));
   assert.equal(Object.keys(manifest.dependencies ?? {}).length, 0);
-  assert.deepEqual(Object.keys(manifest.exports), ['.']);
+  assert.deepEqual(Object.keys(manifest.exports), ['.', './browser']);
   assert.equal(manifest.type, 'module');
   assert.deepEqual(manifest.exports['.'], {
     types: './dist/index.d.ts',
     import: './dist/index.js',
     require: './dist/index.js',
+  });
+  assert.deepEqual(manifest.exports['./browser'], {
+    types: './dist/browser/index.d.ts',
+    import: './dist/browser/index.js',
+    default: './dist/browser/index.js',
   });
   for (const file of files.filter((file) => file.endsWith('.map'))) {
     const map = JSON.parse(readFileSync(join(installed, file)));

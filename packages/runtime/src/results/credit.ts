@@ -36,11 +36,12 @@ interface OperationCredits {
   readonly taskByPartition: Map<number, string>;
 }
 
-const invariantChecksEnabled =
-  process.env.PJS_DEBUG_RESERVATION_INVARIANTS === '1';
-
 /** Owns binary-result credit, reconciliation, and physical termination/yield. */
 export class ResultCreditManager {
+  constructor(
+    private readonly invariantChecksEnabled = false,
+    private readonly allowAbandonment = false,
+  ) {}
   private readonly reservations = new Map<string, ResultReservation>();
   private readonly executions = new Map<string, string[]>();
   private readonly operations = new Map<
@@ -240,6 +241,25 @@ export class ResultCreditManager {
     this.assertInvariants('execution-ended');
   }
 
+  /** Browser endpoint retirement is terminal accounting, never physical completion. */
+  abandonExecution(correlationId: string): void {
+    if (!this.allowAbandonment)
+      throw new Error('Node cannot abandon physical ownership');
+    const ids = this.executions.get(correlationId);
+    if (!ids) return;
+    for (const id of ids) {
+      const reservation = this.reservations.get(id);
+      if (
+        reservation &&
+        (reservation.dispatching || !reservation.callerSettled)
+      )
+        throw new Error('Cannot abandon a posting or nonterminal reservation');
+    }
+    this.executions.delete(correlationId);
+    for (const id of ids) this.release(id, false);
+    this.assertInvariants('browser-abandonment');
+  }
+
   releaseForPartition(
     operation: ResultCreditOperation,
     partitionIndex: number,
@@ -334,7 +354,7 @@ export class ResultCreditManager {
   }
 
   private assertInvariants(stage: string): void {
-    if (!invariantChecksEnabled) return;
+    if (!this.invariantChecksEnabled) return;
     const fail = (detail: string): never => {
       throw new Error(
         `Result reservation invariant failed after ${stage}: ${detail}`,

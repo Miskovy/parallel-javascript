@@ -30,7 +30,8 @@ export class PjsError extends Error {
   readonly rangeEnd: number | undefined;
   constructor(message: string, context: PjsErrorContext = {}) {
     super(message, { cause: context.cause });
-    this.name = new.target.name;
+    // Bundlers may rename constructors; public built-in error names are wire data.
+    this.name = errorNames.get(new.target) ?? new.target.name;
     this.taskId = context.taskId;
     this.workerId = context.workerId;
     this.operationId = context.operationId;
@@ -81,3 +82,19 @@ export class PjsResultCapacityError extends PjsError {
     this.resultByteCapacity = context.resultByteCapacity;
   }
 }
+
+const errorNames = new WeakMap<object, string>([
+  [PjsError, 'PjsError'],
+  [PjsTaskError, 'PjsTaskError'],
+  [PjsWorkerError, 'PjsWorkerError'],
+  [PjsExecutionLeaseError, 'PjsExecutionLeaseError'],
+  [PjsQueueFullError, 'PjsQueueFullError'],
+  [PjsTimeoutError, 'PjsTimeoutError'],
+  [PjsCancelledError, 'PjsCancelledError'],
+  [PjsSerializationError, 'PjsSerializationError'],
+  [PjsRuntimeStateError, 'PjsRuntimeStateError'],
+  [PjsTaskRegistrationError, 'PjsTaskRegistrationError'],
+  [PjsMapContractError, 'PjsMapContractError'],
+  [PjsBinaryResultContractError, 'PjsBinaryResultContractError'],
+  [PjsResultCapacityError, 'PjsResultCapacityError'],
+]);
