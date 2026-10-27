@@ -39,7 +39,17 @@ try {
     throw new Error('Invalid worker concurrency');
   for (const task of data.tasks) {
     const exports = (await import(task.module)) as Record<string, unknown>;
-    const execute = exports[task.exportName];
+    let execute = exports[task.exportName];
+    if (typeof execute !== 'function') {
+      // CommonJS module.exports lives at default; named namespace exports are heuristic.
+      const defaults = exports.default;
+      if (
+        defaults !== null &&
+        (typeof defaults === 'object' || typeof defaults === 'function') &&
+        Object.hasOwn(defaults, task.exportName)
+      )
+        execute = Reflect.get(defaults, task.exportName);
+    }
     if (typeof execute !== 'function')
       throw new Error(
         `Task ${task.id}: export ${task.exportName} is not a function in ${task.module}`,

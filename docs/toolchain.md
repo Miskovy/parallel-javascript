@@ -48,6 +48,15 @@ for lifecycle status. The [24.0.0 report](research/node24-floor-qualification.md
 is historical evidence for its named candidate, not proof for these minimums.
 Node typings and declarations alone cannot establish runtime compatibility.
 
+CommonJS development support adds a require condition for the same ESM index.js
+and index.d.ts, without another build or declaration shim. The installed package
+harness executes plain .cjs and mixed import/require consumers, then both locked
+compilers check and emit .cts/.mts consumers and execute their .cjs/.mjs output
+from an unrelated CWD. Use NodeNext `import PJS = require(...)` in .cts for typed
+loading; an unannotated JavaScript-style require call alone is not a declaration
+inference guarantee. Worker task modules may await imports; the host's synchronous
+public module graph must remain free of top-level await.
+
 The original compiler-migration validation used Node 24.21.0 on Windows. Later
 evidence retains its own attribution and does not qualify published RC4. The
 publication toolchain now pins patched **Node 24.22.1** while retaining independent

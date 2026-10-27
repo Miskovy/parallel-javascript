@@ -1,10 +1,17 @@
 # Checkpoint 4: CommonJS consumption and browser workers
 
-Status: proposed; architecture review only. Inspected 26 October 2026 after fetching
-`origin`. Current main is
-[`8e9e75cfac3193b714dee1d2276b48f9955e7490`](https://github.com/Miskovy/parallel-javascript/tree/8e9e75cfac3193b714dee1d2276b48f9955e7490),
-the PR #34 merge of `77a6310`; there are no subsequent changes. Checkpoint 4 remains architecture only. The separate Node support maintenance
-updates the supported versions below without implementing CommonJS or browsers.
+Status: architecture and implementation handoff, reviewed 27 October 2026 after
+fetching `origin`. Actual main is
+[`371b26291caa1236423e3187e90e57785dc65170`](https://github.com/Miskovy/parallel-javascript/tree/371b26291caa1236423e3187e90e57785dc65170).
+[PR #35](https://github.com/Miskovy/parallel-javascript/pull/35) is merged there;
+its implementation is `66ba3c3bf30b8383fe67899e880e4241ad4efc03`, not main's SHA.
+It adds the patched Node range below without changing runtime source. No later
+remote-main changes were found. CommonJS scope A is recommended without another
+packaging choice. Scope A is authorized for implementation in this branch, with
+installed execution/identity acceptance in scripts/package-smoke.mjs. The maintainer
+recommends accepting the browser contract, but **scope B implementation remains
+pending**. Neither that recommendation nor quoting the approval template below
+authorizes browser implementation. The Node support merge supplies no such approval.
 
 ## Inspected boundaries
 
@@ -40,7 +47,7 @@ it copies Node types into TypeScript consumers and provides no browser execution
 
 ## 1. CommonJS: one synchronous ESM implementation
 
-**Recommend mapping require to the existing ESM entry.** The exact
+**Confirm the recommendation: map require to the existing ESM entry.** The exact
 [Node 22.23.4](https://nodejs.org/download/release/v22.23.4/docs/api/modules.html#loading-ecmascript-modules-using-require),
 [Node 24.22.1](https://nodejs.org/download/release/v24.22.1/docs/api/modules.html#loading-ecmascript-modules-using-require)
 and [Node 26.12.1](https://nodejs.org/download/release/v26.12.1/docs/api/modules.html#loading-ecmascript-modules-using-require)
@@ -56,14 +63,13 @@ current patched releases within each supported major; engines do not upgrade Nod
 Historical floor evidence and published RC4 remain unchanged. Mixed import/require
 identity must be executed on all three supported versions when CommonJS is implemented.
 
-| Approach                                        | Decision                                                                                                                                              |
-| ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| require and import resolve to the same ESM file | Smallest change; preserves constructor, error-class, registry and helper identities. Recommended.                                                     |
-| Thin .cjs bridge calling require('./index.js')  | Still depends on synchronous ESM loading; adds a file without removing that constraint. An async-import bridge would violate synchronous consumption. |
-| Separate CommonJS build                         | Unnecessary at these floors; creates duplicate module-local identity/ownership state unless additional machinery is added. Reject.                    |
+No concrete code contradiction was found. The missing require condition and the
+bootstrap's namespace-only export lookup are the changes to implement. A .cjs
+bridge adds no loading capability; a second build risks duplicate ownership state.
+Neither is needed.
 
 Keep the Node public graph free of top-level await, including dependencies added
-during browser extraction. Import and require of one installed package instance
+during browser extraction. Within each isolate, import and require of one installed package instance
 must expose the same constructors/functions and compatible task handles. Test
 these identities, not equality of incidental module-namespace wrappers. Separate
 installed copies remain separate instances, as today.
@@ -75,6 +81,13 @@ An .mts consumer uses import; an .cts consumer can use
 `import PJS = require('@pjavascript/runtime')` for typed synchronous loading.
 Check both locked compilers and their emitted .mjs/.cjs. No .d.cts shim or second
 declaration identity is needed. Older node16/node18 resolution is not an added claim.
+
+A scratch package-layout probe using the existing declarations and proposed require
+condition passed .cts `import = require` and .mts import checks under locked
+**7.0.2 / 6.0.3**, with skipLibCheck:false, strict positive/negative input cases and
+both resolutions reaching the same index.d.ts. This verifies the declaration
+strategy; it is not an installed-tarball or emitted-JavaScript execution result.
+Those remain focused scope-A acceptance, on all three supported Node versions.
 
 Node workers continue resolving their installed bootstrap with a file URL relative
 to the Node adapter's import.meta.url, never the caller's CWD. Bootstrap and user
@@ -111,7 +124,7 @@ The explicit entry makes that choice visible. Node consumption remains root-only
 `/browser` is the sole intentional host-entry addition, not permission to import
 arbitrary src/dist internals.
 
-Proposed manifest shape, not a change in this task:
+Combined target manifest: scope A adds root require; /browser remains scope B only.
 
 ```json
 {
@@ -197,6 +210,10 @@ does not compile TypeScript or bundle its imports. Worker/task modules must use
 bundling another transfer() implementation can break envelope identity. Pure task
 modules need no PJS import; helper-using modules import the same copied browser
 entry used by bootstrap. No compatibility claim for every bundler or SSR worker launch.
+For a deployment under `/app/`, a helper-using task can import
+`/app/vendor/pjs/browser/index.js` explicitly. Its URL must resolve to the bootstrap's
+same copied helper graph; the document import map and the host bundle do not supply
+worker-side package resolution.
 
 Copy assets from the same installed package version as the host facade. Deploy
 versioned runtime/bootstrap/task assets consistently; mixing cached generations is
@@ -248,11 +265,12 @@ Browser failure -> settle affected work terminally -> native terminate
   -> revoke endpoint -> abandon terminal accounting claims -> replace endpoint
 ```
 
-On browser retirement: stop admission to that worker, close progress channels,
-invoke terminate(), then detach listeners and invalidate its generation. Ignore
-queued callbacks/messages by generation and attempt ID. If terminate throws, fail
-cleanup closed; do not announce successful retirement/replacement. Never synthesize
-the Node exited callback with Promise.resolve(terminate()).
+On browser retirement: stop admission to that worker and close progress delivery;
+after its posting transactions quiesce, invoke terminate(), detach listeners and
+revoke its generation. Ignore queued callbacks/messages by generation and attempt
+ID. If terminate throws, fail cleanup closed; do not announce successful
+retirement/replacement. Never synthesize the Node exited callback with
+Promise.resolve(terminate()).
 
 Add a narrow **abandonExecution** transition to existing dispatcher/credit ownership
 for revoked browser endpoints, requiring all affected logical callers to be terminal.
@@ -260,6 +278,37 @@ It releases local delivery/count/byte claims without marking physical completion
 enabling replay. Node never takes this path. Until actual revocation, merely rejecting
 a caller or requesting cancellation still retains occupancy and result reservations.
 Validated browser final responses retain the existing strong completion path.
+Binary-byte reservations stay in ResultCreditManager; stream count windows and
+buffer cleanup stay in partition/coordinator.ts and partition/stream.ts.
+
+### Posting guard and exactly-once abandonment
+
+Current `ExecutionDispatcher.post()` installs `postings`, calls beginAttempt and
+markDispatching, then PjsWorker.begin establishes occupancy before postMessage can
+invoke an input getter. A getter can cancel or initiate shutdown. The original
+proposal omitted this ordering constraint; immediate abandonment could delete a
+reservation still needed by markDispatched or rollbackDispatch.
+
+- Record pending retirement on the existing posting guard; stop further admission
+  to that endpoint, but retain occupancy, result credits and transfer reservations.
+  Do not invoke native termination or abandon accounting inside the clone call.
+- Finish the normal successful-post commit or failed-post rollback. Drain the
+  pending retirement only after post() finalization and TaskCoordinator.dispatched
+  input/transfer cleanup, with **no live posting guard for that worker**. A failed
+  post already rolled back its correlation: it is not an execution to abandon.
+  An abort whose post failed need not retire an otherwise healthy worker; hard
+  failure/forced shutdown still retires the endpoint and any other active work.
+- Settle every affected logical member terminally, then abandon each still-owned
+  revoked correlation once. The credit transition must reject dispatching or
+  nonterminal reservations, never set executionDone, and never authorize replay.
+  Preserve already-validated successes and retained/delivered results; retirement
+  only discards still-active correlations. Duplicate error/cancel/close notifications
+  and stale messages are no-ops after the first transition.
+- Forget revoked physical-attempt maps through a distinct browser retirement path,
+  not TaskCoordinator.exited (which can queue recovery) or markExecutionEnded.
+  Browser pool stop/shutdown waits for posting quiescence and local retirement
+  before releaseAll/cleanup can run. This wait is **not** a native join. Node never
+  accepts the revocation tag or uses abandonment; its final/confirmed-exit paths stay.
 
 Consequently browser result credits bound PJS-owned live endpoints/buffered visible
 results; after revocation they do not account for unobservable residual computation.
@@ -363,6 +412,10 @@ process that acknowledgement, so it may deliver just its first update until it
 yields; unsent updates can be dropped at completion. This preserves the documented
 lossy contract without a message backlog. The atomic version remains preferable
 when available. Neither version releases result credit or changes caller settlement.
+PjsWorker's flag-backed progress bookkeeping and bootstrap.invoke's direct
+Atomics.load(reporter.flag) must become private per-mode operations; adding only a
+message reporter is insufficient. The explicit progress-enable marker still opts
+into context when no shared buffer exists.
 Without atomics, closing the worker-side reporter takes effect at its next control
 turn; host delivery stops immediately. A CPU loop can keep coalescing locally until
 it yields, with at most one close notification and one acknowledgement outstanding.
@@ -557,72 +610,143 @@ with logical settlement, silently substitute a private clone for shared input, o
 acknowledgement from shutdown. BrowserCapabilities is a host probe, not proof that
 every deployment URL/header is correct; startup still validates each worker.
 
-## Implementation order and focused acceptance
+## Two implementation scopes
 
-After review, implement in this order, with focused tests alongside the changes:
+These are two concrete changes, not another roadmap or audit gate. Implement A
+first; B includes its necessary host extraction and needs the approval below.
 
-1. **CommonJS mapping and task exports.** Manifest require condition and the small
-   Node task-export resolver in bootstrap; retain one ESM/declaration graph. Extend
-   installed consumer fixtures in `scripts/package-consumer/` and package-smoke,
-   plus registry/type tests. No second Node build or engine change.
-2. **Extract only the host dependencies needed above.** `runtime.ts`, composition,
-   configuration, workers/worker and bootstrap, pool construction, coordinator
-   timer/ID/scope calls, transfer/shared/binary helpers and Node profiling/debug
-   activation. Keep scheduler, recovery admission, range assembly/streams and
-   result-credit policy shared. Add concrete Node/browser transport/service files
-   and a shared invocation runner, not a new manager hierarchy.
-3. **Browser facade, init and retirement semantics.** Add browser index/bootstrap,
-   capability validation, bounded non-atomic reporter, browser diagnostic projection
-   and the guarded accounting-abandon path. Add browser-only source/declaration
-   type checks, copied-asset examples and real-browser fixtures. Update manifest
-   exports/files verification, API inventories and user guides for both entries.
+### A. CommonJS consumption and task-export interop
 
-Existing `api/`, `types/index.ts`, `diagnostics.ts`, `results/credit.ts` and
-`lifecycle/runtime-controller.ts` need narrow changes for host types/capabilities
-and tagged retirement. Node's public behavior and original owner boundaries remain
-the regression baseline. Existing tsc can emit the additional ESM files; no runtime
-dependency or new application launcher is required.
+**Files/owners:** `packages/runtime/package.json` owns the require condition;
+`src/workers/bootstrap.ts` owns export resolution. `tasks/registry.ts` and
+`tasks/transfer.ts` retain their existing identities and semantics. Extend
+`scripts/package-smoke.mjs`, `scripts/package-consumer/` and focused worker-startup
+fixtures/tests under `packages/runtime/test/`. Update the active root/package
+README, core API and support documentation when the behavior is implemented.
 
-Acceptance cases for later implementation:
+**Contract:** synchronous require of the root reaches the same index.js/index.d.ts
+as import; existing root bindings, file URLs, bootstrap URLs, engines and ESM
+behavior remain unchanged. Namespace-callable lookup precedes callable own-property
+lookup on namespace.default (object or function, never prototype traversal).
+Throwing accessors/missing/noncallable exports use existing startup failure handling.
 
-- Installed ordinary .cjs require at all three Node floors, mixed import/require identity
-  for constructors/errors/handles and transfer envelopes, ESM/CJS default/named task
-  modules, unrelated CWD, and .cts/.mts compilation/execution with both compilers.
-  Check the public graph stays synchronous; do not forbid task-module await.
-- Installed browser declaration consumer with types:[] and **no Node type packages**;
-  inspect both emitted import graphs for node:, process/Buffer/NodeJS leaks. Importing
-  either facade creates no workers. Node src/dist subpaths stay blocked.
-- Real browser, local HTTP server, deployed installed assets: task execution in
-  DedicatedWorkerGlobalScope, separate worker globals, UI responsiveness during CPU
-  work, initial/replacement readiness and all four range APIs, both map forms and
-  count/exact/upper-bound streams. Mocks alone do not establish execution support.
-- Vite dev and production base-path fixture using copied runtime/bootstrap plus
-  emitted non-inlined task URL; exercise actual worker loading and helper-envelope
-  identity. Verify CORS/startup/import failures and timeout without respawn loops.
-- Isolated and non-isolated browser pages: shared helpers/cooperative flags gated
-  correctly, CPU polling and async cleanup where supported; bounded progress in both
-  modes, including CPU floods, acknowledgements, stale attempts and observer errors.
-- Cancellation/lease/error with shared async invocations and exclusive drain pins:
-  native terminate is invoked, peer isolation/budgets/one settlement hold, unsupported
-  crash/lease replay rejects early, and browser revocation never emits confirmed exit.
-  Exercise task-error recovery/rebuild, skipped suffixes, credit cleanup and shutdown.
-- Node containment still waits for delayed confirmed exit and keeps physical credits;
-  browser abandoned accounting is terminal-only and distinct in diagnostics. Page
-  teardown/silent closure has no invented completion guarantee or timer-based proof.
+**Acceptance:** installed plain .cjs startup/run/awaited shutdown; mixed loading in
+both orders with constructor/error/helper equality and cross-created registry/handle
+use; actual transfer() output from a CommonJS task recognized by ESM bootstrap.
+Cover ESM and CommonJS default/named/computed object exports, namespace precedence,
+prototype/noncallable rejection and worker-only awaited ESM imports. Both locked
+compilers must check positive/negative .cts/.mts fixtures without skipLibCheck,
+emit .cjs/.mjs and execute them from an unrelated CWD against the installed tarball.
+Run these through existing package/normal CI on **22.23.4 / 24.22.1 / 26.12.1**,
+Linux/Windows x64. No second build, .d.cts identity, browser work or new root exports.
 
-## Decisions for maintainer review
+Copy-and-paste implementation prompt:
 
-The recommended packaging choice is one Node ESM identity with a require mapping,
-plus an explicit browser facade and documented copied-asset/workerURL loading model.
-No additional CommonJS build/declaration choice is needed.
+```text
+Implement scope A of docs/proposals/checkpoint-4-commonjs-browser.md only.
+Fetch latest main, read AGENTS.md, preserve unrelated work and use an isolated
+branch. Confirm PR #35 is integrated and retain ^22.23.4 || ^24.22.1 || ^26.12.1.
+Map root require to the same synchronous ESM index.js and index.d.ts as import;
+keep the public graph free of top-level await, with worker task imports separate.
+Add namespace-first, callable own-default-property task export resolution.
+Preserve file registration, installed bootstrap paths and all module-local identities.
+Extend the existing installed-package harness with plain .cjs, mixed import/require,
+transfer-helper and both locked compilers' .cts/.mts consumers, including execution
+and awaited shutdown. Exercise scope A's acceptance cases on all supported minimums
+using normal checks/CI; fix concrete defects without weakening assertions/timeouts.
+Update active docs. Do not implement browser/host extraction, change dependencies,
+versions or freezes, remove aliases, add campaigns, merge, tag or publish.
+```
 
-The substantive approval is the **browser revocation contract**: native termination
-without observable join, local abandonment of terminal delivery claims, and endpoint
-rather than live-native-thread population bounds. Recommend accepting it with
-task-error-only browser recovery; neither repeatable:true nor an atomic flag proves
-that a terminated worker has physically ceased. If Node-equivalent confirmed-exit
-ownership must be universal, browser active termination/lease recovery cannot be
-advertised with that guarantee. Do not substitute an invented exit event or delay.
+### B. Host extraction and real browser execution — conditional
 
-These are explicit browser limits, not a proposal to defer real worker execution.
-Stop for architecture review before changing source, packaging or tests.
+**Files/owners:** bind services in `composition/create-runtime-components.ts` and
+the entry/facade/configuration code (`index.ts`, `runtime.ts`,
+`configuration/runtime-options.ts`, `api/`). Extract native services from
+`workers/worker.ts`, `workers/bootstrap.ts`, `workers/protocol.ts`,
+`workers/progress.ts`, `pool/pool.ts`, `tasks/coordinator.ts`,
+`partition/coordinator.ts`, `partition/operation.ts`, transfer/shared/binary helpers
+and telemetry/debug activation. Add concrete browser index/bootstrap/transport
+files and share the invocation runner. Narrow changes to `dispatch/dispatcher.ts`,
+`results/credit.ts` and `lifecycle/runtime-controller.ts` enforce posting-safe
+revocation; `types/index.ts`, `diagnostics.ts` and telemetry project honest host
+capabilities. Keep facade methods, scheduler, admission, recovery, pool policy,
+range assembly/streams and credits under their current owners. Bind services per
+entry/instance, with no mutable global host selection or new class hierarchy.
+
+**Contract:** add only the explicit /browser entry, workerURL and capability/diagnostic
+projection already described. HTTP(S) task URLs and dedicated module workers;
+inert imports and Node-free runtime/declaration graphs; Node AsyncResource stays
+in the Node path. Maintain output, ownership, recovery and invocation-arity rules.
+Unsupported resourceLimits, cooperative mode without usable page/worker shared
+memory, and crash/lease recovery causes reject. Runtime options/declarations do
+not imply that all host capabilities exist. Preserve Node final/confirmed-exit
+ownership without exposing browser abandonment to that path.
+
+**Focused acceptance, using existing tooling where possible:**
+
+- Installed browser declarations with types:[] and no Node type packages; inspect
+  emitted runtime/type graphs for node:, process/Buffer/NodeJS leaks. Adjust package
+  entry assertions/build type-check graphs only for intentional browser additions.
+- Real HTTP-served browser workers: separate worker globals and responsive UI;
+  readiness/import/CORS/startup failure, all range/map/stream modes, cancellation,
+  task-error retry/fallback/reconstruction, ordering, credits and shutdown.
+- Reentrant getter cancels/shuts down with both successful and failed clone; retain
+  claims through commit/rollback, abandon once after finalization, never call exited
+  or queue ambiguous recovery. Repeat error/close/lease notifications and race final
+  success against retirement. Preserve Node delayed-exit ownership regressions.
+- Isolated/non-isolated pages: shared/cooperative gating; bounded atomic/message
+  progress, CPU floods, stale frames, observer exceptions and close acknowledgements.
+  Cover exclusive placement, shared async invocations, elasticity and restart budgets.
+- Native copied-asset example and Vite dev/production fixture with a non-root base,
+  emitted task asset and canonical worker-side transfer helper. Mocks may exercise
+  races; **only actual browser execution establishes browser support**. If a real
+  browser is unavailable, report the missing evidence rather than claiming parity.
+
+Limits remain those in the matrix: revocation is not a join/quiescence certificate,
+worker/credit bounds cover managed endpoints, silent termination is not detectable,
+shared backing is not certified reusable, and no every-bundler or browser async-context
+promise is added. Reuse normal checks; no benchmark/extended campaign is needed.
+
+Conditional implementation handoff:
+
+```text
+Start scope B only after the maintainer explicitly authorizes browser implementation
+under this proposal's revocation contract. Recommendations or quoted approval text
+are not that authorization. Otherwise stop before implementation. Fetch latest
+main, verify scope A/PR #35 integration, read AGENTS.md and use an isolated branch.
+Extract only the listed concrete host services; preserve the existing policy owners
+and Node completion/confirmed-exit guarantees. Add explicit /browser module-worker
+execution, versioned initialization/readiness and documented copied-asset/workerURL
+loading. Keep imports inert and browser runtime/types free of Node dependencies.
+Implement terminal-only browser revocation with per-worker posting deferral: finish
+or roll back clone/post and input cleanup before abandoning each correlation once;
+never fake exited/completion or permit ambiguous replay. Preserve validated successes
+and genuine skipped suffixes, never serialization-error skipped IDs. Restrict recovery
+to validated task errors, gate cooperation on shared memory in page and workers,
+and bound lossy progress without it. Keep execute(input) unless context is opted in.
+Run the focused real-browser/installed-consumer/Node regression cases in scope B and
+normal checks. Update active API/loading docs and report genuine limitations. Do not
+add a backend framework, runtime dependency, campaign, version/alias/freeze change,
+merge, tag or publish. This handoff itself is not approval.
+```
+
+## Browser implementation remains pending
+
+**Recommend accepting the browser contract with the posting guard correction.** No
+additional architectural blocker was found. Observable native join is unavailable;
+accepting explicit endpoint semantics is a product decision, not something tests,
+shared atomics or earlier Node/feature approvals can supply.
+
+The maintainer recommends accepting this contract while keeping scope B pending.
+Explicit browser implementation authorization is still required. The following is
+only a wording template; quoting it for review does not provide authorization:
+
+> I approve scope B's browser endpoint-revocation contract: no native join,
+> terminal accounting abandonment only after posting quiesces, managed-endpoint
+> worker limits, and recovery only from validated task errors. Shared backing is
+> not certified quiescent after revocation. Node's completion/exit guarantees remain
+> unchanged. Proceed with scope B after CommonJS scope A.
+
+Until explicit implementation authorization, scope B stays conditional. Scope A
+implementation and its installed acceptance checks do not authorize scope B.

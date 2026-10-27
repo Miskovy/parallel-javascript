@@ -87,9 +87,13 @@ range AsyncResource behavior; no tracing API is proposed.
 
 ## Proposed Node and platform policy
 
-PJS is an **ESM Node package**. Use `import`, compile TypeScript tasks to ordinary
-JavaScript first and register local file URLs relative to the calling module.
-No CommonJS entrypoint, browser/bundler integration or TypeScript loader is promised.
+PJS uses **one ESM Node implementation**, consumed through import or synchronous
+CommonJS require in development builds. Both resolve to the same runtime/declarations,
+without duplicate registry/helper state. Compile TypeScript tasks to ordinary
+JavaScript first and register local file URLs. Task modules can be ESM or CommonJS;
+.cts consumers use NodeNext `import = require`, while .mts consumers use import.
+Published RC4 remains ESM-only. Browser/bundler integration and a TypeScript loader
+remain outside the implemented contract.
 No production dependency or new compiler prerequisite is introduced for consumers.
 
 Development manifests now declare `^22.23.4 || ^24.22.1 || ^26.12.1`: the minimums
