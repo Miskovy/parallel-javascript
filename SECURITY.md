@@ -9,6 +9,22 @@ development builds by their commit; later source is not part of immutable RC4.
 Pre-1.0 releases have no long-term security-support guarantee, and older releases
 are not promised backported fixes.
 
+## Node runtime support
+
+Development source requires Node `^22.23.4 || ^24.22.1 || ^26.12.1`, replacing
+older patch floors and adding Node 26. These minimums match the
+[October 2026 upstream security releases](https://nodejs.org/en/blog/vulnerability/october-2026-security-releases)
+and [official release index](https://nodejs.org/dist/index.json), checked on
+26 October 2026. Use current patched releases within these majors; engine metadata
+does not update a consumer's Node binary. Published RC4 and historical reports
+retain their original metadata/results.
+
+Node 26 is Current, with LTS scheduled for 28 October 2026. Node 22 and 24 are
+Maintenance LTS. Node 20 reached upstream EOL on 30 April 2026, is unsupported by
+PJS, and is not included in these upstream October fixes. See the
+[official lifecycle schedule](https://github.com/nodejs/Release/blob/main/schedule.json)
+and [PJS support policy](docs/stability.md#proposed-node-and-platform-policy).
+
 ## Report privately
 
 Use [GitHub's private vulnerability reporting flow](https://github.com/Miskovy/parallel-javascript/security/advisories/new)

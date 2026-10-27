@@ -9,26 +9,13 @@ import {
   verifyReleaseNpmArchive,
 } from './release/toolchain.mjs';
 
-// Reference archives were obtained from nodejs.org/dist/v24.0.0 and checked
-// against its SHASUMS256.txt. Match the running executable to those exact bytes,
-// including when setup-node obtains the runtime from the Actions tool cache.
-const official = {
-  linux: {
-    archive: 'node-v24.0.0-linux-x64.tar.xz',
-    archiveSha256:
-      '59b8af617dccd7f9f68cc8451b2aee1e86d6bd5cb92cd51dd6216a31b707efd7',
-    executableSha256:
-      '5677177955d00aa75909df3490120a2e2a2bba80ebcc66a505e8f9d7a5f0b463',
-  },
-  win32: {
-    archive: 'node-v24.0.0-win-x64.zip',
-    archiveSha256:
-      '3d0fff80c87bb9a8d7f49f2f27832aa34a1477d137af46f5b14df5498be81304',
-    executableSha256:
-      'ade7ce4d4ff97447aa4fdcf2ae9e9094cbfaca0b135475cac621349bc2d335ab',
-  },
-};
-const output = resolve('.node-tools/node24-floor');
+// Official Linux/Windows x64 archives were verified against each release's
+// nodejs.org/dist/v<VERSION>/SHASUMS256.txt. Match executable bytes even when
+// setup-node supplies the runtime from the Actions cache.
+const official = JSON.parse(
+  readFileSync(new URL('./node-floor-binaries.json', import.meta.url)),
+);
+const output = resolve('.node-tools/node-floor', process.version);
 mkdirSync(output, { recursive: true });
 const reportPath = join(output, 'report.json');
 writeFileSync(reportPath, '', { flag: 'wx' });
@@ -43,7 +30,7 @@ const report = {
   osVersion: version(),
   executable: process.execPath,
   executableSha256: sha256(process.execPath),
-  official: official[process.platform],
+  official: official[process.version]?.[process.platform],
   checks: [],
   passed: false,
 };
@@ -76,7 +63,8 @@ function files(directory) {
   });
 }
 try {
-  assert.equal(process.version, 'v24.0.0');
+  assert.ok(process.env.PJS_EXPECTED_NODE, 'Select the exact CI minimum');
+  assert.equal(process.version, 'v' + process.env.PJS_EXPECTED_NODE);
   assert.equal(process.arch, 'x64');
   assert.ok(report.official, 'Only Linux/Windows x64 floor cells are defined');
   assert.equal(report.executableSha256, report.official.executableSha256);
