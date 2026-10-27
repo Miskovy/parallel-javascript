@@ -13,7 +13,7 @@ export default ts.config(
   js.configs.recommended,
   ...ts.configs.recommended,
   {
-    files: ['**/*.mjs', '**/*.ts'],
+    files: ['**/*.mjs', '**/*.cjs', '**/*.ts', '**/*.cts', '**/*.mts'],
     languageOptions: {
       globals: {
         console: 'readonly',
@@ -28,6 +28,27 @@ export default ts.config(
         Atomics: 'readonly',
         structuredClone: 'readonly',
       },
+    },
+  },
+  {
+    files: ['**/*.cjs'],
+    languageOptions: {
+      sourceType: 'commonjs',
+      globals: {
+        require: 'readonly',
+        module: 'readonly',
+        exports: 'readonly',
+      },
+    },
+    rules: { '@typescript-eslint/no-require-imports': 'off' },
+  },
+  {
+    files: ['**/*.cts'],
+    rules: {
+      '@typescript-eslint/no-require-imports': [
+        'error',
+        { allowAsImport: true },
+      ],
     },
   },
 );

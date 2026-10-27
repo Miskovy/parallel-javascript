@@ -4,7 +4,8 @@
 
 **PJS — Parallel JavaScript Runtime.** Explicit CPU tasks on persistent Node
 workers, with bounded admission and clone/transfer/shared-input ownership.
-ESM only; no production dependencies. Tasks are trusted local module exports
+One ESM implementation; development builds also support CommonJS require, with no
+production dependencies. Tasks are trusted local module exports
 with Node capabilities. Worker isolates are not an untrusted-code sandbox.
 
 ## Install
@@ -24,6 +25,12 @@ Consult the [exact Node/platform evidence](https://github.com/Miskovy/parallel-j
 for tested development candidates; an engine range is not evidence for every
 patch or qualification of published RC4. macOS and ARM64 remain unclaimed.
 Compile TypeScript tasks to JavaScript before registration.
+
+Published RC4 remains ESM-only. In development builds, ordinary CommonJS hosts use
+`const { PjsRuntime, PjsTaskRegistry } = require('@pjavascript/runtime')` synchronously.
+Import and require share constructors, errors, registries and transfer helpers;
+only the package root is public. Task modules can use .mjs, .cjs or .js under the
+nearest package type. See the [complete CommonJS example](https://github.com/Miskovy/parallel-javascript/blob/main/docs/guide/core-api.md#commonjs-consumption-development).
 
 ## Quickstart
 

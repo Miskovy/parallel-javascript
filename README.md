@@ -41,7 +41,8 @@ it does not establish stable-release or production-readiness approval.
 npm install @pjavascript/runtime@next
 ```
 
-PJS is ESM. Development manifests support Node **22.23.4+, 24.22.1+, or 26.12.1+**
+PJS ships ESM; development builds also support synchronous CommonJS `require`.
+Published RC4 remains ESM-only. Development manifests support Node **22.23.4+, 24.22.1+, or 26.12.1+**
 within those majors (`^22.23.4 || ^24.22.1 || ^26.12.1`). Stay on current patched
 releases; updating PJS does not upgrade your Node executable. Node 26 is Current
 as of 26 October 2026, with LTS scheduled for 28 October. Consult the
@@ -83,6 +84,16 @@ try {
 Run `node basic-run.mjs`. This complete example works with published RC4 and is
 [package-tested](examples/basic-run.mjs). From a checkout, use `npm run example:basic`.
 Squaring one number teaches the contract; it is too small to benefit from workers.
+
+CommonJS applications can use the same root exports in development builds:
+
+```js
+const { PjsRuntime, PjsTaskRegistry } = require('@pjavascript/runtime');
+```
+
+See the [complete CommonJS registration/execution example](docs/guide/core-api.md#commonjs-consumption-development).
+It keeps one ESM implementation and declaration graph; no application conversion
+or dynamic-import wrapper is required. Task modules can use ESM or CommonJS.
 
 ## Choose an API
 

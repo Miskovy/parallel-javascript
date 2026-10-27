@@ -23,6 +23,63 @@ Published RC4 has older declarations/spellings and lacks later containment
 controls. The [README quickstart](../../README.md) works with RC4;
 checkout examples are tested against the packed development artifact.
 
+## CommonJS consumption (development)
+
+Ordinary CommonJS hosts synchronously require the package root; no dynamic-import
+wrapper or application conversion is needed. This is development behavior, absent
+from published RC4. Both loading modes reach one ESM graph and index.d.ts, sharing
+constructors, errors, registry/handle identity and transfer-helper state within each
+isolate. Internal package subpaths remain blocked.
+
+```js
+// square-task.cjs
+module.exports = (value) => value * value;
+```
+
+```js
+// main.cjs
+const { PjsRuntime, PjsTaskRegistry } = require('@pjavascript/runtime');
+const { pathToFileURL } = require('node:url');
+const registry = new PjsTaskRegistry();
+const square = registry.register(
+  'square',
+  pathToFileURL(require.resolve('./square-task.cjs')),
+);
+const runtime = new PjsRuntime({ registry, workers: 1 });
+async function main() {
+  try {
+    await runtime.ready();
+    console.log(await runtime.run(square, 12)); // 144
+  } finally {
+    await runtime.shutdown();
+  }
+}
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
+```
+
+Registration still requires file URLs. Node interprets .mjs/.cjs and .js using
+its usual package type rules. Bootstrap selects a callable namespace export first,
+then a callable own property of namespace.default (CommonJS module.exports).
+Thus `module.exports = fn` uses the default name; `exports.compute = fn` and
+`module.exports = { compute: fn }` use compute, including computed property names.
+`module.exports = { default: fn }` also supports default registration. Prototype
+properties, Promise-valued/missing/noncallable exports reject worker startup;
+throwing export accessors follow the same startup-failure path.
+
+The public host graph stays synchronous and free of top-level await. Worker task
+modules load asynchronously and may use awaited ESM initialization. Their loading
+is covered by ready()/startupTimeout. The installed bootstrap resolves relative to
+the package, independently of the host's CWD. Compile tasks before registration.
+
+With either locked compiler, NodeNext .cts consumers use
+`import PJS = require('@pjavascript/runtime')` for declared types; .mts consumers
+use ordinary imports. Both use the same declarations, with no .d.cts shim. The
+[installed consumers](../../scripts/package-consumer/commonjs.cjs) exercise this
+loading model, including awaited shutdown.
+
 ## One-sentence contracts
 
 | API                                                    | Contract                                                                                                                         | Use / evidence / boundary                                                                 |

@@ -9,6 +9,7 @@ import {
   PjsTaskRegistry,
 } from '@pjavascript/runtime';
 
+const require = createRequire(import.meta.url);
 const registry = new PjsTaskRegistry();
 assert.equal(typeof registry.snapshot, 'undefined');
 assert.equal(Object.hasOwn(PjsTaskRegistry.prototype, 'snapshot'), false);
@@ -45,6 +46,8 @@ try {
     return true;
   });
   assert.equal(await runtime.run(square, 5), 25);
+  // Keep this ESM fixture usable for published artifacts; CommonJS root loading
+  // and mixed identity are checked by the separate installed consumers.
   for (const subpath of [
     'dist/index.js',
     'dist/telemetry/profile.js',
@@ -59,10 +62,10 @@ try {
     await assert.rejects(import(`@pjavascript/runtime/${subpath}`), {
       code: 'ERR_PACKAGE_PATH_NOT_EXPORTED',
     });
+    assert.throws(() => require(`@pjavascript/runtime/${subpath}`), {
+      code: 'ERR_PACKAGE_PATH_NOT_EXPORTED',
+    });
   }
-  assert.throws(() => createRequire(import.meta.url)('@pjavascript/runtime'), {
-    code: 'ERR_PACKAGE_PATH_NOT_EXPORTED',
-  });
 } finally {
   const shutdown = runtime.shutdown();
   assert.equal(runtime.shutdown({ drain: false }), shutdown);
@@ -80,7 +83,7 @@ console.log(
     errorIdentity: true,
     sourceMappedStack: true,
     blockedSubpaths: true,
-    esmOnly: true,
+    rootOnly: true,
     shutdown: true,
   }),
 );

@@ -129,6 +129,11 @@ try {
   assert.equal(Object.keys(manifest.dependencies ?? {}).length, 0);
   assert.deepEqual(Object.keys(manifest.exports), ['.']);
   assert.equal(manifest.type, 'module');
+  assert.deepEqual(manifest.exports['.'], {
+    types: './dist/index.d.ts',
+    import: './dist/index.js',
+    require: './dist/index.js',
+  });
   for (const file of files.filter((file) => file.endsWith('.map'))) {
     const map = JSON.parse(readFileSync(join(installed, file)));
     for (const source of map.sources) {
@@ -143,6 +148,36 @@ try {
   report.sourceMapsResolve = true;
 
   cpSync(join(root, 'scripts/package-consumer'), consumer, { recursive: true });
+  run(
+    'plain CommonJS installed startup, execution and shutdown',
+    process.execPath,
+    [join(consumer, 'commonjs.cjs')],
+    unrelated,
+  );
+  const commonjsApp = join(consumer, 'commonjs-app');
+  mkdirSync(commonjsApp);
+  writeFileSync(
+    join(commonjsApp, 'package.json'),
+    JSON.stringify({ private: true }),
+  );
+  cpSync(join(consumer, 'commonjs.cjs'), join(commonjsApp, 'main.js'));
+  cpSync(
+    join(consumer, 'commonjs-default.cjs'),
+    join(commonjsApp, 'commonjs-default.cjs'),
+  );
+  run(
+    'CommonJS .js host without an ESM package configuration',
+    process.execPath,
+    [join(commonjsApp, 'main.js')],
+    unrelated,
+  );
+  for (const order of ['require-first', 'import-first'])
+    run(
+      `installed mixed-loading identities and transfers: ${order}`,
+      process.execPath,
+      [join(consumer, 'mixed-loading.mjs'), order],
+      unrelated,
+    );
   const smokeOutput = run(
     'ESM public contract and worker paths',
     process.execPath,
@@ -227,9 +262,21 @@ try {
       [join(consumer, 'output/consumer.js')],
       unrelated,
     );
+    run(`${label} installed .cts/.mts consumer build`, process.execPath, [
+      compiler,
+      '-p',
+      join(consumer, 'tsconfig.modules.json'),
+    ]);
+    for (const file of ['commonjs-consumer.cjs', 'esm-consumer.mjs'])
+      run(
+        `${label} emitted ${file} execution and shutdown`,
+        process.execPath,
+        [join(consumer, 'output', file)],
+        unrelated,
+      );
   }
   report.types =
-    'Both locked compilers checked installed declarations without skipLibCheck and compiled/executed the TS cleanup consumer; development type packages copied, compilers supplied by harness';
+    'Both locked compilers checked installed declarations without skipLibCheck and compiled/executed the TS cleanup and .cts/.mts consumers; development type packages copied, compilers supplied by harness';
   report.passed = true;
   console.log(
     JSON.stringify({
