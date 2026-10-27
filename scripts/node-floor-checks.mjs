@@ -113,6 +113,12 @@ try {
     '--check',
     '--output=' + join(output, 'inventory.json'),
   ]);
+  run('browser source/declaration inventory parity', process.execPath, [
+    'scripts/api-contract-inventory.mjs',
+    '--entry=browser',
+    '--check',
+    '--output=' + join(output, 'browser-inventory.json'),
+  ]);
   run('inventory tool regressions', process.execPath, [
     '--test',
     'scripts/api-contract-inventory.test.mjs',

@@ -196,7 +196,8 @@ configured maximum. Forced shutdown clears timers and blocks spawning.
 `WorkerResourceLimits` is a portable configuration shape. Validation/snapshotting
 lives in configuration, while only `workers/worker.ts` maps it into Node's Worker
 constructor options. Initial, grown and replacement workers share that path. FIFO
-logic remains free of Node transport APIs; no browser backend is implemented here.
+logic remains free of Node transport APIs. The explicit browser entry now binds
+narrow host services to these same owners; see the [browser guide](guide/browser.md).
 
 Ordinary execution resilience reuses the existing owners. `TaskCoordinator` owns
 one logical caller, retained replay input, attempt correlation lookup, original

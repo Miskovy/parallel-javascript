@@ -27,6 +27,13 @@ and [PJS support policy](docs/stability.md#proposed-node-and-platform-policy).
 
 ## Report privately
 
+Development browser execution uses trusted application ESM in dedicated module
+workers, not an untrusted-code sandbox. Configure page worker-src and the worker
+response's own CSP, URL/CORS/MIME rules and optional cross-origin-isolation headers;
+see [browser deployment security](docs/guide/browser.md#deployment-security).
+Endpoint revocation is not native exit confirmation and does not certify shared
+backing safe to reuse. Published RC4 remains unchanged.
+
 Use [GitHub's private vulnerability reporting flow](https://github.com/Miskovy/parallel-javascript/security/advisories/new)
 from **Security → Report a vulnerability**. Reporting was verified enabled on
 23 October 2026. If the flow becomes unavailable, use the private contact method

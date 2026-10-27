@@ -5,6 +5,19 @@ on:
   workflow_dispatch:
 
 jobs:
+  browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.22.1
+          cache: npm
+      - run: node --version
+      - run: npm ci
+      - run: npx --no-install playwright install --with-deps chromium
+      - name: Installed declarations and real module workers, native and Vite
+        run: npm run test:browser
   validate:
     strategy:
       fail-fast: false

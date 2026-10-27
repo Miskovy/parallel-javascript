@@ -1,17 +1,13 @@
 # Checkpoint 4: CommonJS consumption and browser workers
 
-Status: architecture and implementation handoff, reviewed 27 October 2026 after
-fetching `origin`. Actual main is
-[`371b26291caa1236423e3187e90e57785dc65170`](https://github.com/Miskovy/parallel-javascript/tree/371b26291caa1236423e3187e90e57785dc65170).
-[PR #35](https://github.com/Miskovy/parallel-javascript/pull/35) is merged there;
-its implementation is `66ba3c3bf30b8383fe67899e880e4241ad4efc03`, not main's SHA.
-It adds the patched Node range below without changing runtime source. No later
-remote-main changes were found. CommonJS scope A is recommended without another
-packaging choice. Scope A is authorized for implementation in this branch, with
-installed execution/identity acceptance in scripts/package-smoke.mjs. The maintainer
-recommends accepting the browser contract, but **scope B implementation remains
-pending**. Neither that recommendation nor quoting the approval template below
-authorizes browser implementation. The Node support merge supplies no such approval.
+Status: scope A merged through PR #36 on main
+`9cc8ba3cb5bc1d512a3db6d6cd944accbc5b3fe6`. Scope B is now explicitly authorized
+under the reviewed endpoint-revocation contract and implemented on the browser
+feature branch. The [browser guide](../guide/browser.md) describes the implemented
+API, deployment profiles and limitations. This supersedes the pending-authorization
+wording in the original handoff below; it does not alter Node's physical ownership
+guarantees or published RC4. Node support remains
+`^22.23.4 || ^24.22.1 || ^26.12.1`.
 
 ## Inspected boundaries
 
@@ -658,7 +654,7 @@ Update active docs. Do not implement browser/host extraction, change dependencie
 versions or freezes, remove aliases, add campaigns, merge, tag or publish.
 ```
 
-### B. Host extraction and real browser execution — conditional
+### B. Host extraction and real browser execution — authorized
 
 **Files/owners:** bind services in `composition/create-runtime-components.ts` and
 the entry/facade/configuration code (`index.ts`, `runtime.ts`,
@@ -731,22 +727,13 @@ add a backend framework, runtime dependency, campaign, version/alias/freeze chan
 merge, tag or publish. This handoff itself is not approval.
 ```
 
-## Browser implementation remains pending
+## Implementation decision
 
-**Recommend accepting the browser contract with the posting guard correction.** No
-additional architectural blocker was found. Observable native join is unavailable;
-accepting explicit endpoint semantics is a product decision, not something tests,
-shared atomics or earlier Node/feature approvals can supply.
-
-The maintainer recommends accepting this contract while keeping scope B pending.
-Explicit browser implementation authorization is still required. The following is
-only a wording template; quoting it for review does not provide authorization:
-
-> I approve scope B's browser endpoint-revocation contract: no native join,
-> terminal accounting abandonment only after posting quiesces, managed-endpoint
-> worker limits, and recovery only from validated task errors. Shared backing is
-> not certified quiescent after revocation. Node's completion/exit guarantees remain
-> unchanged. Proceed with scope B after CommonJS scope A.
-
-Until explicit implementation authorization, scope B stays conditional. Scope A
-implementation and its installed acceptance checks do not authorize scope B.
+The maintainer explicitly authorized scope B with the posting-guard correction:
+browser termination/revocation is not a native join; terminal accounting waits
+for clone/post commit or rollback and input cleanup. Bounds describe managed
+endpoints. Ambiguous executions are terminal and shared backing is not certified
+quiescent. Node retains completion/confirmed-exit guarantees. The preceding
+conditional handoff records the original prerequisite, now satisfied; it is not
+another approval gate. No additional host framework or release authorization is
+introduced.

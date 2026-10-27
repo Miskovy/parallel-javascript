@@ -29,8 +29,16 @@ Compile TypeScript tasks to JavaScript before registration.
 Published RC4 remains ESM-only. In development builds, ordinary CommonJS hosts use
 `const { PjsRuntime, PjsTaskRegistry } = require('@pjavascript/runtime')` synchronously.
 Import and require share constructors, errors, registries and transfer helpers;
-only the package root is public. Task modules can use .mjs, .cjs or .js under the
+the Node root is public alongside the explicit browser entry. Task modules can use .mjs, .cjs or .js under the
 nearest package type. See the [complete CommonJS example](https://github.com/Miskovy/parallel-javascript/blob/main/docs/guide/core-api.md#commonjs-consumption-development).
+
+Development builds provide `@pjavascript/runtime/browser` for real dedicated module
+workers, without Node polyfills or production dependencies. Deploy the installed
+runtime/bootstrap assets and browser-ready task modules together. The
+[browser guide](https://github.com/Miskovy/parallel-javascript/blob/main/docs/guide/browser.md)
+covers copied assets, Vite dev/production base paths, optional shared memory and
+browser endpoint revocation (not a native join). Imports are inert; create runtimes
+in a Window. Node physical completion/confirmed-exit guarantees remain unchanged.
 
 ## Quickstart
 

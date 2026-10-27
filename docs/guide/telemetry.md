@@ -1,5 +1,11 @@
 # Statistics and terminology
 
+The explicit [browser entry](browser.md) projects these shared metrics without
+threadId or confirmedLeaseExits. Its containment.unconfirmedRetirements counts
+endpoints retired with unfinished work cumulatively; it does not measure live
+native threads or prove shared-memory quiescence. Browser worker totals describe
+managed endpoints. Neither result-byte credits nor these metrics cap total RSS.
+
 `runtime.stats(): PjsRuntimeStats` returns writable defensive copies with current
 state and cumulative counters. B4 development root-exports explicit diagnostic
 types; B4 historically preserved 158 leaves, with later additions recorded in the

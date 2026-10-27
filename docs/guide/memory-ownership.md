@@ -1,5 +1,10 @@
 # Memory ownership
 
+The [browser entry](browser.md#retirement-and-memory-ownership) shares transfer and
+credit rules but has no observable native join. Endpoint revocation releases
+terminal local accounting after posting/input cleanup; it does not certify shared
+backing quiescent or safe to reuse. Node completion/confirmed-exit rules remain intact.
+
 Choose ownership explicitly; transport and allocation can move a workload's
 parallel crossover. Clone is the simplest default with useful separation, not an
 inferior mode. These rules apply to run inputs and each range child.
