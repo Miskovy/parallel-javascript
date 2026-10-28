@@ -846,6 +846,88 @@ export async function runCases(pjs, taskURL, workerURL) {
     },
     { workers: undefined, minWorkers: 1, maxWorkers: 3, idleTimeout: 30 },
   );
+  await test(
+    'elastic terminate retirement releases graceful shutdown without replacement or another pump',
+    async ({ runtime, tasks }) => {
+      const { dispatcher, controller } = runtime.components;
+      const pool = dispatcher.pool;
+      equal(runtime.stats().workers.total, 2);
+      const nextWorkerId = pool.nextId;
+      const started = Promise.withResolvers();
+      const retirement = Promise.withResolvers();
+      const release = Promise.withResolvers();
+      const draining = Promise.withResolvers();
+      const abort = new AbortController();
+      const work = rejects(
+        runtime.run(tasks.hang, null, {
+          cancellation: 'terminate',
+          signal: abort.signal,
+          onProgress() {
+            started.resolve();
+          },
+        }),
+        'PjsCancelledError',
+      );
+      await started.promise;
+      const worker = [...pool.workers.values()].find(
+        (worker) => worker.hasPhysicalExecution,
+      );
+      const postingQuiescent = worker.callbacks.postingQuiescent;
+      worker.callbacks.postingQuiescent = async (owner) => {
+        await postingQuiescent(owner);
+        equal(dispatcher.postings.size, 0);
+        retirement.resolve();
+        await release.promise;
+      };
+      const revoked = worker.callbacks.revoked;
+      let notifications = 0;
+      worker.callbacks.revoked = (owner, ids) => {
+        // This also makes an ordering regression fail immediately, rather than
+        // leaving the fixture's cleanup waiting on the same graceful promise.
+        equal(
+          owner.activeExecutions,
+          0,
+          'retirement notification sees committed occupancy',
+        );
+        notifications++;
+        revoked(owner, ids);
+      };
+      const checkDrained = controller.checkDrained.bind(controller);
+      controller.checkDrained = () => {
+        checkDrained();
+        if (controller.drainResolve) draining.resolve();
+      };
+      try {
+        abort.abort();
+        await Promise.all([work, retirement.promise]);
+        equal(
+          worker.activeExecutions,
+          1,
+          'pending retirement retains occupancy',
+        );
+        const shutdown = runtime.shutdown();
+        await draining.promise;
+        equal(pool.desired, 1);
+        release.resolve();
+        await shutdown; // No submission, external pump, forceAfter or forced stop.
+        equal(notifications, 1);
+        equal(
+          pool.nextId,
+          nextWorkerId,
+          'no growth or replacement readiness event',
+        );
+        equal(pool.replacements, 0);
+        equal(runtime.stats().containment.unconfirmedRetirements, 1);
+        equal(runtime.stats().containment.shutdownEscalations, 0);
+        equal(runtime.stats().state, 'stopped');
+        equal(runtime.stats().workers.total, 0);
+        equal(runtime.stats().workers.activeExecutions, 0);
+      } finally {
+        release.resolve();
+      }
+    },
+    { workers: 2, minWorkers: 1, maxWorkers: 2, idleTimeout: 2147483647 },
+  );
   for (const rollback of [false, true]) {
     await test(`binary posting ${rollback ? 'rollback' : 'commit'} retains credits through reentrant shutdown`, async ({
       runtime,

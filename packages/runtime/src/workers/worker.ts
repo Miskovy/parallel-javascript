@@ -579,9 +579,10 @@ export class PjsWorker {
         this.thread.terminate(); // A throwing native terminate leaves claims intact.
         const correlations = this.correlations();
         this.connection.detach();
-        this.callbacks.revoked(this, correlations);
         this.executions.clear();
         this.refreshOccupancy();
+        // Revocation can pump lifecycle draining; publish committed occupancy first.
+        this.callbacks.revoked(this, correlations);
       });
     } else {
       this.stopPromise = this.terminateThread().then(() => {

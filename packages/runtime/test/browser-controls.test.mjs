@@ -7,6 +7,10 @@ import {
 } from '../dist/workers/progress.js';
 import { ResultCreditManager } from '../dist/results/credit.js';
 import { validateInitialization } from '../dist/browser/protocol.js';
+import { createRuntimeComponents } from '../dist/composition/create-runtime-components.js';
+import { RuntimeFacade } from '../dist/runtime-facade.js';
+import { nodeHost } from '../dist/hosts/node.js';
+import { bounded, clock } from './helpers/containment.mjs';
 import {
   browserCapabilities,
   PjsRuntime,
@@ -117,3 +121,137 @@ test('browser abandonment cannot run on Node or during posting and never marks c
   assert.equal(manager.executions.size, 0);
   manager.assertInvariants('test');
 });
+
+test(
+  'elastic browser retirement notifies committed occupancy and releases graceful drain without replacement',
+  bounded,
+  async (t) => {
+    // Deterministic transport; all admission, retirement and lifecycle owners are real.
+    const endpoints = [];
+    const started = Promise.withResolvers();
+    const host = {
+      ...nodeHost,
+      kind: 'browser',
+      sharedMemory: false,
+      worker: {
+        ...nodeHost.worker,
+        kind: 'browser',
+        create() {
+          let callbacks;
+          const endpoint = { terminations: 0, detached: false };
+          endpoints.push(endpoint);
+          return {
+            thread: {
+              postMessage(message) {
+                if (message.type !== 'execute') return;
+                globalThis.queueMicrotask(() => {
+                  callbacks.message({
+                    type: 'started',
+                    taskId: message.taskId,
+                  });
+                  started.resolve();
+                });
+              },
+              terminate() {
+                endpoint.terminations++;
+              },
+            },
+            listen(value) {
+              callbacks = value;
+              globalThis.queueMicrotask(() =>
+                callbacks.message({ type: 'ready', version: 2 }),
+              );
+            },
+            detach() {
+              endpoint.detached = true;
+            },
+          };
+        },
+      },
+    };
+    const registry = new PjsTaskRegistry();
+    const task = registry.register(
+      'held',
+      new URL('https://example.test/tasks.js'),
+    );
+    const components = createRuntimeComponents(
+      { registry, workers: 2, minWorkers: 1, maxWorkers: 2, idleTimeout: 1000 },
+      host,
+    );
+    const runtime = new RuntimeFacade(components, (stats) => stats);
+    const { dispatcher, controller } = components;
+    clock(dispatcher.pool, 'Idle');
+    const retirement = Promise.withResolvers();
+    const release = Promise.withResolvers();
+    // Failure cleanup only; no extra stop or pump is used to satisfy the assertions.
+    t.after(async () => {
+      release.resolve();
+      await dispatcher.stop();
+    });
+    await runtime.ready();
+    assert.equal(endpoints.length, 2);
+    const abort = new AbortController();
+    const work = assert.rejects(
+      runtime.run(task, null, {
+        signal: abort.signal,
+        cancellation: 'terminate',
+      }),
+      { name: 'PjsCancelledError' },
+    );
+    await started.promise;
+    const worker = [...dispatcher.pool.workers.values()].find(
+      (worker) => worker.hasPhysicalExecution,
+    );
+    const postingQuiescent = worker.callbacks.postingQuiescent;
+    worker.callbacks.postingQuiescent = async (owner) => {
+      await postingQuiescent(owner);
+      assert.equal(dispatcher.postings.size, 0);
+      retirement.resolve();
+      await release.promise;
+    };
+    let notifiedBusy;
+    let notifications = 0;
+    const revoked = worker.callbacks.revoked;
+    worker.callbacks.revoked = (owner, ids) => {
+      notifiedBusy = dispatcher.busy;
+      notifications++;
+      revoked(owner, ids);
+    };
+    abort.abort();
+    await Promise.all([work, retirement.promise]);
+    assert.equal(worker.activeExecutions, 1);
+    assert.equal(endpoints[0].terminations, 0);
+    const draining = Promise.withResolvers();
+    const checkDrained = controller.checkDrained.bind(controller);
+    controller.checkDrained = () => {
+      checkDrained();
+      if (controller.drainResolve) draining.resolve();
+    };
+    const shutdown = runtime.shutdown();
+    await draining.promise;
+    assert.equal(dispatcher.pool.desired, 1);
+    release.resolve();
+    await worker.stop();
+    assert.equal(
+      notifiedBusy,
+      0,
+      'revocation must notify lifecycle after occupancy commits',
+    );
+    await shutdown;
+    assert.equal(notifications, 1);
+    assert.equal(endpoints.length, 2, 'no replacement readiness notification');
+    assert.ok(
+      endpoints.every(
+        (endpoint) => endpoint.terminations === 1 && endpoint.detached,
+      ),
+    );
+    assert.equal(dispatcher.pool.replacements, 0);
+    assert.equal(controller.escalations, 0);
+    assert.equal(runtime.stats().state, 'stopped');
+    assert.deepEqual(components.resultCredits.diagnostics(), {
+      reservations: 0,
+      executions: 0,
+      operations: 0,
+    });
+  },
+);
