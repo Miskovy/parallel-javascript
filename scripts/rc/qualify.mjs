@@ -58,7 +58,7 @@ const git = (...args) =>
   execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim();
 const hash = (path) =>
   createHash('sha256')
-    .update(readFileSync(join(root, path)))
+    .update(readFileSync(resolve(root, path)))
     .digest('hex');
 const sourceFiles = git('ls-files', 'packages/runtime/src').split('\n');
 const testFiles = git('ls-files', 'packages/runtime/test').split('\n');
