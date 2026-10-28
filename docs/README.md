@@ -5,6 +5,10 @@ contract you need. The current guides describe **integrated development source
 through C3 and the approved P1/P2/P3 promotion**, not the immutable package
 already published on npm.
 
+Integrated Checkpoints 1–4, Node support and host cleanup are now prepared as
+the unpublished [RC5 candidate](release-v1.0.0-rc.5.md). Its version/baseline selection
+does not clear release holds or begin the retained-alias window.
+
 ## Using PJS
 
 | Need                                            | Read                                                                |
@@ -36,7 +40,7 @@ qualification, the historical strict JavaScript byte-identity failure and the
 explicit maintainer-approved revised acceptance. Release holds,
 the unauthorized transition prerelease, C4 and Stage F/G remain separate;
 the alias window has not started.
-Unchanged manifest versions do not make development bytes published RC4.
+RC5 candidate manifests do not indicate publication or change immutable RC4.
 
 - [Stability and exact Node/platform evidence](stability.md).
 - [Historical Node 24.0.0 development-floor qualification](research/node24-floor-qualification.md).

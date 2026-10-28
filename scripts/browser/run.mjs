@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import { assertArtifact } from '../rc/artifact.mjs';
+import { assertFrozenWorkspace, assertFrozenFiles } from '../rc/baseline.mjs';
 import { execFileSync } from 'node:child_process';
 import { cp, mkdtemp, readFile, mkdir, writeFile, rm } from 'node:fs/promises';
 import { createServer } from 'node:http';
@@ -38,22 +40,41 @@ try {
     join(consumer, 'package.json'),
     '{"private":true,"type":"module"}',
   );
-  const [packed] = JSON.parse(
-    command([
-      npm,
-      'pack',
-      '--workspace',
-      '@pjavascript/runtime',
-      '--pack-destination',
-      temporary,
-      '--json',
-    ]),
-  );
+  const staged = process.env.PJS_CANDIDATE_TARBALL;
+  let packed;
+  if (staged) {
+    assertFrozenWorkspace(root);
+    assertFrozenFiles(root);
+    const artifact = assertArtifact(resolve(staged));
+    packed = artifact.packed;
+    const git = (...args) =>
+      execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim();
+    assert.equal(git('status', '--short'), '');
+    console.log(
+      JSON.stringify({
+        sourceCommit: git('rev-parse', 'HEAD'),
+        sourceTree: git('rev-parse', 'HEAD^{tree}'),
+        artifactSha256: artifact.sha256,
+      }),
+    );
+  } else {
+    [packed] = JSON.parse(
+      command([
+        npm,
+        'pack',
+        '--workspace',
+        '@pjavascript/runtime',
+        '--pack-destination',
+        temporary,
+        '--json',
+      ]),
+    );
+  }
   command(
     [
       npm,
       'install',
-      join(temporary, packed.filename),
+      staged ? resolve(staged) : join(temporary, packed.filename),
       '--offline',
       '--ignore-scripts',
       '--no-audit',

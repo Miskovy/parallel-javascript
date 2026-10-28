@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { assertArtifact } from './artifact.mjs';
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import {
@@ -16,15 +17,21 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { performance } from 'node:perf_hooks';
 import {
-  baseline,
+  baselineForWorkspace,
   assertArguments,
   assertFrozenFiles,
   assertFrozenWorkspace,
   assertFrozenPackage,
 } from './baseline.mjs';
 
-assertArguments(['output', 'npm-cli', 'pack-dir']);
+assertArguments(['output', 'npm-cli', 'pack-dir', 'tarball']);
 const root = fileURLToPath(new URL('../../', import.meta.url));
+const runGit = (...args) => {
+  const r = spawnSync('git', args, { cwd: root, encoding: 'utf8' });
+  assert.equal(r.status, 0, r.stderr);
+  return r.stdout.trim();
+};
+const baseline = baselineForWorkspace(root);
 assertFrozenWorkspace(root);
 assertFrozenFiles(root);
 const arg = (name) =>
@@ -39,7 +46,14 @@ assert.ok(
 );
 const npmCli = resolve(selectedNpm);
 const packDir = resolve(
-  arg('pack-dir') ?? join(root, '.node-tools/rc4/packages', process.version),
+  arg('pack-dir') ??
+    join(
+      root,
+      '.node-tools',
+      baseline.manifest.version,
+      'packages',
+      process.version,
+    ),
 );
 mkdirSync(packDir, { recursive: true });
 const temporary = mkdtempSync(join(tmpdir(), 'PJS RC external with spaces '));
@@ -49,6 +63,8 @@ const unrelated = join(temporary, 'unrelated working directory');
 for (const dir of [js, ts, unrelated]) mkdirSync(dir);
 const report = {
   schema: 1,
+  sourceCommit: runGit('rev-parse', 'HEAD'),
+  sourceTree: runGit('rev-parse', 'HEAD^{tree}'),
   node: process.version,
   versions: process.versions,
   platform: process.platform,
@@ -85,37 +101,43 @@ function run(label, args, cwd = root) {
   return r.stdout;
 }
 try {
-  const dry = JSON.parse(
-    run('pack dry run', [
-      npmCli,
-      'pack',
-      '--workspace',
-      '@pjavascript/runtime',
-      '--dry-run',
-      '--json',
-    ]),
-  )[0];
-  const packed = JSON.parse(
-    run('actual pack', [
-      npmCli,
-      'pack',
-      '--workspace',
-      '@pjavascript/runtime',
-      '--pack-destination',
-      packDir,
-      '--json',
-    ]),
-  )[0];
+  const staged = arg('tarball') ?? process.env.PJS_CANDIDATE_TARBALL;
+  let packed;
+  if (staged) packed = assertArtifact(resolve(staged), baseline).packed;
+  else {
+    const dry = JSON.parse(
+      run('pack dry run', [
+        npmCli,
+        'pack',
+        '--workspace',
+        '@pjavascript/runtime',
+        '--dry-run',
+        '--json',
+      ]),
+    )[0];
+    packed = JSON.parse(
+      run('actual pack', [
+        npmCli,
+        'pack',
+        '--workspace',
+        '@pjavascript/runtime',
+        '--pack-destination',
+        packDir,
+        '--json',
+      ]),
+    )[0];
+    assert.deepEqual(packed.files, dry.files);
+  }
   assert.equal(packed.name, '@pjavascript/runtime');
   assert.equal(packed.version, baseline.manifest.version);
-  assert.deepEqual(packed.files, dry.files);
   assert.equal(packed.entryCount, Object.keys(baseline.packageFiles).length);
   assert.ok(
     packed.files.every((f) =>
       /^(dist\/|src\/|package.json$|README.md$|LICENSE$)/.test(f.path),
     ),
   );
-  const tarball = join(packDir, packed.filename);
+  const tarball = staged ? resolve(staged) : join(packDir, packed.filename);
+  assertArtifact(tarball, baseline);
   report.tarball = { ...packed, path: tarball, sha256: hash(tarball) };
   for (const [name, dir] of [
     ['js', js],

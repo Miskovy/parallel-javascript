@@ -15,19 +15,24 @@ import { test } from 'node:test';
 import { releaseToolchain } from '../release/toolchain.mjs';
 import { fileURLToPath } from 'node:url';
 import {
-  baseline,
+  baselineForWorkspace,
+  loadBaseline,
+  baselineFile,
   assertArguments,
   assertFrozenFiles,
   assertFrozenPackage,
   assertFrozenWorkspace,
 } from './baseline.mjs';
+import { assertArtifact, readArtifact } from './artifact.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
+const baseline = baselineForWorkspace(root);
 function copyCandidate() {
   const temporary = mkdtempSync(join(tmpdir(), 'pjs-freeze-'));
   for (const path of [
     ...Object.keys(baseline.runtimeSource),
     ...Object.keys(baseline.runtimeTests),
+    ...Object.keys(baseline.inputs ?? {}),
     ...Object.keys(baseline.declarations).map(
       (path) => 'packages/runtime/' + path,
     ),
@@ -42,11 +47,39 @@ function copyCandidate() {
 }
 
 test('RC4 source/tests/API match immutable RC3 and merged R1A', () => {
-  assertFrozenWorkspace(root);
-  assertFrozenFiles(root);
+  const baseline = loadBaseline('1.0.0-rc.4');
   assert.equal(baseline.release, 'v1.0.0-rc.4');
   assert.equal(baseline.contractTests, 206);
-  assert.deepEqual(baseline.releaseToolchain, releaseToolchain);
+  assert.deepEqual(
+    baseline.releaseToolchain,
+    JSON.parse(
+      execFileSync(
+        'git',
+        ['show', 'v1.0.0-rc.4:scripts/release/toolchain.json'],
+        { cwd: root, encoding: 'utf8' },
+      ),
+    ),
+  );
+  assert.deepEqual(
+    baseline.manifest,
+    JSON.parse(
+      execFileSync(
+        'git',
+        ['show', 'v1.0.0-rc.4:packages/runtime/package.json'],
+        { cwd: root, encoding: 'utf8' },
+      ),
+    ),
+  );
+  for (const path of ['package.json', 'package-lock.json'])
+    assert.equal(
+      JSON.parse(
+        execFileSync('git', ['show', `v1.0.0-rc.4:${path}`], {
+          cwd: root,
+          encoding: 'utf8',
+        }),
+      ).version,
+      '1.0.0-rc.4',
+    );
   const historical = JSON.parse(
     readFileSync(new URL('./frozen-v015.json', import.meta.url)),
   );
@@ -94,6 +127,59 @@ test('RC4 source/tests/API match immutable RC3 and merged R1A', () => {
         .digest('hex'),
       digest,
     );
+});
+
+test('current registered candidate source, declarations and metadata match its reviewed baseline', () => {
+  assertFrozenWorkspace(root);
+  assertFrozenFiles(root);
+  assert.equal(baseline.manifest.version, '1.0.0-rc.5');
+  assert.equal(baseline.contractTests, 476);
+  assert.deepEqual(baseline.releaseToolchain, releaseToolchain);
+});
+test('selection is explicit, version-aware and tag-bound, with no fallback', () => {
+  for (const version of ['1.0.0-rc.4', '1.0.0-rc.5']) {
+    assert.equal(loadBaseline(version).manifest.version, version);
+    assert.throws(
+      () => loadBaseline(version, { tag: 'v1.0.0' }),
+      /tag\/version/,
+    );
+  }
+  for (const version of ['1.0.0', '1.0.0-rc.6', '__proto__', '../frozen-rc4'])
+    assert.throws(() => loadBaseline(version), /Unregistered release/);
+});
+test('missing baseline and mismatched frozen identities fail closed', (t) => {
+  const directory = mkdtempSync(join(tmpdir(), 'pjs-selected-baseline-'));
+  t.after(() => rmSync(directory, { recursive: true, force: true }));
+  for (const version of ['1.0.0-rc.4', '1.0.0-rc.5'])
+    assert.throws(
+      () => loadBaseline(version, { baseDirectory: directory }),
+      /ENOENT/,
+    );
+  for (const change of [
+    { release: 'v1.0.0-rc.4' },
+    { manifest: { ...baseline.manifest, version: '1.0.0' } },
+  ]) {
+    writeFileSync(
+      baselineFile('1.0.0-rc.5', directory),
+      JSON.stringify({ ...baseline, ...change }),
+    );
+    assert.throws(
+      () => loadBaseline('1.0.0-rc.5', { baseDirectory: directory }),
+      /mismatch/,
+    );
+  }
+});
+test('qualification inputs cannot drift independently of package source', () => {
+  const temporary = copyCandidate();
+  try {
+    writeFileSync(
+      join(temporary, 'scripts/release/npm-release.mjs'),
+      '// changed release path',
+    );
+    assert.throws(() => assertFrozenFiles(temporary), /Frozen input changed/);
+  } finally {
+    rmSync(temporary, { recursive: true, force: true });
+  }
 });
 
 for (const path of [
@@ -212,5 +298,53 @@ test('unknown and duplicate options fail closed', () => {
   assert.throws(() => assertArguments(['output'], ['--repair=true']));
   assert.throws(() =>
     assertArguments(['output'], ['--output=a', '--output=b']),
+  );
+});
+
+test('exact staged archives reject changed compressed bytes even with identical files', (t) => {
+  const directory = mkdtempSync(join(tmpdir(), 'pjs-artifact-freeze-'));
+  t.after(() => rmSync(directory, { recursive: true, force: true }));
+  mkdirSync(join(directory, 'package'));
+  writeFileSync(
+    join(directory, 'package/package.json'),
+    JSON.stringify(baseline.manifest),
+  );
+  writeFileSync(
+    join(directory, 'package/README.md'),
+    'synthetic archive identity fixture',
+  );
+  const tarball = join(directory, 'candidate.tgz');
+  execFileSync('tar', [
+    '-czf',
+    tarball,
+    '-C',
+    directory,
+    'package/package.json',
+    'package/README.md',
+  ]);
+  const original = readArtifact(tarball);
+  const expected = {
+    manifest: original.manifest,
+    packageFiles: original.hashes,
+    archiveSha256: original.sha256,
+  };
+  assertArtifact(tarball, expected);
+  const bytes = readFileSync(tarball);
+  assert.equal(bytes[0], 0x1f);
+  assert.equal(bytes[1], 0x8b);
+  bytes[4] ^= 1; // gzip timestamp header; decompressed files and CRC stay unchanged.
+  writeFileSync(tarball, bytes);
+  assert.deepEqual(readArtifact(tarball).hashes, original.hashes);
+  assert.throws(
+    () => assertArtifact(tarball, expected),
+    /archive SHA-256 mismatch/,
+  );
+  assert.throws(
+    () =>
+      assertArtifact(tarball, {
+        ...expected,
+        manifest: { ...expected.manifest, version: '1.0.0-rc.4' },
+      }),
+    /manifest changed/,
   );
 });

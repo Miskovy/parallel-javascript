@@ -20,102 +20,78 @@ GitHub's repository **Packages** sidebar represents GitHub Packages. This projec
 does not publish a duplicate there or create another package identity. Any later
 organization/linked-artifact or GitHub Packages adoption is a separate decision.
 
-## RC4 candidate qualification
+## RC5 candidate preparation and validation
 
-The [RC4 candidate note](release-v1.0.0-rc.4.md) defines this release's scope.
-The active [baseline](../scripts/rc/frozen-rc4.json) freezes the merged R1A runtime,
-RC4 metadata, declarations and every packed file. The old R1A repair allowance is
-removed. Run the [qualification commands](../scripts/rc/README.md) from a committed,
-clean tree. The RC4 qualification historically used four CI cells with standard soak; two independent clean local builds
-run full qualification/extended soak and require identical archives. Preserve the
-candidate commit, report, canonical tarball and SHA-256 together. Any subsequent
-change invalidates qualification of that commit and requires qualification again.
-RC3 is an immutable GitHub prerelease with no npm publication: its release
-validator stopped before the OIDC step. RC4 is published on npm with registry signatures and a provenance attestation.
-The procedure below applies to future deliberately approved releases. PR qualification now tests the selected
-npm CLI without credentials/scripts and validates the actual candidate tarball
-through the same release helper; unknown JSON shapes fail before review.
+`1.0.0-rc.5` is a **review candidate**, not a published release or final-v1.0
+readiness declaration. On 28 October 2026 read-only checks returned explicit npm
+and GitHub-release 404s for RC5 and a successful empty remote-tag query. The package
+metadata remained accessible with latest/next at RC4. Recheck availability before
+any separately authorized publication. This PR creates no tag, release or registry state.
 
-## Runtime feature qualification after RC4
+The explicit reviewed map in [baseline.mjs](../scripts/rc/baseline.mjs) registers
+RC4 and RC5 only. Unknown versions, missing baseline files, tag/version mismatches,
+workspace/package/lock metadata drift, and source/declaration/artifact drift fail
+closed. Historical [frozen-rc4.json](../scripts/rc/frozen-rc4.json) is unchanged,
+including its original Node 24.21.0 publication pin; validate RC4 at its original
+tag/source and artifact, never against new RC5 bytes. RC4 historical reports remain
+evidence for that artifact only. The RC5 [baseline](../scripts/rc/frozen-rc5.json)
+selects the integrated implementation and reviewed Node 24.22.1/npm 11.19.0 toolchain.
 
-RC4 is already published and immutable. Feature branches intentionally change
-runtime source bytes and use ordinary contract qualification:
+Baseline writing is a deliberate preparation operation, separate from every
+read-only check:
 
 ```sh
-npm run release:npm -- .node-tools/release-cli
-npm run runtime:qualify -- --release-npm-cli=/absolute/path/to/provisioned/npm-cli.js --output=.node-tools/new-runtime-report.json
+npm run build
+node scripts/rc/prepare.mjs --version=1.0.0-rc.5 --npm-cli=/absolute/reviewed/npm-cli.js
 ```
 
-The provisioner prints the selected path. Start from a clean committed tree and
-choose a new output filename. The six Linux/Windows x64 Node 22.23.4/24.22.1/26.12.1 CI cells
-use this path: build, all contracts (including the bounded containment soak),
-types, compatibility compiler, installed package, release tooling, lint, formatting,
-documentation and diff checks. Reports retain exact versions, source commit and outputs.
-This is not approval to publish the unchanged version or a new candidate.
+Only RC5 can be prepared by this writer. Existing output requires an explicit
+--replace=true. Review input changes before regeneration; validation never writes
+expected values. The baseline hashes the full source/test/declaration inventories,
+both public export sets, workspace/package/lock metadata, selected release/tooling/
+consumer inputs, and every packed file plus the compressed archive. Its own file
+and Git SHA/tree are excluded to avoid a self-reference. Unpacked historical
+research and documentation outside the enumerated inputs are excluded, not
+requalified. Receipts bind the actual clean committed SHA/tree, baseline hash and
+tarball SHA-256. Material candidate changes require explicit regeneration and
+affected checks again; never edit a digest to hide an unexplained mismatch.
 
-The [24.0.0 floor report](research/node24-floor-qualification.md) records historical
-development-candidate outcomes, not the new support minimums. Active supplemental
-compiler/inventory and executable-identity checks now run on all six cells.
-Floor evidence does not qualify a later final release or replace Stage F's
-selected floor/current-patch matrix, extended campaigns and reproduction gates.
+From the clean committed candidate use the existing normal validation and RC
+requirements described in [RC tooling](../scripts/rc/README.md). The release branch
+runs the unchanged six-cell Linux/Windows minimum matrix, standard R2/R3 and the
+existing real-browser job, plus registered candidate qualification. Reproduction
+uses two independent clean builds: full qualification and the existing bounded RC
+extended soak in A, build/independent consumers in B, then compares the **actual
+archives**. This is not a new benchmark or extended R2/R3 campaign.
 
-The release-specific `rc:qualify`, API/package freezes and committed
-`frozen-rc4.json` remain intact. They must fail for changed feature bytes rather
-than pretend R1 is the RC4 artifact. Qualify RC4 from its historical tag/commit;
-a future release requires a separately reviewed version and baseline.
-The `release.published` workflow, OIDC binding and publication guards are unchanged.
+Stage the reproduced canonical archive with its receipt/checksum outside Git.
+Set PJS_CANDIDATE_TARBALL to that absolute archive for the installed Node and browser
+harnesses; they validate and install those bytes instead of repacking. RC package
+validation also accepts --tarball=absolute/path. The existing release helper's
+tarball mode checks the selected baseline, artifact and immutable digest, runs
+selected-npm **publish --dry-run --ignore-scripts**, and installs the same archive.
+No rehearsal may invoke actual publication. All failed receipts remain retained;
+use new output paths for retries.
 
-## Proposed future candidate gates — Stage F remains separate
+<a id="proposed-future-candidate-gates--stage-f-remains-separate"></a>
 
-C1-A/Q, C2 and C3 are integrated at main
-`0f79db5e1192dd47db32d2e300fc382a0f431462`. The authoritative
-[Stage C decisions](research/v1-api-migration-plan.md#decisions-for-maintainer-review)
-record approved P1/P2/P3 development promotion while keeping the combined
-six-alias transition prerelease and later C4 removal separate. The
-[promotion report](research/p1-p2-p3-development-promotion.md) records fresh
-qualification, the historical strict JavaScript byte-identity failure and the
-explicit maintainer-approved revised acceptance. No transition
-prerelease is authorized and no window starts from a promotion commit or merge. Hold applicability remains
-unresolved; actual versions, support-floor changes and publication are unselected.
-Historical runtime evidence is not final-candidate qualification.
+## Preparation is not publication eligibility
 
-The blocker is concrete: [baseline.mjs](../scripts/rc/baseline.mjs) selects
-`frozen-rc4.json` unconditionally. RC API/package/qualification/reproduction
-scripts and the publish workflow consequently enforce RC4 identity. Feature
-qualification is not permission to publish a new candidate through that freeze.
-Do not edit RC4 hashes or skip exact-source/declaration/package checks to proceed.
+Separately tracked release holds and their applicability remain **unresolved**.
+The [post-C3 decisions](research/v1-api-migration-plan.md#decisions-for-maintainer-review),
+[ADR 0023](adr/0023-v1-api-stability-decisions.md) and
+[stability policy](stability.md) still govern them. This work neither investigates
+nor clears excluded findings. RC5 selection resolves the version/baseline preparation
+choice only. No alias window starts from this PR; actual deliberate publication is
+required and no alias-removal release is selected.
 
-Before F, implement a separately reviewed explicit release-version-to-baseline
-selection. Reject unknown versions, tag/version/source mismatches and missing
-baselines; no default to RC4 and no "current source" auto-acceptance. Retain the
-historical RC4 path for its original commit/tag. Select a new unused prerelease,
-intentional semantic contract and exact candidate baseline together. Define how
-qualification binds to the final committed source without a self-referential
-commit hash in its own baseline (for example, hash the explicitly enumerated
-source/manifest inputs and bind reports to their committed SHA). Freeze before
-the accepted qualification run; any material candidate change invalidates it.
-
-Semantic compatibility checks review supported declarations, behavior/defaults,
-errors and ownership against the approved B/C contract; exact reproducibility
-checks compare the complete packed artifact and metadata. A declaration-byte
-hash alone cannot prove semantics, and semantic equivalence cannot excuse changed
-bytes under an immutable version. Two clean builds of the selected final source
-must reproduce the approved archive; installed consumers and rehearsal must use
-that exact staged archive with recorded SHA-256. Recheck it immediately before
-any later authorized publication.
-
-Follow S1 integration → A decision review → B fixes → C promotions/alias removal
-→ F final qualification/rehearsal → G separate authorization. F qualifies the
-promised Node floors (currently 22.23.4, 24.22.1 and 26.12.1) and selected
-current patches in each major, Linux/Windows x64, with exact versions and reviewed
-release npm. S1's 22.13.0/24.21.0 results do not prove 24.0.0 or qualify future
-source. Apply the [floor failure decision](stability.md#proposed-node-and-platform-policy),
-standard R2/R3 raw-child reconciliation and required extended/reproduction gates.
-The current publisher does not run those full campaigns; enforce source-bound
-evidence before final release authorization instead of assuming a successful CD
-job establishes them. Node support maintenance does not change RC selectors, PJS
-versions, frozen baselines or release authorization. Conditional internal
-cleanup/optimization must finish before F.
+The existing Stage F/G requirements for final readiness, including separately
+selected current patches, extended evidence and hold applicability, have not been
+silently replaced by candidate CI. Their unresolved applicability/publication
+clearance is a maintainer decision. Normal supported-minimum and Chromium results
+do not establish all current patches, other browser engines, macOS, ARM64, final
+v1.0 readiness or authorization to publish. Historical reports and holds remain
+unchanged. See [RC5 notes and migration](release-v1.0.0-rc.5.md).
 
 ## One-time maintainer configuration
 
@@ -180,11 +156,10 @@ and two-build reproduction. See upstream
 8. For an absent version, CD runs `npm ci`, `test:release` (including the selected real npm CLI dry-run regression),
    `test:contracts` (including build), `test:types`, `typecheck:compat`,
    `test:package`, lint, formatting, documentation and diff checks. The existing
-   broad CI matrix remains separate. CD also enforces the active exact RC4
+   broad CI matrix remains separate. CD also enforces the explicitly selected version
    source/declaration/export/manifest baseline. Its final artifact check compares
-   every packed file with the committed RC4 hashes; no repair exception is accepted
-   and no extended research campaign runs here. Future releases must deliberately
-   review a new version and baseline together.
+   every packed file with the selected committed hashes; no repair exception is accepted
+   and no extended research campaign runs here. Unknown versions remain blocked until a version and baseline are deliberately reviewed together.
 9. CD packs once into runner temporary staging. It validates the actual tarball's
    name, version, plausible file count, allowed contents, zero runtime
    dependencies and repository metadata, performs a publish dry-run and runs an

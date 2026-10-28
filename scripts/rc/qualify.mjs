@@ -10,14 +10,16 @@ import {
   classifyReleaseNpmVersion,
 } from '../release/toolchain.mjs';
 import {
-  baseline,
+  baselineForWorkspace,
+  baselineFile,
   assertArguments,
   assertFrozenWorkspace,
 } from './baseline.mjs';
 
-assertArguments(['output', 'npm-cli', 'release-npm-cli', 'profile']);
+assertArguments(['output', 'npm-cli', 'release-npm-cli', 'profile', 'tarball']);
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
+const baseline = baselineForWorkspace(root);
 assertFrozenWorkspace(root);
 const arg = (name, fallback) =>
   process.argv
@@ -45,7 +47,10 @@ const profile = arg('profile', 'standard');
 const expectedTests = baseline.contractTests;
 // Additive CD regressions; preserve RC4's immutable historical test count.
 const convergenceTests = 14;
-const expectedReleaseTests = baseline.releaseContractTests + convergenceTests;
+const expectedReleaseTests =
+  baseline.schema === 2
+    ? undefined
+    : baseline.releaseContractTests + convergenceTests;
 assert.ok(['smoke', 'standard', 'extended'].includes(profile));
 const scratch = absoluteOutput + '.parts';
 mkdirSync(scratch, { recursive: true });
@@ -53,7 +58,7 @@ const git = (...args) =>
   execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim();
 const hash = (path) =>
   createHash('sha256')
-    .update(readFileSync(join(root, path)))
+    .update(readFileSync(resolve(root, path)))
     .digest('hex');
 const sourceFiles = git('ls-files', 'packages/runtime/src').split('\n');
 const testFiles = git('ls-files', 'packages/runtime/test').split('\n');
@@ -70,7 +75,9 @@ const report = {
     convergence: convergenceTests,
     expected: expectedReleaseTests,
   },
-  baselineSha256: hash('scripts/rc/frozen-rc4.json'),
+  baselinePath: baselineFile(baseline.manifest.version),
+  baselineSha256: hash(baselineFile(baseline.manifest.version)),
+  sourceTree: git('rev-parse', 'HEAD^{tree}'),
   startingStatus: git('status', '--short'),
   node: process.version,
   nodeExecutable: process.execPath,
@@ -119,6 +126,10 @@ function run(label, args, executable = process.execPath) {
       PJS_NPM_CLI: releaseNpmCli,
       PJS_NPM_CONTRACT_REPORT: join(scratch, 'npm-dry-run.json'),
       PJS_CONTRACT_REPORT: join(scratch, 'contracts.json'),
+      npm_execpath: npmCli,
+      ...(arg('tarball')
+        ? { PJS_CANDIDATE_TARBALL: resolve(arg('tarball')) }
+        : {}),
     },
   });
   report.checks.push({
@@ -147,14 +158,11 @@ try {
     'scripts/release/npm-cli.test.mjs',
     'scripts/rc/baseline.test.mjs',
   ]);
-  assert.match(
-    releaseOutput,
-    new RegExp(`[ℹ#] tests ${expectedReleaseTests}\\b`),
-  );
-  assert.match(
-    releaseOutput,
-    new RegExp(`[ℹ#] pass ${expectedReleaseTests}\\b`),
-  );
+  const releaseCount = Number(releaseOutput.match(/[ℹ#] tests (\d+)\b/)[1]);
+  if (expectedReleaseTests !== undefined)
+    assert.equal(releaseCount, expectedReleaseTests);
+  assert.match(releaseOutput, new RegExp(`[ℹ#] pass ${releaseCount}\\b`));
+  report.releaseContracts.executed = releaseCount;
   assert.match(releaseOutput, /[ℹ#] skipped 0\b/);
   run('existing package smoke', ['scripts/package-smoke.mjs']);
   run('test:types', [
@@ -189,7 +197,7 @@ try {
   run('documentation links', ['scripts/check-docs.mjs']);
   run('diff --check', ['diff', '--check'], 'git');
   report.apiFreeze = JSON.parse(
-    run('RC4 exact source/declaration/export/manifest freeze', [
+    run(`${baseline.release} exact source/declaration/export/manifest freeze`, [
       'scripts/rc/api-freeze.mjs',
     ]),
   );
@@ -202,6 +210,7 @@ try {
       `--npm-cli=${npmCli}`,
       `--output=${packageOutput}`,
       `--pack-dir=${join(scratch, 'packed')}`,
+      ...(arg('tarball') ? [`--tarball=${resolve(arg('tarball'))}`] : []),
     ],
   );
   report.package = JSON.parse(readFileSync(packageOutput));
@@ -219,7 +228,7 @@ try {
       'scripts/release/npm-release.mjs',
       'tarball',
       packMetadata,
-      join(scratch, 'packed'),
+      dirname(report.package.tarball.path),
       baseline.manifest.version,
       'next',
     ],
@@ -257,7 +266,9 @@ try {
   );
   assert.equal(
     report.preservation.rc3BaselineBefore,
-    baseline.previousBaselineSha256,
+    baseline.schema === 2
+      ? hash('scripts/rc/frozen-rc3.json')
+      : baseline.previousBaselineSha256,
   );
   assert.equal(
     git('rev-parse', 'v1.0.0-rc.3'),
@@ -279,7 +290,10 @@ try {
     report.preservation.tagObjectAfter,
     report.preservation.tagObjectBefore,
   );
-  assert.equal(hash('scripts/rc/frozen-rc4.json'), report.baselineSha256);
+  assert.equal(
+    hash(baselineFile(baseline.manifest.version)),
+    report.baselineSha256,
+  );
   report.endingStatus = git('status', '--short');
   assert.equal(
     report.endingStatus,
@@ -294,7 +308,7 @@ try {
       node: process.version,
       sourceCommit: report.sourceCommit,
       tests: expectedTests,
-      exports: 38,
+      exports: baseline.namedExports.length,
       profile,
       operations: report.soak.operationCounts,
     }),

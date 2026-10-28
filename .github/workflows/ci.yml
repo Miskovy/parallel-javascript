@@ -85,6 +85,9 @@ jobs:
         env:
           PJS_EXPECTED_NODE: ${{ matrix.node }}
           PJS_RELEASE_NPM_CLI: ${{ steps.release-cli.outputs.path || steps.release-cli-windows.outputs.path }}
+      - name: Registered release candidate qualification
+        if: startsWith(github.head_ref, 'release/') || startsWith(github.ref_name, 'release/')
+        run: node scripts/rc/qualify.mjs --npm-cli="${{ steps.release-cli.outputs.path || steps.release-cli-windows.outputs.path }}" --release-npm-cli="${{ steps.release-cli.outputs.path || steps.release-cli-windows.outputs.path }}" --profile=standard --output=.node-tools/rc-candidate.json
       - name: Retain supported minimum identity and supplemental evidence
         if: always()
         uses: actions/upload-artifact@v4

@@ -8,6 +8,11 @@ One ESM implementation; development builds also support CommonJS require, with n
 production dependencies. Tasks are trusted local module exports
 with Node capabilities. Worker isolates are not an untrusted-code sandbox.
 
+This package is the prepared **1.0.0-rc.5 candidate**, with integrated Checkpoints
+1–4. It has not been published; npm install commands below still select immutable
+RC4. See [RC5 notes and migration](https://github.com/Miskovy/parallel-javascript/blob/main/docs/release-v1.0.0-rc.5.md).
+Candidate validation does not clear existing release holds or authorize publication.
+
 ## Install
 
 ```sh
@@ -94,8 +99,7 @@ of transferred buffers. Await shutdown for final resource cleanup.
 ## Development versus published RC4
 
 This README in a locally packed development build may describe later source.
-Merged main includes S1, corrected Stage A, B1–B4, C1-A/Q, C2 and C3; unchanged
-`rc.4` version fields do not make it the published artifact. Later development
+Merged main includes S1, corrected Stage A, B1–B4, C1-A/Q, C2 and C3; the selected RC5 version identifies a review candidate, not a published artifact. Later development
 adds closeable stream and ordinary-backed binary types, removes unsupported
 registry.snapshot() access, and names diagnostic/error types including
 PjsRuntimeStats. Those corrections are absent from immutable RC4.

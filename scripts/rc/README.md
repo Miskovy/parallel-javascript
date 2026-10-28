@@ -1,24 +1,27 @@
 # RC contract qualification
 
-This tooling qualifies the exact `1.0.0-rc.4` candidate; it adds no product API.
-[`frozen-rc4.json`](frozen-rc4.json) freezes all 25 production source files, all
-24 runtime test/fixture/type/config files, 25 declarations, 38 named exports (16 runtime values), the full package manifest,
-206 runtime contracts, 29 release/baseline regressions, the reviewed publication
-toolchain and all 128 packed file hashes. Its runtime provenance is merged
-R1A commit `2387e1efd0cfb225387132266d0152949315b411`. Qualification reports record
-HEAD separately: the release candidate includes versioning, documentation and gates
-on top of that runtime. The immutable [`frozen-rc3.json`](frozen-rc3.json), historical [`frozen-v015.json`](frozen-v015.json) and
-v0.15.0 tag remain unchanged; they are no longer the active candidate baseline.
+The active review candidate is **1.0.0-rc.5**, not a publication. Explicit
+version selection in [baseline.mjs](baseline.mjs) registers only RC4 and RC5.
+[frozen-rc4.json](frozen-rc4.json) remains immutable and applies to its original
+source/tag; its 206-test/38-export evidence must not be attributed to RC5.
+[frozen-rc5.json](frozen-rc5.json) freezes the integrated implementation's source,
+tests, declarations, both export sets, complete package/lock metadata, release
+inputs and packed files/archive. Validation never regenerates expected hashes.
+All six deprecated aliases and existing release holds remain unchanged.
 
-There are no repair allowlists or compatibility bypass flags. Unknown/duplicate
-arguments fail closed. Whole source/declaration inventories detect added/removed
-files. Package validation compares every artifact byte, including generated JS,
-maps, README, LICENSE and metadata. Baselines are reviewed release inputs; no
-build or qualification command regenerates them. A future candidate must explicitly
-review and replace its baseline and version together.
-All output paths must be new. Existing output is refused, including an incomplete
-failed run: choose another filename to retain failures. Historical soaks are not
-invoked because some overwrite historical research artifacts.
+Prepare explicitly after intended input changes (existing RC5 output requires
+--replace=true), review the resulting baseline, then commit before qualification:
+
+```sh
+npm run build
+node scripts/rc/prepare.mjs --version=1.0.0-rc.5 --npm-cli=/absolute/reviewed/npm-cli.js
+```
+
+No self-referential commit/hash is stored in the baseline. Its explicit exclusions
+are recorded there; qualification receipts record actual clean SHA/tree, selected
+baseline hash and artifact SHA-256. Unknown versions, mismatched versions/tags,
+missing baselines and drift fail closed. Output receipts must use new paths;
+failed attempts are retained. Historical research artifacts are never overwritten.
 
 ## Profiles and bounds
 
@@ -53,8 +56,8 @@ From a clean exact candidate checkout:
 ```sh
 npm ci
 npm run release:npm -- /absolute/new/release-cli
-npm run rc:qualify -- --release-npm-cli=/absolute/new/release-cli/node_modules/npm/bin/npm-cli.js --profile=standard --output=/absolute/new/validation.json
-npm run rc:repro -- --release-npm-cli=/absolute/new/release-cli/node_modules/npm/bin/npm-cli.js --scratch-dir=/absolute/sufficient-storage --output=/absolute/new/repro.json --canonical-dir=/absolute/new/package-dir
+npm run rc:qualify -- --npm-cli=/absolute/new/release-cli/node_modules/npm/bin/npm-cli.js --release-npm-cli=/absolute/new/release-cli/node_modules/npm/bin/npm-cli.js --profile=standard --output=/absolute/new/validation.json
+npm run rc:repro -- --npm-cli=/absolute/new/release-cli/node_modules/npm/bin/npm-cli.js --release-npm-cli=/absolute/new/release-cli/node_modules/npm/bin/npm-cli.js --scratch-dir=/absolute/sufficient-storage --output=/absolute/new/repro.json --canonical-dir=/absolute/new/package-dir
 ```
 
 The qualification command requires a clean tree and performs explicit process.execPath gates, release/baseline regressions (including credential-free real selected-npm dry-run), runtime test runner
@@ -69,8 +72,9 @@ each, full current-Node qualification plus extended soak in A, build/package in 
 then requires identical packed file hashes and archive bytes. It retains the canonical tarball/checksum.
 Dependencies and package sources come from the exact committed candidate.
 
-Ordinary npm (including Node 22.13.0's npm 10.9.2) performs dependency installation,
-packing and installed-consumer validation. Publication-specific operations must
+For candidate packing/reproduction select the independently reviewed npm CLI
+for both --npm-cli and --release-npm-cli. Ordinary runtime CI still records its
+own npm separately for dependency installation and normal consumer checks. Publication-specific operations must
 select the separately provisioned npm 11.19.0; unsupported publisher versions fail
 before executing the fixture's lifecycle traps. Production publication additionally
 requires Node 24.22.1. The version/integrity policy lives in
@@ -84,19 +88,33 @@ consumer/fixture temporary files also fit. Preserve retained reports and canonic
 artifacts; remove only reconstructible caches or dependency directories. Storage
 failure does not satisfy any reproducibility gate.
 
-## Isolated Windows Node minimum
+## Exact staged artifact
 
-Use existing portable binaries without changing PATH or the default Node. Example
-paths below describe this Windows checkout's ignored local tooling:
+Reproduction independently packs A and B and compares their file hashes and
+complete compressed archives. It stages A only after equality is established.
+It removes any inherited staged-artifact override so the comparison cannot reuse
+the same archive twice. Preserve candidate.json, reports and checksum together.
 
-```powershell
-& .\.node-tools\node-v22.13.0-win-x64\node.exe scripts/rc/qualify.mjs --release-npm-cli=E:/reviewed-release-cli/node_modules/npm/bin/npm-cli.js --profile=standard --npm-cli=E:/Miskovy/Work/pjs/pjs/.node-tools/node-v22.13.0-win-x64/node_modules/npm/bin/npm-cli.js --output=.node-tools/rc4/new-minimum.json
+```sh
+PJS_CANDIDATE_TARBALL=/absolute/canonical/package.tgz npm run test:package
+PJS_CANDIDATE_TARBALL=/absolute/canonical/package.tgz npm run test:browser
+npm run test:rc:package -- --tarball=/absolute/canonical/package.tgz --npm-cli=/absolute/reviewed/npm-cli.js --output=/absolute/new/staged-package.json
 ```
 
-Select the installed 22.23.3 executable/npm CLI similarly. Commands run tests and
-compilers directly through that Node binary; invoking npm alone through a Node 22
-wrapper would let literal node script commands resolve the default Node 24.
-No persistent or process-local PATH override is used by the qualifier.
+These paths validate the selected baseline and install the exact archive without
+repacking it. RC qualification accepts --tarball=absolute/path too and forwards
+it to the Node consumers. The existing release helper tarball mode is the sole
+publication rehearsal: selected npm publish --dry-run --ignore-scripts plus an
+offline install, never publication. No OIDC, tag, release or registry mutation is
+authorized by these commands. Browser execution is separately performed by the
+existing real native/Vite fixtures; retain actual engine/version output.
+
+## Isolated Windows minimums
+
+Use the existing Linux/Windows x64 matrix at Node 22.23.4, 24.22.1 and 26.12.1.
+Direct manual invocations must use the intended node.exe and absolute reviewed
+npm CLI paths. Reports record process.execPath and actual versions. No evidence
+from another host is inferred for an unexecuted cell.
 
 ## Reduced individual checks
 
