@@ -34,7 +34,7 @@ failure and the explicit maintainer-approved revised acceptance.
 | ------------------------------------------------------------------------------------ | ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Registry registration, runtime construction, ready/run/shutdown, base options/errors | Core candidate                                              | Stabilize with documented registration/admission/first-shutdown contracts; B3 encapsulation, B4 errors, installed core consumers                                             |
 | transfer/sharedReadonly and ownership types                                          | Specialized supported                                       | Stabilize specialized helpers: dispatch detachment/alias effects, copy-visible-bytes shared input, immutability by contract; installed ownership and physical-boundary gates |
-| executionLease, lease error, restartPolicy, forceAfter                               | Promoted development contract                               | C1 accepted after B4, containment/physical/R2 and installed JS/TS gates; ordinary exclusive run only, no replay or hard termination deadline                                 |
+| executionLease, lease error, restartPolicy, forceAfter                               | Promoted development contract                               | C1 accepted after B4, containment/physical/R2 and installed JS/TS gates; ordinary exclusive leases, eligible opt-in recovery, no hard termination deadline                   |
 | partitionRange / parallelFor                                                         | Promoted development contract                               | C2 contract: ordered retained collection / completion-only pre-serialization discard, one parent deadline/context, partial side effects; range/batch/installed gates         |
 | streamRange / result types                                                           | Promoted development contract                               | B1 closeable stream implemented; C2: eager completion order, single consumer, explicit abandonment cleanup; stream/context/memory/installed gates                            |
 | parallelMapRange / array and typed overloads / map error                             | Promoted development contract                               | C2 contract: full flat target, logical ordering, built-in constructors, exact block kind/cardinality and reentrant validation-before-target lookup                           |
@@ -70,8 +70,9 @@ but should not silently narrow assignability or overload resolution. Exact stack
 or message text, constructor arity, enumeration order, transient sample ordering,
 performance bounds and internal graphs are not protocols.
 
-The root package is the only supported import. Packed source/maps enable editor
-navigation, not internal subpath contracts. Public class members remain callable
+The supported entries are the Node root `@pjavascript/runtime` and the explicit
+`@pjavascript/runtime/browser` entry. Internal subpaths remain unsupported. Packed
+source/maps enable editor navigation, not internal subpath contracts. Public class members remain callable
 in JS despite export maps or `@internal`; B3 removes registry.snapshot() from the
 prototype and public declaration. Registry storage is module-private, while other TS-private
 emitted properties, absolute-path internal imports, protocol, profile sink,
@@ -80,10 +81,22 @@ claim that this provides runtime secrecy or a security sandbox.
 
 Caller settlement, physical ownership and worker lifecycle are independent.
 Abort/deadline/lease/escalation may settle callers while a worker remains occupied.
-Only a validated final execution response or confirmed worker exit releases that
-physical ownership. No replay, rollback, transfer restoration, native/OOM safety
-or hard realtime preemption. Preserve ordinary Promise continuation context and
-range AsyncResource behavior; no tracing API is proposed.
+On Node, only a validated final execution response or confirmed worker exit releases
+physical ownership. Browser shutdown/containment instead uses posting-safe endpoint
+revocation and terminal local accounting; it provides no native join or proof of
+shared-backing quiescence. Failed termination cannot report successful cleanup.
+
+There is no retry by default. Eligible opt-in retries and one registered-task fallback
+require `repeatable: true`; `rebuildInput` explicitly reconstructs transferred recovery
+input when needed. Confirmed successes and delivered results are preserved. Node
+supports the documented task-error, worker-crash and execution-lease recovery causes;
+browser recovery permits validated task errors and genuinely skipped suffixes only,
+never ambiguous revoked work. Partial/repeated effects remain the application's
+responsibility. There is no rollback, automatic transfer restoration, native/OOM safety
+or hard realtime preemption. Node preserves ordinary Promise continuation context and
+range AsyncResource behavior; browser callback scopes provide no Node async-context
+guarantee. See the [recovery API](guide/core-api.md#ordinary-execution-resilience-development)
+and [browser lifecycle](guide/browser.md#retirement-and-memory-ownership).
 
 ## Proposed Node and platform policy
 
@@ -150,9 +163,11 @@ patch/support deadline; see [SECURITY](../SECURITY.md).
 S1 integration → A decision review → B corrections → C controlled promotion and
 alias removal → F final-candidate qualification/rehearsal → G authorized release.
 Conditional internal type/state work and optimization require independent reasons
-and must finish before F. Historical RC4 source/artifact baselines are immutable,
-and current scripts select them unconditionally: they cannot qualify publication
-of future source. F must deliberately select a new version/baseline and bind
-qualification to that candidate. Semantic API compatibility and exact artifact
-reproducibility are separate checks. See [releasing](releasing.md); no release
-gate, frozen hash or package metadata is changed by this decision package.
+and must finish before F. Historical RC4 source/artifact baselines remain immutable.
+Current scripts explicitly select the registered RC4 or RC5 baseline from the candidate
+version and reject unregistered versions; they never default new source to RC4.
+RC5 remains an unpublished review candidate. Qualification binds the selected inputs
+to the actual committed SHA/tree and staged artifact. Semantic API compatibility and
+exact artifact reproducibility are separate checks. See [releasing](releasing.md).
+Candidate preparation and documentation reconciliation do not clear existing holds,
+decide their applicability, start an alias transition window or authorize publication.

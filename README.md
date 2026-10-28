@@ -148,11 +148,15 @@ credits do not bound RSS, worker allocations, inputs or consumer-retained values
 See [backpressure](docs/guide/backpressure.md).
 
 Cancellation or timeout can settle a caller while its worker stays busy. There
-is no automatic retry or rollback. Development's exclusive
+is no retry by default or rollback. Eligible opt-in retries and registered-task
+fallback require `repeatable: true` and preserve confirmed successes. Node's exclusive
 `run({ executionLease })`, rolling `restartPolicy` and graceful
 `shutdown({ forceAfter })` initiate asynchronous containment; physical ownership
 lasts until valid completion or confirmed exit. Without escalation, graceful
-shutdown can wait indefinitely. See [lifecycle](docs/guide/lifecycle.md) and
+shutdown can wait indefinitely. Browser containment/shutdown uses posting-safe local
+endpoint retirement, without native join or shared-backing quiescence proof, and
+permits recovery only after validated task errors or genuinely skipped work. See
+[lifecycle](docs/guide/lifecycle.md), [browser ownership](docs/guide/browser.md#retirement-and-memory-ownership) and
 [errors](docs/guide/errors.md).
 
 ## Examples
