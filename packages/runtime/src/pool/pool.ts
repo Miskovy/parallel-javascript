@@ -1,16 +1,13 @@
+import type { WorkerSnapshot } from '../telemetry/snapshot.js';
 import { PjsExecutionLeaseError, PjsWorkerError } from '../errors/index.js';
 import type { TaskDescriptor } from '../tasks/registry.js';
 import { PjsWorker } from '../workers/worker.js';
-import type { RuntimeHost } from '../hosts/contracts.js';
+import type { PoolServices } from '../hosts/contracts.js';
 import type {
   WorkerCallbacks,
   WorkerFailureReason,
 } from '../workers/worker.js';
-import type {
-  RestartPolicy,
-  WorkerResourceLimits,
-  WorkerState,
-} from '../types/index.js';
+import type { RestartPolicy, WorkerResourceLimits } from '../types/index.js';
 
 export interface PoolOptions {
   workers: number;
@@ -66,7 +63,7 @@ export class PjsPool {
     private readonly options: PoolOptions,
     private readonly tasks: TaskDescriptor[],
     private readonly callbacks: PoolCallbacks,
-    private readonly host: RuntimeHost,
+    private readonly host: PoolServices,
   ) {
     this.desired = options.workers;
   }
@@ -210,7 +207,7 @@ export class PjsPool {
       0,
     );
   }
-  snapshots(): WorkerState[] {
+  snapshots(): WorkerSnapshot[] {
     return [...this.workers.values()].map((worker) => worker.snapshot());
   }
   get busy(): number {
@@ -265,9 +262,7 @@ export class PjsPool {
       leaseExpirations: this.leaseExpirations,
       leaseTerminationRequests: this.leaseTerminationRequests,
       confirmedLeaseExits: this.confirmedLeaseExits,
-      ...(this.host.kind === 'browser'
-        ? { unconfirmedRetirements: this.unconfirmedRetirements }
-        : {}),
+      unconfirmedRetirements: this.unconfirmedRetirements,
       workerReplacements: this.replacements,
       restartWindowUtilization: this.restartWindowUtilization,
       restartBudgetExhaustions: this.budgetExhaustions,
@@ -284,7 +279,8 @@ export class PjsPool {
         [...this.workers.values()].map((worker) => worker.stop()),
       );
       await Promise.all(this.repairs);
-      if (this.host.kind === 'browser') this.workers.clear();
+      if (this.host.worker.lifecycle === 'endpoint-revocation')
+        this.workers.clear();
       this.state = 'stopped';
     })();
     return this.stopPromise;

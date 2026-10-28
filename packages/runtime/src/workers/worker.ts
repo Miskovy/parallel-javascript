@@ -1,3 +1,4 @@
+import type { WorkerSnapshot } from '../telemetry/snapshot.js';
 import type {
   WorkerServices,
   WorkerConnection,
@@ -13,7 +14,7 @@ import {
   internalProfilingEnabled,
   recordInternalProfile,
 } from '../telemetry/profile.js';
-import type { WorkerResourceLimits, WorkerState } from '../types/index.js';
+import type { WorkerResourceLimits } from '../types/index.js';
 import type { ProgressControl } from './progress.js';
 import { encodeProgress, MAX_PROGRESS_BYTES, utf8Bytes } from './progress.js';
 import { isWorkerMessage } from './protocol.js';
@@ -61,7 +62,7 @@ export class PjsWorker {
   readonly ready: Promise<void>;
   private readonly thread: WorkerThread;
   private readonly connection: WorkerConnection;
-  private readonly state: WorkerState & {
+  private readonly state: WorkerSnapshot & {
     currentTaskIds: string[];
     exclusive: boolean;
   };
@@ -104,16 +105,17 @@ export class PjsWorker {
     });
     // A replacement can fail before the pool attaches a readiness waiter.
     void this.ready.catch(() => {});
-    this.connection = services.create(
-      { version: 2, tasks, concurrency } satisfies BootstrapData,
-      resourceLimits,
-    );
+    const data = { version: 2, tasks, concurrency } satisfies BootstrapData;
+    this.connection =
+      services.lifecycle === 'confirmed-exit'
+        ? services.create(data, resourceLimits)
+        : services.create(data);
     this.thread = this.connection.thread;
     this.state = {
       id,
-      ...(this.thread.threadId === undefined
-        ? {}
-        : { threadId: this.thread.threadId }),
+      ...(this.connection.lifecycle === 'confirmed-exit'
+        ? { threadId: this.connection.thread.threadId }
+        : {}),
       status: 'starting',
       concurrency,
       currentTaskIds: [],
@@ -122,32 +124,37 @@ export class PjsWorker {
       completedTasks: 0,
       failedTasks: 0,
       totalExecutionTimeMs: 0,
-    } as typeof this.state;
+    };
     this.startupTimer = setTimeout(
       () => this.fail('Worker startup deadline exceeded'),
       startupTimeout,
     );
-    this.connection.listen({
-      message: (message) => this.receive(message),
-      messageError: (cause) =>
+    const messages = {
+      message: (message: unknown) => this.receive(message),
+      messageError: (cause: Error) =>
         this.fail('Worker message could not be deserialized', cause),
-      error: (cause) =>
+      error: (cause: Error) =>
         this.fail(
           `Worker error: ${cause.message}`,
           cause,
           undefined,
           'worker-crash',
         ),
-      exit: (code) => this.exited(code),
-    });
+    };
+    if (this.connection.lifecycle === 'confirmed-exit')
+      this.connection.listen({
+        ...messages,
+        exit: (code) => this.exited(code),
+      });
+    else this.connection.listen(messages);
   }
 
-  snapshot(): WorkerState {
+  snapshot(): WorkerSnapshot {
     return { ...this.state, currentTaskIds: [...this.executions.keys()] };
   }
 
   /** Internal hot-path state check; public snapshots remain defensive copies. */
-  get status(): WorkerState['status'] {
+  get status(): WorkerSnapshot['status'] {
     return this.state.status;
   }
 
@@ -297,7 +304,7 @@ export class PjsWorker {
     taskId: string,
     taskName: string,
     input: unknown,
-    transferList: readonly ArrayBuffer[] = [],
+    transferList: ArrayBuffer[] = [],
     profile = false,
     completionOnly = false,
     expectedResultBytes?: number,
@@ -413,7 +420,7 @@ export class PjsWorker {
     );
     try {
       const profile =
-        this.services.kind === 'node' && internalProfilingEnabled();
+        Boolean(this.services.profiling) && internalProfilingEnabled();
       const postStarted = profile ? performance.now() : 0;
       this.thread.postMessage({
         type: 'executeBatch',
@@ -565,18 +572,22 @@ export class PjsWorker {
     this.rejectReady(
       new PjsWorkerError('Worker stopped before ready', { workerId: this.id }),
     );
-    if (this.services.kind === 'node' && this.state.status === 'idle')
+    if (
+      this.connection.lifecycle === 'confirmed-exit' &&
+      this.state.status === 'idle'
+    )
       this.thread.postMessage({ type: 'shutdown' } satisfies HostMessage);
     for (const id of this.executions.keys()) this.closeProgress(id);
     this.state.status = 'stopped';
     if (this.leaseExpired) this.callbacks.leaseTerminationRequested?.(this);
-    if (this.services.kind === 'browser') {
+    const connection = this.connection;
+    if (connection.lifecycle === 'endpoint-revocation') {
       // This promise confirms local posting/retirement only, never native exit.
       this.stopPromise = Promise.resolve().then(async () => {
         if (!this.callbacks.postingQuiescent || !this.callbacks.revoked)
           throw new Error('Browser retirement requires dispatcher ownership');
         await this.callbacks.postingQuiescent(this);
-        this.thread.terminate(); // A throwing native terminate leaves claims intact.
+        connection.thread.terminate(); // A throwing native terminate leaves claims intact.
         const correlations = this.correlations();
         this.connection.detach();
         this.executions.clear();
@@ -594,7 +605,9 @@ export class PjsWorker {
 
   /** Internal Node boundary; tests can delay termination on one worker instance. */
   private terminateThread(): Promise<number> {
-    return this.thread.terminate() as Promise<number>;
+    if (this.connection.lifecycle !== 'confirmed-exit')
+      throw new Error('Browser revocation has no termination promise');
+    return this.connection.thread.terminate();
   }
 
   private exited(code: number): void {
@@ -641,7 +654,9 @@ export class PjsWorker {
         'Worker error: ' + value.error.message,
         value.error,
         undefined,
-        this.services.kind === 'browser' ? 'worker-crash' : 'protocol',
+        this.connection.lifecycle === 'endpoint-revocation'
+          ? 'worker-crash'
+          : 'protocol',
       );
       return;
     }
@@ -734,11 +749,12 @@ export class PjsWorker {
       else if (value.type === 'failure') this.state.failedTasks++;
       this.state.totalExecutionTimeMs += value.executionMs;
     }
-    if (value.profile && this.services.kind !== 'node') {
+    const profiling = this.services.profiling;
+    if (value.profile && !profiling) {
       this.fail('Worker profiling is unsupported on this host');
       return;
     }
-    if (value.profile) {
+    if (value.profile && profiling) {
       recordInternalProfile('workerIngress', value.profile.workerIngressMs);
       recordInternalProfile(
         'workerOutputPreparation',
@@ -746,7 +762,7 @@ export class PjsWorker {
       );
       recordInternalProfile(
         'workerResultTransport',
-        Number(this.services.timestampNs() - value.profile.postedAtNs) / 1e6,
+        Number(profiling.timestampNs() - value.profile.postedAtNs) / 1e6,
       );
     }
     this.callbacks.result(this, value);

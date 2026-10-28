@@ -1,4 +1,4 @@
-import type { BootstrapData, SerializedError } from '../workers/protocol.js';
+import type { BootstrapData, SerializedError } from '../../workers/protocol.js';
 export const BROWSER_PROTOCOL = 1;
 
 export interface BrowserInitialization {

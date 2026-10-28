@@ -2,7 +2,7 @@ import type { ExecutionDispatcher } from '../dispatch/dispatcher.js';
 import type { RangeCoordinator } from '../partition/coordinator.js';
 import type { TaskCoordinator } from '../tasks/coordinator.js';
 import type { RuntimeState } from '../types/index.js';
-import type { PjsRuntimeStats } from '../diagnostics.js';
+import type { RuntimeSnapshot } from './snapshot.js';
 
 /** Read-only compatibility projection over subsystem-owned state. */
 export class RuntimeTelemetry {
@@ -14,7 +14,7 @@ export class RuntimeTelemetry {
     private readonly shutdownEscalations: () => number,
   ) {}
 
-  snapshot(): PjsRuntimeStats {
+  snapshot(): RuntimeSnapshot {
     const workers = this.dispatcher.workerSnapshots();
     const taskSnapshot = this.tasks.snapshot();
     const rangeSnapshot = this.ranges.snapshot();

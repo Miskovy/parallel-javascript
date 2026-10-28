@@ -1,5 +1,5 @@
 import type { ProgressValue } from '../types/index.js';
-import type { RuntimeHost } from '../hosts/contracts.js';
+import type { RangeServices } from '../hosts/contracts.js';
 import type { ExecutionDispatcher } from '../dispatch/dispatcher.js';
 import {
   PjsBinaryResultContractError,
@@ -116,7 +116,7 @@ export class RangeCoordinator implements TaskParentPort {
     private readonly resultCredits: ResultCreditManager,
     private readonly runtime: RangeRuntimePort,
     private readonly concurrency: number,
-    private readonly host: RuntimeHost,
+    private readonly host: RangeServices,
   ) {}
 
   get size(): number {

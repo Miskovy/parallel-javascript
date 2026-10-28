@@ -1,6 +1,7 @@
+import type { WorkerSnapshot } from '../telemetry/snapshot.js';
 import { PjsExecutionLeaseError, PjsWorkerError } from '../errors/index.js';
 import type { ProgressControl } from '../workers/progress.js';
-import type { RuntimeHost } from '../hosts/contracts.js';
+import type { DispatchServices } from '../hosts/contracts.js';
 import { PjsPool } from '../pool/pool.js';
 import { PjsScheduler } from '../scheduler/fifo.js';
 import type { PendingTask } from '../tasks/task.js';
@@ -9,7 +10,6 @@ import type { TaskDescriptor } from '../tasks/registry.js';
 import type {
   RestartPolicy,
   WorkerResourceLimits,
-  WorkerState,
   SchedulingTask,
 } from '../types/index.js';
 import type {
@@ -127,7 +127,7 @@ export class ExecutionDispatcher {
     tasks: TaskDescriptor[],
     private readonly resultCredits: ResultCreditManager,
     private readonly callbacks: ExecutionDispatcherCallbacks,
-    private readonly host: RuntimeHost,
+    private readonly host: DispatchServices,
   ) {
     this.scheduler = new PjsScheduler(options.maxQueue, options.scheduling);
     this.pool = new PjsPool(
@@ -202,7 +202,7 @@ export class ExecutionDispatcher {
         },
         fatal: (error) => this.callbacks.fatal(error),
       },
-      host,
+      host.pool,
     );
   }
 
@@ -243,7 +243,7 @@ export class ExecutionDispatcher {
     return this.pool.recoverySnapshot();
   }
 
-  workerSnapshots(): WorkerState[] {
+  workerSnapshots(): WorkerSnapshot[] {
     return this.pool.snapshots().map((worker) => ({
       ...worker,
       draining: this.drain?.worker.id === worker.id,
@@ -425,7 +425,7 @@ export class ExecutionDispatcher {
     else this.pool.cooperateExecution(correlationId);
   }
   private async postingQuiescent(worker: PjsWorker): Promise<void> {
-    if (this.host.kind !== 'browser')
+    if (this.host.lifecycle !== 'endpoint-revocation')
       throw new Error('Node cannot revoke endpoints');
     await Promise.all(
       [...this.postings.values()]
@@ -800,7 +800,7 @@ export class ExecutionDispatcher {
       Atomics.store(progress.flag, 0, progress.closed ? -1 : 1);
     let finish: (() => void) | undefined;
     const done =
-      this.host.kind === 'browser'
+      this.host.lifecycle === 'endpoint-revocation'
         ? new Promise<void>((resolve) => {
             finish = resolve;
           })
@@ -845,9 +845,7 @@ export class ExecutionDispatcher {
           task.input,
           task.transferList,
           Boolean(
-            this.host.kind === 'node' &&
-            task.child &&
-            internalProfilingEnabled(),
+            this.host.profiling && task.child && internalProfilingEnabled(),
           ),
           task.child?.operation.resultMode === 'discard',
           task.expectedResultBytes,
@@ -874,7 +872,7 @@ export class ExecutionDispatcher {
       this.resultCredits.rollbackDispatch(executionId);
       this.callbacks.dispatchFailed(task, error as Error);
     } finally {
-      if (this.host.kind === 'browser') {
+      if (this.host.lifecycle === 'endpoint-revocation') {
         try {
           this.callbacks.dispatched(task);
         } finally {

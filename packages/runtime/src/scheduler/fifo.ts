@@ -1,12 +1,13 @@
+import type { WorkerSnapshot } from '../telemetry/snapshot.js';
 import { PjsQueueFullError } from '../errors/index.js';
 import type { ScheduledTask } from '../tasks/task.js';
-import type { SchedulingTask, WorkerState } from '../types/index.js';
+import type { SchedulingTask } from '../types/index.js';
 
 export interface Scheduler<T extends ScheduledTask> {
   readonly size: number;
   readonly capacity: number;
   enqueue(task: T): void;
-  next(worker: Readonly<WorkerState>): T | undefined;
+  next(worker: Readonly<WorkerSnapshot>): T | undefined;
   remove(taskId: string): T | undefined;
 }
 
@@ -115,7 +116,7 @@ export class PjsScheduler<T extends ScheduledTask> implements Scheduler<T> {
       this.selecting = false;
     }
   }
-  next(worker: Readonly<WorkerState>): T | undefined {
+  next(worker: Readonly<WorkerSnapshot>): T | undefined {
     if (worker.status !== 'idle') return undefined;
     const task = this.select(this.values());
     return task ? this.remove(task.id) : undefined;

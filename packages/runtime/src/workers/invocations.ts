@@ -1,3 +1,4 @@
+import type { TransportProfiling } from '../hosts/contracts.js';
 import {
   encodeProgress,
   ProgressReporter,
@@ -32,7 +33,7 @@ export interface InvocationServices {
     transferList: readonly ArrayBuffer[];
   };
   inspectBinaryResult(value: unknown): BinaryResultInspection;
-  timestampNs?(): bigint;
+  readonly profiling?: TransportProfiling;
   fatal?(error: unknown): void;
 }
 
@@ -94,11 +95,11 @@ export async function startInvocations(
     workerIngressMs: number,
     outputPreparationMs: number,
   ): InternalWorkerProfile | undefined {
-    return enabled
+    return enabled && services.profiling
       ? {
           workerIngressMs,
           outputPreparationMs,
-          postedAtNs: services.timestampNs!(),
+          postedAtNs: services.profiling.timestampNs(),
         }
       : undefined;
   }
@@ -221,7 +222,7 @@ export async function startInvocations(
       port.close();
       return;
     }
-    if (value.profile && !services.timestampNs)
+    if (value.profile && !services.profiling)
       throw new Error('Worker profiling is unsupported on this host');
     const receivedAt = value.profile ? performance.now() : 0;
     const correlationId =

@@ -346,3 +346,43 @@ logical settlement closes reporting without ending physical/result ownership.
 ResultCreditManager and RangeStream retain their existing correlation/yield rules.
 See the [Checkpoint 3 design](proposals/checkpoint-3-scheduling-concurrency-progress.md)
 and [current API](guide/core-api.md).
+
+## Integrated Node/browser host boundary
+
+Composition binds one immutable host assembly per entry and passes narrow typed
+service views to the existing owners. TaskCoordinator gets IDs, timers, transfer
+validation input snapshots, promise checks and recovery capability; RangeCoordinator
+gets IDs, timers, host-thread checks and callback scopes. ExecutionDispatcher gets
+shared-memory/profiling capabilities and pool services; PjsPool gets worker
+construction, lifecycle observations and idle-timer unref. Scheduler, placement,
+recovery state, range assembly and result credits remain shared owners.
+
+`hosts/contracts.ts` discriminates confirmed-exit connections from endpoint-revocation
+connections. Node alone wires an exit observation and exposes `Promise<number>`
+termination. Browser termination returns void and its connection has no exit callback.
+Profiling is an optional capability, absent in the browser, rather than a throwing
+placeholder. Recovery restrictions come from the bound policy, preserving Node's
+validation order and the browser's early supported-cause checks before input work.
+
+`hosts/browser/host.ts` assembles services. `worker-connection.ts` owns native Worker
+construction, listeners, versioned initialization/readiness checks and detachment;
+its protocol and capability probe live beside it. The public browser binding stays
+thin. Deployed `browser/bootstrap.js` and the Node installed bootstrap URL are stable;
+registry and transfer WeakMaps still have one canonical module owner per isolate.
+
+Browser retirement still waits for post commit/rollback and input cleanup, requires
+native termination to succeed, then commits empty occupancy before notifying the
+existing terminal accounting/lifecycle owners. Failed termination retains claims.
+This fixes graceful draining even when elasticity needs no replacement/readiness
+event; it is not physical-exit evidence. Node releases ownership only on validated
+completion or confirmed exit. Deterministic retirement controls and real-browser
+native/Vite cases retain this distinction without polling or shutdown workarounds.
+
+Minimal internal snapshots carry optional thread observations and the existing
+containment counters. Named Node/browser statistics projections preserve the public
+fields: Node requires thread IDs and omits endpoint-retirement counts; browser omits
+thread IDs and confirmed exits, retaining cumulative unconfirmedRetirements. The
+projections neither mutate snapshots nor manufacture unsupported observations.
+Both locked compilers check incompatible lifecycle operations and owner service
+access; installed consumers and [browser deployment tests](guide/browser.md) check
+the public graphs and behavior, without freezing internal emitted file paths.

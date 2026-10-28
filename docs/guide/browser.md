@@ -40,6 +40,10 @@ HTTP(S) URL objects and callable ESM exports. A task URL must already be runnabl
 browser JavaScript; it does not transpile TypeScript or bundle dependencies.
 Workers do not inherit the document's import map. Task-side PJS helpers must use
 one canonical deployed module graph, as the example's absolute helper URL does.
+The internal transport now lives under `hosts/browser/`; applications still load
+`browser/bootstrap.js` and the same public entry. Copy the entire installed tree
+rather than selecting internal files; nested imports must retain their relative
+layout after deployment.
 Do not independently bundle a second worker-side transfer helper: ownership
 envelopes intentionally use module-local identity.
 
