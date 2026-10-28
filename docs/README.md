@@ -10,6 +10,7 @@ already published on npm.
 | Need                                            | Read                                                                |
 | ----------------------------------------------- | ------------------------------------------------------------------- |
 | Registration, runtime options and API selection | [Core API](guide/core-api.md)                                       |
+| Browser module workers and asset deployment     | [Browser guide](guide/browser.md)                                   |
 | Clone, transfer and shared input                | [Memory ownership](guide/memory-ownership.md)                       |
 | Cancellation, occupancy and shutdown            | [Lifecycle](guide/lifecycle.md)                                     |
 | Queue, count and byte limits                    | [Backpressure](guide/backpressure.md)                               |

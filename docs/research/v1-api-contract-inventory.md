@@ -1675,3 +1675,107 @@ with migration, not silent deletion of useful APIs. Stage F chooses a new
 prerelease/version/baseline and qualifies the exact final artifact. Stage G
 requires separate publication authorization. This document declares neither
 v1 readiness nor fresh cross-platform runtime qualification.
+
+## Browser entry (development)
+
+Derived from `node scripts/api-contract-inventory.mjs --entry=browser` without
+--check, including source/declaration parity. This supplements the Node inventory;
+it does not rewrite frozen evidence. The explicit `/browser` entry has **72 root
+exports: 18 values and 54 type-only exports; 0 additional reachable named types;
+167 statistics leaf paths**. Shared entries retain their existing Node contract
+IDs. Browser-specific or host-projected entries below receive a BROWSER prefix.
+The checker derives the delta, normalizing relative type-reference paths, and
+checks both the shared IDs and these entries.
+
+The browser omits WorkerResourceLimits, WorkerState.threadId and confirmedLeaseExits
+(including their statistics paths). resourceLimits is never-typed and its runtime
+presence rejects. unconfirmedRetirements is cumulative terminal endpoint retirement,
+not confirmed exit or a live-thread gauge. Browser registries require HTTP(S),
+runtime construction requires Window, and shutdown promises no native join. See
+the [browser contract](../guide/browser.md).
+
+| ID                                                         | Declaration / projection                                                                  |
+| ---------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `BROWSER.ROOT.browserCapabilities`                         | function; inert, frozen local capability probe                                            |
+| `BROWSER.ROOT.BrowserCapabilities`                         | type; local capability probe result                                                       |
+| `BROWSER.ROOT.PjsContainmentStats`                         | type; browser host projection                                                             |
+| `BROWSER.ROOT.PjsRuntime`                                  | class; shared facade, Window host and revocation lifecycle                                |
+| `BROWSER.ROOT.PjsRuntimeOptions`                           | type; browser host projection                                                             |
+| `BROWSER.ROOT.PjsRuntimeStats`                             | type; browser host projection                                                             |
+| `BROWSER.ROOT.PjsTaskRegistry`                             | class; HTTP(S) task modules                                                               |
+| `BROWSER.ROOT.PjsTransfer`                                 | type; shared envelope brand                                                               |
+| `BROWSER.ROOT.PjsWorkerStats`                              | type; browser host projection                                                             |
+| `BROWSER.ROOT.transfer`                                    | function; browser buffer validation; shared ownership envelope                            |
+| `BROWSER.ROOT.WorkerState`                                 | type; Node state without threadId                                                         |
+| `BROWSER.MEM.BrowserCapabilities.sharedMemory`             | `boolean`                                                                                 |
+| `BROWSER.MEM.BrowserCapabilities.termination`              | `"revocation"`                                                                            |
+| `BROWSER.MEM.BrowserCapabilities.windowHost`               | `boolean`                                                                                 |
+| `BROWSER.MEM.BrowserCapabilities.workerExitConfirmation`   | `false`                                                                                   |
+| `BROWSER.MEM.BrowserCapabilities.workers`                  | `boolean`                                                                                 |
+| `BROWSER.MEM.PjsContainmentStats.leaseExpirations`         | Same type as `MEM.PjsContainmentStats.leaseExpirations`; browser host projection.         |
+| `BROWSER.MEM.PjsContainmentStats.leaseTerminationRequests` | Same type as `MEM.PjsContainmentStats.leaseTerminationRequests`; browser host projection. |
+| `BROWSER.MEM.PjsContainmentStats.restartBudgetExhaustions` | Same type as `MEM.PjsContainmentStats.restartBudgetExhaustions`; browser host projection. |
+| `BROWSER.MEM.PjsContainmentStats.restartWindowUtilization` | Same type as `MEM.PjsContainmentStats.restartWindowUtilization`; browser host projection. |
+| `BROWSER.MEM.PjsContainmentStats.shutdownEscalations`      | Same type as `MEM.PjsContainmentStats.shutdownEscalations`; browser host projection.      |
+| `BROWSER.MEM.PjsContainmentStats.unconfirmedRetirements`   | `number`                                                                                  |
+| `BROWSER.MEM.PjsContainmentStats.workerReplacements`       | Same type as `MEM.PjsContainmentStats.workerReplacements`; browser host projection.       |
+| `BROWSER.MEM.PjsRuntime.parallelFor`                       | Same type as `MEM.PjsRuntime.parallelFor`; browser host projection.                       |
+| `BROWSER.MEM.PjsRuntime.parallelMapRange`                  | Same type as `MEM.PjsRuntime.parallelMapRange`; browser host projection.                  |
+| `BROWSER.MEM.PjsRuntime.partitionRange`                    | Same type as `MEM.PjsRuntime.partitionRange`; browser host projection.                    |
+| `BROWSER.MEM.PjsRuntime.ready`                             | Same type as `MEM.PjsRuntime.ready`; browser host projection.                             |
+| `BROWSER.MEM.PjsRuntime.run`                               | Same type as `MEM.PjsRuntime.run`; browser host projection.                               |
+| `BROWSER.MEM.PjsRuntime.shutdown`                          | Same type as `MEM.PjsRuntime.shutdown`; browser host projection.                          |
+| `BROWSER.MEM.PjsRuntime.stats`                             | `() => import("./types.js").PjsRuntimeStats`                                              |
+| `BROWSER.MEM.PjsRuntime.streamRange`                       | Same type as `MEM.PjsRuntime.streamRange`; browser host projection.                       |
+| `BROWSER.MEM.PjsRuntimeOptions.concurrency`                | Same type as `MEM.PjsRuntimeOptions.concurrency`; browser host projection.                |
+| `BROWSER.MEM.PjsRuntimeOptions.idleTimeout`                | Same type as `MEM.PjsRuntimeOptions.idleTimeout`; browser host projection.                |
+| `BROWSER.MEM.PjsRuntimeOptions.maxQueue`                   | Same type as `MEM.PjsRuntimeOptions.maxQueue`; browser host projection.                   |
+| `BROWSER.MEM.PjsRuntimeOptions.maxRestarts`                | Same type as `MEM.PjsRuntimeOptions.maxRestarts`; browser host projection.                |
+| `BROWSER.MEM.PjsRuntimeOptions.maxWorkers`                 | Same type as `MEM.PjsRuntimeOptions.maxWorkers`; browser host projection.                 |
+| `BROWSER.MEM.PjsRuntimeOptions.minWorkers`                 | Same type as `MEM.PjsRuntimeOptions.minWorkers`; browser host projection.                 |
+| `BROWSER.MEM.PjsRuntimeOptions.registry`                   | `import("./registry.js").PjsTaskRegistry`                                                 |
+| `BROWSER.MEM.PjsRuntimeOptions.resourceLimits`             | `never`                                                                                   |
+| `BROWSER.MEM.PjsRuntimeOptions.restartPolicy`              | Same type as `MEM.PjsRuntimeOptions.restartPolicy`; browser host projection.              |
+| `BROWSER.MEM.PjsRuntimeOptions.scheduling`                 | Same type as `MEM.PjsRuntimeOptions.scheduling`; browser host projection.                 |
+| `BROWSER.MEM.PjsRuntimeOptions.startupTimeout`             | Same type as `MEM.PjsRuntimeOptions.startupTimeout`; browser host projection.             |
+| `BROWSER.MEM.PjsRuntimeOptions.workers`                    | Same type as `MEM.PjsRuntimeOptions.workers`; browser host projection.                    |
+| `BROWSER.MEM.PjsRuntimeOptions.workerURL`                  | `URL`                                                                                     |
+| `BROWSER.MEM.PjsRuntimeStats.activeOperations`             | Same type as `MEM.PjsRuntimeStats.activeOperations`; browser host projection.             |
+| `BROWSER.MEM.PjsRuntimeStats.activeTasks`                  | Same type as `MEM.PjsRuntimeStats.activeTasks`; browser host projection.                  |
+| `BROWSER.MEM.PjsRuntimeStats.containment`                  | `import("./types.js").PjsContainmentStats`                                                |
+| `BROWSER.MEM.PjsRuntimeStats.dispatch`                     | Same type as `MEM.PjsRuntimeStats.dispatch`; browser host projection.                     |
+| `BROWSER.MEM.PjsRuntimeStats.mapResults`                   | Same type as `MEM.PjsRuntimeStats.mapResults`; browser host projection.                   |
+| `BROWSER.MEM.PjsRuntimeStats.maps`                         | Same type as `MEM.PjsRuntimeStats.maps`; browser host projection.                         |
+| `BROWSER.MEM.PjsRuntimeStats.operations`                   | Same type as `MEM.PjsRuntimeStats.operations`; browser host projection.                   |
+| `BROWSER.MEM.PjsRuntimeStats.partitions`                   | Same type as `MEM.PjsRuntimeStats.partitions`; browser host projection.                   |
+| `BROWSER.MEM.PjsRuntimeStats.progress`                     | Same type as `MEM.PjsRuntimeStats.progress`; browser host projection.                     |
+| `BROWSER.MEM.PjsRuntimeStats.queue`                        | Same type as `MEM.PjsRuntimeStats.queue`; browser host projection.                        |
+| `BROWSER.MEM.PjsRuntimeStats.scheduling`                   | Same type as `MEM.PjsRuntimeStats.scheduling`; browser host projection.                   |
+| `BROWSER.MEM.PjsRuntimeStats.state`                        | Same type as `MEM.PjsRuntimeStats.state`; browser host projection.                        |
+| `BROWSER.MEM.PjsRuntimeStats.streamResults`                | Same type as `MEM.PjsRuntimeStats.streamResults`; browser host projection.                |
+| `BROWSER.MEM.PjsRuntimeStats.streams`                      | Same type as `MEM.PjsRuntimeStats.streams`; browser host projection.                      |
+| `BROWSER.MEM.PjsRuntimeStats.tasks`                        | Same type as `MEM.PjsRuntimeStats.tasks`; browser host projection.                        |
+| `BROWSER.MEM.PjsRuntimeStats.timing`                       | Same type as `MEM.PjsRuntimeStats.timing`; browser host projection.                       |
+| `BROWSER.MEM.PjsRuntimeStats.workers`                      | `import("./types.js").PjsWorkerStats`                                                     |
+| `BROWSER.MEM.PjsTaskRegistry.register`                     | Same type as `MEM.PjsTaskRegistry.register`; browser host projection.                     |
+| `BROWSER.MEM.PjsTransfer.__@transferBrand`                 | Same type as `MEM.PjsTransfer.__@transferBrand`; browser host projection.                 |
+| `BROWSER.MEM.PjsTransfer.value`                            | Same type as `MEM.PjsTransfer.value`; browser host projection.                            |
+| `BROWSER.MEM.PjsWorkerStats.activeExecutions`              | Same type as `MEM.PjsWorkerStats.activeExecutions`; browser host projection.              |
+| `BROWSER.MEM.PjsWorkerStats.busy`                          | Same type as `MEM.PjsWorkerStats.busy`; browser host projection.                          |
+| `BROWSER.MEM.PjsWorkerStats.details`                       | `import("./types.js").WorkerState[]`                                                      |
+| `BROWSER.MEM.PjsWorkerStats.failures`                      | Same type as `MEM.PjsWorkerStats.failures`; browser host projection.                      |
+| `BROWSER.MEM.PjsWorkerStats.idle`                          | Same type as `MEM.PjsWorkerStats.idle`; browser host projection.                          |
+| `BROWSER.MEM.PjsWorkerStats.restarts`                      | Same type as `MEM.PjsWorkerStats.restarts`; browser host projection.                      |
+| `BROWSER.MEM.PjsWorkerStats.starting`                      | Same type as `MEM.PjsWorkerStats.starting`; browser host projection.                      |
+| `BROWSER.MEM.PjsWorkerStats.total`                         | Same type as `MEM.PjsWorkerStats.total`; browser host projection.                         |
+| `BROWSER.MEM.WorkerState.completedTasks`                   | Same type as `MEM.WorkerState.completedTasks`; browser host projection.                   |
+| `BROWSER.MEM.WorkerState.concurrency`                      | Same type as `MEM.WorkerState.concurrency`; browser host projection.                      |
+| `BROWSER.MEM.WorkerState.currentTaskId`                    | Same type as `MEM.WorkerState.currentTaskId`; browser host projection.                    |
+| `BROWSER.MEM.WorkerState.currentTaskIds`                   | Same type as `MEM.WorkerState.currentTaskIds`; browser host projection.                   |
+| `BROWSER.MEM.WorkerState.draining`                         | Same type as `MEM.WorkerState.draining`; browser host projection.                         |
+| `BROWSER.MEM.WorkerState.exclusive`                        | Same type as `MEM.WorkerState.exclusive`; browser host projection.                        |
+| `BROWSER.MEM.WorkerState.failedTasks`                      | Same type as `MEM.WorkerState.failedTasks`; browser host projection.                      |
+| `BROWSER.MEM.WorkerState.id`                               | Same type as `MEM.WorkerState.id`; browser host projection.                               |
+| `BROWSER.MEM.WorkerState.status`                           | Same type as `MEM.WorkerState.status`; browser host projection.                           |
+| `BROWSER.MEM.WorkerState.totalExecutionTimeMs`             | Same type as `MEM.WorkerState.totalExecutionTimeMs`; browser host projection.             |
+| `BROWSER.STAT.containment.unconfirmedRetirements`          | `number`                                                                                  |

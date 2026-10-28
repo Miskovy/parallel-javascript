@@ -1,6 +1,5 @@
 import type { ProgressValue } from '../types/index.js';
-import { randomUUID } from 'node:crypto';
-import { types } from 'node:util';
+import type { RuntimeHost } from '../hosts/contracts.js';
 import type { ExecutionDispatcher } from '../dispatch/dispatcher.js';
 import {
   PjsBinaryResultContractError,
@@ -41,7 +40,7 @@ import type {
   TaskRecovery,
   ProgressSubscription,
 } from './task.js';
-import { reserveTransfers, snapshotTransferList } from './transfer.js';
+import { reserveTransfers } from './transfer-core.js';
 
 export type TaskTerminalStatus =
   'completed' | 'failed' | 'cancelled' | 'timed_out';
@@ -88,7 +87,7 @@ export class TaskCoordinator {
       logicalId: string;
     }
   >();
-  private progressTick: ReturnType<typeof setImmediate> | undefined;
+  private progressTick: (() => void) | undefined;
   progressErrors = 0;
 
   constructor(
@@ -97,6 +96,7 @@ export class TaskCoordinator {
     private readonly resultCredits: ResultCreditManager,
     private readonly runtime: TaskRuntimePort,
     private readonly parents: TaskParentPort,
+    private readonly host: RuntimeHost,
   ) {}
 
   get size(): number {
@@ -155,7 +155,7 @@ export class TaskCoordinator {
             implementation: recovery.fallbackUsed ? 'fallback' : 'primary',
           });
           // Invalid async factories must not leak an unhandled rejection on the host.
-          if (types.isPromise(prepared)) {
+          if (this.host.isPromise(prepared)) {
             void prepared.catch(() => {});
             if (!this.canContinue(task)) return false;
             throw new PjsSerializationError(
@@ -178,7 +178,9 @@ export class TaskCoordinator {
           if (!this.canContinue(task)) return false;
           const requestedTransfers = prepared.transferList;
           if (!this.canContinue(task)) return false;
-          const transferList = snapshotTransferList(requestedTransfers ?? []);
+          const transferList = this.host.snapshotTransferList(
+            requestedTransfers ?? [],
+          );
           if (!this.canContinue(task)) return false;
           if (
             task.child &&
@@ -207,7 +209,7 @@ export class TaskCoordinator {
           return false;
         }
       }
-      const executionId = !recovery.posted ? task.id : randomUUID();
+      const executionId = !recovery.posted ? task.id : this.host.id();
       task.executionId = executionId;
       this.attempts.set(executionId, task);
       recovery.posted = true;
@@ -221,7 +223,7 @@ export class TaskCoordinator {
     const correlationId =
       members.length > 1
         ? task.recovery
-          ? randomUUID()
+          ? this.host.id()
           : task.id
         : (task.executionId ?? task.id);
     for (const member of members) member.batchLeaderId = correlationId;
@@ -241,7 +243,7 @@ export class TaskCoordinator {
     child?: PartitionChild,
     deferred?: PendingTask[],
   ): Promise<Output> {
-    const id = randomUUID();
+    const id = this.host.id();
     const rejectSubmission = (error: Error): Promise<Output> => {
       this.metrics.rejected++;
       if (child) this.parents.rejected(child, error);
@@ -303,6 +305,10 @@ export class TaskCoordinator {
       )
         throw new TypeError(
           'cancellation must be settle, cooperative or terminate',
+        );
+      if (mode === 'cooperative' && !this.host.sharedMemory)
+        throw new TypeError(
+          'Cooperative cancellation requires usable shared memory in page and worker',
         );
       if (mode === 'terminate' || mode === 'cooperative') cancellation = mode;
       recovery = this.createRecovery(
@@ -371,7 +377,7 @@ export class TaskCoordinator {
       );
     let transferList: ArrayBuffer[];
     try {
-      transferList = snapshotTransferList(
+      transferList = this.host.snapshotTransferList(
         options.transferList === undefined ? [] : options.transferList,
       );
       if (
@@ -504,7 +510,7 @@ export class TaskCoordinator {
         this.runtime.requestPump();
       };
       pending.cleanup = () => {
-        if (timer) clearTimeout(timer);
+        if (timer) this.host.clearTimer(timer);
         signal?.removeEventListener('abort', abort);
         // A getter may abort during postMessage. Hold ownership until posting finishes.
         if (
@@ -516,7 +522,7 @@ export class TaskCoordinator {
       };
       signal?.addEventListener('abort', abort, { once: true });
       if (timeout !== undefined)
-        timer = setTimeout(() => {
+        timer = this.host.setTimer(() => {
           this.cancel(pending, 'timed_out');
           this.runtime.requestPump();
         }, timeout);
@@ -556,7 +562,7 @@ export class TaskCoordinator {
   }
   private scheduleProgress(): void {
     if (this.progressTick || !this.pendingProgress.size) return;
-    this.progressTick = setImmediate(() => {
+    this.progressTick = this.host.defer(() => {
       this.progressTick = undefined;
       for (let count = 0; count < 64; count++) {
         const entry = this.pendingProgress.values().next().value;
@@ -649,7 +655,7 @@ export class TaskCoordinator {
   }
   private clearProgressTick(): void {
     if (!this.pendingProgress.size && this.progressTick) {
-      clearImmediate(this.progressTick);
+      this.progressTick();
       this.progressTick = undefined;
     }
   }
@@ -725,6 +731,17 @@ export class TaskCoordinator {
     }
   }
 
+  revoked(correlationId: string): void {
+    if (this.host.kind !== 'browser')
+      throw new Error('Node cannot revoke attempts');
+    const members = new Set(this.executions.get(correlationId) ?? []);
+    for (const id of members)
+      if (this.tasks.has(id))
+        throw new Error('Cannot abandon a nonterminal caller');
+    this.executions.delete(correlationId);
+    for (const [id, task] of this.attempts)
+      if (members.has(task.id)) this.attempts.delete(id);
+  }
   exited(correlationId: string): void {
     const members = this.executions.get(correlationId);
     this.executions.delete(correlationId);
@@ -762,7 +779,7 @@ export class TaskCoordinator {
     if (task.executionId) this.attempts.delete(task.executionId);
     const recovery = task.recovery;
     if (recovery) {
-      if (recovery.timer) clearTimeout(recovery.timer);
+      if (recovery.timer) this.host.clearTimer(recovery.timer);
       delete recovery.timer;
       delete recovery.pendingFailure;
       delete recovery.lastPrimaryError;
@@ -823,6 +840,26 @@ export class TaskCoordinator {
     rebuildInput: TaskRecovery['rebuildInput'],
     context: { taskId?: string; operationId?: string },
   ): TaskRecovery | undefined {
+    if (this.host.kind === 'browser') {
+      if (
+        retry !== undefined &&
+        this.recoveryCauses(retry.on, ['worker-crash']).some(
+          (cause) => cause !== 'task-error',
+        )
+      )
+        throw new TypeError(
+          'Browser recovery supports validated task-error only',
+        );
+      if (
+        fallback !== undefined &&
+        this.recoveryCauses(fallback.on, ['task-error']).some(
+          (cause) => cause !== 'task-error',
+        )
+      )
+        throw new TypeError(
+          'Browser fallback supports validated task-error only',
+        );
+    }
     const descriptor = this.registry.get(task);
     let recovery: TaskRecovery | undefined;
     if (repeatable !== undefined && repeatable !== true)
@@ -1021,7 +1058,7 @@ export class TaskCoordinator {
       overrideDelay ?? (recovery.fallbackUsed ? 0 : recovery.backoffMs);
     if (delay === 0) ready();
     else {
-      const timer = setTimeout(() => {
+      const timer = this.host.setTimer(() => {
         if (recovery.timer !== timer || !this.tasks.has(task.id)) return;
         delete recovery.timer;
         if (this.canContinue(task)) ready();

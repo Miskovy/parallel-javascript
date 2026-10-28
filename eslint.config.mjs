@@ -13,6 +13,23 @@ export default ts.config(
   js.configs.recommended,
   ...ts.configs.recommended,
   {
+    files: ['scripts/browser/fixtures/*.js', 'examples/browser/*.js'],
+    languageOptions: {
+      globals: {
+        console: 'readonly',
+        URL: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
+        performance: 'readonly',
+        AbortController: 'readonly',
+        SharedArrayBuffer: 'readonly',
+        Atomics: 'readonly',
+      },
+    },
+  },
+  {
     files: ['**/*.mjs', '**/*.cjs', '**/*.ts', '**/*.cts', '**/*.mts'],
     languageOptions: {
       globals: {

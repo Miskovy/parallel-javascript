@@ -30,6 +30,11 @@ Your application's event loop stays available for I/O. Coarse CPU work can
 amortize worker and transport costs; tiny transforms and ordinary asynchronous
 I/O usually belong on the host. There are no production dependencies.
 
+Development builds also execute tasks in dedicated browser module workers through
+the explicit `@pjavascript/runtime/browser` entry. See the
+[browser deployment guide](docs/guide/browser.md) for native modules, Vite assets,
+capability requirements and endpoint-retirement guarantees. Published RC4 is unchanged.
+
 **Current release: [1.0.0-rc.4](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.4),
 a prerelease.** As checked on 23 October 2026, [npm `next` and `latest`](https://registry.npmjs.org/@pjavascript%2fruntime)
 both select RC4. Final v1.0.0 has not been released. CI reports validation results;

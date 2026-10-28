@@ -1,5 +1,10 @@
 # Lifecycle, cancellation and failure
 
+This guide describes Node physical completion/confirmed-exit guarantees. The
+implemented [browser entry](browser.md#retirement-and-memory-ownership) shares logical
+settlement and posting guards but uses explicit terminal endpoint revocation,
+without native exit confirmation or a shared-memory quiescence guarantee.
+
 **Promotion status:** Development P1 containment contracts are promoted following benchmark review; caller settlement still does not release physical ownership before validated completion or confirmed exit.
 
 Construction snapshots the registry and starts workers. `ready()` resolves after

@@ -5,6 +5,10 @@
 PJS runs explicitly registered CPU work in persistent Node worker isolates. Your
 application keeps its event-loop/I/O plane; PJS supplies a bounded compute plane.
 
+Development's explicit `/browser` entry shares these task/range/scheduling owners
+with dedicated module workers. See [browser loading and lifecycle](browser.md)
+for its HTTP(S) registry, capabilities and host-specific ownership contract.
+
 ```text
 Node application
   ├─ event loop / ordinary asynchronous I/O

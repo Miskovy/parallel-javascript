@@ -92,8 +92,11 @@ CommonJS require in development builds. Both resolve to the same runtime/declara
 without duplicate registry/helper state. Compile TypeScript tasks to ordinary
 JavaScript first and register local file URLs. Task modules can be ESM or CommonJS;
 .cts consumers use NodeNext `import = require`, while .mts consumers use import.
-Published RC4 remains ESM-only. Browser/bundler integration and a TypeScript loader
-remain outside the implemented contract.
+Published RC4 remains ESM-only. Development's explicit browser entry now supports
+dedicated module workers with native-module and Vite dev/production loading profiles;
+see the [browser contract](guide/browser.md). Real Chromium **156.0.8078.4** was
+executed on Linux x64, with isolated/non-isolated pages. Other browser engines
+remain unclaimed. Automatic TypeScript task loading remains outside the contract.
 No production dependency or new compiler prerequisite is introduced for consumers.
 
 Development manifests now declare `^22.23.4 || ^24.22.1 || ^26.12.1`: the minimums

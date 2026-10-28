@@ -27,7 +27,11 @@ interface StreamCallbacks {
 
 function observablePayloadBytes(value: unknown): number | undefined {
   if (typeof value !== 'object' || value === null) return undefined;
-  if (value instanceof ArrayBuffer || value instanceof SharedArrayBuffer)
+  if (
+    value instanceof ArrayBuffer ||
+    (typeof SharedArrayBuffer === 'function' &&
+      value instanceof SharedArrayBuffer)
+  )
     return value.byteLength;
   return ArrayBuffer.isView(value) ? value.byteLength : undefined;
 }

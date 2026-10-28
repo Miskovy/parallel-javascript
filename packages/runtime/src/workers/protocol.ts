@@ -32,6 +32,7 @@ export type HostMessage =
       taskName: string;
       exclusive?: boolean;
       progressBuffer?: SharedArrayBuffer;
+      progressMode?: 'message';
       input: unknown;
       cancellationBuffer?: SharedArrayBuffer;
       profile?: boolean;
@@ -45,13 +46,20 @@ export type HostMessage =
       taskName: string;
       exclusive?: boolean;
       progressBuffer?: SharedArrayBuffer;
+      progressMode?: 'message';
       items: BatchInput[];
       cancellationBuffer?: SharedArrayBuffer;
       profile?: boolean;
       completionOnly?: boolean;
     }
   | { type: 'cancel'; correlationId: string }
-  | { type: 'progressAck'; correlationId: string }
+  | {
+      type: 'progressAck';
+      correlationId: string;
+      taskId?: string;
+      sequence?: number;
+    }
+  | { type: 'progressClose'; correlationId: string }
   | { type: 'shutdown' };
 export type TaskResultMessage =
   | {
@@ -128,7 +136,8 @@ export type WorkerMessage =
   | { type: 'ready'; version: 2 }
   | { type: 'started'; taskId: string }
   | ExecutionResultMessage
-  | { type: 'bootstrapFailure'; error: SerializedError };
+  | { type: 'bootstrapFailure'; error: SerializedError }
+  | { type: 'workerFailure'; error: SerializedError };
 
 function record(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
@@ -203,7 +212,8 @@ export function isWorkerMessage(value: unknown): value is WorkerMessage {
       value.payload.length <= 16 * 1024
     );
   if (value.type === 'ready') return value.version === 2;
-  if (value.type === 'bootstrapFailure') return error(value.error);
+  if (value.type === 'bootstrapFailure' || value.type === 'workerFailure')
+    return error(value.error);
   if (value.type === 'batchResult') {
     if (
       typeof value.batchId !== 'string' ||
@@ -253,16 +263,28 @@ export function isWorkerMessage(value: unknown): value is WorkerMessage {
 export function isHostMessage(value: unknown): value is HostMessage {
   if (!record(value)) return false;
   if (value.type === 'shutdown') return true;
-  if (value.type === 'cancel' || value.type === 'progressAck')
+  if (value.type === 'cancel' || value.type === 'progressClose')
     return typeof value.correlationId === 'string';
+  if (value.type === 'progressAck')
+    return (
+      typeof value.correlationId === 'string' &&
+      (value.taskId === undefined || typeof value.taskId === 'string') &&
+      (value.sequence === undefined ||
+        (Number.isSafeInteger(value.sequence) &&
+          (value.sequence as number) > 0))
+    );
   const common =
     typeof value.taskName === 'string' &&
+    (value.progressMode === undefined || value.progressMode === 'message') &&
+    !(value.progressMode !== undefined && value.progressBuffer !== undefined) &&
     (value.exclusive === undefined || typeof value.exclusive === 'boolean') &&
     (value.progressBuffer === undefined ||
-      (value.progressBuffer instanceof SharedArrayBuffer &&
+      (typeof SharedArrayBuffer === 'function' &&
+        value.progressBuffer instanceof SharedArrayBuffer &&
         value.progressBuffer.byteLength === 8)) &&
     (value.cancellationBuffer === undefined ||
-      (value.cancellationBuffer instanceof SharedArrayBuffer &&
+      (typeof SharedArrayBuffer === 'function' &&
+        value.cancellationBuffer instanceof SharedArrayBuffer &&
         value.cancellationBuffer.byteLength === 4)) &&
     (value.profile === undefined || typeof value.profile === 'boolean') &&
     (value.completionOnly === undefined ||

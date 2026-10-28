@@ -6,8 +6,14 @@ import ts from 'typescript';
 // Structural discovery, not a byte freeze. Policy remains in the canonical document.
 const args = process.argv.slice(2);
 assert.ok(
-  args.every((arg) => arg === '--check' || arg.startsWith('--output=')),
+  args.every(
+    (arg) =>
+      arg === '--check' ||
+      arg === '--entry=browser' ||
+      arg.startsWith('--output='),
+  ),
 );
+const browser = args.includes('--entry=browser');
 const configuration = ts.readConfigFile(
   'packages/runtime/tsconfig.json',
   ts.sys.readFile,
@@ -259,11 +265,12 @@ function inspect(entry, options) {
   };
 }
 
-const source = inspect('packages/runtime/src/index.ts', {
+const entryPath = browser ? 'browser/index' : 'index';
+const source = inspect(`packages/runtime/src/${entryPath}.ts`, {
   ...parsed.options,
   noEmit: true,
 });
-const declarations = inspect('packages/runtime/dist/index.d.ts', {
+const declarations = inspect(`packages/runtime/dist/${entryPath}.d.ts`, {
   ...parsed.options,
   rootDir: undefined,
   noEmit: true,
@@ -326,6 +333,7 @@ function programFiles() {
   });
 }
 const result = {
+  entry: browser ? '@pjavascript/runtime/browser' : '@pjavascript/runtime',
   method:
     'Locked TypeScript checker; supported root declarations plus repository-owned signature-reachable types and statistics leaves; standard-library graphs and emitted private fields excluded.',
   counts: {
@@ -340,17 +348,65 @@ const result = {
   experimentalNames: [...new Set(sourceFiles.map(({ name }) => name))].sort(),
   experimentalOccurrences: sourceFiles,
 };
+const entries = (source) => [
+  ...source.roots,
+  ...source.roots.flatMap(({ members }) => members),
+  ...source.reachable,
+  ...source.statsFields,
+];
+if (browser) {
+  const node = inspect('packages/runtime/src/index.ts', {
+    ...parsed.options,
+    noEmit: true,
+  });
+  const baseline = new Map(entries(node).map((entry) => [entry.id, entry]));
+  const changedRoots = new Set(['PjsRuntime', 'PjsTaskRegistry']);
+  const comparable = (entry) =>
+    JSON.stringify(entry, (key, value) =>
+      key === 'location'
+        ? undefined
+        : typeof value === 'string'
+          ? value.replaceAll('import("../', 'import("./')
+          : value,
+    );
+  for (const root of source.roots)
+    if (comparable(root) !== comparable(baseline.get(root.id)))
+      changedRoots.add(root.name);
+  result.browserContracts = entries(source)
+    .filter(
+      (entry) =>
+        (entry.id.startsWith('ROOT.') && changedRoots.has(entry.name)) ||
+        (entry.id.startsWith('MEM.') &&
+          changedRoots.has(entry.id.split('.')[1])) ||
+        comparable(entry) !== comparable(baseline.get(entry.id)),
+    )
+    .map((entry) => ({ ...entry, id: `BROWSER.${entry.id}` }));
+  result.sharedContractIds = entries(source)
+    .filter(
+      (entry) =>
+        !result.browserContracts.some(
+          (changed) => changed.id === `BROWSER.${entry.id}`,
+        ),
+    )
+    .map(({ id }) => id);
+  result.omittedNodeContractIds = entries(node)
+    .filter(
+      (entry) =>
+        !entries(source).some((candidate) => candidate.id === entry.id),
+    )
+    .map(({ id }) => id);
+}
 if (args.includes('--check')) {
   const inventory = readFileSync(
     'docs/research/v1-api-contract-inventory.md',
     'utf8',
   );
-  for (const entry of [
-    ...source.roots,
-    ...source.roots.flatMap(({ members }) => members),
-    ...source.reachable,
-    ...source.statsFields,
-  ])
+  for (const entry of browser
+    ? [
+        ...result.browserContracts,
+        ...result.sharedContractIds.map((id) => ({ id })),
+      ]
+    : entries(source))
     assert.ok(
       inventory.includes('`' + entry.id + '`'),
       `Inventory missing ${entry.id}`,

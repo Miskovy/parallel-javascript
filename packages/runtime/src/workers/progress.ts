@@ -3,6 +3,40 @@ import type { ProgressMessage } from './protocol.js';
 export const MAX_PROGRESS_BYTES = 16 * 1024;
 const invalid = Symbol('invalid progress');
 
+/** Count without allocating an encoded copy; only the comparison to limit matters. */
+export function utf8Bytes(text: string, limit = MAX_PROGRESS_BYTES): number {
+  let bytes = 0;
+  for (let i = 0; i < text.length; i++) {
+    const code = text.charCodeAt(i);
+    if (code < 128) bytes++;
+    else if (code < 2048) bytes += 2;
+    else if (
+      code >= 0xd800 &&
+      code <= 0xdbff &&
+      i + 1 < text.length &&
+      text.charCodeAt(i + 1) >= 0xdc00 &&
+      text.charCodeAt(i + 1) <= 0xdfff
+    ) {
+      bytes += 4;
+      i++;
+    } else bytes += 3;
+    if (bytes > limit) return bytes;
+  }
+  return bytes;
+}
+
+export interface InvocationProgress {
+  isOpen(): boolean;
+  report(message: ProgressMessage): boolean;
+  wake(taskId?: string, sequence?: number): void;
+  close(): void;
+}
+
+export interface ProgressControl {
+  readonly flag?: Int32Array<SharedArrayBuffer>;
+  closed: boolean;
+}
+
 /** Incremental JSON encoding: never stringify/copy an entire application payload first. */
 export function encodeProgress(value: unknown): string | undefined {
   const chunks: string[] = [];
@@ -113,6 +147,9 @@ export class ProgressReporter {
     readonly flag: Int32Array<SharedArrayBuffer>,
     private readonly send: (message: ProgressMessage) => void,
   ) {}
+  isOpen(): boolean {
+    return Atomics.load(this.flag, 0) >= 0;
+  }
   report(message: ProgressMessage): boolean {
     if (Atomics.load(this.flag, 0) < 0) return false;
     this.pending = message;
@@ -137,5 +174,48 @@ export class ProgressReporter {
   close(): void {
     Atomics.store(this.flag, 0, -1);
     this.pending = undefined;
+  }
+}
+
+/** Non-isolated browser: one acknowledged frame and one replaceable pending value. */
+export class MessageProgressReporter implements InvocationProgress {
+  private pending: ProgressMessage | undefined;
+  private inFlight: ProgressMessage | undefined;
+  private open = true;
+  constructor(private readonly send: (message: ProgressMessage) => void) {}
+  isOpen(): boolean {
+    return this.open;
+  }
+  report(message: ProgressMessage): boolean {
+    if (!this.open) return false;
+    this.pending = message;
+    this.flush();
+    return this.open;
+  }
+  wake(taskId?: string, sequence?: number): void {
+    if (
+      !this.inFlight ||
+      this.inFlight.taskId !== taskId ||
+      this.inFlight.sequence !== sequence
+    )
+      return;
+    this.inFlight = undefined;
+    this.flush();
+  }
+  private flush(): void {
+    if (!this.open || this.inFlight || !this.pending) return;
+    const message = this.pending;
+    this.pending = undefined;
+    this.inFlight = message;
+    try {
+      this.send(message);
+    } catch {
+      this.close();
+    }
+  }
+  close(): void {
+    this.open = false;
+    this.pending = undefined;
+    this.inFlight = undefined;
   }
 }

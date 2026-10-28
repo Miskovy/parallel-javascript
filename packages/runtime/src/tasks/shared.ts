@@ -1,4 +1,4 @@
-import { types } from 'node:util';
+import { numericViewTag } from '../internal/binary-brands.js';
 
 type SharedView =
   | Uint8Array<SharedArrayBuffer>
@@ -38,15 +38,15 @@ export function sharedReadonly(
   | Float64Array<SharedArrayBuffer> {
   const Constructor:
     (new (buffer: SharedArrayBuffer) => SharedView) | undefined =
-    types.isUint8Array(source)
+    numericViewTag(source) === 'Uint8Array'
       ? Uint8Array
-      : types.isInt32Array(source)
+      : numericViewTag(source) === 'Int32Array'
         ? Int32Array
-        : types.isUint32Array(source)
+        : numericViewTag(source) === 'Uint32Array'
           ? Uint32Array
-          : types.isFloat32Array(source)
+          : numericViewTag(source) === 'Float32Array'
             ? Float32Array
-            : types.isFloat64Array(source)
+            : numericViewTag(source) === 'Float64Array'
               ? Float64Array
               : undefined;
   if (!Constructor)
@@ -59,6 +59,8 @@ export function sharedReadonly(
     source.byteOffset,
     source.byteLength,
   );
+  if (typeof SharedArrayBuffer !== 'function')
+    throw new TypeError('sharedReadonly requires usable shared memory');
   const buffer = new SharedArrayBuffer(bytes.byteLength);
   new Uint8Array(buffer).set(bytes);
   return new Constructor(buffer);

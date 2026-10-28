@@ -1,4 +1,3 @@
-import { availableParallelism } from 'node:os';
 import { integer } from '../internal/integer.js';
 import type { PjsTaskRegistry } from '../tasks/registry.js';
 import type {
@@ -37,19 +36,20 @@ export interface PjsRuntimeOptions {
 /** Normalize scalar construction options in their original observable read order.
  * Registry snapshot and maxQueue reads remain in composition, in that order.
  */
-export function normalizeRuntimeOptions(options: PjsRuntimeOptions) {
+export function normalizeRuntimeOptions(
+  options: PjsRuntimeOptions,
+  cpuCount: () => number,
+) {
   const minimum = integer('minWorkers', options.minWorkers ?? 1, 1);
   const maximum = integer(
     'maxWorkers',
-    options.maxWorkers ??
-      Math.max(minimum, options.workers ?? availableParallelism()),
+    options.maxWorkers ?? Math.max(minimum, options.workers ?? cpuCount()),
     minimum,
   );
   const configuredWorkers = options.workers;
   const selectedWorkers = integer(
     'workers',
-    configuredWorkers ??
-      Math.max(minimum, Math.min(maximum, availableParallelism())),
+    configuredWorkers ?? Math.max(minimum, Math.min(maximum, cpuCount())),
     minimum,
     maximum,
   );

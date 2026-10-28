@@ -1,3 +1,5 @@
+import { PjsTaskRegistrationError } from '../errors/index.js';
+import type { RuntimeHost } from '../hosts/contracts.js';
 import type { StreamRangeSubmission } from '../api/range/contracts.js';
 import { normalizeRuntimeOptions } from '../configuration/runtime-options.js';
 import type { PjsRuntimeOptions } from '../configuration/runtime-options.js';
@@ -10,8 +12,14 @@ import { RuntimeTelemetry } from '../telemetry/runtime.js';
 import { snapshotRegistry } from '../tasks/registry.js';
 
 /** Passive constructors store callbacks; operational callbacks begin only at start. */
-export function createRuntimeComponents(options: PjsRuntimeOptions) {
-  const resultCredits = new ResultCreditManager();
+export function createRuntimeComponents(
+  options: PjsRuntimeOptions,
+  host: RuntimeHost,
+) {
+  const resultCredits = new ResultCreditManager(
+    host.debugInvariants,
+    host.kind === 'browser',
+  );
   const {
     workers,
     concurrency,
@@ -23,8 +31,19 @@ export function createRuntimeComponents(options: PjsRuntimeOptions) {
     startupTimeout,
     maxRestarts,
     restartPolicy,
-  } = normalizeRuntimeOptions(options);
+  } = normalizeRuntimeOptions(options, host.cpuCount);
   const registry = snapshotRegistry(options.registry);
+  for (const descriptor of registry.values()) {
+    const protocol = new URL(descriptor.module).protocol;
+    if (
+      host.kind === 'node'
+        ? protocol !== 'file:'
+        : !['http:', 'https:'].includes(protocol)
+    )
+      throw new PjsTaskRegistrationError(
+        'Registry module URLs do not match the runtime host',
+      );
+  }
   const dispatcher: ExecutionDispatcher = new ExecutionDispatcher(
     {
       workers,
@@ -57,10 +76,15 @@ export function createRuntimeComponents(options: PjsRuntimeOptions) {
           taskCoordinator.exited(correlationId);
         controller.pump();
       },
+      revoked: (correlations) => {
+        for (const id of correlations) taskCoordinator.revoked(id);
+        controller.pump();
+      },
       dispatchFailed: (task, error) =>
         taskCoordinator.dispatchFailed(task, error),
       fatal: (error) => controller.fail(error),
     },
+    host,
   );
   const taskCoordinator: TaskCoordinator = new TaskCoordinator(
     registry,
@@ -80,6 +104,7 @@ export function createRuntimeComponents(options: PjsRuntimeOptions) {
       settled: (task, status, error, output) =>
         rangeCoordinator.settled(task, status, error, output),
     },
+    host,
   );
   const rangeCoordinator: RangeCoordinator = new RangeCoordinator(
     registry,
@@ -98,6 +123,7 @@ export function createRuntimeComponents(options: PjsRuntimeOptions) {
       requestPump: () => controller.pump(),
     },
     concurrency,
+    host,
   );
   const controller: RuntimeController = new RuntimeController(
     dispatcher,
