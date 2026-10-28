@@ -1,5 +1,5 @@
 import type { ProgressValue } from '../types/index.js';
-import type { RuntimeHost } from '../hosts/contracts.js';
+import type { TaskServices } from '../hosts/contracts.js';
 import type { ExecutionDispatcher } from '../dispatch/dispatcher.js';
 import {
   PjsBinaryResultContractError,
@@ -96,7 +96,7 @@ export class TaskCoordinator {
     private readonly resultCredits: ResultCreditManager,
     private readonly runtime: TaskRuntimePort,
     private readonly parents: TaskParentPort,
-    private readonly host: RuntimeHost,
+    private readonly host: TaskServices,
   ) {}
 
   get size(): number {
@@ -732,7 +732,7 @@ export class TaskCoordinator {
   }
 
   revoked(correlationId: string): void {
-    if (this.host.kind !== 'browser')
+    if (this.host.lifecycle !== 'endpoint-revocation')
       throw new Error('Node cannot revoke attempts');
     const members = new Set(this.executions.get(correlationId) ?? []);
     for (const id of members)
@@ -840,25 +840,22 @@ export class TaskCoordinator {
     rebuildInput: TaskRecovery['rebuildInput'],
     context: { taskId?: string; operationId?: string },
   ): TaskRecovery | undefined {
-    if (this.host.kind === 'browser') {
+    const policy = this.host.recovery;
+    if (policy.mode === 'limited') {
       if (
         retry !== undefined &&
         this.recoveryCauses(retry.on, ['worker-crash']).some(
-          (cause) => cause !== 'task-error',
+          (cause) => !policy.causes.includes(cause),
         )
       )
-        throw new TypeError(
-          'Browser recovery supports validated task-error only',
-        );
+        throw new TypeError(policy.retryError);
       if (
         fallback !== undefined &&
         this.recoveryCauses(fallback.on, ['task-error']).some(
-          (cause) => cause !== 'task-error',
+          (cause) => !policy.causes.includes(cause),
         )
       )
-        throw new TypeError(
-          'Browser fallback supports validated task-error only',
-        );
+        throw new TypeError(policy.fallbackError);
     }
     const descriptor = this.registry.get(task);
     let recovery: TaskRecovery | undefined;

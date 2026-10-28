@@ -19,6 +19,6 @@ await startInvocations(
     commonjs: true,
     transferOutput,
     inspectBinaryResult,
-    timestampNs: () => process.hrtime.bigint(),
+    profiling: { timestampNs: () => process.hrtime.bigint() },
   },
 );

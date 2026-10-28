@@ -1,7 +1,8 @@
 import { RuntimeFacade } from '../runtime-facade.js';
 import { createRuntimeComponents } from '../composition/create-runtime-components.js';
-import { createBrowserHost } from '../hosts/browser.js';
-import { isWindowHost } from './capabilities.js';
+import { createBrowserHost } from '../hosts/browser/host.js';
+import { isWindowHost } from '../hosts/browser/capabilities.js';
+import { projectBrowserStatistics } from './statistics.js';
 import type { PjsRuntimeOptions, PjsRuntimeStats } from './types.js';
 
 export class PjsRuntime extends RuntimeFacade<PjsRuntimeStats> {
@@ -24,25 +25,6 @@ export class PjsRuntime extends RuntimeFacade<PjsRuntimeStats> {
       options,
       createBrowserHost(new URL(workerURL.href)),
     );
-    super(components, (stats) => {
-      const details = stats.workers.details.map((state) => {
-        const copy: Partial<typeof state> = { ...state };
-        delete copy.threadId;
-        return copy as Omit<typeof state, 'threadId'>;
-      });
-      const containment: Partial<typeof stats.containment> = {
-        ...stats.containment,
-      };
-      delete containment.confirmedLeaseExits;
-      return {
-        ...stats,
-        workers: { ...stats.workers, details },
-        containment: {
-          ...containment,
-          unconfirmedRetirements:
-            components.dispatcher.recoverySnapshot().unconfirmedRetirements!,
-        } as PjsRuntimeStats['containment'],
-      };
-    });
+    super(components, projectBrowserStatistics);
   }
 }

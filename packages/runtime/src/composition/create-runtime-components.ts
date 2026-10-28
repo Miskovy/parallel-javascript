@@ -18,7 +18,7 @@ export function createRuntimeComponents(
 ) {
   const resultCredits = new ResultCreditManager(
     host.debugInvariants,
-    host.kind === 'browser',
+    host.lifecycle === 'endpoint-revocation',
   );
   const {
     workers,
@@ -35,11 +35,7 @@ export function createRuntimeComponents(
   const registry = snapshotRegistry(options.registry);
   for (const descriptor of registry.values()) {
     const protocol = new URL(descriptor.module).protocol;
-    if (
-      host.kind === 'node'
-        ? protocol !== 'file:'
-        : !['http:', 'https:'].includes(protocol)
-    )
+    if (!host.moduleProtocols.includes(protocol))
       throw new PjsTaskRegistrationError(
         'Registry module URLs do not match the runtime host',
       );
@@ -84,7 +80,12 @@ export function createRuntimeComponents(
         taskCoordinator.dispatchFailed(task, error),
       fatal: (error) => controller.fail(error),
     },
-    host,
+    Object.freeze({
+      lifecycle: host.lifecycle,
+      sharedMemory: host.sharedMemory,
+      ...(host.worker.profiling ? { profiling: true as const } : {}),
+      pool: Object.freeze({ worker: host.worker, unref: host.unref }),
+    }),
   );
   const taskCoordinator: TaskCoordinator = new TaskCoordinator(
     registry,
@@ -104,7 +105,17 @@ export function createRuntimeComponents(
       settled: (task, status, error, output) =>
         rangeCoordinator.settled(task, status, error, output),
     },
-    host,
+    Object.freeze({
+      lifecycle: host.lifecycle,
+      sharedMemory: host.sharedMemory,
+      recovery: host.recovery,
+      id: host.id,
+      isPromise: host.isPromise,
+      snapshotTransferList: host.snapshotTransferList,
+      defer: host.defer,
+      setTimer: host.setTimer,
+      clearTimer: host.clearTimer,
+    }),
   );
   const rangeCoordinator: RangeCoordinator = new RangeCoordinator(
     registry,
@@ -123,7 +134,15 @@ export function createRuntimeComponents(
       requestPump: () => controller.pump(),
     },
     concurrency,
-    host,
+    Object.freeze({
+      sharedMemory: host.sharedMemory,
+      id: host.id,
+      isHostThread: host.isHostThread,
+      createScope: host.createScope,
+      defer: host.defer,
+      setTimer: host.setTimer,
+      clearTimer: host.clearTimer,
+    }),
   );
   const controller: RuntimeController = new RuntimeController(
     dispatcher,

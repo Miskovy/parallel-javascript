@@ -7,7 +7,7 @@ export interface SerializedError {
 }
 export interface BootstrapData {
   version: 2;
-  tasks: TaskDescriptor[];
+  tasks: readonly TaskDescriptor[];
   concurrency?: number;
 }
 export interface InternalWorkerProfile {

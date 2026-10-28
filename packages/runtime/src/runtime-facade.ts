@@ -22,6 +22,7 @@ import type {
 import type { PjsRangeStream } from './partition/stream.js';
 import type { PjsTask } from './tasks/registry.js';
 import type { RunOptions, ShutdownOptions } from './types/index.js';
+import type { RuntimeSnapshot } from './telemetry/snapshot.js';
 import type { PjsRuntimeStats } from './diagnostics.js';
 
 /** Public facade. API policy and runtime lifecycle live with their internal owners. */
@@ -29,7 +30,7 @@ export class RuntimeFacade<Stats = PjsRuntimeStats> {
   private readonly components: ReturnType<typeof createRuntimeComponents>;
   constructor(
     components: ReturnType<typeof createRuntimeComponents>,
-    private readonly project: (stats: PjsRuntimeStats) => Stats,
+    private readonly project: (stats: RuntimeSnapshot) => Stats,
   ) {
     this.components = components;
   }

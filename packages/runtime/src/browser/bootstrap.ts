@@ -4,8 +4,11 @@ import { inspectBinaryResult } from '../partition/binary-core.js';
 import { transferOutput } from '../tasks/transfer-core.js';
 import { serializeError } from '../workers/protocol.js';
 import type { WorkerMessage } from '../workers/protocol.js';
-import { browserCapabilities } from './capabilities.js';
-import { BROWSER_PROTOCOL, validateInitialization } from './protocol.js';
+import { browserCapabilities } from '../hosts/browser/capabilities.js';
+import {
+  BROWSER_PROTOCOL,
+  validateInitialization,
+} from '../hosts/browser/protocol.js';
 
 const worker = globalThis as typeof globalThis & {
   postMessage(message: unknown, transfers?: ArrayBuffer[]): void;

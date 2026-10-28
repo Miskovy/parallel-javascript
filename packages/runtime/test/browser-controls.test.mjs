@@ -6,7 +6,7 @@ import {
   utf8Bytes,
 } from '../dist/workers/progress.js';
 import { ResultCreditManager } from '../dist/results/credit.js';
-import { validateInitialization } from '../dist/browser/protocol.js';
+import { validateInitialization } from '../dist/hosts/browser/protocol.js';
 import { createRuntimeComponents } from '../dist/composition/create-runtime-components.js';
 import { RuntimeFacade } from '../dist/runtime-facade.js';
 import { nodeHost } from '../dist/hosts/node.js';
@@ -131,16 +131,18 @@ test(
     const started = Promise.withResolvers();
     const host = {
       ...nodeHost,
-      kind: 'browser',
+      lifecycle: 'endpoint-revocation',
+      moduleProtocols: ['http:', 'https:'],
       sharedMemory: false,
       worker: {
-        ...nodeHost.worker,
-        kind: 'browser',
+        validateTransferList: nodeHost.worker.validateTransferList,
+        lifecycle: 'endpoint-revocation',
         create() {
           let callbacks;
           const endpoint = { terminations: 0, detached: false };
           endpoints.push(endpoint);
           return {
+            lifecycle: 'endpoint-revocation',
             thread: {
               postMessage(message) {
                 if (message.type !== 'execute') return;
