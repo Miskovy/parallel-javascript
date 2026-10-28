@@ -6,11 +6,14 @@ served by `https://registry.npmjs.org/`. Current published prerelease:
 Final v1.0.0 has not been released. Published versions are immutable; do not republish them.
 
 Public [npm metadata](https://registry.npmjs.org/@pjavascript%2fruntime) rechecked
-23 October 2026 reports both `latest` and `next` at RC4;
+28 October 2026 reports both `latest` and `next` at RC4;
 [GitHub](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.4)
-lists it as a prerelease. Development main includes integrated S1, corrected
-Stage A, B1–B4, C1-A/Q, C2 and C3. Unchanged RC4 version fields do not identify
-those bytes as the published artifact. The [post-C3 decision table](research/v1-api-migration-plan.md#decisions-for-maintainer-review)
+lists RC4 as a prerelease. Current workspace/package manifests identify the
+**unpublished 1.0.0-rc.5 review candidate**, containing completed Checkpoints 1–4,
+patched Node support, the browser shutdown correction and host lifecycle refactor.
+These integrated bytes differ from immutable published RC4. Candidate preparation,
+documentation reconciliation and technical validation grant no publication permission
+or final-v1.0 readiness. The [post-C3 decision table](research/v1-api-migration-plan.md#decisions-for-maintainer-review)
 and [ADR 0023](adr/0023-v1-api-stability-decisions.md) grant no release approval.
 
 The repository npm badge and install link make the package immediately discoverable.

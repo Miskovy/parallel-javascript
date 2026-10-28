@@ -165,8 +165,11 @@ export interface ShutdownOptions {
   /**
    * Escalate the first graceful shutdown, including remaining startup.
    * Integer milliseconds from 1 through 2147483647; requires drain not to be false.
-   * First shutdown options/promise win. Resolution still requires confirmed worker exits;
-   * termination rejection cannot report successful cleanup. Undefined adds no escalation deadline.
+   * First shutdown options/promise win. Node retains execution ownership until validated
+   * completion or confirmed exit; shutdown also awaits worker-exit cleanup.
+   * Browser shutdown resolves after posting-safe endpoint retirement and terminal local
+   * accounting, without a native join or proof that shared backing is quiescent.
+   * Failed termination cannot report successful cleanup. Undefined adds no escalation deadline.
    */
   forceAfter?: number;
 }
