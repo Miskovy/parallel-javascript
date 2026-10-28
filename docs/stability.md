@@ -7,12 +7,12 @@ select [`@pjavascript/runtime@1.0.0-rc.4`](https://registry.npmjs.org/@pjavascri
 and [GitHub RC4](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.4)
 is a prerelease. Final v1.0.0 has not been released.
 
-Development main `0f79db5e1192dd47db32d2e300fc382a0f431462` integrates S1,
-corrected Stage A, B1–B4, C1-A/Q, C2 and C3. It differs from immutable published
-RC4 despite unchanged version fields; those new bytes must not replace RC4.
-The [canonical inventory](research/v1-api-contract-inventory.md) records **61 root
-names, 342 members and 158 diagnostic leaves**, with no additional named reachable
-types. The [v0.15 inventory](research/v0.15-public-api-inventory.md) is historical.
+Integrated Checkpoints 1–4, patched Node support and host cleanup are prepared
+as the **unpublished 1.0.0-rc.5 candidate**. Version metadata does not publish it or
+replace RC4. The [RC5 migration note](release-v1.0.0-rc.5.md) explains intentional
+changes. Current [public inventories](research/v1-api-contract-inventory.md) record
+71 Node root exports / 168 diagnostic leaves and 72 browser root exports / 167
+leaves, with no additional reachable named types. Historical inventories remain unchanged.
 
 B1 exposes the existing closeable stream contract; B2 narrows strict results to
 ordinary backing; B3 removes unsupported registry.snapshot() access; B4 names

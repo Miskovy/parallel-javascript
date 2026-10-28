@@ -6,7 +6,11 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { performance } from 'node:perf_hooks';
-import { assertArguments } from './baseline.mjs';
+import {
+  assertArguments,
+  baselineForWorkspace,
+  assertFrozenWorkspace,
+} from './baseline.mjs';
 
 assertArguments([
   'output',
@@ -28,6 +32,8 @@ assert.ok(
   releaseNpmCli,
   'Select --release-npm-cli for pinned publication qualification',
 );
+const baseline = baselineForWorkspace(root);
+assertFrozenWorkspace(root, baseline);
 const candidate = execFileSync('git', ['rev-parse', 'HEAD'], {
   cwd: root,
   encoding: 'utf8',
@@ -43,6 +49,10 @@ const temporary = mkdtempSync(join(scratchDirectory, 'PJS RC clean states '));
 const report = {
   schema: 1,
   sourceCommit: candidate,
+  sourceTree: execFileSync('git', ['rev-parse', 'HEAD^{tree}'], {
+    cwd: root,
+    encoding: 'utf8',
+  }).trim(),
   node: process.version,
   versions: process.versions,
   temporary,
@@ -56,7 +66,10 @@ save();
 function run(label, executable, args, cwd = root) {
   console.log('START ' + label);
   const start = performance.now();
+  const env = { ...process.env };
+  delete env.PJS_CANDIDATE_TARBALL;
   const r = spawnSync(executable, args, {
+    env,
     cwd,
     encoding: 'utf8',
     timeout: 900000,
@@ -199,7 +212,8 @@ try {
   );
   report.canonical = { ...report.states[0].package.tarball };
   const destination = resolve(
-    arg('canonical-dir') ?? join(root, '.node-tools/rc4/canonical'),
+    arg('canonical-dir') ??
+      join(root, '.node-tools', baseline.manifest.version, 'canonical'),
   );
   mkdirSync(destination, { recursive: true });
   const target = join(destination, report.canonical.filename);
@@ -220,6 +234,7 @@ try {
     JSON.stringify(
       {
         sourceCommit: candidate,
+        sourceTree: report.sourceTree,
         version: report.canonical.version,
         baselineSha256: report.states[0].qualification.baselineSha256,
         filename: report.canonical.filename,

@@ -40,6 +40,11 @@ a prerelease.** As checked on 23 October 2026, [npm `next` and `latest`](https:/
 both select RC4. Final v1.0.0 has not been released. CI reports validation results;
 it does not establish stable-release or production-readiness approval.
 
+**Prepared candidate: 1.0.0-rc.5**, containing integrated Checkpoints 1–4,
+patched Node support, CommonJS and browser execution. It is not published; npm tags
+still select RC4. Read the [release notes/migration](docs/release-v1.0.0-rc.5.md)
+and [candidate procedure](docs/releasing.md). Existing release holds remain unresolved.
+
 ## Quickstart
 
 ```sh
@@ -121,7 +126,7 @@ See the [core API guide](docs/guide/core-api.md) for contracts and options.
 ## Development status
 
 Merged source includes S1, corrected Stage A, B1–B4, C1-A/Q, C2 and C3. It differs
-from published RC4 despite unchanged version fields. Checkout examples use the
+from published RC4 as the RC5 candidate. Checkout examples use the
 six new development option names with deprecated aliases; RC4 uses the older
 spellings and declarations. Later containment controls are also absent from RC4.
 

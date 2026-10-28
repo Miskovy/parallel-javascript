@@ -24,7 +24,7 @@ const task: PjsTask<Input, number> = registry.register(
   new URL('../tasks.mjs', import.meta.url),
   'work',
 );
-const binary = registry.register<Input, Uint8Array>(
+const binary = registry.register<Input, Uint8Array<ArrayBuffer>>(
   'binary',
   new URL('../tasks.mjs', import.meta.url),
   'work',
@@ -38,7 +38,7 @@ try {
   assert.equal(await runtime.run(task, { value: 42 }, options), 42);
   const shared = sharedReadonly(new Float64Array([1, 2, 3]));
   assert.equal(await runtime.run(task, { mode: 'sum', data: shared }), 6);
-  const stream: AsyncIterable<StreamRangeResult<Uint8Array>> =
+  const stream: AsyncIterable<StreamRangeResult<Uint8Array<ArrayBuffer>>> =
     runtime.streamRange(
       binary,
       { start: 0, end: 5, grainSize: 2 },

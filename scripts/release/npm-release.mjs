@@ -13,7 +13,13 @@ import { basename, join, resolve } from 'node:path';
 import { performance } from 'node:perf_hooks';
 import { fileURLToPath } from 'node:url';
 import { setTimeout as delay } from 'node:timers/promises';
-import { baseline, assertFrozenPackage } from '../rc/baseline.mjs';
+import {
+  baselineForWorkspace,
+  loadBaseline,
+  assertFrozenWorkspace,
+  assertFrozenFiles,
+  assertFrozenPackage,
+} from '../rc/baseline.mjs';
 import { assertSupportedReleaseNpmVersion } from './toolchain.mjs';
 
 export const packageName = '@pjavascript/runtime';
@@ -491,9 +497,10 @@ async function main() {
       validateManifest(manifest, manifest.version);
       assert.equal(
         manifest.version,
-        baseline.manifest.version,
+        baselineForWorkspace(root).manifest.version,
         'Review a matching release baseline before publication',
       );
+      assertFrozenWorkspace(root);
       const { version, distTag } = releasePolicy(
         manifest.version,
         event.release,
@@ -531,6 +538,9 @@ async function main() {
     }
     case 'tarball': {
       const [packJson, directory, version, distTag] = args;
+      const baseline = loadBaseline(version);
+      assertFrozenWorkspace(root, baseline);
+      assertFrozenFiles(root, baseline);
       assert.equal(distTag, semver.exec(version)?.[4] ? 'next' : 'latest');
       const reports = JSON.parse(readFileSync(packJson));
       assert.equal(reports.length, 1);
@@ -577,6 +587,15 @@ async function main() {
           ]),
         ),
       );
+      if (baseline.archiveSha256)
+        assert.equal(
+          createHash('sha256').update(readFileSync(tarball)).digest('hex'),
+          baseline.archiveSha256,
+          'Frozen archive SHA-256 mismatch',
+        );
+      const validatedSha256 = createHash('sha256')
+        .update(readFileSync(tarball))
+        .digest('hex');
       // Inspect and install the artifact that the workflow will publish; never repack it.
       const dry = parsePublishDryRunReport(
         npm([
@@ -596,6 +615,11 @@ async function main() {
       const sha256 = createHash('sha256')
         .update(readFileSync(tarball))
         .digest('hex');
+      assert.equal(
+        sha256,
+        validatedSha256,
+        'Artifact changed during rehearsal',
+      );
       output('tarball', tarball);
       output('sha256', sha256);
       summary(

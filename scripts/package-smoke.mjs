@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import { assertArtifact } from './rc/artifact.mjs';
+import { assertFrozenWorkspace, assertFrozenFiles } from './rc/baseline.mjs';
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import {
@@ -58,39 +60,66 @@ try {
       type: 'module',
     }),
   );
-  const dry = JSON.parse(
-    run(
-      'pack dry run',
-      process.execPath,
-      [
-        npmCli,
-        'pack',
-        '--workspace',
-        '@pjavascript/runtime',
-        '--dry-run',
-        '--json',
-      ],
+  const staged = process.env.PJS_CANDIDATE_TARBALL;
+  let packed;
+  if (staged) {
+    assertFrozenWorkspace(root);
+    assertFrozenFiles(root);
+    packed = assertArtifact(resolve(staged)).packed;
+    report.sourceCommit = run(
+      'candidate SHA',
+      'git',
+      ['rev-parse', 'HEAD'],
       root,
-    ),
-  )[0];
-  const packed = JSON.parse(
-    run(
-      'pack',
-      process.execPath,
-      [
-        npmCli,
-        'pack',
-        '--workspace',
-        '@pjavascript/runtime',
-        '--pack-destination',
-        temporary,
-        '--json',
-      ],
+    ).trim();
+    report.sourceTree = run(
+      'candidate tree',
+      'git',
+      ['rev-parse', 'HEAD^{tree}'],
       root,
-    ),
-  )[0];
+    ).trim();
+    assert.equal(
+      run('clean candidate', 'git', ['status', '--short'], root).trim(),
+      '',
+    );
+  } else {
+    const dry = JSON.parse(
+      run(
+        'pack dry run',
+        process.execPath,
+        [
+          npmCli,
+          'pack',
+          '--workspace',
+          '@pjavascript/runtime',
+          '--dry-run',
+          '--json',
+        ],
+        root,
+      ),
+    )[0];
+    packed = JSON.parse(
+      run(
+        'pack',
+        process.execPath,
+        [
+          npmCli,
+          'pack',
+          '--workspace',
+          '@pjavascript/runtime',
+          '--pack-destination',
+          temporary,
+          '--json',
+        ],
+        root,
+      ),
+    )[0];
+    assert.deepEqual(
+      packed.files.map((file) => file.path).sort(),
+      dry.files.map((file) => file.path).sort(),
+    );
+  }
   const files = packed.files.map((file) => file.path).sort();
-  assert.deepEqual(files, dry.files.map((file) => file.path).sort());
   for (const required of [
     'dist/index.js',
     'dist/index.d.ts',
@@ -105,9 +134,10 @@ try {
       /^(dist\/|src\/|package.json$|README.md$|LICENSE$)/.test(file),
     ),
   );
-  const tarball = join(temporary, packed.filename);
+  const tarball = staged ? resolve(staged) : join(temporary, packed.filename);
   report.tarball = {
     ...packed,
+    path: tarball,
     sha256: createHash('sha256').update(readFileSync(tarball)).digest('hex'),
   };
   if (reportPath) {

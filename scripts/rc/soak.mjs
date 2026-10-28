@@ -13,6 +13,7 @@ const {
   PjsCancelledError,
   PjsTimeoutError,
   PjsWorkerError,
+  PjsExecutionLeaseError,
   PjsTaskError,
   PjsQueueFullError,
   PjsSerializationError,
@@ -131,7 +132,7 @@ function create(options = {}) {
 }
 function inspect(runtime) {
   const stats = runtime.stats();
-  const credit = runtime.resultCredits;
+  const credit = runtime.components.resultCredits;
   return {
     state: stats.state,
     tasks: stats.tasks.pending,
@@ -152,25 +153,27 @@ function inspect(runtime) {
     ...credit.creditDiagnostics(),
     reservedBytes: stats.streamResults.currentReservedResultBytes,
     buffers: stats.streamResults.buffered,
-    productionClaims: runtime.dispatcher.admissionReservations,
-    reservedWorkers: runtime.dispatcher.reservedWorkers.size,
+    productionClaims: runtime.components.dispatcher.admissionReservations,
+    reservedWorkers: runtime.components.dispatcher.reservedWorkers.size,
   };
 }
 function invariant(runtime) {
   const stats = runtime.stats();
-  const credit = runtime.resultCredits;
+  const credit = runtime.components.resultCredits;
   const composition = credit.creditDiagnostics();
   assert.equal(
     composition.unreconciledResultBytes + composition.reconciledResultBytes,
     stats.streamResults.currentReservedResultBytes,
   );
   assert.ok(stats.queue.size <= stats.queue.capacity);
-  assert.ok(stats.workers.total <= runtime.dispatcher.pool.options.workers);
+  assert.ok(
+    stats.workers.total <= runtime.components.dispatcher.pool.options.workers,
+  );
   assert.equal(
     new Set(stats.workers.details.map((w) => w.id)).size,
     stats.workers.total,
   );
-  for (const operation of runtime.rangeCoordinator.operations.values()) {
+  for (const operation of runtime.components.rangeCoordinator.operations.values()) {
     if (!operation.stream) continue;
     assert.ok(
       operation.stream.buffered + operation.children.size <=
@@ -214,7 +217,7 @@ async function quiescent(runtime, label) {
     'reconciledResultBytes',
   ])
     assert.equal(d[key], 0, `${label}: ${key}`);
-  assert.equal(runtime.resultCredits.diagnostics().operations, 0);
+  assert.equal(runtime.components.resultCredits.diagnostics().operations, 0);
 }
 async function stop(runtime, label, options) {
   await runtime.shutdown(options);
@@ -225,7 +228,7 @@ async function stop(runtime, label, options) {
   report.terminals.push({
     label,
     ...d,
-    creditOperations: runtime.resultCredits.diagnostics().operations,
+    creditOperations: runtime.components.resultCredits.diagnostics().operations,
     tasksMetrics: runtime.stats().tasks,
     partitions: runtime.stats().partitions,
   });
@@ -711,6 +714,15 @@ try {
     );
     await quiescent(runtime, 'all contract errors cleaned');
     assert.equal(await runtime.run(task, { value: 91 }), 91);
+    // RC5 adds a public lease error; retain the all-exported-errors requirement.
+    await expectError(
+      capture(runtime.run(task, { gate: gate() }, { executionLease: 30 })),
+      PjsExecutionLeaseError,
+    );
+    await quiescent(
+      runtime,
+      'lease failure retains ownership through confirmed exit',
+    );
     for (const badExport of [false, true]) {
       const registry = new PjsTaskRegistry();
       registry.register(
@@ -969,7 +981,7 @@ try {
   const errors = Object.keys(api)
     .filter((name) => name.endsWith('Error'))
     .sort();
-  assert.equal(errors.length, 12);
+  assert.equal(errors.length, 13);
   assert.deepEqual(Object.keys(report.publicErrors).sort(), errors);
   report.operationCounts = report.terminals.reduce(
     (sum, t) => ({
