@@ -108,6 +108,11 @@ their existing owners; caller rejection does not restore transferred memory or
 roll back side effects. Stable hold disposition and contract/evidence acceptance
 remain pending independently of merge/tag/publication authorization.
 
+Extended R2 qualification found a queued exclusive task retaining an obsolete
+busy-worker pin after a replacement became idle. The candidate corrects that pin
+using existing dispatcher placement/credit checks and retains the exact failing
+history as a regression, with the independent model unchanged.
+
 See the [documentation index](https://github.com/Miskovy/parallel-javascript/blob/main/docs/README.md),
 [core API](https://github.com/Miskovy/parallel-javascript/blob/main/docs/guide/core-api.md),
 [ownership](https://github.com/Miskovy/parallel-javascript/blob/main/docs/guide/memory-ownership.md),

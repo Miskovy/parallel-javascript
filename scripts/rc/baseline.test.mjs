@@ -186,7 +186,7 @@ test('current registered candidate source, declarations and metadata match its r
   assertFrozenWorkspace(root);
   assertFrozenFiles(root);
   assert.equal(baseline.manifest.version, '1.0.0');
-  assert.equal(baseline.contractTests, 477);
+  assert.equal(baseline.contractTests, 478);
   assert.deepEqual(baseline.releaseToolchain, releaseToolchain);
 });
 test('selection is explicit, version-aware and tag-bound, with no fallback', () => {

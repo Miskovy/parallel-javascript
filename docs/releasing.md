@@ -48,6 +48,11 @@ selected npm publication with `--dry-run --ignore-scripts`, offline installation
 and final rehash. Keep failures and unavailable cells and do not repeat passed
 checks without changed inputs or an unresolved requirement.
 
+Registered release candidates select the existing frozen RC qualifier in place
+of the overlapping ordinary runtime qualifier. The standard R2/R3 campaigns still
+run once per cell. This avoids duplicate ordinary gates while retaining every
+frozen-candidate contract, type, installed consumer, tooling and soak check.
+
 See [runner commands](../scripts/rc/README.md). Large receipts and archives remain
 outside Git. Chromium results do not establish other engines, macOS, ARM64 or
 arbitrary bundlers. Merge, tag, GitHub Release/npm publication and dist-tag writes

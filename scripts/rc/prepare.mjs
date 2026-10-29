@@ -133,7 +133,7 @@ const baseline = {
   previousBaselineSha256: sha256(
     readFileSync(join(root, 'scripts/rc/frozen-rc4.json')),
   ),
-  contractTests: 477,
+  contractTests: 478,
   namedExports: namedExports(root, 'packages/runtime/src/index.ts'),
   runtimeValues: Object.keys(
     await import('../../packages/runtime/dist/index.js'),

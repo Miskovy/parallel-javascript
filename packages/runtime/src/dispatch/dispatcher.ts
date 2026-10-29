@@ -592,15 +592,20 @@ export class ExecutionDispatcher {
       this.invalidate();
     }
   }
-  private placement(task: PendingTask, queued: boolean): PjsWorker | undefined {
+  private placement(
+    task: PendingTask,
+    queued: boolean,
+    ignoreDrain = false,
+  ): PjsWorker | undefined {
     const exclusive = this.exclusive(task);
-    const ownPin = this.drain?.owner === task.id ? this.drain : undefined;
+    const ownPin =
+      !ignoreDrain && this.drain?.owner === task.id ? this.drain : undefined;
     if (ownPin)
       return ownPin.worker.canExecute(true) &&
         this.rawSlots(ownPin.worker) === ownPin.worker.concurrency
         ? ownPin.worker
         : undefined;
-    const layout = this.layout();
+    const layout = this.layout(ignoreDrain);
     const credit = queued
       ? (task.admissionWeight ?? 1) +
         this.scheduler.capacity -
@@ -608,7 +613,10 @@ export class ExecutionDispatcher {
         this.admissionReservations
       : 0;
     return layout.workers.find((worker) => {
-      if (this.drain?.worker === worker || this.rawSlots(worker) < 1)
+      if (
+        (!ignoreDrain && this.drain?.worker === worker) ||
+        this.rawSlots(worker) < 1
+      )
         return false;
       if (!exclusive)
         return (
@@ -640,6 +648,16 @@ export class ExecutionDispatcher {
           (task) => task.id === this.drain!.owner,
         );
       if (this.drain && !this.drain.production && !pinned) this.clearDrain();
+      // A replacement can become idle while the pinned worker is still busy.
+      // Reuse ordinary placement/credit checks before retiring that obsolete pin.
+      if (
+        pinned &&
+        !this.placement(pinned, queued.includes(pinned)) &&
+        this.placement(pinned, queued.includes(pinned), true)
+      ) {
+        this.clearDrain();
+        pinned = undefined;
+      }
       if (this.drain) {
         // Another hosted invocation may fail while a worker drains. Revalidate
         // the queue credits needed to exchange *all* newly retained slots.

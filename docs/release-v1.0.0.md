@@ -102,6 +102,11 @@ stable.
 - Runtime: six selectors reject legacy presence; ordinary run rejects the former
   batch alias at its validation boundary. Stable algorithm, admission, lifecycle,
   result, ownership, host and worker protocols are preserved.
+- Extended R2 exposed an obsolete exclusive-task pin after worker replacement.
+  The dispatcher now reuses existing placement/credit checks to clear that pin
+  when an idle replacement can accept the task. Exclusive placement, recovery
+  reservations and scheduling order retain their existing checks and owners.
+  The exact failing history is a regression; the independent model is unchanged.
 - Types: six legacy members/exclusive transition unions disappear; stable
   conditional generic aliases, overload order and stable mode exclusions remain.
   Root export names and runtime values stay the same for both entries.

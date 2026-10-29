@@ -61,6 +61,15 @@ Remote main and the RC5 tag identify the base above; no stable tag exists.
 
 ## Qualification ledger
 
+The first committed candidate's extended R2 run exposed a concrete I5 queue
+divergence: seed 19/case 59, action 23, retained an exclusive task's pin on a busy
+worker after another replacement became idle. The exact history also failed
+locally. Add one focused regression and correct obsolete pin revalidation at the
+existing dispatcher owner; keep model assertions, seeds and bounds unchanged.
+This is a defect-driven addition to implementation scope, not a new release gate.
+The original failure and package/baseline are retained. The corrected source
+requires fresh qualification; earlier results retain their original attribution.
+
 Results will bind actual clean head/tree, baseline, tools and archive. RC5 evidence
 is historical and cannot qualify changed stable bytes. Failures and unavailable
 cells remain recorded. Large archives and receipts stay outside Git.

@@ -127,7 +127,9 @@ See the [core API guide](docs/guide/core-api.md) for contracts and options.
 The published RC5 includes the integrated runtime, recovery, scheduling, progress,
 CommonJS and browser contracts. This candidate changes six alias acceptance paths,
 their option declarations, migration consumers, version metadata and release freeze.
-It preserves execution, scheduling and ownership algorithms. The remaining
+Execution and ownership keep their existing owners. A focused dispatcher correction
+lets queued exclusive work use an idle replacement instead of an obsolete busy-worker
+pin, as found by the required extended R2 profile. The remaining
 `@experimental` annotation on the internal array-map adapter overload is retained
 and explicitly classified in the [stable contract](docs/release-v1.0.0.md).
 See [stability](docs/stability.md) and the [current inventory](docs/research/v1-api-contract-inventory.md).
