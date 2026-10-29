@@ -88,11 +88,11 @@ function strict(expectedBytes = resultBytes, extra = {}) {
   const capacityBytes =
     typeof expectedBytes === 'number' ? expectedBytes : resultBytes;
   return {
-    experimentalMaxBufferedResults: countCapacity,
+    maxBufferedResults: countCapacity,
     ...(random() < 0.5
-      ? { experimentalMaxResultBytes: expectedBytes }
-      : { experimentalResultBytes: expectedBytes }),
-    experimentalMaxReservedResultBytes: Math.max(byteCapacity, capacityBytes),
+      ? { maxResultBytes: expectedBytes }
+      : { resultBytes: expectedBytes }),
+    maxReservedResultBytes: Math.max(byteCapacity, capacityBytes),
     ...extra,
   };
 }
@@ -183,7 +183,7 @@ async function cancellationScenario(runtime, task) {
     (partition) => payload(partition, { ms: delayMs, move: random() < 0.5 }),
     strict(resultBytes, {
       signal: controller.signal,
-      experimentalMaxReservedResultBytes:
+      maxReservedResultBytes:
         phase === 'credit-wait' ? resultBytes : byteCapacity,
     }),
   );
@@ -290,9 +290,8 @@ async function crashScenario(runtime, task) {
       }),
     strict(resultBytes, {
       signal: controller.signal,
-      experimentalDispatchBatchSize: batchSize,
-      experimentalMaxReservedResultBytes:
-        resultBytes * (batchSize === 1 ? 2 : 4),
+      dispatchBatchSize: batchSize,
+      maxReservedResultBytes: resultBytes * (batchSize === 1 ? 2 : 4),
     }),
   );
   const failed = consumeExpectedFailure(stream);
@@ -373,10 +372,10 @@ async function upperBoundScenario(runtime, task) {
         crash: failure === 'crash' && partition.index === 1,
       }),
     {
-      experimentalMaxResultBytes: random() < 0.5 ? maximum : () => maximum,
-      experimentalMaxReservedResultBytes: maximum * choice([1, 2, 4]),
-      experimentalMaxBufferedResults: choice([2, 4, 8]),
-      experimentalDispatchBatchSize: batch,
+      maxResultBytes: random() < 0.5 ? maximum : () => maximum,
+      maxReservedResultBytes: maximum * choice([1, 2, 4]),
+      maxBufferedResults: choice([2, 4, 8]),
+      dispatchBatchSize: batch,
       signal: controller.signal,
       ...(failure === 'timeout' ? { timeout: 2 } : {}),
     },

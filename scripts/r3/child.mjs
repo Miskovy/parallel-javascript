@@ -304,13 +304,13 @@ async function binaries(phase, iteration) {
         input: { bytes: config.bytes, backing: config.backing, move: maximum },
       }),
       {
-        experimentalMaxBufferedResults: config.workers * 2,
-        experimentalDispatchBatchSize: 2,
-        experimentalMaxReservedResultBytes:
+        maxBufferedResults: config.workers * 2,
+        dispatchBatchSize: 2,
+        maxReservedResultBytes:
           config.workers * 2 * config.bytes * (maximum ? 2 : 1),
         ...(maximum
-          ? { experimentalMaxResultBytes: config.bytes * 2 }
-          : { experimentalResultBytes: config.bytes }),
+          ? { maxResultBytes: config.bytes * 2 }
+          : { resultBytes: config.bytes }),
       },
     ),
   );

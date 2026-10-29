@@ -1,20 +1,21 @@
 # RC contract qualification
 
-The active review candidate is **1.0.0-rc.5**, not a publication. Explicit
-version selection in [baseline.mjs](baseline.mjs) registers only RC4 and RC5.
+The prepared review candidate is **1.0.0**, not a publication. Explicit
+version selection in [baseline.mjs](baseline.mjs) registers RC4, RC5 and 1.0.0.
 [frozen-rc4.json](frozen-rc4.json) remains immutable and applies to its original
 source/tag; its 206-test/38-export evidence must not be attributed to RC5.
-[frozen-rc5.json](frozen-rc5.json) freezes the integrated implementation's source,
+Published [frozen-rc5.json](frozen-rc5.json) is immutable.
+The stable freeze records the candidate source,
 tests, declarations, both export sets, complete package/lock metadata, release
 inputs and packed files/archive. Validation never regenerates expected hashes.
-All six deprecated aliases and existing release holds remain unchanged.
+The stable candidate proposes all six alias removals; policy amendment and stable hold decisions remain open.
 
-Prepare explicitly after intended input changes (existing RC5 output requires
+Prepare explicitly after intended input changes (existing unpublished stable output requires
 --replace=true), review the resulting baseline, then commit before qualification:
 
 ```sh
 npm run build
-node scripts/rc/prepare.mjs --version=1.0.0-rc.5 --npm-cli=/absolute/reviewed/npm-cli.js
+node scripts/rc/prepare.mjs --version=1.0.0 --npm-cli=/absolute/reviewed/npm-cli.js
 ```
 
 No self-referential commit/hash is stored in the baseline. Its explicit exclusions

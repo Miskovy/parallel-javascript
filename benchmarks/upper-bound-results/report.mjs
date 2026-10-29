@@ -85,9 +85,9 @@ host sizing is the measured benefit. Bounds still must be structurally safe.
 ## PUBLIC / EXPERIMENTAL API
 
 \`UpperBoundBinaryStreamRangeOptions\` declares
-\`experimentalMaxResultBytes: number | ((partition) => number)\` together with
-\`experimentalMaxReservedResultBytes\`. Existing exact options retain required
-\`experimentalResultBytes\`. Both declarations together fail in types and at
+\`maxResultBytes: number | ((partition) => number)\` together with
+\`maxReservedResultBytes\`. Existing exact options retain required
+\`resultBytes\`. Both declarations together fail in types and at
 runtime. Count-only options exclude both. Callbacks are synchronous, host-run,
 cached while waiting, and may throw or submit ordinary work. No async declaration
 or implicit bound estimation is supported.

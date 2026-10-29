@@ -30,10 +30,8 @@ const kinds = [
 ];
 function stream(input, mode, declared) {
   return runtime.streamRange(task, range, () => ({ input }), {
-    [mode === 'exact'
-      ? 'experimentalResultBytes'
-      : 'experimentalMaxResultBytes']: declared,
-    experimentalMaxReservedResultBytes: declared,
+    [mode === 'exact' ? 'resultBytes' : 'maxResultBytes']: declared,
+    maxReservedResultBytes: declared,
   });
 }
 try {
@@ -126,7 +124,7 @@ try {
     task,
     { start: 0, end: 8, grainSize: 8 },
     () => ({ input: { kind: 'shared-typed', bytes: 8 } }),
-    { experimentalOutputConstructor: Uint8Array },
+    { outputConstructor: Uint8Array },
   );
   assert.ok(mapped.buffer instanceof ArrayBuffer);
   assert.equal(mapped.length, 8);

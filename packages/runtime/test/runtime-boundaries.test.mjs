@@ -181,7 +181,7 @@ test('API adapters preserve request references, modes, constructor getter timing
   assert.deepEqual(args, [task, range, factory, options, 'discard']);
   const events = [];
   const mapOptions = new Proxy(
-    { experimentalOutputConstructor: Float64Array },
+    { outputConstructor: Float64Array },
     {
       has(target, key) {
         events.push('has:' + key);
@@ -200,7 +200,7 @@ test('API adapters preserve request references, modes, constructor getter timing
   assert.deepEqual(events, [
     'has:outputConstructor',
     'has:experimentalOutputConstructor',
-    'get:experimentalOutputConstructor',
+    'get:outputConstructor',
   ]);
   assert.deepEqual(args, [
     task,
@@ -215,7 +215,7 @@ test('API adapters preserve request references, modes, constructor getter timing
   assert.throws(
     () =>
       parallelMapRange(port, task, range, factory, {
-        get experimentalOutputConstructor() {
+        get outputConstructor() {
           throw failure;
         },
       }),
@@ -230,10 +230,8 @@ test('stream API normalizes count/exact/upper-bound options before starting the 
       mode === 'count'
         ? {}
         : {
-            [mode === 'exact'
-              ? 'experimentalResultBytes'
-              : 'experimentalMaxResultBytes']: 16,
-            experimentalMaxReservedResultBytes: 32,
+            [mode === 'exact' ? 'resultBytes' : 'maxResultBytes']: 16,
+            maxReservedResultBytes: 32,
           };
     const stream = streamRange(
       {
@@ -276,10 +274,7 @@ test('failed stream normalization counts rejection before reentrant property che
       },
       has(target, key) {
         events.push('has:' + key);
-        return (
-          key === 'experimentalMaxBufferedResults' ||
-          key === 'experimentalResultBytes'
-        );
+        return key === 'maxBufferedResults' || key === 'resultBytes';
       },
     },
   );
@@ -306,6 +301,7 @@ test('failed stream normalization counts rejection before reentrant property che
     'has:experimentalMaxBufferedResults',
     'rejected',
     'has:experimentalResultBytes',
+    'has:resultBytes',
     'bytes',
   ]);
   await assert.rejects(stream.next(), (error) => error === failure);
@@ -422,7 +418,7 @@ test('range validation retains getter order before state rejection and never inv
       },
     });
     const options = new Proxy(
-      { experimentalOutputConstructor: Float64Array },
+      { outputConstructor: Float64Array },
       {
         has(target, key) {
           events.push('has:' + key);
@@ -449,7 +445,7 @@ test('range validation retains getter order before state rejection and never inv
         ? [
             'has:outputConstructor',
             'has:experimentalOutputConstructor',
-            'get:experimentalOutputConstructor',
+            'get:outputConstructor',
           ]
         : method === 'streamRange'
           ? [

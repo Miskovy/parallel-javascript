@@ -18,16 +18,8 @@ export async function c3Contracts() {
   const input =
     (bytes = 8) =>
     () => ({ input: { kind: 'Uint8Array', bytes } });
-  const declarations = [
-    'resultBytes',
-    'experimentalResultBytes',
-    'maxResultBytes',
-    'experimentalMaxResultBytes',
-  ];
-  const capacities = [
-    'maxReservedResultBytes',
-    'experimentalMaxReservedResultBytes',
-  ];
+  const declarations = ['resultBytes', 'maxResultBytes'];
+  const capacities = ['maxReservedResultBytes'];
   async function invalid(options, pattern = /./) {
     const before = runtime.stats();
     const buffer = new Uint8Array([1]);
@@ -115,7 +107,7 @@ export async function c3Contracts() {
     for (const [current, legacy] of [
       ['resultBytes', 'experimentalResultBytes'],
       ['maxResultBytes', 'experimentalMaxResultBytes'],
-      capacities,
+      ['maxReservedResultBytes', 'experimentalMaxReservedResultBytes'],
     ]) {
       for (const value of [8, 9, undefined])
         for (const inherited of [false, true]) {
@@ -126,7 +118,7 @@ export async function c3Contracts() {
                 : { [legacy]: value },
               { [current]: 8 },
             ),
-            /mutually exclusive/,
+            /was removed/,
           );
           const fields = {
             get [current]() {
@@ -139,9 +131,9 @@ export async function c3Contracts() {
           // Values are deliberately irrelevant: presence must reject before reads.
           const options = inherited ? Object.create(fields) : fields;
           void value;
-          await invalid(options, /mutually exclusive/);
+          await invalid(options, /was removed/);
         }
-      for (const selected of [current, legacy]) {
+      for (const selected of [current]) {
         const valid = selected.includes('Reserved')
           ? { resultBytes: 8, [selected]: 8 }
           : { [selected]: 8, maxReservedResultBytes: 8 };
@@ -192,8 +184,8 @@ export async function c3Contracts() {
         }
       }
     }
-    for (const exact of declarations.slice(0, 2))
-      for (const maximum of declarations.slice(2))
+    for (const exact of ['resultBytes'])
+      for (const maximum of ['maxResultBytes'])
         await invalid(
           { [exact]: undefined, [maximum]: 8, maxReservedResultBytes: 8 },
           /mutually exclusive/,
@@ -290,7 +282,7 @@ export async function c3Contracts() {
       c3Consumer: true,
       modes: ['exact', 'upper-bound'],
       mixed: true,
-      aliasesRetained: true,
+      aliasesRetained: false,
     }),
   );
 }

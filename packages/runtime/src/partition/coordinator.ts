@@ -131,7 +131,7 @@ export class RangeCoordinator implements TaskParentPort {
     resultMode: RangeResultMode,
     stream?: RangeStream<unknown>,
     mapOutputConstructor?: PjsTypedArrayConstructor,
-    resultByteDeclaration?: BinaryStreamRangeOptions['experimentalResultBytes'],
+    resultByteDeclaration?: BinaryStreamRangeOptions['resultBytes'],
     resultByteCapacity?: number,
     resultByteMode: ResultByteMode = 'exact',
   ): Promise<unknown[] | PjsTypedArray | void> {

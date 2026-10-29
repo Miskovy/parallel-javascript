@@ -112,19 +112,19 @@ test('stream count, byte and property-presence rules are observable through iter
     await assert.rejects(
       next(
         runtime.streamRange(echo, range, factory, {
-          experimentalMaxBufferedResults: capacity,
+          maxBufferedResults: capacity,
         }),
       ),
       RangeError,
     );
   }
   for (const options of [
-    { experimentalResultBytes: undefined },
-    { experimentalMaxReservedResultBytes: 0 },
+    { resultBytes: undefined },
+    { maxReservedResultBytes: 0 },
     {
-      experimentalResultBytes: 0,
-      experimentalMaxResultBytes: 0,
-      experimentalMaxReservedResultBytes: 0,
+      resultBytes: 0,
+      maxResultBytes: 0,
+      maxReservedResultBytes: 0,
     },
   ]) {
     await assert.rejects(
@@ -133,8 +133,8 @@ test('stream count, byte and property-presence rules are observable through iter
     );
   }
   for await (const { output } of runtime.streamRange(echo, range, factory, {
-    experimentalResultBytes: 0,
-    experimentalMaxReservedResultBytes: 0,
+    resultBytes: 0,
+    maxReservedResultBytes: 0,
   })) {
     assert.equal(output.byteLength, 0);
   }
@@ -158,8 +158,8 @@ test('declaration callbacks and impossible capacities have distinct contextual e
     await assert.rejects(
       next(
         runtime.streamRange(echo, range, factory, {
-          experimentalMaxResultBytes: declaration,
-          experimentalMaxReservedResultBytes: 1,
+          maxResultBytes: declaration,
+          maxReservedResultBytes: 1,
         }),
       ),
       (error) => {
@@ -172,8 +172,8 @@ test('declaration callbacks and impossible capacities have distinct contextual e
   await assert.rejects(
     next(
       runtime.streamRange(echo, range, factory, {
-        experimentalResultBytes: 2,
-        experimentalMaxReservedResultBytes: 1,
+        resultBytes: 2,
+        maxReservedResultBytes: 1,
       }),
     ),
     (error) => {

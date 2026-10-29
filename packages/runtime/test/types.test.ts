@@ -197,14 +197,14 @@ type IsAny<T> = 0 extends 1 & T ? true : false;
 const completionIsNotAny: IsAny<CompletionValue> = false;
 void completionIsNotAny;
 // @ts-expect-error Count-only options exclude exact byte declarations.
-const countExact: CountOnlyStreamRangeOptions = { experimentalResultBytes: 8 };
+const countExact: CountOnlyStreamRangeOptions = { resultBytes: 8 };
 const countMaximum: CountOnlyStreamRangeOptions = {
   // @ts-expect-error Count-only options exclude maximum byte declarations.
-  experimentalMaxResultBytes: 8,
+  maxResultBytes: 8,
 };
 // @ts-expect-error Count-only options exclude byte capacity, including explicit undefined.
 const countCapacity: CountOnlyStreamRangeOptions = {
-  experimentalMaxReservedResultBytes: undefined,
+  maxReservedResultBytes: undefined,
 };
 void countExact;
 void countMaximum;
@@ -213,8 +213,8 @@ void countCapacity;
 runtime.streamRange(task, range, () => ({ input: 'bad' }));
 
 const binaryOptions: BinaryStreamRangeOptions = {
-  experimentalResultBytes: (partition) => partition.end - partition.start,
-  experimentalMaxReservedResultBytes: 1024,
+  resultBytes: (partition) => partition.end - partition.start,
+  maxReservedResultBytes: 1024,
   maxBufferedResults: 4,
 };
 const binaryStream: AsyncIterable<StreamRangeResult<Uint8Array>> =
@@ -229,9 +229,9 @@ const directExact: PjsRangeStream<Uint8Array> = runtime.streamRange(
 void directExact.return();
 const binaryValue: PjsBinaryResult = new DataView(new ArrayBuffer(8));
 const upperOptions = {
-  experimentalMaxResultBytes: (partition: RangePartition) =>
+  maxResultBytes: (partition: RangePartition) =>
     partition.end - partition.start,
-  experimentalMaxReservedResultBytes: 1024,
+  maxReservedResultBytes: 1024,
 };
 const upperStream: AsyncIterable<StreamRangeResult<Uint8Array>> =
   runtime.streamRange(task, range, () => ({ input: data }), upperOptions);
@@ -386,25 +386,25 @@ const byteInput = () => ({ input: data });
 // @ts-expect-error Upper-bound streams require direct binary task results.
 runtime.streamRange(partitionTask, range, numberInput, upperOptions);
 const conflictingByteOptions = {
-  experimentalResultBytes: 16,
-  experimentalMaxResultBytes: 32,
-  experimentalMaxReservedResultBytes: 64,
+  resultBytes: 16,
+  maxResultBytes: 32,
+  maxReservedResultBytes: 64,
 };
 // @ts-expect-error Exact and upper-bound declarations cannot coexist or use count-only fallback.
 runtime.streamRange(task, range, byteInput, conflictingByteOptions);
-const missingMaximumCapacity = { experimentalMaxResultBytes: 32 };
+const missingMaximumCapacity = { maxResultBytes: 32 };
 // @ts-expect-error A maximum needs a byte capacity.
 runtime.streamRange(task, range, byteInput, missingMaximumCapacity);
 const asyncMaximumOptions = {
-  experimentalMaxResultBytes: async () => 32,
-  experimentalMaxReservedResultBytes: 64,
+  maxResultBytes: async () => 32,
+  maxReservedResultBytes: 64,
 };
 // @ts-expect-error Declaration callbacks must be synchronous; no count-only fallback.
 runtime.streamRange(task, range, byteInput, asyncMaximumOptions);
 void binaryValue;
 // @ts-expect-error Strict binary options require a direct binary task result.
 runtime.streamRange(partitionTask, range, numberInput, binaryOptions);
-const missingExactCapacity = { experimentalResultBytes: 16 };
+const missingExactCapacity = { resultBytes: 16 };
 // @ts-expect-error Both strict binary options are required together.
 runtime.streamRange(task, range, byteInput, missingExactCapacity);
 
@@ -428,96 +428,46 @@ const typedOptions: TypedMapRangeOptions<Float64ArrayConstructor> = {
   outputConstructor: Float64Array,
   dispatchBatchSize: 4,
 };
-const legacyTypedOptions: TypedMapRangeOptions<Float64ArrayConstructor> = {
-  experimentalOutputConstructor: Float64Array,
-  experimentalDispatchBatchSize: 1,
-};
-const legacyTypedMapped: Promise<Float64Array<ArrayBuffer>> =
-  runtime.parallelMapRange(
-    typedMapTask,
-    range,
-    (partition) => ({ input: { partition } }),
-    legacyTypedOptions,
-  );
-void legacyTypedMapped;
-const legacyCount: CountOnlyStreamRangeOptions = {
-  experimentalMaxBufferedResults: 1,
-  experimentalDispatchBatchSize: 1,
-};
-void runtime.streamRange(
-  partitionTask,
-  range,
-  (partition) => ({ input: { partition, shared } }),
-  legacyCount,
-);
-
-const bothBatches = { dispatchBatchSize: 1, experimentalDispatchBatchSize: 1 };
-const undefinedBatchAlias = {
-  dispatchBatchSize: 1,
-  experimentalDispatchBatchSize: undefined,
-};
-const bothCounts = { maxBufferedResults: 1, experimentalMaxBufferedResults: 1 };
-const undefinedCountAlias = {
-  maxBufferedResults: 1,
-  experimentalMaxBufferedResults: undefined,
-};
-const bothConstructors = {
-  outputConstructor: Float64Array,
+// Fresh literals reject removed fields; structural variables may have extras.
+const extraBatch = { dispatchBatchSize: 1, experimentalDispatchBatchSize: 1 };
+const structuralBatch: PartitionOptions = extraBatch;
+void structuralBatch; // Runtime remains authoritative for removed presence.
+// @ts-expect-error Removed key is absent from the stable public shape.
+const removedBatch: PartitionOptions = { experimentalDispatchBatchSize: 1 };
+// @ts-expect-error Removed key is absent from stable count options.
+const removedCount: StreamRangeOptions = { experimentalMaxBufferedResults: 1 };
+const removedConstructor: TypedMapRangeOptions = {
+  // @ts-expect-error Removed constructor cannot select typed mapping.
   experimentalOutputConstructor: Float64Array,
 };
-const undefinedConstructorAlias = {
-  outputConstructor: Float64Array,
-  experimentalOutputConstructor: undefined,
+void [removedBatch, removedCount, removedConstructor];
+const removedExact: BinaryStreamRangeOptions = {
+  resultBytes: 8,
+  maxReservedResultBytes: 8,
+  // @ts-expect-error Removed exact alias is not a public member.
+  experimentalResultBytes: 8,
 };
-// @ts-expect-error Equal batch aliases are mutually exclusive even through a variable.
-const invalidBatchPair: PartitionOptions = bothBatches;
-// @ts-expect-error Presence of undefined is excluded under exact optional types.
-const invalidUndefinedBatch: PartitionOptions = undefinedBatchAlias;
-// @ts-expect-error Count aliases are mutually exclusive.
-const invalidCountPair: StreamRangeOptions = bothCounts;
-// @ts-expect-error Count-only also excludes both count spellings.
-const invalidCountOnlyPair: CountOnlyStreamRangeOptions = bothCounts;
-// @ts-expect-error Undefined still counts as present.
-const invalidUndefinedCount: StreamRangeOptions = undefinedCountAlias;
-// @ts-expect-error Constructor aliases are mutually exclusive.
-const invalidConstructorPair: TypedMapRangeOptions = bothConstructors;
-// @ts-expect-error Required new constructor does not permit an undefined legacy key.
-const invalidUndefinedConstructor: TypedMapRangeOptions =
-  undefinedConstructorAlias;
-// @ts-expect-error Exact mode inherits exclusive batch/count pairs.
-const invalidExactPair: BinaryStreamRangeOptions = {
-  ...bothCounts,
-  experimentalResultBytes: 1,
-  experimentalMaxReservedResultBytes: 1,
+const removedMaximum: UpperBoundBinaryStreamRangeOptions = {
+  maxResultBytes: 8,
+  maxReservedResultBytes: 8,
+  // @ts-expect-error Removed maximum alias is not a public member.
+  experimentalMaxResultBytes: undefined,
 };
-// @ts-expect-error Maximum mode inherits exclusive batch/count pairs.
-const invalidMaximumPair: UpperBoundBinaryStreamRangeOptions = {
-  ...bothBatches,
-  experimentalMaxResultBytes: 1,
-  experimentalMaxReservedResultBytes: 1,
+const removedCapacity: BinaryStreamRangeOptions = {
+  resultBytes: 8,
+  maxReservedResultBytes: 8,
+  // @ts-expect-error Removed capacity alias is not a public member.
+  experimentalMaxReservedResultBytes: 8,
 };
-void [
-  invalidBatchPair,
-  invalidUndefinedBatch,
-  invalidCountPair,
-  invalidCountOnlyPair,
-  invalidUndefinedCount,
-  invalidConstructorPair,
-  invalidUndefinedConstructor,
-  invalidExactPair,
-  invalidMaximumPair,
-];
+const extraBytes = {
+  resultBytes: 8,
+  maxReservedResultBytes: 8,
+  experimentalResultBytes: undefined,
+};
+const structuralBytes: BinaryStreamRangeOptions = extraBytes;
+void [removedExact, removedMaximum, removedCapacity, structuralBytes];
 // @ts-expect-error run does not acquire batching support.
 runtime.run(task, data, { dispatchBatchSize: 1 });
-// @ts-expect-error collect rejects incompatible pairs through non-literal options.
-runtime.partitionRange(task, range, makeInput, bothBatches);
-// @ts-expect-error completion rejects incompatible batch pairs.
-runtime.parallelFor(task, range, makeInput, bothBatches);
-const typedInput = (partition: RangePartition) => ({ input: { partition } });
-// @ts-expect-error typed overload cannot fall back past incompatible constructors.
-runtime.parallelMapRange(typedMapTask, range, typedInput, bothConstructors);
-// @ts-expect-error no stream overload accepts both count spellings.
-runtime.streamRange(task, range, makeInput, bothCounts);
 const typedMapped: Promise<Float64Array<ArrayBuffer>> =
   runtime.parallelMapRange(
     typedMapTask,
@@ -561,17 +511,17 @@ void shutdown;
 // @ts-expect-error Shutdown policy is a boolean.
 runtime.shutdown({ drain: 'false' });
 
-const capacityWithoutDeclaration = { experimentalMaxReservedResultBytes: 64 };
+const capacityWithoutDeclaration = { maxReservedResultBytes: 64 };
 // @ts-expect-error Capacity without either declaration cannot select byte mode.
 runtime.streamRange(task, range, byteInput, capacityWithoutDeclaration);
 // @ts-expect-error Explicit undefined does not mean omission for byte mode.
 runtime.streamRange(task, range, () => ({ input: data }), {
-  experimentalResultBytes: undefined,
+  resultBytes: undefined,
 });
 const exactCallback: BinaryStreamRangeOptions = {
   // @ts-expect-error An exact declaration must be synchronous too.
-  experimentalResultBytes: async () => 16,
-  experimentalMaxReservedResultBytes: 64,
+  resultBytes: async () => 16,
+  maxReservedResultBytes: 64,
 };
 void exactCallback;
 const typedEmpty: Promise<Float64Array<ArrayBuffer>> = runtime.parallelMapRange(
@@ -882,33 +832,6 @@ function negativeContracts(stats: PjsRuntimeStats, error: PjsError): void {
 }
 void negativeContracts;
 
-const c3BadValue0 = {
-  resultBytes: 8,
-  experimentalResultBytes: 8,
-  maxReservedResultBytes: 8,
-};
-// @ts-expect-error C3 exclusive presence/mode/required-field contract.
-const c3Bad0: BinaryStreamRangeOptions = c3BadValue0;
-void c3Bad0;
-
-const c3BadValue1 = {
-  maxResultBytes: 8,
-  experimentalMaxResultBytes: 8,
-  maxReservedResultBytes: 8,
-};
-// @ts-expect-error C3 exclusive presence/mode/required-field contract.
-const c3Bad1: UpperBoundBinaryStreamRangeOptions = c3BadValue1;
-void c3Bad1;
-
-const c3BadValue2 = {
-  resultBytes: 8,
-  maxReservedResultBytes: 8,
-  experimentalMaxReservedResultBytes: 8,
-};
-// @ts-expect-error C3 exclusive presence/mode/required-field contract.
-const c3Bad2: BinaryStreamRangeOptions = c3BadValue2;
-void c3Bad2;
-
 const c3BadValue3 = {
   resultBytes: 8,
   maxResultBytes: 8,
@@ -919,7 +842,7 @@ const c3Bad3: BinaryStreamRangeOptions = c3BadValue3;
 void c3Bad3;
 
 const c3BadValue4 = {
-  experimentalResultBytes: 8,
+  resultBytes: 8,
   maxResultBytes: 8,
   maxReservedResultBytes: 8,
 };
@@ -937,15 +860,6 @@ const c3BadValue6 = { maxReservedResultBytes: 8 };
 const c3Bad6: UpperBoundBinaryStreamRangeOptions = c3BadValue6;
 void c3Bad6;
 
-const c3BadValue7 = {
-  resultBytes: 8,
-  experimentalResultBytes: undefined,
-  maxReservedResultBytes: 8,
-};
-// @ts-expect-error C3 exclusive presence/mode/required-field contract.
-const c3Bad7: BinaryStreamRangeOptions = c3BadValue7;
-void c3Bad7;
-
 const c3BadValue8 = { resultBytes: undefined };
 // @ts-expect-error C3 exclusive presence/mode/required-field contract.
 const c3Bad8: CountOnlyStreamRangeOptions = c3BadValue8;
@@ -960,21 +874,6 @@ const c3BadValue10 = { maxReservedResultBytes: undefined };
 // @ts-expect-error C3 exclusive presence/mode/required-field contract.
 const c3Bad10: CountOnlyStreamRangeOptions = c3BadValue10;
 void c3Bad10;
-
-const c3BadValue11 = { experimentalResultBytes: undefined };
-// @ts-expect-error C3 exclusive presence/mode/required-field contract.
-const c3Bad11: CountOnlyStreamRangeOptions = c3BadValue11;
-void c3Bad11;
-
-const c3BadValue12 = { experimentalMaxResultBytes: undefined };
-// @ts-expect-error C3 exclusive presence/mode/required-field contract.
-const c3Bad12: CountOnlyStreamRangeOptions = c3BadValue12;
-void c3Bad12;
-
-const c3BadValue13 = { experimentalMaxReservedResultBytes: undefined };
-// @ts-expect-error C3 exclusive presence/mode/required-field contract.
-const c3Bad13: CountOnlyStreamRangeOptions = c3BadValue13;
-void c3Bad13;
 
 const resilienceCause: RecoveryCause = 'worker-crash';
 const resilienceRetry: RetryOptions = {

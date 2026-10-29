@@ -27,6 +27,59 @@ import { assertArtifact, readArtifact } from './artifact.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const baseline = baselineForWorkspace(root);
+
+test('published RC4 and RC5 baseline/tag/tree/archive identities are immutable', () => {
+  const git = (...args) =>
+    execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim();
+  const identities = [
+    [
+      '1.0.0-rc.4',
+      'a77cbb893c1b39123d05c7c4e09aeac95643c65f3a25be6d31d3fea39e6ae55b',
+      '15a3060ea375584df8358316429ba108cd802403',
+      'def47e895ffb6c62865ebec5d1604e32dbc64a51',
+      'fba5bdb4f0a1cda9e399b81389f678ba3aa1c366',
+    ],
+    [
+      '1.0.0-rc.5',
+      'a6e247f48c23530cbd22f89ddc3c30453b0cd2c10c1618ead1634afddd1c04c2',
+      '131d28112924fc55228d4722ec111aa513f94aee',
+      '131d28112924fc55228d4722ec111aa513f94aee',
+      '5e8ec2653b0b86aa93dbaf5c912e76e203f1c906',
+    ],
+  ];
+  for (const [version, digest, tag, commit, tree] of identities) {
+    const path = baselineFile(version);
+    assert.equal(
+      createHash('sha256').update(readFileSync(path)).digest('hex'),
+      digest,
+    );
+    assert.equal(git('rev-parse', `v${version}`), tag);
+    assert.equal(git('rev-parse', `v${version}^{commit}`), commit);
+    assert.equal(git('rev-parse', `v${version}^{tree}`), tree);
+    const historical = loadBaseline(version);
+    assert.deepEqual(
+      historical,
+      JSON.parse(
+        execFileSync(
+          'git',
+          [
+            'show',
+            `v${version}:scripts/rc/${version.endsWith('5') ? 'frozen-rc5' : 'frozen-rc4'}.json`,
+          ],
+          { cwd: root, encoding: 'utf8' },
+        ),
+      ),
+    );
+  }
+  assert.equal(
+    loadBaseline('1.0.0-rc.5').archiveSha256,
+    'f9bd1a3e09002b60ed136f76ac4f3ae197b2869cc910f324434ad124bc98e568',
+  );
+  assert.equal(
+    Object.keys(loadBaseline('1.0.0-rc.5').packageFiles).length,
+    303,
+  );
+});
 function copyCandidate() {
   const temporary = mkdtempSync(join(tmpdir(), 'pjs-freeze-'));
   for (const path of [
@@ -132,19 +185,19 @@ test('RC4 source/tests/API match immutable RC3 and merged R1A', () => {
 test('current registered candidate source, declarations and metadata match its reviewed baseline', () => {
   assertFrozenWorkspace(root);
   assertFrozenFiles(root);
-  assert.equal(baseline.manifest.version, '1.0.0-rc.5');
-  assert.equal(baseline.contractTests, 476);
+  assert.equal(baseline.manifest.version, '1.0.0');
+  assert.equal(baseline.contractTests, 478);
   assert.deepEqual(baseline.releaseToolchain, releaseToolchain);
 });
 test('selection is explicit, version-aware and tag-bound, with no fallback', () => {
-  for (const version of ['1.0.0-rc.4', '1.0.0-rc.5']) {
+  for (const version of ['1.0.0-rc.4', '1.0.0-rc.5', '1.0.0']) {
     assert.equal(loadBaseline(version).manifest.version, version);
     assert.throws(
-      () => loadBaseline(version, { tag: 'v1.0.0' }),
+      () => loadBaseline(version, { tag: 'v9.0.0' }),
       /tag\/version/,
     );
   }
-  for (const version of ['1.0.0', '1.0.0-rc.6', '__proto__', '../frozen-rc4'])
+  for (const version of ['1.0.1', '1.0.0-rc.6', '__proto__', '../frozen-rc4'])
     assert.throws(() => loadBaseline(version), /Unregistered release/);
 });
 test('missing baseline and mismatched frozen identities fail closed', (t) => {
@@ -157,14 +210,14 @@ test('missing baseline and mismatched frozen identities fail closed', (t) => {
     );
   for (const change of [
     { release: 'v1.0.0-rc.4' },
-    { manifest: { ...baseline.manifest, version: '1.0.0' } },
+    { manifest: { ...baseline.manifest, version: '1.0.1' } },
   ]) {
     writeFileSync(
-      baselineFile('1.0.0-rc.5', directory),
+      baselineFile('1.0.0', directory),
       JSON.stringify({ ...baseline, ...change }),
     );
     assert.throws(
-      () => loadBaseline('1.0.0-rc.5', { baseDirectory: directory }),
+      () => loadBaseline('1.0.0', { baseDirectory: directory }),
       /mismatch/,
     );
   }

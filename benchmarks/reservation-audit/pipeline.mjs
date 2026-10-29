@@ -31,9 +31,9 @@ await runtime.ready();
 
 function strict(expected, capacity, countCapacity = 16) {
   return {
-    experimentalMaxBufferedResults: countCapacity,
-    experimentalResultBytes: expected,
-    experimentalMaxReservedResultBytes: capacity,
+    maxBufferedResults: countCapacity,
+    resultBytes: expected,
+    maxReservedResultBytes: capacity,
   };
 }
 
@@ -82,7 +82,7 @@ async function longPipeline() {
   }, 5);
   const before = runtime.stats();
   const result = await consumeBinary(tasks.pipeline, count, bytesFor, {
-    experimentalDispatchBatchSize: 1,
+    dispatchBatchSize: 1,
     ...strict((partition) => bytesFor(partition.index), 4 * MiB),
   });
   clearInterval(timer);
@@ -145,7 +145,7 @@ async function variableOutputTrace() {
     { start: 0, end: source.length, grainSize },
     (partition) => ({ input: { partition, source, kind: 'rle', move: true } }),
     {
-      experimentalDispatchBatchSize: 1,
+      dispatchBatchSize: 1,
       ...strict(expected, 256 * KiB),
     },
   )) {

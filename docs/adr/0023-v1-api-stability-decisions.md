@@ -2,6 +2,17 @@
 
 **Promotion status:** P1/P2/P3 development promotion accepted following benchmark review; this does not accept unrelated policy/release decisions in this ADR. All six aliases and separate hold/C4/F/G gates remain.
 
+## Proposed stable-boundary amendment — 29 October 2026
+
+RC5 is now the published combined transition. This checkpoint proposes removing
+all six aliases directly in 1.0.0, amending decision 4's following-prerelease
+requirement. The candidate is reversible preparation, not acceptance of this
+amendment. Consumers must migrate legacy own/inherited/undefined properties
+before upgrading. If retention in 1.x is selected, aliases must remain supported
+until a later major release. No additional prerelease is selected.
+See the [concrete checkpoint](../research/v1-release-checkpoint.md).
+The original policy and historical decisions below retain their attribution.
+
 ## Status
 
 **Proposed — implementation through C3 integrated; remaining policy/release decisions pending.**

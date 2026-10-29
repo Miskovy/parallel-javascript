@@ -41,8 +41,8 @@ async function setup(t) {
 const done = { value: undefined, done: true };
 const bytes = {
   maxBufferedResults: 2,
-  experimentalResultBytes: 8,
-  experimentalMaxReservedResultBytes: 16,
+  resultBytes: 8,
+  maxReservedResultBytes: 16,
 };
 
 test('direct return before first read is eager, idempotent and not a physical barrier', async (t) => {

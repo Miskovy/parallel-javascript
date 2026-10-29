@@ -56,7 +56,7 @@ async function execute(entry) {
       completionTask,
       { start: 0, end: entry.count, grainSize: 1 },
       (partition) => ({ input: payload(partition.index) }),
-      { experimentalDispatchBatchSize: entry.batchSize },
+      { dispatchBatchSize: entry.batchSize },
     );
   }
   if (entry.kind === 'stream') {
@@ -66,8 +66,8 @@ async function execute(entry) {
       { start: 0, end: entry.count, grainSize: 1 },
       (partition) => ({ input: payload(partition.index) }),
       {
-        experimentalDispatchBatchSize: entry.batchSize,
-        experimentalMaxBufferedResults: 8,
+        dispatchBatchSize: entry.batchSize,
+        maxBufferedResults: 8,
       },
     )) {
       void result;
@@ -110,9 +110,9 @@ async function execute(entry) {
         },
       }),
       {
-        experimentalDispatchBatchSize: 4,
+        dispatchBatchSize: 4,
         ...(entry.kind === 'map-typed'
-          ? { experimentalOutputConstructor: Float64Array }
+          ? { outputConstructor: Float64Array }
           : {}),
       },
     );

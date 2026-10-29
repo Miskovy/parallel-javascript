@@ -43,7 +43,7 @@ try {
       binary,
       { start: 0, end: 5, grainSize: 2 },
       (partition) => ({ input: { partition, mode: 'binary', bytes: 8 } }),
-      { experimentalResultBytes: 8, experimentalMaxReservedResultBytes: 16 },
+      { resultBytes: 8, maxReservedResultBytes: 16 },
     );
   let count = 0;
   for await (const { output } of stream) {

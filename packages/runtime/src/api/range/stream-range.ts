@@ -81,16 +81,13 @@ export function streamRange<Input, Output, Progress = ProgressValue>(
     NoInfer<Progress>
   > & {
     resultBytes?: ResultByteDeclaration;
-    experimentalResultBytes?: ResultByteDeclaration;
     maxResultBytes?: ResultByteDeclaration;
-    experimentalMaxResultBytes?: ResultByteDeclaration;
     maxReservedResultBytes?: number;
-    experimentalMaxReservedResultBytes?: number;
   } = {},
 ): PjsRangeStream<Output> {
   let capacity: number;
   let resultByteDeclaration:
-    BinaryStreamRangeOptions['experimentalResultBytes'] | undefined;
+    BinaryStreamRangeOptions['resultBytes'] | undefined;
   let resultByteCapacity: number | undefined;
   let resultByteMode: ResultByteMode = 'exact';
   try {
@@ -104,7 +101,7 @@ export function streamRange<Input, Output, Progress = ProgressValue>(
             'maxBufferedResults',
             'experimentalMaxBufferedResults',
           )
-        : 'experimentalMaxBufferedResults';
+        : 'maxBufferedResults';
     capacity = integer(
       countName ?? 'maxBufferedResults',
       (countName === undefined ? undefined : options[countName]) ??

@@ -45,7 +45,7 @@ async function execute(entry) {
       task,
       { start: 0, end: entry.count, grainSize: 1 },
       (partition) => ({ input: payload(partition.index, entry) }),
-      { experimentalDispatchBatchSize: entry.batchSize },
+      { dispatchBatchSize: entry.batchSize },
     );
   }
   if (entry.kind === 'stream') {
@@ -55,8 +55,8 @@ async function execute(entry) {
       { start: 0, end: entry.count, grainSize: 1 },
       (partition) => ({ input: payload(partition.index, entry) }),
       {
-        experimentalDispatchBatchSize: entry.batchSize,
-        experimentalMaxBufferedResults: 8,
+        dispatchBatchSize: entry.batchSize,
+        maxBufferedResults: 8,
       },
     )) {
       void value;

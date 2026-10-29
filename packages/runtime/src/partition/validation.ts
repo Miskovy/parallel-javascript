@@ -73,7 +73,7 @@ export function validateRangeRequest<Input, Output, Progress = ProgressValue>(
     !typedArrayConstructors.has(mapOutputConstructor)
   )
     throw new TypeError(
-      'experimentalOutputConstructor must be a built-in typed-array constructor',
+      'outputConstructor must be a built-in typed-array constructor',
     );
   const priority = integer(
     'priority',

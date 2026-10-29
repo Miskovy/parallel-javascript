@@ -737,7 +737,7 @@ test(
       { ...retry, retry: { maxAttempts: 2, on: [] } },
       { ...retry, retry: { maxAttempts: 2, on: ['serialization'] } },
       { cancellation: 'terminate', dispatchBatchSize: undefined },
-      { ...retry, experimentalDispatchBatchSize: 1 },
+      { ...retry, dispatchBatchSize: 1 },
     ])
       await assert.rejects(
         runtime.run(tasks.echo, 1, options),

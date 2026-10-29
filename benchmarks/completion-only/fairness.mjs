@@ -53,13 +53,13 @@ for (const batchSize of [1, 4, 8]) {
       task,
       { start: 0, end: 128, grainSize: 1 },
       makeInput(0),
-      { experimentalDispatchBatchSize: batchSize },
+      { dispatchBatchSize: batchSize },
     );
     const collecting = runtime.partitionRange(
       task,
       { start: 0, end: 128, grainSize: 1 },
       makeInput(1),
-      { experimentalDispatchBatchSize: batchSize },
+      { dispatchBatchSize: batchSize },
     );
     const runWhenAdmitted = async (input) => {
       for (;;) {

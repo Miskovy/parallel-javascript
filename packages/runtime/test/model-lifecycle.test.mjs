@@ -15,6 +15,15 @@ const saveNegative = () => {
 };
 saveNegative();
 
+test(
+  'R2 exclusive queue uses an idle replacement instead of retaining a busy-worker pin',
+  { timeout: 10000 },
+  async () => {
+    const evidence = await runHistory(generate(19, 59, 'extended'));
+    assert.ok(evidence.passed && evidence.cleanup);
+  },
+);
+
 for (let caseId = 0; caseId < PROFILES.smoke.cases; caseId++)
   test(`R2 smoke seed=123456 case=${caseId}`, { timeout: 10000 }, async () => {
     const h = generate(123456, caseId);

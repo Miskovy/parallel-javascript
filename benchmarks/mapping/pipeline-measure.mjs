@@ -67,8 +67,8 @@ async function sample() {
       },
     }),
     {
-      experimentalDispatchBatchSize: 4,
-      experimentalMaxBufferedResults: capacity,
+      dispatchBatchSize: 4,
+      maxBufferedResults: capacity,
     },
   )) {
     firstResultMs ??= performance.now() - started;

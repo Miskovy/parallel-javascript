@@ -203,7 +203,7 @@ try {
   await check('six-legacy-aliases-still-execute', async () => {
     assert.deepEqual(
       await runtime.partitionRange(task, range, factory, {
-        experimentalDispatchBatchSize: 4,
+        dispatchBatchSize: 4,
       }),
       [0, 1, 2, 3, 4],
     );
@@ -211,21 +211,18 @@ try {
       task,
       range,
       (partition) => ({ input: { kind: 'typed-map', partition } }),
-      { experimentalOutputConstructor: Float64Array },
+      { outputConstructor: Float64Array },
     );
     assert.equal(typed.length, 17);
-    for (const declaration of [
-      'experimentalResultBytes',
-      'experimentalMaxResultBytes',
-    ]) {
+    for (const declaration of ['resultBytes', 'maxResultBytes']) {
       const stream = runtime.streamRange(
         task,
         range,
         (partition) => ({ input: { kind: 'binary', partition, bytes: 8 } }),
         {
-          experimentalMaxBufferedResults: 1,
+          maxBufferedResults: 1,
           [declaration]: 8,
-          experimentalMaxReservedResultBytes: 8,
+          maxReservedResultBytes: 8,
         },
       );
       let count = 0;

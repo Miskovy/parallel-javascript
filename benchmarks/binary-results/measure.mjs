@@ -139,12 +139,12 @@ async function pjsStream(strict, objectMode = false) {
       },
     }),
     {
-      experimentalDispatchBatchSize: transferBlocks ? 1 : 4,
-      experimentalMaxBufferedResults: countCapacity,
+      dispatchBatchSize: transferBlocks ? 1 : 4,
+      maxBufferedResults: countCapacity,
       ...(strict
         ? {
-            experimentalResultBytes: (partition) => bytesFor(partition.index),
-            experimentalMaxReservedResultBytes: byteCapacity,
+            resultBytes: (partition) => bytesFor(partition.index),
+            maxReservedResultBytes: byteCapacity,
           }
         : {}),
     },
@@ -169,8 +169,8 @@ async function pjsMap() {
       input: { partition, source, iterations, kind: 'map' },
     }),
     {
-      experimentalOutputConstructor: Uint8Array,
-      experimentalDispatchBatchSize: 4,
+      outputConstructor: Uint8Array,
+      dispatchBatchSize: 4,
     },
   );
   return {

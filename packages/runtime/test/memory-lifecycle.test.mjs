@@ -48,9 +48,9 @@ async function setup(t, options) {
 }
 function stream(runtime, task, count, input, extra = {}) {
   return runtime.streamRange(task, range(count), () => ({ input }), {
-    experimentalMaxBufferedResults: count,
-    experimentalMaxResultBytes: 16,
-    experimentalMaxReservedResultBytes: count * 16,
+    maxBufferedResults: count,
+    maxResultBytes: 16,
+    maxReservedResultBytes: count * 16,
     ...extra,
   });
 }
@@ -388,10 +388,10 @@ test(
       range(4),
       () => ({ input: { bytes: 8, backing: 4096, move: true } }),
       {
-        experimentalMaxBufferedResults: 4,
-        experimentalResultBytes: 8,
-        experimentalMaxReservedResultBytes: 32,
-        experimentalDispatchBatchSize: 2,
+        maxBufferedResults: 4,
+        resultBytes: 8,
+        maxReservedResultBytes: 32,
+        dispatchBatchSize: 2,
       },
     );
     const b = stream(
@@ -399,7 +399,7 @@ test(
       tasks.binary,
       4,
       { bytes: 8, backing: 4096 },
-      { experimentalDispatchBatchSize: 2 },
+      { dispatchBatchSize: 2 },
     );
     const operations = [
       ...runtimeComponents(runtime).rangeCoordinator.operations.values(),
@@ -442,12 +442,10 @@ for (const mode of ['exact', 'upper-bound']) {
         range(3),
         () => ({ input: { bytes: 8, gate: control } }),
         {
-          experimentalMaxBufferedResults: 3,
-          experimentalDispatchBatchSize: 3,
-          experimentalMaxReservedResultBytes: 48,
-          ...(mode === 'exact'
-            ? { experimentalResultBytes: 16 }
-            : { experimentalMaxResultBytes: 16 }),
+          maxBufferedResults: 3,
+          dispatchBatchSize: 3,
+          maxReservedResultBytes: 48,
+          ...(mode === 'exact' ? { resultBytes: 16 } : { maxResultBytes: 16 }),
         },
       );
       await until(() => entered(control) === 1);

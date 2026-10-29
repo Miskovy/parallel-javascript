@@ -6,7 +6,12 @@ import { join, relative } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { format, resolveConfig } from 'prettier';
-import { assertArguments, baselineFile } from './baseline.mjs';
+import {
+  assertArguments,
+  baselineFile,
+  loadBaseline,
+  immutableRc5Sha256,
+} from './baseline.mjs';
 import { namedExports } from './contracts.mjs';
 import { readArtifact, sha256 } from './artifact.mjs';
 import {
@@ -22,9 +27,11 @@ const arg = (name) =>
 const version = arg('version');
 assert.equal(
   version,
-  '1.0.0-rc.5',
-  'Preparation may only write the explicitly reviewed RC5 baseline',
+  '1.0.0',
+  'Preparation may only write the explicitly reviewed stable baseline; published releases are immutable',
 );
+loadBaseline('1.0.0-rc.4');
+loadBaseline('1.0.0-rc.5');
 assert.ok(arg('replace') === undefined || arg('replace') === 'true');
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const cli = arg('npm-cli');
@@ -53,7 +60,7 @@ const hashes = (paths) =>
   Object.fromEntries(
     paths.map((path) => [path, sha256(readFileSync(join(root, path)))]),
   );
-const stage = mkdtempSync(join(tmpdir(), 'pjs-rc5-prepare-'));
+const stage = mkdtempSync(join(tmpdir(), 'pjs-v1-prepare-'));
 const [packed] = JSON.parse(
   execFileSync(
     process.execPath,
@@ -82,33 +89,51 @@ const inputs = [
     'packages/runtime/tsconfig.browser-worker.json',
     'README.md',
     'docs/releasing.md',
+    'docs/README.md',
     'docs/release-v1.0.0-rc.5.md',
+    'docs/release-v1.0.0.md',
+    'docs/stability.md',
+    'docs/partitioning.md',
+    'docs/memory.md',
+    'docs/guide/core-api.md',
+    'docs/guide/browser.md',
+    'docs/adr/0023-v1-api-stability-decisions.md',
     '.github/workflows/ci.yml',
     '.github/workflows/publish-npm.yml',
     'scripts/package-smoke.mjs',
     'scripts/runtime-qualify.mjs',
     'scripts/test-contracts.mjs',
     'scripts/api-contract-inventory.mjs',
+    'scripts/api-contract-inventory.test.mjs',
+    'scripts/node-floor-checks.mjs',
+    'scripts/node-floor-binaries.json',
+    'scripts/check-docs.mjs',
+    'eslint.config.mjs',
+    '.prettierrc.json',
+    '.prettierignore',
     ...[
       'scripts/rc',
       'scripts/release',
       'scripts/package-consumer',
       'scripts/browser',
+      'scripts/r2',
+      'scripts/r3',
       'examples',
     ].flatMap((dir) => inventory(dir)),
   ]),
 ]
-  .filter((path) => path !== 'scripts/rc/frozen-rc5.json')
+  .filter((path) => path !== 'scripts/rc/frozen-v1.json')
   .sort();
 const source = 'packages/runtime/';
 const baseline = {
   schema: 2,
+  publishedRc5Sha256: immutableRc5Sha256,
   release: `v${version}`,
   previousBaselineFile: 'scripts/rc/frozen-rc4.json',
   previousBaselineSha256: sha256(
     readFileSync(join(root, 'scripts/rc/frozen-rc4.json')),
   ),
-  contractTests: 476,
+  contractTests: 478,
   namedExports: namedExports(root, 'packages/runtime/src/index.ts'),
   runtimeValues: Object.keys(
     await import('../../packages/runtime/dist/index.js'),

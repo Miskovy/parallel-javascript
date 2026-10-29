@@ -32,8 +32,8 @@ function setup(t, options = {}) {
 const range = (end = 1) => ({ start: 0, end, grainSize: 1 });
 const input = (partition, extra = {}) => ({ input: { partition, ...extra } });
 const options = (maximum = 8, capacity = maximum, extra = {}) => ({
-  experimentalMaxResultBytes: maximum,
-  experimentalMaxReservedResultBytes: capacity,
+  maxResultBytes: maximum,
+  maxReservedResultBytes: capacity,
   ...extra,
 });
 async function until(predicate) {
@@ -188,7 +188,7 @@ test('refund resumes admission before consumer yield and slow buffers retain act
         return 8;
       },
       10,
-      { experimentalMaxBufferedResults: 4 },
+      { maxBufferedResults: 4 },
     ),
   );
   await until(() => runtime.stats().streamResults.buffered === 3);
@@ -216,7 +216,7 @@ test('zero actual refunds all maximum but count capacity still blocks production
     task,
     range(8),
     (partition) => input(partition, { bytes: 0 }),
-    options(8, 16, { experimentalMaxBufferedResults: 2 }),
+    options(8, 16, { maxBufferedResults: 2 }),
   );
   await until(() => runtime.stats().streamResults.buffered === 2);
   assert.equal(runtime.stats().partitions.admitted, 2);
@@ -294,9 +294,9 @@ test('invalid, ambiguous, asynchronous, throwing, and impossible maxima fail bef
       PjsBinaryResultContractError,
     );
   for (const bad of [
-    options(8, 8, { experimentalResultBytes: 8 }),
-    { experimentalMaxResultBytes: 8 },
-    { experimentalMaxReservedResultBytes: 8 },
+    options(8, 8, { resultBytes: 8 }),
+    { maxResultBytes: 8 },
+    { maxReservedResultBytes: 8 },
   ])
     await assert.rejects(
       collect(runtime.streamRange(task, range(), factory, bad)),
@@ -348,8 +348,8 @@ test('batches refund logical successes and stop on first or middle failure', asy
           fail: partition.index === failIndex,
         }),
       options(8, 32, {
-        experimentalDispatchBatchSize: 4,
-        experimentalMaxBufferedResults: 4,
+        dispatchBatchSize: 4,
+        maxBufferedResults: 4,
       }),
     );
     if (failIndex < 0) assert.equal((await collect(stream)).length, 4);
@@ -454,7 +454,7 @@ test('consumer break, throw, return, and iterator throw release buffered actual 
       task,
       range(8),
       (partition) => input(partition, { bytes: 1 }),
-      options(8, 32, { experimentalMaxBufferedResults: 4 }),
+      options(8, 32, { maxBufferedResults: 4 }),
     );
     await until(() => runtime.stats().streamResults.buffered === 4);
     if (kind === 'break') {
@@ -543,7 +543,7 @@ test('a credit-blocked maximum does not starve another stream or ordinary work',
     task,
     range(3),
     (partition) => input(partition, { bytes: 1 }),
-    options(8, 8, { experimentalMaxBufferedResults: 3 }),
+    options(8, 8, { maxBufferedResults: 3 }),
   );
   await until(() => runtime.stats().streamResults.buffered === 1);
   const small = await collect(
@@ -575,7 +575,7 @@ test('non-draining shutdown discards reconciled buffered actuals without countin
     task,
     range(8),
     (partition) => input(partition, { bytes: 1, move: true }),
-    options(8, 32, { experimentalMaxBufferedResults: 4 }),
+    options(8, 32, { maxBufferedResults: 4 }),
   );
   await until(() => runtime.stats().streamResults.buffered === 4);
   assert.equal(runtime.stats().streamResults.currentReservedResultBytes, 4);

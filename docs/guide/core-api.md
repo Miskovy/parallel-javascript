@@ -1,6 +1,6 @@
 # Core API guide
 
-**Promotion status:** Development P2 range/count/map/batch contracts are promoted following benchmark review; all six deprecated option aliases remain accepted through the actual shared transition window.
+**Candidate scope:** Published RC5 accepts the six deprecated aliases. Prepared 1.0.0 proposes stable-only names and explicit legacy rejection; see [migration and approval status](../release-v1.0.0.md).
 
 PJS runs explicitly registered CPU work in persistent Node worker isolates. Your
 application keeps its event-loop/I/O plane; PJS supplies a bounded compute plane.
@@ -21,17 +21,15 @@ replace the event loop, or make a tiny function inherently faster. Start with
 [basic-run.mjs](../../examples/basic-run.mjs) and its
 [task module](../../examples/tasks.mjs). The README's example uses the same files.
 
-This guide describes **integrated development source**, including execution resilience and
-six new option names with [deprecated aliases](../partitioning.md#c2-development-option-transition).
-Published RC4 has older declarations/spellings and lacks later containment
-controls. The [README quickstart](../../README.md) works with RC4;
-checkout examples are tested against the packed development artifact.
+This guide describes the prepared **1.0.0 candidate**. Published RC5 already
+includes these runtime controls and the six stable names, with deprecated aliases.
+The candidate proposes alias rejection; see [migration](../release-v1.0.0.md).
+Checkout examples are tested against the intended installed candidate artifact.
 
 ## CommonJS consumption (development)
 
 Ordinary CommonJS hosts synchronously require the package root; no dynamic-import
-wrapper or application conversion is needed. This is development behavior, absent
-from published RC4. Both loading modes reach one ESM graph and index.d.ts, sharing
+wrapper or application conversion is needed. This behavior is included in published RC5 and this candidate. Both loading modes reach one ESM graph and index.d.ts, sharing
 constructors, errors, registry/handle identity and transfer-helper state within each
 isolate. Internal package subpaths remain blocked.
 
@@ -326,7 +324,7 @@ awaited. Callback work/retained values remain application-owned.
 
 ## Ordinary execution resilience (development)
 
-These options are available in development source, not published RC4. They apply
+These options are included in published RC5 and this candidate. They apply
 to `run()`; all range forms also support per-partition recovery as described below.
 Ordinary `run()` remains a single-task dispatch.
 
@@ -554,7 +552,7 @@ The [binary recipe](../../examples/streaming-binary.mjs) demonstrates reconstruc
 
 Integrated development returns `PjsRangeStream<Output>` with required direct
 `next()`, `return()` and `throw()`. `CountOnlyStreamRangeOptions` is also importable
-from the root; it excludes all six strict byte spellings (three alias pairs). These type-only
+from the root; it excludes the three stable strict-byte keys. These type-only
 exports are not in published RC4. Range streaming is promoted in development.
 
 ```ts

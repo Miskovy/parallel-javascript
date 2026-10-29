@@ -203,7 +203,7 @@ async function sample() {
       task,
       { start: 0, end: size, grainSize },
       createInput,
-      { experimentalDispatchBatchSize: batchSize },
+      { dispatchBatchSize: batchSize },
     );
   } else {
     const measured = await boundedManual(

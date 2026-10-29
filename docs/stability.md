@@ -1,32 +1,15 @@
 # API stability and compatibility
 
-**Promotion status:** P1/P2/P3 are promoted in development after reviewed benchmark acceptance; all six deprecated aliases remain. Publication, hold applicability, C4 and Stage F/G remain separate.
+**Prepared stable contract:** 1.0.0 is an unpublished candidate. Published RC5
+is the combined transition prerelease (`next`); RC4 remains `latest` as checked
+29 October 2026. RC5 keeps all six aliases. This candidate proposes stable-only
+option shapes and runtime rejection of every removed property presence.
 
-PJS is pre-1.0. As checked on **23 October 2026**, npm `latest` and `next`
-select [`@pjavascript/runtime@1.0.0-rc.4`](https://registry.npmjs.org/@pjavascript%2fruntime),
-and [GitHub RC4](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.4)
-is a prerelease. Final v1.0.0 has not been released.
-
-Integrated Checkpoints 1–4, patched Node support and host cleanup are prepared
-as the **unpublished 1.0.0-rc.5 candidate**. Version metadata does not publish it or
-replace RC4. The [RC5 migration note](release-v1.0.0-rc.5.md) explains intentional
-changes. Current [public inventories](research/v1-api-contract-inventory.md) record
-71 Node root exports / 168 diagnostic leaves and 72 browser root exports / 167
-leaves, with no additional reachable named types. Historical inventories remain unchanged.
-
-B1 exposes the existing closeable stream contract; B2 narrows strict results to
-ordinary backing; B3 removes unsupported registry.snapshot() access; B4 names
-diagnostic/error types. C1-A/Q adds acceptance and installed-consumer evidence.
-C2/C3 implement [six option spelling pairs](partitioning.md#c2-development-option-transition)
-with deprecated aliases and exclusive presence rules. **P1/P2/P3 contracts are promoted in development;
-all six deprecated aliases remain.** The authoritative
-[post-C3 decisions](research/v1-api-migration-plan.md#decisions-for-maintainer-review)
-separate P1/P2/P3 promotion, the shared transition release, C4, F and publication.
-Hold applicability remains unresolved; P1/P2/P3 development promotion follows
-explicit maintainer approval, not an inference from passing CI. It supplies no
-hold eligibility or release clearance. The [promotion report](research/p1-p2-p3-development-promotion.md)
-records fresh qualification, the historical strict JavaScript byte-identity
-failure and the explicit maintainer-approved revised acceptance.
+The [stable release notes](release-v1.0.0.md) inventory both entries and the
+complete RC5 delta. The [checkpoint](research/v1-release-checkpoint.md) fixes
+acceptance, supported cells and outstanding decisions. P1/P2/P3 development
+promotion remains accepted. Direct alias removal at 1.0.0 requires a policy
+amendment; stable hold disposition and contract/evidence acceptance remain open.
 
 ## Current status and proposed disposition
 
@@ -54,14 +37,12 @@ Do not leave experimental features accidentally within an experimental-free free
 
 ## Compatibility boundary
 
-Pre-v1 incompatible changes need prerelease notes and migration guidance. The
-recommended transition accepts deprecated option aliases for one prerelease,
-rejects both spellings by property presence, and removes/rejects aliases in the
-following selected prerelease before final freeze. Actual version numbers and
-release authorization are separate decisions. Current checkout examples use all
-six C2/C3 development names. Both migrations are integrated, but one shared
-transition prerelease has not been selected or published. No alias window starts
-with their merges. All six aliases remain until a separately authorized C4 decision.
+RC5 published the six-name transition. The candidate proposes removing aliases
+directly in 1.0.0; ADR 0023 originally required a following removal prerelease.
+The amendment is pending review. No further prerelease is invented here.
+See [migration and type compatibility](release-v1.0.0.md). Retention in stable
+1.x would make those supported names subject to the same major-release removal
+obligation as every stable API.
 
 Once declared stable in 1.x, supported behavior **and types**, error identities,
 supported diagnostic fields, defaults and ownership/cleanup semantics follow
@@ -164,10 +145,10 @@ S1 integration → A decision review → B corrections → C controlled promotio
 alias removal → F final-candidate qualification/rehearsal → G authorized release.
 Conditional internal type/state work and optimization require independent reasons
 and must finish before F. Historical RC4 source/artifact baselines remain immutable.
-Current scripts explicitly select the registered RC4 or RC5 baseline from the candidate
-version and reject unregistered versions; they never default new source to RC4.
-RC5 remains an unpublished review candidate. Qualification binds the selected inputs
-to the actual committed SHA/tree and staged artifact. Semantic API compatibility and
-exact artifact reproducibility are separate checks. See [releasing](releasing.md).
-Candidate preparation and documentation reconciliation do not clear existing holds,
-decide their applicability, start an alias transition window or authorize publication.
+Current scripts register RC4, RC5 and 1.0.0 explicitly and reject unknown
+versions and tag/version mismatches. Published RC4/RC5 freezes remain immutable;
+only the explicit stable preparation writer creates the new expected baseline.
+Qualification binds clean SHA/tree, selected inputs and exact artifact. The
+checkpoint records semantic review separately from two-build byte reproduction.
+Candidate preparation does not approve policy, clear stable holds or authorize
+merge/tag/publication.

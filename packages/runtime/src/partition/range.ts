@@ -54,39 +54,20 @@ export type PartitionOptions<
         ) => PartitionInput<Input>;
   signal?: AbortSignal;
   timeout?: number;
-} & (
-  | {
-      /** Group transfer-free partitions; integer 1–16, default 1. */
-      dispatchBatchSize?: number;
-      /** @deprecated Use dispatchBatchSize. Both spellings together reject. */
-      experimentalDispatchBatchSize?: never;
-    }
-  | {
-      dispatchBatchSize?: never;
-      /** @deprecated Use dispatchBatchSize. Both spellings together reject. */
-      experimentalDispatchBatchSize?: number;
-    }
-);
+} & {
+  /** Group transfer-free partitions; integer 1-16, default 1. */
+  dispatchBatchSize?: number;
+};
 
 /** Completion-order stream delivery options. */
 export type StreamRangeOptions<
   Input = unknown,
   Output = never,
   Progress = ProgressValue,
-> = PartitionOptions<Input, Output, Progress> &
-  (
-    | {
-        /** Logical retained/in-flight results; defaults to workers. */
-        maxBufferedResults?: number;
-        /** @deprecated Use maxBufferedResults. Both spellings together reject. */
-        experimentalMaxBufferedResults?: never;
-      }
-    | {
-        maxBufferedResults?: never;
-        /** @deprecated Use maxBufferedResults. Both spellings together reject. */
-        experimentalMaxBufferedResults?: number;
-      }
-  );
+> = PartitionOptions<Input, Output, Progress> & {
+  /** Logical retained/in-flight results; defaults to workers. */
+  maxBufferedResults?: number;
+};
 
 /** Count-only delivery excludes every strict byte-mode property. */
 export type CountOnlyStreamRangeOptions<
@@ -97,9 +78,6 @@ export type CountOnlyStreamRangeOptions<
   resultBytes?: never;
   maxResultBytes?: never;
   maxReservedResultBytes?: never;
-  experimentalResultBytes?: never;
-  experimentalMaxResultBytes?: never;
-  experimentalMaxReservedResultBytes?: never;
 };
 
 /**
@@ -132,54 +110,22 @@ export type BinaryStreamRangeOptions<
   Input = unknown,
   Output = never,
   Progress = ProgressValue,
-> = StreamRangeOptions<Input, Output, Progress> &
-  (
-    | {
-        resultBytes: ResultByteDeclaration;
-        /** @deprecated Use resultBytes. Both spellings reject together. */ experimentalResultBytes?: never;
-      }
-    | {
-        resultBytes?: never;
-        /** @deprecated Use resultBytes. Both spellings reject together. */ experimentalResultBytes: ResultByteDeclaration;
-      }
-  ) &
-  (
-    | {
-        maxReservedResultBytes: number;
-        /** @deprecated Use maxReservedResultBytes. Both spellings reject together. */ experimentalMaxReservedResultBytes?: never;
-      }
-    | {
-        maxReservedResultBytes?: never;
-        /** @deprecated Use maxReservedResultBytes. Both spellings reject together. */ experimentalMaxReservedResultBytes: number;
-      }
-  ) & { maxResultBytes?: never; experimentalMaxResultBytes?: never };
+> = StreamRangeOptions<Input, Output, Progress> & {
+  resultBytes: ResultByteDeclaration;
+  maxReservedResultBytes: number;
+  maxResultBytes?: never;
+};
 
 /** Maximum visible bytes; successful unused credit refunds on arrival. */
 export type UpperBoundBinaryStreamRangeOptions<
   Input = unknown,
   Output = never,
   Progress = ProgressValue,
-> = StreamRangeOptions<Input, Output, Progress> &
-  (
-    | {
-        maxResultBytes: ResultByteDeclaration;
-        /** @deprecated Use maxResultBytes. Both spellings reject together. */ experimentalMaxResultBytes?: never;
-      }
-    | {
-        maxResultBytes?: never;
-        /** @deprecated Use maxResultBytes. Both spellings reject together. */ experimentalMaxResultBytes: ResultByteDeclaration;
-      }
-  ) &
-  (
-    | {
-        maxReservedResultBytes: number;
-        /** @deprecated Use maxReservedResultBytes. Both spellings reject together. */ experimentalMaxReservedResultBytes?: never;
-      }
-    | {
-        maxReservedResultBytes?: never;
-        /** @deprecated Use maxReservedResultBytes. Both spellings reject together. */ experimentalMaxReservedResultBytes: number;
-      }
-  ) & { resultBytes?: never; experimentalResultBytes?: never };
+> = StreamRangeOptions<Input, Output, Progress> & {
+  maxResultBytes: ResultByteDeclaration;
+  maxReservedResultBytes: number;
+  resultBytes?: never;
+};
 
 /** Typed numeric blocks supported by element-range mapping. */
 export type PjsTypedArray =
@@ -214,20 +160,10 @@ export type TypedMapRangeOptions<
   Constructor extends PjsTypedArrayConstructor = PjsTypedArrayConstructor,
   Input = never,
   Progress = ProgressValue,
-> = PartitionOptions<Input, InstanceType<Constructor>, Progress> &
-  (
-    | {
-        /** Built-in typed-array constructor for the flat result. */
-        outputConstructor: Constructor;
-        /** @deprecated Use outputConstructor. Both spellings together reject. */
-        experimentalOutputConstructor?: never;
-      }
-    | {
-        outputConstructor?: never;
-        /** @deprecated Use outputConstructor. Both spellings together reject. */
-        experimentalOutputConstructor: Constructor;
-      }
-  );
+> = PartitionOptions<Input, InstanceType<Constructor>, Progress> & {
+  /** Built-in typed-array constructor for the flat result. */
+  outputConstructor: Constructor;
+};
 
 export interface RangePlan extends PartitionRange {
   chunkCount: number;

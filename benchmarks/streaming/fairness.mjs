@@ -35,8 +35,8 @@ for (const capacity of [1, 4, 8]) {
         { start: 0, end: 64, grainSize: 1 },
         make,
         {
-          experimentalDispatchBatchSize: 4,
-          experimentalMaxBufferedResults: capacity,
+          dispatchBatchSize: 4,
+          maxBufferedResults: capacity,
         },
       )) {
         void value;
@@ -50,7 +50,7 @@ for (const capacity of [1, 4, 8]) {
     const fast = consume('fast');
     const parallel = runtime
       .parallelFor(task, { start: 0, end: 64, grainSize: 1 }, make, {
-        experimentalDispatchBatchSize: 4,
+        dispatchBatchSize: 4,
       })
       .then(() => {
         first.parallel ??= performance.now() - started;

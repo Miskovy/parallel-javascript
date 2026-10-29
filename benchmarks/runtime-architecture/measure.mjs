@@ -92,7 +92,7 @@ const cases = [
         task,
         { start: 0, end: logicalCount, grainSize: 1 },
         (partition) => ({ input: { kind: 'range', partition } }),
-        { experimentalDispatchBatchSize: 4 },
+        { dispatchBatchSize: 4 },
       ),
   },
   {
@@ -102,7 +102,7 @@ const cases = [
         task,
         { start: 0, end: logicalCount, grainSize: 1 },
         (partition) => ({ input: { kind: 'range', partition } }),
-        { experimentalDispatchBatchSize: 4 },
+        { dispatchBatchSize: 4 },
       ),
   },
   {
@@ -114,8 +114,8 @@ const cases = [
           { start: 0, end: logicalCount, grainSize: 1 },
           (partition) => ({ input: { kind: 'range', partition } }),
           {
-            experimentalDispatchBatchSize: 4,
-            experimentalMaxBufferedResults: 8,
+            dispatchBatchSize: 4,
+            maxBufferedResults: 8,
           },
         ),
         logicalCount,
@@ -137,9 +137,9 @@ const cases = [
             },
           }),
           {
-            experimentalMaxBufferedResults: 8,
-            experimentalResultBytes: 256 * 2 ** 10,
-            experimentalMaxReservedResultBytes: 2 * 2 ** 20,
+            maxBufferedResults: 8,
+            resultBytes: 256 * 2 ** 10,
+            maxReservedResultBytes: 2 * 2 ** 20,
           },
         ),
         binaryCount,
@@ -152,7 +152,7 @@ const cases = [
         task,
         { start: 0, end: logicalCount, grainSize: 4 },
         (partition) => ({ input: { kind: 'map-array', partition } }),
-        { experimentalDispatchBatchSize: 4 },
+        { dispatchBatchSize: 4 },
       ),
   },
   {
@@ -163,8 +163,8 @@ const cases = [
         { start: 0, end: logicalCount, grainSize: 4 },
         (partition) => ({ input: { kind: 'map-typed', partition } }),
         {
-          experimentalDispatchBatchSize: 4,
-          experimentalOutputConstructor: Uint32Array,
+          dispatchBatchSize: 4,
+          outputConstructor: Uint32Array,
         },
       ),
   },

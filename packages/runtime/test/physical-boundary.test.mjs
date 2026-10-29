@@ -122,10 +122,8 @@ function stream(runtime, task, shared, mode, extra = {}, count = 1) {
     () => ({ input: { shared } }),
     {
       maxBufferedResults: count,
-      experimentalMaxReservedResultBytes: count * 8,
-      ...(mode === 'exact'
-        ? { experimentalResultBytes: 8 }
-        : { experimentalMaxResultBytes: 8 }),
+      maxReservedResultBytes: count * 8,
+      ...(mode === 'exact' ? { resultBytes: 8 } : { maxResultBytes: 8 }),
       ...extra,
     },
   );
@@ -215,10 +213,8 @@ for (const mode of ['exact', 'upper-bound']) {
           }),
           {
             signal: controller.signal,
-            experimentalMaxReservedResultBytes: 8,
-            ...(mode === 'exact'
-              ? { experimentalResultBytes: 8 }
-              : { experimentalMaxResultBytes: 8 }),
+            maxReservedResultBytes: 8,
+            ...(mode === 'exact' ? { resultBytes: 8 } : { maxResultBytes: 8 }),
           },
         );
         await assert.rejects(
@@ -519,8 +515,8 @@ for (const fail of [false, true]) {
         { start: 0, end: 1, grainSize: 1 },
         () => ({ input: { fail } }),
         {
-          experimentalMaxResultBytes: 8,
-          experimentalMaxReservedResultBytes: 8,
+          maxResultBytes: 8,
+          maxReservedResultBytes: 8,
         },
       );
       const iterator = results[Symbol.asyncIterator]();
@@ -552,8 +548,8 @@ test(
       { start: 0, end: 1, grainSize: 1 },
       () => ({ input: () => 0 }),
       {
-        experimentalResultBytes: 8,
-        experimentalMaxReservedResultBytes: 8,
+        resultBytes: 8,
+        maxReservedResultBytes: 8,
       },
     );
     const iterator = results[Symbol.asyncIterator]();

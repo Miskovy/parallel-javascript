@@ -2,7 +2,7 @@
   <img src="static/pjs-logo-square-1280x1280.png" width="200" height="200" alt="PJS logo: green circuit and hexagon mark">
 </p>
 
-**Promotion status:** Development P1/P2/P3 contracts are promoted following benchmark review; this does not change published RC4, begin the alias window or authorize a release.
+**Release status:** Published RC5 is the transition prerelease. This checkout prepares an unpublished 1.0.0 candidate with proposed C4 alias removal; policy and stable-release approval remain pending.
 
 <h1 align="center">PJS</h1>
 
@@ -33,17 +33,17 @@ I/O usually belong on the host. There are no production dependencies.
 Development builds also execute tasks in dedicated browser module workers through
 the explicit `@pjavascript/runtime/browser` entry. See the
 [browser deployment guide](docs/guide/browser.md) for native modules, Vite assets,
-capability requirements and endpoint-retirement guarantees. Published RC4 is unchanged.
+capability requirements and endpoint-retirement guarantees. Published RC5 already includes this browser entry.
 
-**Current release: [1.0.0-rc.4](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.4),
-a prerelease.** As checked on 23 October 2026, [npm `next` and `latest`](https://registry.npmjs.org/@pjavascript%2fruntime)
-both select RC4. Final v1.0.0 has not been released. CI reports validation results;
-it does not establish stable-release or production-readiness approval.
+**Published prerelease: [1.0.0-rc.5](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.5).**
+On 29 October 2026, npm `next` selects RC5 and `latest` still selects RC4.
+Final 1.0.0 is unpublished. RC5 accepts all six deprecated aliases.
 
-**Prepared candidate: 1.0.0-rc.5**, containing integrated Checkpoints 1–4,
-patched Node support, CommonJS and browser execution. It is not published; npm tags
-still select RC4. Read the [release notes/migration](docs/release-v1.0.0-rc.5.md)
-and [candidate procedure](docs/releasing.md). Existing release holds remain unresolved.
+**Prepared candidate: 1.0.0.** It proposes rejecting all six legacy properties,
+including inherited and explicit undefined presence. Use the stable spellings in
+the [migration notes](docs/release-v1.0.0.md). Direct removal at 1.0.0 needs the
+documented maintainer policy amendment; passing CI does not accept that decision
+or resolve stable-release holds. See the [checkpoint](docs/research/v1-release-checkpoint.md).
 
 ## Quickstart
 
@@ -51,11 +51,10 @@ and [candidate procedure](docs/releasing.md). Existing release holds remain unre
 npm install @pjavascript/runtime@next
 ```
 
-PJS ships ESM; development builds also support synchronous CommonJS `require`.
-Published RC4 remains ESM-only. Development manifests support Node **22.23.4+, 24.22.1+, or 26.12.1+**
+PJS ships ESM and supports synchronous CommonJS `require` through the same Node graph.
+RC5 and this candidate support Node **22.23.4+, 24.22.1+, or 26.12.1+**
 within those majors (`^22.23.4 || ^24.22.1 || ^26.12.1`). Stay on current patched
-releases; updating PJS does not upgrade your Node executable. Node 26 is Current
-as of 26 October 2026, with LTS scheduled for 28 October. Consult the
+releases; updating PJS does not upgrade your Node executable. Consult the
 [support policy and exact evidence](docs/stability.md#proposed-node-and-platform-policy).
 The [24.0.0 floor report](docs/research/node24-floor-qualification.md) is historical;
 it does not establish the new minimums or change published RC4.
@@ -125,15 +124,15 @@ See the [core API guide](docs/guide/core-api.md) for contracts and options.
 
 ## Development status
 
-Merged source includes S1, corrected Stage A, B1–B4, C1-A/Q, C2 and C3. It differs
-from published RC4 as the RC5 candidate. Checkout examples use the
-six new development option names with deprecated aliases; RC4 uses the older
-spellings and declarations. Later containment controls are also absent from RC4.
-
-P1/P2/P3 are promoted in development; all six aliases remain. The
-one shared transition prerelease, C4 removal and final-candidate qualification
-need the separate [maintainer decisions](docs/research/v1-api-migration-plan.md#decisions-for-maintainer-review).
-See the [stability policy](docs/stability.md) and [current inventory](docs/research/v1-api-contract-inventory.md).
+The published RC5 includes the integrated runtime, recovery, scheduling, progress,
+CommonJS and browser contracts. This candidate changes six alias acceptance paths,
+their option declarations, migration consumers, version metadata and release freeze.
+Execution and ownership keep their existing owners. A focused dispatcher correction
+lets queued exclusive work use an idle replacement instead of an obsolete busy-worker
+pin, as found by the required extended R2 profile. The remaining
+`@experimental` annotation on the internal array-map adapter overload is retained
+and explicitly classified in the [stable contract](docs/release-v1.0.0.md).
+See [stability](docs/stability.md) and the [current inventory](docs/research/v1-api-contract-inventory.md).
 
 ## Ownership, cancellation and backpressure
 

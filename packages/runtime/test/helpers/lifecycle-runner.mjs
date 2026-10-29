@@ -281,12 +281,12 @@ class Controller {
           },
           {
             signal: controller.signal,
-            experimentalDispatchBatchSize: a.count,
-            experimentalMaxBufferedResults: a.count,
-            experimentalMaxReservedResultBytes: a.count * 8,
+            dispatchBatchSize: a.count,
+            maxBufferedResults: a.count,
+            maxReservedResultBytes: a.count * 8,
             ...(a.mode === 'exact'
-              ? { experimentalResultBytes: 8 }
-              : { experimentalMaxResultBytes: 8 }),
+              ? { resultBytes: 8 }
+              : { maxResultBytes: 8 }),
           },
         );
         this.streams.set(a.stream, stream);
