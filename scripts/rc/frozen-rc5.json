@@ -1075,15 +1075,15 @@
   "archiveToolchain": {
     "node": "24.22.1",
     "npm": "11.19.0",
-    "platform": "linux",
+    "platform": "win32",
     "arch": "x64"
   },
   "inputs": {
     ".github/workflows/ci.yml": "39977ad3b8b1c7686890784b86cef26a9b9427bb408495b0efe19d55d1d6e113",
-    ".github/workflows/publish-npm.yml": "008dc326589397476517cccf27cb95a5b5cd6ac9813abd1e17ab74749ea1e90c",
+    ".github/workflows/publish-npm.yml": "2ce75128c36b74397b7e057b2ef7d63aa5680497e9bade341944cc34f2e23235",
     "README.md": "193f6ed59208716a5bf253ddaa928efa33f97d639328ba5efae4afd2def2a059",
     "docs/release-v1.0.0-rc.5.md": "f3514e3ee5f22ea66377b82e5dc7c74f910d3934c3338210927d8018239e97df",
-    "docs/releasing.md": "7a25aed3486e989bf1d9a3115ca53d717fb0b85c37148f3486cb1d60d2c985a6",
+    "docs/releasing.md": "d13b195fab548666612668b01d446cb7bc5dcc4207209af3a78550a8ed5f4f3a",
     "examples/basic-run.mjs": "ceabb3380855bffc8e099a199a338eda134be173479b09d31801f050ce3dac58",
     "examples/browser/copy-assets.mjs": "0e4cb6097a6467948fcc62404a11a2a9c88df0531f3a8a53f4c618b1438eeb19",
     "examples/browser/host.js": "41528aa31a95829641ea356fa92ff604f648a17b8c9ad3b65c2293c2c9d1c5cf",
@@ -1148,7 +1148,7 @@
     "scripts/rc/repro.mjs": "bc021e8899e3af2c4ba1c4e28127014f116cb3550f4876532638179494e8676c",
     "scripts/rc/soak.mjs": "6fa4d7dc66bdfbefcea07146e929def1d1186f99d0615b35a9e09e748520445e",
     "scripts/rc/tasks.mjs": "35ead9ecdac66d2a1f82472688a5fb06fde8deceb9c3f8c722f43b925659ee4f",
-    "scripts/release/npm-cli.test.mjs": "fd3eb72c299b1c0e9b9af52ba4283a5f5dc4609a2d09921207bc781202e3ef31",
+    "scripts/release/npm-cli.test.mjs": "f12573469cf9baa120fc58f53cff40be2c4c04c6b298a2c8ce296c68fa69cc59",
     "scripts/release/npm-release.mjs": "9029ea93dc133278db2cd629b4c0f540ef3b86d79ee1344932087a18ffb3e0f0",
     "scripts/release/npm-release.test.mjs": "50c54363269d91dc68f071d2b3ff13a13af6f43a2c9143ea1b722750c5f5f6f0",
     "scripts/release/toolchain.json": "0b0426ccc9d1ce5568df062f1aa3c182e06fd9c671e40f51c6f1325a04a36439",

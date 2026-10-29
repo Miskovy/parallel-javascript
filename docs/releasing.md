@@ -129,7 +129,11 @@ The shared release helper rejects any other publisher version before registry
 operations and disables package-manager caching. Runtime support for Node
 22.23.4, 24.22.1 and 26.12.1 does not approve every bundled npm for publishing. Six-cell
 CI provisions the exact release npm archive after verifying its committed SHA-512,
-then tests the live CLI separately from ordinary runtime npm. Review Node/npm pins
+then tests the live CLI separately from ordinary runtime npm.
+Publication also provisions that verified archive before its exact toolchain check.
+It adds the local npm executables to subsequent steps' PATH and sets PJS_NPM_CLI
+for release helpers; bare npm commands and nested npm scripts select the same CLI.
+The bundled npm only bootstraps provisioning. Review Node/npm pins
 and archive integrity together when upgrading; repeat the runtime validation matrix
 and two-build reproduction. See upstream
 [trusted publishing guidance](https://docs.npmjs.com/trusted-publishers/),

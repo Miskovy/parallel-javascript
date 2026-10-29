@@ -37,6 +37,11 @@ jobs:
         with:
           node-version: ${{ steps.toolchain.outputs.node }}
           package-manager-cache: false
+      - name: Provision and select the reviewed publication npm
+        run: |
+          npm run release:npm -- "$RUNNER_TEMP/pjs-release-cli"
+          echo "$RUNNER_TEMP/pjs-release-cli/node_modules/.bin" >> "$GITHUB_PATH"
+          echo "PJS_NPM_CLI=$RUNNER_TEMP/pjs-release-cli/node_modules/npm/bin/npm-cli.js" >> "$GITHUB_ENV"
       - name: Require the exact reviewed Node and npm publisher
         run: node scripts/release/toolchain.mjs check
       - name: Validate release version and classification
