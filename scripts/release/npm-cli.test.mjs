@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { spawnSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import {
   existsSync,
@@ -10,7 +10,7 @@ import {
   writeFileSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { delimiter, isAbsolute, join } from 'node:path';
+import { delimiter, isAbsolute, join, resolve } from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import {
@@ -25,12 +25,7 @@ import {
 
 test(
   'publication step selects the verified CLI for bare npm and nested npm scripts',
-  {
-    // The publication job runs on Ubuntu; exercise its actual bash step there.
-    skip:
-      process.platform === 'win32' && 'Publication uses the Ubuntu bash shell',
-    timeout: 180000,
-  },
+  { timeout: 180000 },
   (t) => {
     const root = fileURLToPath(new URL('../../', import.meta.url));
     const workflow = readFileSync(
@@ -48,20 +43,29 @@ test(
     );
     const directory = mkdtempSync(join(tmpdir(), 'PJS publisher with spaces '));
     t.after(() => rmSync(directory, { recursive: true, force: true }));
+    // Use the production shell on Unix and Git's bundled bash on Windows.
+    const bash =
+      process.platform === 'win32'
+        ? resolve(
+            execFileSync('git', ['--exec-path'], { encoding: 'utf8' }).trim(),
+            '../../../bin/bash.exe',
+          )
+        : 'bash';
+    const shellPath = (path) => path.replaceAll('\\', '/');
     const env = { ...process.env };
     for (const key of Object.keys(env))
       if (/token|auth|^npm_config_|^npm_execpath$|^PJS_NPM_CLI$/i.test(key))
         delete env[key];
     Object.assign(env, {
-      RUNNER_TEMP: directory,
-      GITHUB_PATH: join(directory, 'github-path'),
-      GITHUB_ENV: join(directory, 'github-env'),
-      GITHUB_OUTPUT: join(directory, 'github-output'),
+      RUNNER_TEMP: shellPath(directory),
+      GITHUB_PATH: shellPath(join(directory, 'github-path')),
+      GITHUB_ENV: shellPath(join(directory, 'github-env')),
+      GITHUB_OUTPUT: shellPath(join(directory, 'github-output')),
       npm_config_cache: join(directory, 'cache'),
     });
     const shell = (script, cwd, childEnv) => {
       const result = spawnSync(
-        'bash',
+        bash,
         ['--noprofile', '--norc', '-e', '-c', script],
         {
           cwd,
@@ -95,11 +99,19 @@ test(
     );
     assert.equal(provision.integrity, releaseToolchain.npmIntegrity);
     assert.equal(provision.cli, cli);
-    assert.equal(env.PJS_NPM_CLI, cli);
+    assert.equal(realpathSync(env.PJS_NPM_CLI), realpathSync(cli));
     assertSupportedReleaseNpmVersion(shell('npm --version', directory, env));
     assert.equal(
-      shell('command -v npm', directory, env),
-      join(directory, 'pjs-release-cli/node_modules/.bin/npm'),
+      realpathSync(
+        shell(
+          process.platform === 'win32'
+            ? 'cygpath -w "$(command -v npm)"'
+            : 'command -v npm',
+          directory,
+          env,
+        ),
+      ),
+      realpathSync(join(directory, 'pjs-release-cli/node_modules/.bin/npm')),
     );
     writeFileSync(
       join(directory, 'package.json'),
@@ -110,12 +122,12 @@ test(
     );
     writeFileSync(
       join(directory, 'probe.mjs'),
-      `import { execFileSync } from 'node:child_process';
+      `import { execSync } from 'node:child_process';
 console.log(JSON.stringify({
   cli: process.env.npm_execpath,
   helperCli: process.env.PJS_NPM_CLI,
   node: process.execPath,
-  bareVersion: execFileSync('npm', ['--version'], { encoding: 'utf8' }).trim(),
+  bareVersion: execSync('npm --version', { encoding: 'utf8' }).trim(),
 }));\n`,
     );
     for (const command of [
@@ -124,7 +136,7 @@ console.log(JSON.stringify({
     ]) {
       const actual = JSON.parse(shell(command, directory, env));
       assert.equal(realpathSync(actual.cli), realpathSync(cli));
-      assert.equal(actual.helperCli, cli);
+      assert.equal(realpathSync(actual.helperCli), realpathSync(cli));
       assert.equal(realpathSync(actual.node), realpathSync(process.execPath));
       assertSupportedReleaseNpmVersion(actual.bareVersion);
       t.diagnostic(JSON.stringify({ command, ...actual }));

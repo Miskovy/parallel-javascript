@@ -1148,7 +1148,7 @@
     "scripts/rc/repro.mjs": "bc021e8899e3af2c4ba1c4e28127014f116cb3550f4876532638179494e8676c",
     "scripts/rc/soak.mjs": "6fa4d7dc66bdfbefcea07146e929def1d1186f99d0615b35a9e09e748520445e",
     "scripts/rc/tasks.mjs": "35ead9ecdac66d2a1f82472688a5fb06fde8deceb9c3f8c722f43b925659ee4f",
-    "scripts/release/npm-cli.test.mjs": "24783cebd3b460778ade632825d3ffd254c30d133aef3c1c6e2065727577f2dc",
+    "scripts/release/npm-cli.test.mjs": "cb3a2bd6978d149383c40dc21bf28cb75b6f22c108fa791969014ed402f5f7e0",
     "scripts/release/npm-release.mjs": "9029ea93dc133278db2cd629b4c0f540ef3b86d79ee1344932087a18ffb3e0f0",
     "scripts/release/npm-release.test.mjs": "50c54363269d91dc68f071d2b3ff13a13af6f43a2c9143ea1b722750c5f5f6f0",
     "scripts/release/toolchain.json": "0b0426ccc9d1ce5568df062f1aa3c182e06fd9c671e40f51c6f1325a04a36439",
