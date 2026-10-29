@@ -5,18 +5,142 @@ import {
   existsSync,
   mkdtempSync,
   readFileSync,
+  realpathSync,
   rmSync,
   writeFileSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { isAbsolute, join } from 'node:path';
+import { delimiter, isAbsolute, join } from 'node:path';
 import { test } from 'node:test';
-import { assertSupportedReleaseNpmVersion } from './toolchain.mjs';
+import { fileURLToPath } from 'node:url';
+import {
+  assertSupportedReleaseNpmVersion,
+  releaseToolchain,
+} from './toolchain.mjs';
 import {
   packageName,
   parsePublishDryRunReport,
   validatePublishDryRunReport,
 } from './npm-release.mjs';
+
+test(
+  'publication step selects the verified CLI for bare npm and nested npm scripts',
+  {
+    // The publication job runs on Ubuntu; exercise its actual bash step there.
+    skip:
+      process.platform === 'win32' && 'Publication uses the Ubuntu bash shell',
+    timeout: 180000,
+  },
+  (t) => {
+    const root = fileURLToPath(new URL('../../', import.meta.url));
+    const workflow = readFileSync(
+      join(root, '.github/workflows/publish-npm.yml'),
+      'utf8',
+    );
+    const step = workflow.match(
+      / {6}- name: Provision and select the reviewed publication npm\n {8}run: \|\n((?: {10}.+\n)+)/,
+    );
+    assert.ok(step, 'Publication must provision and select its CLI');
+    assert.ok(
+      step.index <
+        workflow.indexOf('      - name: Require the exact reviewed Node'),
+      'Provision and select before checking the publication toolchain',
+    );
+    const directory = mkdtempSync(join(tmpdir(), 'PJS publisher with spaces '));
+    t.after(() => rmSync(directory, { recursive: true, force: true }));
+    const env = { ...process.env };
+    for (const key of Object.keys(env))
+      if (/token|auth|^npm_config_|^npm_execpath$|^PJS_NPM_CLI$/i.test(key))
+        delete env[key];
+    Object.assign(env, {
+      RUNNER_TEMP: directory,
+      GITHUB_PATH: join(directory, 'github-path'),
+      GITHUB_ENV: join(directory, 'github-env'),
+      GITHUB_OUTPUT: join(directory, 'github-output'),
+      npm_config_cache: join(directory, 'cache'),
+    });
+    const shell = (script, cwd, childEnv) => {
+      const result = spawnSync(
+        'bash',
+        ['--noprofile', '--norc', '-e', '-c', script],
+        {
+          cwd,
+          env: childEnv,
+          encoding: 'utf8',
+          timeout: 150000,
+          maxBuffer: 4 * 1024 ** 2,
+        },
+      );
+      assert.ifError(result.error);
+      assert.equal(result.status, 0, result.stdout + result.stderr);
+      return result.stdout.trim();
+    };
+    shell(step[1].replaceAll(/^ {10}/gm, ''), root, env);
+    // Apply the same file-command handoff that Actions uses for subsequent steps.
+    for (const line of readFileSync(env.GITHUB_ENV, 'utf8')
+      .trim()
+      .split('\n')) {
+      const equals = line.indexOf('=');
+      assert.ok(equals > 0);
+      env[line.slice(0, equals)] = line.slice(equals + 1);
+    }
+    env.PATH =
+      readFileSync(env.GITHUB_PATH, 'utf8').trim() + delimiter + env.PATH;
+    const cli = join(
+      directory,
+      'pjs-release-cli/node_modules/npm/bin/npm-cli.js',
+    );
+    const provision = JSON.parse(
+      readFileSync(join(directory, 'pjs-release-cli/provision.json')),
+    );
+    assert.equal(provision.integrity, releaseToolchain.npmIntegrity);
+    assert.equal(provision.cli, cli);
+    assert.equal(env.PJS_NPM_CLI, cli);
+    assertSupportedReleaseNpmVersion(shell('npm --version', directory, env));
+    assert.equal(
+      shell('command -v npm', directory, env),
+      join(directory, 'pjs-release-cli/node_modules/.bin/npm'),
+    );
+    writeFileSync(
+      join(directory, 'package.json'),
+      JSON.stringify({
+        private: true,
+        scripts: { probe: 'node probe.mjs', nested: 'npm run --silent probe' },
+      }),
+    );
+    writeFileSync(
+      join(directory, 'probe.mjs'),
+      `import { execFileSync } from 'node:child_process';
+console.log(JSON.stringify({
+  cli: process.env.npm_execpath,
+  helperCli: process.env.PJS_NPM_CLI,
+  node: process.execPath,
+  bareVersion: execFileSync('npm', ['--version'], { encoding: 'utf8' }).trim(),
+}));\n`,
+    );
+    for (const command of [
+      'npm run --silent probe',
+      'npm run --silent nested',
+    ]) {
+      const actual = JSON.parse(shell(command, directory, env));
+      assert.equal(realpathSync(actual.cli), realpathSync(cli));
+      assert.equal(actual.helperCli, cli);
+      assert.equal(realpathSync(actual.node), realpathSync(process.execPath));
+      assertSupportedReleaseNpmVersion(actual.bareVersion);
+      t.diagnostic(JSON.stringify({ command, ...actual }));
+    }
+    if (process.versions.node === releaseToolchain.node) {
+      const checked = JSON.parse(
+        shell('node scripts/release/toolchain.mjs check', root, env),
+      );
+      assert.deepEqual(checked, {
+        node: releaseToolchain.node,
+        npm: releaseToolchain.npm,
+        supported: true,
+      });
+    }
+  },
+);
 
 test(
   'selected real npm CLI dry-run satisfies the production parser without credentials or scripts',
