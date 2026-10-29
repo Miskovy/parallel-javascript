@@ -41,7 +41,7 @@ try {
   const range = { start: 0, end: 5, grainSize: 2 };
   const batchOptions: PartitionOptions[] = [
     { dispatchBatchSize: 16 },
-    { experimentalDispatchBatchSize: 1 },
+    { dispatchBatchSize: 1 },
   ];
   for (const option of batchOptions) {
     const collected: number[][] = await runtime.partitionRange(
@@ -69,8 +69,8 @@ try {
   const constructors: TypedMapRangeOptions<Float64ArrayConstructor>[] = [
     { outputConstructor: Float64Array, dispatchBatchSize: 2 },
     {
-      experimentalOutputConstructor: Float64Array,
-      experimentalDispatchBatchSize: 2,
+      outputConstructor: Float64Array,
+      dispatchBatchSize: 2,
     },
   ];
   for (const option of constructors) {
@@ -88,14 +88,14 @@ try {
     const binaryOptions:
       BinaryStreamRangeOptions | UpperBoundBinaryStreamRangeOptions = move
       ? {
-          experimentalMaxResultBytes: bytes,
-          experimentalMaxReservedResultBytes: 16,
+          maxResultBytes: bytes,
+          maxReservedResultBytes: 16,
           dispatchBatchSize: 2,
           maxBufferedResults: 1,
         }
       : {
-          experimentalResultBytes: bytes,
-          experimentalMaxReservedResultBytes: 16,
+          resultBytes: bytes,
+          maxReservedResultBytes: 16,
           dispatchBatchSize: 1,
           maxBufferedResults: 1,
         };
@@ -121,44 +121,8 @@ try {
       maxBufferedResults: 1,
     },
     {
-      resultBytes: 16,
-      experimentalMaxReservedResultBytes: 16,
-      dispatchBatchSize: 2,
-      maxBufferedResults: 1,
-    },
-    {
-      experimentalResultBytes: 16,
-      maxReservedResultBytes: 16,
-      dispatchBatchSize: 2,
-      maxBufferedResults: 1,
-    },
-    {
-      experimentalResultBytes: 16,
-      experimentalMaxReservedResultBytes: 16,
-      dispatchBatchSize: 2,
-      maxBufferedResults: 1,
-    },
-    {
       maxResultBytes: 16,
       maxReservedResultBytes: 16,
-      dispatchBatchSize: 2,
-      maxBufferedResults: 1,
-    },
-    {
-      maxResultBytes: 16,
-      experimentalMaxReservedResultBytes: 16,
-      dispatchBatchSize: 2,
-      maxBufferedResults: 1,
-    },
-    {
-      experimentalMaxResultBytes: 16,
-      maxReservedResultBytes: 16,
-      dispatchBatchSize: 2,
-      maxBufferedResults: 1,
-    },
-    {
-      experimentalMaxResultBytes: 16,
-      experimentalMaxReservedResultBytes: 16,
       dispatchBatchSize: 2,
       maxBufferedResults: 1,
     },
@@ -237,7 +201,7 @@ console.log(
       'parallelMapRange',
     ],
     overloads: ['count', 'exact', 'upper-bound', 'array', 'typed'],
-    aliasesRetained: true,
+    aliasesRetained: false,
   }),
 );
 await containmentContracts();

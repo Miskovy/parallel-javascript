@@ -50,13 +50,13 @@ async function sample() {
     return value;
   };
   const options = {
-    experimentalDispatchBatchSize: move ? 1 : 4,
-    experimentalMaxBufferedResults: Math.min(16, Math.max(1, count)),
+    dispatchBatchSize: move ? 1 : 4,
+    maxBufferedResults: Math.min(16, Math.max(1, count)),
     ...(mode === 'count'
       ? {}
       : {
-          experimentalResultBytes: mode === 'fixed' ? bytes : declaration,
-          experimentalMaxReservedResultBytes: Math.max(
+          resultBytes: mode === 'fixed' ? bytes : declaration,
+          maxReservedResultBytes: Math.max(
             bytes,
             bytes * Math.min(16, Math.max(1, count)),
           ),

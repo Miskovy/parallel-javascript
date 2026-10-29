@@ -1,100 +1,57 @@
 # Publishing PJS releases
 
-The canonical package is [`@pjavascript/runtime` on npmjs.com](https://www.npmjs.com/package/@pjavascript/runtime),
-served by `https://registry.npmjs.org/`. Current published prerelease:
-`v1.0.0-rc.4`, installed with `npm install @pjavascript/runtime@next`.
-Final v1.0.0 has not been released. Published versions are immutable; do not republish them.
+## Prepared 1.0.0 candidate
 
-Public [npm metadata](https://registry.npmjs.org/@pjavascript%2fruntime) rechecked
-28 October 2026 reports both `latest` and `next` at RC4;
-[GitHub](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.4)
-lists RC4 as a prerelease. Current workspace/package manifests identify the
-**unpublished 1.0.0-rc.5 review candidate**, containing completed Checkpoints 1–4,
-patched Node support, the browser shutdown correction and host lifecycle refactor.
-These integrated bytes differ from immutable published RC4. Candidate preparation,
-documentation reconciliation and technical validation grant no publication permission
-or final-v1.0 readiness. The [post-C3 decision table](research/v1-api-migration-plan.md#decisions-for-maintainer-review)
-and [ADR 0023](adr/0023-v1-api-stability-decisions.md) grant no release approval.
+Published RC5 is immutable at `131d28112924fc55228d4722ec111aa513f94aee`,
+tree `5e8ec2653b0b86aa93dbaf5c912e76e203f1c906`. Its baseline SHA-256 is
+`a6e247f48c23530cbd22f89ddc3c30453b0cd2c10c1618ead1634afddd1c04c2`;
+archive `f9bd1a3e09002b60ed136f76ac4f3ae197b2869cc910f324434ad124bc98e568`
+contains 303 files / 200,346 bytes. Registry readback on 29 October 2026 found
+`next=1.0.0-rc.5`, `latest=1.0.0-rc.4`, and no 1.0.0 or stable tag/release.
 
-The repository npm badge and install link make the package immediately discoverable.
-The new package `homepage` field appears beginning with the next published version;
-existing RC2 metadata and its packaged README do not change retroactively.
-GitHub's repository **Packages** sidebar represents GitHub Packages. This project
-does not publish a duplicate there or create another package identity. Any later
-organization/linked-artifact or GitHub Packages adoption is a separate decision.
-
-## RC5 candidate preparation and validation
-
-`1.0.0-rc.5` is a **review candidate**, not a published release or final-v1.0
-readiness declaration. On 28 October 2026 read-only checks returned explicit npm
-and GitHub-release 404s for RC5 and a successful empty remote-tag query. The package
-metadata remained accessible with latest/next at RC4. Recheck availability before
-any separately authorized publication. This PR creates no tag, release or registry state.
-
-The explicit reviewed map in [baseline.mjs](../scripts/rc/baseline.mjs) registers
-RC4 and RC5 only. Unknown versions, missing baseline files, tag/version mismatches,
-workspace/package/lock metadata drift, and source/declaration/artifact drift fail
-closed. Historical [frozen-rc4.json](../scripts/rc/frozen-rc4.json) is unchanged,
-including its original Node 24.21.0 publication pin; validate RC4 at its original
-tag/source and artifact, never against new RC5 bytes. RC4 historical reports remain
-evidence for that artifact only. The RC5 [baseline](../scripts/rc/frozen-rc5.json)
-selects the integrated implementation and reviewed Node 24.22.1/npm 11.19.0 toolchain.
-
-Baseline writing is a deliberate preparation operation, separate from every
-read-only check:
-
-```sh
-npm run build
-node scripts/rc/prepare.mjs --version=1.0.0-rc.5 --npm-cli=/absolute/reviewed/npm-cli.js
-```
-
-Only RC5 can be prepared by this writer. Existing output requires an explicit
---replace=true. Review input changes before regeneration; validation never writes
-expected values. The baseline hashes the full source/test/declaration inventories,
-both public export sets, workspace/package/lock metadata, selected release/tooling/
-consumer inputs, and every packed file plus the compressed archive. Its own file
-and Git SHA/tree are excluded to avoid a self-reference. Unpacked historical
-research and documentation outside the enumerated inputs are excluded, not
-requalified. Receipts bind the actual clean committed SHA/tree, baseline hash and
-tarball SHA-256. Material candidate changes require explicit regeneration and
-affected checks again; never edit a digest to hide an unexplained mismatch.
-
-From the clean committed candidate use the existing normal validation and RC
-requirements described in [RC tooling](../scripts/rc/README.md). The release branch
-runs the unchanged six-cell Linux/Windows minimum matrix, standard R2/R3 and the
-existing real-browser job, plus registered candidate qualification. Reproduction
-uses two independent clean builds: full qualification and the existing bounded RC
-extended soak in A, build/independent consumers in B, then compares the **actual
-archives**. This is not a new benchmark or extended R2/R3 campaign.
-
-Stage the reproduced canonical archive with its receipt/checksum outside Git.
-Set PJS_CANDIDATE_TARBALL to that absolute archive for the installed Node and browser
-harnesses; they validate and install those bytes instead of repacking. RC package
-validation also accepts --tarball=absolute/path. The existing release helper's
-tarball mode checks the selected baseline, artifact and immutable digest, runs
-selected-npm **publish --dry-run --ignore-scripts**, and installs the same archive.
-No rehearsal may invoke actual publication. All failed receipts remain retained;
-use new output paths for retries.
+The workspace prepares **1.0.0**, not a published stable release. It proposes C4
+removal directly at stable, requiring the explicit [policy amendment](adr/0023-v1-api-stability-decisions.md).
+The [release notes](release-v1.0.0.md) and [fixed checkpoint](research/v1-release-checkpoint.md)
+state contract, migration, matrix, evidence and remaining decisions. RC5-only hold
+non-blocking disposition is not stable-release clearance. Evidence acceptance,
+contract approval, hold disposition and publication permission remain separate.
 
 <a id="proposed-future-candidate-gates--stage-f-remains-separate"></a>
 
-## Preparation is not publication eligibility
+## Explicit preparation and validation
 
-Separately tracked release holds and their applicability remain **unresolved**.
-The [post-C3 decisions](research/v1-api-migration-plan.md#decisions-for-maintainer-review),
-[ADR 0023](adr/0023-v1-api-stability-decisions.md) and
-[stability policy](stability.md) still govern them. This work neither investigates
-nor clears excluded findings. RC5 selection resolves the version/baseline preparation
-choice only. No alias window starts from this PR; actual deliberate publication is
-required and no alias-removal release is selected.
+The selector registers RC4, RC5 and stable 1.0.0 only. Unknown versions,
+tag/version mismatches, missing baselines and byte drift fail closed. RC4/RC5
+baselines and their original tag/source/artifact are immutable; regression tests
+check both identities. Validation never writes expected hashes.
 
-The existing Stage F/G requirements for final readiness, including separately
-selected current patches, extended evidence and hold applicability, have not been
-silently replaced by candidate CI. Their unresolved applicability/publication
-clearance is a maintainer decision. Normal supported-minimum and Chromium results
-do not establish all current patches, other browser engines, macOS, ARM64, final
-v1.0 readiness or authorization to publish. Historical reports and holds remain
-unchanged. See [RC5 notes and migration](release-v1.0.0-rc.5.md).
+```sh
+npm run build
+node scripts/rc/prepare.mjs --version=1.0.0 --npm-cli=/absolute/reviewed/npm-cli.js
+```
+
+The writer accepts stable only, requires exact reviewed Node/npm and explicit
+`--replace=true` for an existing **unpublished** stable freeze. It freezes source,
+runtime tests, declarations, both export sets, metadata, selected release inputs,
+packed members and the compressed archive. Review differences before committing.
+No hash may be changed to hide a failing comparison. Baseline self-reference and
+Git identity are excluded; receipts bind the actual clean commit/tree.
+
+Stage F runs ten deduplicated Linux/Windows x64 floor/current cells: Node 22.23.4,
+24.22.1, 24.22.2, 26.12.1 and 26.13.0. Each retains standard R2/R3 and the existing
+runtime/registered-candidate gates. Existing extended R2/R3 run on publisher Node
+on both OSes. Two-clean-build reproduction runs the extended RC soak in state A,
+independent build/installed consumers in B, then compares members and complete
+archive bytes before staging one canonical archive. Installed Node and browser
+native/Vite profiles consume that archive. Existing exact-artifact helper rehearses
+selected npm publication with `--dry-run --ignore-scripts`, offline installation
+and final rehash. Keep failures and unavailable cells and do not repeat passed
+checks without changed inputs or an unresolved requirement.
+
+See [runner commands](../scripts/rc/README.md). Large receipts and archives remain
+outside Git. Chromium results do not establish other engines, macOS, ARM64 or
+arbitrary bundlers. Merge, tag, GitHub Release/npm publication and dist-tag writes
+require separate explicit authorization.
 
 ## One-time maintainer configuration
 
@@ -238,11 +195,11 @@ corrected. No tag mutation is needed or performed by this change. CD does not
 promote prereleases to `latest` automatically. Any future deliberate tag correction
 requires explicit maintainer authorization and an existing appropriate npm session.
 
-RC2 and RC4 are already published. Validate changes with
+RC2, RC4 and RC5 are already published. Validate changes with
 `npm run test:release`, formatting, documentation and
 workflow checks; do not publish it again to test the pipeline. No manual publish
-dispatch is provided. End-to-end OIDC publication will be exercised only by a
-future deliberately approved release.
+dispatch is provided. RC5 exercised the existing OIDC publication flow. Stable publication still needs
+its own explicit authorization.
 
 There is currently no Dependabot configuration. GitHub Actions update monitoring
 for the pinned releases is a follow-up; review upstream SHA updates deliberately.

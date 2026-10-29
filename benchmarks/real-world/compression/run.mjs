@@ -179,17 +179,15 @@ export async function measure(config, engine, fixture, repetitions, probeFile) {
   try {
     if (config.model === 'pjs' && !config.deep) {
       for (let pass = 0; pass < repetitions; pass++) {
-        const streamOptions = { experimentalMaxBufferedResults: config.count };
+        const streamOptions = { maxBufferedResults: config.count };
         if (config.credit !== 'count') {
-          streamOptions.experimentalMaxReservedResultBytes =
+          streamOptions.maxReservedResultBytes =
             (config.direction === 'inflate'
               ? config.grain
               : bound(config.grain)) * config.byteMaxima;
           if (config.direction === 'inflate')
-            streamOptions.experimentalResultBytes = (p) => p.end - p.start;
-          else
-            streamOptions.experimentalMaxResultBytes = (p) =>
-              bound(p.end - p.start);
+            streamOptions.resultBytes = (p) => p.end - p.start;
+          else streamOptions.maxResultBytes = (p) => bound(p.end - p.start);
         }
         const stream = engine.runtime.streamRange(
           engine.task,

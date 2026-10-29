@@ -1,57 +1,37 @@
 # Numeric range operations
 
-**Promotion status:** Development P2/P3 range and strict-result contracts are promoted following benchmark review. All six deprecated aliases remain accepted; C4 needs the actual transition release and separate authorization.
-
-For the integrated development contract and stability boundary, start with the
-[core API guide](guide/core-api.md) and [stability policy](stability.md).
-This reference describes development mechanics. Published RC4 predates the six
-new spellings and later declaration corrections; see the
-[documentation index](README.md) for release versus development scope.
+The prepared 1.0.0 candidate uses `dispatchBatchSize`, `maxBufferedResults`,
+`outputConstructor`, `resultBytes`, `maxResultBytes` and
+`maxReservedResultBytes`. Published RC5 accepts their six deprecated aliases;
+the candidate proposes removing them, subject to the policy amendment in the
+[release notes](release-v1.0.0.md). P1/P2/P3 development promotion is accepted.
 
 ## C2 development option transition
 
-Development source accepts `dispatchBatchSize`, `maxBufferedResults` and
-`outputConstructor` on their existing range, stream and typed-map option shapes.
-Their `experimentalDispatchBatchSize`, `experimentalMaxBufferedResults` and
-`experimentalOutputConstructor` aliases remain accepted and are deprecated.
-These P2 features are promoted in development following benchmark review.
-Defaults, count limits, batching 1–16, ordering and ownership are unchanged.
+RC5 is the published combined transition. In this candidate every legacy
+presence rejects, including inherited properties and explicit undefined. Each
+existing selector probes the stable name followed by its legacy name, then
+rejects legacy presence before either value read. Stable values are read once.
+There is no options spread, warning pass or silent fallback to defaults.
 
-C3 adds `resultBytes`, `maxResultBytes` and `maxReservedResultBytes` with
-deprecated `experimentalResultBytes`, `experimentalMaxResultBytes` and
-`experimentalMaxReservedResultBytes` aliases. Each pair rejects both-presence.
-Mixed spellings across distinct declaration/capacity pairs are valid; any exact
-declaration conflicts with any maximum declaration. Strict modes require one
-declaration and one capacity. Count-only types exclude all six byte spellings.
-P3 is now promoted in development by explicit approval following benchmark review;
-the spelling transition alone did not establish that status.
+Batch selection follows timeout/signal/cancellation reads; count selection
+precedes strict byte validation; constructor selection precedes range submission.
+Constructor presence failures throw synchronously. Common range validation
+rejects its Promise. Stream selection returns a failed closeable stream with
+sticky iteration failure. Existing null/primitive and throwing Proxy catch paths
+retain their documented failure channels. Ordinary run rejects the former batch
+alias before resilience value reads; run does not acquire batching support.
 
-Each pair rejects when both properties are present, including equal values,
-explicit `undefined` and inherited properties. Neither spelling takes precedence.
-Proxy `has` traps now observe the new name followed by its legacy name, at the
-existing validation boundary. Only the selected property is read, once; absent
-pairs use the existing default without a value read. Batch selection follows
-timeout/signal getters, count selection precedes byte validation, and constructor
-selection precedes range submission. Constructor selection failures still throw
-synchronously; common range validation rejects its Promise; count normalization
-returns a failed stream with sticky iteration failure. Reentrant application
-code retains the existing cancellation/state checks and physical ownership.
+Stable-only explicit type aliases preserve conditional generic inference and
+overload applicability. Count-only excludes the three stable byte keys; exact
+and upper-bound modes exclude one another and require a capacity. No legacy
+`never` members remain. Fresh literals receive excess-property checks, while
+structurally compatible variables can contain extra fields; runtime guards are
+authoritative. Declaration merging is not an extension contract. Array/typed
+maps, closeable streams and ownership accounting retain their existing owners.
 
-PartitionOptions, StreamRangeOptions, BinaryStreamRangeOptions,
-UpperBoundBinaryStreamRangeOptions and TypedMapRangeOptions are now type aliases
-with exclusive-pair unions/intersections and optional `never` alternatives.
-They no longer support interface declaration merging or extension by an interface;
-use an intersection type to add application fields. Generic constructor inference,
-overload order, shared-capable inputs/maps and closeable streams are preserved.
-Runtime presence checks remain authoritative, particularly without TypeScript's
-`exactOptionalPropertyTypes`, where an optional `never` can admit `undefined`.
-
-C2 and C3 are integrated, but the same eventual combined transition prerelease
-has not been selected or published. All six aliases remain; no merge starts the
-shared window. Publication and
-later C4 alias removal require separate decisions. See the
-[C2 report](research/c2-range-option-transition.md) and
-[migration plan](research/v1-api-migration-plan.md).
+See the [core guide](guide/core-api.md), [C2 history](research/c2-range-option-transition.md)
+and [migration plan](research/v1-api-migration-plan.md).
 
 v0.4 added `runtime.partitionRange(task, range, createInput, options?)`; v0.5
 added bounded transport batches; v0.6 added completion-only `parallelFor()`;

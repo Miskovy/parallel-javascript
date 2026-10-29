@@ -10,7 +10,7 @@ export async function c2Contracts() {
   const range = { start: -1, end: 4, grainSize: 2 };
   const factory = (partition) => ({ input: { partition } });
   try {
-    for (const name of ['dispatchBatchSize', 'experimentalDispatchBatchSize']) {
+    for (const name of ['dispatchBatchSize']) {
       const options = { [name]: 16 };
       const ordered = await runtime.partitionRange(
         task,
@@ -42,7 +42,7 @@ export async function c2Contracts() {
         await stream.return();
       }
     }
-    for (const name of ['outputConstructor', 'experimentalOutputConstructor']) {
+    for (const name of ['outputConstructor']) {
       const mapped = await runtime.parallelMapRange(
         task,
         range,
@@ -51,21 +51,12 @@ export async function c2Contracts() {
       );
       assert.deepEqual(mapped, new Float64Array([-2, 0, 2, 4, 6]));
     }
-    for (const name of [
-      'maxBufferedResults',
-      'experimentalMaxBufferedResults',
-    ]) {
-      for (const mode of [
-        'count',
-        'experimentalResultBytes',
-        'experimentalMaxResultBytes',
-      ]) {
+    for (const name of ['maxBufferedResults']) {
+      for (const mode of ['count', 'resultBytes', 'maxResultBytes']) {
         const options = {
           [name]: 1,
           dispatchBatchSize: 16,
-          ...(mode === 'count'
-            ? {}
-            : { [mode]: 8, experimentalMaxReservedResultBytes: 8 }),
+          ...(mode === 'count' ? {} : { [mode]: 8, maxReservedResultBytes: 8 }),
         };
         const stream = runtime.streamRange(
           binaryTask,
@@ -113,13 +104,12 @@ export async function c2Contracts() {
             () => assert.fail('invalid packed aliases invoked a factory'),
             options,
           );
-        if (method === 'parallelMapRange')
-          assert.throws(call, /mutually exclusive/);
+        if (method === 'parallelMapRange') assert.throws(call, /was removed/);
         else if (method === 'streamRange') {
           const stream = call();
-          await assert.rejects(stream.next(), /mutually exclusive/);
-          await assert.rejects(stream.next(), /mutually exclusive/);
-        } else await assert.rejects(call(), /mutually exclusive/);
+          await assert.rejects(stream.next(), /was removed/);
+          await assert.rejects(stream.next(), /was removed/);
+        } else await assert.rejects(call(), /was removed/);
       }
     }
   } finally {
@@ -135,7 +125,7 @@ export async function c2Contracts() {
         'parallelMapRange',
       ],
       overloads: ['count', 'exact', 'upper-bound', 'array', 'typed'],
-      aliasesRetained: true,
+      aliasesRetained: false,
     }),
   );
 }

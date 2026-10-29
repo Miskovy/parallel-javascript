@@ -93,8 +93,8 @@ for (const [current, legacy, value, applicable] of pairs) {
               return { input, transferList: [input.buffer] };
             });
           if (current === 'outputConstructor')
-            assert.throws(call, /mutually exclusive/);
-          else await assert.rejects(call(), /mutually exclusive/);
+            assert.throws(call, /was removed/);
+          else await assert.rejects(call(), /was removed/);
           const after = runtime.stats();
           assert.deepEqual(reads, []);
           assert.equal(input.byteLength, 1);
@@ -119,7 +119,7 @@ for (const [current, legacy, value, applicable] of pairs) {
 
   test(`${current}: either own/inherited getter is read once; throwing getters retain failure channels`, async (t) => {
     const { runtime, task } = setup(t);
-    for (const name of [current, legacy]) {
+    for (const name of [current]) {
       for (const inherited of [false, true]) {
         for (const method of applicable) {
           let reads = 0;
@@ -182,7 +182,7 @@ for (const [current, legacy, value, applicable] of pairs) {
   for (const trap of ['has-current', 'has-legacy', 'get']) {
     test(`${current}: ${trap} reentrant abort prevents submission`, async (t) => {
       const { runtime, task } = setup(t);
-      for (const name of [current, legacy]) {
+      for (const name of [current]) {
         const controller = new AbortController();
         const events = [];
         const options = new Proxy(
@@ -222,10 +222,7 @@ for (const [current, legacy, value, applicable] of pairs) {
           events.includes('get:' + (name === current ? legacy : current)),
           false,
         );
-        assert.equal(
-          runtime.stats().operations.rejected,
-          name === current ? 1 : 2,
-        );
+        assert.equal(runtime.stats().operations.rejected, 1);
         assert.equal(runtime.stats().dispatch.executeMessages, 0);
       }
     });
@@ -233,7 +230,7 @@ for (const [current, legacy, value, applicable] of pairs) {
   test(`${current}: throwing has and reentrant shutdown preserve boundary ownership`, async (t) => {
     const { runtime, task } = setup(t);
     const error = new Error('presence trap');
-    for (const name of [current, legacy]) {
+    for (const name of [current]) {
       const options = new Proxy(
         {},
         {
@@ -253,7 +250,7 @@ for (const [current, legacy, value, applicable] of pairs) {
     }
     let shutdown;
     const options = new Proxy(
-      { [legacy]: value },
+      { [current]: value },
       {
         has(target, key) {
           if (key === current) shutdown = runtime.shutdown();
@@ -272,9 +269,9 @@ for (const [current, legacy, value, applicable] of pairs) {
   });
 }
 
-test('both batch spellings exclude defined ordinary leases, including inherited undefined', async (t) => {
+test('stable batch options exclude defined ordinary leases, including inherited undefined', async (t) => {
   const { runtime, task } = setup(t);
-  for (const name of ['dispatchBatchSize', 'experimentalDispatchBatchSize']) {
+  for (const name of ['dispatchBatchSize']) {
     for (const value of [undefined, 1, 16]) {
       for (const inherited of [false, true]) {
         const input = new Uint8Array([9]);
@@ -351,11 +348,11 @@ test('invalid null/primitive options retain API failure channels and accounting'
   assert.equal(runtime.stats().dispatch.executeMessages, 0);
 });
 
-test('batch and count defaults, empty ranges and integer boundaries apply under both spellings', async (t) => {
+test('batch and count defaults, empty ranges and integer boundaries apply under stable spellings', async (t) => {
   const { runtime, task } = setup(t);
   const empty = { start: -1, end: -1, grainSize: 1 };
-  for (const [current, legacy] of pairs.slice(0, 2)) {
-    for (const name of [current, legacy]) {
+  for (const [current] of pairs.slice(0, 2)) {
+    for (const name of [current]) {
       for (const value of [
         0,
         -1,
@@ -412,7 +409,7 @@ test('batch and count defaults, empty ranges and integer boundaries apply under 
       }
     }
   }
-  for (const name of ['dispatchBatchSize', 'experimentalDispatchBatchSize']) {
+  for (const name of ['dispatchBatchSize']) {
     const before = runtime.stats().dispatch;
     const output = await runtime.partitionRange(
       task,
@@ -435,9 +432,9 @@ test('batch and count defaults, empty ranges and integer boundaries apply under 
   }
 });
 
-test('either constructor spelling retains all eleven built-ins, empty typed results and subclass rejection', async (t) => {
+test('stable constructor retains all eleven built-ins, empty typed results and subclass rejection', async (t) => {
   const { runtime, task } = setup(t);
-  for (const name of ['outputConstructor', 'experimentalOutputConstructor']) {
+  for (const name of ['outputConstructor']) {
     for (const constructor of [
       Int8Array,
       Uint8Array,
@@ -505,9 +502,9 @@ test('count alias normalization preserves exact/maximum rejection accounting and
         experimentalMaxReservedResultBytes: 16,
       },
     );
-    await assert.rejects(stream.next(), /mutually exclusive/);
+    await assert.rejects(stream.next(), /was removed/);
     assert.deepEqual(await stream.return(), { done: true, value: undefined });
-    await assert.rejects(stream.next(), /mutually exclusive/);
+    await assert.rejects(stream.next(), /was removed/);
     assert.equal(
       runtime.stats().operations.rejected,
       before.operations.rejected + 1,

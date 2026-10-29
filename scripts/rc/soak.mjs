@@ -261,9 +261,9 @@ async function scenario(id, fn) {
   }
 }
 const strict = (maximum = 16, extra = {}) => ({
-  experimentalMaxBufferedResults: 2,
-  experimentalMaxResultBytes: maximum,
-  experimentalMaxReservedResultBytes: maximum * 2,
+  maxBufferedResults: 2,
+  maxResultBytes: maximum,
+  maxReservedResultBytes: maximum * 2,
   ...extra,
 });
 const range = (end = 11, grainSize = 3) => ({ start: 0, end, grainSize });
@@ -417,11 +417,11 @@ try {
             },
           }),
           {
-            experimentalMaxBufferedResults: countCap,
+            maxBufferedResults: countCap,
             ...(exact
-              ? { experimentalResultBytes: (p) => sizes[p.index] }
-              : { experimentalMaxResultBytes: 64 }),
-            experimentalMaxReservedResultBytes: 128,
+              ? { resultBytes: (p) => sizes[p.index] }
+              : { maxResultBytes: 64 }),
+            maxReservedResultBytes: 128,
           },
         );
         for await (const result of stream) {
@@ -490,7 +490,7 @@ try {
           task,
           plan,
           (p) => ({ input: { partition: p, mode: 'map' } }),
-          { experimentalOutputConstructor: Float64Array },
+          { outputConstructor: Float64Array },
         );
         assert.ok(mapped instanceof Float64Array);
         assert.deepEqual(
@@ -509,7 +509,7 @@ try {
           task,
           range(10001, 128),
           (p) => ({ input: { partition: p, mode: 'map' } }),
-          { experimentalOutputConstructor: Float64Array },
+          { outputConstructor: Float64Array },
         );
         assert.equal(mapped.length, 10001);
         assert.equal(mapped[10000], 20000);
@@ -531,7 +531,7 @@ try {
             ...(p.index === 0 ? { gate: control } : {}),
           },
         }),
-        { experimentalMaxBufferedResults: 4 },
+        { maxBufferedResults: 4 },
       ),
     );
     const first = await iterator.next();
@@ -670,7 +670,7 @@ try {
           task,
           range(2, 1),
           (p) => ({ input: { partition: p, mode: 'map', lengthDelta: 1 } }),
-          { experimentalOutputConstructor: Float64Array },
+          { outputConstructor: Float64Array },
         ),
       ),
       PjsMapContractError,
@@ -682,8 +682,8 @@ try {
         (p) => ({ input: { partition: p, mode: 'binary', bytes: 17 } }),
         exact
           ? {
-              experimentalResultBytes: 16,
-              experimentalMaxReservedResultBytes: 16,
+              resultBytes: 16,
+              maxReservedResultBytes: 16,
             }
           : strict(16),
       );
@@ -696,7 +696,7 @@ try {
       task,
       range(1, 1),
       (p) => ({ input: { partition: p, mode: 'binary', bytes: 15 } }),
-      { experimentalResultBytes: 16, experimentalMaxReservedResultBytes: 16 },
+      { resultBytes: 16, maxReservedResultBytes: 16 },
     );
     await expectError(
       capture(iteratorOf(smaller).next()),
@@ -706,7 +706,7 @@ try {
       task,
       range(1, 1),
       (p) => ({ input: { partition: p, mode: 'binary', bytes: 16 } }),
-      { experimentalResultBytes: 16, experimentalMaxReservedResultBytes: 8 },
+      { resultBytes: 16, maxReservedResultBytes: 8 },
     );
     await expectError(
       capture(iteratorOf(capacity).next()),

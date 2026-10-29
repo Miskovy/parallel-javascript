@@ -32,9 +32,9 @@ const input = (index, extra = {}) => ({
   ...extra,
 });
 const streamOptions = {
-  experimentalMaxBufferedResults: 16,
-  experimentalMaxResultBytes: maximum,
-  experimentalMaxReservedResultBytes: 4 * maximum,
+  maxBufferedResults: 16,
+  maxResultBytes: maximum,
+  maxReservedResultBytes: 4 * maximum,
 };
 for (const mode of [
   'abort',
@@ -141,8 +141,8 @@ for (const mode of [
       const encoded = deflateRawSync(data.subarray(0, MiB), options());
       const opt =
         mode === 'upper-contract'
-          ? { experimentalMaxResultBytes: encoded.length - 1 }
-          : { experimentalResultBytes: MiB - 1 };
+          ? { maxResultBytes: encoded.length - 1 }
+          : { resultBytes: MiB - 1 };
       const stream = runtime.streamRange(
         engine.task,
         { start: 0, end: 1, grainSize: 1 },
@@ -154,8 +154,8 @@ for (const mode of [
         }),
         {
           ...opt,
-          experimentalMaxReservedResultBytes: 2 * maximum,
-          experimentalMaxBufferedResults: 2,
+          maxReservedResultBytes: 2 * maximum,
+          maxBufferedResults: 2,
         },
       );
       await assert.rejects(
@@ -236,9 +236,9 @@ for (let trial = 0; trial < 6; trial++)
           input: { data: source, start: p.start, end: p.end, level: 6 },
         }),
         {
-          experimentalMaxResultBytes: (p) => bound(p.end - p.start),
-          experimentalMaxReservedResultBytes: 2 * maximum,
-          experimentalMaxBufferedResults: 64,
+          maxResultBytes: (p) => bound(p.end - p.start),
+          maxReservedResultBytes: 2 * maximum,
+          maxBufferedResults: 64,
         },
       );
       try {

@@ -41,10 +41,10 @@ async function sample(mode, bytes, maximum) {
     () => ({ input: { bytes, move: true } }),
     {
       ...(mode === 'exact'
-        ? { experimentalResultBytes: bytes }
-        : { experimentalMaxResultBytes: maximum }),
-      experimentalMaxReservedResultBytes: maximum * 16,
-      experimentalMaxBufferedResults: 16,
+        ? { resultBytes: bytes }
+        : { maxResultBytes: maximum }),
+      maxReservedResultBytes: maximum * 16,
+      maxBufferedResults: 16,
     },
   )) {
     assert.equal(output.byteLength, bytes);

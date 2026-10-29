@@ -48,7 +48,7 @@ async function execute(entry) {
           outputType: 'scalar',
         },
       }),
-      { experimentalDispatchBatchSize: entry.batchSize },
+      { dispatchBatchSize: entry.batchSize },
     );
   if (entry.kind === 'clone') {
     const data = new Uint8Array(entry.bytes);

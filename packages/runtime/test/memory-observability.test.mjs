@@ -55,7 +55,7 @@ async function inspectBuffered(
       task,
       { start: 0, end: 1, grainSize: 1 },
       () => ({ input: { returnValue } }),
-      { experimentalMaxBufferedResults: 1 },
+      { maxBufferedResults: 1 },
     ),
   );
   await until(() => runtime.stats().streamResults.buffered === 1);
@@ -114,7 +114,7 @@ test('multiple buffered views report payload bytes and explicitly alias-count', 
       direct,
       { start: 0, end: 2, grainSize: 1 },
       (partition) => ({ input: { returnValue: views[partition.index] } }),
-      { experimentalMaxBufferedResults: 2 },
+      { maxBufferedResults: 2 },
     ),
   );
   await until(() => runtime.stats().streamResults.buffered === 2);
@@ -132,7 +132,7 @@ test('yield, transfer, cancellation, and failure release diagnostic retention', 
       direct,
       { start: 0, end: 1, grainSize: 1 },
       () => ({ input: { returnValue: moved, move: true } }),
-      { experimentalMaxBufferedResults: 1 },
+      { maxBufferedResults: 1 },
     ),
   );
   await until(
@@ -146,7 +146,7 @@ test('yield, transfer, cancellation, and failure release diagnostic retention', 
       direct,
       { start: 0, end: 1, grainSize: 1 },
       () => ({ input: { returnValue: new Uint8Array(48) } }),
-      { experimentalMaxBufferedResults: 1 },
+      { maxBufferedResults: 1 },
     ),
   );
   await until(
@@ -166,7 +166,7 @@ test('yield, transfer, cancellation, and failure release diagnostic retention', 
           fail: partition.index === 1,
         },
       }),
-      { experimentalMaxBufferedResults: 2 },
+      { maxBufferedResults: 2 },
     ),
   );
   await until(() => runtime.stats().streams.failed === 1);
@@ -182,7 +182,7 @@ test('stream start remains eager and its deadline starts before consumption', as
       direct,
       { start: 0, end: 8, grainSize: 1 },
       () => ({ input: { returnValue: new Uint8Array(8) } }),
-      { experimentalMaxBufferedResults: 2 },
+      { maxBufferedResults: 2 },
     ),
   );
   await until(() => runtime.stats().streamResults.buffered === 2);
@@ -195,7 +195,7 @@ test('stream start remains eager and its deadline starts before consumption', as
       direct,
       { start: 0, end: 2, grainSize: 1 },
       () => ({ input: { returnValue: new Uint8Array(8) } }),
-      { timeout: 40, experimentalMaxBufferedResults: 1 },
+      { timeout: 40, maxBufferedResults: 1 },
     ),
   );
   await delay(80);
@@ -226,7 +226,7 @@ test('stream remains single-consumer and an async processing pipeline cleans up 
       mapBlock,
       { start: 0, end: 16, grainSize: 2 },
       (partition) => ({ input: { partition, kind: 'float64' } }),
-      { experimentalMaxBufferedResults: 2 },
+      { maxBufferedResults: 2 },
     )) {
       createHash('sha256').update(new Uint8Array(output.buffer)).digest();
       await immediate();

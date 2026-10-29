@@ -1,17 +1,14 @@
 # @pjavascript/runtime
 
-**Promotion status:** Development P1/P2/P3 contracts are promoted following benchmark review; all six deprecated aliases remain. Published RC4 and release authorization remain separate.
+**Prepared 1.0.0 candidate; unpublished.** Published RC5 is the combined
+transition prerelease and accepts all six deprecated aliases. This candidate
+proposes stable-only names and explicit rejection of legacy own/inherited/undefined
+presence. Direct removal at 1.0.0 needs the maintainer policy amendment. Read the
+[migration and complete RC5 delta](https://github.com/Miskovy/parallel-javascript/blob/main/docs/release-v1.0.0.md).
 
-**PJS — Parallel JavaScript Runtime.** Explicit CPU tasks on persistent Node
-workers, with bounded admission and clone/transfer/shared-input ownership.
-One ESM implementation; development builds also support CommonJS require, with no
-production dependencies. Tasks are trusted local module exports
-with Node capabilities. Worker isolates are not an untrusted-code sandbox.
-
-This package is the prepared **1.0.0-rc.5 candidate**, with integrated Checkpoints
-1–4. It has not been published; npm install commands below still select immutable
-RC4. See [RC5 notes and migration](https://github.com/Miskovy/parallel-javascript/blob/main/docs/release-v1.0.0-rc.5.md).
-Candidate validation does not clear existing release holds or authorize publication.
+PJS runs trusted registered tasks in persistent Node or dedicated browser workers,
+with bounded admission, explicit clone/transfer/shared ownership and no production
+dependencies. Node ESM import and synchronous CommonJS require share one graph.
 
 ## Install
 
@@ -19,25 +16,22 @@ Candidate validation does not clear existing release holds or authorize publicat
 npm install @pjavascript/runtime@next
 ```
 
-As verified on 23 October 2026, [npm `next` and `latest`](https://registry.npmjs.org/@pjavascript%2fruntime)
-select **1.0.0-rc.4**, also a [GitHub prerelease](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.4).
-Final v1.0.0 has not been released. Development manifests support Node
-**22.23.4+, 24.22.1+, or 26.12.1+**, within those majors
-(`^22.23.4 || ^24.22.1 || ^26.12.1`). Use current patched releases; installing
-PJS does not upgrade Node. Node 26 is Current as of 26 October 2026, with LTS
-scheduled for 28 October; published RC4 retains its original metadata.
-Consult the [exact Node/platform evidence](https://github.com/Miskovy/parallel-javascript/blob/main/docs/stability.md#proposed-node-and-platform-policy)
-for tested development candidates; an engine range is not evidence for every
-patch or qualification of published RC4. macOS and ARM64 remain unclaimed.
+On 29 October 2026 npm `next` selects published **1.0.0-rc.5** and
+`latest` selects RC4. Final 1.0.0 has not been released. RC5 and this candidate
+support Node **22.23.4+, 24.22.1+, or 26.12.1+** within those majors
+(`^22.23.4 || ^24.22.1 || ^26.12.1`). See the
+[exact qualification and support limits](https://github.com/Miskovy/parallel-javascript/blob/main/docs/stability.md#proposed-node-and-platform-policy).
+Linux/Windows x64 and Chromium native/Vite profiles have explicit qualification;
+macOS, ARM64, other engines and arbitrary bundlers remain unclaimed.
 Compile TypeScript tasks to JavaScript before registration.
 
-Published RC4 remains ESM-only. In development builds, ordinary CommonJS hosts use
+Ordinary CommonJS hosts use
 `const { PjsRuntime, PjsTaskRegistry } = require('@pjavascript/runtime')` synchronously.
 Import and require share constructors, errors, registries and transfer helpers;
 the Node root is public alongside the explicit browser entry. Task modules can use .mjs, .cjs or .js under the
 nearest package type. See the [complete CommonJS example](https://github.com/Miskovy/parallel-javascript/blob/main/docs/guide/core-api.md#commonjs-consumption-development).
 
-Development builds provide `@pjavascript/runtime/browser` for real dedicated module
+RC5 and this candidate provide `@pjavascript/runtime/browser` for real dedicated module
 workers, without Node polyfills or production dependencies. Deploy the installed
 runtime/bootstrap assets and browser-ready task modules together. The
 [browser guide](https://github.com/Miskovy/parallel-javascript/blob/main/docs/guide/browser.md)
@@ -96,30 +90,23 @@ consumer-retained values. Cancellation and timeout can settle a caller while
 its worker remains busy. There is no automatic retry, rollback or restoration
 of transferred buffers. Await shutdown for final resource cleanup.
 
-## Development versus published RC4
+## Stable candidate versus published RC5
 
-This README in a locally packed development build may describe later source.
-Merged main includes S1, corrected Stage A, B1–B4, C1-A/Q, C2 and C3; the selected RC5 version identifies a review candidate, not a published artifact. Later development
-adds closeable stream and ordinary-backed binary types, removes unsupported
-registry.snapshot() access, and names diagnostic/error types including
-PjsRuntimeStats. Those corrections are absent from immutable RC4.
+RC5 accepts the stable spellings and six deprecated experimental aliases. This
+candidate proposes rejecting every legacy presence directly in 1.0.0, pending
+the documented policy amendment. Migrate to dispatchBatchSize,
+maxBufferedResults, outputConstructor, resultBytes, maxResultBytes and
+maxReservedResultBytes. Stable-only declarations retain generic inference,
+count/binary exclusions and closeable streams; runtime rejects inherited and
+undefined legacy properties as well as own values.
 
-C2/C3 accept `dispatchBatchSize`, `maxBufferedResults`, `outputConstructor`,
-`resultBytes`, `maxResultBytes` and `maxReservedResultBytes` with six deprecated
-`experimental...` aliases. Each pair rejects simultaneous presence, including
-undefined or inherited properties. The later containment controls
-`run({ executionLease })`, rolling `restartPolicy` and graceful
-`shutdown({ forceAfter })` are also absent from published RC4. They initiate
-asynchronous containment; ownership lasts until valid completion or confirmed
-exit, without replay or a hard preemption guarantee. First shutdown options and
-the shared promise are fixed; omitting escalation can leave drain waiting
-indefinitely.
-
-P1/P2/P3 are promoted in development; all six aliases remain. The combined
-transition prerelease is not yet authorized; it and later alias removal need separate
-[maintainer decisions](https://github.com/Miskovy/parallel-javascript/blob/main/docs/research/v1-api-migration-plan.md#decisions-for-maintainer-review).
-Checkout examples use the development spellings and are tested against a fresh
-packed artifact.
+Node retains physical occupancy and credits until validated completion or
+confirmed exit. Browser retirement is posting-safe local cleanup and terminal
+accounting, without native join or shared-memory quiescence. Bounded opt-in
+repeatable retries/fallback and explicit recovery input reconstruction retain
+their existing owners; caller rejection does not restore transferred memory or
+roll back side effects. Stable hold disposition and contract/evidence acceptance
+remain pending independently of merge/tag/publication authorization.
 
 See the [documentation index](https://github.com/Miskovy/parallel-javascript/blob/main/docs/README.md),
 [core API](https://github.com/Miskovy/parallel-javascript/blob/main/docs/guide/core-api.md),

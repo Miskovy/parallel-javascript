@@ -318,11 +318,9 @@ for (const mode of ['exact', 'upper']) {
         { start: 0, end: 1, grainSize: 1 },
         () => ({ input: { shared: buffer } }),
         {
-          experimentalMaxBufferedResults: 1,
-          experimentalMaxReservedResultBytes: 8,
-          ...(mode === 'exact'
-            ? { experimentalResultBytes: 8 }
-            : { experimentalMaxResultBytes: 8 }),
+          maxBufferedResults: 1,
+          maxReservedResultBytes: 8,
+          ...(mode === 'exact' ? { resultBytes: 8 } : { maxResultBytes: 8 }),
         },
       );
       const iterator = results[Symbol.asyncIterator]();
@@ -372,7 +370,7 @@ test(
     await assert.rejects(
       runtime.run(tasks.echo, 1, {
         executionLease: 100,
-        experimentalDispatchBatchSize: 1,
+        dispatchBatchSize: 1,
       }),
       TypeError,
     );
@@ -380,7 +378,7 @@ test(
     assert.equal(runtime.stats().dispatch.executeMessages, 0);
     assert.deepEqual(
       await runtime.partitionRange(tasks.echo, range, factory, {
-        experimentalDispatchBatchSize: 2,
+        dispatchBatchSize: 2,
       }),
       [1, 1],
     );
@@ -841,11 +839,9 @@ for (const mode of ['exact', 'upper']) {
         { start: 0, end: 1, grainSize: 1 },
         () => ({ input: { shared: buffer } }),
         {
-          experimentalMaxBufferedResults: 1,
-          experimentalMaxReservedResultBytes: 8,
-          ...(mode === 'exact'
-            ? { experimentalResultBytes: 8 }
-            : { experimentalMaxResultBytes: 8 }),
+          maxBufferedResults: 1,
+          maxReservedResultBytes: 8,
+          ...(mode === 'exact' ? { resultBytes: 8 } : { maxResultBytes: 8 }),
         },
       );
       const cancelled = assert.rejects(
@@ -917,8 +913,8 @@ test(
       { start: 0, end: 1, grainSize: 1 },
       () => ({ input: { shared: buffer } }),
       {
-        experimentalResultBytes: 8,
-        experimentalMaxReservedResultBytes: 8,
+        resultBytes: 8,
+        maxReservedResultBytes: 8,
       },
     );
     const cancelled = assert.rejects(

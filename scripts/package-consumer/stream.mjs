@@ -3,6 +3,7 @@ import { setImmediate as immediate } from 'node:timers/promises';
 import * as api from '@pjavascript/runtime';
 import { c2Contracts } from './c2.mjs';
 import { c3Contracts } from './c3.mjs';
+import { c4Contracts } from './c4.mjs';
 
 assert.deepEqual(
   Object.keys(api).sort(),
@@ -57,8 +58,8 @@ try {
   await runtime.ready();
   const gate = hold();
   const stream = runtime.streamRange(task, range, () => ({ input: { gate } }), {
-    experimentalResultBytes: 8,
-    experimentalMaxReservedResultBytes: 8,
+    resultBytes: 8,
+    maxReservedResultBytes: 8,
   });
   assert.equal(stream[Symbol.asyncIterator](), stream);
   await entered(gate); // Eager execution, no next() yet.
@@ -78,7 +79,7 @@ try {
     task,
     range,
     () => ({ input: { gate: thrownGate } }),
-    { experimentalMaxResultBytes: 16, experimentalMaxReservedResultBytes: 16 },
+    { maxResultBytes: 16, maxReservedResultBytes: 16 },
   );
   await entered(thrownGate);
   const readFailure = thrown.next().catch((error) => error);
@@ -112,3 +113,4 @@ assert.equal(runtime.stats().streamResults.currentReservedResultBytes, 0);
 assert.equal(runtime.stats().workers.busy, 0);
 await c2Contracts();
 await c3Contracts();
+await c4Contracts();

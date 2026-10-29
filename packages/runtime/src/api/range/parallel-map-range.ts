@@ -57,7 +57,6 @@ export function parallelMapRange<Input, Progress = ProgressValue>(
     Progress
   > & {
     outputConstructor?: PjsTypedArrayConstructor;
-    experimentalOutputConstructor?: PjsTypedArrayConstructor;
   } = {},
 ): Promise<unknown[] | PjsTypedArray> {
   const constructorName = optionSpelling(

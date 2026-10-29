@@ -52,7 +52,7 @@ for (const batchSize of [1, 4, 8]) {
             progressIndex,
           },
         }),
-        { experimentalDispatchBatchSize: batchSize },
+        { dispatchBatchSize: batchSize },
       );
     const a = operation(0);
     const b = operation(1);

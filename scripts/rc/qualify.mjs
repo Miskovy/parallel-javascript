@@ -230,7 +230,7 @@ try {
       packMetadata,
       dirname(report.package.tarball.path),
       baseline.manifest.version,
-      'next',
+      baseline.manifest.version.includes('-') ? 'next' : 'latest',
     ],
   );
   report.tarListingTransport = JSON.parse(

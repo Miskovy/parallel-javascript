@@ -31,7 +31,7 @@ for (const capacity of [1, 4, 8]) {
         task,
         { start: 0, end: 32_768, grainSize: 512 },
         (partition) => makeInput(partition, 'array'),
-        { experimentalDispatchBatchSize: 4 },
+        { dispatchBatchSize: 4 },
       )
       .then((value) => {
         completed.map = performance.now() - started;
@@ -44,8 +44,8 @@ for (const capacity of [1, 4, 8]) {
         { start: 0, end: 16_384, grainSize: 256 },
         (partition) => makeInput(partition),
         {
-          experimentalDispatchBatchSize: 4,
-          experimentalMaxBufferedResults: capacity,
+          dispatchBatchSize: 4,
+          maxBufferedResults: capacity,
         },
       )) {
         void value;
@@ -68,7 +68,7 @@ for (const capacity of [1, 4, 8]) {
             iterations: 64,
           },
         }),
-        { experimentalDispatchBatchSize: 4 },
+        { dispatchBatchSize: 4 },
       )
       .then(() => {
         completed.parallel = performance.now() - started;

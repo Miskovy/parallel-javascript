@@ -1,7 +1,6 @@
 # Browser module workers (development)
 
-Integrated development builds expose `@pjavascript/runtime/browser`. Published
-RC4 is unchanged. The Node root retains its single ESM graph for both import and
+Published RC5 and the prepared 1.0.0 candidate expose `@pjavascript/runtime/browser`. The Node root retains its single ESM graph for both import and
 require; the explicit browser entry has a different lifecycle contract. Imports
 create no workers. Construct the browser runtime in a Window; helpers and task
 types can also be imported inside dedicated workers. There are no production
@@ -9,7 +8,7 @@ dependencies, Node polyfills, UI-thread task fallback or generated task strings.
 
 ## Native module deployment
 
-Use an installed development artifact. Run
+Use the intended installed artifact; final qualification consumes the canonical 1.0.0 archive. Run
 [copy-assets.mjs](../../examples/browser/copy-assets.mjs) from the application to
 copy its installed `dist` tree into `public/vendor/pjs`, preserving relative paths.
 Deploy public files at `/app/`. Copy the example

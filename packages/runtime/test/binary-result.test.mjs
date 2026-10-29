@@ -40,8 +40,8 @@ async function until(predicate) {
 
 function strictOptions(resultBytes, capacity, extra = {}) {
   return {
-    experimentalResultBytes: resultBytes,
-    experimentalMaxReservedResultBytes: capacity,
+    resultBytes: resultBytes,
+    maxReservedResultBytes: capacity,
     ...extra,
   };
 }
@@ -227,7 +227,7 @@ test('clone, transfer, uneven declarations, and physical batching retain logical
           move,
         }),
       strictOptions((partition) => (partition.end - partition.start) * 8, 80, {
-        experimentalDispatchBatchSize: move ? 1 : 4,
+        dispatchBatchSize: move ? 1 : 4,
       }),
     )) {
       widths.push([partition.index, output.byteLength]);
@@ -256,8 +256,8 @@ test('count and byte credits compose and variable declarations wait for consumer
     (partition) =>
       input(partition, { bytes: sizes[partition.index], kind: 'uint8' }),
     strictOptions((partition) => sizes[partition.index], 80, {
-      experimentalMaxBufferedResults: 4,
-      experimentalDispatchBatchSize: 4,
+      maxBufferedResults: 4,
+      dispatchBatchSize: 4,
     }),
   );
   await until(
@@ -448,7 +448,7 @@ test('timeout, crash, and first batch failure clean every reservation exactly on
         bytes: 8,
         fail: partition.index === 1,
       }),
-    strictOptions(8, 32, { experimentalDispatchBatchSize: 4 }),
+    strictOptions(8, 32, { dispatchBatchSize: 4 }),
   );
   await assert.rejects(async () => {
     for await (const value of failedBatch) void value;
@@ -465,7 +465,7 @@ test('consumer failure and weighted head-of-line pressure do not leak or starve 
       task,
       { start: 0, end: 8, grainSize: 1 },
       (partition) => input(partition, { bytes: 8, move: true }),
-      strictOptions(8, 16, { experimentalMaxBufferedResults: 2 }),
+      strictOptions(8, 16, { maxBufferedResults: 2 }),
     )) {
       void value;
       if (++yielded === 2) throw new Error('consumer failed');
@@ -482,7 +482,7 @@ test('consumer failure and weighted head-of-line pressure do not leak or starve 
       { start: 0, end: 2, grainSize: 1 },
       (partition) => input(partition, { bytes: sizes[partition.index], ms: 5 }),
       strictOptions((partition) => sizes[partition.index], 8, {
-        experimentalMaxBufferedResults: 2,
+        maxBufferedResults: 2,
       }),
     ),
   );
@@ -545,7 +545,7 @@ test('strict streams retain parent saturation and count-only streams remain avai
     task,
     { start: 0, end: 2, grainSize: 1 },
     (partition) => input(partition, { bytes: 3, kind: 'object' }),
-    { experimentalMaxBufferedResults: 1 },
+    { maxBufferedResults: 1 },
   ))
     ordinary.push(output);
   assert.equal(ordinary.length, 2);

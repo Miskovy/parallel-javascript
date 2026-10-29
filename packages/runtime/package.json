@@ -1,6 +1,6 @@
 {
   "name": "@pjavascript/runtime",
-  "version": "1.0.0-rc.5",
+  "version": "1.0.0",
   "description": "Explicit task runtime for Node.js and browser module workers",
   "type": "module",
   "engines": {

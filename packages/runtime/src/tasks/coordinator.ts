@@ -270,6 +270,10 @@ export class TaskCoordinator {
     let timeout: number | undefined;
     let signal: AbortSignal | undefined;
     try {
+      if ('experimentalDispatchBatchSize' in options)
+        throw new TypeError(
+          'experimentalDispatchBatchSize was removed; use dispatchBatchSize',
+        );
       const mode = options.cancellation;
       const retry = options.retry;
       const fallback = options.fallback;
@@ -289,11 +293,7 @@ export class TaskCoordinator {
         'retry',
         'fallback',
       ].some((name) => name in options);
-      if (
-        controlled &&
-        ('dispatchBatchSize' in options ||
-          'experimentalDispatchBatchSize' in options)
-      )
+      if (controlled && 'dispatchBatchSize' in options)
         throw new TypeError(
           'Execution resilience requires an exclusive ordinary run() dispatch',
         );
@@ -356,11 +356,7 @@ export class TaskCoordinator {
       executionLease = options.executionLease;
       if (executionLease !== undefined) {
         integer('executionLease', executionLease, 1, 2 ** 31 - 1);
-        if (
-          child ||
-          'experimentalDispatchBatchSize' in options ||
-          'dispatchBatchSize' in options
-        )
+        if (child || 'dispatchBatchSize' in options)
           throw new TypeError(
             'executionLease requires an exclusive ordinary run() dispatch',
           );

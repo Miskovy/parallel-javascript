@@ -65,7 +65,7 @@ async function execute(entry) {
       completionTask,
       { start: 0, end: entry.count, grainSize: 1 },
       payload,
-      { experimentalDispatchBatchSize: 8 },
+      { dispatchBatchSize: 8 },
     );
     return;
   }
@@ -93,12 +93,12 @@ async function execute(entry) {
           }
         : payload(partition),
     {
-      experimentalDispatchBatchSize: move ? 1 : 4,
-      experimentalMaxBufferedResults: 8,
+      dispatchBatchSize: move ? 1 : 4,
+      maxBufferedResults: 8,
       ...(strict
         ? {
-            experimentalResultBytes: callback ? () => bytes : bytes,
-            experimentalMaxReservedResultBytes: 2 * 2 ** 20,
+            resultBytes: callback ? () => bytes : bytes,
+            maxReservedResultBytes: 2 * 2 ** 20,
           }
         : {}),
     },

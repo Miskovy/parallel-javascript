@@ -1,13 +1,10 @@
 # PJS documentation
 
-Start with the [README quickstart](../README.md), then choose a guide for the
-contract you need. The current guides describe **integrated development source
-through C3 and the approved P1/P2/P3 promotion**, not the immutable package
-already published on npm.
-
-Integrated Checkpoints 1–4, Node support and host cleanup are now prepared as
-the unpublished [RC5 candidate](release-v1.0.0-rc.5.md). Its version/baseline selection
-does not clear release holds or begin the retained-alias window.
+Start with the [README quickstart](../README.md). Current guides describe the
+prepared **1.0.0 candidate**. Published RC5 is the combined six-alias transition;
+this candidate proposes removing those aliases directly at stable, pending the
+policy amendment. See [migration](release-v1.0.0.md) and the
+[fixed release checkpoint](research/v1-release-checkpoint.md).
 
 ## Using PJS
 
@@ -18,7 +15,7 @@ does not clear release holds or begin the retained-alias window.
 | Clone, transfer and shared input                | [Memory ownership](guide/memory-ownership.md)                       |
 | Cancellation, occupancy and shutdown            | [Lifecycle](guide/lifecycle.md)                                     |
 | Queue, count and byte limits                    | [Backpressure](guide/backpressure.md)                               |
-| Range/map/stream options and six alias pairs    | [Range reference](partitioning.md#c2-development-option-transition) |
+| Range/map/stream options and alias migration    | [Range reference](partitioning.md#c2-development-option-transition) |
 | Error identity and recovery                     | [Errors](guide/errors.md)                                           |
 | Diagnostic fields, units and lifetimes          | [Telemetry](guide/telemetry.md)                                     |
 | Workload sizing and measurement                 | [Performance](guide/performance.md)                                 |
@@ -26,21 +23,15 @@ does not clear release holds or begin the retained-alias window.
 
 ## Release and development status
 
-As verified on 23 October 2026, [npm `latest` and `next`](https://registry.npmjs.org/@pjavascript%2fruntime)
-select **1.0.0-rc.4**, also a [GitHub prerelease](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.4).
-The [RC4 release record](release-v1.0.0-rc.4.md) describes that published artifact.
-Final v1.0.0 has not been released.
-
-Development main `0f79db5e1192dd47db32d2e300fc382a0f431462` integrates S1,
-corrected Stage A, B1–B4, C1-A/Q, C2 and C3. It includes later containment
-controls, declaration corrections and six option renames absent from RC4.
-P1/P2/P3 contracts are promoted in development; all six deprecated aliases remain.
-The [promotion report](research/p1-p2-p3-development-promotion.md) records fresh
-qualification, the historical strict JavaScript byte-identity failure and the
-explicit maintainer-approved revised acceptance. Release holds,
-the unauthorized transition prerelease, C4 and Stage F/G remain separate;
-the alias window has not started.
-RC5 candidate manifests do not indicate publication or change immutable RC4.
+On 29 October 2026 npm `next` selects published **1.0.0-rc.5** and `latest`
+selects RC4. Stable 1.0.0 is unpublished. RC5 includes the integrated recovery,
+scheduling, progress, CommonJS and browser contracts. The prepared candidate
+adds C4 alias rejection, stable-only declarations and explicit stable freeze.
+P1/P2/P3 promotion remains accepted. Policy/contract/evidence approval and
+stable hold disposition remain separate from merge/publication authorization.
+The [RC5 notes](release-v1.0.0-rc.5.md) retain their historical preparation
+attribution; the [published release](https://github.com/Miskovy/parallel-javascript/releases/tag/v1.0.0-rc.5)
+records actual publication. Historical RC4 and earlier qualification remain intact.
 
 - [Stability and exact Node/platform evidence](stability.md).
 - [Historical Node 24.0.0 development-floor qualification](research/node24-floor-qualification.md).

@@ -184,7 +184,7 @@ async function sample() {
       task,
       { start: 0, end: size, grainSize },
       createInput,
-      { experimentalDispatchBatchSize: batchSize },
+      { dispatchBatchSize: batchSize },
     );
   } else if (mode === 'stream') {
     results = collectStreamResults ? [] : undefined;
@@ -195,8 +195,8 @@ async function sample() {
       { start: 0, end: size, grainSize },
       createInput,
       {
-        experimentalDispatchBatchSize: batchSize,
-        experimentalMaxBufferedResults: config.maxBufferedResults ?? workers,
+        dispatchBatchSize: batchSize,
+        maxBufferedResults: config.maxBufferedResults ?? workers,
       },
     )) {
       if (pending) {
@@ -220,7 +220,7 @@ async function sample() {
       task,
       { start: 0, end: size, grainSize },
       createInput,
-      { experimentalDispatchBatchSize: batchSize },
+      { dispatchBatchSize: batchSize },
     );
   }
   const wallMs = performance.now() - started;

@@ -90,6 +90,46 @@ export async function runCases(pjs, taskURL, workerURL) {
   };
   const range = { start: 0, end: 4, grainSize: 1 };
   const caps = pjs.browserCapabilities();
+  await test('C4 removed options reject before factories and posting', async ({
+    runtime,
+    tasks,
+  }) => {
+    for (const [legacy, method] of [
+      ['experimentalDispatchBatchSize', 'partitionRange'],
+      ['experimentalMaxBufferedResults', 'streamRange'],
+      ['experimentalOutputConstructor', 'parallelMapRange'],
+      ['experimentalResultBytes', 'streamRange'],
+      ['experimentalMaxResultBytes', 'streamRange'],
+      ['experimentalMaxReservedResultBytes', 'streamRange'],
+    ])
+      for (const inherited of [false, true])
+        for (const value of [undefined, 1]) {
+          const fields = {};
+          let reads = 0;
+          Object.defineProperty(fields, legacy, {
+            get() {
+              reads++;
+              return value;
+            },
+          });
+          const options = inherited ? Object.create(fields) : fields;
+          const before = runtime.stats().dispatch.executeMessages;
+          const error = await rejects(() => {
+            const result = runtime[method](
+              tasks.generic,
+              range,
+              () => {
+                throw new Error('factory invoked');
+              },
+              options,
+            );
+            return method === 'streamRange' ? result.next() : result;
+          }, 'TypeError');
+          ok(error.message.includes('was removed'));
+          equal(reads, 0);
+          equal(runtime.stats().dispatch.executeMessages, before);
+        }
+  });
   await test('dedicated execution, exact arity and responsive UI', async ({
     runtime,
     tasks,

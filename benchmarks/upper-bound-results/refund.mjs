@@ -29,9 +29,9 @@ async function measure(mode, trial) {
     { start: 0, end: count, grainSize: 1 },
     () => ({ input: { bytes: actual, move: true } }),
     {
-      experimentalMaxResultBytes: maximum,
-      experimentalMaxReservedResultBytes: capacity,
-      experimentalMaxBufferedResults: countCapacity,
+      maxResultBytes: maximum,
+      maxReservedResultBytes: capacity,
+      maxBufferedResults: countCapacity,
     },
   );
   try {

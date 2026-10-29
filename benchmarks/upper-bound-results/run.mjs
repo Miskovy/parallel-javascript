@@ -102,15 +102,15 @@ async function measure(config) {
   const bytes = Math.floor(maximum * config.utilization);
   const capacity = maximum * config.capacityBlocks;
   const streamOptions = {
-    experimentalMaxBufferedResults: 64,
-    experimentalDispatchBatchSize: 1,
+    maxBufferedResults: 64,
+    dispatchBatchSize: 1,
     ...(config.mode === 'count'
       ? {}
       : {
-          experimentalMaxReservedResultBytes: capacity,
+          maxReservedResultBytes: capacity,
           ...(config.mode === 'exact'
             ? {
-                experimentalResultBytes:
+                resultBytes:
                   config.kind === 'rle'
                     ? (partition) => {
                         const started = performance.now();
@@ -125,7 +125,7 @@ async function measure(config) {
                       }
                     : bytes,
               }
-            : { experimentalMaxResultBytes: maximum }),
+            : { maxResultBytes: maximum }),
         }),
   };
   async function consume(record = false) {

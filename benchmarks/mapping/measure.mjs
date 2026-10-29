@@ -140,7 +140,7 @@ async function sample() {
       task,
       { start: 0, end: size, grainSize },
       input,
-      { experimentalDispatchBatchSize: batchSize },
+      { dispatchBatchSize: batchSize },
     );
   } else if (mode.startsWith('map-typed')) {
     result = await runtime.parallelMapRange(
@@ -148,8 +148,8 @@ async function sample() {
       { start: 0, end: size, grainSize },
       input,
       {
-        experimentalDispatchBatchSize: batchSize,
-        experimentalOutputConstructor: Float64Array,
+        dispatchBatchSize: batchSize,
+        outputConstructor: Float64Array,
       },
     );
   } else if (mode === 'partition-blocks') {
@@ -157,7 +157,7 @@ async function sample() {
       task,
       { start: 0, end: size, grainSize },
       input,
-      { experimentalDispatchBatchSize: batchSize },
+      { dispatchBatchSize: batchSize },
     );
     const assemblyStarted = performance.now();
     result = new Float64Array(size);
@@ -174,8 +174,8 @@ async function sample() {
       { start: 0, end: size, grainSize },
       input,
       {
-        experimentalDispatchBatchSize: batchSize,
-        experimentalMaxBufferedResults: config.maxBufferedResults,
+        dispatchBatchSize: batchSize,
+        maxBufferedResults: config.maxBufferedResults,
       },
     )) {
       firstResultMs ??= performance.now() - started;
@@ -199,7 +199,7 @@ async function sample() {
           iterations,
         },
       }),
-      { experimentalDispatchBatchSize: batchSize },
+      { dispatchBatchSize: batchSize },
     );
   }
   const wallMs = performance.now() - started;

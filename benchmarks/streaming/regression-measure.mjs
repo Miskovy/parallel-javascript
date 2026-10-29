@@ -55,7 +55,7 @@ async function execute(entry) {
           partition,
         },
       }),
-      { experimentalDispatchBatchSize: entry.batchSize },
+      { dispatchBatchSize: entry.batchSize },
     );
   }
   if (entry.kind === 'clone') {

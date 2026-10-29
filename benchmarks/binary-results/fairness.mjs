@@ -39,9 +39,9 @@ for (const largeCapacity of [256 * KiB, 1024 * KiB]) {
           },
         }),
         {
-          experimentalMaxBufferedResults: 8,
-          experimentalResultBytes: bytes,
-          experimentalMaxReservedResultBytes: capacity,
+          maxBufferedResults: 8,
+          resultBytes: bytes,
+          maxReservedResultBytes: capacity,
         },
       )) {
         void value;
@@ -66,7 +66,7 @@ for (const largeCapacity of [256 * KiB, 1024 * KiB]) {
             iterations: 2,
           },
         }),
-        { experimentalDispatchBatchSize: 4 },
+        { dispatchBatchSize: 4 },
       )
       .then(() => {
         completed.parallel = performance.now() - started;
@@ -79,8 +79,8 @@ for (const largeCapacity of [256 * KiB, 1024 * KiB]) {
           input: { partition, source, kind: 'map', iterations: 2 },
         }),
         {
-          experimentalOutputConstructor: Uint8Array,
-          experimentalDispatchBatchSize: 4,
+          outputConstructor: Uint8Array,
+          dispatchBatchSize: 4,
         },
       )
       .then((value) => {

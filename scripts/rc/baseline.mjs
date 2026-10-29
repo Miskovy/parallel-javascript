@@ -8,10 +8,13 @@ import { fileURLToPath } from 'node:url';
 export const registeredBaselines = Object.freeze({
   '1.0.0-rc.4': 'frozen-rc4.json',
   '1.0.0-rc.5': 'frozen-rc5.json',
+  '1.0.0': 'frozen-v1.json',
 });
 const directory = dirname(fileURLToPath(import.meta.url));
 export const immutableRc4Sha256 =
   'a77cbb893c1b39123d05c7c4e09aeac95643c65f3a25be6d31d3fea39e6ae55b';
+export const immutableRc5Sha256 =
+  'a6e247f48c23530cbd22f89ddc3c30453b0cd2c10c1618ead1634afddd1c04c2';
 export function baselineFile(version, baseDirectory = directory) {
   assert.ok(
     Object.hasOwn(registeredBaselines, version),
@@ -31,6 +34,12 @@ export function loadBaseline(
       immutableRc4Sha256,
       'Immutable RC4 baseline changed',
     );
+  if (version === '1.0.0-rc.5')
+    assert.equal(
+      createHash('sha256').update(bytes).digest('hex'),
+      immutableRc5Sha256,
+      'Immutable RC5 baseline changed',
+    );
   const data = JSON.parse(bytes);
   assert.equal(data.release, tag, 'Baseline release/tag mismatch');
   assert.equal(
@@ -43,12 +52,12 @@ export function loadBaseline(
     '@pjavascript/runtime',
     'Baseline package identity mismatch',
   );
-  if (version === '1.0.0-rc.5') {
-    assert.equal(data.schema, 2, 'Unsupported RC5 baseline schema');
+  if (version === '1.0.0-rc.5' || version === '1.0.0') {
+    assert.equal(data.schema, 2, 'Unsupported release baseline schema');
     assert.match(
       data.archiveSha256,
       /^[a-f0-9]{64}$/,
-      'Missing RC5 archive identity',
+      'Missing release archive identity',
     );
     for (const path of [
       'package.json',
@@ -69,6 +78,16 @@ export function loadBaseline(
       data.archiveToolchain.npm,
       data.releaseToolchain.npm,
       'Archive npm/toolchain mismatch',
+    );
+  }
+  if (version === '1.0.0') {
+    assert.equal(data.publishedRc5Sha256, immutableRc5Sha256);
+    assert.equal(
+      createHash('sha256')
+        .update(readFileSync(baselineFile('1.0.0-rc.5', baseDirectory)))
+        .digest('hex'),
+      immutableRc5Sha256,
+      'Immutable RC5 baseline changed',
     );
   }
   if (data.schema === 2) {
