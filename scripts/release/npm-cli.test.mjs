@@ -10,7 +10,7 @@ import {
   writeFileSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { delimiter, isAbsolute, join, resolve } from 'node:path';
+import { delimiter, dirname, isAbsolute, join, resolve } from 'node:path';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import {
@@ -54,9 +54,13 @@ test(
     const shellPath = (path) => path.replaceAll('\\', '/');
     const env = { ...process.env };
     for (const key of Object.keys(env))
-      if (/token|auth|^npm_config_|^npm_execpath$|^PJS_NPM_CLI$/i.test(key))
+      if (
+        /token|auth|^npm_config_|^npm_execpath$|^PJS_NPM_CLI$|^path$/i.test(key)
+      )
         delete env[key];
     Object.assign(env, {
+      // Normalize Windows' Path key before applying the Actions PATH handoff.
+      PATH: dirname(process.execPath) + delimiter + process.env.PATH,
       RUNNER_TEMP: shellPath(directory),
       GITHUB_PATH: shellPath(join(directory, 'github-path')),
       GITHUB_ENV: shellPath(join(directory, 'github-env')),
