@@ -43,6 +43,11 @@ test(
     );
     const directory = mkdtempSync(join(tmpdir(), 'PJS publisher with spaces '));
     t.after(() => rmSync(directory, { recursive: true, force: true }));
+    const installer = join(directory, 'unexpected-installer.cjs');
+    writeFileSync(
+      installer,
+      "throw new Error('Provisioning must not invoke an npm installer');\n",
+    );
     // Use the production shell on Unix and Git's bundled bash on Windows.
     const bash =
       process.platform === 'win32'
@@ -66,6 +71,7 @@ test(
       GITHUB_ENV: shellPath(join(directory, 'github-env')),
       GITHUB_OUTPUT: shellPath(join(directory, 'github-output')),
       npm_config_cache: join(directory, 'cache'),
+      PJS_NPM_CLI: installer,
     });
     const shell = (script, cwd, childEnv) => {
       const result = spawnSync(

@@ -8,6 +8,7 @@ import {
   readFileSync,
   writeFileSync,
 } from 'node:fs';
+import { createRequire } from 'node:module';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -93,28 +94,25 @@ async function main() {
     verifyReleaseNpmArchive(bytes);
     const tarball = join(destination, 'npm.tgz');
     writeFileSync(tarball, bytes, { flag: 'wx' });
-    const installer = selectedNpm();
-    assert.ok(
-      installer,
-      'Provision via npm run or set PJS_NPM_CLI to the installer',
-    );
-    execFileSync(
-      process.execPath,
-      [
-        installer,
-        'install',
-        tarball,
-        '--prefix',
-        destination,
-        '--offline',
-        '--ignore-scripts',
-        '--no-audit',
-        '--no-fund',
-        '--package-lock=false',
-      ],
-      { encoding: 'utf8', timeout: 120000, maxBuffer: 4 * 1024 ** 2 },
-    );
+    // npm bundles its dependencies. Extract once instead of asking npm install
+    // to unpack the same archive into its cache and then the destination.
+    const npmDirectory = join(destination, 'node_modules/npm');
+    mkdirSync(npmDirectory, { recursive: true });
+    execFileSync('tar', ['-xzf', '-', '--strip-components=1'], {
+      cwd: npmDirectory,
+      input: bytes,
+      encoding: 'utf8',
+      timeout: 120000,
+      maxBuffer: 4 * 1024 ** 2,
+    });
     const cli = join(destination, 'node_modules/npm/bin/npm-cli.js');
+    const linkBins = createRequire(cli)('bin-links');
+    await linkBins({
+      path: npmDirectory,
+      pkg: JSON.parse(readFileSync(join(npmDirectory, 'package.json'), 'utf8')),
+      global: false,
+      top: false,
+    });
     const version = execFileSync(process.execPath, [cli, '--version'], {
       encoding: 'utf8',
       timeout: 30000,
