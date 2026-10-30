@@ -53,7 +53,7 @@ for ten-trial performance evidence.
 Individual steps, with existing plot prerequisites and selected Node:
 
 ```sh
-node --test --test-timeout=20000 benchmarks/publication-v1/harness.test.mjs
+node --test --test-timeout=20000 benchmarks/publication-v1/harness.test.mjs benchmarks/publication-v1/analysis.test.mjs
 node benchmarks/publication-v1/run.mjs --profile=smoke --output=.node-tools/publication-smoke-01
 node benchmarks/publication-v1/analyze.mjs .node-tools/publication-smoke-01 .node-tools/publication-analysis-01
 python benchmarks/publication-v1/plot.py .node-tools/publication-analysis-01/summary.json .node-tools/publication-graphics-01

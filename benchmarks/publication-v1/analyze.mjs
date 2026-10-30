@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve, join } from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { pathToFileURL, fileURLToPath } from 'node:url';
 import { summarize, practicalWin } from './src/historical/stats.mjs';
 import { json, verifyManifest, writeJson, sha256 } from './lib.mjs';
 
@@ -91,46 +91,6 @@ export function analyze(input) {
         row.throughputPerSecond = (spec.count * 1000) / row.wallMs.median;
       rows.push(row);
     }
-  for (const row of rows) {
-    const baseline = rows.find(
-      (r) => r.case === row.case && r.contender === 'serial',
-    );
-    row.serialSpeedup =
-      row.wallMs && baseline.wallMs
-        ? baseline.wallMs.median / row.wallMs.median
-        : null;
-    row.versusSerial =
-      freeze.profile !== 'publication'
-        ? 'smoke: no performance inference'
-        : row.status !== 'complete' || baseline.status !== 'complete'
-          ? 'correctness failure or missing data'
-          : row.contender === 'serial'
-            ? 'matching chunked baseline'
-            : practicalWin(row.wallMs, baseline.wallMs)
-              ? 'clear practical improvement'
-              : practicalWin(baseline.wallMs, row.wallMs)
-                ? 'clear practical loss'
-                : 'small/noisy difference';
-    row.peerComparisons = rows
-      .filter((r) => r.case === row.case && r.contender !== row.contender)
-      .map((peer) => ({
-        contender: peer.contender,
-        medianRatio:
-          row.wallMs && peer.wallMs
-            ? row.wallMs.median / peer.wallMs.median
-            : null,
-        assessment:
-          freeze.profile !== 'publication'
-            ? 'smoke: no performance inference'
-            : row.status !== 'complete' || peer.status !== 'complete'
-              ? 'failed/missing'
-              : practicalWin(row.wallMs, peer.wallMs)
-                ? 'clear practical improvement'
-                : practicalWin(peer.wallMs, row.wallMs)
-                  ? 'clear practical loss'
-                  : 'small/noisy difference',
-      }));
-  }
   const eligible =
     freeze.profile === 'publication' &&
     run.status === 'passed' &&
@@ -139,6 +99,48 @@ export function analyze(input) {
     rows.every(
       (r) => r.status === 'complete' && r.n >= 10 && r.timerP95Ms?.n === r.n,
     );
+  const noInference =
+    freeze.profile === 'smoke'
+      ? 'smoke: no performance inference'
+      : 'incomplete/invalid campaign: no performance inference';
+  for (const row of rows) {
+    const baseline = rows.find(
+      (r) => r.case === row.case && r.contender === 'serial',
+    );
+    row.serialSpeedup =
+      row.wallMs && baseline.wallMs
+        ? baseline.wallMs.median / row.wallMs.median
+        : null;
+    row.versusSerial = !eligible
+      ? noInference
+      : row.status !== 'complete' || baseline.status !== 'complete'
+        ? 'correctness failure or missing data'
+        : row.contender === 'serial'
+          ? 'matching chunked baseline'
+          : practicalWin(row.wallMs, baseline.wallMs)
+            ? 'clear practical improvement'
+            : practicalWin(baseline.wallMs, row.wallMs)
+              ? 'clear practical loss'
+              : 'small/noisy difference';
+    row.peerComparisons = rows
+      .filter((r) => r.case === row.case && r.contender !== row.contender)
+      .map((peer) => ({
+        contender: peer.contender,
+        medianRatio:
+          row.wallMs && peer.wallMs
+            ? row.wallMs.median / peer.wallMs.median
+            : null,
+        assessment: !eligible
+          ? noInference
+          : row.status !== 'complete' || peer.status !== 'complete'
+            ? 'failed/missing'
+            : practicalWin(row.wallMs, peer.wallMs)
+              ? 'clear practical improvement'
+              : practicalWin(peer.wallMs, row.wallMs)
+                ? 'clear practical loss'
+                : 'small/noisy difference',
+      }));
+  }
   const breakEven = freeze.config.contenders
     .filter((c) => c !== 'serial')
     .map((contender) => ({
@@ -172,7 +174,15 @@ export function analyze(input) {
     profile: freeze.profile,
     limitation: eligible
       ? 'Single-host synthetic JavaScript kernels; descriptive uncertainty; see SPEC.md'
-      : 'Smoke evidence from a managed Windows session with unverified background/power conditions; no publication performance claims',
+      : freeze.profile === 'smoke'
+        ? 'Reduced correctness smoke only; no publication performance claims. Host conditions are recorded in freeze.json.'
+        : 'Incomplete or invalid publication campaign; no performance inference. Review failures, missing samples and source checks.',
+    analysisSources: ['analyze.mjs', 'lib.mjs', 'src/historical/stats.mjs'].map(
+      (name) => ({
+        name,
+        sha256: sha256(fileURLToPath(new URL(name, import.meta.url))),
+      }),
+    ),
     rawManifestSha256: sha256(join(input, 'manifest.json')),
     freeze,
     packages,
@@ -186,7 +196,7 @@ export function reportMarkdown(data) {
   const lines = [
     '# JavaScript worker pools: campaign results',
     '',
-    `**${data.publicationEligible ? 'Publication campaign' : 'SMOKE ONLY — no competitor ranking or performance claim'}**`,
+    `**${data.publicationEligible ? 'Publication campaign' : data.profile === 'smoke' ? 'SMOKE ONLY — no competitor ranking or performance claim' : 'INCOMPLETE/INVALID — no performance claim'}**`,
     '',
     data.limitation,
     '',
@@ -206,7 +216,7 @@ export function reportMarkdown(data) {
   const f = (v) => (v === null || v === undefined ? 'NA' : v.toFixed(3));
   for (const r of data.rows)
     lines.push(
-      `| ${r.case} | ${r.contender} | ${r.n}/${r.status} | ${f(r.wallMs?.median)} [${r.wallMs?.ci95.map(f).join(', ') ?? 'NA'}] | ${f(r.wallMs?.cv)} | ${f(r.preparationMs?.median)} | ${f(r.coldFirstResultMs?.median)} / ${f(r.coldCompletedMs?.median)} | ${f(r.throughputPerSecond)} | ${f(r.serialSpeedup)} | ${f(r.timerP95Ms?.median)} / ${f(r.timerMaxMs?.median)} | ${f(r.sampledRssMiB?.median)} | ${r.versusSerial} |`,
+      `| ${r.case} | ${r.contender} | ${r.n}/${r.status} | ${f(r.wallMs?.median)} [${r.n > 1 ? (r.wallMs?.ci95.map(f).join(', ') ?? 'NA') : 'not estimable'}] | ${r.n > 1 ? f(r.wallMs?.cv) : 'NA'} | ${f(r.preparationMs?.median)} | ${f(r.coldFirstResultMs?.median)} / ${f(r.coldCompletedMs?.median)} | ${f(r.throughputPerSecond)} | ${f(r.serialSpeedup)} | ${f(r.timerP95Ms?.median)} / ${f(r.timerMaxMs?.median)} | ${f(r.sampledRssMiB?.median)} | ${r.versusSerial} |`,
     );
   lines.push(
     '',
@@ -214,7 +224,7 @@ export function reportMarkdown(data) {
     '',
     data.publicationEligible
       ? 'The following records include every primary size and every numerical grain, including losses and uncertain cells. A crossover is bounded by sampled sizes; no interpolation or universal break-even is inferred.'
-      : 'Reduced smoke sizes validate the harness only. They cannot establish losses, winners or break-even points. The publication command runs the frozen full sizes and ten independent trials per cell.',
+      : 'This campaign cannot establish losses, winners or break-even points. The publication command runs the frozen full sizes and ten independent trials per cell. One-trial smoke uncertainty is not estimable.',
     '',
   );
   if (data.publicationEligible)
