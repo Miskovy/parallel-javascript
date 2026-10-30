@@ -2,8 +2,6 @@
   <img src="static/pjs-logo-square-1280x1280.png" width="200" height="200" alt="PJS logo: green circuit and hexagon mark">
 </p>
 
-**Release status:** Published RC5 is the transition prerelease. This checkout prepares an unpublished 1.0.0 candidate with proposed C4 alias removal; policy and stable-release approval remain pending.
-
 <h1 align="center">PJS</h1>
 
 <p align="center"><strong>Parallel JavaScript Runtime</strong></p>
