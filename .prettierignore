@@ -4,4 +4,5 @@ package-lock.json
 benchmarks/results/*.json
 benchmarks/results/local/
 benchmarks/results/flagship-monte-carlo/
+benchmarks/publication-v1/evidence/
 .node-tools/

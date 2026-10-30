@@ -47,7 +47,8 @@ def draw(data, output, kind):
                     v, (lower, upper) = metric["median"], metric["ci95"]
                 values.append(v); low.append(max(0, v-lower)); high.append(max(0, upper-v))
             positions = x + (i - (len(order)-1)/2) * width
-            ax.bar(positions, values, width, color=COLORS[contender], label=NAMES[contender], yerr=np.array([low, high]), capsize=2, error_kw={"elinewidth": 0.8})
+            intervals = {"yerr": np.array([low, high]), "capsize": 2, "error_kw": {"elinewidth": 0.8}} if data["freeze"]["trials"] > 1 else {}
+            ax.bar(positions, values, width, color=COLORS[contender], label=NAMES[contender], **intervals)
             for position, bad in zip(positions, failed):
                 if bad:
                     ax.text(position, 0, "FAIL", rotation=90, fontsize=7, va="bottom", ha="center", color="#a32121")
@@ -66,14 +67,16 @@ def draw(data, output, kind):
     fig.legend(handles, labels, ncol=6, loc="upper center", bbox_to_anchor=(0.51, 0.935), frameon=False, fontsize=9)
     env = data["freeze"]["environment"]
     trials = data["freeze"]["trials"]
-    foot = (f'{env["cpuModel"]} · {env["os"]}/{env["arch"]} · Node {data["packages"]["node"]["version"]} · {data["freeze"]["matrix"]["primary"]} workers · {trials} trials/cell\n'
-            f'Medians; descriptive 95% bootstrap intervals (2,000 resamples). Preparation separate. Serial has identical logical chunking.\n'
+    uncertainty = 'Medians; descriptive 95% bootstrap intervals (2,000 resamples).' if trials > 1 else 'One smoke observation per cell; uncertainty not estimable.'
+    foot = (f'{env["cpuModel"]} · {env["os"]}/{env["arch"]} · Node {data["packages"]["node"]["version"]} · {data["freeze"]["matrix"]["primary"]} workers · {trials} trial(s)/cell\n'
+            f'{uncertainty} Preparation separate. Serial has identical logical chunking.\n'
             f'All primary and batching cases shown. Scaling and cold/RSS results: REPORT.md. Source {data["freeze"]["source"]["commit"][:12]}\n'
             'Reproduce: github.com/Miskovy/parallel-javascript → benchmarks/publication-v1/README.md')
     fig.text(0.065, 0.027, foot, fontsize=8.2, linespacing=1.65)
     if not data["publicationEligible"]:
-        fig.text(0.5, 0.51, "SMOKE ONLY\nNOT PERFORMANCE EVIDENCE", fontsize=35, color="#a21f2d", alpha=0.20, weight="bold", rotation=20, ha="center", va="center")
-        fig.text(0.065, 0.006, "Reduced correctness workloads · unverified managed-host conditions · no ranking or speed claims", color="#a21f2d", fontsize=10, weight="bold")
+        warning = "SMOKE ONLY" if data["profile"] == "smoke" else "INCOMPLETE CAMPAIGN"
+        fig.text(0.5, 0.51, warning + "\nNOT PERFORMANCE EVIDENCE", fontsize=35, color="#a21f2d", alpha=0.20, weight="bold", rotation=20, ha="center", va="center")
+        fig.text(0.065, 0.006, "Unqualified for performance publication · see retained host conditions and trial records · no speed claims", color="#a21f2d", fontsize=10, weight="bold")
     fig.subplots_adjust(top=0.88, bottom=0.14, left=0.09, right=0.98, hspace=0.46)
     for suffix in ("png", "svg"):
         fig.savefig(output / f'{kind}.{suffix}', dpi=160, facecolor=fig.get_facecolor())
@@ -90,7 +93,7 @@ def main():
     plt.rcParams.update({"font.family": "DejaVu Sans", "svg.fonttype": "none", "axes.formatter.useoffset": False})
     draw(data, args.output, "throughput")
     draw(data, args.output, "responsiveness")
-    metadata = {"inputSha256": hashlib.sha256(args.summary.read_bytes()).hexdigest(), "matplotlib": matplotlib.__version__, "numpy": np.__version__, "publicationEligible": data["publicationEligible"], "files": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in args.output.iterdir() if p.is_file()}}
+    metadata = {"inputSha256": hashlib.sha256(args.summary.read_bytes()).hexdigest(), "scriptSha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(), "matplotlib": matplotlib.__version__, "numpy": np.__version__, "publicationEligible": data["publicationEligible"], "files": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in args.output.iterdir() if p.is_file()}}
     (args.output / "plot-manifest.json").write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
 
 

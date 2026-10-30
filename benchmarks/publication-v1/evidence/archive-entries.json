@@ -1,0 +1,2647 @@
+[
+  {
+    "path": "smoke-01/freeze.json",
+    "bytes": 37727,
+    "sha256": "9c56f8fb7a49d0696bbc9fdbdb506fec20274a9319208edaae3f6561e94b1947"
+  },
+  {
+    "path": "smoke-01/manifest.json",
+    "bytes": 234,
+    "sha256": "e532dd4ff6d92fa2c2b4c3e643e678190a0d094010bbd0ea66ba4775db4939dc"
+  },
+  {
+    "path": "smoke-01/run.json",
+    "bytes": 1320,
+    "sha256": "4df9c117d52e17417064ae20d26acf8be28e9c8bfb62cba118cdbe6b20020b07"
+  },
+  {
+    "path": "smoke-02/children/0000-numerical-4-tinypool-t0.config.json",
+    "bytes": 496,
+    "sha256": "fdbe69104ca84f6b034fb9ef57a9a5af34a3175b8fdfd9edd9c9752f1153c460"
+  },
+  {
+    "path": "smoke-02/children/0000-numerical-4-tinypool-t0.process.json",
+    "bytes": 1449,
+    "sha256": "6598cf3aa449aca75630b3e9e673bb70da903ef4ae32b6070d6d73cbc6912ca9"
+  },
+  {
+    "path": "smoke-02/children/0001-numerical-4-raw-t0.config.json",
+    "bytes": 486,
+    "sha256": "bdc9700795824d2806cb801cf0490d41b293791fd6db06b38cace049735d8cd8"
+  },
+  {
+    "path": "smoke-02/children/0001-numerical-4-raw-t0.process.json",
+    "bytes": 653,
+    "sha256": "c46ea94233e7b7b873e637e3f953a0038931d9fe2d13a1ee7d89241b5246e695"
+  },
+  {
+    "path": "smoke-02/children/0001-numerical-4-raw-t0.result.json",
+    "bytes": 15462,
+    "sha256": "c203f4511b1b04fae3bc483501c90b7223412a81c9df126ef3d20f8020699976"
+  },
+  {
+    "path": "smoke-02/children/0002-numerical-4-serial-t0.config.json",
+    "bytes": 492,
+    "sha256": "637d9cc698ff47be45506e628e4179ca7901e4ae7e85f18bd653aa123383d1df"
+  },
+  {
+    "path": "smoke-02/children/0002-numerical-4-serial-t0.process.json",
+    "bytes": 659,
+    "sha256": "83c381fd6c7ada48330db36482a4a1e45d170ce1e96c52acdcd4201f4cd73656"
+  },
+  {
+    "path": "smoke-02/children/0002-numerical-4-serial-t0.result.json",
+    "bytes": 15497,
+    "sha256": "5d820098aebe9d6c59a9a034f7b6c4b97944bfac63b9ae5c2e1c84878f0aa0bf"
+  },
+  {
+    "path": "smoke-02/children/0003-numerical-4-piscina-t0.config.json",
+    "bytes": 494,
+    "sha256": "6281b9c29413f065e68206807057e8c331dc18c231d0fccef5a4496556b12746"
+  },
+  {
+    "path": "smoke-02/children/0003-numerical-4-piscina-t0.process.json",
+    "bytes": 661,
+    "sha256": "93bee8cc849dc596fb9bb2af268b6ab713cef61e025dead6e30201714525549e"
+  },
+  {
+    "path": "smoke-02/children/0003-numerical-4-piscina-t0.result.json",
+    "bytes": 15520,
+    "sha256": "7cc11938f7d793f27b169630810058e3ed0997adf2e249342c0a64af8a8e0f37"
+  },
+  {
+    "path": "smoke-02/children/0004-numerical-4-pjs-t0.config.json",
+    "bytes": 486,
+    "sha256": "d08356d40034542c34e595eb3b807b11544bb713b69c20590b971c5cf282d65c"
+  },
+  {
+    "path": "smoke-02/children/0004-numerical-4-pjs-t0.process.json",
+    "bytes": 653,
+    "sha256": "dc6504146c9486b79a79ad03f25358b7a023c7995ada4e9fba52b9f9b1747de6"
+  },
+  {
+    "path": "smoke-02/children/0004-numerical-4-pjs-t0.result.json",
+    "bytes": 15480,
+    "sha256": "f227799e5e77b924e86aa547f0740a4fa817ce681fd7d806d32c1b835866339f"
+  },
+  {
+    "path": "smoke-02/children/0005-numerical-4-workerpool-t0.config.json",
+    "bytes": 500,
+    "sha256": "53500e9ca45159c1b6e879ac46173f37bfae5d9ce172d7700db05f2618be4e22"
+  },
+  {
+    "path": "smoke-02/children/0005-numerical-4-workerpool-t0.process.json",
+    "bytes": 667,
+    "sha256": "ca0d5f01b617eac2a84c57203f5791b9303b50a6acf3be3aa4d233c4eb1192f5"
+  },
+  {
+    "path": "smoke-02/children/0005-numerical-4-workerpool-t0.result.json",
+    "bytes": 15485,
+    "sha256": "ea7ac022bc78c3d412bff43e3570b66431d77c96c1d722ccc79878d2d6cfece5"
+  },
+  {
+    "path": "smoke-02/children/0006-monte-medium-p1-piscina-t0.config.json",
+    "bytes": 485,
+    "sha256": "ad6973aa2475ba8a905c17b1356211204af5a159157f7d53c1ddde36e38e55be"
+  },
+  {
+    "path": "smoke-02/children/0006-monte-medium-p1-piscina-t0.process.json",
+    "bytes": 669,
+    "sha256": "6bf0072c9e8fbbe5c7afd8ec23bea029c95eee7bba6f85029720d0dae40687df"
+  },
+  {
+    "path": "smoke-02/children/0006-monte-medium-p1-piscina-t0.result.json",
+    "bytes": 7346,
+    "sha256": "f62d707ad8d05666ff805ce27dd0bcf6d85b2a4144d6c21f7c16707751a2439b"
+  },
+  {
+    "path": "smoke-02/children/0007-monte-medium-p1-pjs-t0.config.json",
+    "bytes": 477,
+    "sha256": "d832e86b4ab5e14624a4b45a42d5d1144cf3239e7bcb502fdac67a29ebe66e0c"
+  },
+  {
+    "path": "smoke-02/children/0007-monte-medium-p1-pjs-t0.process.json",
+    "bytes": 661,
+    "sha256": "d4c2b301522fbcc2c1942c42f21271eb963f6cd963542877393004aca3e16762"
+  },
+  {
+    "path": "smoke-02/children/0007-monte-medium-p1-pjs-t0.result.json",
+    "bytes": 7276,
+    "sha256": "94e7e731f59c4c6e880ca928e24a706d0f2f075afca27fc3f5c3487feedd8925"
+  },
+  {
+    "path": "smoke-02/children/0008-monte-medium-p1-raw-t0.config.json",
+    "bytes": 477,
+    "sha256": "898bf7a721d9772211ba153322d8ec0770b48dc700a1f12bc091d50de7c2d851"
+  },
+  {
+    "path": "smoke-02/children/0008-monte-medium-p1-raw-t0.process.json",
+    "bytes": 661,
+    "sha256": "d57a14c91844a4766707e3d7b0075d0cae006da2351907ede239861502352e6d"
+  },
+  {
+    "path": "smoke-02/children/0008-monte-medium-p1-raw-t0.result.json",
+    "bytes": 7281,
+    "sha256": "e55942e9b9ba859a15d96c54e6ffa6aab7e886d23978224bf687937cd7063bef"
+  },
+  {
+    "path": "smoke-02/children/0009-monte-medium-p1-tinypool-t0.config.json",
+    "bytes": 487,
+    "sha256": "f41726e038758f503c1217a36af10737a23aa7e3a11944ebc5ec4432d66e8f85"
+  },
+  {
+    "path": "smoke-02/children/0009-monte-medium-p1-tinypool-t0.process.json",
+    "bytes": 671,
+    "sha256": "1ef21d4f821ce5087e3069e6bf9cee2956eee5700aebb8bbf13cbfee34d2959d"
+  },
+  {
+    "path": "smoke-02/children/0009-monte-medium-p1-tinypool-t0.result.json",
+    "bytes": 4348,
+    "sha256": "ea7b24c114230e24a981bb3ee27209b699b1b575dbd10e3fdff1f63d695bcbf7"
+  },
+  {
+    "path": "smoke-02/children/0010-monte-medium-p1-serial-t0.config.json",
+    "bytes": 483,
+    "sha256": "351e8d7f8568f467d9dbc69197ebeb7d35e8730a7f177ac02f0722616e8c11ce"
+  },
+  {
+    "path": "smoke-02/children/0010-monte-medium-p1-serial-t0.process.json",
+    "bytes": 667,
+    "sha256": "112f4543be495a74e03e9ed000fca0136d20cfe80aef56c626fa4189e3e31b83"
+  },
+  {
+    "path": "smoke-02/children/0010-monte-medium-p1-serial-t0.result.json",
+    "bytes": 7291,
+    "sha256": "88c2e847d1e20cc7ab828ebee4982aef6e2f851ca89d766239b9cbab70dacfb2"
+  },
+  {
+    "path": "smoke-02/children/0011-monte-medium-p1-workerpool-t0.config.json",
+    "bytes": 491,
+    "sha256": "209e1ec3b9cf66b9b0effe5cb0cd1218b22af940b92db7508f9bceb3883dcf86"
+  },
+  {
+    "path": "smoke-02/children/0011-monte-medium-p1-workerpool-t0.process.json",
+    "bytes": 675,
+    "sha256": "c76b576ea4861e4d1b1266dcbb404ce027fde739e7b6dd725346b5e0e85aed10"
+  },
+  {
+    "path": "smoke-02/children/0011-monte-medium-p1-workerpool-t0.result.json",
+    "bytes": 7281,
+    "sha256": "ae6993e77182e8e6fba52d399e8d461fd894f9127d5a69a09c696931a6761c82"
+  },
+  {
+    "path": "smoke-02/children/0012-image-64-clone-tinypool-t0.config.json",
+    "bytes": 501,
+    "sha256": "f1c2ff3e807d0bac4804fd691814986d65bd1177fa84e8fa6c6f843e467ceda2"
+  },
+  {
+    "path": "smoke-02/children/0012-image-64-clone-tinypool-t0.process.json",
+    "bytes": 1455,
+    "sha256": "bff814bb494afdaf3e0422a2fc731bd9a30537a880d028d7d7c839efe79f8f67"
+  },
+  {
+    "path": "smoke-02/children/0013-image-64-clone-pjs-t0.config.json",
+    "bytes": 491,
+    "sha256": "4586655939d101b33d403ec461fc5ee82251bce26dc80f5109dcd0a8b95d5f72"
+  },
+  {
+    "path": "smoke-02/children/0013-image-64-clone-pjs-t0.process.json",
+    "bytes": 659,
+    "sha256": "4b802bfd8a0935d527279d4e019d359fd3720902c7675f81c2350fd0e6f442eb"
+  },
+  {
+    "path": "smoke-02/children/0013-image-64-clone-pjs-t0.result.json",
+    "bytes": 15477,
+    "sha256": "97e1261404714c1065cb229cbbdfb74808fd4e95301c2ed8b966439d74916262"
+  },
+  {
+    "path": "smoke-02/children/0014-image-64-clone-raw-t0.config.json",
+    "bytes": 491,
+    "sha256": "7fa0af831e0c955fd569039db1a7e21e52e01c10df0619c18df17a3eeb089365"
+  },
+  {
+    "path": "smoke-02/children/0014-image-64-clone-raw-t0.process.json",
+    "bytes": 659,
+    "sha256": "1cbb4d4b8d36e1be802a97dd66c72b40ddfc57941207933bbf70fcf97324e00a"
+  },
+  {
+    "path": "smoke-02/children/0014-image-64-clone-raw-t0.result.json",
+    "bytes": 15473,
+    "sha256": "3251bb4b18bee4559450bd13663e0ba9693402d0471666a26ea87a6582e5b2df"
+  },
+  {
+    "path": "smoke-02/children/0015-image-64-clone-serial-t0.config.json",
+    "bytes": 497,
+    "sha256": "ae76b9b861c170e2dbb7c5fc64e6a32466175d4262bc8b762df9f46f7dfccca9"
+  },
+  {
+    "path": "smoke-02/children/0015-image-64-clone-serial-t0.process.json",
+    "bytes": 665,
+    "sha256": "57dacfcd954da43a65f7851d9f15464f0ba2e6575a59870478fb38811a1cbf52"
+  },
+  {
+    "path": "smoke-02/children/0015-image-64-clone-serial-t0.result.json",
+    "bytes": 15457,
+    "sha256": "8044471d6066318348debba7ece3b4e180b9a77d1f4eada3a1e2cd55e40413c9"
+  },
+  {
+    "path": "smoke-02/children/0016-image-64-clone-piscina-t0.config.json",
+    "bytes": 499,
+    "sha256": "078db24bc74466fc75e0a55707691fc3808093d84f0235f4164e2c238dafc555"
+  },
+  {
+    "path": "smoke-02/children/0016-image-64-clone-piscina-t0.process.json",
+    "bytes": 667,
+    "sha256": "bd7557e973feedf04a5bf8fed925303423ce2db3ab237bc42c409c4cef423d9f"
+  },
+  {
+    "path": "smoke-02/children/0016-image-64-clone-piscina-t0.result.json",
+    "bytes": 15500,
+    "sha256": "76062d37ea6e1d3bdd1629843b6dc33899128e940482c51a592be33f2e2ec473"
+  },
+  {
+    "path": "smoke-02/children/0017-image-64-clone-workerpool-t0.config.json",
+    "bytes": 505,
+    "sha256": "2bfa48ae842d68eb1bd81bd04d97622595454c0bb4053691b0f4f2cd968a6732"
+  },
+  {
+    "path": "smoke-02/children/0017-image-64-clone-workerpool-t0.process.json",
+    "bytes": 673,
+    "sha256": "d06562f5028e7117e0af6c7894891c77af7d361b037710b7eb926e114119a65c"
+  },
+  {
+    "path": "smoke-02/children/0017-image-64-clone-workerpool-t0.result.json",
+    "bytes": 15475,
+    "sha256": "5db7fb256d4b3cac468c3d4ec311708a9601de9734773293ef959a022658a7bc"
+  },
+  {
+    "path": "smoke-02/children/0018-image-32-clone-serial-t0.config.json",
+    "bytes": 497,
+    "sha256": "173f994d8b0daf363a06d10f2ccb4e376ceaae06a1e0565675719403911c0c83"
+  },
+  {
+    "path": "smoke-02/children/0018-image-32-clone-serial-t0.process.json",
+    "bytes": 665,
+    "sha256": "5fc854257c58649e945b7d78d8432c08ae01f271435e699fc79be7d7a0f17fec"
+  },
+  {
+    "path": "smoke-02/children/0018-image-32-clone-serial-t0.result.json",
+    "bytes": 15496,
+    "sha256": "5ee324f5bb5e49aaf81dfb5701de738accc98c6235e91a26abae34919c285698"
+  },
+  {
+    "path": "smoke-02/children/0019-image-32-clone-piscina-t0.config.json",
+    "bytes": 499,
+    "sha256": "0818759970ddd4a651f8068bd5be613dfdd937986606a2703522324897f353c0"
+  },
+  {
+    "path": "smoke-02/children/0019-image-32-clone-piscina-t0.process.json",
+    "bytes": 667,
+    "sha256": "473c42308e66c49b801a67c920b19b243c65b7c7bf7f28db5bd692b1a09504c5"
+  },
+  {
+    "path": "smoke-02/children/0019-image-32-clone-piscina-t0.result.json",
+    "bytes": 15488,
+    "sha256": "de8a124b25cbcf72ff883ee0a6237321c2b28816d8b74c7b573c0306880e5d0f"
+  },
+  {
+    "path": "smoke-02/children/0020-image-32-clone-raw-t0.config.json",
+    "bytes": 491,
+    "sha256": "a5c5a62d666560fbb02041a70e4f2771e442041715577fff8451b6dd9f4e6e13"
+  },
+  {
+    "path": "smoke-02/children/0020-image-32-clone-raw-t0.process.json",
+    "bytes": 659,
+    "sha256": "66e967513ffdc36f199578d41b18e379bfd2fde27620527b2b881c543a942c7a"
+  },
+  {
+    "path": "smoke-02/children/0020-image-32-clone-raw-t0.result.json",
+    "bytes": 15482,
+    "sha256": "b90b15242ae28ada6f77bbe3e2b31c27ab80eea6377a27eb2780e7e4c3614d6c"
+  },
+  {
+    "path": "smoke-02/children/0021-image-32-clone-pjs-t0.config.json",
+    "bytes": 491,
+    "sha256": "755a330838126516e206b7b56c942c3b79316691af45ec08f17a8291aaf55d32"
+  },
+  {
+    "path": "smoke-02/children/0021-image-32-clone-pjs-t0.process.json",
+    "bytes": 659,
+    "sha256": "ae5d200de4686f07c0efbddcc50b871ad46ca612d39113579cc1fc15bdbbabf4"
+  },
+  {
+    "path": "smoke-02/children/0021-image-32-clone-pjs-t0.result.json",
+    "bytes": 15477,
+    "sha256": "f8366708842459aefd7606d002df62f4fcd104c0b769296b71b818be6f2b97a4"
+  },
+  {
+    "path": "smoke-02/children/0022-image-32-clone-tinypool-t0.config.json",
+    "bytes": 501,
+    "sha256": "2c8f1c7cdc6809e9f49df486b4e3055b1432d48a72e93187017f7a11a16779d7"
+  },
+  {
+    "path": "smoke-02/children/0022-image-32-clone-tinypool-t0.process.json",
+    "bytes": 1455,
+    "sha256": "33e295df8b0b65077b6aed2261fa38caf0ab5afcc7f04ae19a5c8556f39a6387"
+  },
+  {
+    "path": "smoke-02/children/0023-image-32-clone-workerpool-t0.config.json",
+    "bytes": 505,
+    "sha256": "bd508f5b92112dbaa1ea2f75130bb8f4e813cc3f79ca65eaf5d4ccd4649c8436"
+  },
+  {
+    "path": "smoke-02/children/0023-image-32-clone-workerpool-t0.process.json",
+    "bytes": 673,
+    "sha256": "4c3a1d0e59a364142ec2d045d2074a3dcde9a1998a334d105db263083125012d"
+  },
+  {
+    "path": "smoke-02/children/0023-image-32-clone-workerpool-t0.result.json",
+    "bytes": 15487,
+    "sha256": "236a1e0b16b92f1fc651b3922ccd13085dc189f7721b94c8a192c07f33d2508b"
+  },
+  {
+    "path": "smoke-02/children/0024-image-64-transfer-raw-t0.config.json",
+    "bytes": 503,
+    "sha256": "a7e528d2adc7d93d6e5af8fc3efa4f066262fb3a1b6e199d7381c8f326c08830"
+  },
+  {
+    "path": "smoke-02/children/0024-image-64-transfer-raw-t0.process.json",
+    "bytes": 665,
+    "sha256": "872cf678c36a6542b712260379a8e0abe4474cb219056ac131f9572daed296a2"
+  },
+  {
+    "path": "smoke-02/children/0024-image-64-transfer-raw-t0.result.json",
+    "bytes": 15478,
+    "sha256": "bb0bbfd5f427be39e6479e35bafcbb1829c279c069f0860ae5b211c3246e3b2d"
+  },
+  {
+    "path": "smoke-02/children/0025-image-64-transfer-serial-t0.config.json",
+    "bytes": 509,
+    "sha256": "18bfaf9fa47623e5a576724448827500ebeb08310997827e7acf008ba0fe343e"
+  },
+  {
+    "path": "smoke-02/children/0025-image-64-transfer-serial-t0.process.json",
+    "bytes": 671,
+    "sha256": "cee1af04a0eb5fb4b14da94a24dfde6dab52d6ed5114c087b1995a50e63eed22"
+  },
+  {
+    "path": "smoke-02/children/0025-image-64-transfer-serial-t0.result.json",
+    "bytes": 15497,
+    "sha256": "a22523697675514a5869c8196e719675f24bcd91e21dfe5ab74859381aac57ed"
+  },
+  {
+    "path": "smoke-02/children/0026-image-64-transfer-tinypool-t0.config.json",
+    "bytes": 513,
+    "sha256": "1a32d982dd458cad9ea2553c86b7b91ec0f66f1d6744e33197ee3476eb872897"
+  },
+  {
+    "path": "smoke-02/children/0026-image-64-transfer-tinypool-t0.process.json",
+    "bytes": 1461,
+    "sha256": "8cff9dac7c055bdb043ceeff7f0463d00c61cb3cfda398f4e8d760fba982c31a"
+  },
+  {
+    "path": "smoke-02/children/0027-image-64-transfer-workerpool-t0.config.json",
+    "bytes": 517,
+    "sha256": "fc6b010507b077a75cd2275640769b0a4e158a734bb4b341cec2422096444ff6"
+  },
+  {
+    "path": "smoke-02/children/0027-image-64-transfer-workerpool-t0.process.json",
+    "bytes": 679,
+    "sha256": "4ec65fba7ab789c61675d9e38fe92373dffc8f25cfbfbb39c4bccd84ee6497d4"
+  },
+  {
+    "path": "smoke-02/children/0027-image-64-transfer-workerpool-t0.result.json",
+    "bytes": 15483,
+    "sha256": "e3e5de0c8aeee609026fa56d35f045c825e73a53bd986c6f25c92ab30d1b46c4"
+  },
+  {
+    "path": "smoke-02/children/0028-image-64-transfer-piscina-t0.config.json",
+    "bytes": 511,
+    "sha256": "4ecb64bc76f39be8f2c015b7f02ae199619e4e8fcf104bb47c9ea104c7aeebfe"
+  },
+  {
+    "path": "smoke-02/children/0028-image-64-transfer-piscina-t0.process.json",
+    "bytes": 673,
+    "sha256": "c98a9addffcc16579cecc7b7ebad1121c919ab3ade69e2980cf8df71546ff4f0"
+  },
+  {
+    "path": "smoke-02/children/0028-image-64-transfer-piscina-t0.result.json",
+    "bytes": 15491,
+    "sha256": "133932688976ce6ca05239caa04d082fbd6374bda2d3d06325e301d901a90f20"
+  },
+  {
+    "path": "smoke-02/children/0029-image-64-transfer-pjs-t0.config.json",
+    "bytes": 503,
+    "sha256": "345cdfb4a8e074a8eb16c653ac330b6c9e9627f008368f714ebb88793252018d"
+  },
+  {
+    "path": "smoke-02/children/0029-image-64-transfer-pjs-t0.process.json",
+    "bytes": 665,
+    "sha256": "663365c708544e0fcb0f84467f5b900037eaee8292340999904c0c8fc87ccc7e"
+  },
+  {
+    "path": "smoke-02/children/0029-image-64-transfer-pjs-t0.result.json",
+    "bytes": 15483,
+    "sha256": "a995f396ba604bbdb87667dfca684102d1ed11a5e7664c26d4a962a0287fe606"
+  },
+  {
+    "path": "smoke-02/children/0030-numerical-4-batch8-piscina-t0.config.json",
+    "bytes": 516,
+    "sha256": "ab5e4108e920ede90166e9bfb3438cbac541d953dc6519478e0ddb2063381eee"
+  },
+  {
+    "path": "smoke-02/children/0030-numerical-4-batch8-piscina-t0.process.json",
+    "bytes": 675,
+    "sha256": "1146ac621683e2be01356b8af731e9b674fea29fb5d4b88f71912d8b8c9d72d3"
+  },
+  {
+    "path": "smoke-02/children/0030-numerical-4-batch8-piscina-t0.result.json",
+    "bytes": 15512,
+    "sha256": "3788f3086f86c1f0576d38489ee55e5bdf49679020c5232e36d37f483ebf9841"
+  },
+  {
+    "path": "smoke-02/children/0031-numerical-4-batch8-serial-t0.config.json",
+    "bytes": 514,
+    "sha256": "21074d040a495a6c70038c5fb63f7dbe34ac8f8606872289cc6d5ec022817824"
+  },
+  {
+    "path": "smoke-02/children/0031-numerical-4-batch8-serial-t0.process.json",
+    "bytes": 673,
+    "sha256": "70fb810febbbc1ec5ef59c73a0f92148f13a1a1398447018f97dc9744092c914"
+  },
+  {
+    "path": "smoke-02/children/0031-numerical-4-batch8-serial-t0.result.json",
+    "bytes": 15503,
+    "sha256": "edfec93b57e139afe732b3568ad61b1d75f82d61f9707928493b7e1e7110b42a"
+  },
+  {
+    "path": "smoke-02/children/0032-numerical-4-batch8-raw-t0.config.json",
+    "bytes": 508,
+    "sha256": "2a59bc74e75800b440b6c8d8259606307097d2b9057e809611a50dbcf909d1ae"
+  },
+  {
+    "path": "smoke-02/children/0032-numerical-4-batch8-raw-t0.process.json",
+    "bytes": 667,
+    "sha256": "3e46d385380bdb083e2d29008c02f4925c4de02880ffb142ea5ad3000b0a19f7"
+  },
+  {
+    "path": "smoke-02/children/0032-numerical-4-batch8-raw-t0.result.json",
+    "bytes": 15490,
+    "sha256": "8af8e1636e0b52a23c0637211a20c440eaf77bf943f4ea015a156e9d917fbccd"
+  },
+  {
+    "path": "smoke-02/children/0033-numerical-4-batch8-tinypool-t0.config.json",
+    "bytes": 518,
+    "sha256": "29a4dbc0ed0d4df534600878f6192d0bde42c436484a9fee97b19559dd588e8d"
+  },
+  {
+    "path": "smoke-02/children/0033-numerical-4-batch8-tinypool-t0.process.json",
+    "bytes": 1463,
+    "sha256": "27da443cdbadb1882ae35d5a2990ea0aee874005c194c7433049bbbea2b030eb"
+  },
+  {
+    "path": "smoke-02/children/0034-numerical-4-batch8-workerpool-t0.config.json",
+    "bytes": 522,
+    "sha256": "7f21fc039bc2c508fee4e891f327adb81ead31e2b729d0cb6f717f4af44c41fe"
+  },
+  {
+    "path": "smoke-02/children/0034-numerical-4-batch8-workerpool-t0.process.json",
+    "bytes": 681,
+    "sha256": "0edb95acfbf8600d85ddeba844fe260532b1d6e246245b2ec282379b9ed57b9b"
+  },
+  {
+    "path": "smoke-02/children/0034-numerical-4-batch8-workerpool-t0.result.json",
+    "bytes": 15500,
+    "sha256": "7118d64c669a02c2114ab72e84a14026fece069eeeb5c48a631a8f0f130a090e"
+  },
+  {
+    "path": "smoke-02/children/0035-numerical-4-batch8-pjs-t0.config.json",
+    "bytes": 508,
+    "sha256": "46853e0a6cb4014aedcc4c44cbf2fa5c74689da03a54bb0eae4640ce652ac0ef"
+  },
+  {
+    "path": "smoke-02/children/0035-numerical-4-batch8-pjs-t0.process.json",
+    "bytes": 667,
+    "sha256": "fb29ff2a57c5794fde92bdbe5ad4511f3b38489c1013e5622108a6a75d73ee90"
+  },
+  {
+    "path": "smoke-02/children/0035-numerical-4-batch8-pjs-t0.result.json",
+    "bytes": 15481,
+    "sha256": "95dbfc55d309e6e76345e81b762e2ddbed1f3dae7dbea85780fc115d179b7120"
+  },
+  {
+    "path": "smoke-02/children/0036-numerical-16-raw-t0.config.json",
+    "bytes": 490,
+    "sha256": "d2c1dd59b03f9d141de7c4535b7173fdda26710f124e848377e6ac2dba14bcb1"
+  },
+  {
+    "path": "smoke-02/children/0036-numerical-16-raw-t0.process.json",
+    "bytes": 655,
+    "sha256": "8dbfbac4dd46007ac5e3f1dd6ecdd5bc86615724f88e37c15debcebee463866d"
+  },
+  {
+    "path": "smoke-02/children/0036-numerical-16-raw-t0.result.json",
+    "bytes": 15497,
+    "sha256": "ffc0c6ab092f01846cbff3cdb37a48bb3633c2a5a4cc415b416c6f69fbef5df1"
+  },
+  {
+    "path": "smoke-02/children/0037-numerical-16-tinypool-t0.config.json",
+    "bytes": 500,
+    "sha256": "0fecee26566ea263358646cf8ad6baf56c612007b68ff695a8b6112407feb8e1"
+  },
+  {
+    "path": "smoke-02/children/0037-numerical-16-tinypool-t0.process.json",
+    "bytes": 1337,
+    "sha256": "c878fdecd7d11f1311be3e4ee8aedde619d6c7da3f074553520c9afba494dee4"
+  },
+  {
+    "path": "smoke-02/children/0038-numerical-16-workerpool-t0.config.json",
+    "bytes": 504,
+    "sha256": "2833297ab26b198870ab78f8cfb40ea17dcd3d7706ed368b09fb84714640f2da"
+  },
+  {
+    "path": "smoke-02/children/0038-numerical-16-workerpool-t0.process.json",
+    "bytes": 669,
+    "sha256": "952e55e90ef9f3545a7a8257553f39d8846b6a4f59909614dc53609f33a02642"
+  },
+  {
+    "path": "smoke-02/children/0038-numerical-16-workerpool-t0.result.json",
+    "bytes": 15455,
+    "sha256": "3ffce56c03af00ef1c4083ef04eda9c8e3157ef76bb9f38cb763bd6cd3fef692"
+  },
+  {
+    "path": "smoke-02/children/0039-numerical-16-serial-t0.config.json",
+    "bytes": 496,
+    "sha256": "e5443cb32aa4aec251af63f5e24e722ee720dc16397762fa18bf0b6323c9a5aa"
+  },
+  {
+    "path": "smoke-02/children/0039-numerical-16-serial-t0.process.json",
+    "bytes": 661,
+    "sha256": "2464ca2df82481547391e36f1ea721b608c8d054931bf2a9077d535f20a33310"
+  },
+  {
+    "path": "smoke-02/children/0039-numerical-16-serial-t0.result.json",
+    "bytes": 15447,
+    "sha256": "20b5dfd9dc51b6e36590a8f159dc30856dad7437c64234b22b5c20804a5395c4"
+  },
+  {
+    "path": "smoke-02/children/0040-numerical-16-piscina-t0.config.json",
+    "bytes": 498,
+    "sha256": "d025d8f6dd7b328a04819aa123d9dfa3ee7e11e20a120c76c261ec52e6d1c8b1"
+  },
+  {
+    "path": "smoke-02/children/0040-numerical-16-piscina-t0.process.json",
+    "bytes": 663,
+    "sha256": "25d15488b26eaede8ab2bd459af304035d82579a3fd59a46019bc7b94527bbfc"
+  },
+  {
+    "path": "smoke-02/children/0040-numerical-16-piscina-t0.result.json",
+    "bytes": 15503,
+    "sha256": "f8bd7d34afcdf9fdd5d470d2efbccf1fb8af1ade0a5e96789d7b4139706ab020"
+  },
+  {
+    "path": "smoke-02/children/0041-numerical-16-pjs-t0.config.json",
+    "bytes": 490,
+    "sha256": "89005223f6f8ae00debb3e57c2c1a91acc1a0867ea42b83635cd361c4a246226"
+  },
+  {
+    "path": "smoke-02/children/0041-numerical-16-pjs-t0.process.json",
+    "bytes": 655,
+    "sha256": "7fce0e8f61630c2ffacfe3465ec7db748b55517e6e882dbcc76a2eeb67fa7522"
+  },
+  {
+    "path": "smoke-02/children/0041-numerical-16-pjs-t0.result.json",
+    "bytes": 15463,
+    "sha256": "aa677c5a2c69f9c252363e5661a4b5434bd4dc402ad11a272fc6840dd627e0e8"
+  },
+  {
+    "path": "smoke-02/children/0042-monte-small-raw-t0.config.json",
+    "bytes": 465,
+    "sha256": "ada748d021d350e295ef9247bde25e4e4218bace50c874d5f0dea7b7154b3aaf"
+  },
+  {
+    "path": "smoke-02/children/0042-monte-small-raw-t0.process.json",
+    "bytes": 653,
+    "sha256": "3c87f9aa840d04a3e2240c1a925cdeb22067ba6cba1ecce2d2b93dc9669ddaec"
+  },
+  {
+    "path": "smoke-02/children/0042-monte-small-raw-t0.result.json",
+    "bytes": 15465,
+    "sha256": "63b2f82af7b910aae7919b64ae86a43722feb026c3c85038f80014c57304bb49"
+  },
+  {
+    "path": "smoke-02/children/0043-monte-small-serial-t0.config.json",
+    "bytes": 471,
+    "sha256": "0e9b44b3fd7cf2a7842f5750b10ddc9c5ff1043489e90d1c33d24c146a6b5c60"
+  },
+  {
+    "path": "smoke-02/children/0043-monte-small-serial-t0.process.json",
+    "bytes": 659,
+    "sha256": "a81b2cbbd892f292101a81696cf46950ea5a3f5786ddf7001c8dc1e8dbd17a7b"
+  },
+  {
+    "path": "smoke-02/children/0043-monte-small-serial-t0.result.json",
+    "bytes": 15431,
+    "sha256": "4456445f01532c577deb32774f7b894050d1a4ed5eef7be1d637d1d6d36aa276"
+  },
+  {
+    "path": "smoke-02/children/0044-monte-small-workerpool-t0.config.json",
+    "bytes": 479,
+    "sha256": "cbe0752b5bf56f90ed3a5df07bb85e1cd01bce561ee541e4b5a8c2d0a7f147cf"
+  },
+  {
+    "path": "smoke-02/children/0044-monte-small-workerpool-t0.process.json",
+    "bytes": 667,
+    "sha256": "75dc7bc2f6e6aad26f7f6e5827bac0d63277a4e6c1c6f7e9237454b6025b6c9f"
+  },
+  {
+    "path": "smoke-02/children/0044-monte-small-workerpool-t0.result.json",
+    "bytes": 15439,
+    "sha256": "c221ec134795e87a1de1e3281e01324a6f97a01e2d11a9e8bb4e65e08af6c736"
+  },
+  {
+    "path": "smoke-02/children/0045-monte-small-tinypool-t0.config.json",
+    "bytes": 475,
+    "sha256": "e5f1bf54d4b9021130b59d62f21d3a758fc525562d50b826beeac538ea212076"
+  },
+  {
+    "path": "smoke-02/children/0045-monte-small-tinypool-t0.process.json",
+    "bytes": 663,
+    "sha256": "f1042298ff3916ebc408bfcadce78b6a939b15f5694805b9ff8a575bbf231ef8"
+  },
+  {
+    "path": "smoke-02/children/0045-monte-small-tinypool-t0.result.json",
+    "bytes": 4337,
+    "sha256": "592a28e17694a403d15d7ec9bb05c9c75e89ce136bec7552347cd3b9e9601f20"
+  },
+  {
+    "path": "smoke-02/children/0046-monte-small-piscina-t0.config.json",
+    "bytes": 473,
+    "sha256": "c11c77b7b89a46826d085c57fcce3ba7c521db53d77cd6822b8c6496e15ba324"
+  },
+  {
+    "path": "smoke-02/children/0046-monte-small-piscina-t0.process.json",
+    "bytes": 661,
+    "sha256": "1b60b4ecd1d548f433b6cf4dd4cf65a170e4017f0b1ecbff33c84d9b86b517d6"
+  },
+  {
+    "path": "smoke-02/children/0046-monte-small-piscina-t0.result.json",
+    "bytes": 15475,
+    "sha256": "2df9a4d4baafb7200e76840413179e918f7dcfec871f37ac412ea39d6b37439c"
+  },
+  {
+    "path": "smoke-02/children/0047-monte-small-pjs-t0.config.json",
+    "bytes": 465,
+    "sha256": "008409d2b08d853c9e501b1427775514a4e415478fafb0825bde1c177f77d5e1"
+  },
+  {
+    "path": "smoke-02/children/0047-monte-small-pjs-t0.process.json",
+    "bytes": 653,
+    "sha256": "ff436ab13204e8716903e49757054ea902ef35ce9e57aacec6dd7977471907a9"
+  },
+  {
+    "path": "smoke-02/children/0047-monte-small-pjs-t0.result.json",
+    "bytes": 15498,
+    "sha256": "1709a59d924006ba81451be0c36f72462dc04bff0d6865f6f3909ae939390205"
+  },
+  {
+    "path": "smoke-02/children/0048-monte-medium-piscina-t0.config.json",
+    "bytes": 476,
+    "sha256": "3f6ce4ae19aa04e051d813d5ba284c615d11ed15be3fe24786bbd0eb886b7b11"
+  },
+  {
+    "path": "smoke-02/children/0048-monte-medium-piscina-t0.process.json",
+    "bytes": 663,
+    "sha256": "c36d3be249ad7c832e3357eaeaba3699d7523228075e6e5b6e9e4f700223a6fa"
+  },
+  {
+    "path": "smoke-02/children/0048-monte-medium-piscina-t0.result.json",
+    "bytes": 15475,
+    "sha256": "8832ea763f3d7d09e65027c6b849f077006366e89f432f14a769c8ba8457b47e"
+  },
+  {
+    "path": "smoke-02/children/0049-monte-medium-raw-t0.config.json",
+    "bytes": 468,
+    "sha256": "d14b8500693cc72301a2e8d332406ba731065633cc7ff1ca664821374ba9b84f"
+  },
+  {
+    "path": "smoke-02/children/0049-monte-medium-raw-t0.process.json",
+    "bytes": 655,
+    "sha256": "6d0ad24ea5e68109904e1b3aa60f205c4f830fcbfc6de0716069599e7780c4a7"
+  },
+  {
+    "path": "smoke-02/children/0049-monte-medium-raw-t0.result.json",
+    "bytes": 15468,
+    "sha256": "3af02c33c25154c0e2aca25ab00ce3034cc0ada39b354852e09c2d7d9fe1fc7c"
+  },
+  {
+    "path": "smoke-02/children/0050-monte-medium-serial-t0.config.json",
+    "bytes": 474,
+    "sha256": "bd10f7205b191734a516193ae954b2091dc0513818e34b7d6ac954bd600eaa5f"
+  },
+  {
+    "path": "smoke-02/children/0050-monte-medium-serial-t0.process.json",
+    "bytes": 661,
+    "sha256": "e4b0469e89db6fa9ccbca147a7980597453375c9e6d47e7c26f15d8f97073cf5"
+  },
+  {
+    "path": "smoke-02/children/0050-monte-medium-serial-t0.result.json",
+    "bytes": 15445,
+    "sha256": "9a52f594cd7789f47bac9cf69600e5ab58862919cc174442a1ca1592590ecfd4"
+  },
+  {
+    "path": "smoke-02/children/0051-monte-medium-tinypool-t0.config.json",
+    "bytes": 478,
+    "sha256": "6fb2d61910889f54cec278c37bf33a1f0225d9b31f06ae26ed616a17ab1c0243"
+  },
+  {
+    "path": "smoke-02/children/0051-monte-medium-tinypool-t0.process.json",
+    "bytes": 1451,
+    "sha256": "f4f73246559a3e9538f724987ee45afab4d5c1fdcca90ff485c1442aa21e9200"
+  },
+  {
+    "path": "smoke-02/children/0052-monte-medium-pjs-t0.config.json",
+    "bytes": 468,
+    "sha256": "a960c3c9f915257c299884b0db2d9ee79004d729b7f0e8485a529eea2dcb0bc7"
+  },
+  {
+    "path": "smoke-02/children/0052-monte-medium-pjs-t0.process.json",
+    "bytes": 655,
+    "sha256": "27dee0b2af662e9a9f3d6f82840c59e5fff71bf0cd014e833f9f2df7dfe63e99"
+  },
+  {
+    "path": "smoke-02/children/0052-monte-medium-pjs-t0.result.json",
+    "bytes": 15501,
+    "sha256": "89d47bfb0100246e3b787ffcd2a9d0c05e5fed98bf69f02ea7cc5924564d35ac"
+  },
+  {
+    "path": "smoke-02/children/0053-monte-medium-workerpool-t0.config.json",
+    "bytes": 482,
+    "sha256": "1470e6a0c1aba0d3a543016645c3a82766dbfffe12145a82aa53cbd8638068ba"
+  },
+  {
+    "path": "smoke-02/children/0053-monte-medium-workerpool-t0.process.json",
+    "bytes": 669,
+    "sha256": "e707b4e7930e86567e2559c80f75cc08af7d74b8298e95cc2a23711c0fca2c98"
+  },
+  {
+    "path": "smoke-02/children/0053-monte-medium-workerpool-t0.result.json",
+    "bytes": 15461,
+    "sha256": "ba82d337e4b46c0afe2b3e861b8b74f9e78708b3ad5aaff9682a4f22bb61f29a"
+  },
+  {
+    "path": "smoke-02/children/0054-image-32-transfer-piscina-t0.config.json",
+    "bytes": 511,
+    "sha256": "038c6d24ffac015188af386e614af282b10366e3f96b48ef8dbe656989249b27"
+  },
+  {
+    "path": "smoke-02/children/0054-image-32-transfer-piscina-t0.process.json",
+    "bytes": 673,
+    "sha256": "1dfd0c2f8cdd770db72ae380f7650c056f4afcd0132743d28f31841bcef580a3"
+  },
+  {
+    "path": "smoke-02/children/0054-image-32-transfer-piscina-t0.result.json",
+    "bytes": 15491,
+    "sha256": "03ab2f46e9b0ebe22c0f18e3110cb5d5e470e61416bcd01aecc53c5248b8c71d"
+  },
+  {
+    "path": "smoke-02/children/0055-image-32-transfer-serial-t0.config.json",
+    "bytes": 509,
+    "sha256": "ce74e4b3dd022ba927bd9b82c0f4a641b8f5ebb131c90a3b7ba2e2a1c20270fc"
+  },
+  {
+    "path": "smoke-02/children/0055-image-32-transfer-serial-t0.process.json",
+    "bytes": 671,
+    "sha256": "ddb0bb3d1e90addaef4ce418b8478385bc9962b255159ff22b0398d32c2f8ed2"
+  },
+  {
+    "path": "smoke-02/children/0055-image-32-transfer-serial-t0.result.json",
+    "bytes": 15508,
+    "sha256": "ee8c1dfb5ec6113473a59e8cf9f14f117fb069604fb1f584cc72bd95e0e59166"
+  },
+  {
+    "path": "smoke-02/children/0056-image-32-transfer-workerpool-t0.config.json",
+    "bytes": 517,
+    "sha256": "ac8cd11408efeeb56ff19dc9830e7441a8036fefd7ad9b61aed205fa5e945c12"
+  },
+  {
+    "path": "smoke-02/children/0056-image-32-transfer-workerpool-t0.process.json",
+    "bytes": 679,
+    "sha256": "645ee21f1315c12ffffa17565f790452bb3a70620cd65012c0e4cb1ab4f5e1d6"
+  },
+  {
+    "path": "smoke-02/children/0056-image-32-transfer-workerpool-t0.result.json",
+    "bytes": 15491,
+    "sha256": "6bcf3939753ff8832d871b625474a884eab4f0bb732e9cf00503a3919c6beec3"
+  },
+  {
+    "path": "smoke-02/children/0057-image-32-transfer-tinypool-t0.config.json",
+    "bytes": 513,
+    "sha256": "a33d5b87c741ceae47a5671a826591d2e3acfd3b52c737fac63927b86908e6ac"
+  },
+  {
+    "path": "smoke-02/children/0057-image-32-transfer-tinypool-t0.process.json",
+    "bytes": 1347,
+    "sha256": "75e7e7fad085f3b3664016a9bdd76a63e7744354034f54b9f9a23516ac4f7a9c"
+  },
+  {
+    "path": "smoke-02/children/0058-image-32-transfer-raw-t0.config.json",
+    "bytes": 503,
+    "sha256": "ed698e55f01406601b80eb7ed32c57f3a289a48b0a93c783bff9c53bdd95cdb2"
+  },
+  {
+    "path": "smoke-02/children/0058-image-32-transfer-raw-t0.process.json",
+    "bytes": 665,
+    "sha256": "aae7b48ee4649eab9f3210ee89e75db281ee28567e50ddd6bf94607386626649"
+  },
+  {
+    "path": "smoke-02/children/0058-image-32-transfer-raw-t0.result.json",
+    "bytes": 15477,
+    "sha256": "aacaf0aef2c670f344e4113f84ac194e55db6aa6546dad3fd39c54c5acb69e64"
+  },
+  {
+    "path": "smoke-02/children/0059-image-32-transfer-pjs-t0.config.json",
+    "bytes": 503,
+    "sha256": "eb8682d900e241c8470a8747ef2a542f0f9eef0a5d794d8782feb36f71611857"
+  },
+  {
+    "path": "smoke-02/children/0059-image-32-transfer-pjs-t0.process.json",
+    "bytes": 665,
+    "sha256": "5377f07d879ae2113369b897c0c15ae453add70380c9b38103d3fd641185b17f"
+  },
+  {
+    "path": "smoke-02/children/0059-image-32-transfer-pjs-t0.result.json",
+    "bytes": 15478,
+    "sha256": "71ac39468ac39241fbc1af6f0834f45080a6c86b4cc8b16d27d9d47026aeadd4"
+  },
+  {
+    "path": "smoke-02/children/0060-numerical-64-tinypool-t0.config.json",
+    "bytes": 500,
+    "sha256": "2ccdf8749aefa83692344fd5ca26398b79d273b5c0a5e2666dfc674b191d2e72"
+  },
+  {
+    "path": "smoke-02/children/0060-numerical-64-tinypool-t0.process.json",
+    "bytes": 1451,
+    "sha256": "893a871a40cbaad8106547eb04f0603731eae2f068b55659382471469625b482"
+  },
+  {
+    "path": "smoke-02/children/0061-numerical-64-pjs-t0.config.json",
+    "bytes": 490,
+    "sha256": "df28780687ef9a216891b0a1195769c1b35dbda2d4f82a0ab43df48882bfd7f9"
+  },
+  {
+    "path": "smoke-02/children/0061-numerical-64-pjs-t0.process.json",
+    "bytes": 655,
+    "sha256": "4eae2e4d6fd4ce022a71fabd19e71d0b3cf98e44681fcfba32a7e1c0c6ccb689"
+  },
+  {
+    "path": "smoke-02/children/0061-numerical-64-pjs-t0.result.json",
+    "bytes": 15480,
+    "sha256": "1db173e12732dd45ccc995b1fb279b5f0b71fb62265b91d82eccf7539afb63e3"
+  },
+  {
+    "path": "smoke-02/children/0062-numerical-64-piscina-t0.config.json",
+    "bytes": 498,
+    "sha256": "fa2de0581b33a3e6adcd4cebec3853f8758adb203541efe16d89c62420d0a8a1"
+  },
+  {
+    "path": "smoke-02/children/0062-numerical-64-piscina-t0.process.json",
+    "bytes": 663,
+    "sha256": "fcc3108a41b53a2cd310f14674223d3b8bfaf70946531d25936f0474bc44d0ec"
+  },
+  {
+    "path": "smoke-02/children/0062-numerical-64-piscina-t0.result.json",
+    "bytes": 15504,
+    "sha256": "bdb7d7c2c2625de48408e274ba6422e1efab1cbf3f5006cfab67832955920e57"
+  },
+  {
+    "path": "smoke-02/children/0063-numerical-64-raw-t0.config.json",
+    "bytes": 490,
+    "sha256": "eb5b89184aa2f153c60fec2c44a2d5d3fc2d5dc7bcd1027570b2d4b09238f3c5"
+  },
+  {
+    "path": "smoke-02/children/0063-numerical-64-raw-t0.process.json",
+    "bytes": 655,
+    "sha256": "10ed074262dc367f68492e6c637cf9d4d6649d6f9a4bcbc44d5aa7c7d975d52f"
+  },
+  {
+    "path": "smoke-02/children/0063-numerical-64-raw-t0.result.json",
+    "bytes": 15489,
+    "sha256": "0bf9b4bcecb7e29849b7afe4d7a9e9f0d3aa8e224afcfbdb2635c7c3d6e70a74"
+  },
+  {
+    "path": "smoke-02/children/0064-numerical-64-serial-t0.config.json",
+    "bytes": 496,
+    "sha256": "f0ff045b1534643cefd5a7566d8d65ef7a598869081b9805c7ad1cffd91d577c"
+  },
+  {
+    "path": "smoke-02/children/0064-numerical-64-serial-t0.process.json",
+    "bytes": 661,
+    "sha256": "c2c8f646ef893539b92173e2dca68dec220f5cea82cb00b547d36a5d675abeb8"
+  },
+  {
+    "path": "smoke-02/children/0064-numerical-64-serial-t0.result.json",
+    "bytes": 15489,
+    "sha256": "7aa124aa8f46d361aad62393e4901166ae6a28f58eb31de332daeb8d4350a75b"
+  },
+  {
+    "path": "smoke-02/children/0065-numerical-64-workerpool-t0.config.json",
+    "bytes": 504,
+    "sha256": "949296e1fa92003d5b37e20540e83846cbeedaa692528ec7fcf20cb82a8a6202"
+  },
+  {
+    "path": "smoke-02/children/0065-numerical-64-workerpool-t0.process.json",
+    "bytes": 669,
+    "sha256": "aea89221cd9269916aa4dc0aab06186c26609a309534560178c249982278e08b"
+  },
+  {
+    "path": "smoke-02/children/0065-numerical-64-workerpool-t0.result.json",
+    "bytes": 15501,
+    "sha256": "22879cb132657fd0ab8462e67daab500c43e71db2abb59c67cf7269f2e4e7bad"
+  },
+  {
+    "path": "smoke-02/children/0066-monte-medium-p2-workerpool-t0.config.json",
+    "bytes": 491,
+    "sha256": "5acf8ff3e3129ba4b6622378f691e4c26b99a5ef640a3293ae5ba4f930183762"
+  },
+  {
+    "path": "smoke-02/children/0066-monte-medium-p2-workerpool-t0.process.json",
+    "bytes": 675,
+    "sha256": "5b42d0e92ea05430c5917f514883b2bf1b89f1127d2181ef8ef1732caaf2037c"
+  },
+  {
+    "path": "smoke-02/children/0066-monte-medium-p2-workerpool-t0.result.json",
+    "bytes": 9999,
+    "sha256": "0fb3a29bfc4cca2f08ac02fb5c5f2694d26fe7accdbc9e89806a3f69ae3b6687"
+  },
+  {
+    "path": "smoke-02/children/0067-monte-medium-p2-tinypool-t0.config.json",
+    "bytes": 487,
+    "sha256": "e829751942486d270f04dc091c529dc985440d0de08f36539685c7ae570c8896"
+  },
+  {
+    "path": "smoke-02/children/0067-monte-medium-p2-tinypool-t0.process.json",
+    "bytes": 1343,
+    "sha256": "b210349f97808c3baa3838b63ca64e09dee09616f4f630e24cc62474a11b8e98"
+  },
+  {
+    "path": "smoke-02/children/0068-monte-medium-p2-raw-t0.config.json",
+    "bytes": 477,
+    "sha256": "d646ee81bf1fa32566e8cfe37544ada79f1f54bb43dc37f83f42f590c2ee3371"
+  },
+  {
+    "path": "smoke-02/children/0068-monte-medium-p2-raw-t0.process.json",
+    "bytes": 661,
+    "sha256": "cfd53b608458b1a47cdd1ef704a67b69cfc57979bf479b0d104f56ed35d3f380"
+  },
+  {
+    "path": "smoke-02/children/0068-monte-medium-p2-raw-t0.result.json",
+    "bytes": 10017,
+    "sha256": "1e94c61eb74eebfa6a7146ecf594f20b33c901a847d6963191d9a7b74675fba3"
+  },
+  {
+    "path": "smoke-02/children/0069-monte-medium-p2-piscina-t0.config.json",
+    "bytes": 485,
+    "sha256": "92f192c70c9a7f1c91465c4972e2a13de0454239c717031b96ca5d9252ae83fb"
+  },
+  {
+    "path": "smoke-02/children/0069-monte-medium-p2-piscina-t0.process.json",
+    "bytes": 669,
+    "sha256": "5d1011810ff3ee893911be39e17a4da9ac26863ea7e3317d9ce7500cdb37adfe"
+  },
+  {
+    "path": "smoke-02/children/0069-monte-medium-p2-piscina-t0.result.json",
+    "bytes": 10004,
+    "sha256": "87372962001249b6c00eb0e2baeeea2e07b84dd1050ce193fbe9447375c5456f"
+  },
+  {
+    "path": "smoke-02/children/0070-monte-medium-p2-serial-t0.config.json",
+    "bytes": 483,
+    "sha256": "5155cd0c91a690b0bba3f77574b011bd925d2f5f209d9d4c630e28c7263b2936"
+  },
+  {
+    "path": "smoke-02/children/0070-monte-medium-p2-serial-t0.process.json",
+    "bytes": 667,
+    "sha256": "3a5b112bf8db1b1abf729bbd23e3d5f3600a446cc7ec5c236e32de9b9bbe836e"
+  },
+  {
+    "path": "smoke-02/children/0070-monte-medium-p2-serial-t0.result.json",
+    "bytes": 10025,
+    "sha256": "eb30ac71dfb532e90fd3eeebf833aea22fd99484736c446d44649b2a556bab7a"
+  },
+  {
+    "path": "smoke-02/children/0071-monte-medium-p2-pjs-t0.config.json",
+    "bytes": 477,
+    "sha256": "4b84611b6b1dc2ffa77d227fdea7d2de8ea8e8890f3b98fad4df5531f73a5c57"
+  },
+  {
+    "path": "smoke-02/children/0071-monte-medium-p2-pjs-t0.process.json",
+    "bytes": 661,
+    "sha256": "12cb5b9bead88e4aef89ed54bfa573b0dd94ffa30107fb42a7326a5ea6801bfb"
+  },
+  {
+    "path": "smoke-02/children/0071-monte-medium-p2-pjs-t0.result.json",
+    "bytes": 10022,
+    "sha256": "5ff828b7e3a891b8834e6d664057e6008cd65b639425af32c7ad17957b812686"
+  },
+  {
+    "path": "smoke-02/children/0072-monte-large-tinypool-t0.config.json",
+    "bytes": 476,
+    "sha256": "3c34831bd4dd5589c6a22a82a735d0c408ae640e6bd08024c66cf86a5deec727"
+  },
+  {
+    "path": "smoke-02/children/0072-monte-large-tinypool-t0.process.json",
+    "bytes": 1449,
+    "sha256": "20ad90a0f65b95daa2e6035a3a6c8d35a084329e8825f905d4f65689feb6f607"
+  },
+  {
+    "path": "smoke-02/children/0073-monte-large-workerpool-t0.config.json",
+    "bytes": 480,
+    "sha256": "3760688971d448554f2b7f287db3cf73008d82c4776d4c9a668858831167961e"
+  },
+  {
+    "path": "smoke-02/children/0073-monte-large-workerpool-t0.process.json",
+    "bytes": 667,
+    "sha256": "220f4ab1d53c65168b90ebea19632988799e6707f489a81eeea85b010a5266c8"
+  },
+  {
+    "path": "smoke-02/children/0073-monte-large-workerpool-t0.result.json",
+    "bytes": 15462,
+    "sha256": "9481b0ee55f5662d565ef27ca25c16bbbd129fb9741f00c516f3eab20d8755a8"
+  },
+  {
+    "path": "smoke-02/children/0074-monte-large-serial-t0.config.json",
+    "bytes": 472,
+    "sha256": "063b9bd3faa3f63af3ed07cd7278f7caba902cb22c103dde77ecfae806141123"
+  },
+  {
+    "path": "smoke-02/children/0074-monte-large-serial-t0.process.json",
+    "bytes": 659,
+    "sha256": "a5e7f60b1d9949cce469eaac585a2826a28f760d02dc08653fe111d8e4521a4b"
+  },
+  {
+    "path": "smoke-02/children/0074-monte-large-serial-t0.result.json",
+    "bytes": 15463,
+    "sha256": "1aac0bddffeff0b1a4b00adeb01237173372161987c0634b22bddd1562e9e94b"
+  },
+  {
+    "path": "smoke-02/children/0075-monte-large-raw-t0.config.json",
+    "bytes": 466,
+    "sha256": "f9517c78f2edf1efdd6799af440ab8b6518b7080dac0ddf08de72e61987b758a"
+  },
+  {
+    "path": "smoke-02/children/0075-monte-large-raw-t0.process.json",
+    "bytes": 653,
+    "sha256": "c48401b52e79dd15d7cf59caecdc09d784bcfa57ea6c16fdf289ebe4a4c23c3c"
+  },
+  {
+    "path": "smoke-02/children/0075-monte-large-raw-t0.result.json",
+    "bytes": 15445,
+    "sha256": "9f43a92a684ab03178ee8366f18b5e7399d61c39e78a06f8762687322f248c16"
+  },
+  {
+    "path": "smoke-02/children/0076-monte-large-piscina-t0.config.json",
+    "bytes": 474,
+    "sha256": "63a5a369d129c88b2df06596d03fec347d66c06bf03d9a025d8c18fd597ea44a"
+  },
+  {
+    "path": "smoke-02/children/0076-monte-large-piscina-t0.process.json",
+    "bytes": 661,
+    "sha256": "38892e3b4c3d45fb26ccdbe927316f90ca84bbe72735c730397140d9220fbf2f"
+  },
+  {
+    "path": "smoke-02/children/0076-monte-large-piscina-t0.result.json",
+    "bytes": 15460,
+    "sha256": "4049c046e2f8e129776912bb69036a59356a93045e0a521f39f9780e877f642e"
+  },
+  {
+    "path": "smoke-02/children/0077-monte-large-pjs-t0.config.json",
+    "bytes": 466,
+    "sha256": "13e1a7ec05a60cba709a695dd1f46c8354d13e854c289be7dc0f21331f074c40"
+  },
+  {
+    "path": "smoke-02/children/0077-monte-large-pjs-t0.process.json",
+    "bytes": 653,
+    "sha256": "18258399147b4117c17ab2da73ccf00c37aef49bad9136cc493ca8a4ef7630b5"
+  },
+  {
+    "path": "smoke-02/children/0077-monte-large-pjs-t0.result.json",
+    "bytes": 15478,
+    "sha256": "bab2a977e1911d9ee552e02e070baf62c3ea8cd5fc4fcebe2aaa5100c494e424"
+  },
+  {
+    "path": "smoke-02/consumer-path.txt",
+    "bytes": 63,
+    "sha256": "4f9e42e3647139dbe2d0c1ae9ccd4017ba29416123281063b6f293c0286153b9"
+  },
+  {
+    "path": "smoke-02/freeze.json",
+    "bytes": 37727,
+    "sha256": "f7ecfe4f8ec281627915b404cda020732b3657c8b180ebb8383a7e92c9ed724d"
+  },
+  {
+    "path": "smoke-02/host-resolution.json",
+    "bytes": 2950,
+    "sha256": "cef94461e5dbd254ef510b774d5a12c630b0dca9d1da7d128505e3bb5e24d638"
+  },
+  {
+    "path": "smoke-02/install.json",
+    "bytes": 998,
+    "sha256": "437b168c6d95257380550a857f909b39ae827d242eddb06e01f47f2b2b349614"
+  },
+  {
+    "path": "smoke-02/installed-files.json",
+    "bytes": 84415,
+    "sha256": "b79815180de32f98141a7f2e4f10ada334345748f689c4fab03309cc1f1f5878"
+  },
+  {
+    "path": "smoke-02/manifest.json",
+    "bytes": 38158,
+    "sha256": "4742b9196dfa661ca1d5c6a165dd59aced2113bee975c8919f5ad3b857ea9659"
+  },
+  {
+    "path": "smoke-02/oracles/image-32-clone.bin",
+    "bytes": 4096,
+    "sha256": "b4e0afd16f16d5d08aed73ff679188402091dabb85dbe172712109d62b053adf"
+  },
+  {
+    "path": "smoke-02/oracles/image-32-transfer.bin",
+    "bytes": 4096,
+    "sha256": "b4e0afd16f16d5d08aed73ff679188402091dabb85dbe172712109d62b053adf"
+  },
+  {
+    "path": "smoke-02/oracles/image-64-clone.bin",
+    "bytes": 16384,
+    "sha256": "ace2940df4d706f61e70e2f14a93b61b6404e889d6391baa4f08fdff6e1404fd"
+  },
+  {
+    "path": "smoke-02/oracles/image-64-transfer.bin",
+    "bytes": 16384,
+    "sha256": "ace2940df4d706f61e70e2f14a93b61b6404e889d6391baa4f08fdff6e1404fd"
+  },
+  {
+    "path": "smoke-02/oracles/monte-large.json",
+    "bytes": 217,
+    "sha256": "c7b34b4d38f8f36ae474bf265f62983d37d52f1e2c0f7f9222b287cdd835dd81"
+  },
+  {
+    "path": "smoke-02/oracles/monte-medium-p1.json",
+    "bytes": 215,
+    "sha256": "93ffb0760d4dbcd11455ac195da06a108a30c3eb7a16774209b90689a4bc1ead"
+  },
+  {
+    "path": "smoke-02/oracles/monte-medium-p2.json",
+    "bytes": 215,
+    "sha256": "93ffb0760d4dbcd11455ac195da06a108a30c3eb7a16774209b90689a4bc1ead"
+  },
+  {
+    "path": "smoke-02/oracles/monte-medium.json",
+    "bytes": 215,
+    "sha256": "93ffb0760d4dbcd11455ac195da06a108a30c3eb7a16774209b90689a4bc1ead"
+  },
+  {
+    "path": "smoke-02/oracles/monte-small.json",
+    "bytes": 216,
+    "sha256": "fec1c640a3f6fed4395e7011786e5cdc683d01afbe2b5fec34fbaabbebbe5098"
+  },
+  {
+    "path": "smoke-02/oracles/numerical-16.json",
+    "bytes": 60,
+    "sha256": "9973fe39eb65c86378dce78c334d1c4a479769d79ffb1c566b1d46f8f7b5b80d"
+  },
+  {
+    "path": "smoke-02/oracles/numerical-4-batch8.json",
+    "bytes": 60,
+    "sha256": "9973fe39eb65c86378dce78c334d1c4a479769d79ffb1c566b1d46f8f7b5b80d"
+  },
+  {
+    "path": "smoke-02/oracles/numerical-4.json",
+    "bytes": 60,
+    "sha256": "9973fe39eb65c86378dce78c334d1c4a479769d79ffb1c566b1d46f8f7b5b80d"
+  },
+  {
+    "path": "smoke-02/oracles/numerical-64.json",
+    "bytes": 60,
+    "sha256": "ea68b6bd710f75a64243cb93e9e29608749be6e99b01de1eb7c5d29c19da4e33"
+  },
+  {
+    "path": "smoke-02/packages.json",
+    "bytes": 7883,
+    "sha256": "2bc46804683d631c8727b226ca15cc31fd9451e409e172b6b6b59e7b7aa71a9e"
+  },
+  {
+    "path": "smoke-02/raw.jsonl",
+    "bytes": 882577,
+    "sha256": "6b6e977fccbab4473fe26ec355d787e75c0d19eafdfaf632fd81758997d28a8e"
+  },
+  {
+    "path": "smoke-02/references.json",
+    "bytes": 3501,
+    "sha256": "af82de8a840c3eb280e3ce6a03042c4f68ccfbd3c79222b9025352929060d861"
+  },
+  {
+    "path": "smoke-02/registry-piscina.json",
+    "bytes": 4608,
+    "sha256": "7ed55bea197d887ad394e9fef8f624edd20f57f1d8c346054fc86b3588068f3a"
+  },
+  {
+    "path": "smoke-02/registry-pjavascript_runtime.json",
+    "bytes": 3196,
+    "sha256": "02e2d7a20bfdffbb6de7a08d2bbc1957f4cc8895e7deb1a845670169c0bd992c"
+  },
+  {
+    "path": "smoke-02/registry-tinypool.json",
+    "bytes": 3680,
+    "sha256": "58a44c5c44c88f30e1a3350b0c7b905739294f45e3bb6a9f5d3940d24e85c95a"
+  },
+  {
+    "path": "smoke-02/registry-workerpool.json",
+    "bytes": 3210,
+    "sha256": "d18101a8acb5764b7a6ef042219ad24ba96901ae16f7130462923b82e0542374"
+  },
+  {
+    "path": "smoke-02/run.json",
+    "bytes": 12667,
+    "sha256": "5db6ba844ce7d0a852801150e13b9f384c5e73a7253fb59afa3ac09cb9c87fb2"
+  },
+  {
+    "path": "final-smoke-01/analysis/REPORT.md",
+    "bytes": 16342,
+    "sha256": "3cac7e6d570280e7d4d8a131e5a6cc67aa049185073a0c30044653d457be1b7a"
+  },
+  {
+    "path": "final-smoke-01/analysis/results.csv",
+    "bytes": 17420,
+    "sha256": "114b010e035b59555d438b987515a3ba77d99acc8bdc9928523310f287368e63"
+  },
+  {
+    "path": "final-smoke-01/analysis/summary.json",
+    "bytes": 355271,
+    "sha256": "3c1a60fe53017d8a0a9784cbd29e5a7700d9ecf5986db691a5c1cd2b044b4b70"
+  },
+  {
+    "path": "final-smoke-01/campaign.json",
+    "bytes": 984,
+    "sha256": "55e7b877e44fd66cf0e7feefc5e83f8ac9d4e765cc3bed020818aac90f20fca1"
+  },
+  {
+    "path": "final-smoke-01/graphics/plot-manifest.json",
+    "bytes": 563,
+    "sha256": "98f1c151b84e09bca2517ad950617f8ff1f8c1f2626ac79dd36e16a41f8b5f77"
+  },
+  {
+    "path": "final-smoke-01/graphics/responsiveness.png",
+    "bytes": 260196,
+    "sha256": "e6ba8c9598cd4ff4e8d3695d13467b8bddac49e6da4c2038631a2230a0ede1cf"
+  },
+  {
+    "path": "final-smoke-01/graphics/responsiveness.svg",
+    "bytes": 65872,
+    "sha256": "49a69527c4e9c21c33c983e8659a85225616e561033a976caec52a0989fd1b3a"
+  },
+  {
+    "path": "final-smoke-01/graphics/throughput.png",
+    "bytes": 258630,
+    "sha256": "7ada730253eb0c840de9e09d8bf262154d3fb75aeba23eee5f0693c119fceb1b"
+  },
+  {
+    "path": "final-smoke-01/graphics/throughput.svg",
+    "bytes": 66466,
+    "sha256": "95f6486e4799dbdd19b91d6bcf3a4fcd13c3ddd1d612f0d1af6465f5a24c9bb8"
+  },
+  {
+    "path": "final-smoke-01/manifest.json",
+    "bytes": 43318,
+    "sha256": "50d5162491e3e9e74cc5f3d90f6f13ddf1189fa04e265febc6dcbedbbfe2c3bf"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0000-numerical-4-tinypool-t0.config.json",
+    "bytes": 509,
+    "sha256": "534c8ab17f5d2be7240db5482850c847dd2713f74c39b66aa20afcf0da1986f9"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0000-numerical-4-tinypool-t0.process.json",
+    "bytes": 689,
+    "sha256": "8c51ea4f4782ad8042964a3e50b94280d83230949c07fe7852e2c96fc1f2527a"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0000-numerical-4-tinypool-t0.result.json",
+    "bytes": 15496,
+    "sha256": "0b8d1e3d9445f31e3cd4259d83628b714be01ccda15016efd50a8c55c4b0870e"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0001-numerical-4-raw-t0.config.json",
+    "bytes": 499,
+    "sha256": "319e12c10ef4cd5febf523b456a3d06b136c337c96697cf0a061dbccb2f38407"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0001-numerical-4-raw-t0.process.json",
+    "bytes": 679,
+    "sha256": "e83b4e03a0024ebae646531ff35e3ecdd59b8905cc35098b7fa50539ec489651"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0001-numerical-4-raw-t0.result.json",
+    "bytes": 15505,
+    "sha256": "89840252211f9e54f1fc73669d59497f3d6bd29a316012ab5bac23d119b061a4"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0002-numerical-4-serial-t0.config.json",
+    "bytes": 505,
+    "sha256": "7093cd296519e71a03181d347eba4334a68abcbd45d9475549ac7c6749da3250"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0002-numerical-4-serial-t0.process.json",
+    "bytes": 685,
+    "sha256": "340fa2ad86f5e716901bc9df1f5884c4d7cbf347fd51ea4477f21e9feef7880d"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0002-numerical-4-serial-t0.result.json",
+    "bytes": 15500,
+    "sha256": "0c9f3c8d498effc0a01d555187ee18c5c813e90cddd64a15c21388d852962b93"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0003-numerical-4-piscina-t0.config.json",
+    "bytes": 507,
+    "sha256": "4ee8740c18a833dd305ad08e2c53ef81dddf721099a2ff690048d7fe3bea121d"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0003-numerical-4-piscina-t0.process.json",
+    "bytes": 687,
+    "sha256": "ef912beccccee8f0e7cb668c174e986de8a7b7c40ab1d556a1dcdccb647bab59"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0003-numerical-4-piscina-t0.result.json",
+    "bytes": 15503,
+    "sha256": "8fc6aec4324daaaa7841d2f3adc47cf9bdb86148d9759c4a8c300f81c7fe2e9b"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0004-numerical-4-pjs-t0.config.json",
+    "bytes": 499,
+    "sha256": "b3372319c5b540a916902deddbc18542b66b2455d8d42ddbba7c501f125d5bd5"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0004-numerical-4-pjs-t0.process.json",
+    "bytes": 679,
+    "sha256": "ef2a58bf83c71c3edb6f92bd166ba877946230c835101eabc6fe2ba73057f62b"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0004-numerical-4-pjs-t0.result.json",
+    "bytes": 15477,
+    "sha256": "173ada99b290e991427abd00be620a0019436cb36b7d52a2c9a00194eb8c320e"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0005-numerical-4-workerpool-t0.config.json",
+    "bytes": 513,
+    "sha256": "e2864c7d99b3c5501763d79a8cb90df2e6e7d46f67e0dc97db8e22367e45b921"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0005-numerical-4-workerpool-t0.process.json",
+    "bytes": 693,
+    "sha256": "b51eeea4eea5c90b6c643788462ff47e9f24f41bb8dfdf976b86421fe5fbd63b"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0005-numerical-4-workerpool-t0.result.json",
+    "bytes": 15498,
+    "sha256": "49d0eb64b512e3554e6fc2ca4b5d9e5c2706d725d3c84049e1d51c859d55003f"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0006-monte-medium-p1-piscina-t0.config.json",
+    "bytes": 498,
+    "sha256": "0166b59d6973ff17e22e73b8895de913369458c76af925a82556fcc872485237"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0006-monte-medium-p1-piscina-t0.process.json",
+    "bytes": 695,
+    "sha256": "2892a3362a5133acd5666ca3145d1406010b12b4e48d9b484b0c7ecf34983eae"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0006-monte-medium-p1-piscina-t0.result.json",
+    "bytes": 7298,
+    "sha256": "9e1886dc1533e9c53fdc0cf3e25fad99f5e8bed3bc6b7666f7b045b0f4c2bb1a"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0007-monte-medium-p1-pjs-t0.config.json",
+    "bytes": 490,
+    "sha256": "d253ec40d69db321c99dceaf7357fb648273283f29e4eb44bc3d5e0938be17b9"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0007-monte-medium-p1-pjs-t0.process.json",
+    "bytes": 687,
+    "sha256": "46b86223ec323e91950aa0018247a53258543247b3aebcb8219b70a5eb0d1a25"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0007-monte-medium-p1-pjs-t0.result.json",
+    "bytes": 7296,
+    "sha256": "003fc0aca1234c9587de7db633673a73eb69968371f197ac77617cf822c39303"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0008-monte-medium-p1-raw-t0.config.json",
+    "bytes": 490,
+    "sha256": "327eb42e1e3a7edabde4062de49e3f1f3164b9bf3e81aaa960fc90cf19062b45"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0008-monte-medium-p1-raw-t0.process.json",
+    "bytes": 687,
+    "sha256": "008e393a62e24ad76de4c0ffa1c7a6a3340caaa71bfe5370901c18856ca11623"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0008-monte-medium-p1-raw-t0.result.json",
+    "bytes": 7297,
+    "sha256": "5f82925119fff2f0fbb1d63640d2ea519e81d863de528c69a7f9513b571f6a27"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0009-monte-medium-p1-tinypool-t0.config.json",
+    "bytes": 500,
+    "sha256": "c9634deba91379503f42d1a46b4b2ebdd8c851e3c2983302f521dc4b83f1e24d"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0009-monte-medium-p1-tinypool-t0.process.json",
+    "bytes": 697,
+    "sha256": "ef9e1fc8d588300e49f7327334601f7fe0e8796100d0f5f97198e83b1fdd27cc"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0009-monte-medium-p1-tinypool-t0.result.json",
+    "bytes": 7305,
+    "sha256": "66044c84dbfb623551b18b66810ea74dfb3742c3f5665528341579192ff25344"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0010-monte-medium-p1-serial-t0.config.json",
+    "bytes": 496,
+    "sha256": "a477280b50fe675aae149cc6cb1e05580566520398e8cba801709d1d37bcecaa"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0010-monte-medium-p1-serial-t0.process.json",
+    "bytes": 693,
+    "sha256": "37e17bd3157d47220217305b950247da3639de07027c41db2886283436a47966"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0010-monte-medium-p1-serial-t0.result.json",
+    "bytes": 7303,
+    "sha256": "1b80784d9f3433a8e300f8a587c83197724efdc477a3e60e3ec40d1ea36fe4fe"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0011-monte-medium-p1-workerpool-t0.config.json",
+    "bytes": 504,
+    "sha256": "0f5a3094cfd6932e223af614838ca4564212f815e93f12f625e94516b59c0001"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0011-monte-medium-p1-workerpool-t0.process.json",
+    "bytes": 701,
+    "sha256": "f2fd89cb2161ba660f1324a09409adf19c3df13fa4acfabcda44cf19ad982221"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0011-monte-medium-p1-workerpool-t0.result.json",
+    "bytes": 7312,
+    "sha256": "aa5bfa3acf666d9bda506be9891089121bf6e88c5eb700f9f8d62614baa1a8a8"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0012-image-64-clone-tinypool-t0.config.json",
+    "bytes": 514,
+    "sha256": "065856ae90c629a7590d3bb16e01b540226f58b4f82213ae4700f3cf78c9203a"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0012-image-64-clone-tinypool-t0.process.json",
+    "bytes": 695,
+    "sha256": "40be309d19338e1be24fd64ec35c1447b1926f9003ad3452ca21572f597b9157"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0012-image-64-clone-tinypool-t0.result.json",
+    "bytes": 15493,
+    "sha256": "c7d6215b3107ada34b30041667066107222cf4225c1d99c4de6451f545d0d107"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0013-image-64-clone-pjs-t0.config.json",
+    "bytes": 504,
+    "sha256": "33ed7c29387a4860b664b51ce636238ac56b8692f4ea31a1099a7354c79254da"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0013-image-64-clone-pjs-t0.process.json",
+    "bytes": 685,
+    "sha256": "838e36cf56f62a19bfdf1b1de99c636c0f67fd8ade9f3d731ccec03c7568a8aa"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0013-image-64-clone-pjs-t0.result.json",
+    "bytes": 15465,
+    "sha256": "8a7cb4bc9725752fab1fff2e29b2d50e494dc1188f46aa7df36432486a826048"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0014-image-64-clone-raw-t0.config.json",
+    "bytes": 504,
+    "sha256": "7f6ff912b72c2b3b5c40475d98cb98f74c46da8cf6c1b8095565d78c27b0b25c"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0014-image-64-clone-raw-t0.process.json",
+    "bytes": 685,
+    "sha256": "ba9e3a86520fbce6cfc825b3e848481dd2c67a2d863d7a4689e82c488637d1c0"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0014-image-64-clone-raw-t0.result.json",
+    "bytes": 15493,
+    "sha256": "7ed343dfeaea1e950c790f9ba3646976d96fb4d0cc3be49275a95abc72183f15"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0015-image-64-clone-serial-t0.config.json",
+    "bytes": 510,
+    "sha256": "de4c8b84379219d0cf4c44a36c03c5a8a208ff872907723934a3732e2ddf9ca1"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0015-image-64-clone-serial-t0.process.json",
+    "bytes": 691,
+    "sha256": "f68b56aba8afb442a5beeb362bc49c0aeaabfd60ff7967d7a6a4d187b07d4a69"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0015-image-64-clone-serial-t0.result.json",
+    "bytes": 15491,
+    "sha256": "9836b54d703b181cef804fa3c9866b9652eb270f1338e0d328822f830ab3aa2c"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0016-image-64-clone-piscina-t0.config.json",
+    "bytes": 512,
+    "sha256": "9c6123e18cffe9569f338efdd0bc28b1c8e2f8908d36a82cb70f200e1da48ca0"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0016-image-64-clone-piscina-t0.process.json",
+    "bytes": 693,
+    "sha256": "33fd9b84c98f1213d3d075ea3920eded6aada2bddab12ad733616e578ab0a5dd"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0016-image-64-clone-piscina-t0.result.json",
+    "bytes": 15501,
+    "sha256": "cec8027b47de07e43e3cf5df53a9c75bdcce09d1d586979f12e3b63a37dc8ed0"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0017-image-64-clone-workerpool-t0.config.json",
+    "bytes": 518,
+    "sha256": "9508fdd641b43b23e4c1a5fe4be8e12c5033fb8ea4422f77813f7f99b0f961f1"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0017-image-64-clone-workerpool-t0.process.json",
+    "bytes": 699,
+    "sha256": "8f768e9da005785dd4d4e904462832a98331893cda82406eb347e4ec2644fdb0"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0017-image-64-clone-workerpool-t0.result.json",
+    "bytes": 15485,
+    "sha256": "c0bd1ba19aa96c47c5f47a43aabf4587ee775f5d60265aa787db6072b80e0322"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0018-image-32-clone-serial-t0.config.json",
+    "bytes": 510,
+    "sha256": "0a57c4008637c69cc26039b79c7e3071aa702068af1121f6d1d1b9f9d4fcfbb0"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0018-image-32-clone-serial-t0.process.json",
+    "bytes": 691,
+    "sha256": "893bcd483d16754589437ec4ee01896f467efd8632a959e91820bf976cf89081"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0018-image-32-clone-serial-t0.result.json",
+    "bytes": 15483,
+    "sha256": "5524d841c6e130126dcb09a9eaad1a7de055623fc9ae2c29afeab56e0ccff0d9"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0019-image-32-clone-piscina-t0.config.json",
+    "bytes": 512,
+    "sha256": "bb8b7d6641ea19131ee6e7e84d131c41941b7d1edf8a5ad0f630ec04ba61fee2"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0019-image-32-clone-piscina-t0.process.json",
+    "bytes": 693,
+    "sha256": "3d2e397996099c661accec734088ab5acd2e5e381cc50dd4ea3d5a3c1d9cd992"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0019-image-32-clone-piscina-t0.result.json",
+    "bytes": 15477,
+    "sha256": "bca3a5063a3378db9aea0325662e7a670fec11abf512f89ffdf833c21f8d31f1"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0020-image-32-clone-raw-t0.config.json",
+    "bytes": 504,
+    "sha256": "9a45c9c1912c4820dfd87efb2f0b223756817d8f19a753dd78b9b61bcf544bd5"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0020-image-32-clone-raw-t0.process.json",
+    "bytes": 685,
+    "sha256": "4912aa435dd90bfc36ed9f94ad625f3a9793a2887e508fa2f3ee2722a8696948"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0020-image-32-clone-raw-t0.result.json",
+    "bytes": 15486,
+    "sha256": "a9ba14f0082d118ce2d4d1d17aff8e3e8713c37e97de0f6f5004cb29f23ab2cc"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0021-image-32-clone-pjs-t0.config.json",
+    "bytes": 504,
+    "sha256": "e5c9c02d39a05441a56addbef632ae8296c4e2167ff35ba53414ceb2276b0fa4"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0021-image-32-clone-pjs-t0.process.json",
+    "bytes": 685,
+    "sha256": "51c4a3519d63c02c0443e08caf8d7b02931673882f81b54136619316aead6caf"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0021-image-32-clone-pjs-t0.result.json",
+    "bytes": 15473,
+    "sha256": "837f7d4848cb83cd4018f202196adf843663ed906be1b34f41e46694e31b89e6"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0022-image-32-clone-tinypool-t0.config.json",
+    "bytes": 514,
+    "sha256": "f0ca2c702d3e75fa624f8ec8ad26c2d3e4b0c2867cbb3f51539c1b8e25b100b1"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0022-image-32-clone-tinypool-t0.process.json",
+    "bytes": 695,
+    "sha256": "85469d1a48d659f6f3f06d60ee2672868795a59c6d90cb1c6ec36bcdca1c0281"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0022-image-32-clone-tinypool-t0.result.json",
+    "bytes": 15493,
+    "sha256": "cb7f9d559f920241cb11804b8712f5abc4a66febff94c671c91a44777985a680"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0023-image-32-clone-workerpool-t0.config.json",
+    "bytes": 518,
+    "sha256": "527853974233317a98038c539d8a15ff1a06698db2f85e48dc18e4c555f1e1f1"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0023-image-32-clone-workerpool-t0.process.json",
+    "bytes": 699,
+    "sha256": "e3932ba025842bb61acec99ee8c43f9554b0477940dd6dbe15f0a8ff706012fc"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0023-image-32-clone-workerpool-t0.result.json",
+    "bytes": 15496,
+    "sha256": "b45a2fa13f02b9ea267006996dec5eb7f0d3ca1bb9da978901a1c04e58292be8"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0024-image-64-transfer-raw-t0.config.json",
+    "bytes": 516,
+    "sha256": "94fbe647384deb220b62c809ac79bf21274146c3aee5181f66cc87dd7e8e6a00"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0024-image-64-transfer-raw-t0.process.json",
+    "bytes": 691,
+    "sha256": "9b5ba5b66f19afb18912f9acddb9f3770ca51a3702de02f04ec731f59721d093"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0024-image-64-transfer-raw-t0.result.json",
+    "bytes": 15471,
+    "sha256": "123a3d729fb66efc727b73276afd6e2b6752c31c6436fa36352442cd2ddd9ea6"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0025-image-64-transfer-serial-t0.config.json",
+    "bytes": 522,
+    "sha256": "a5f79970384e92d6a525e7c88457a3dd735946b8224f79d8b4f640419c44f749"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0025-image-64-transfer-serial-t0.process.json",
+    "bytes": 697,
+    "sha256": "ab21de83d6b2cc8f274ec39dd7e22a3147115a2d6370d708c3237df30bf1d5de"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0025-image-64-transfer-serial-t0.result.json",
+    "bytes": 15515,
+    "sha256": "0b45858ce1b0b658ae0f6208e93695579a11ea182d91fab4a7846b9416171ad8"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0026-image-64-transfer-tinypool-t0.config.json",
+    "bytes": 526,
+    "sha256": "96a9cf0944dbeb03b54e825a54873fb4363fdf5b67f95472a6ec6d0821a4efae"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0026-image-64-transfer-tinypool-t0.process.json",
+    "bytes": 701,
+    "sha256": "852140ce5f036434320c88e47d09513de65312478bf41c7d4b6de65f5b472f08"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0026-image-64-transfer-tinypool-t0.result.json",
+    "bytes": 15517,
+    "sha256": "ec55b3c32f9971c80d95ea63ae5919ff1d9a50547a41b474fc757743562eee2e"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0027-image-64-transfer-workerpool-t0.config.json",
+    "bytes": 530,
+    "sha256": "8f73ea8bfa799350bb608076d4ce9981199b61afbff0ea5cf84e62cd86ec158d"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0027-image-64-transfer-workerpool-t0.process.json",
+    "bytes": 705,
+    "sha256": "762042a6adb13490741bec4a129102b3bc24ac8a9a9024ef147273e544e1b1e2"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0027-image-64-transfer-workerpool-t0.result.json",
+    "bytes": 15505,
+    "sha256": "fb20884e5c7499f6e8c87a29c0d4f163cf32118b437c13dffe288a50dd8d4206"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0028-image-64-transfer-piscina-t0.config.json",
+    "bytes": 524,
+    "sha256": "b671a55fdfb59b3ce90b343790b05bb97c661497ae18876b3d1ec15b68dd1ec1"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0028-image-64-transfer-piscina-t0.process.json",
+    "bytes": 699,
+    "sha256": "650b5bcf357d618a495c9fea810f907ebc9fdcc90a5193c7509f471ae1b9f9d4"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0028-image-64-transfer-piscina-t0.result.json",
+    "bytes": 15504,
+    "sha256": "360e8f21fb76aaf01988685f8b27bddedad011ef9f50f2247cb158ced6126da0"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0029-image-64-transfer-pjs-t0.config.json",
+    "bytes": 516,
+    "sha256": "5fe1021490bea24aa8e21311025876e164393ead5a3585160d9d4be18df4d9d6"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0029-image-64-transfer-pjs-t0.process.json",
+    "bytes": 691,
+    "sha256": "7f665abaca490a41cd15d2409eacb570c9c2a62d2780232451e03f40a380fd37"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0029-image-64-transfer-pjs-t0.result.json",
+    "bytes": 15486,
+    "sha256": "786df3cb3096a5594b29070b08079f7e01b6f68b29dca87e4bcab0e95e331a65"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0030-numerical-4-batch8-piscina-t0.config.json",
+    "bytes": 529,
+    "sha256": "ed7535330c4383b5da29efaf43ef85c9083e530c0cb712d8ce16662aa91b20b8"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0030-numerical-4-batch8-piscina-t0.process.json",
+    "bytes": 701,
+    "sha256": "6d637c28303292e7ce7fa59cbb52354207be85b60e1df02263c33b008b74c56a"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0030-numerical-4-batch8-piscina-t0.result.json",
+    "bytes": 15498,
+    "sha256": "0fc5793b381de658f515c63e143f8995f16481a7d42d43743f3d317edc8862a8"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0031-numerical-4-batch8-serial-t0.config.json",
+    "bytes": 527,
+    "sha256": "49b01d0c7692eb72f5c4cc896dc93311710eaecc7278ec61c2d38d57119ebc4c"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0031-numerical-4-batch8-serial-t0.process.json",
+    "bytes": 699,
+    "sha256": "45f3d257459a65b3fc742bcdffc2b1e85c85efa82ee46932e632c58584ab1f00"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0031-numerical-4-batch8-serial-t0.result.json",
+    "bytes": 15534,
+    "sha256": "356e6220d114fdafdc6de6b7f565b5a2719e406878b02f656e4d39e055718208"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0032-numerical-4-batch8-raw-t0.config.json",
+    "bytes": 521,
+    "sha256": "ec7d056b6578ade1a3549dfb3a803468749fedcc6bc761d83bce93972b5c2507"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0032-numerical-4-batch8-raw-t0.process.json",
+    "bytes": 693,
+    "sha256": "018f18057a1a82ab2ab616a727115d2bc3dfe0cc34b0db64cf4ee70134f36687"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0032-numerical-4-batch8-raw-t0.result.json",
+    "bytes": 15483,
+    "sha256": "6d2956913edc9d86552726e277158a13e7a9041637e0a98dd0a68370e32e72c7"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0033-numerical-4-batch8-tinypool-t0.config.json",
+    "bytes": 531,
+    "sha256": "f336bf60867d26e7e38ac2096012a4aed0fa412b5e286c50a7106306554d8615"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0033-numerical-4-batch8-tinypool-t0.process.json",
+    "bytes": 703,
+    "sha256": "3ebc7658d4956277bf5edcf7e4b5aab910bc6141293f59c9c9d8e1cb5966af2d"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0033-numerical-4-batch8-tinypool-t0.result.json",
+    "bytes": 15522,
+    "sha256": "ed9d0f0585fae6a239c0f1b9be1470bd8fb2a6e585f4df22c81eebead98de651"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0034-numerical-4-batch8-workerpool-t0.config.json",
+    "bytes": 535,
+    "sha256": "f9563dce3a402cd6d2cd38199beb23c6c04c1abc042074f4fa560736461d3340"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0034-numerical-4-batch8-workerpool-t0.process.json",
+    "bytes": 707,
+    "sha256": "99cb6e6dd1ff7b87478c966bf5a698454cdf04b1d00ad57d88c6afaaa6205dcd"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0034-numerical-4-batch8-workerpool-t0.result.json",
+    "bytes": 15524,
+    "sha256": "0c79c64776823134237cbf7606094ef8c6e39bbcca8af36fe06be26d9f2762bb"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0035-numerical-4-batch8-pjs-t0.config.json",
+    "bytes": 521,
+    "sha256": "6028b92aa350e1f4e2144e864708f87bd5489744f81a383370fe2a5c2849dcf3"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0035-numerical-4-batch8-pjs-t0.process.json",
+    "bytes": 693,
+    "sha256": "a1391ea8c6b7c1b5528cbb1181b49e9294cf6536368b3e3fc95c1fb2ec2532dd"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0035-numerical-4-batch8-pjs-t0.result.json",
+    "bytes": 15520,
+    "sha256": "e9d0bcf749d357ced1e4f411fbdc8ea69f2a5d0fa0a3fe2edceb58b0cb54522e"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0036-numerical-16-raw-t0.config.json",
+    "bytes": 503,
+    "sha256": "a9df39e4ade9633a9551396cd60de28fa01ff9f7c0a3b156de56d3ad344fb3a8"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0036-numerical-16-raw-t0.process.json",
+    "bytes": 681,
+    "sha256": "269d020221d3ed8756c0d2a8d46d5114db156036cbf13f872a7c77103f08f059"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0036-numerical-16-raw-t0.result.json",
+    "bytes": 15475,
+    "sha256": "f32d4f0752489486b44c2e4c8dc7bd5ec2d3f9737446c763bedfa257c08148e5"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0037-numerical-16-tinypool-t0.config.json",
+    "bytes": 513,
+    "sha256": "a461e52ec807ce9dc0a0ad45690d0d3d3c5320ee97a25c6a15d0a152b5f028ad"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0037-numerical-16-tinypool-t0.process.json",
+    "bytes": 691,
+    "sha256": "7e7ac53df370e3e0a356b776374ad244ee2c122f9a187a1697c5ba95f789ed02"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0037-numerical-16-tinypool-t0.result.json",
+    "bytes": 15496,
+    "sha256": "b2e9dae2cd746a805a5ec51373a1b2cff453e2cd2cb1918bcf5bf9506dcfa8a7"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0038-numerical-16-workerpool-t0.config.json",
+    "bytes": 517,
+    "sha256": "a756e641006f8ac2cc6c3e75e236c9718b08218a6838243ad44290adc4e3716e"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0038-numerical-16-workerpool-t0.process.json",
+    "bytes": 695,
+    "sha256": "216f767ee932e834998bf1fe7806f9868f539cb0e5cdce4be69f2467cee879a2"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0038-numerical-16-workerpool-t0.result.json",
+    "bytes": 15505,
+    "sha256": "045b2bbc9dbc73e8008484c445560ae7df5d3598cefc5514c2fd1ce503d73d49"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0039-numerical-16-serial-t0.config.json",
+    "bytes": 509,
+    "sha256": "840ac611c8573441471bb42f087364448183f26aa3f7c304c5bb890a5559e793"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0039-numerical-16-serial-t0.process.json",
+    "bytes": 687,
+    "sha256": "e00239a53a6d8021e4ce573f7563ca3f9b187d25faf5f2ba1471042034d8b822"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0039-numerical-16-serial-t0.result.json",
+    "bytes": 15514,
+    "sha256": "fb0442a2ddfb2804b371e2c2001fdf088ebc6d05b1f96811affae01db6be1dd6"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0040-numerical-16-piscina-t0.config.json",
+    "bytes": 511,
+    "sha256": "74e839e868e154990efdb512dfd2ae8b556e4e1377c7b3d338cf06589572731d"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0040-numerical-16-piscina-t0.process.json",
+    "bytes": 689,
+    "sha256": "9740535e09b90f857c4c390e3ad784cc3b7bc9e08e623fe64c45eca0a0f1d6bd"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0040-numerical-16-piscina-t0.result.json",
+    "bytes": 15487,
+    "sha256": "3de4c2afa8a8bd38876c4dfcfdd2a95c6d9269aa5dee171202d980424da3270c"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0041-numerical-16-pjs-t0.config.json",
+    "bytes": 503,
+    "sha256": "b88cf212901b0455141cb424aeea5a16dca500da539c70155ee5deddd2c0b619"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0041-numerical-16-pjs-t0.process.json",
+    "bytes": 681,
+    "sha256": "0f1ad6b1abbd05d0d1a74f31e65a3a4bf7187e3d96762eb12fd33775e7bdf94d"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0041-numerical-16-pjs-t0.result.json",
+    "bytes": 15523,
+    "sha256": "f981271db6d07661fd8c6b097f0a25a0583a4d9c992fe7458575c447376d056d"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0042-monte-small-raw-t0.config.json",
+    "bytes": 478,
+    "sha256": "8b01971e1947908e9a08df85c2c69c6a0fd9d2fd13c53c7774e5515bd93fa5bc"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0042-monte-small-raw-t0.process.json",
+    "bytes": 679,
+    "sha256": "26849505e93ed377d9ce3a0ab22b39284b90713df3b95d4036f5589a95d7a58d"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0042-monte-small-raw-t0.result.json",
+    "bytes": 15459,
+    "sha256": "fcb531f10326665b586e3bfde0b8492180b28f82ef06ab4f002d69a36a9844cd"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0043-monte-small-serial-t0.config.json",
+    "bytes": 484,
+    "sha256": "f745789fbcd5f502bdd9c92c9cfe0e7230f4f66eb21c03e91ea9f10fb7b9c2de"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0043-monte-small-serial-t0.process.json",
+    "bytes": 685,
+    "sha256": "f43deeb2bec6c3a6f67db66427529eb5647f1c6a162e8deff5504d6b6f78d4cb"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0043-monte-small-serial-t0.result.json",
+    "bytes": 15473,
+    "sha256": "47c0cd1ad8fff008115e0ef943800da4f4eaa26195d66eee33712d89a9ca1e98"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0044-monte-small-workerpool-t0.config.json",
+    "bytes": 492,
+    "sha256": "22c78be7144f23df7345bb934e131b567271f29d916116989e16a0b0c0759118"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0044-monte-small-workerpool-t0.process.json",
+    "bytes": 693,
+    "sha256": "58cc3c3d48abe2fe716628e4202636f083cc4ac4971ed252c8a3aa804e31dd6e"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0044-monte-small-workerpool-t0.result.json",
+    "bytes": 15474,
+    "sha256": "74d4f1e7ccdbfac40af0ab67cdf4eb672295eebebed7512f21233c133e582d6d"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0045-monte-small-tinypool-t0.config.json",
+    "bytes": 488,
+    "sha256": "2fd467ef358464608863528b9e89ca20c6a6f8ea0e63d5a9cda2ecdfc7f22015"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0045-monte-small-tinypool-t0.process.json",
+    "bytes": 689,
+    "sha256": "ef1ad693813f2d08de5bb57b110518169e014957522c3520aa0b73061d6f1f4e"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0045-monte-small-tinypool-t0.result.json",
+    "bytes": 15463,
+    "sha256": "6204b73aec7bf7b52caa769c8ad34cf039ecc1ce5d096205476bc792de00b2a1"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0046-monte-small-piscina-t0.config.json",
+    "bytes": 486,
+    "sha256": "6b5237d0bd4c830646d19a18ef1bc09492da062d941aeccb9d09a15a4fb2e349"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0046-monte-small-piscina-t0.process.json",
+    "bytes": 687,
+    "sha256": "2e082cc4876da766d7f39944308fff54b3e667246b0f688fa670449297296f5c"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0046-monte-small-piscina-t0.result.json",
+    "bytes": 15464,
+    "sha256": "00d344410d061c5463e260bbb687efe61d6f881d6ca3e09923c3f3a98b2cbe80"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0047-monte-small-pjs-t0.config.json",
+    "bytes": 478,
+    "sha256": "b3e805f3faaecba37eab4449fe389f38a67b7fa59d2e1565a7ebb408ce958393"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0047-monte-small-pjs-t0.process.json",
+    "bytes": 679,
+    "sha256": "73dc4a48fef4b1af3de93cde21d757848669ae4cfe23816a714f1eacd7b412df"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0047-monte-small-pjs-t0.result.json",
+    "bytes": 15469,
+    "sha256": "02c00368bdd1fab40cdbebe4d537a010dcdbce9ee91d59eb58de3e2273cc4d7c"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0048-monte-medium-piscina-t0.config.json",
+    "bytes": 489,
+    "sha256": "34d24b88f12865f47f05ef6a2e2f757d1242f0a96b0f418ab9d6fdf2aa2af9cd"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0048-monte-medium-piscina-t0.process.json",
+    "bytes": 689,
+    "sha256": "b393c068a5b179d5aec83f7938cee4df9b030f0995fac9b4df086d5f1552d8e1"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0048-monte-medium-piscina-t0.result.json",
+    "bytes": 15453,
+    "sha256": "2364ccbfdb784efdb788f21e13332a287b5ea37c829cd13d2b72ac7f6631627b"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0049-monte-medium-raw-t0.config.json",
+    "bytes": 481,
+    "sha256": "62259493e01bdaa1afe3db4001060574593799c135e7727ef8c8950ef06ea945"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0049-monte-medium-raw-t0.process.json",
+    "bytes": 681,
+    "sha256": "88e545bb5f99bfe90e379d4a597593b23ea31b248d4a967f73452b3fc81d97e0"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0049-monte-medium-raw-t0.result.json",
+    "bytes": 15448,
+    "sha256": "8c6d2f57e19db0004bf19520e210e0e6178cdc70e9b612b02c66b61a6c2ccb16"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0050-monte-medium-serial-t0.config.json",
+    "bytes": 487,
+    "sha256": "161f741bfe68f131e8e69802868bd6cf3fe6d227145812a5fda4ec82810ae5cf"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0050-monte-medium-serial-t0.process.json",
+    "bytes": 687,
+    "sha256": "10f9d98d20bb56862fa32810dd8913defa280d800ae8a7d5ca374325af031b7b"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0050-monte-medium-serial-t0.result.json",
+    "bytes": 15474,
+    "sha256": "e9d944807934de666a29c23f891ed3e4885980c48e05866ed2d87e8d99bf174e"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0051-monte-medium-tinypool-t0.config.json",
+    "bytes": 491,
+    "sha256": "ece327b44398f4c17f203f91ba5d00069c8ffcf2af5926b8bf8c2caf6bb90735"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0051-monte-medium-tinypool-t0.process.json",
+    "bytes": 691,
+    "sha256": "47d0fa2d442085edb0aaa49303e45b29befe54cdb113bed16809c42d6ae9eeab"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0051-monte-medium-tinypool-t0.result.json",
+    "bytes": 15470,
+    "sha256": "b0a64b345ece5f789c70217c0aee65fb3450afb85c7bbdcc3131079445cab646"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0052-monte-medium-pjs-t0.config.json",
+    "bytes": 481,
+    "sha256": "70f2f740813667cbff21d73edaaf0329ba9320fcdfa83a53a8480290a3d428ca"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0052-monte-medium-pjs-t0.process.json",
+    "bytes": 681,
+    "sha256": "ae1a15eeaec2e6932cb94e1d9cb2470cba5fbe3eb2d7f5a0b51752c63724729c"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0052-monte-medium-pjs-t0.result.json",
+    "bytes": 15464,
+    "sha256": "4db264acd014fe8a4df8fc8c1a650cf9462e213bd0c3b63d8a4daef5922d69a7"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0053-monte-medium-workerpool-t0.config.json",
+    "bytes": 495,
+    "sha256": "f87c7177b426e91d35143e77941dc9c22a81998aebf62afcb2538ec36baf7d40"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0053-monte-medium-workerpool-t0.process.json",
+    "bytes": 695,
+    "sha256": "895709bd1f74a824e49c00bc86bf50f8730b44a9a089d39cb67edc67f23210fe"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0053-monte-medium-workerpool-t0.result.json",
+    "bytes": 15470,
+    "sha256": "50ab5601e05f69f8c710ce3ad1906c8ee392769595865dafdec75464030961f8"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0054-image-32-transfer-piscina-t0.config.json",
+    "bytes": 524,
+    "sha256": "8b09324b14b33ea35beb0c220d307a6df7cf58b5d308b445c06a55a098dbee18"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0054-image-32-transfer-piscina-t0.process.json",
+    "bytes": 699,
+    "sha256": "914a33c060fb58885e3eafcf7b6c55e3ebf7b66498ab7c381629f8d668bee030"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0054-image-32-transfer-piscina-t0.result.json",
+    "bytes": 15491,
+    "sha256": "ea4da9e0c4bc5a17d217bb066df6f4133af59d566b15d3f7d645e32de8ecc238"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0055-image-32-transfer-serial-t0.config.json",
+    "bytes": 522,
+    "sha256": "dd3314bb1caaac3ce8a6ce04058a7e9542b28d564762b3350fe577fe66ddbe90"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0055-image-32-transfer-serial-t0.process.json",
+    "bytes": 697,
+    "sha256": "4fbb0e19d61366114cc19dcec46c1b102e5f0e08e5597209c4f01b0dab568f96"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0055-image-32-transfer-serial-t0.result.json",
+    "bytes": 15500,
+    "sha256": "6ea5a6b72dee50473b95bb5e54f3f1fd92f59b59d5bf7604176b7f0fbdabf6fe"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0056-image-32-transfer-workerpool-t0.config.json",
+    "bytes": 530,
+    "sha256": "65cd6dc418422c964328301f5aa4ccb0f79327de0b3ec9ffb2bbacdb282ce03c"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0056-image-32-transfer-workerpool-t0.process.json",
+    "bytes": 705,
+    "sha256": "b83c2f1ab7fc609a614e13e1c2696ec35873f5128cd424454ba35a4cedd295b5"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0056-image-32-transfer-workerpool-t0.result.json",
+    "bytes": 15529,
+    "sha256": "f10c28a67cde3986c5743614a1827d838c5f3a6c3ff6fdd35581329865572456"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0057-image-32-transfer-tinypool-t0.config.json",
+    "bytes": 526,
+    "sha256": "b2e0cd643775bc0e27d3be4b080a6bfee1f657f2458e0c7314c7b2d9ee7697e4"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0057-image-32-transfer-tinypool-t0.process.json",
+    "bytes": 701,
+    "sha256": "96f82031aa503244cf22f2884dc0d688d1ead875505c6d66423aae9951a9e14b"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0057-image-32-transfer-tinypool-t0.result.json",
+    "bytes": 15514,
+    "sha256": "c56cd631eb370593a601360bb4d65accf501dd002b08b33c06ce9c83c845ba7c"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0058-image-32-transfer-raw-t0.config.json",
+    "bytes": 516,
+    "sha256": "3ec32590374a497e97791febeae48724f4f77261e5421ba658043919fa61abb6"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0058-image-32-transfer-raw-t0.process.json",
+    "bytes": 691,
+    "sha256": "55d7f09a9cb97064f41b82f38ab0ea45b45d97fc9aca80acc4e022dc02b1e332"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0058-image-32-transfer-raw-t0.result.json",
+    "bytes": 15517,
+    "sha256": "5ae816859ee44b311a18f7cf262420a9b370acbbb1f069dfd7d1a40dec330e32"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0059-image-32-transfer-pjs-t0.config.json",
+    "bytes": 516,
+    "sha256": "746e33c98e446941eb10556519d0d40312d4746448bc67d913d0965449d87ac6"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0059-image-32-transfer-pjs-t0.process.json",
+    "bytes": 691,
+    "sha256": "62ff2bd40fe8fe8fc11d4fbfc6769a8e6da86e2ae9d33cb8a08efa56bef95041"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0059-image-32-transfer-pjs-t0.result.json",
+    "bytes": 15476,
+    "sha256": "7f9804a8bbb5183ee25de92504ca060137741a67d8c41dad0fec3d75d48f4d80"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0060-numerical-64-tinypool-t0.config.json",
+    "bytes": 513,
+    "sha256": "9a04a28838c9c3fa15f87811cb7340108df5a084ff4ddf84c189e7597665f619"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0060-numerical-64-tinypool-t0.process.json",
+    "bytes": 691,
+    "sha256": "a33189e0fb4013fa2ba91dd1d417c31228661f3f95fa52beee12b5e43110fd73"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0060-numerical-64-tinypool-t0.result.json",
+    "bytes": 15501,
+    "sha256": "594a7df18b7cae7ce66f66f97d502192df16f3adbfb4c24eee3e8412c843fa1a"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0061-numerical-64-pjs-t0.config.json",
+    "bytes": 503,
+    "sha256": "03367a3b2e7c1de82b73a493bf674de242d69a007438cfa8b0d33a8b88a145c5"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0061-numerical-64-pjs-t0.process.json",
+    "bytes": 681,
+    "sha256": "2d18856ea6b61999fdb3328ef4c9daa404c0a7a6467f4690561f0c1205687821"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0061-numerical-64-pjs-t0.result.json",
+    "bytes": 15472,
+    "sha256": "46deb05f7ecdb5c0cf64d5e4f4eedffa4900b09bcf4bd7b3379c3cb1fc0b2677"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0062-numerical-64-piscina-t0.config.json",
+    "bytes": 511,
+    "sha256": "9cf01a04f28fa97e8177ba3a4c43f42f065305c2710eb1fc7c59796937d7d6f0"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0062-numerical-64-piscina-t0.process.json",
+    "bytes": 689,
+    "sha256": "91037a7a7af2e8cec091b95fc0b19d8a40a40292323cd734ad047079fd783eeb"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0062-numerical-64-piscina-t0.result.json",
+    "bytes": 15505,
+    "sha256": "0410cbd52f80dc20d835f7c2665cd41a5bb66b14796c8cfe6c91ab987cbf6e41"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0063-numerical-64-raw-t0.config.json",
+    "bytes": 503,
+    "sha256": "9557022bcff8096a8fefc2b8997cd2edcf3e72affd0f0835219c61991ba165aa"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0063-numerical-64-raw-t0.process.json",
+    "bytes": 681,
+    "sha256": "42d2457147a55d2b94483fadd33ed1c422c908b8c47e9f6f2ca0ee7bd6ef4f48"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0063-numerical-64-raw-t0.result.json",
+    "bytes": 15499,
+    "sha256": "a63282706048b03a125c891abf8a842fe33754891979d6cd689d4b1b5c2d3d9c"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0064-numerical-64-serial-t0.config.json",
+    "bytes": 509,
+    "sha256": "60763a537ad85dc081a7c33970150cc1ac16cc7493fbcb1d6658125fc1025edf"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0064-numerical-64-serial-t0.process.json",
+    "bytes": 687,
+    "sha256": "fe20436ccd7ef975f1cab8b68287214b3bbebd42d6aa9e6179b7bfc7b83b0852"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0064-numerical-64-serial-t0.result.json",
+    "bytes": 15500,
+    "sha256": "e3c80006436519f5f5487446bc51e9fd8ea8a581a4cdfcf2b96232680c0eff5f"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0065-numerical-64-workerpool-t0.config.json",
+    "bytes": 517,
+    "sha256": "111f8251b034bd33d85855cb3aca9eaa666b1d7b70386464b7089eae31ac9839"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0065-numerical-64-workerpool-t0.process.json",
+    "bytes": 695,
+    "sha256": "412ced37abdfb311325e3a1f51a7c66263abdda84fb28461dedb8037be9e667d"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0065-numerical-64-workerpool-t0.result.json",
+    "bytes": 15490,
+    "sha256": "c50865b6bfc1f283fe74f2aacb652028988fe5dd51366e8b4d9848b4a9785ac3"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0066-monte-medium-p2-workerpool-t0.config.json",
+    "bytes": 504,
+    "sha256": "13075561723a8acd477c11a5b18ad3200cbe60b62736e579366f7e45f9d27d4b"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0066-monte-medium-p2-workerpool-t0.process.json",
+    "bytes": 701,
+    "sha256": "eca266455baad7b19a7e5432bb92457b9ce3c81721af42b6751266e0c9b895da"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0066-monte-medium-p2-workerpool-t0.result.json",
+    "bytes": 10026,
+    "sha256": "becf9be6b7801b7f8623a43bd1fe3f042b02b997c06377355bf47677a72956db"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0067-monte-medium-p2-tinypool-t0.config.json",
+    "bytes": 500,
+    "sha256": "716aca85dee384c3ef2c9c6934e4a378a8c8b6a3e18359fef9c8d1d092b830de"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0067-monte-medium-p2-tinypool-t0.process.json",
+    "bytes": 697,
+    "sha256": "1cc7b98e950af4573819ad1236ff9d0265666670e4c31603d68f39e4314440f5"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0067-monte-medium-p2-tinypool-t0.result.json",
+    "bytes": 10012,
+    "sha256": "9b911fe43b99e3e35e9a65f02b783dba8474c8eb29c3d242d8be98da94cf241a"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0068-monte-medium-p2-raw-t0.config.json",
+    "bytes": 490,
+    "sha256": "91ff6ba86f94889003cf0063326c4cc59158a11ca6e99a523cae01d0a6eb02b4"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0068-monte-medium-p2-raw-t0.process.json",
+    "bytes": 687,
+    "sha256": "af1effb5c52af7f79e5757edc8341b3369414bea436e2a46119ccc2999ddb1af"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0068-monte-medium-p2-raw-t0.result.json",
+    "bytes": 10018,
+    "sha256": "679a0ad2cc5179e05bf968747098ec8939fee3a80ff2e0aa1bf110251c6159fc"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0069-monte-medium-p2-piscina-t0.config.json",
+    "bytes": 498,
+    "sha256": "91060d94a7482bd0ad38c20f98a1efb2fdf77e069c7cb8da61fa4fb152ef4d63"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0069-monte-medium-p2-piscina-t0.process.json",
+    "bytes": 695,
+    "sha256": "d6b7f384cc8a58b99d3cd27baddb72f5eb65605c551992061022938f52cbf300"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0069-monte-medium-p2-piscina-t0.result.json",
+    "bytes": 10015,
+    "sha256": "6fed64e85a98b3aaf2cdf24e7e467960cc328eeba55b26136855ae588d422c68"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0070-monte-medium-p2-serial-t0.config.json",
+    "bytes": 496,
+    "sha256": "b6268ab50577e69f9ad78cf484b3017d963128d4b66fe8096b7278978311d673"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0070-monte-medium-p2-serial-t0.process.json",
+    "bytes": 693,
+    "sha256": "c6c69938e78ec67e700c805723abd29e63594c17f1c52afca86f2279bfd27065"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0070-monte-medium-p2-serial-t0.result.json",
+    "bytes": 10026,
+    "sha256": "d2394dec67c0c9cec9695b026708d5f7b9d21969276125c57a1114f20c3962b0"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0071-monte-medium-p2-pjs-t0.config.json",
+    "bytes": 490,
+    "sha256": "fb7087d7230354031964b0944cfb9da9e2e5f894a23ba514affccb78001231e0"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0071-monte-medium-p2-pjs-t0.process.json",
+    "bytes": 687,
+    "sha256": "84e8036b50987687f3e95511825cf758781fd0a27d67fc5da535aaec215eac2d"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0071-monte-medium-p2-pjs-t0.result.json",
+    "bytes": 10038,
+    "sha256": "e055a58cef6102999331f0baf6378986584bce8ca1998aaa265261a56c96133b"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0072-monte-large-tinypool-t0.config.json",
+    "bytes": 489,
+    "sha256": "750315caed7a2c56744f3f9ec20ccdb82331b53a01dd8019b2c19f6a2b89486b"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0072-monte-large-tinypool-t0.process.json",
+    "bytes": 689,
+    "sha256": "3535988e7848e97d3facae30f27f7533ee72cabde2e11c3553d35cad4fea7b12"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0072-monte-large-tinypool-t0.result.json",
+    "bytes": 15485,
+    "sha256": "70c3153ce5cbf3cfc35d9714cc0108adc9e024eb14dbe7ca2660665ac31af3b0"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0073-monte-large-workerpool-t0.config.json",
+    "bytes": 493,
+    "sha256": "91d80c24422c0eb6b456e785d3bc79acad8ecf5645252dc66432afe5adfa7d99"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0073-monte-large-workerpool-t0.process.json",
+    "bytes": 693,
+    "sha256": "daacd5e6821d2bf2d30af4a2602b8e8b4ed758c28db2e875fd225dec7d21c18d"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0073-monte-large-workerpool-t0.result.json",
+    "bytes": 15466,
+    "sha256": "4691bab96334c95794699f18bb1cd17e420292d71724c9ff11cb36c5c4be00e6"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0074-monte-large-serial-t0.config.json",
+    "bytes": 485,
+    "sha256": "75ba1b973b1ad4b4d259cf9c84a572bd7b530fa5e169b968f3a54f24b5f8e403"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0074-monte-large-serial-t0.process.json",
+    "bytes": 685,
+    "sha256": "4aa66f25b7f6889aefc380ad0bbe6bffeb4b8f36afe38e86f55b051ee6f6fe5a"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0074-monte-large-serial-t0.result.json",
+    "bytes": 15472,
+    "sha256": "e02ecaa94edf5b1be112d8e88dcefe4841f8da94b0b8faed63588fab222988a4"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0075-monte-large-raw-t0.config.json",
+    "bytes": 479,
+    "sha256": "089caf20cd8d8e53d4ab5be37f242357a479162f2049dbf033c78361b87b054f"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0075-monte-large-raw-t0.process.json",
+    "bytes": 679,
+    "sha256": "2ef4cb5d44f6419401f6340f5ae5a46566d0cfa7d82ea537ab23c2730a2a02b2"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0075-monte-large-raw-t0.result.json",
+    "bytes": 15470,
+    "sha256": "dbcca41ed7e7cf465376e57e1ecdac96599efd546712fc15112710e34fa147b3"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0076-monte-large-piscina-t0.config.json",
+    "bytes": 487,
+    "sha256": "c89ce551443df53fcf6fae0d69074d5fdc63f99149cfa1575f03d86e985fea2b"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0076-monte-large-piscina-t0.process.json",
+    "bytes": 687,
+    "sha256": "821ad9757e774afbfe8cf67bc9e6d12826c3eb481c97b4337e5715595a895bd3"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0076-monte-large-piscina-t0.result.json",
+    "bytes": 15465,
+    "sha256": "b8ea477ddd2c97726ac9cdd2a676957e7141a929969d5eb3cde10cba7cd46aa8"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0077-monte-large-pjs-t0.config.json",
+    "bytes": 479,
+    "sha256": "ff91cac5bed0ee1f988cf31efbfb1413e304f23432a123bca6c80d016e309e98"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0077-monte-large-pjs-t0.process.json",
+    "bytes": 679,
+    "sha256": "86dfb823e1a0f1116ae382eda5cd170e0c1117d59da238f6d6783a6f501b7093"
+  },
+  {
+    "path": "final-smoke-01/smoke/children/0077-monte-large-pjs-t0.result.json",
+    "bytes": 15448,
+    "sha256": "bb68bf8e7288d6a3a89aee191e654b77996ef3f13ed606b9bd0e4b2c6ad62a77"
+  },
+  {
+    "path": "final-smoke-01/smoke/consumer-path.txt",
+    "bytes": 63,
+    "sha256": "86e655cb502ac2d168939a3ba8faf8880c70c941314c05035904d4ba958539a1"
+  },
+  {
+    "path": "final-smoke-01/smoke/freeze.json",
+    "bytes": 38149,
+    "sha256": "26e3afff335e9788a2f46b4431cd51a96cc0723e26951e023d46539eb71f0f84"
+  },
+  {
+    "path": "final-smoke-01/smoke/host-resolution.json",
+    "bytes": 2950,
+    "sha256": "783dba2d563561bcbe1d38747f1769cd8c43085b285d88ca9954290716137bc4"
+  },
+  {
+    "path": "final-smoke-01/smoke/install.json",
+    "bytes": 1000,
+    "sha256": "7641194b00bf4325805c7f5bef9099b617daa33ee92ba93df15e787e9eb94507"
+  },
+  {
+    "path": "final-smoke-01/smoke/installed-files.json",
+    "bytes": 84415,
+    "sha256": "b79815180de32f98141a7f2e4f10ada334345748f689c4fab03309cc1f1f5878"
+  },
+  {
+    "path": "final-smoke-01/smoke/manifest.json",
+    "bytes": 39895,
+    "sha256": "143631687763c89c1ef91a8b7f22981679897191cacfd5c199665a383a58dd80"
+  },
+  {
+    "path": "final-smoke-01/smoke/oracles/image-32-clone.bin",
+    "bytes": 4096,
+    "sha256": "b4e0afd16f16d5d08aed73ff679188402091dabb85dbe172712109d62b053adf"
+  },
+  {
+    "path": "final-smoke-01/smoke/oracles/image-32-transfer.bin",
+    "bytes": 4096,
+    "sha256": "b4e0afd16f16d5d08aed73ff679188402091dabb85dbe172712109d62b053adf"
+  },
+  {
+    "path": "final-smoke-01/smoke/oracles/image-64-clone.bin",
+    "bytes": 16384,
+    "sha256": "ace2940df4d706f61e70e2f14a93b61b6404e889d6391baa4f08fdff6e1404fd"
+  },
+  {
+    "path": "final-smoke-01/smoke/oracles/image-64-transfer.bin",
+    "bytes": 16384,
+    "sha256": "ace2940df4d706f61e70e2f14a93b61b6404e889d6391baa4f08fdff6e1404fd"
+  },
+  {
+    "path": "final-smoke-01/smoke/oracles/monte-large.json",
+    "bytes": 217,
+    "sha256": "c7b34b4d38f8f36ae474bf265f62983d37d52f1e2c0f7f9222b287cdd835dd81"
+  },
+  {
+    "path": "final-smoke-01/smoke/oracles/monte-medium-p1.json",
+    "bytes": 215,
+    "sha256": "93ffb0760d4dbcd11455ac195da06a108a30c3eb7a16774209b90689a4bc1ead"
+  },
+  {
+    "path": "final-smoke-01/smoke/oracles/monte-medium-p2.json",
+    "bytes": 215,
+    "sha256": "93ffb0760d4dbcd11455ac195da06a108a30c3eb7a16774209b90689a4bc1ead"
+  },
+  {
+    "path": "final-smoke-01/smoke/oracles/monte-medium.json",
+    "bytes": 215,
+    "sha256": "93ffb0760d4dbcd11455ac195da06a108a30c3eb7a16774209b90689a4bc1ead"
+  },
+  {
+    "path": "final-smoke-01/smoke/oracles/monte-small.json",
+    "bytes": 216,
+    "sha256": "fec1c640a3f6fed4395e7011786e5cdc683d01afbe2b5fec34fbaabbebbe5098"
+  },
+  {
+    "path": "final-smoke-01/smoke/oracles/numerical-16.json",
+    "bytes": 60,
+    "sha256": "9973fe39eb65c86378dce78c334d1c4a479769d79ffb1c566b1d46f8f7b5b80d"
+  },
+  {
+    "path": "final-smoke-01/smoke/oracles/numerical-4-batch8.json",
+    "bytes": 60,
+    "sha256": "9973fe39eb65c86378dce78c334d1c4a479769d79ffb1c566b1d46f8f7b5b80d"
+  },
+  {
+    "path": "final-smoke-01/smoke/oracles/numerical-4.json",
+    "bytes": 60,
+    "sha256": "9973fe39eb65c86378dce78c334d1c4a479769d79ffb1c566b1d46f8f7b5b80d"
+  },
+  {
+    "path": "final-smoke-01/smoke/oracles/numerical-64.json",
+    "bytes": 60,
+    "sha256": "ea68b6bd710f75a64243cb93e9e29608749be6e99b01de1eb7c5d29c19da4e33"
+  },
+  {
+    "path": "final-smoke-01/smoke/packages.json",
+    "bytes": 7883,
+    "sha256": "8d8ae87fba6b6c0845f7f238ca9527c8d5fd1a2c0ffe4605c0879f5c3fa454e6"
+  },
+  {
+    "path": "final-smoke-01/smoke/raw.jsonl",
+    "bytes": 1025730,
+    "sha256": "205c116126a8b1f3563ae7dc2f1738463af8fb6b72d727c6b0dd2a6ca8dbc717"
+  },
+  {
+    "path": "final-smoke-01/smoke/references.json",
+    "bytes": 3679,
+    "sha256": "767287c4d4e11c22bd121d1f009585d27529d21c27618f44b727ca9bd5d068b4"
+  },
+  {
+    "path": "final-smoke-01/smoke/registry-piscina.json",
+    "bytes": 4608,
+    "sha256": "cb05bace8b06a23261abb7464077e8c42c17136448ebd75b2cb09f62c144edf0"
+  },
+  {
+    "path": "final-smoke-01/smoke/registry-pjavascript_runtime.json",
+    "bytes": 3196,
+    "sha256": "896e1d0f8043e221afb8f40d288d796d5dc9a16d2742766e3ea158a6d80bc655"
+  },
+  {
+    "path": "final-smoke-01/smoke/registry-tinypool.json",
+    "bytes": 3680,
+    "sha256": "2f6b87ce41dbda8de9638c055088c8d200c75270c67e52f577c1d9e6611452cf"
+  },
+  {
+    "path": "final-smoke-01/smoke/registry-workerpool.json",
+    "bytes": 3210,
+    "sha256": "0c6717d61b5d34f1c3a0b3965465480a91f99254202db4aa25c005c223f5cfc7"
+  },
+  {
+    "path": "final-smoke-01/smoke/run.json",
+    "bytes": 12687,
+    "sha256": "7c172e752f9a17c60338f14095982986fc93a917943e396c606322bcce703242"
+  },
+  {
+    "path": "final-smoke-01/step-1.json",
+    "bytes": 607,
+    "sha256": "c91f9dbc08ce77993a264d9df9e34b0d1aa7c2be6d624d3f4ab95d567d8bf184"
+  },
+  {
+    "path": "final-smoke-01/step-2.json",
+    "bytes": 1117,
+    "sha256": "105ecbb1983252b7e9b870a91b383841f60e0b2f87a951fc10c7a18700a4c4fd"
+  },
+  {
+    "path": "final-smoke-01/step-3.json",
+    "bytes": 4283,
+    "sha256": "2aa2e808ef727fc44674ac14a9e78a13afa95f015a37b9e61e7de3b59ecff155"
+  },
+  {
+    "path": "final-smoke-01/step-4.json",
+    "bytes": 802,
+    "sha256": "73c6b642e0b2b4b34647e721666b0b4942260032249a56d3085c59762a2bcc0e"
+  },
+  {
+    "path": "final-smoke-01/step-5.json",
+    "bytes": 583,
+    "sha256": "17712710a356e1135e42af9979a13c0c18c9828c556b7e93ae3ff5a3de343bc6"
+  }
+]

@@ -49,6 +49,7 @@ try {
     '--test',
     '--test-timeout=20000',
     join(here, 'harness.test.mjs'),
+    join(here, 'analysis.test.mjs'),
   ]);
   const extra = ['npm-cli', 'host-note']
     .filter((key) => options[key])
