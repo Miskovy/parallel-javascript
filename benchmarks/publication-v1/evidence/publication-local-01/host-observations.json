@@ -1,0 +1,38 @@
+{
+  "kind": "Read-only observations before the publication campaign; values retained from the executed PowerShell/CIM/native API probe",
+  "observedUtc": "2026-10-30T10:34:01.2109597Z",
+  "power": {
+    "GetSystemPowerStatusSucceeded": true,
+    "ACLineStatus": 1,
+    "BatteryFlag": 128,
+    "description": "AC online; no system battery",
+    "activeScheme": "381b4222-f694-41f0-9685-ff5bb260df2e (Balanced)",
+    "settingsChanged": false
+  },
+  "cpuJob": {
+    "IsProcessInJobSucceeded": true,
+    "inJob": true,
+    "QueryInformationJobObjectCpuRateSucceeded": true,
+    "cpuRateFlags": 0,
+    "cpuRate": 0,
+    "description": "No CPU-rate control enabled in the queried current job; ancestor job restrictions remain unobserved"
+  },
+  "logicalProcessors": 8,
+  "backgroundSamples": [
+    { "utc": "2026-10-30T10:34:06.2131881Z", "totalCpuPercent": 2 },
+    { "utc": "2026-10-30T10:34:08.5513925Z", "totalCpuPercent": 1 },
+    { "utc": "2026-10-30T10:34:10.8569429Z", "totalCpuPercent": 6 },
+    { "utc": "2026-10-30T10:34:13.1438807Z", "totalCpuPercent": 0 },
+    { "utc": "2026-10-30T10:34:15.4529573Z", "totalCpuPercent": 4 },
+    { "utc": "2026-10-30T10:34:17.7723567Z", "totalCpuPercent": 9 }
+  ],
+  "backgroundProcessObservations": "Chrome, VS Code and normal Windows processes were present; no sustained heavy compute load was observed. No user application with potentially unsaved state was terminated.",
+  "thermalZoneRawTenthsKelvin": [2900, 3010],
+  "temperatureLimitation": "ACPI thermal-zone readings are not validated CPU core temperatures; CPU temperature and sustained clock stability are unknown",
+  "host": {
+    "manufacturer": "Gigabyte Technology Co., Ltd.",
+    "model": "H410M S2H V3",
+    "HypervisorPresent": true,
+    "totalPhysicalMemoryBytes": 17037594624
+  }
+}

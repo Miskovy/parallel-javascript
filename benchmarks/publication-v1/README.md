@@ -4,11 +4,12 @@ This is a separate public-package comparison campaign. The RC2 flagship source,
 frozen campaign and results, and the development benchmark-health campaign are
 preserved. Read [SPEC.md](SPEC.md) for the frozen matrix and decision rules.
 
-The task is delivered as a runnable campaign plus labelled correctness smoke
-artifacts. The managed Windows execution has unverified background activity,
-thermals and effective CPU quotas; it cannot support publication speed claims.
-The committed PNG/SVG files are visibly marked **SMOKE ONLY**. A quiet local run
-using the command below produces the actual publication report and graphics.
+The full local publication campaign is complete: **780/780 trials passed**, with
+ten measured trials per cell, after the correctness smoke. Read the
+[comparison report](COMPARISON.md) for gains, losses and inconclusive cases, and
+[EVIDENCE.md](EVIDENCE.md) for actual host observations, all data, the PNG/SVG
+graphics and public raw-trial replay. The earlier smoke remains separately
+labelled **SMOKE ONLY** and is preserved in [SMOKE-EVIDENCE.md](SMOKE-EVIDENCE.md).
 
 ## Reproduce
 
@@ -81,33 +82,40 @@ Source and package identities are distinct: repository SHA identifies the
 the **executed packages**. An unchanged runtime tree does not make this a
 workspace-runtime benchmark.
 
-Committed example evidence and reproduction receipts are described in
-[EVIDENCE.md](EVIDENCE.md). Large raw archives, if separated from Git, must have
-a committed size/hash/access manifest. No runtime defect should be silently
-fixed as part of this benchmark: retain its reproduction and failure receipt.
+The measured publication artifacts are in `evidence/publication-local-01/`;
+original smoke artifacts remain at `evidence/`. Every publication trial is
+retained in the compact public `trials.zip`. The complete 37 MB raw archive stays
+outside Git with a committed size/hash/access manifest. `package-results.py`
+packages both views without changing samples. [EVIDENCE.md](EVIDENCE.md) gives
+the commands and paths. No runtime defect should be silently fixed as part of
+this benchmark: retain its reproduction and failure receipt.
 
 ## Factual post captions
 
-Current **smoke-only** Reddit caption:
+Suggested headline: **JavaScript worker pools: coarse work scales, tiny tasks
+still favor serial.**
 
-> I built a reproducible comparison harness for published PJS 1.0.0, Piscina
-> 5.3.2, Tinypool 2.2.0, workerpool 10.0.3, a persistent raw worker-thread pool
-> and serial JS. It covers deterministic Monte Carlo, a JS image stencil with
-> clone/transfer modes, and fine-grained tasks with batching controls. The
-> attached smoke graphics demonstrate the harness only; they are not speed
-> claims. Source, correctness receipts and the quiet-host campaign command are
-> in benchmarks/publication-v1.
+Reddit caption:
 
-Current **smoke-only** Discord caption:
+> I compared published PJS 1.0.0, Piscina 5.3.2, Tinypool 2.2.0, workerpool
+> 10.0.3, persistent raw worker threads and serial JS in 780 local trials.
+> At four workers on an i3-10100F with Node 24.22.1, PJS took 1.63 s for large
+> Monte Carlo versus 4.29 s serial, with overlapping worker-pool intervals.
+> PJS led the large JS image-transfer case, lost the finest numerical cases,
+> and several smaller cases were noisy. Full charts, losses, intervals, raw
+> trials and reproduction commands are in benchmarks/publication-v1.
+> These are single-host JS-kernel results, not a universal ranking.
 
-> PJS 1.0 comparison harness and correctness smoke are ready: six contenders,
-> identical kernels/chunks, clone/transfer checks, bounded persistent pools and
-> generated PNG/SVG charts. The current charts are SMOKE ONLY. Run the committed
-> quiet-host campaign for ten-trial measurements; no ranking is claimed here.
+Discord caption:
 
-After a valid local publication run, report specific measured cases and their
-intervals, link the full results including losses, and retain the package/host/
-Node/p/n caveats. Never replace that with an unsupported overall-winner headline.
+> The PJS 1.0 comparison now has 780 measured local trials and PNG/SVG charts.
+> PJS was 2.64x faster than serial on large Monte Carlo, with overlapping pool
+> intervals; it led the large image-transfer case and lost the finest numerical
+> cases. Full losses, noisy cells, data and commands: benchmarks/publication-v1/COMPARISON.md.
+> Node 24.22.1, i3-10100F, four workers, ten trials/cell.
+
+These captions are suggestions only; nothing has been posted externally. Keep
+the complete results and package/host/Node/p/n context with any shared graphic.
 
 ## Source references
 

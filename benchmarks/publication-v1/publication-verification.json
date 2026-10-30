@@ -1,0 +1,184 @@
+{
+  "schema": 1,
+  "kind": "Full publication campaign verification; no measurements rerun",
+  "result": {
+    "status": "passed",
+    "measuredSource": {
+      "commit": "1263cabe72da379d9eb9a2f36fc637f0e61dd59d",
+      "tree": "545c8264faa76bf571f0525c51fa749262f61f18",
+      "status": "",
+      "origin": "https://github.com/Miskovy/pjs.git"
+    },
+    "publicationEligible": true,
+    "trials": 780,
+    "cells": 78,
+    "samplesPerCell": 10,
+    "warmupsPerTrial": 2,
+    "failedTrials": 0,
+    "timeouts": 0,
+    "cleanup": "All awaited and natural exit",
+    "unchangedCoreSourceFiles": [
+      {
+        "path": "benchmarks/publication-v1/analysis.test.mjs",
+        "sha256": "4333e21c43a59925d8235cd542f13dc89178c567974b72f8fbca2351e22ec73e"
+      },
+      {
+        "path": "benchmarks/publication-v1/analyze.mjs",
+        "sha256": "a9a32ea1bdaba8562d003d83065a46ffe0d8e916b7d2f4ed4f844d2309d9c4d3"
+      },
+      {
+        "path": "benchmarks/publication-v1/campaign.mjs",
+        "sha256": "7c0af5f888cd820a082a9324478d312b2e3d51f005dd81503f4d9d4bb28ad6bf"
+      },
+      {
+        "path": "benchmarks/publication-v1/config.mjs",
+        "sha256": "bb3b7a1ab95a12865ce6ed0c7d14d4cd511876787581ef15d827e3d51fcbf9bf"
+      },
+      {
+        "path": "benchmarks/publication-v1/environment.mjs",
+        "sha256": "b135e071953eb795add7e6fd7dc27a6de6698aaa71b28dcbedaa4753c23333d0"
+      },
+      {
+        "path": "benchmarks/publication-v1/harness.test.mjs",
+        "sha256": "9070bd4b905fad1b781d2f648907c1f6ebe99d4dd6b7fa540765e1c5ab736332"
+      },
+      {
+        "path": "benchmarks/publication-v1/lib.mjs",
+        "sha256": "3133e533e0d1e960bbe245d2ff419fe10fd9610891140798a5dfa493fa5a14f1"
+      },
+      {
+        "path": "benchmarks/publication-v1/plot.py",
+        "sha256": "ea6cbbb00e1b084fd054eea918f16f636fdee0c274bb0e34ce8c14f1341f478a"
+      },
+      {
+        "path": "benchmarks/publication-v1/prepare.mjs",
+        "sha256": "2abd70a0454e062d783e1891c761e3101a0488dcda85c5a10c1a4a7e0ac73e89"
+      },
+      {
+        "path": "benchmarks/publication-v1/requirements.txt",
+        "sha256": "6d0d68a3a3c8ec44cd9340f01a86a3bf88c44a41ba2d56dac122b228bd0cc705"
+      },
+      {
+        "path": "benchmarks/publication-v1/run.mjs",
+        "sha256": "152a623f93b9c83b8407f3e2f9d1ee5ad0c3852f33ea6dcae1890131170a0b22"
+      },
+      {
+        "path": "benchmarks/publication-v1/sandbox/package-lock.json",
+        "sha256": "bc287fd318b32372e93e88fbef0d8d1aef4245afb5f8e38a2fc439bd82ec2eb8"
+      },
+      {
+        "path": "benchmarks/publication-v1/sandbox/package.json",
+        "sha256": "216b8e00b85cc6e2121e16e605b910b38e6d74f03bd99e185ba61bdee4efaa1e"
+      },
+      {
+        "path": "benchmarks/publication-v1/SPEC.md",
+        "sha256": "3f79df2fe0d6403548ad4cc8c7b559c86f10ca80f32f2a1e7aea22e95d01db53"
+      },
+      {
+        "path": "benchmarks/publication-v1/src/adapters.mjs",
+        "sha256": "0647307dbcc4eb3b4af21471a2be8e4df2f9b561e7f796ff355a540597031126"
+      },
+      {
+        "path": "benchmarks/publication-v1/src/child.mjs",
+        "sha256": "92440ae8fd6e644f1f9d8eb80ab359103cfaa68579f3f4a4ac2d1a89c780230d"
+      },
+      {
+        "path": "benchmarks/publication-v1/src/historical/kernel.mjs",
+        "sha256": "9f6ce264e9e54401b91dc843f958813e0a82d300b58d4d3a3af7b8995dac80a4"
+      },
+      {
+        "path": "benchmarks/publication-v1/src/historical/model.mjs",
+        "sha256": "f87891439ab84e24b55642d6d5414bf759a2c5fe35c026a7f761866af8fc1f53"
+      },
+      {
+        "path": "benchmarks/publication-v1/src/historical/prng.mjs",
+        "sha256": "05c37402a4c3e0818c08ff30278147f6d0525b461fe64c8205682c0bedd54002"
+      },
+      {
+        "path": "benchmarks/publication-v1/src/historical/stats.mjs",
+        "sha256": "0a540c81fb85ea8ba63e3c7eda64cbd7daef218d92d4d9971ea102e67017b0ae"
+      },
+      {
+        "path": "benchmarks/publication-v1/src/identity.mjs",
+        "sha256": "5590bf8926ed01605587bd687a45bf677fd5f9b886c9f0dbc2fcc30bca4286c2"
+      },
+      {
+        "path": "benchmarks/publication-v1/src/kernels.mjs",
+        "sha256": "a3b3b73774fdf93b6c37d806d2b5c4d02721906cc42697f8f8902d82d2cc285a"
+      },
+      {
+        "path": "benchmarks/publication-v1/src/metrics.mjs",
+        "sha256": "9fc5a9540c5f83de78b31143954cc6f5fddc70d01a18de1d1841f7664830ef41"
+      },
+      {
+        "path": "benchmarks/publication-v1/src/piscina-task.mjs",
+        "sha256": "5dfd08c7d4dd43a839a598b31222afefb62608c0690d5df9219834e14944270c"
+      },
+      {
+        "path": "benchmarks/publication-v1/src/pjs-task.mjs",
+        "sha256": "67553d30a5992a671441643f6cf82d9e6a4c70d81a6d5b79e68927227c699af0"
+      },
+      {
+        "path": "benchmarks/publication-v1/src/raw-worker.mjs",
+        "sha256": "b1d68ee1579b2bd80d4de6f6ed82665230be6161d6bfa85ed2a42b38ed009c14"
+      },
+      {
+        "path": "benchmarks/publication-v1/src/raw.mjs",
+        "sha256": "b89ee7fc3fd76da278bcc29aa05fea0d61f570064a5f3419b551aa032ffdded5"
+      },
+      {
+        "path": "benchmarks/publication-v1/src/tinypool-task.mjs",
+        "sha256": "fcf97824fe6e4b23dc30e691ea7180229ae5443378c3a864bbb711b0d6011245"
+      },
+      {
+        "path": "benchmarks/publication-v1/src/workerpool-task.mjs",
+        "sha256": "1b3871517d8afea881dc60c312d4e5a99dffc0f4ac3e4c09cb305ef553e99dca"
+      }
+    ],
+    "publicArtifactsVerified": 15,
+    "fullArchive": {
+      "kind": "Complete immutable campaign archive retained outside Git",
+      "path": "E:\\Miskovy\\Work\\pjs\\pjs\\.node-tools\\publication-v1\\publication-local-01-full-raw.zip",
+      "bytes": 37382561,
+      "sha256": "bdb552a47f2c8d5d20715d3f5d07c6c5debdf95f5fd46e67cbea91739f821044",
+      "root": "publication-local-01",
+      "entries": "archive-entries.json",
+      "reason": "Large oracle arrays and duplicate per-child receipts stay outside Git; trials.zip retains every trial and top-level receipt for public replay."
+    },
+    "fullArchiveEntriesVerified": 2644,
+    "publicReplay": "All statistics equal; report/CSV and both PNGs byte-for-byte identical; raw-view manifest metadata intentionally differs",
+    "wrapperChecks": [
+      {
+        "label": "plot dependency versions",
+        "exitCode": 0
+      },
+      {
+        "label": "functional fixtures",
+        "exitCode": 0
+      },
+      {
+        "label": "correctness and cleanup smoke",
+        "exitCode": 0
+      },
+      {
+        "label": "frozen publication measurements",
+        "exitCode": 0
+      },
+      {
+        "label": "complete analysis",
+        "exitCode": 0
+      },
+      {
+        "label": "PNG and SVG graphics",
+        "exitCode": 0
+      }
+    ]
+  },
+  "formatAndProtectedScope": {
+    "chunk_id": "e3a030",
+    "wall_time_seconds": 1.0496125,
+    "exit_code": 0,
+    "original_token_count": 17,
+    "output": "Checking formatting...\nAll matched files use Prettier code style!\n"
+  }
+}

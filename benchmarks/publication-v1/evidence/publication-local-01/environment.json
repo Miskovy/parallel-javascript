@@ -1,0 +1,61 @@
+{
+  "cpuModel": "Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz",
+  "logicalCpusObserved": 8,
+  "availableParallelism": 8,
+  "physicalCores": 4,
+  "totalMemoryBytes": 17037594624,
+  "freeMemoryBytes": 7978217472,
+  "os": "win32",
+  "release": "10.0.19045",
+  "arch": "x64",
+  "virtualization": {
+    "command": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Get-CimInstance Win32_ComputerSystem | Select-Object Manufacturer,Model,HypervisorPresent | ConvertTo-Json -Compress"
+    ],
+    "exitCode": 0,
+    "stdout": "{\"Manufacturer\":\"Gigabyte Technology Co., Ltd.\",\"Model\":\"H410M S2H V3\",\"HypervisorPresent\":true}\r\n",
+    "stderr": ""
+  },
+  "cpuQuota": "Windows job-object CPU quota is not portably observable; availableParallelism includes observable affinity",
+  "affinity": {
+    "command": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "(Get-Process -Id 15616).ProcessorAffinity.ToInt64()"
+    ],
+    "exitCode": 0,
+    "stdout": "255\r\n",
+    "stderr": ""
+  },
+  "power": {
+    "command": [
+      "powercfg.exe",
+      "/getactivescheme"
+    ],
+    "exitCode": 0,
+    "stdout": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+    "stderr": ""
+  },
+  "backgroundLoad": "unknown",
+  "loadAverage": [
+    0,
+    0,
+    0
+  ],
+  "topologyObservation": {
+    "command": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Get-CimInstance Win32_Processor | Select-Object Name,NumberOfCores,NumberOfLogicalProcessors | ConvertTo-Json -Compress"
+    ],
+    "exitCode": 0,
+    "stdout": "{\"Name\":\"Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz\",\"NumberOfCores\":4,\"NumberOfLogicalProcessors\":8}\r\n",
+    "stderr": ""
+  },
+  "usableCapacity": 8
+}

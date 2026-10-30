@@ -1,0 +1,13 @@
+{
+  "inputSha256": "689e8e08bdeb00907540195e8d2845e3f607238aa768df56d3922637f4a6b64b",
+  "scriptSha256": "ea6cbbb00e1b084fd054eea918f16f636fdee0c274bb0e34ce8c14f1341f478a",
+  "matplotlib": "3.10.3",
+  "numpy": "2.1.3",
+  "publicationEligible": true,
+  "files": {
+    "responsiveness.png": "14a858a10390beab1ecf2ac6ab2e0310d31e8f68e9b9b7636be5e2a37b58efc0",
+    "responsiveness.svg": "b5b4bdb889d8c253a72313026e0f79c28c53ea7f038e916dc1e4dce419ddcfc1",
+    "throughput.png": "a637b3c3a2ddc0596444b2864d216453a3e2bf0868cdeff849c18fcdb58159b1",
+    "throughput.svg": "99131eaeb5148617557501ce5cb9ba1a8eff602b00cd228624785f648678b8c5"
+  }
+}
