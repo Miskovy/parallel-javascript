@@ -1,0 +1,178 @@
+{
+  "consumer": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pjs-publication-v1-LPrmjR",
+  "identities": [
+    {
+      "name": "@pjavascript/runtime",
+      "version": "1.0.0",
+      "entry": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pjs-publication-v1-LPrmjR\\node_modules\\@pjavascript\\runtime\\dist\\index.js",
+      "entrySha256": "7c98dcad3823d3054b470e5cf144f8424443df3a1e27cb9ce84280397b142736",
+      "packagePath": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pjs-publication-v1-LPrmjR\\node_modules\\@pjavascript\\runtime\\package.json",
+      "resolved": "https://registry.npmjs.org/@pjavascript/runtime/-/runtime-1.0.0.tgz",
+      "integrity": "sha512-I2PqbwTQwweKaSIMQHJ08y0scpnp5JRR3JWps1dpiMMNMzZDX9gHlcGSM/amz+JGjCB43oP5j8dqwgpklxd3bg=="
+    },
+    {
+      "name": "piscina",
+      "version": "5.3.2",
+      "entry": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pjs-publication-v1-LPrmjR\\node_modules\\piscina\\dist\\esm-wrapper.mjs",
+      "entrySha256": "7422394f0ceee72f99fb608dfbd024a8bc8d35f12c4cf0fd5acf26d70c1e6791",
+      "packagePath": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pjs-publication-v1-LPrmjR\\node_modules\\piscina\\package.json",
+      "resolved": "https://registry.npmjs.org/piscina/-/piscina-5.3.2.tgz",
+      "integrity": "sha512-vv7l/mM7B9WgrhDaudIqv1x6v4LOBRYYmpWGdWushhpbCmVHp11sUB2v4hj1CAeTGXVxuZFz6xOU1RalAiPKfQ=="
+    },
+    {
+      "name": "tinypool",
+      "version": "2.2.0",
+      "entry": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pjs-publication-v1-LPrmjR\\node_modules\\tinypool\\dist\\index.js",
+      "entrySha256": "b5a818e11ee7e1ede0f823a377b282521fd1ee94976d05c4b8b0bcca1bbf86ed",
+      "packagePath": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pjs-publication-v1-LPrmjR\\node_modules\\tinypool\\package.json",
+      "resolved": "https://registry.npmjs.org/tinypool/-/tinypool-2.2.0.tgz",
+      "integrity": "sha512-jBrmx4lYmaC9k/mgPbylxs7kBUxHtD8256up+HjLaDFfXScKJQyil+SWXSvhAtT7XHo+yTVlpB81PGmHP8oLSQ=="
+    },
+    {
+      "name": "workerpool",
+      "version": "10.0.3",
+      "entry": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pjs-publication-v1-LPrmjR\\node_modules\\workerpool\\src\\index.js",
+      "entrySha256": "804c8467068ccc801541702cc0777a8a40493a8d620ccb2548290f5090a491f2",
+      "packagePath": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\pjs-publication-v1-LPrmjR\\node_modules\\workerpool\\package.json",
+      "resolved": "https://registry.npmjs.org/workerpool/-/workerpool-10.0.3.tgz",
+      "integrity": "sha512-6z2Iis68Wqth93/G/wJP9u+R3O+d2XTlgWChGCwuT1qLbBsOYueGRZuJ++v3mtDP5KjYdy+WzvWC+VWETSVXJA=="
+    }
+  ],
+  "registry": [
+    {
+      "url": "https://registry.npmjs.org/%40pjavascript%2Fruntime/1.0.0",
+      "version": "1.0.0",
+      "dist": {
+        "shasum": "e5be081a9966e7e4f9d78f3fd6badaadf19fbcdd",
+        "tarball": "https://registry.npmjs.org/@pjavascript/runtime/-/runtime-1.0.0.tgz",
+        "fileCount": 303,
+        "integrity": "sha512-I2PqbwTQwweKaSIMQHJ08y0scpnp5JRR3JWps1dpiMMNMzZDX9gHlcGSM/amz+JGjCB43oP5j8dqwgpklxd3bg==",
+        "signatures": [
+          {
+            "sig": "MEYCIQCuunSXjqcLndgZ2FF1p3DjJBpSWv7wzjk72mbhxKXwLAIhAKXkBsRhwKi+e3djH1XjliMYx0aRYMDaZJHTstEFIALX",
+            "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+          },
+          {
+            "sig": "MEQCIFeknuP3Db2SMoR2LTg8W2i5dTCcILREWW7MzPuR9pWgAiAm5ZLJs5ofr5KNK6rDJTv551DNCKFJxi3XHStZdcNGrg==",
+            "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+          }
+        ],
+        "attestations": {
+          "url": "https://registry.npmjs.org/-/npm/v1/attestations/@pjavascript%2fruntime@1.0.0",
+          "provenance": {
+            "predicateType": "https://slsa.dev/provenance/v1"
+          }
+        },
+        "unpackedSize": 1004199
+      }
+    },
+    {
+      "url": "https://registry.npmjs.org/piscina/5.3.2",
+      "version": "5.3.2",
+      "dist": {
+        "shasum": "ea9376457c47f54d01ecd7556eed94c49160f400",
+        "tarball": "https://registry.npmjs.org/piscina/-/piscina-5.3.2.tgz",
+        "fileCount": 147,
+        "integrity": "sha512-vv7l/mM7B9WgrhDaudIqv1x6v4LOBRYYmpWGdWushhpbCmVHp11sUB2v4hj1CAeTGXVxuZFz6xOU1RalAiPKfQ==",
+        "signatures": [
+          {
+            "sig": "MEYCIQDUAeosgJSgCD72cMVKuXiv9LeARZ4FJAV+ASrhIeAwwgIhAIjhXvy9lsQSzbMaT3AE2GGB05zW1b0WGlcH0NwjpQ6o",
+            "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+          },
+          {
+            "sig": "MEUCIBFT0Xi/wXmYpU0u4ybsEz1Gghq40+aDDnSbLL0TOYEGAiEA/5UGiI2O6IStkxfxo3FOu7ULgOSfeTh/qFw7hMwfpZk=",
+            "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+          }
+        ],
+        "unpackedSize": 435141
+      }
+    },
+    {
+      "url": "https://registry.npmjs.org/tinypool/2.2.0",
+      "version": "2.2.0",
+      "dist": {
+        "shasum": "cbd3f850b02f132ad288546bbc14c42cd93b32e5",
+        "tarball": "https://registry.npmjs.org/tinypool/-/tinypool-2.2.0.tgz",
+        "fileCount": 14,
+        "integrity": "sha512-jBrmx4lYmaC9k/mgPbylxs7kBUxHtD8256up+HjLaDFfXScKJQyil+SWXSvhAtT7XHo+yTVlpB81PGmHP8oLSQ==",
+        "signatures": [
+          {
+            "sig": "MEUCIBHvyG81MQ9bVrzh6iE5WGeOCPWUDmUKHsSFY2YsMq/SAiEAtMGkmkgZwq4RXxew4JORJG1oM2OUXFeOXMMHCMeVTl8=",
+            "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+          },
+          {
+            "sig": "MEUCIERxTnBBGW2oZueShyiemc7ufCgGmbrmfX/Oxw7pFkB3AiEA4y2Lmz6isRKVCGW0poYxqTqpJqdOX/AIL1au8m7WfGw=",
+            "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+          }
+        ],
+        "attestations": {
+          "url": "https://registry.npmjs.org/-/npm/v1/attestations/tinypool@2.2.0",
+          "provenance": {
+            "predicateType": "https://slsa.dev/provenance/v1"
+          }
+        },
+        "unpackedSize": 50923
+      }
+    },
+    {
+      "url": "https://registry.npmjs.org/workerpool/10.0.3",
+      "version": "10.0.3",
+      "dist": {
+        "shasum": "e9914112d0169a974fc1b4c2fda00388bbd70b61",
+        "tarball": "https://registry.npmjs.org/workerpool/-/workerpool-10.0.3.tgz",
+        "fileCount": 52,
+        "integrity": "sha512-6z2Iis68Wqth93/G/wJP9u+R3O+d2XTlgWChGCwuT1qLbBsOYueGRZuJ++v3mtDP5KjYdy+WzvWC+VWETSVXJA==",
+        "signatures": [
+          {
+            "sig": "MEQCIAls64hpEM247jJ70yN/Y3eGrBz96Ke1lrBdrlrrHT2NAiANM7mxFJGh8IoQwdV9+d/+pOHYKX+T/ajx1RylbHvwLw==",
+            "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+          }
+        ],
+        "unpackedSize": 619361
+      }
+    }
+  ],
+  "lockSha256": "bc287fd318b32372e93e88fbef0d8d1aef4245afb5f8e38a2fc439bd82ec2eb8",
+  "npm": {
+    "version": "11.19.0",
+    "cli": "E:\\Miskovy\\Work\\pjs\\pjs\\.node-tools\\registry-convergence-npm-11.19.0\\node_modules\\npm\\bin\\npm-cli.js",
+    "sha256": "8e5f6f3429f8cdbe693cdc29904e9d5a7b127a494bd15c804bd54c7403bfcbe7"
+  },
+  "node": {
+    "version": "v24.22.1",
+    "executable": "E:\\Miskovy\\Work\\pjs\\pjs\\.node-tools\\publication-v1\\toolchain\\node-v24.22.1-win-x64\\node.exe",
+    "sha256": "d702daa815eabbff763c7d3808e235cf031cf2ca70211b56847bc72f51e240e5",
+    "versions": {
+      "node": "24.22.1",
+      "acorn": "8.18.0",
+      "ada": "4.0.0",
+      "amaro": "1.1.11",
+      "ares": "1.34.9",
+      "brotli": "1.2.0",
+      "cldr": "48.0",
+      "icu": "78.3",
+      "llhttp": "9.4.3",
+      "merve": "1.2.2",
+      "modules": "137",
+      "napi": "10",
+      "nbytes": "0.1.4",
+      "ncrypto": "0.0.1",
+      "nghttp2": "1.70.0",
+      "nghttp3": "",
+      "ngtcp2": "",
+      "openssl": "3.5.9",
+      "simdjson": "4.6.11",
+      "simdutf": "6.4.0",
+      "sqlite": "3.53.4",
+      "tz": "2026e",
+      "undici": "7.30.1",
+      "unicode": "17.0",
+      "uv": "1.52.1",
+      "uvwasi": "0.0.23",
+      "v8": "13.6.233.17-node.58",
+      "zlib": "1.3.2.1-motley-285e94b",
+      "zstd": "1.5.7"
+    }
+  },
+  "installedFileCount": 526
+}

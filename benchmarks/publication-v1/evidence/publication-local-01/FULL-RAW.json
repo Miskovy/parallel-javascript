@@ -1,0 +1,9 @@
+{
+  "kind": "Complete immutable campaign archive retained outside Git",
+  "path": "E:\\Miskovy\\Work\\pjs\\pjs\\.node-tools\\publication-v1\\publication-local-01-full-raw.zip",
+  "bytes": 37382561,
+  "sha256": "bdb552a47f2c8d5d20715d3f5d07c6c5debdf95f5fd46e67cbea91739f821044",
+  "root": "publication-local-01",
+  "entries": "archive-entries.json",
+  "reason": "Large oracle arrays and duplicate per-child receipts stay outside Git; trials.zip retains every trial and top-level receipt for public replay."
+}

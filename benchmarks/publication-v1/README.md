@@ -4,11 +4,12 @@ This is a separate public-package comparison campaign. The RC2 flagship source,
 frozen campaign and results, and the development benchmark-health campaign are
 preserved. Read [SPEC.md](SPEC.md) for the frozen matrix and decision rules.
 
-The campaign includes a runnable harness and labelled correctness smoke
-artifacts. The managed Windows execution has unverified background activity,
-thermals and effective CPU quotas; it cannot support publication speed claims.
-The committed PNG/SVG files are visibly marked **SMOKE ONLY**. A quiet local run
-using the command below produces the actual publication report and graphics.
+The full local publication campaign is complete: **780/780 trials passed**, with
+ten measured trials per cell, after the correctness smoke. Read the
+[comparison report](COMPARISON.md) for gains, losses and inconclusive cases, and
+[EVIDENCE.md](EVIDENCE.md) for actual host observations, all data, the PNG/SVG
+graphics and public raw-trial replay. The earlier smoke remains separately
+labelled **SMOKE ONLY** and is preserved in [SMOKE-EVIDENCE.md](SMOKE-EVIDENCE.md).
 
 ## Reproduce
 
@@ -81,10 +82,13 @@ Source and package identities are distinct: repository SHA identifies the
 the **executed packages**. An unchanged runtime tree does not make this a
 workspace-runtime benchmark.
 
-Committed example evidence and reproduction receipts are described in
-[EVIDENCE.md](EVIDENCE.md). Large raw archives, if separated from Git, must have
-a committed size/hash/access manifest. No runtime defect should be silently
-fixed as part of this benchmark: retain its reproduction and failure receipt.
+The measured publication artifacts are in `evidence/publication-local-01/`;
+original smoke artifacts remain at `evidence/`. Every publication trial is
+retained in the compact public `trials.zip`. The complete 37 MB raw archive stays
+outside Git with a committed size/hash/access manifest. `package-results.py`
+packages both views without changing samples. [EVIDENCE.md](EVIDENCE.md) gives
+the commands and paths. No runtime defect should be silently fixed as part of
+this benchmark: retain its reproduction and failure receipt.
 
 ## Source references
 

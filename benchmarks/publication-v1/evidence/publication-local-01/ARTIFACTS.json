@@ -1,0 +1,77 @@
+[
+  {
+    "path": "archive-entries.json",
+    "bytes": 542561,
+    "sha256": "36b70a8466a9e30d822a2b3caf0ee2a973a1bcff49ab45eab76c58f2ae194806"
+  },
+  {
+    "path": "environment.json",
+    "bytes": 1805,
+    "sha256": "19f1a2c954ad43d2ec6bbd93625d3417dff9946738c7960172ff8496268b3413"
+  },
+  {
+    "path": "FULL-RAW.json",
+    "bytes": 508,
+    "sha256": "4dd6b9a45d13306c1a44a0687f6407e587d5a99ec9f0cb9c00008a19070f645f"
+  },
+  {
+    "path": "graphics/plot-manifest.json",
+    "bytes": 649,
+    "sha256": "2a193efba1a0a1f0a33b54378bf6fe455429af4a8178a86dc6762a7d24fba75b"
+  },
+  {
+    "path": "graphics/responsiveness.png",
+    "bytes": 206105,
+    "sha256": "14a858a10390beab1ecf2ac6ab2e0310d31e8f68e9b9b7636be5e2a37b58efc0"
+  },
+  {
+    "path": "graphics/responsiveness.svg",
+    "bytes": 66467,
+    "sha256": "b5b4bdb889d8c253a72313026e0f79c28c53ea7f038e916dc1e4dce419ddcfc1"
+  },
+  {
+    "path": "graphics/throughput.png",
+    "bytes": 194222,
+    "sha256": "a637b3c3a2ddc0596444b2864d216453a3e2bf0868cdeff849c18fcdb58159b1"
+  },
+  {
+    "path": "graphics/throughput.svg",
+    "bytes": 66412,
+    "sha256": "99131eaeb5148617557501ce5cb9ba1a8eff602b00cd228624785f648678b8c5"
+  },
+  {
+    "path": "host-observations.json",
+    "bytes": 1793,
+    "sha256": "ccceedccacb9be3772eb6566cb00e27e0b83b149860f9bcb23dd49e94abbc72e"
+  },
+  {
+    "path": "packages.json",
+    "bytes": 8061,
+    "sha256": "cb1197f4b98ecb06d578f762097fa4bfdbaa2b29c950a1e52dab0d41b3821db8"
+  },
+  {
+    "path": "plot-environment.txt",
+    "bytes": 210,
+    "sha256": "8c91ff5cc4ca6743037254475630b53017558cbab972e90bfeb60f03bb50d150"
+  },
+  {
+    "path": "REPORT.md",
+    "bytes": 18279,
+    "sha256": "b6a41ac0cfe3c4771c8021edaf1749c91c0f8c53939d1804e1ee8256a6653c98"
+  },
+  {
+    "path": "results.csv",
+    "bytes": 18290,
+    "sha256": "e5d4090f8d750691930741471ffc2cbe90fcfa4ac47fac90345ccc3c67359b2c"
+  },
+  {
+    "path": "summary.json",
+    "bytes": 765945,
+    "sha256": "689e8e08bdeb00907540195e8d2845e3f607238aa768df56d3922637f4a6b64b"
+  },
+  {
+    "path": "trials.zip",
+    "bytes": 502923,
+    "sha256": "afd6b42d7e54078cb5f33406f586602df27ec8e2bfeb38de5e7c778d5c799457"
+  }
+]
