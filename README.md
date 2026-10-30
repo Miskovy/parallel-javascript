@@ -39,7 +39,7 @@ Final 1.0.0 is unpublished. RC5 accepts all six deprecated aliases.
 
 **Prepared candidate: 1.0.0.** It proposes rejecting all six legacy properties,
 including inherited and explicit undefined presence. Use the stable spellings in
-the [migration notes](docs/release-v1.0.0.md). Direct removal at 1.0.0 needs the
+the [migration notes](docs/releases/release-v1.0.0.md). Direct removal at 1.0.0 needs the
 documented maintainer policy amendment; passing CI does not accept that decision
 or resolve stable-release holds. See the [checkpoint](docs/research/v1-release-checkpoint.md).
 
@@ -53,7 +53,7 @@ PJS ships ESM and supports synchronous CommonJS `require` through the same Node 
 RC5 and this candidate support Node **22.23.4+, 24.22.1+, or 26.12.1+**
 within those majors (`^22.23.4 || ^24.22.1 || ^26.12.1`). Stay on current patched
 releases; updating PJS does not upgrade your Node executable. Consult the
-[support policy and exact evidence](docs/stability.md#proposed-node-and-platform-policy).
+[support policy and exact evidence](docs/reference/stability.md#proposed-node-and-platform-policy).
 The [24.0.0 floor report](docs/research/node24-floor-qualification.md) is historical;
 it does not establish the new minimums or change published RC4.
 macOS and ARM64 remain unclaimed. Compile TypeScript tasks to JavaScript before
@@ -129,8 +129,8 @@ Execution and ownership keep their existing owners. A focused dispatcher correct
 lets queued exclusive work use an idle replacement instead of an obsolete busy-worker
 pin, as found by the required extended R2 profile. The remaining
 `@experimental` annotation on the internal array-map adapter overload is retained
-and explicitly classified in the [stable contract](docs/release-v1.0.0.md).
-See [stability](docs/stability.md) and the [current inventory](docs/research/v1-api-contract-inventory.md).
+and explicitly classified in the [stable contract](docs/releases/release-v1.0.0.md).
+See [stability](docs/reference/stability.md) and the [current inventory](docs/research/v1-api-contract-inventory.md).
 
 ## Ownership, cancellation and backpressure
 
@@ -190,10 +190,10 @@ npm run test:docs
 ```
 
 Use [CONTRIBUTING](CONTRIBUTING.md) for the full validation matrix and
-[toolchain](docs/toolchain.md) for compiler and release-CLI setup. The package
+[toolchain](docs/development/toolchain.md) for compiler and release-CLI setup. The package
 gate installs a fresh tarball outside the checkout and tests JavaScript,
 both TypeScript consumers and all six examples.
 
 [Support](SUPPORT.md) · [Code of Conduct](CODE_OF_CONDUCT.md) ·
-[Security policy](SECURITY.md) · [Maintainer release procedure](docs/releasing.md) ·
+[Security policy](SECURITY.md) · [Maintainer release procedure](docs/development/releasing.md) ·
 [MIT license](LICENSE)

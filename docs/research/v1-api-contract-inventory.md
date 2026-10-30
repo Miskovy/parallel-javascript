@@ -16,7 +16,7 @@ conditional generic aliases remain to preserve assignability and inference.
 Legacy names remain only in runtime presence guards and migration/history/tests.
 The internal array-map adapter annotation remains experimental and unsupported as
 a direct entry. Public P2 promotion is unchanged. See
-[stable contract and migration](../release-v1.0.0.md) and the
+[stable contract and migration](../releases/release-v1.0.0.md) and the
 [fixed acceptance ledger](v1-release-checkpoint.md).
 
 ## Historical promotion and implementation attribution
@@ -47,7 +47,7 @@ results retain their historical attribution.
 
 Execution resilience is implemented in development on `feat/execution-resilience`
 at `8c943c5`, based on main `c9b070e`. The inventory was regenerated from
-`scripts/api-contract-inventory.mjs` without `--check`, with source/declaration
+`scripts/checks/api-contract-inventory.mjs` without `--check`, with source/declaration
 parity confirmed. Relative to C3, it adds two type-only roots, 34 member entries
 (including inherited ordinary-run exclusions on range options), and three
 diagnostic leaves. The JavaScript root values, reachable named-type count and
@@ -57,7 +57,7 @@ new runtime, platform or release qualification claim. See the
 
 Checkpoint 1 extends physical cancellation to all range methods and adds opt-in
 elasticity (`idleTimeout`) plus copied worker `resourceLimits`. The current graph
-was extracted without `--check` from `scripts/api-contract-inventory.mjs`, with
+was extracted without `--check` from `scripts/checks/api-contract-inventory.mjs`, with
 source/declaration parity: one new type-only root, six new members, unchanged
 diagnostic leaf count. Range cancellation members now accept the mode enum;
 At that checkpoint retry/fallback remained excluded from ranges. Prior promotion/evidence below is
@@ -151,7 +151,7 @@ inventory checker use the locked TypeScript 6.0.3 dependency. Run:
 
 ```sh
 npm run build
-node scripts/api-contract-inventory.mjs --check --output=.node-tools/stage-a/inventory.json
+node scripts/checks/api-contract-inventory.mjs --check --output=.node-tools/stage-a/inventory.json
 ```
 
 Run from the repository root after the normal locked `npm ci` and build; no
@@ -162,7 +162,7 @@ for each retained report. Without `--output`, no report directory/file is create
 The focused output-handling regression command (after build) is:
 
 ```sh
-node --test scripts/api-contract-inventory.test.mjs
+node --test scripts/checks/api-contract-inventory.test.mjs
 ```
 
 The script independently follows source and built root declarations with the
@@ -572,7 +572,7 @@ encoded as TypeScript integer subtypes. Default time unit is milliseconds.
 All six overview spellings accept their deprecated `experimental...` aliases.
 Both-presence rejects by property presence, including inherited/undefined keys;
 strict modes require one declaration and one capacity, and count-only excludes
-all six byte spellings. See the [transition reference](../partitioning.md#c2-development-option-transition).
+all six byte spellings. See the [transition reference](../reference/partitioning.md#c2-development-option-transition).
 
 `PjsTypedArray`/constructor enumerate Int8, Uint8, Uint8Clamped, Int16, Uint16,
 Int32, Uint32, Float32, Float64, BigInt64 and BigUint64, retaining ArrayBufferLike
@@ -1638,7 +1638,7 @@ and direct shell checks; captured verification invokes the already-installed
 adjacent npm 11.19.0 CLI explicitly. No package/toolchain version was changed.
 
 - `npm run build`, `npm run test:types`, `npm run typecheck:compat`: passed.
-- `node scripts/api-contract-inventory.mjs --check --output=<fresh-file>`:
+- `node scripts/checks/api-contract-inventory.mjs --check --output=<fresh-file>`:
   passed twice with identical JSON and source/declaration structural parity;
   all root/member/reachable/statistic IDs accounted for. Alias/union ordering
   normalization is structural inspection, not an exact release declaration freeze.
@@ -1682,7 +1682,7 @@ v1 readiness nor fresh cross-platform runtime qualification.
 
 ## Browser entry (development)
 
-Derived from `node scripts/api-contract-inventory.mjs --entry=browser` without
+Derived from `node scripts/checks/api-contract-inventory.mjs --entry=browser` without
 --check, including source/declaration parity. This supplements the Node inventory;
 it does not rewrite frozen evidence. The explicit `/browser` entry has **72 root
 exports: 18 values and 54 type-only exports; 0 additional reachable named types;

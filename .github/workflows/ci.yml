@@ -82,7 +82,7 @@ jobs:
         run: npm.cmd run runtime:qualify -- --release-npm-cli="${{ steps.release-cli-windows.outputs.path }}" --r2-report=.node-tools/r2/ci/report.json --r3-report=.node-tools/r3/ci/report.json --output=.node-tools/runtime-ci.json
       - name: Exact supported minimum identity and supplemental compatibility checks
         if: always() && contains(fromJSON('["22.23.4", "24.22.1", "26.12.1"]'), matrix.node)
-        run: node scripts/node-floor-checks.mjs
+        run: node scripts/qualification/node-floor.mjs
         env:
           PJS_EXPECTED_NODE: ${{ matrix.node }}
           PJS_RELEASE_NPM_CLI: ${{ steps.release-cli.outputs.path || steps.release-cli-windows.outputs.path }}
@@ -91,12 +91,12 @@ jobs:
         run: node scripts/rc/qualify.mjs --npm-cli="${{ steps.release-cli.outputs.path || steps.release-cli-windows.outputs.path }}" --release-npm-cli="${{ steps.release-cli.outputs.path || steps.release-cli-windows.outputs.path }}" --profile=standard --output=.node-tools/rc-candidate.json
       - name: Final-candidate extended R2
         if: success() && matrix.node == '24.22.1' && (startsWith(github.head_ref, 'release/') || startsWith(github.ref_name, 'release/'))
-        run: node scripts/r2/campaign.mjs --profile=extended --output=.node-tools/stable-release/r2-extended
+        run: node scripts/qualification/lifecycle/campaign.mjs --profile=extended --output=.node-tools/stable-release/r2-extended
         env:
           PJS_DEBUG_RESERVATION_INVARIANTS: '1'
       - name: Final-candidate extended R3
         if: success() && matrix.node == '24.22.1' && (startsWith(github.head_ref, 'release/') || startsWith(github.ref_name, 'release/'))
-        run: node scripts/r3/campaign.mjs --profile=extended --output=.node-tools/stable-release/r3-extended
+        run: node scripts/qualification/memory/campaign.mjs --profile=extended --output=.node-tools/stable-release/r3-extended
       - name: Two clean builds and canonical stable archive
         if: success() && runner.os == 'Linux' && matrix.node == '24.22.1' && (startsWith(github.head_ref, 'release/') || startsWith(github.ref_name, 'release/'))
         run: node scripts/rc/repro.mjs --npm-cli="${{ steps.release-cli.outputs.path }}" --release-npm-cli="${{ steps.release-cli.outputs.path }}" --scratch-dir="${{ runner.temp }}/stable-repro" --output=.node-tools/stable-release/repro.json --canonical-dir=.node-tools/stable-release/canonical

@@ -273,7 +273,7 @@ chapters are design/contract navigation, not additional benchmark sources.
 
 PJS. _v0.3 technical report: reusable shared inputs_, 2026-09-27, Node v24.13.1,
 Linux 6.19.10-300.fc44.x86_64, AMD Ryzen 3 PRO 3300U, four available logical CPUs.
-[Report](../docs/benchmarks-v0.3.md#clone-transfer-and-shared-results),
+[Report](../docs/benchmarks/benchmarks-v0.3.md#clone-transfer-and-shared-results),
 [raw transport](../benchmarks/results/transfer-v0.3.json),
 [raw shared-input sessions](../benchmarks/results/shared-v0.3.json).
 Used for contrasting payload sizes, preparation amortization, and worker counts.
@@ -281,14 +281,14 @@ Used for contrasting payload sizes, preparation amortization, and worker counts.
 ### PJS-V03-PISCINA
 
 PJS. Same v0.3 report and host; comparison with exact Piscina 5.3.2.
-[Report](../docs/benchmarks-v0.3.md#piscina-comparison),
+[Report](../docs/benchmarks/benchmarks-v0.3.md#piscina-comparison),
 [raw comparison](../benchmarks/results/piscina-v0.3.json).
 Used for mixed prime-search results, not a general library ranking.
 
 ### PJS-V03-CONTROL
 
 PJS. Same v0.3 report and host; alternating baseline/candidate control.
-[Report](../docs/benchmarks-v0.3.md#cpu-observations-and-regression-investigation),
+[Report](../docs/benchmarks/benchmarks-v0.3.md#cpu-observations-and-regression-investigation),
 [initial local baseline](../benchmarks/results/cpu-v0.2-local.json),
 [initial candidate](../benchmarks/results/cpu-v0.3.json),
 [alternating control](../benchmarks/results/cpu-regression-v0.3.json).
@@ -300,11 +300,11 @@ variance. It does not establish zero overhead.
 PJS. _v0.3 technical report: reusable shared inputs_, CPU observations and
 shared-input sessions, 2026-09-27; Node v24.13.1, Linux
 6.19.10-300.fc44.x86_64, AMD Ryzen 3 PRO 3300U, four available logical CPUs.
-[Report and investigation](../docs/benchmarks-v0.3.md#cpu-observations-and-regression-investigation),
+[Report and investigation](../docs/benchmarks/benchmarks-v0.3.md#cpu-observations-and-regression-investigation),
 [Benchmark methodology](../benchmarks/README.md),
 [Raw CPU sweep](../benchmarks/results/cpu-v0.3.json),
 [Alternating control](../benchmarks/results/cpu-regression-v0.3.json),
-[Shared-session report](../docs/benchmarks-v0.3.md#clone-transfer-and-shared-results),
+[Shared-session report](../docs/benchmarks/benchmarks-v0.3.md#clone-transfer-and-shared-results),
 [Raw shared sessions](../benchmarks/results/shared-v0.3.json).
 Used for Chapter 05's distinction between direct-serial and one-pool-worker
 speedup, unstable superlinear-looking ratios, and a losing worker-count increase.
@@ -318,7 +318,7 @@ span or establishes a weak-scaling growth rule.
 PJS. _v0.4: runtime-owned partitioning_,
 2026-09-27, Node v24.13.1, Linux 6.19.10-300.fc44.x86_64, AMD Ryzen 3 PRO 3300U,
 four available logical CPUs; Piscina comparison pinned to 5.3.2.
-[Report](../docs/benchmarks-v0.4.md),
+[Report](../docs/benchmarks/benchmarks-v0.4.md),
 [harness methodology](../benchmarks/partitioning/README.md),
 [kernel](../benchmarks/partitioning/kernel.mjs),
 [raw range](../benchmarks/results/range-partition-v0.4.json),
@@ -337,7 +337,7 @@ not establish production tails, other platforms, or a universal optimal grain.
 PJS. _PJS v0.13 — real-world hashing and crypto evaluation_, campaign 2026-10-02,
 Fedora 44, AMD Ryzen 3 PRO 3300U (4 physical/4 logical), Node v24.13.1,
 V8 13.6.233.17-node.40, default libuv pool of four.
-[Report](../docs/benchmarks-v0.13.md),
+[Report](../docs/benchmarks/benchmarks-v0.13.md),
 [measurement appendix](../docs/research/v0.13-crypto-measurements.md),
 [raw campaign](../benchmarks/results/crypto-v0.13-fedora-node24.json),
 [harness methodology](../benchmarks/real-world/crypto/README.md).

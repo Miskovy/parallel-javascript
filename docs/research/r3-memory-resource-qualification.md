@@ -76,8 +76,8 @@ resources with `async_hooks`. No WeakRef/finalizer deadline is asserted. The
 existing 30-second per-file contract deadline is unchanged; an exploratory Linux
 Node 24.13.1 smoke run took about 2.7 seconds.
 
-[The campaign](../../scripts/r3/campaign.mjs) runs each scenario/seed in a fresh
-[child](../../scripts/r3/child.mjs), sequentially. Original configurations are
+[The campaign](../../scripts/qualification/memory/campaign.mjs) runs each scenario/seed in a fresh
+[child](../../scripts/qualification/memory/child.mjs), sequentially. Original configurations are
 saved before execution; partial reports, stdout/stderr and watchdog failures are
 retained. Any existing output directory or result file is refused. Default paths
 allocate a new ignored directory under `.node-tools/r3/`. A reproduction requires
@@ -130,7 +130,7 @@ npm run test:r3:smoke
 npm run test:r3 -- --output=.node-tools/r3/my-new-standard
 npm run test:r3 -- --gc=diagnostic --output=.node-tools/r3/my-new-gc
 npm run test:r3:extended -- --output=.node-tools/r3/my-new-extended
-node scripts/r3/child.mjs .node-tools/r3/my-new-standard/clone-buffer-4-seed-20261019.config.json .node-tools/r3/my-new-replay.json
+node scripts/qualification/memory/child.mjs .node-tools/r3/my-new-standard/clone-buffer-4-seed-20261019.config.json .node-tools/r3/my-new-replay.json
 ```
 
 Use `node --expose-gc` for a diagnostic child replay. The parent adds that flag

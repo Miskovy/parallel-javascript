@@ -1,6 +1,6 @@
 # Core API guide
 
-**Candidate scope:** Published RC5 accepts the six deprecated aliases. Prepared 1.0.0 proposes stable-only names and explicit legacy rejection; see [migration and approval status](../release-v1.0.0.md).
+**Candidate scope:** Published RC5 accepts the six deprecated aliases. Prepared 1.0.0 proposes stable-only names and explicit legacy rejection; see [migration and approval status](../releases/release-v1.0.0.md).
 
 PJS runs explicitly registered CPU work in persistent Node worker isolates. Your
 application keeps its event-loop/I/O plane; PJS supplies a bounded compute plane.
@@ -23,7 +23,7 @@ replace the event loop, or make a tiny function inherently faster. Start with
 
 This guide describes the prepared **1.0.0 candidate**. Published RC5 already
 includes these runtime controls and the six stable names, with deprecated aliases.
-The candidate proposes alias rejection; see [migration](../release-v1.0.0.md).
+The candidate proposes alias rejection; see [migration](../releases/release-v1.0.0.md).
 Checkout examples are tested against the intended installed candidate artifact.
 
 ## CommonJS consumption (development)
@@ -79,7 +79,7 @@ the package, independently of the host's CWD. Compile tasks before registration.
 With either locked compiler, NodeNext .cts consumers use
 `import PJS = require('@pjavascript/runtime')` for declared types; .mts consumers
 use ordinary imports. Both use the same declarations, with no .d.cts shim. The
-[installed consumers](../../scripts/package-consumer/commonjs.cjs) exercise this
+[installed consumers](../../scripts/package/consumer/commonjs.cjs) exercise this
 loading model, including awaited shutdown.
 
 ## One-sentence contracts
@@ -99,7 +99,7 @@ loading model, including awaited shutdown.
 | stats()                                                | Return copied current state and cumulative diagnostic counters without retaining completed-task history.                         | v0.13/14 measurements; no latency quantiles                                               |
 | shutdown(options)                                      | Close admission and use the first chosen drain policy to finish or terminate accepted work and stop workers.                     | Cross-platform lifecycle suites; graceful drain can wait indefinitely                     |
 
-All four range methods and their controls are [promoted in development](../stability.md).
+All four range methods and their controls are [promoted in development](../reference/stability.md).
 
 ## Registration and runtime options
 

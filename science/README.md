@@ -26,22 +26,26 @@ Keep the [glossary](glossary.md) beside you. Mathematics uses GitHub-compatible
 `$$` display blocks; adjacent prose or plaintext gives the same calculation.
 
 For systems readers and contributors, begin with the
-[architecture](../docs/architecture.md) and [stability policy](../docs/stability.md),
+[architecture](../docs/development/architecture.md) and [stability policy](../docs/reference/stability.md),
 then read these chapters selectively. Follow a scientific concept to its ADR,
 then to its user guide and measured evidence. For example, shared backing leads
 to [ADR 0007](../docs/adr/0007-shared-input-model.md), the
 [ownership guide](../docs/guide/memory-ownership.md), and the
-[v0.3 report](../docs/benchmarks-v0.3.md).
+[v0.3 report](../docs/benchmarks/benchmarks-v0.3.md).
 
 ## What belongs where
 
-| Area                      | Purpose                                                               |
-| ------------------------- | --------------------------------------------------------------------- |
-| `science/`                | Principles, derivations, explanatory examples, and their limitations. |
-| `docs/` and `docs/guide/` | Current product behavior and how to use it.                           |
-| `docs/adr/`               | Decisions, alternatives, consequences, and revisit conditions.        |
-| `docs/research/`          | Investigations tied to a milestone and its environment.               |
-| `benchmarks/`             | Reproducible harnesses and retained raw observations.                 |
+| Area                                | Purpose                                                               |
+| ----------------------------------- | --------------------------------------------------------------------- |
+| `science/`                          | Principles, derivations, explanatory examples, and their limitations. |
+| `docs/guide/` and `docs/reference/` | Current product behavior and how to use it.                           |
+| `docs/development/`                 | Architecture, memory mechanics, toolchain, and release procedure.     |
+| `docs/releases/`                    | Versioned release scope and migration notes.                          |
+| `docs/proposals/`                   | Milestone design proposals and implementation checkpoints.            |
+| `docs/benchmarks/`                  | Historical measurement and cross-platform reports.                    |
+| `docs/adr/`                         | Decisions, alternatives, consequences, and revisit conditions.        |
+| `docs/research/`                    | Investigations tied to a milestone and its environment.               |
+| `benchmarks/`                       | Reproducible harnesses and retained raw observations.                 |
 
 Current PJS descriptions here refer to the **1.0.0-rc.1** architecture inspected at
 commit `6429357769545f1992e8344df006626cd6fc9a79`. This is a documentation baseline,

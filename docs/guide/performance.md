@@ -1,7 +1,7 @@
 # Choosing useful CPU work
 
-The retained [v0.13](../cross-platform-v0.13.md) and
-[v0.14](../cross-platform-v0.14.md) evidence supports specific principles, not a
+The retained [v0.13](../benchmarks/cross-platform-v0.13.md) and
+[v0.14](../benchmarks/cross-platform-v0.14.md) evidence supports specific principles, not a
 universal speedup or byte threshold. Tiny work loses to transport/orchestration;
 coarse work can amortize those costs. No v0.15 performance campaign is needed
 when runtime source is unchanged.

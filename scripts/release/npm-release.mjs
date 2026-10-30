@@ -468,7 +468,7 @@ function smoke(spec, version, offline = false) {
     version,
   );
   for (const file of ['smoke.mjs', 'tasks.mjs'])
-    cpSync(join(root, 'scripts/package-consumer', file), join(consumer, file));
+    cpSync(join(root, 'scripts/package/consumer', file), join(consumer, file));
   summary(
     command(
       process.execPath,

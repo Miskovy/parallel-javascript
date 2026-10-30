@@ -164,7 +164,7 @@ try {
   assert.match(releaseOutput, new RegExp(`[ℹ#] pass ${releaseCount}\\b`));
   report.releaseContracts.executed = releaseCount;
   assert.match(releaseOutput, /[ℹ#] skipped 0\b/);
-  run('existing package smoke', ['scripts/package-smoke.mjs']);
+  run('existing package smoke', ['scripts/package/smoke.mjs']);
   run('test:types', [
     'node_modules/@typescript/native/bin/tsc',
     '-p',
@@ -181,7 +181,9 @@ try {
     .sort()
     .map((p) => 'packages/runtime/test/' + p);
   run('runtime node:test', ['--test', '--test-timeout=20000', ...tests]);
-  run('independent individual contract counts', ['scripts/test-contracts.mjs']);
+  run('independent individual contract counts', [
+    'scripts/checks/contracts.mjs',
+  ]);
   report.contracts = JSON.parse(readFileSync(join(scratch, 'contracts.json')));
   assert.equal(report.contracts.totals.tests, expectedTests);
   assert.equal(report.contracts.totals.pass, expectedTests);
@@ -194,7 +196,7 @@ try {
     '--check',
     '.',
   ]);
-  run('documentation links', ['scripts/check-docs.mjs']);
+  run('documentation links', ['scripts/checks/docs.mjs']);
   run('diff --check', ['diff', '--check'], 'git');
   report.apiFreeze = JSON.parse(
     run(`${baseline.release} exact source/declaration/export/manifest freeze`, [

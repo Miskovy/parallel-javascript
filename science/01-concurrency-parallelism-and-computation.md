@@ -227,7 +227,7 @@ important question is where instructions execute, not how completion is spelled.
 PJS currently asks the programmer to declare explicit units of CPU work as
 registered module exports. Accepted work executes using separate persistent Node
 workers. It does not infer independence, serialize arbitrary closures, or
-automatically parallelize JavaScript. The [architecture](../docs/architecture.md)
+automatically parallelize JavaScript. The [architecture](../docs/development/architecture.md)
 and [registration ADR](../docs/adr/0001-task-registration.md) connect those choices
 to isolate boundaries and startup validation.
 

@@ -1,5 +1,7 @@
 # RC contract qualification
 
+[Scripts index](../README.md)
+
 The prepared review candidate is **1.0.0**, not a publication. Explicit
 version selection in [baseline.mjs](baseline.mjs) registers RC4, RC5 and 1.0.0.
 [frozen-rc4.json](frozen-rc4.json) remains immutable and applies to its original
@@ -132,7 +134,7 @@ using ordinary runtime validation; the RC4 examples and frozen reports above are
 historical. Each job retains actual installed consumers and the existing standard
 R2/R3 profiles; manual RC commands above do not replace active CI. Evidence from
 CI is separate qualification, never inferred from this
-host. See the [proposal](../../docs/proposal-v1.0.0-rc.1.md),
+host. See the [proposal](../../docs/proposals/proposal-v1.0.0-rc.1.md),
 [contract inventory](../../docs/research/v1-rc1-contract-inventory.md),
 [error matrix](../../docs/research/v1-rc1-error-matrix.md) and
 [readiness gates](../../docs/research/v1-rc1-readiness.md).

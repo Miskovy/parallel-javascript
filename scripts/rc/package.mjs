@@ -204,7 +204,7 @@ try {
     }
   }
   for (const file of ['smoke.mjs', 'tasks.mjs'])
-    cpSync(join(root, 'scripts/package-consumer', file), join(js, file));
+    cpSync(join(root, 'scripts/package/consumer', file), join(js, file));
   report.basicConsumer = JSON.parse(
     run(
       'installed ESM/errors/source maps/subpaths/worker resolution',
@@ -273,11 +273,11 @@ try {
     report.examples.push({ example, passed: true, output: result.trim() });
   }
   for (const file of ['tsconfig.types.json', 'task.ts'])
-    cpSync(join(root, 'scripts/package-consumer', file), join(ts, file));
+    cpSync(join(root, 'scripts/package/consumer', file), join(ts, file));
   cpSync(join(root, 'scripts/rc/consumer.ts'), join(ts, 'consumer.ts'));
   cpSync(join(root, 'scripts/rc/tasks.mjs'), join(ts, 'tasks.mjs'));
   const config = JSON.parse(
-    readFileSync(join(root, 'scripts/package-consumer/tsconfig.json')),
+    readFileSync(join(root, 'scripts/package/consumer/tsconfig.json')),
   );
   writeFileSync(
     join(ts, 'tsconfig.json'),

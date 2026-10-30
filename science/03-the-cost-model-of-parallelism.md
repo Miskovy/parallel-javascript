@@ -166,7 +166,7 @@ reveal a floor for orchestration, but removing computation also changes overlap
 and pressure. A dedicated buffer round trip narrows a transport question but
 omits application preparation. Kernel-only worker time cannot be subtracted
 from whole-operation time to reveal one universal “scheduler cost.” The
-[architecture](../docs/architecture.md) maps current owners of these costs without
+[architecture](../docs/development/architecture.md) maps current owners of these costs without
 making this ledger a contract.
 
 ## Persistent workers and amortization
@@ -266,7 +266,7 @@ The historical **v0.3** measurements used Node v24.13.1 on Linux
 The one-worker round-trip probe alternated clone/transfer order, reused returned
 buffers, excluded allocation/validation equally, and retained twenty samples per
 mode after five warmups. The
-[report](../docs/benchmarks-v0.3.md#clone-transfer-and-shared-results) and
+[report](../docs/benchmarks/benchmarks-v0.3.md#clone-transfer-and-shared-results) and
 [raw transport artifact](../benchmarks/results/transfer-v0.3.json) report:
 
 | Payload | Clone median ms | Transfer median ms |
@@ -309,7 +309,7 @@ model for JavaScript.
 
 In the v0.3 range-sum reuse benchmark on the stated Ryzen/Node host, shared mode
 took 7.387 ms with two workers and 12.019 ms with four. The
-[report](../docs/benchmarks-v0.3.md#unexpected-findings-and-remaining-bottlenecks)
+[report](../docs/benchmarks/benchmarks-v0.3.md#unexpected-findings-and-remaining-bottlenecks)
 and [artifact](../benchmarks/results/shared-v0.3.json) retain both rows.
 Bandwidth, dispatch, and host contention are plausible contributors, but hardware
 counters were not collected, so the experiment does not identify the cause.
@@ -330,7 +330,7 @@ an above-core-count worker sweep. On Fedora 44, the same Ryzen 3 PRO 3300U
 N=16384/r=8/p=1, and 16 client jobs, two PJS workers delivered about
 42.3 operations/s with filesystem probe p95 1.31 ms; four delivered about
 66.0 with 7.62 ms. See the
-[worker-count report](../docs/benchmarks-v0.13.md#worker-count-findings) and
+[worker-count report](../docs/benchmarks/benchmarks-v0.13.md#worker-count-findings) and
 [raw campaign](../benchmarks/results/crypto-v0.13-fedora-node24.json).
 Reported throughput is a median across trials; reported filesystem p95 is a
 median of per-trial percentiles, not a pooled percentile.
@@ -342,7 +342,7 @@ do not establish production tail guarantees or an oversubscription threshold.
 The same v0.13 Fedora/Node campaign measured independent native SHA-256 jobs.
 PJS used four workers and 16 logical jobs in flight, while the serial baseline
 executed one job at a time. Six trials per cell retained throughput observations.
-The [SHA report](../docs/benchmarks-v0.13.md#sha-results),
+The [SHA report](../docs/benchmarks/benchmarks-v0.13.md#sha-results),
 [measurement appendix](../docs/research/v0.13-crypto-measurements.md), and
 [raw campaign](../benchmarks/results/crypto-v0.13-fedora-node24.json) give:
 
@@ -367,7 +367,7 @@ fixed worker counts, matched message contents, fresh processes, two warmups, and
 five retained samples on the stated Linux Ryzen/Node v24.13.1 host. Two-worker
 medians were 217.957 ms PJS and 161.030 ms Piscina; four-worker medians were
 140.646 ms and 181.678 ms. See the
-[comparison report](../docs/benchmarks-v0.3.md#piscina-comparison) and
+[comparison report](../docs/benchmarks/benchmarks-v0.3.md#piscina-comparison) and
 [raw artifact](../benchmarks/results/piscina-v0.3.json).
 
 The ordering reverses. Library policy, transport, grain, kernel, and experimental
@@ -395,7 +395,7 @@ also drifted; a large timing ratio was insufficient to identify a runtime defect
 Fresh-process baseline/candidate/candidate/baseline controls with retained samples
 reduced that particular difference to about +2.0%. Other small/medium four-worker
 rows reversed their earlier direction, and substantial variance remained. Read
-the [investigation](../docs/benchmarks-v0.3.md#cpu-observations-and-regression-investigation),
+the [investigation](../docs/benchmarks/benchmarks-v0.3.md#cpu-observations-and-regression-investigation),
 [initial baseline](../benchmarks/results/cpu-v0.2-local.json),
 [initial candidate](../benchmarks/results/cpu-v0.3.json), and
 [alternating artifact](../benchmarks/results/cpu-regression-v0.3.json).

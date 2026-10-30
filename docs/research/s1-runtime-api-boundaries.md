@@ -112,10 +112,10 @@ existing test assertions and instrumentation:
 - `containment.test.mjs`, `memory-lifecycle.test.mjs`,
   `model-real-worker.test.mjs`, `physical-boundary.test.mjs` and
   `upper-bound-result.test.mjs`: direct field observations/clock bindings.
-- `scripts/r3/child.mjs`: actual coordinator dispatched/settle instrumentation
+- `scripts/qualification/memory/child.mjs`: actual coordinator dispatched/settle instrumentation
   and current pool records.
-- `scripts/reservation-soak.mjs`, `scripts/cross-platform-v011/binary.mjs` and
-  `scripts/compression-supplement-v014.mjs`: credit/owner observation paths.
+- `scripts/qualification/reservation-soak.mjs`, `scripts/historical/cross-platform-v011/binary.mjs` and
+  `scripts/historical/compression-supplement-v014.mjs`: credit/owner observation paths.
 
 R2's independent model and enabled-action generator, seeds, histories, negative
 detection, real-worker checks, credit sums, diagnostics and watchdog budgets are

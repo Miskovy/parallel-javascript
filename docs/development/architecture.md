@@ -1,0 +1,388 @@
+# Runtime architecture
+
+The [stability policy](../reference/stability.md) defines the public promise; the
+[initial proposal](../proposals/proposal.md) records its origins. The package
+exports `PjsRuntime`, `PjsTaskRegistry`, `transfer`, `sharedReadonly`, public
+types, and errors. Pool, worker transport, scheduling implementation, coordinators,
+mutable records, telemetry, profiling hooks, and protocol remain internal.
+
+The v0.11 decomposition established task, range, physical-dispatch, result-credit,
+and telemetry owners. S1 separates public API adaptation, configuration,
+construction, and runtime lifecycle while keeping `PjsRuntime` as the public
+facade. [ADR 0022](../adr/0022-runtime-api-boundaries.md) supersedes the colocation
+part of ADR 0018 and preserves its subsystem ownership guarantees.
+
+```mermaid
+flowchart TD
+  A[Application] --> R[PjsRuntime facade]
+  R --> API[API adapters: run and range modes]
+  R --> B[Composition: normalized options and callback wiring]
+  R --> L[RuntimeController: lifecycle and guarded pump]
+  B -. constructs before startup .-> L
+  API --> O[RangeCoordinator: parent lifecycle and result policy]
+  API --> T[TaskCoordinator: logical task lifecycle]
+  L --> O
+  L --> T
+  L --> D[ExecutionDispatcher: admission and physical dispatch]
+  R --> V[RuntimeTelemetry: read-only projection]
+  O --> T
+  O --> C[ResultCreditManager: binary reservation lifecycle]
+  O --> S[RangeStream: consumer buffer lifecycle]
+  D --> Q[Scheduler: bounded FIFO policy]
+  D --> P[PjsPool: worker ownership and recovery]
+  D --> C
+  P --> W[PjsWorker: correlated execution slot]
+  W --> N[Node worker_threads and V8 isolates]
+  G[PjsTaskRegistry: immutable module descriptors] --> B
+  V -. snapshots .-> O
+  V -. snapshots .-> T
+  V -. snapshots .-> D
+```
+
+## Component ownership
+
+| Mutable domain              | Authority             | Important state                                                                      |
+| --------------------------- | --------------------- | ------------------------------------------------------------------------------------ |
+| Runtime lifecycle           | `RuntimeController`   | state, readiness/shutdown promises, drain mode, pump guard, escalation timer         |
+| Range parents               | `RangeCoordinator`    | operations, production cursor, deadlines, result policy, operation/partition metrics |
+| Logical tasks               | `TaskCoordinator`     | task records, timers/listeners, transfer claims, caller settlement, task metrics     |
+| Physical admission/dispatch | `ExecutionDispatcher` | queue-credit/idle-worker claims, batching, physical counters                         |
+| FIFO ordering               | `PjsScheduler`        | weighted queued entries                                                              |
+| Result byte credit          | `ResultCreditManager` | reservations, execution correlations, per-operation credit, invariant scanner        |
+| Worker population           | `PjsPool`             | workers, repair promises, restart budget                                             |
+| Worker execution            | `PjsWorker`           | bounded physical-correlation map with independent protocol phases                    |
+| Stream delivery             | `RangeStream`         | buffer, waiter, single-consumer terminal state                                       |
+| Stats                       | `RuntimeTelemetry`    | no correctness state; read-only aggregation only                                     |
+
+The coordinator types are internal. Applications still construct only
+`PjsRuntime`. `RangeOperation` remains a data-oriented host record and one
+`AsyncResource`; `RangeCoordinator` is its transition authority. Result modes
+remain a concrete discriminated switch because separate strategy objects would
+add indirection without creating a new state owner.
+
+Dependencies point from the facade/coordinators toward execution primitives.
+No subsystem receives the runtime facade. Task-to-parent notification uses a
+narrow synchronous `TaskParentPort`; it cannot mutate arbitrary runtime state.
+There is no service locator, generic event bus, or asynchronous command layer.
+
+`configuration/runtime-options.ts` normalizes scalar construction controls.
+`composition/create-runtime-components.ts` captures the registry snapshot, reads
+queue capacity, constructs all owners, and connects narrow callbacks. Passive
+constructors cannot invoke operational callbacks. Startup starts synchronously
+only after coordinators, controller, telemetry and stream capabilities exist.
+Registry and queue getter reads retain their original order.
+
+`api/run.ts` and `api/range/` receive typed submission capabilities. Collecting
+and completion adapters select their modes; map adaptation selects the output
+constructor; stream adaptation owns overload handling, count/byte option
+normalization and stream construction. The coordinator retains rejection
+accounting, accepted parents, lazy children, deadlines and terminal settlement.
+Stateless request validation lives in `partition/validation.ts`. Mapping block
+validation and copying live in `partition/results/map-assembly.ts`; the coordinator
+reads its target after validation because a result getter can abort the parent.
+Targets, assembly timing, counters and parent settlement remain coordinator-owned.
+These paths are internal and add no package entrypoints.
+
+## Progress loop and reentrancy
+
+`RuntimeController` owns one guarded pump with the established order:
+
+```text
+dispatch queued work
+produce a bounded number of range batches
+dispatch newly queued work
+check graceful-drain completion
+```
+
+The `pumping` guard is a correctness boundary. Nested requests collapse into
+the active turn. Range production retains one immediate continuation after its
+bounded synchronous budget.
+
+The following synchronous reentrancy is intentional and must be preserved:
+
+- an input factory may call `runtime.run()`;
+- a transfer-list iterator or payload getter may abort during dispatch;
+- task settlement may immediately notify and finish its parent;
+- parent settlement may synchronously cancel sibling tasks;
+- stream demand, yield, close, or throw may request another pump;
+- pool readiness/result/failure callbacks may request progress;
+- shutdown may begin inside an input factory.
+
+Accordingly, dispatch claims capacity before application callbacks, physical
+posting owns a worker before structured clone invokes getters, and parent
+terminal state is stored before sibling cancellation.
+
+## Ownership and scheduling
+
+The main isolate coordinates the component owners. `TaskCoordinator` owns task
+settlement, `ExecutionDispatcher` owns assignment, and each worker owns a private module registry and bounded active-execution map
+(default capacity one). Promise continuations, worker
+messages, timer callbacks, and abort callbacks serialize through the main event
+loop. Input getters invoked by structured clone can re-enter the public API
+synchronously, so dispatch claims its slot before cloning.
+
+PjsScheduler retains its bounded Map, logical weights and direct queued removal.
+Default equal priorities preserve FIFO. Its selection scan ranks dispatcher-approved
+candidates using immutable metadata and stable sequence ties; the optional custom
+comparator never receives internal records. Dispatcher alone authorizes a shared
+slot, an empty exclusive worker or the single drain pin. Compatible slots accept
+direct work only when the queue is empty. A failed post rolls back only its slot;
+completion order across physical executions remains unspecified.
+
+The pool has no queue knowledge. Dispatcher computes thread demand from actual
+shared/exclusive capacity and recovery/production claims; PjsPool alone changes
+worker population. Lazy range production remains bounded and round-robin.
+
+## Lifecycle and invariants
+
+Runtime: `created → starting → running → stopping → stopped`. Fatal infrastructure errors lead to `failed`; resources are stopped automatically, and an awaited shutdown finishes in `stopped`. Readiness means every initial worker imported every registered export, not merely that OS threads were launched. Startup can accept bounded work, but normal dispatch waits for readiness. Graceful shutdown during startup may dispatch as workers become ready while the remaining workers start.
+
+Pool: `created → active → stopping → stopped`. By default a fixed population is selected within construction bounds. A defined idleTimeout opts into demand-driven growth up to maxWorkers and idle retirement down to minWorkers, starting at the minimum unless workers is explicit. Running/claimed slots cannot be retired. Retiring threads count toward the maximum until exit; fixed-pool behavior is unchanged when idleTimeout is omitted.
+
+Worker: `starting → idle ↔ busy`; crash/protocol/bootstrap error → `failed`; termination request → `stopped`. Status is separate from physical occupancy: a failed/stopped worker retains all current physical correlations until confirmed exit. workers.busy counts occupied threads; workers.activeExecutions counts their occupied correlations, including those awaiting termination. Replacement has a fresh monotonically increasing runtime worker ID and a Node thread ID. The old thread exits before the new one is spawned. An error followed by an exit counts as one failure. Historical worker objects are discarded on replacement; lifetime failure counters remain.
+
+Task: `created → queued → scheduled → running → completed | failed`; any nonterminal accepted state may become `cancelled | timed_out`. `started` is an explicit protocol acknowledgement. Every accepted task has a UUID. Terminal settlement deletes the runtime record, removes it from the queue, removes its abort listener, clears its timer, releases the retained input, and resolves or rejects once. Returned errors retain task IDs. Completed records are not retained indefinitely.
+
+The crucial distinction is caller settlement versus execution completion. A cancelled/timed-out running task has no remaining promise bookkeeping, but its worker retains the task ID until a valid final result or confirmed thread exit. Late responses release that slot without touching the settled promise. Thus `tasks.pending` may be zero while `workers.busy` is positive. Runtime draining checks both, plus live partition operations.
+
+Physical completion requires affirmative evidence: a valid final response for the
+occupied task/batch, or confirmed Node Worker exit. Error/messageerror events,
+protocol rejection, logical failure, cancellation, timeout, status changes, and
+termination requests are not that evidence. Worker failure immediately notifies
+the logical task layer, while a separate, exactly-once exit callback ends any
+remaining physical correlation. The dispatcher marks result execution ended on
+valid final response or confirmed exit only. Exit also requests the existing
+guarded progress loop; it does not introduce another scheduler.
+
+Result credit also holds a posting claim before structured clone can invoke
+application getters. Reentrant caller settlement cannot release that claim. A
+successful post converts it to dispatched ownership; a failed post rolls it back
+and releases settled credit immediately, without inventing physical execution.
+Final response validation must match both the correlation and its physical kind:
+a single-item response cannot complete an occupied batch.
+
+## Task contract and protocol
+
+Registration binds a typed handle to a local file URL and named/default function export. Each runtime snapshots the registry; later registrations require a new runtime. Bootstrap imports once per isolate and checks exports are callable. TypeScript handles assert types; they cannot prove the module matches. Tasks accept one serializable input and return a result, a `transfer(value, buffers)` envelope, or a promise of either. The registered output type describes the caller-visible value. All task-owned async work must finish before the task returns. Only explicit cooperative mode or onProgress adds TaskContext as a second argument;
+other calls keep the observable one-argument calling convention.
+
+Protocol version 2 retains ordinary `execute`, internal `executeBatch { batchId, taskName, items }`, and an explicit completion-only marker. Collecting workers answer with ordinary success values. Completion workers answer `completed` without inspecting, transferring, or serializing the task return value. Batch results contain ordered per-task success/completion records, at most one final failure, and any later skipped IDs. `ready`, `started`, shutdown, and bootstrap failure remain versioned and validated. Batch IDs identify physical occupancy; task IDs retain logical identity. Missing, duplicate, reordered, or unknown IDs, an invalid failure shape, or any response for the wrong occupied slot fails the worker. Registered module exports remain the only executable code.
+
+Payload serialization lives in `PjsWorker.execute()` and bootstrap result posting. v0.2 passes transfer lists through these boundaries; lists are local postMessage options and do not change the wire protocol. Worker bootstrap recognizes envelopes through an isolate-local WeakMap and sends only their values. Ordinary objects with fields such as `value` or `transferList` are not treated as envelopes. No eval, source-string serialization, or dynamic compilation is used. Imported modules are trusted; this is not an isolation boundary for hostile JavaScript.
+
+## Admission, deadlines, and cancellation
+
+`maxQueue` bounds waiting task count, not bytes. Accepted work is bounded by queue capacity plus execution slots. Large inputs still require application memory budgeting. Ordinary run() has no admission waiters. Overflow returns `PjsQueueFullError`. During startup, work consumes waiting capacity.
+
+Timeouts start at acceptance, include queue delay, and use Node timers with integer delays from 1 to 2³¹−1 ms. Delivery depends on event-loop progress; deadlines are not hard real-time CPU preemption. Abort before admission rejects without accepting work. Queued cancellation/deadline removes work. Active cancellation/deadline settles the caller but preserves the slot. No task repeats by default; ordinary retry/fallback requires explicit repetition permission because side effects may already have occurred.
+
+## Ordinary execution resilience
+
+Range physical cancellation belongs to `RangeCoordinator`: after recording terminal
+parent state, collect/deduplicate child batch correlations, cancel child callers and
+request containment for only those correlations. Reentrant posting uses the existing
+dispatcher termination intent; result-credit ownership still ends at validated final
+completion or confirmed exit. Consumer stream cleanup and fail-fast siblings follow
+the parent's mode. No range retries are added.
+
+Elasticity remains split by ownership. `ExecutionDispatcher` supplies physical FIFO
+demand, retained recovery slots and protected idle-worker claims; `PjsPool` owns
+creation, monotonic idle timers and retirement promises. Lazy range producers can
+request capacity without eager inputs, including with zero queue slots. Retirement
+and cancellation do not charge crash budgets; unexpected/bootstrap failures keep
+their existing failure/fatal paths. All live/terminating threads remain within the
+configured maximum. Forced shutdown clears timers and blocks spawning.
+
+`WorkerResourceLimits` is a portable configuration shape. Validation/snapshotting
+lives in configuration, while only `workers/worker.ts` maps it into Node's Worker
+constructor options. Initial, grown and replacement workers share that path. FIFO
+logic remains free of Node transport APIs. The explicit browser entry now binds
+narrow host services to these same owners; see the [browser guide](../guide/browser.md).
+
+Ordinary execution resilience reuses the existing owners. `TaskCoordinator` owns
+one logical caller, retained replay input, attempt correlation lookup, original
+deadline and at most one backoff timer. It selects bounded retries and one registered
+worker fallback only with explicit `repeatable: true`. `ExecutionDispatcher` routes
+physical correlations separately from logical IDs, preserving protocol v2 and the
+credit owner's transitions. Worker failure reasons distinguish crashes/leases from
+protocol/bootstrap faults. Physical cancellation routes through the pool's existing
+repair promises, exempts intentional retirement from failure budgets, and defers
+termination during posting until ownership is established.
+
+After physical completion, a recovery retains the old admission slot or exchanges
+it for a queue credit. Runnable FIFO entries receive reserved slots first, freeing
+queue credit for recovery; zero-queue recovery retains its slot through replacement
+and backoff. Waiting recovery remains bounded by worker/queue capacity. Neither
+fallback nor retry creates a new caller, bypasses global pool failure, or replays
+input transfers. Range/batch operations reject retry and fallback; range cancellation supports the same explicit termination policy. See the
+[approved design](../proposals/execution-resilience.md) and
+[run guide](../guide/core-api.md#ordinary-execution-resilience-development).
+
+## Range coordinator, result policies, and batching (experimental)
+
+`partitionRange()`, `parallelFor()`, `streamRange()`, and `parallelMapRange()` describe a safe integer half-open range with an explicit grain and synchronous host payload factory. `partition/range.ts` validates the plan and generates immutable descriptors; `RangeOperation` is the host state/AsyncResource record, while `RangeCoordinator` owns parent transitions, production, result policy, and child settlement. `TaskCoordinator` admits each logical child and `ExecutionDispatcher` maps admitted work onto the existing FIFO/pool. Collecting mode allocates an indexed output array. Discard mode allocates none and resolves `void`. Stream mode uses a single-consumer `AsyncIterable` coordinator and yields `{ partition, output }` in completion order. Map mode preallocates one flat element result and copies validated partition blocks into their logical offsets.
+
+Parents follow `created → running → completed | failed | cancelled | timed_out`, with running including startup/capacity waiting. Parents occupy no worker or FIFO slot. At most `min(MAX_SAFE_INTEGER, workers + maxQueue)` parent records are accepted. Batch size 1 retains the v0.4 worker-count live-child window. A configured batch size `B` permits at most `workers × B` live logical children for that parent, while the FIFO counts each queued batch by its logical weight. Thus waiting logical work remains at most `maxQueue`; physical queue nodes may be fewer. Production stages at most `B` descriptors per physical dispatch and at most worker-count physical batches per synchronous turn. It never materializes a whole range.
+
+One physical batch contains only children from the same parent operation and registered task. Its items execute sequentially in one worker. Successes settle by logical task ID and parent outputs remain ordered by partition index. On first item failure, later items do not execute; the parent fails once and other sibling callers are cancelled. A crash is attributed to the batch leader and follows the existing no-retry rule because partial side effects are unknowable. Cancellation removes queued weighted batches but cannot preempt a posted one; the full posted batch finishes unless an item fails or the parent explicitly enables physical termination.
+
+Input transfer lists are rejected before detachment whenever configured batch size exceeds one. This preserves per-child transfer ownership rather than moving buffers for logical items that may never execute. Shared and cloned inputs batch normally. Output transfer envelopes may be combined in one result message because those buffers are worker-owned. Use batch size one for transfer-owned matrix inputs.
+
+Collecting results are stored by logical index and returned only after every chunk succeeds. Their memory grows with completed outputs; `maxQueue` is a task bound, not a result-byte bound. Map workers return exactly one ordinary-array or explicitly selected typed-array block element per range index. The host validates cardinality/kind, copies directly into a flat preallocated result at `partition.start - range.start`, and never exposes partial output. Completion results are discarded inside workers and never enter a host output array. A stream's separate `maxBufferedResults` credit bound covers buffered plus admitted-unsettled logical results. Consumer reads release credits and repump the shared FIFO; physical batches cannot exceed available credits. Workers are released after host settlement rather than being held by a slow consumer.
+
+Stream success includes delivery of every result. Consumer close cancels remaining work, while producer failure preserves already-yielded values and discards buffered ones. Streams begin eagerly at API call. Directly buffered ArrayBuffer/SAB/view results contribute visible `byteLength` diagnostics; scalars, arrays, objects, and nested graphs count as unknown without traversal.
+
+v0.9 strict binary streams additionally reserve an exact declared visible byte length before each logical child is admitted. Count and byte credits are independent and per operation. The worker validates live direct ArrayBuffer or ArrayBuffer-backed view output after unwrapping a transfer envelope and before posting success. Shared backing and nested graphs are rejected in this mode. A queued cancellation releases immediately; a posted execution retains its reservation until validated final completion or confirmed exit. Physical batches retain one reservation per logical item. The guarantee bounds declared result payloads, not RSS, heap, backing allocation, worker temporaries, inputs, or consumer-owned values. See [ADR 0017](../adr/0017-binary-result-reservations.md).
+
+A single deadline covers consumer waiting, and graceful shutdown waits for delivery; an abandoned, unclosed iterator can therefore prevent a draining shutdown from finishing. First failure cancels siblings without freeing occupied workers or their binary reservations. Worker-created range operations reject explicitly; no parent compute slot waits for children. General nested parallelism is unsupported.
+
+Graceful shutdown finishes the entire accepted logical range, including ungenerated work. Non-draining shutdown cancels parents before remaining ordinary tasks. Fatal runtime failure rejects every live parent. See the [usage contract](../reference/partitioning.md), [ADR 0008](../adr/0008-runtime-owned-partitioning.md) and [admission ADR](../adr/0009-partition-admission-and-metrics.md).
+
+## Failure and shutdown
+
+v0.12 extends the result-credit owner with upper-bound reconciliation. The range
+coordinator selects an explicit maximum declaration and checks eligibility;
+it never reads mutable reservation internals. The worker receives an exclusive
+`resultByteContract: { mode: 'upper-bound', bytes }`, validates before posting,
+and returns `actualResultBytes`. Exact protocol fields remain unchanged.
+After the dispatcher marks physical execution ended, TaskCoordinator suppresses
+late/non-deliverable results and invokes ResultCreditManager.reconcile before
+logical settlement and stream push. Positive slack refunds then; actual credit
+releases on yield. The existing guarded pump runs after the entire response is
+settled, so new admissions see refunds without a second scheduling loop.
+Credit amounts, mode, reconciliation identity, metrics, and invariants all stay
+inside ResultCreditManager. PjsRuntime gains only option typing. See
+[ADR 0019](../adr/0019-upper-bound-result-reservations.md).
+
+Task exceptions become `PjsTaskError` with remote name, message, and stack plus local task/worker IDs. Input/output clone or transfer failures become `PjsSerializationError`; they do not normally damage the worker. Invalid lists rejected before admission count as rejected tasks; serialization failures at dispatch or result posting count as failed accepted tasks. Crashes, protocol violations, startup errors, and replacement exhaustion become `PjsWorkerError`. Registration, admission, runtime state, cancellation, and deadlines have distinct exported errors. Uninspectable thrown values use a safe fallback description.
+
+An unexpected exit, including exit code zero, fails the occupied task and replaces the worker while the pool remains active. Queue entries survive. Bootstrap failures are fatal immediately, because repeatedly importing invalid configuration is not recovery. Historical lifetime maxRestarts remains the default. The experimental, mutually exclusive restartPolicy uses a pool-wide monotonic rolling budget, including lease containment; old decisions expire at windowMs. Both bound replacement decisions to prevent a hot crash loop. Exhaustion fails accepted work with task-specific errors and stops the pool.
+
+Graceful shutdown synchronously closes admission, waits for accepted tasks and outstanding executions, then stops workers and removes thread listeners. The shutdown control message closes the bootstrap port; host termination guarantees task-created stray resources cannot retain the process. Async user finalizers are not a supported shutdown hook. Explicit `drain: false` rejects accepted work and terminates workers, including busy ones. Concurrent calls share one promise and the first chosen mode. The experimental R1 API permits the first graceful call to set a monotonic forceAfter deadline. At expiry it changes to forced mode, cancels pending callers, starts termination and awaits confirmed exits. Omitted escalation preserves graceful behavior; later calls cannot change options. See [ADR 0021](../adr/0021-physical-execution-containment.md).
+
+## Memory and observability
+
+Structured clone is the default on input dispatch and output posting. Explicit `run(..., { transferList })` lists and output `transfer(value, list)` envelopes move ArrayBuffer backing memory. Typed-array metadata and enclosing objects still require serialization. Queued inputs are retained by reference until dispatch; mutation, resizing, or external transfer before settlement is outside the contract.
+
+Lists are copied at submission and validated both then and immediately before posting. Only live, unique ArrayBuffers that Node permits to transfer are accepted. A module-level WeakMap reserves queued input buffers across runtimes using the same library instance. Every claim is checked before any is written. Cancellation/failure before dispatch releases reservations without detachment. Successful posting detaches every sender-side view; task failure, crash, timeout, or shutdown cannot reverse it. Reservations remain held during a reentrant abort from a payload getter, and are released in dispatch's finally block. No graph walk is used to check buffer reachability; a listed buffer must also occur in the payload to be usable by the receiver. See [ADR 0005](../adr/0005-transfer-ownership.md).
+
+Typed-array subviews can clone or transfer a whole backing buffer, so benchmarks explicitly build compact row blocks. Transferring the right matrix to several workers needs a dedicated copy for each worker; those costs are timed and reported. SharedArrayBuffer can pass through naturally but cannot be transferred. PJS supplies no race-safety guarantees or synchronization API for shared data. v0.3 adds `sharedReadonly` construction and a read-only usage contract over native SAB transport; see [the memory guide](memory.md) and [ADR 0007](../adr/0007-shared-input-model.md). There is no resource registry or disposal: GC manages references, and replacement workers receive shared backing through subsequent task messages. Read-only is not enforced protection. Cancellation does not end active access. maxQueue does not bound shared bytes; no hidden compute jobs or speculative byte metrics are added.
+
+Snapshots are copies. `operations` counts parent outcomes independently and exposes collecting/completion/streaming/mapping breakdowns; `streams` aliases streaming parent outcomes. `streamResults` reports produced, yielded, current/peak aggregate buffered logical results, current/peak known visible payload bytes, current/peak unknown result counts, current/peak reserved binary bytes, reservation waits/rejections, and binary contract failures. `mapResults` reports validated blocks/elements and cumulative host assembly time. `partitions` counts generated/admitted logical children and their completed/failed/cancelled callers. `tasks` remains logical and includes ordinary plus range children. The separate `dispatch` namespace counts execute messages, result messages, batched execute messages, logical tasks, logical partitions, and their average per execute. Parent timeouts cancel children, so `operations.timedOut` and `tasks.cancelled` describe different levels. Strict stream snapshots expose `reservedResultBytes`, `bufferedKnownPayloadBytes`, and `resultByteCapacity`; other active fields retain their previous meaning. Terminal history is not retained. `workers.details` counts logical item outcomes, including late responses. Worker crashes increment failure counters without inventing missing execution durations.
+
+Queue latency is monotonic acceptance-to-physical-dispatch time, including startup; every logical item in a batch receives a sample. Execution latency is measured per logical invocation inside a worker, excluding result posting. Total latency remains acceptance-to-caller settlement. Counts for each mean are exposed; an empty mean is zero with zero samples. Disabled-by-default internal benchmark hooks measure selected stages but are not exported and overlap, so their durations cannot be summed. One operation-level AsyncResource runs host factories and parent settlement in the caller's captured async scope and emits destroy on cleanup. Worker isolates do not inherit AsyncLocalStorage stores; only explicit task input crosses that boundary. See [ADR 0013](../adr/0013-async-resource-context.md).
+
+## Stabilization boundary
+
+Historically, v0.15 retained all 25 runtime source files unchanged. S1 changes
+internal boundaries as described above. Composition constructs all subsystem
+owners before dispatcher.start can trigger callbacks. No scheduler,
+credit owner, pool or message protocol is replaced. The only root imports are the
+façade, registration, ownership helpers, public types and errors; registry.snapshot
+is a known unsupported public-member leak, documented in the inventory.
+
+The canonical user contracts now live in the [core guide](../guide/core-api.md),
+[lifecycle guide](../guide/lifecycle.md), [credit guide](../guide/backpressure.md) and
+[metric glossary](../guide/telemetry.md). The separate result-credit plane reserves
+before execution, reconciles upper-bound successful arrivals, and releases when
+PJS ownership ends. It does not manage process memory.
+
+The v0.15 audit found no architectural regression requiring refactoring. S1 is
+the separately approved maintenance boundary change. Disabled internal
+profiling and opt-in reservation invariant scans remain research/test facilities;
+no benchmark imports or codec-specific behavior enter the production graph.
+Read the [readiness matrix](../research/v0.15-v1-readiness.md) for the proposed stable
+core and release gates. Future execution features are not readiness blockers.
+
+## Checkpoint 2 recovery and cooperation
+
+TaskCoordinator owns shared recovery policy validation and per-child attempt state;
+RangeCoordinator retains unfinished logical children in its existing bounded window.
+After physical completion and backoff it resumes them through production claims as
+single-item posts, without multiplying one batch slot into per-item slot claims.
+Normal weighted FIFO batching is unchanged; sleeping range recovery reserves no
+worker and ready recovery yields to queued work. Ordinary recovery retains its prior
+slot/queue exchange. A separate physical membership map of logical IDs survives
+leader settlement; ResultCreditManager remains a binary-credit owner, not the attempt
+registry. Its next-attempt transition keeps logical credit while resetting physical
+posting/completion flags. Successful partitions never replay; only genuine task-error
+suffixes prove uninvoked children, not combined serialization-error envelopes.
+
+Reconstruction runs in TaskCoordinator with a dispatcher-protected worker before
+posting, and range callbacks retain their parent AsyncResource scope. Both the
+factory and payload/list getters can reenter cancellation/shutdown; liveness is
+rechecked before posting. No overlap or hidden buffer backup is introduced.
+
+PjsWorker owns each cooperative execution's shared flag; bootstrap supplies a fresh
+invocation context only in cooperative mode. Atomics polling handles CPU loops;
+correlated control messages abort the local async signal while execute is awaiting.
+Control messages bypass the overlapping-execution guard. Final cancelled envelopes
+still require exact correlation/coverage and a requested cancellation; they are not
+retryable failures. The same pool/lifecycle owners handle replacement and forced
+shutdown, with no new manager, scheduler policy or concurrency backend.
+
+## Scheduling, async execution and progress (Checkpoint 3 development)
+
+PjsScheduler keeps weighted storage/removal and stable ties; it ranks eligible
+entries by priority or an optional comparator over frozen scalar metadata.
+ExecutionDispatcher owns admission, shared-slot/exclusive-worker claims, recovery
+credit exchanges and the one waiting exclusive drain pin. Priority does not change
+lazy round-robin range production or preempt running code. Callback reentrancy
+invalidates selection before dispatch; comparator failure restores built-in ranking.
+
+PjsWorker tracks each posted single/batch independently; bootstrap permits bounded
+overlap at await points while batch members remain sequential. PjsPool alone owns
+threads, elastic retirement and one restart decision per failed thread. Failure/exit
+fans out to every physical correlation before pumping; TaskCoordinator applies each
+logical recovery policy. Terminate-mode and leased work obtains an empty worker
+exclusively, preventing destructive cancellation of unrelated invocations. Legacy
+single-execution internal inspection views remain for existing lifecycle tests.
+
+TaskCoordinator owns logical progress subscriptions and the bounded callback drain.
+Invocation-local contexts capture exact item/physical IDs. A bounded incremental
+JSON encoder, shared atomic frame permit and latched acknowledgement wakeup bound
+both transport directions, including CPU loops. Final responses never await progress;
+logical settlement closes reporting without ending physical/result ownership.
+ResultCreditManager and RangeStream retain their existing correlation/yield rules.
+See the [Checkpoint 3 design](../proposals/checkpoint-3-scheduling-concurrency-progress.md)
+and [current API](../guide/core-api.md).
+
+## Integrated Node/browser host boundary
+
+Composition binds one immutable host assembly per entry and passes narrow typed
+service views to the existing owners. TaskCoordinator gets IDs, timers, transfer
+validation input snapshots, promise checks and recovery capability; RangeCoordinator
+gets IDs, timers, host-thread checks and callback scopes. ExecutionDispatcher gets
+shared-memory/profiling capabilities and pool services; PjsPool gets worker
+construction, lifecycle observations and idle-timer unref. Scheduler, placement,
+recovery state, range assembly and result credits remain shared owners.
+
+`hosts/contracts.ts` discriminates confirmed-exit connections from endpoint-revocation
+connections. Node alone wires an exit observation and exposes `Promise<number>`
+termination. Browser termination returns void and its connection has no exit callback.
+Profiling is an optional capability, absent in the browser, rather than a throwing
+placeholder. Recovery restrictions come from the bound policy, preserving Node's
+validation order and the browser's early supported-cause checks before input work.
+
+`hosts/browser/host.ts` assembles services. `worker-connection.ts` owns native Worker
+construction, listeners, versioned initialization/readiness checks and detachment;
+its protocol and capability probe live beside it. The public browser binding stays
+thin. Deployed `browser/bootstrap.js` and the Node installed bootstrap URL are stable;
+registry and transfer WeakMaps still have one canonical module owner per isolate.
+
+Browser retirement still waits for post commit/rollback and input cleanup, requires
+native termination to succeed, then commits empty occupancy before notifying the
+existing terminal accounting/lifecycle owners. Failed termination retains claims.
+This fixes graceful draining even when elasticity needs no replacement/readiness
+event; it is not physical-exit evidence. Node releases ownership only on validated
+completion or confirmed exit. Deterministic retirement controls and real-browser
+native/Vite cases retain this distinction without polling or shutdown workarounds.
+
+Minimal internal snapshots carry optional thread observations and the existing
+containment counters. Named Node/browser statistics projections preserve the public
+fields: Node requires thread IDs and omits endpoint-retirement counts; browser omits
+thread IDs and confirmed exits, retaining cumulative unconfirmedRetirements. The
+projections neither mutate snapshots nor manufacture unsupported observations.
+Both locked compilers check incompatible lifecycle operations and owner service
+access; installed consumers and [browser deployment tests](../guide/browser.md) check
+the public graphs and behavior, without freezing internal emitted file paths.

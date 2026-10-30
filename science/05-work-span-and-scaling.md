@@ -450,7 +450,7 @@ The campaign ran on 2026-09-27 with Node v24.13.1, Linux
 CPUs. It used fresh processes per worker count, reused pools across input sizes,
 two warmups, and five retained timed samples. Startup was separate. Order was
 serial, four, two, one workers; this was not a randomized multi-session study.
-See [the report](../docs/benchmarks-v0.3.md#cpu-observations-and-regression-investigation),
+See [the report](../docs/benchmarks/benchmarks-v0.3.md#cpu-observations-and-regression-investigation),
 [methodology](../benchmarks/README.md), and
 [raw CPU artifact](../benchmarks/results/cpu-v0.3.json).
 
@@ -473,7 +473,7 @@ The report explicitly investigated the unusually slow one-worker phase. In the
 alternating follow-up, candidate v0.3 medians for this input were approximately
 276.354 ms direct serial, 310.509 ms one worker, and 181.219 ms four workers.
 Those give roughly 1.525 application speedup and 1.713 pool speedup. See the
-[investigation](../docs/benchmarks-v0.3.md#cpu-observations-and-regression-investigation)
+[investigation](../docs/benchmarks/benchmarks-v0.3.md#cpu-observations-and-regression-investigation)
 and [all control samples](../benchmarks/results/cpu-regression-v0.3.json).
 The earlier curve is not a stable scalability finding. Nor is the follow-up
 a precise universal bound: substantial variance and reversals remained.
@@ -490,7 +490,7 @@ The same milestone's reused shared-input scan processed 2,097,152 Float64 values
 per execution. One, two, and four workers recorded approximately 8.491, 7.387,
 and 12.019 ms amortized per execution. Each timed session included one shared
 construction and five executions. These numbers come from the
-[report](../docs/benchmarks-v0.3.md#clone-transfer-and-shared-results) and
+[report](../docs/benchmarks/benchmarks-v0.3.md#clone-transfer-and-shared-results) and
 [raw shared sessions](../benchmarks/results/shared-v0.3.json).
 
 Two workers were faster than four in that local experiment. Memory bandwidth,
@@ -534,9 +534,9 @@ these boundary and sampling distinctions.
 PJS's persistent workers and explicit task boundaries make some costs
 observable, but they do not supply arbitrary nested DAG scheduling or the
 work-stealing theorem's contract. Its
-[architecture](../docs/architecture.md),
+[architecture](../docs/development/architecture.md),
 [FIFO decision](../docs/adr/0003-scheduler-interface.md), and
-[stability policy](../docs/stability.md) retain authority over current behavior.
+[stability policy](../docs/reference/stability.md) retain authority over current behavior.
 The theory helps decide what to measure and which decomposition to consider;
 it does not select a universal worker count or authorize a scheduler change.
 

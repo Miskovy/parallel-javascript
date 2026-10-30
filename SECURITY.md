@@ -23,7 +23,7 @@ Node 26 is Current, with LTS scheduled for 28 October 2026. Node 22 and 24 are
 Maintenance LTS. Node 20 reached upstream EOL on 30 April 2026, is unsupported by
 PJS, and is not included in these upstream October fixes. See the
 [official lifecycle schedule](https://github.com/nodejs/Release/blob/main/schedule.json)
-and [PJS support policy](docs/stability.md#proposed-node-and-platform-policy).
+and [PJS support policy](docs/reference/stability.md#proposed-node-and-platform-policy).
 
 ## Report privately
 

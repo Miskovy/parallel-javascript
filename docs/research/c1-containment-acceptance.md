@@ -117,8 +117,8 @@ Use the unchanged ordinary qualifier on available exact Windows cells:
 ```sh
 npm run runtime:qualify -- --release-npm-cli=<verified-npm-11.19.0-cli> --output=<fresh-cell-report.json>
 node node_modules/typescript/bin/tsc6 -p packages/runtime/test/tsconfig.json
-node scripts/api-contract-inventory.mjs --check --output=<fresh-cell-inventory.json>
-node --test scripts/api-contract-inventory.test.mjs
+node scripts/checks/api-contract-inventory.mjs --check --output=<fresh-cell-inventory.json>
+node --test scripts/checks/api-contract-inventory.test.mjs
 ```
 
 The qualifier builds, runs all contracts, public types, compatibility, installed

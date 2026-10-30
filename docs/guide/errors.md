@@ -95,7 +95,7 @@ non-Error reason). Native allocation failures can propagate. Malformed JavaScrip
 objects with throwing getters/invalid signal methods can throw synchronously.
 These are programming errors, not queue or crash signals.
 
-The [installed-package test](../../scripts/package-smoke.mjs) checks exported
+The [installed-package test](../../scripts/package/smoke.mjs) checks exported
 class identity, name, message and stack context from an actual tarball. Unit and
 lifecycle tests cover context propagation and worker recovery separately.
 

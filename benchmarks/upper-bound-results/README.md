@@ -36,7 +36,7 @@ This reuses the established runtime-architecture measurement workloads in eight
 balanced fresh-process positions, producing 24 observations per version/case.
 It writes `runtime-regression-v0.12.json` without modifying v0.11 evidence.
 Set `PJS_POWER_MODE` to the actual power configuration; compare versions on the
-same machine and plan. See the [report](../../docs/benchmarks-v0.12.md).
+same machine and plan. See the [report](../../docs/benchmarks/benchmarks-v0.12.md).
 
 `npm run benchmark:upper-bound` also runs the consumer-withheld refund control
 and separate stage profile, writing `refund-benefit-v0.12.json` and
@@ -45,7 +45,7 @@ on Power saver; the consumer-withheld experiment proves production/retention
 benefit independently of timer granularity. Profile timing is instrumentation,
 not production throughput.
 
-Run `node scripts/validate-v012.mjs` for all checks, ten invariant-enabled stress
+Run `node scripts/historical/validate-v012.mjs` for all checks, ten invariant-enabled stress
 rounds, the final 30-second soak, and historical evidence hash preservation.
 Then `node benchmarks/upper-bound-results/report.mjs` generates the full report
 from retained artifacts and successful validation.

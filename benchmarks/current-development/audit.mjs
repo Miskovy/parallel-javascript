@@ -9,7 +9,7 @@ const output = resolve(
 const receipt = command(
   process.execPath,
   [
-    'scripts/api-contract-inventory.mjs',
+    'scripts/checks/api-contract-inventory.mjs',
     '--check',
     '--output=' + output + '.public.json',
   ],

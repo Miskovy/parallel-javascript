@@ -99,7 +99,7 @@ Fedora zlib-ng build. That campaign stopped qualification, inspected the matchin
 native implementation and established a codec-specific contract before proceeding.
 The runtime needed no codec knowledge or semantic change. See the preserved
 [bound qualification](../research/v0.14-compression-bounds.md) and
-[cross-platform report](../cross-platform-v0.14.md).
+[cross-platform report](../benchmarks/cross-platform-v0.14.md).
 
 ```text
 workload/library → trustworthy declaration → PJS enforcement

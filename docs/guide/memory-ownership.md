@@ -88,7 +88,7 @@ Readonly is an application contract, **not enforced freezing**. Aliases remain
 writable. Use disjoint regions or Atomics for intentional shared output, with an
 explicit application protocol. PJS supplies no race prevention or resource registry.
 See [shared-input.mjs](../../examples/shared-input.mjs) and the detailed historical
-[memory reference](../memory.md).
+[memory reference](../development/memory.md).
 
 ## Result ownership and credits
 

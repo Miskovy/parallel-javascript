@@ -7,7 +7,7 @@ contains 38 named exports: 16 values and 22 type-only symbols. The
 source and declarations plus unchanged manifest export/type/engine contracts.
 Byte identity is stronger than a formatting-insensitive declaration comparison.
 No export, option, error class, type or lifecycle change is proposed. Classification
-remains exactly [v0.15 stability](../stability.md); no experimental promotion.
+remains exactly [v0.15 stability](../reference/stability.md); no experimental promotion.
 
 The table maps promises to the existing 184 individual regression tests and new
 [bounded harness](../../scripts/rc/soak.mjs). Every profile covers the listed

@@ -21,8 +21,8 @@ for CPU work; ordinary asynchronous I/O stays on Node's event loop.
 PJS is not a transparent JavaScript auto-parallelizer, a closure serializer, a
 replacement for async I/O, or a distributed runtime.
 
-Start with the [README](README.md), [architecture](docs/architecture.md),
-[stability policy](docs/stability.md), and [core API guide](docs/guide/core-api.md).
+Start with the [README](README.md), [architecture](docs/development/architecture.md),
+[stability policy](docs/reference/stability.md), and [core API guide](docs/guide/core-api.md).
 For changes to a particular contract, also read the relevant
 [lifecycle](docs/guide/lifecycle.md), [backpressure](docs/guide/backpressure.md),
 [memory ownership](docs/guide/memory-ownership.md), or
@@ -35,7 +35,7 @@ prefer current patched releases. Other Node majors are outside the supported
 policy. The project ships one ESM graph with import/require root entries in
 development builds; compile TypeScript task modules to JavaScript before
 loading them in workers. The manifest does not install or upgrade Node and does
-not mean every patch has been tested: see the [support policy and exact evidence](docs/stability.md#proposed-node-and-platform-policy).
+not mean every patch has been tested: see the [support policy and exact evidence](docs/reference/stability.md#proposed-node-and-platform-policy).
 The [24.0.0 report](docs/research/node24-floor-qualification.md) remains historical.
 
 ```sh
@@ -55,6 +55,9 @@ PowerShell policy blocks `npm.ps1`.
 
 Run these commands from the repository root. They are the normal validation gates:
 
+The [scripts index](scripts/README.md) maps these commands to checks, package
+fixtures, qualification campaigns and release tooling.
+
 | Command                    | What it protects                                                                                     |
 | -------------------------- | ---------------------------------------------------------------------------------------------------- |
 | `npm test`                 | Builds the runtime, checks public type cases, and runs the runtime test suite.                       |
@@ -70,6 +73,10 @@ When formatting is needed, use the workspace formatter on only the files you
 changed, for example `npm exec -- prettier --write CONTRIBUTING.md`. Avoid
 reformatting unrelated historical documents. Run `git diff --check` before
 submitting.
+
+Use the [documentation layout](docs/README.md#documentation-layout) when adding
+or moving a page, and update the relevant section index. Historical proposals,
+reports and retained evidence keep their original milestone and conclusions.
 
 ### Validation by change type
 
@@ -118,7 +125,7 @@ Significant API or architecture changes should start with a GitHub issue. Explai
 - Compatibility impact and any migration needed.
 - The testing strategy and documentation changes.
 
-Use the [stability policy](docs/stability.md) to distinguish core candidates,
+Use the [stability policy](docs/reference/stability.md) to distinguish core candidates,
 supported ownership helpers, experimental range APIs, and diagnostic surfaces.
 An experimental API is not automatically promoted by adding an example.
 

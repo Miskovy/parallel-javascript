@@ -11,7 +11,7 @@ guarantees or published RC4. Node support remains
 
 ## Inspected boundaries
 
-Source governs over older paragraphs in the [architecture](../architecture.md)
+Source governs over older paragraphs in the [architecture](../development/architecture.md)
 and [lifecycle](../guide/lifecycle.md) documentation that still describe earlier
 range-recovery behavior. The [Checkpoint 2](checkpoint-2-execution-recovery.md)
 and [Checkpoint 3](checkpoint-3-scheduling-concurrency-progress.md) designs,
@@ -35,8 +35,8 @@ Built-in dependencies in that graph are node:async_hooks, crypto, os, util and
 worker_threads. Replacing just the Worker constructor would leave browser imports
 and declarations coupled to Node.
 
-Consumer evidence read includes `scripts/package-smoke.mjs` and
-`scripts/package-consumer/`, registry/public-type/runtime-boundary tests, and the
+Consumer evidence read includes `scripts/package/smoke.mjs` and
+`scripts/package/consumer/`, registry/public-type/runtime-boundary tests, and the
 Checkpoint 2/3, containment, transfer, shared, batch, stream and result-credit tests.
 The installed harness currently asserts root-only exports and tests ESM consumers;
 it copies Node types into TypeScript consumers and provides no browser execution proof.
@@ -616,7 +616,7 @@ first; B includes its necessary host extraction and needs the approval below.
 **Files/owners:** `packages/runtime/package.json` owns the require condition;
 `src/workers/bootstrap.ts` owns export resolution. `tasks/registry.ts` and
 `tasks/transfer.ts` retain their existing identities and semantics. Extend
-`scripts/package-smoke.mjs`, `scripts/package-consumer/` and focused worker-startup
+`scripts/package/smoke.mjs`, `scripts/package/consumer/` and focused worker-startup
 fixtures/tests under `packages/runtime/test/`. Update the active root/package
 README, core API and support documentation when the behavior is implemented.
 

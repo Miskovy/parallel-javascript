@@ -386,7 +386,7 @@ export async function runCampaign(profile, output, filter = '') {
     corpus: { version: 1, seed },
     runtimeBefore: sourceHashes(),
     harnessBefore: sourceHashes('benchmarks/real-world/compression'),
-    proposalHash: sourceHashes('docs')['docs/proposal-v0.14.md'],
+    proposalHash: sourceHashes('docs')['docs/proposals/proposal-v0.14.md'],
     complete: false,
     cells: [],
     skips: [],

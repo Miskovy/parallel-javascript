@@ -4,7 +4,7 @@
 transition prerelease and accepts all six deprecated aliases. This candidate
 proposes stable-only names and explicit rejection of legacy own/inherited/undefined
 presence. Direct removal at 1.0.0 needs the maintainer policy amendment. Read the
-[migration and complete RC5 delta](https://github.com/Miskovy/parallel-javascript/blob/main/docs/release-v1.0.0.md).
+[migration and complete RC5 delta](https://github.com/Miskovy/parallel-javascript/blob/main/docs/releases/release-v1.0.0.md).
 
 PJS runs trusted registered tasks in persistent Node or dedicated browser workers,
 with bounded admission, explicit clone/transfer/shared ownership and no production
@@ -20,7 +20,7 @@ On 29 October 2026 npm `next` selects published **1.0.0-rc.5** and
 `latest` selects RC4. Final 1.0.0 has not been released. RC5 and this candidate
 support Node **22.23.4+, 24.22.1+, or 26.12.1+** within those majors
 (`^22.23.4 || ^24.22.1 || ^26.12.1`). See the
-[exact qualification and support limits](https://github.com/Miskovy/parallel-javascript/blob/main/docs/stability.md#proposed-node-and-platform-policy).
+[exact qualification and support limits](https://github.com/Miskovy/parallel-javascript/blob/main/docs/reference/stability.md#proposed-node-and-platform-policy).
 Linux/Windows x64 and Chromium native/Vite profiles have explicit qualification;
 macOS, ARM64, other engines and arbitrary bundlers remain unclaimed.
 Compile TypeScript tasks to JavaScript before registration.
@@ -117,7 +117,7 @@ See the [documentation index](https://github.com/Miskovy/parallel-javascript/blo
 [core API](https://github.com/Miskovy/parallel-javascript/blob/main/docs/guide/core-api.md),
 [ownership](https://github.com/Miskovy/parallel-javascript/blob/main/docs/guide/memory-ownership.md),
 [lifecycle](https://github.com/Miskovy/parallel-javascript/blob/main/docs/guide/lifecycle.md)
-and [stability policy](https://github.com/Miskovy/parallel-javascript/blob/main/docs/stability.md).
+and [stability policy](https://github.com/Miskovy/parallel-javascript/blob/main/docs/reference/stability.md).
 The tarball includes compiled JavaScript, declarations, maps and their TypeScript
 source for editor navigation and stack traces; internal subpaths are unsupported.
 

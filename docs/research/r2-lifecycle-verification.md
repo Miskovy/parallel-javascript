@@ -47,7 +47,7 @@ Synthetic protocol delivery cannot prove those Node boundaries on its own.
 `r2-model-1`; [the generator](../../packages/runtime/test/helpers/lifecycle-generator.mjs)
 is `r2-generator-1`. The model imports no production code. Its rules derive from
 the [lifecycle contract](../guide/lifecycle.md),
-[architecture](../architecture.md) and [ADR 0021](../adr/0021-physical-execution-containment.md).
+[architecture](../development/architecture.md) and [ADR 0021](../adr/0021-physical-execution-containment.md).
 It independently predicts FIFO ownership, first caller outcome, credit retention,
 rolling-budget age boundaries and one-way shutdown. A failure requires classifying
 the discrepancy as a runtime defect, model error or invalid injection; passing

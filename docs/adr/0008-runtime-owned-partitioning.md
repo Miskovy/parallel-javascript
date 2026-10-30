@@ -4,7 +4,7 @@
 
 v0.3 applications divide ranges and assemble Promise lists themselves. Shared
 inputs solve backing-store reuse, not range ownership, ordered collection or
-parent/child cancellation. The [proposal](../proposal-v0.4.md) defines the
+parent/child cancellation. The [proposal](../proposals/proposal-v0.4.md) defines the
 execution contract before the experimental API.
 
 ## Decision

@@ -101,7 +101,7 @@ Node 22.23.3 already existed. No uninstall, nvm/default/PATH/power/CPU change.
 
 ## Files added and modified
 
-Added: [proposal](../proposal-v1.0.0-rc.1.md),
+Added: [proposal](../proposals/proposal-v1.0.0-rc.1.md),
 [contracts](v1-rc1-contract-inventory.md), [errors](v1-rc1-error-matrix.md),
 this report, [readiness](v1-rc1-readiness.md), [soak](v1-rc1-soak.md),
 [Linux handoff](v1-rc1-linux-handoff.md), and nine files under

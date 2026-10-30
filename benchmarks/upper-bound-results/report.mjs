@@ -451,28 +451,28 @@ later feature from measured application bottlenecks. No v0.13 work started.
 ## Evidence and reproduction
 
 Run npm run benchmark:upper-bound, the regression comparator against a separately
-built v0.11 root, then node scripts/validate-v012.mjs and
+built v0.11 root, then node scripts/historical/validate-v012.mjs and
 node benchmarks/upper-bound-results/report.mjs. The report generator requires
 successful final validation. The validation artifact hash-checks
 ${validation.historicalEvidence.length} historical files against the requested v0.11 head;
 all are unchanged. Its runtime hashes identify the final validated source.
 The new evidence files are:
 
-- [Performance matrix](../benchmarks/results/upper-bound-results-v0.12.json)
-- [Regression controls](../benchmarks/results/runtime-regression-v0.12.json)
-- [Refund benefit](../benchmarks/results/refund-benefit-v0.12.json)
-- [Stage profile](../benchmarks/results/upper-bound-profile-v0.12.json)
-- [Final soak](../benchmarks/results/reservation-soak-v0.12.json)
-- [Validation and historical hashes](../benchmarks/results/validation-v0.12.json)
-- [Proposal](proposal-v0.12.md), [ADR 0019](adr/0019-upper-bound-result-reservations.md),
-  [benchmark methodology](../benchmarks/upper-bound-results/README.md), and
+- [Performance matrix](../../benchmarks/results/upper-bound-results-v0.12.json)
+- [Regression controls](../../benchmarks/results/runtime-regression-v0.12.json)
+- [Refund benefit](../../benchmarks/results/refund-benefit-v0.12.json)
+- [Stage profile](../../benchmarks/results/upper-bound-profile-v0.12.json)
+- [Final soak](../../benchmarks/results/reservation-soak-v0.12.json)
+- [Validation and historical hashes](../../benchmarks/results/validation-v0.12.json)
+- [Proposal](../proposals/proposal-v0.12.md), [ADR 0019](../adr/0019-upper-bound-result-reservations.md),
+  [benchmark methodology](../../benchmarks/upper-bound-results/README.md), and
   [prepared cross-platform campaign](cross-platform-v0.12.md).
 `;
 const formatting = JSON.parse(
   await readFile(new URL('../../.prettierrc.json', import.meta.url), 'utf8'),
 );
 await writeFile(
-  new URL('../../docs/benchmarks-v0.12.md', import.meta.url),
+  new URL('../../docs/benchmarks/benchmarks-v0.12.md', import.meta.url),
   await format(report, { ...formatting, parser: 'markdown' }),
 );
-console.log('Wrote docs/benchmarks-v0.12.md');
+console.log('Wrote docs/benchmarks/benchmarks-v0.12.md');

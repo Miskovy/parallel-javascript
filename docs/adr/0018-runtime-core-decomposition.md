@@ -42,7 +42,7 @@ memory contract, protocol revision, or public API redesign.
 The affected state machines are runtime lifecycle, worker lifecycle, logical
 task lifecycle, parent range lifecycle, exact result reservation lifecycle,
 transfer ownership, and stream delivery. Their complete transition maps and
-ownership matrix are recorded in [the v0.11 proposal](../proposal-v0.11.md).
+ownership matrix are recorded in [the v0.11 proposal](../proposals/proposal-v0.11.md).
 
 ## Decision
 

@@ -59,7 +59,7 @@ for (const [path, count] of Object.entries(targets))
       );
   });
 const notices = {
-  'docs/stability.md':
+  'docs/reference/stability.md':
     'P1/P2/P3 are promoted in development after reviewed benchmark acceptance; all six deprecated aliases remain. Publication, hold applicability, C4 and Stage F/G remain separate.',
   'docs/research/v1-api-contract-inventory.md':
     'Development status: P1 containment, P2 range/count/map/batch and P3 strict-result contracts are promoted after reviewed benchmark acceptance. Historical inventory rows retain their execution attribution; all six aliases remain deprecated and accepted.',
@@ -75,7 +75,7 @@ const notices = {
     'P1/P2/P3 error contracts retain their hierarchy, metadata and ownership semantics following development promotion; error text is not a protocol.',
   'docs/guide/backpressure.md':
     'Development P2/P3 contracts are promoted following benchmark review; result-byte credits bound visible payload per stream and are not a process-memory limit.',
-  'docs/partitioning.md':
+  'docs/reference/partitioning.md':
     'Development P2/P3 range and strict-result contracts are promoted following benchmark review. All six deprecated aliases remain accepted; C4 needs the actual transition release and separate authorization.',
   'README.md':
     'Development P1/P2/P3 contracts are promoted following benchmark review; this does not change published RC4, begin the alias window or authorize a release.',
@@ -118,8 +118,8 @@ const replacements = {
   ],
   'docs/guide/core-api.md': [
     [
-      'remain [experimental](../stability.md)',
-      'are [promoted in development](../stability.md)',
+      'remain [experimental](../reference/stability.md)',
+      'are [promoted in development](../reference/stability.md)',
     ],
     [
       'adds experimental `run({ executionLease })`',
@@ -148,7 +148,7 @@ const replacements = {
       'Error classes and metadata are unchanged; P1/P2/P3\nstatus is recorded above;',
     ],
   ],
-  'docs/partitioning.md': [
+  'docs/reference/partitioning.md': [
     ['# Experimental numeric range operations', '# Numeric range operations'],
     ['describes experimental mechanics', 'describes development mechanics'],
     [
@@ -167,7 +167,7 @@ for (const [path, notice] of Object.entries(notices))
       assert.ok(text.includes(before), path + ': status wording drift');
       text = text.replaceAll(before, after);
     }
-    if (path === 'docs/stability.md')
+    if (path === 'docs/reference/stability.md')
       text = text
         .replace(
           '**All feature experimental\nannotations and all six aliases remain.**',

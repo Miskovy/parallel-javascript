@@ -4,7 +4,7 @@
 
 v0.2 transfers avoid message copies but still prepare a right-hand matrix per
 worker. Native SharedArrayBuffer messaging already shares backing bytes through
-the existing transport. See the [v0.3 proposal](../proposal-v0.3.md).
+the existing transport. See the [v0.3 proposal](../proposals/proposal-v0.3.md).
 
 ## Decision
 

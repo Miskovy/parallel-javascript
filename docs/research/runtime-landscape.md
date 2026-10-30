@@ -38,9 +38,9 @@ The immediate research hypotheses are smaller: transfer ownership can reduce bul
 
 Reviewed 2026-09-27: [Node worker messaging](https://nodejs.org/api/worker_threads.html#portpostmessagevalue-transferlist) already transports SAB-backed views without copying their backing bytes. A helper supplies construction and a usage contract without worker resource synchronization; see [ADR 0007](../adr/0007-shared-input-model.md). A future partitioner can reference the same view in bounded child tasks. Native GC avoids speculative disposal semantics.
 
-The [ECMAScript shared memory model](https://tc39.es/ecma262/multipage/memory-model.html) and [Atomics algorithms](https://tc39.es/ecma262/multipage/structured-data.html#sec-atomics-object) distinguish atomic integer access from compound unsynchronized updates. Read-only kernels need no atomic read loop when initialization precedes publication and no participant writes. The [memory guide](../memory.md) documents load/store/add/compareExchange/wait/notify and a deterministic lost-update demonstration. This is groundwork, not a synchronization library.
+The [ECMAScript shared memory model](https://tc39.es/ecma262/multipage/memory-model.html) and [Atomics algorithms](https://tc39.es/ecma262/multipage/structured-data.html#sec-atomics-object) distinguish atomic integer access from compound unsynchronized updates. Read-only kernels need no atomic read loop when initialization precedes publication and no participant writes. The [memory guide](../development/memory.md) documents load/store/add/compareExchange/wait/notify and a deterministic lost-update demonstration. This is groundwork, not a synchronization library.
 
-Piscina **5.3.2** is an exact development-only dependency. Its installed README and implementation define the tested fixed min/max pool, concurrency one, default synchronous Atomics and transfer-list behavior. [The upstream project](https://github.com/piscinajs/piscina) is the primary reference; the lockfile pins the actual artifact. Matched kernels compare CPU, clone, transfer and shared read workloads. Cancellation is deliberately not compared: Piscina can terminate active workers while PJS preserves execution occupancy. See [measured results and limitations](../benchmarks-v0.3.md); neither these workloads nor a single machine support a general performance ranking.
+Piscina **5.3.2** is an exact development-only dependency. Its installed README and implementation define the tested fixed min/max pool, concurrency one, default synchronous Atomics and transfer-list behavior. [The upstream project](https://github.com/piscinajs/piscina) is the primary reference; the lockfile pins the actual artifact. Matched kernels compare CPU, clone, transfer and shared read workloads. Cancellation is deliberately not compared: Piscina can terminate active workers while PJS preserves execution occupancy. See [measured results and limitations](../benchmarks/benchmarks-v0.3.md); neither these workloads nor a single machine support a general performance ranking.
 
 ## v0.4 review: partition ownership before scheduler changes
 
@@ -64,14 +64,14 @@ cloned range metadata. No per-worker resource registry or protocol change is
 needed. Factories reserve admission before invoking application code, because
 reentrant host callbacks must not invalidate the bounded-production contract.
 
-The [proposal](../proposal-v0.4.md), [ownership ADR](../adr/0008-runtime-owned-partitioning.md)
+The [proposal](../proposals/proposal-v0.4.md), [ownership ADR](../adr/0008-runtime-owned-partitioning.md)
 and [admission/metrics ADR](../adr/0009-partition-admission-and-metrics.md)
 keep parents outside worker capacity, reject worker-created partitioning, and
 separate logical-parent settlement from execution occupancy. Output retention
 remains proportional to completed results. This is intentionally narrower than
 nested structured parallelism or streaming map.
 
-The [v0.4 report](../benchmarks-v0.4.md) evaluates uniform range sums, shared-B
+The [v0.4 report](../benchmarks/benchmarks-v0.4.md) evaluates uniform range sums, shared-B
 matrix rows, increasing-cost indices, and a no-op transport control across five
 grains. Per-worker kernel intervals are an occupancy proxy, not precise idle or
 CPU time. The next milestone must follow those observations; no adaptive
@@ -106,8 +106,8 @@ mode. Both libraries benefit when multiple tiny logical items share one
 message, so the evidence supports batching as a general transport technique,
 not a scheduler superiority claim. PJS keeps its central FIFO, counts queued
 logical weight, preserves per-partition identity and rejects batched input
-transfers. The [proposal](../proposal-v0.5.md), [ADRs](../adr/0010-dispatch-efficiency.md),
-and [measurement report](../benchmarks-v0.5.md) define the limits. Work stealing
+transfers. The [proposal](../proposals/proposal-v0.5.md), [ADRs](../adr/0010-dispatch-efficiency.md),
+and [measurement report](../benchmarks/benchmarks-v0.5.md) define the limits. Work stealing
 still lacks evidence: the fixed-width skew control instead shows that large
 contiguous batches can reduce dynamic balance.
 
@@ -179,7 +179,7 @@ constructor so empty output and wrong-view rejection are deterministic. A
 disjoint shared-output `parallelFor()` is still faster in the retained numeric
 case, but its mutable partial-write failure semantics differ from returned map
 ownership. The [decision](../adr/0015-element-block-map-semantics.md) and
-[measurements](../benchmarks-v0.8.md) reject turning either model into a hidden
+[measurements](../benchmarks/benchmarks-v0.8.md) reject turning either model into a hidden
 alias for the other.
 
 Result-memory observability also stays deliberately narrower than heap sizing.

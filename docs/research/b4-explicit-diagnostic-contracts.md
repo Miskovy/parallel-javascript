@@ -132,8 +132,8 @@ npm run lint
 npm run format:check
 npm run test:docs
 node node_modules/typescript/bin/tsc6 -p packages/runtime/test/tsconfig.json
-node scripts/api-contract-inventory.mjs --check --output=<fresh-cell-inventory.json>
-node --test scripts/api-contract-inventory.test.mjs
+node scripts/checks/api-contract-inventory.mjs --check --output=<fresh-cell-inventory.json>
+node --test scripts/checks/api-contract-inventory.test.mjs
 git diff --check
 ```
 

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { checked, command, manifest, sha256, source } from './evidence.mjs';
-import { PROFILES as r3Profiles } from '../../scripts/r3/campaign.mjs';
+import { PROFILES as r3Profiles } from '../../scripts/qualification/memory/campaign.mjs';
 
 const root = resolve(process.argv[2]);
 const reportPath = join(root, 'reconciliation.json');
@@ -41,7 +41,7 @@ try {
   ]);
   run('inventory regression contracts', [
     '--test',
-    'scripts/api-contract-inventory.test.mjs',
+    'scripts/checks/api-contract-inventory.test.mjs',
   ]);
   run('retained result tables', [
     'benchmarks/current-development/summarize.mjs',

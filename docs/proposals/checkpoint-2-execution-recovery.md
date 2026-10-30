@@ -8,7 +8,7 @@ there are no intervening changes. Only this proposal changes in this task.
 
 ## Current implementation and recommended owners
 
-The [resilience proposal](execution-resilience.md), [architecture](../architecture.md),
+The [resilience proposal](execution-resilience.md), [architecture](../development/architecture.md),
 [core API](../guide/core-api.md), [lifecycle](../guide/lifecycle.md) and
 [ownership guide](../guide/memory-ownership.md) establish the existing boundaries.
 Source, rather than older scope statements in the first proposal, governs this design.

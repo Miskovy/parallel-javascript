@@ -409,14 +409,14 @@ siblings could remain physically occupied. These lifecycle obligations are
 part of the engineering cost of a partitioner.
 
 The current RC still exposes the range API as experimental; see
-[stability](../docs/stability.md) and the
+[stability](../docs/reference/stability.md) and the
 [core API guide](../docs/guide/core-api.md). Later batching, streaming,
 and result-credit milestones have separate contracts. The following data are
 the historical v0.4 campaign, not measurements of those later mechanisms.
 
 ## What the retained grain sweep found
 
-The [v0.4 report](../docs/benchmarks-v0.4.md) and
+The [v0.4 report](../docs/benchmarks/benchmarks-v0.4.md) and
 [harness methodology](../benchmarks/partitioning/README.md) describe the campaign
 run on 2026-09-27: Node v24.13.1, Linux 6.19.10-300.fc44.x86_64, AMD Ryzen 3 PRO
 3300U, four available logical CPUs. Each configuration used a fresh process,
@@ -439,7 +439,7 @@ PJS v0.4 with four workers. Entries are median operation wall times in ms.
 | 512×512 matrix multiply, shared B and transferred A/output slices |  130.054 |   108.708 |    149.927 |
 | No-op dispatch control, 4,096 logical indices                     |    1.230 |     3.528 |     27.708 |
 
-The [report](../docs/benchmarks-v0.4.md),
+The [report](../docs/benchmarks/benchmarks-v0.4.md),
 [raw range](../benchmarks/results/range-partition-v0.4.json),
 [raw skew](../benchmarks/results/skew-partition-v0.4.json),
 [raw matrix](../benchmarks/results/matrix-partition-v0.4.json), and
@@ -462,7 +462,7 @@ intervals per worker were approximately `6.25, 34.91, 57.02, 87.88 ms`. With
 sixteen chunks, each worker's accumulated intervals were approximately
 `24.32, 31.81, 28.96, 32.97 ms`. The latter distribution is much more even.
 These are particular samples from the
-[report](../docs/benchmarks-v0.4.md) and
+[report](../docs/benchmarks/benchmarks-v0.4.md) and
 [raw skew artifact](../benchmarks/results/skew-partition-v0.4.json), not medians
 formed independently for four worker identities.
 
@@ -483,7 +483,7 @@ it only describes waiting at the measured queue boundary.
 
 There is a crucial control: with **one worker**, the same owned skew workload
 went from 183.142 ms at one chunk to 130.970 ms at 32 chunks, again in the
-[report](../docs/benchmarks-v0.4.md) and
+[report](../docs/benchmarks/benchmarks-v0.4.md) and
 [raw artifact](../benchmarks/results/skew-partition-v0.4.json). There can be no
 inter-worker balancing gain with one worker. Changing grain also changed kernel
 timing; JIT behavior or call shape could contribute, but the experiment did not
@@ -499,14 +499,14 @@ copying on the host. Shared input constructed one 16 MiB backing; the four-worke
 owned configuration recorded about 14.474 ms preparation separately from timed
 operations. A one-shot comparison must include its preparation, whereas repeated
 operations can amortize it. See the
-[report](../docs/benchmarks-v0.4.md) and
+[report](../docs/benchmarks/benchmarks-v0.4.md) and
 [raw range allocation/preparation records](../benchmarks/results/range-partition-v0.4.json).
 
 For matrix multiplication, shared B was 2 MiB once; each operation transferred
 2 MiB of compact A slices and 2 MiB of output slices, then copied 2 MiB into the
 assembled output. Those byte budgets stayed constant across grains, while the
 number of factories, transfers, and results changed. See the
-[report](../docs/benchmarks-v0.4.md) and
+[report](../docs/benchmarks/benchmarks-v0.4.md) and
 [raw matrix allocation records](../benchmarks/results/matrix-partition-v0.4.json).
 Constant bytes do not imply constant time.
 
@@ -514,7 +514,7 @@ Constant bytes do not imply constant time.
 
 At four workers and sixteen matrix chunks, manual PJS orchestration measured
 109.760 ms, owned PJS 108.708 ms, and manual Piscina 5.3.2 orchestration
-110.045 ms. The [report](../docs/benchmarks-v0.4.md) and
+110.045 ms. The [report](../docs/benchmarks/benchmarks-v0.4.md) and
 [raw matrix comparison](../benchmarks/results/matrix-partition-v0.4.json) show
 close results in that configuration, not a general library ranking. The manual
 PJS engine used retained v0.3 code while the owned engine used v0.4; that

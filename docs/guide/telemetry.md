@@ -140,5 +140,5 @@ hosted invocation.
 
 One AsyncResource associates each range's host factory and settlement with the
 caller's async context. Worker AsyncLocalStorage is not implicitly inherited;
-pass explicit task input. See [architecture](../architecture.md) for internal
+pass explicit task input. See [architecture](../development/architecture.md) for internal
 ownership and composition rules.

@@ -266,14 +266,14 @@ Both planes share hardware CPU, bandwidth, memory, and OS scheduling.
 Separating execution gives the main JS thread opportunities to handle callbacks
 while workers calculate. Bounded admission makes overload visible, and explicit
 lifetime lets the application observe occupied capacity. This is a rationale
-for the [PJS architecture](../docs/architecture.md), not physical CPU isolation.
+for the [PJS architecture](../docs/development/architecture.md), not physical CPU isolation.
 A busy worker population can still delay the application by competing for the
 machine's resources. Main-thread input construction, cloning, result handling,
 and assembly can also remain expensive.
 
 ## A historical experiment on two different queues
 
-The [v0.13 crypto campaign](../docs/benchmarks-v0.13.md#filesystem-interference)
+The [v0.13 crypto campaign](../docs/benchmarks/benchmarks-v0.13.md#filesystem-interference)
 compared native asynchronous scrypt with synchronous scrypt in four PJS workers
 while running a filesystem read probe. The host was Fedora 44 / Linux
 6.19.10-300.fc44.x86_64 on an AMD Ryzen 3 PRO 3300U (four physical/four logical

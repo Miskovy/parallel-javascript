@@ -10,7 +10,7 @@ below describe main before Checkpoint 3.
 
 ## Baseline and owners
 
-Read together with the [architecture](../architecture.md),
+Read together with the [architecture](../development/architecture.md),
 [Checkpoint 2 proposal](checkpoint-2-execution-recovery.md),
 [API](../guide/core-api.md), [lifecycle](../guide/lifecycle.md),
 [backpressure](../guide/backpressure.md), [ownership](../guide/memory-ownership.md)

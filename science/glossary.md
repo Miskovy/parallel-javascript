@@ -151,4 +151,4 @@ behavior belongs to its [ownership guide](../docs/guide/memory-ownership.md),
 
 For mathematical definitions and numerical exercises, return to
 [the cost model](03-the-cost-model-of-parallelism.md). For exact current API
-promises, use the guides and [stability policy](../docs/stability.md).
+promises, use the guides and [stability policy](../docs/reference/stability.md).

@@ -16,7 +16,7 @@ trials and deterministic generated analysis use new immutable filenames under
 
 ## Exact-reference v0.11 platform validation
 
-The portable campaign runner is `scripts/cross-platform-v011/run.mjs`.
+The portable campaign runner is `scripts/historical/cross-platform-v011/run.mjs`.
 It extracts commit `716e86d48987ae838c421ff22ade2b7a469e8242`, installs the
 lockfile with `npm ci`, validates each supplied existing Node executable, and
 uses fresh processes in balanced Node 22/24 order. It records source hashes,
@@ -24,13 +24,13 @@ machine/power/load context, correctness, invariant/stress/soak output, CPU
 worker sweeps, established v0.11 cases and controlled binary mode sweeps.
 It never changes Node installations or historical repository evidence.
 
-Use `node scripts/cross-platform-v011/run.mjs --help` for executable-path
+Use `node scripts/historical/cross-platform-v011/run.mjs --help` for executable-path
 options. New campaign JSON and adjacent metadata go to `benchmarks/results/`;
 existing campaign filenames are refused. For another session use `--output`
 with a new directory. Only supply runtimes already installed on the machine.
 The Windows and Fedora machines can run independently. Aggregate their original
-campaign JSON with `scripts/cross-platform-v011/report.mjs`.
-See [the campaign report and platform workflows](../docs/cross-platform-v0.11.md).
+campaign JSON with `scripts/historical/cross-platform-v011/report.mjs`.
+See [the campaign report and platform workflows](../docs/benchmarks/cross-platform-v0.11.md).
 
 Run `npm run benchmark:cpu`, `npm run benchmark:matrix`, and `npm run benchmark:transfer` separately on an otherwise idle machine. Each runner builds first. Each worker count runs in a fresh child process; the pool is reused across sizes. Serial is measured first, followed by descending worker counts. This is a reproducible baseline, not a randomized multi-session statistical study. Background load, power policy, clock/thermal changes, JIT, GC, and ordering can affect results.
 
@@ -74,7 +74,7 @@ Known source, shared, temporary preparation, clone/transfer input and output/ass
 
 For range sums, every task receives the full source to model common reference data. A transfer of only a compact disjoint range is a valid different workload and could be cheaper. Matrix B reuse is the stronger demonstration of genuinely common reference data.
 
-Piscina uses minThreads=maxThreads, concurrentTasksPerWorker=1, maxQueue=1024 and its default synchronous Atomics path. Both pools dispatch small CPU probes before timing, so startup includes imports/probes and is not a readiness ranking. All outputs use matching semantics. This baseline does not compare cancellation, instrumentation, failure behavior, fairness or all Piscina features. Raw reports: `shared-v0.3.json`, `matrix-shared-v0.3.json`, `piscina-v0.3.json`. See [interpretation](../docs/benchmarks-v0.3.md).
+Piscina uses minThreads=maxThreads, concurrentTasksPerWorker=1, maxQueue=1024 and its default synchronous Atomics path. Both pools dispatch small CPU probes before timing, so startup includes imports/probes and is not a readiness ranking. All outputs use matching semantics. This baseline does not compare cancellation, instrumentation, failure behavior, fairness or all Piscina features. Raw reports: `shared-v0.3.json`, `matrix-shared-v0.3.json`, `piscina-v0.3.json`. See [interpretation](../docs/benchmarks/benchmarks-v0.3.md).
 
 ### Same-machine CPU regression control
 
@@ -84,14 +84,14 @@ To investigate visible phase drift, run `node benchmarks/cpu-baseline/compare.mj
 
 ## v0.4 runtime-owned partitioning
 
-See the [reproduction instructions and metric definitions](partitioning/README.md) and [measurement report](../docs/benchmarks-v0.4.md). The new runner compares archived v0.3 manual production, v0.4 runtime-owned ranges and bounded manual Piscina 5.3.2 across five grain sizes. Range input compares full clone, reused shared backing and compact transfers; matrix uses shared B and transferred A/outputs. Increasing-cost skew and no-op control expose balance and dispatch tradeoffs. Raw results use `*-partition-v0.4.json`. The CPU comparison runner now writes `cpu-regression-v0.4.json`; its supplied checkout determines the baseline version.
+See the [reproduction instructions and metric definitions](partitioning/README.md) and [measurement report](../docs/benchmarks/benchmarks-v0.4.md). The new runner compares archived v0.3 manual production, v0.4 runtime-owned ranges and bounded manual Piscina 5.3.2 across five grain sizes. Range input compares full clone, reused shared backing and compact transfers; matrix uses shared B and transferred A/outputs. Increasing-cost skew and no-op control expose balance and dispatch tradeoffs. Raw results use `*-partition-v0.4.json`. The CPU comparison runner now writes `cpu-regression-v0.4.json`; its supplied checkout determines the baseline version.
 
 ## v0.5 dispatch efficiency
 
 Run `npm run benchmark:dispatch` for the retained no-op, shared-scan, matrix,
 increasing-cost skew, fixed-width skew, output-retention, Piscina, CPU/RSS and
 event-loop sweep. See the dedicated [methodology](dispatch-efficiency/README.md)
-and [report](../docs/benchmarks-v0.5.md). Raw samples are in
+and [report](../docs/benchmarks/benchmarks-v0.5.md). Raw samples are in
 `results/dispatch-efficiency-v0.5.json`; profiling and fairness use separate
 v0.5 artifacts. The key no-op endpoint repeats in fresh processes using
 manual/batched balanced order. No historical result is overwritten.
@@ -114,7 +114,7 @@ Run `npm run benchmark:completion` for collecting/completion comparisons,
 event-loop measurements, a bounded Piscina completion harness, AsyncResource
 micro-controls, and mixed completion/collecting/ordinary fairness. See the
 [dedicated methodology](completion-only/README.md) and
-[measurement report](../docs/benchmarks-v0.6.md). Raw samples are retained in
+[measurement report](../docs/benchmarks/benchmarks-v0.6.md). Raw samples are retained in
 `results/completion-only-v0.6.json` and
 `results/completion-fairness-v0.6.json`; historical artifacts are unchanged.
 
@@ -126,7 +126,7 @@ completion-order versus userland ordered delivery; stream-plus-collect versus
 `partitionRange()`; disjoint shared output; and bounded Piscina 5.3.2 manual
 collect/incremental/completion controls. See the
 [dedicated methodology](streaming/README.md) and
-[measurement report](../docs/benchmarks-v0.7.md).
+[measurement report](../docs/benchmarks/benchmarks-v0.7.md).
 
 The runner records first and last result latency, wall/CPU time, sampled RSS,
 logical buffer occupancy, physical messages, event-loop delay/utilization, and
@@ -150,7 +150,7 @@ mapping, and bounded Piscina 5.3.2 controls. It also runs a realistic transferre
 binary pipeline at result capacities 1/4/8 and a mixed map/stream/
 `parallelFor()`/ordinary fairness suite. See the
 [dedicated methodology](mapping/README.md) and
-[measurement report](../docs/benchmarks-v0.8.md).
+[measurement report](../docs/benchmarks/benchmarks-v0.8.md).
 
 Each main configuration runs in a fresh process with one warmup, three retained
 trials, no outlier removal, and no forced GC. The harness retains wall/CPU time,
@@ -175,7 +175,7 @@ Run `npm run benchmark:binary` for fixed and variable direct-binary streams,
 count-versus-byte capacity, clone/transfer, fast/slow realistic consumers,
 object-stream and typed-map controls, a Piscina 5.3.2 manual semaphore, and
 mixed fairness. See the [dedicated methodology](binary-results/README.md) and
-[measurement report](../docs/benchmarks-v0.9.md).
+[measurement report](../docs/benchmarks/benchmarks-v0.9.md).
 
 The main runner uses fresh processes, one warmup and three retained trials per
 configuration. Raw results are `binary-results-v0.9.json` and
@@ -190,8 +190,8 @@ Run `npm run benchmark:reservation` for the clone/transfer size sweep and the
 application pipeline, or `npm run soak:reservations` for the 30-second mixed
 failure soak. `npm run soak:reservations:smoke` provides the short harness
 check. See the [methodology](reservation-audit/README.md), the
-[proposal](../docs/proposal-v0.10.md), and the
-[measurement report](../docs/benchmarks-v0.10.md).
+[proposal](../docs/proposals/proposal-v0.10.md), and the
+[measurement report](../docs/benchmarks/benchmarks-v0.10.md).
 
 The retained artifacts are `reservation-performance-v0.10.json`,
 `reservation-pipeline-v0.10.json`, `reservation-soak-v0.10.json`,
@@ -214,8 +214,8 @@ partition, completion-only, count-only stream, strict binary clone/transfer,
 and generic/typed map paths. Raw results are
 `runtime-architecture-v0.11.json`; the post-refactor mixed failure soak is
 `reservation-soak-v0.11.json`. See the
-[proposal](../docs/proposal-v0.11.md) and
-[measurement report](../docs/benchmarks-v0.11.md). Historical artifacts remain
+[proposal](../docs/proposals/proposal-v0.11.md) and
+[measurement report](../docs/benchmarks/benchmarks-v0.11.md). Historical artifacts remain
 unchanged.
 
 ## v0.12 upper-bound result reservations and refunds
@@ -228,6 +228,6 @@ controls. The reservation soak now mixes exact and upper-bound cases and writes
 `reservation-soak-v0.12.json`; historical evidence remains untouched.
 
 See the [methodology](upper-bound-results/README.md),
-[proposal](../docs/proposal-v0.12.md), and
-[report](../docs/benchmarks-v0.12.md). New raw evidence is
+[proposal](../docs/proposals/proposal-v0.12.md), and
+[report](../docs/benchmarks/benchmarks-v0.12.md). New raw evidence is
 `upper-bound-results-v0.12.json` and `runtime-regression-v0.12.json`.
