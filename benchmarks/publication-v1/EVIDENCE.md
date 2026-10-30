@@ -79,6 +79,9 @@ an observation; no plan, affinity or system setting was changed.
   files; [ARTIFACTS.json](evidence/ARTIFACTS.json) hashes the archive, summaries,
   environment, package receipts and graphics.
 
+The campaign's `.gitattributes` disables newline conversion for evidence files,
+so the committed bytes retain their recorded hashes on other platforms.
+
 The archive includes three immutable directories: `smoke-01` records the initial
 setup error (incorrect timeout API, no contender executed); `smoke-02` retains
 all 78 cells, including 13 Tinypool bootstrap failures caused by an incorrect
