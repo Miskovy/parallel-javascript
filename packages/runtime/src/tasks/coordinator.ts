@@ -2,14 +2,12 @@ import type { ProgressValue } from '../types/index.js';
 import type { TaskServices } from '../hosts/contracts.js';
 import type { ExecutionDispatcher } from '../dispatch/dispatcher.js';
 import {
-  PjsBinaryResultContractError,
   PjsCancelledError,
   PjsExecutionLeaseError,
   PjsError,
   PjsQueueFullError,
   PjsRuntimeStateError,
   PjsSerializationError,
-  PjsTaskError,
   PjsTaskRegistrationError,
   PjsTimeoutError,
   PjsWorkerError,
@@ -41,6 +39,7 @@ import type {
   ProgressSubscription,
 } from './task.js';
 import { reserveTransfers } from './transfer-core.js';
+import { taskResultError } from './result-error.js';
 
 export type TaskTerminalStatus =
   'completed' | 'failed' | 'cancelled' | 'timed_out';
@@ -70,23 +69,32 @@ export interface TaskParentPort {
   ): void;
 }
 
+interface ValidatedSubmission {
+  recovery: TaskRecovery | undefined;
+  priority: number;
+  progress: ProgressSubscription | undefined;
+  cancellation: 'terminate' | 'cooperative' | undefined;
+  timeout: number | undefined;
+  signal: AbortSignal | undefined;
+  executionLease: number | undefined;
+}
+
+interface PendingProgress {
+  worker: PjsWorker;
+  message: ProgressMessage;
+  value: unknown;
+  acknowledge: () => void;
+  subscription: ProgressSubscription;
+  logicalId: string;
+}
+
 /** Owns accepted logical task records, caller settlement, timers, and transfers. */
 export class TaskCoordinator {
   private readonly tasks = new Map<string, PendingTask>();
   private readonly attempts = new Map<string, PendingTask>();
   private readonly metrics = new Metrics();
   private readonly executions = new Map<string, string[]>();
-  private readonly pendingProgress = new Map<
-    string,
-    {
-      worker: PjsWorker;
-      message: ProgressMessage;
-      value: unknown;
-      acknowledge: () => void;
-      subscription: ProgressSubscription;
-      logicalId: string;
-    }
-  >();
+  private readonly pendingProgress = new Map<string, PendingProgress>();
   private progressTick: (() => void) | undefined;
   progressErrors = 0;
 
@@ -141,8 +149,8 @@ export class TaskCoordinator {
   }
 
   /** Gate each recovery-enabled posting against the original caller lifetime. */
-  prepareDispatch(task: PendingTask): boolean {
-    const members = task.batch ?? [task];
+  prepareDispatch(leader: PendingTask): boolean {
+    const members = leader.batch ?? [leader];
     for (const task of members) {
       if (!this.tasks.has(task.id) || (task.child && !this.canContinue(task))) {
         return false;
@@ -154,79 +162,13 @@ export class TaskCoordinator {
       if (!this.canContinue(task)) {
         return false;
       }
-      if (recovery.attempts > 0 && !recovery.skipped && recovery.rebuildInput) {
-        try {
-          const prepared = recovery.rebuildInput({
-            attempt: recovery.attempts + 1,
-            implementation: recovery.fallbackUsed ? 'fallback' : 'primary',
-          });
-          // Invalid async factories must not leak an unhandled rejection on the host.
-          if (this.host.isPromise(prepared)) {
-            void prepared.catch(() => {});
-            if (!this.canContinue(task)) {
-              return false;
-            }
-            throw new PjsSerializationError(
-              'rebuildInput must synchronously return { input, transferList? }',
-              { taskId: task.id },
-            );
-          }
-          if (!this.canContinue(task)) {
-            return false;
-          }
-          if (
-            !prepared ||
-            typeof prepared !== 'object' ||
-            !('input' in prepared) ||
-            'then' in prepared
-          ) {
-            throw new PjsSerializationError(
-              'rebuildInput must synchronously return { input, transferList? }',
-              { taskId: task.id },
-            );
-          }
-          const input = prepared.input;
-          if (!this.canContinue(task)) {
-            return false;
-          }
-          const requestedTransfers = prepared.transferList;
-          if (!this.canContinue(task)) {
-            return false;
-          }
-          const transferList = this.host.snapshotTransferList(
-            requestedTransfers ?? [],
-          );
-          if (!this.canContinue(task)) {
-            return false;
-          }
-          if (
-            task.child &&
-            task.child.operation.dispatchBatchSize > 1 &&
-            transferList.length > 0
-          ) {
-            throw new PjsSerializationError(
-              'Batched partition dispatch does not accept input transfer lists; use batch size 1',
-              { taskId: task.id },
-            );
-          }
-          const release = reserveTransfers(transferList, task.id);
-          task.input = input;
-          task.transferList = transferList;
-          task.releaseTransfers = release;
-        } catch (cause) {
-          if (this.canContinue(task)) {
-            this.finishFailure(
-              task,
-              cause instanceof PjsSerializationError
-                ? cause
-                : new PjsError('Recovery input factory failed', {
-                    taskId: task.id,
-                    cause,
-                  }),
-            );
-          }
-          return false;
-        }
+      if (
+        recovery.attempts > 0 &&
+        !recovery.skipped &&
+        recovery.rebuildInput &&
+        !this.rebuildRecoveryInput(task, recovery)
+      ) {
+        return false;
       }
       const executionId = !recovery.posted ? task.id : this.host.id();
       task.executionId = executionId;
@@ -241,12 +183,12 @@ export class TaskCoordinator {
       delete recovery.ready;
       delete recovery.skipped;
     }
-    const correlationId =
-      members.length > 1
-        ? task.recovery
-          ? this.host.id()
-          : task.id
-        : (task.executionId ?? task.id);
+    let correlationId: string;
+    if (members.length > 1) {
+      correlationId = leader.recovery ? this.host.id() : leader.id;
+    } else {
+      correlationId = leader.executionId ?? leader.id;
+    }
     for (const member of members) {
       member.batchLeaderId = correlationId;
     }
@@ -255,6 +197,206 @@ export class TaskCoordinator {
       members.map((member) => member.id),
     );
     return true;
+  }
+
+  /**
+   * Rebuild under the dispatch claim. Each application read can settle the caller;
+   * stop before observing the next getter or reserving a transfer after that happens.
+   */
+  private rebuildRecoveryInput(
+    task: PendingTask,
+    recovery: TaskRecovery,
+  ): boolean {
+    try {
+      const prepared = recovery.rebuildInput!({
+        attempt: recovery.attempts + 1,
+        implementation: recovery.fallbackUsed ? 'fallback' : 'primary',
+      });
+      // Invalid async factories must not leak an unhandled rejection on the host.
+      if (this.host.isPromise(prepared)) {
+        void prepared.catch(() => {});
+        if (!this.canContinue(task)) {
+          return false;
+        }
+        throw new PjsSerializationError(
+          'rebuildInput must synchronously return { input, transferList? }',
+          { taskId: task.id },
+        );
+      }
+      if (!this.canContinue(task)) {
+        return false;
+      }
+      if (
+        !prepared ||
+        typeof prepared !== 'object' ||
+        !('input' in prepared) ||
+        'then' in prepared
+      ) {
+        throw new PjsSerializationError(
+          'rebuildInput must synchronously return { input, transferList? }',
+          { taskId: task.id },
+        );
+      }
+      const input = prepared.input;
+      if (!this.canContinue(task)) {
+        return false;
+      }
+      const requestedTransfers = prepared.transferList;
+      if (!this.canContinue(task)) {
+        return false;
+      }
+      const transferList = this.host.snapshotTransferList(
+        requestedTransfers ?? [],
+      );
+      if (!this.canContinue(task)) {
+        return false;
+      }
+      if (
+        task.child &&
+        task.child.operation.dispatchBatchSize > 1 &&
+        transferList.length > 0
+      ) {
+        throw new PjsSerializationError(
+          'Batched partition dispatch does not accept input transfer lists; use batch size 1',
+          { taskId: task.id },
+        );
+      }
+      const release = reserveTransfers(transferList, task.id);
+      task.input = input;
+      task.transferList = transferList;
+      task.releaseTransfers = release;
+    } catch (cause) {
+      if (this.canContinue(task)) {
+        this.finishFailure(
+          task,
+          cause instanceof PjsSerializationError
+            ? cause
+            : new PjsError('Recovery input factory failed', {
+                taskId: task.id,
+                cause,
+              }),
+        );
+      }
+      return false;
+    }
+    return true;
+  }
+
+  /** Read application options once in validation order, before touching admission or inputs. */
+  private readSubmissionOptions<Input, Output, Progress>(
+    task: PjsTask<Input, Output, Progress>,
+    options:
+      | RunOptions<Input, Output, Progress>
+      | RunOptions<unknown, never, Progress>,
+    id: string,
+    child?: PartitionChild,
+  ): ValidatedSubmission {
+    let cancellation: 'terminate' | 'cooperative' | undefined;
+    if ('experimentalDispatchBatchSize' in options) {
+      throw new TypeError(
+        'experimentalDispatchBatchSize was removed; use dispatchBatchSize',
+      );
+    }
+    const mode = options.cancellation;
+    const retry = options.retry;
+    const fallback = options.fallback;
+    const repeatable = options.repeatable;
+    const rebuildInput = options.rebuildInput;
+    if (
+      rebuildInput !== undefined &&
+      (typeof rebuildInput !== 'function' ||
+        (retry === undefined && fallback === undefined))
+    ) {
+      throw new TypeError(
+        'rebuildInput requires a function and retry or fallback',
+      );
+    }
+    const controlled = ['cancellation', 'repeatable', 'retry', 'fallback'].some(
+      (name) => name in options,
+    );
+    if (controlled && 'dispatchBatchSize' in options) {
+      throw new TypeError(
+        'Execution resilience requires an exclusive ordinary run() dispatch',
+      );
+    }
+    if (
+      mode !== undefined &&
+      mode !== 'settle' &&
+      mode !== 'terminate' &&
+      mode !== 'cooperative'
+    ) {
+      throw new TypeError(
+        'cancellation must be settle, cooperative or terminate',
+      );
+    }
+    if (mode === 'cooperative' && !this.host.sharedMemory) {
+      throw new TypeError(
+        'Cooperative cancellation requires usable shared memory in page and worker',
+      );
+    }
+    if (mode === 'terminate' || mode === 'cooperative') {
+      cancellation = mode;
+    }
+    let recovery = this.createRecovery(
+      task,
+      retry,
+      fallback,
+      repeatable,
+      rebuildInput,
+      { taskId: id },
+    );
+    if (child?.operation.recovery) {
+      recovery = { ...child.operation.recovery };
+      const rebuild = child.operation.rebuildInput;
+      if (rebuild) {
+        recovery.rebuildInput = (next) =>
+          child.operation.runInAsyncScope(
+            rebuild,
+            undefined,
+            child.partition,
+            next,
+          );
+      }
+    }
+    const timeout = options.timeout;
+    if (timeout !== undefined) {
+      integer('timeout', timeout, 1, 2 ** 31 - 1);
+    }
+    const signal = options.signal;
+    const priority = child
+      ? child.operation.priority
+      : integer(
+          'priority',
+          'priority' in options ? (options.priority ?? 0) : 0,
+          -(2 ** 31),
+          2 ** 31 - 1,
+        );
+    const progress = child
+      ? child.operation.progress
+      : this.createProgress(
+          'onProgress' in options ? options.onProgress : undefined,
+        );
+    if (recovery && signal) {
+      recovery.signal = signal;
+    }
+    const executionLease = options.executionLease;
+    if (executionLease !== undefined) {
+      integer('executionLease', executionLease, 1, 2 ** 31 - 1);
+      if (child || 'dispatchBatchSize' in options) {
+        throw new TypeError(
+          'executionLease requires an exclusive ordinary run() dispatch',
+        );
+      }
+    }
+    return {
+      recovery,
+      priority,
+      progress,
+      cancellation,
+      timeout,
+      signal,
+      executionLease,
+    };
   }
 
   submit<Input, Output, Progress = ProgressValue>(
@@ -290,120 +432,21 @@ export class TaskCoordinator {
         ),
       );
     }
-    let recovery: TaskRecovery | undefined;
-    let priority = 0;
-    let progress: ProgressSubscription | undefined;
-    let cancellation: 'terminate' | 'cooperative' | undefined;
-    let timeout: number | undefined;
-    let signal: AbortSignal | undefined;
+    let controls: ValidatedSubmission;
     try {
-      if ('experimentalDispatchBatchSize' in options) {
-        throw new TypeError(
-          'experimentalDispatchBatchSize was removed; use dispatchBatchSize',
-        );
-      }
-      const mode = options.cancellation;
-      const retry = options.retry;
-      const fallback = options.fallback;
-      const repeatable = options.repeatable;
-      const rebuildInput = options.rebuildInput;
-      if (
-        rebuildInput !== undefined &&
-        (typeof rebuildInput !== 'function' ||
-          (retry === undefined && fallback === undefined))
-      ) {
-        throw new TypeError(
-          'rebuildInput requires a function and retry or fallback',
-        );
-      }
-      const controlled = [
-        'cancellation',
-        'repeatable',
-        'retry',
-        'fallback',
-      ].some((name) => name in options);
-      if (controlled && 'dispatchBatchSize' in options) {
-        throw new TypeError(
-          'Execution resilience requires an exclusive ordinary run() dispatch',
-        );
-      }
-      if (
-        mode !== undefined &&
-        mode !== 'settle' &&
-        mode !== 'terminate' &&
-        mode !== 'cooperative'
-      ) {
-        throw new TypeError(
-          'cancellation must be settle, cooperative or terminate',
-        );
-      }
-      if (mode === 'cooperative' && !this.host.sharedMemory) {
-        throw new TypeError(
-          'Cooperative cancellation requires usable shared memory in page and worker',
-        );
-      }
-      if (mode === 'terminate' || mode === 'cooperative') {
-        cancellation = mode;
-      }
-      recovery = this.createRecovery(
-        task,
-        retry,
-        fallback,
-        repeatable,
-        rebuildInput,
-        { taskId: id },
-      );
-      if (child?.operation.recovery) {
-        recovery = { ...child.operation.recovery };
-        const rebuild = child.operation.rebuildInput;
-        if (rebuild) {
-          recovery.rebuildInput = (next) =>
-            child.operation.runInAsyncScope(
-              rebuild,
-              undefined,
-              child.partition,
-              next,
-            );
-        }
-      }
-      timeout = options.timeout;
-      if (timeout !== undefined) {
-        integer('timeout', timeout, 1, 2 ** 31 - 1);
-      }
-      signal = options.signal;
-      priority = child
-        ? child.operation.priority
-        : integer(
-            'priority',
-            'priority' in options ? (options.priority ?? 0) : 0,
-            -(2 ** 31),
-            2 ** 31 - 1,
-          );
-      progress = child
-        ? child.operation.progress
-        : this.createProgress(
-            'onProgress' in options ? options.onProgress : undefined,
-          );
-      if (recovery && signal) {
-        recovery.signal = signal;
-      }
+      controls = this.readSubmissionOptions(task, options, id, child);
     } catch (error) {
       return rejectSubmission(error as Error);
     }
-    let executionLease: number | undefined;
-    try {
-      executionLease = options.executionLease;
-      if (executionLease !== undefined) {
-        integer('executionLease', executionLease, 1, 2 ** 31 - 1);
-        if (child || 'dispatchBatchSize' in options) {
-          throw new TypeError(
-            'executionLease requires an exclusive ordinary run() dispatch',
-          );
-        }
-      }
-    } catch (error) {
-      return rejectSubmission(error as Error);
-    }
+    const {
+      recovery,
+      priority,
+      progress,
+      cancellation,
+      timeout,
+      signal,
+      executionLease,
+    } = controls;
     if (signal?.aborted) {
       return rejectSubmission(
         new PjsCancelledError('Task was already aborted', {
@@ -625,68 +668,69 @@ export class TaskCoordinator {
           break;
         }
         this.pendingProgress.delete(entry.message.correlationId);
-        const { worker, message, subscription, acknowledge } = entry;
-        try {
-          const task = this.executionTask(message.taskId);
-          if (
-            !task ||
-            !subscription.active ||
-            task.progress !== subscription ||
-            (task.batchLeaderId ?? task.executionId ?? task.id) !==
-              message.correlationId
-          ) {
-            continue;
-          }
-          if (task.child && !this.parents.canSubmit(task.child)) {
-            continue;
-          }
-          if (
-            task.deadline !== undefined &&
-            performance.now() >= task.deadline
-          ) {
-            this.cancel(task, 'timed_out');
-            this.runtime.requestPump();
-            continue;
-          }
-          const event: TaskProgress<unknown> = Object.freeze({
-            value: entry.value,
-            taskId: task.id,
-            taskName: task.snapshot.taskName,
-            executionId: message.taskId,
-            correlationId: message.correlationId,
-            implementation:
-              task.snapshot.implementation ?? task.snapshot.taskName,
-            attempt: task.snapshot.attempt ?? 1,
-            sequence: message.sequence,
-            workerId: worker.id,
-            ...(task.child
-              ? {
-                  operationId: task.child.operation.id,
-                  partitionIndex: task.child.partition.index,
-                }
-              : {}),
-          });
-          try {
-            const result: unknown = subscription.callback(event);
-            if (
-              result &&
-              (typeof result === 'object' || typeof result === 'function') &&
-              'then' in result &&
-              typeof result.then === 'function'
-            ) {
-              void Promise.resolve(result).catch(() => {});
-              throw new TypeError('onProgress must be synchronous');
-            }
-          } catch {
-            this.progressErrors++;
-            this.disableProgress(subscription);
-          }
-        } finally {
-          acknowledge();
-        }
+        this.deliverProgress(entry);
       }
       this.scheduleProgress();
     });
+  }
+
+  /** Acknowledge even discarded frames so a closed observer cannot hold a permit. */
+  private deliverProgress(entry: PendingProgress): void {
+    const { worker, message, subscription, acknowledge } = entry;
+    try {
+      const task = this.executionTask(message.taskId);
+      if (
+        !task ||
+        !subscription.active ||
+        task.progress !== subscription ||
+        (task.batchLeaderId ?? task.executionId ?? task.id) !==
+          message.correlationId
+      ) {
+        return;
+      }
+      if (task.child && !this.parents.canSubmit(task.child)) {
+        return;
+      }
+      if (task.deadline !== undefined && performance.now() >= task.deadline) {
+        this.cancel(task, 'timed_out');
+        this.runtime.requestPump();
+        return;
+      }
+      const event: TaskProgress<unknown> = Object.freeze({
+        value: entry.value,
+        taskId: task.id,
+        taskName: task.snapshot.taskName,
+        executionId: message.taskId,
+        correlationId: message.correlationId,
+        implementation: task.snapshot.implementation ?? task.snapshot.taskName,
+        attempt: task.snapshot.attempt ?? 1,
+        sequence: message.sequence,
+        workerId: worker.id,
+        ...(task.child
+          ? {
+              operationId: task.child.operation.id,
+              partitionIndex: task.child.partition.index,
+            }
+          : {}),
+      });
+      try {
+        const result: unknown = subscription.callback(event);
+        if (
+          result &&
+          (typeof result === 'object' || typeof result === 'function') &&
+          'then' in result &&
+          typeof result.then === 'function'
+        ) {
+          void Promise.resolve(result).catch(() => {});
+          throw new TypeError('onProgress must be synchronous');
+        }
+      } catch {
+        this.progressErrors++;
+        this.disableProgress(subscription);
+      }
+    } finally {
+      acknowledge();
+    }
   }
 
   private disableProgress(subscription: ProgressSubscription): void {
@@ -857,6 +901,10 @@ export class TaskCoordinator {
     }
   }
 
+  /**
+   * Remove the live identity before cleanup or parent notification can reenter.
+   * Caller settlement alone does not release a posted execution or its result credit.
+   */
   settle(
     task: PendingTask,
     status: TaskTerminalStatus,
@@ -1252,24 +1300,7 @@ export class TaskCoordinator {
     } else if (message.type === 'cancelled') {
       this.cancel(task, 'cancelled');
     } else {
-      const context = { taskId: task.id, workerId: worker.id };
-      const error =
-        message.kind === 'serialization'
-          ? new PjsSerializationError(
-              `Task output could not be serialized: ${message.error.message}`,
-              { ...context, cause: message.error },
-            )
-          : message.kind === 'binaryContract'
-            ? new PjsBinaryResultContractError(message.error.message, {
-                ...context,
-                cause: message.error,
-                declaredBytes: message.binaryContract!.declaredBytes,
-                ...(message.binaryContract!.actualBytes === undefined
-                  ? {}
-                  : { actualBytes: message.binaryContract!.actualBytes }),
-                actualType: message.binaryContract!.actualType,
-              })
-            : new PjsTaskError(message.error, context);
+      const error = taskResultError(message, task.id, worker.id);
       this.failedAttempt(
         task,
         error,

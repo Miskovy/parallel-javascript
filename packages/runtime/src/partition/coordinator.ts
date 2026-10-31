@@ -1,6 +1,9 @@
 import type { ProgressValue } from '../types/index.js';
 import type { RangeServices } from '../hosts/contracts.js';
-import type { ExecutionDispatcher } from '../dispatch/dispatcher.js';
+import type {
+  ExecutionDispatcher,
+  ProductionClaim,
+} from '../dispatch/dispatcher.js';
 import {
   PjsBinaryResultContractError,
   PjsCancelledError,
@@ -50,13 +53,16 @@ type OperationKind = 'collecting' | 'completion' | 'streaming' | 'mapping';
 type TerminalOperationStatus = Exclude<OperationStatus, 'created' | 'running'>;
 
 function operationKind(resultMode: RangeResultMode): OperationKind {
-  return resultMode === 'collect'
-    ? 'collecting'
-    : resultMode === 'discard'
-      ? 'completion'
-      : resultMode === 'stream'
-        ? 'streaming'
-        : 'mapping';
+  switch (resultMode) {
+    case 'collect':
+      return 'collecting';
+    case 'discard':
+      return 'completion';
+    case 'stream':
+      return 'streaming';
+    default:
+      return 'mapping';
+  }
 }
 
 function outcomeCounters() {
@@ -450,39 +456,7 @@ export class RangeCoordinator implements TaskParentPort {
         this.streamResultMetrics.produced++;
         this.updateStreamPeaks();
       } else if (operation.resultMode === 'map') {
-        const assemblyStarted = performance.now();
-        try {
-          const block = validateMapBlock(
-            operation.id,
-            child.partition,
-            output,
-            operation.mapOutputConstructor,
-          );
-          // Validation getters can synchronously abort and clear operation.outputs.
-          // Read the coordinator-owned target after validation, as before extraction.
-          const elements = assembleMapBlock(
-            operation.outputs!,
-            operation.plan.start,
-            child.partition,
-            block,
-            operation.mapOutputConstructor,
-          );
-          this.mapResultMetrics.blocks++;
-          this.mapResultMetrics.elements += elements;
-        } catch (cause) {
-          const mapError =
-            cause instanceof PjsMapContractError
-              ? cause
-              : new PjsMapContractError('Map block assembly failed', {
-                  ...this.context(child),
-                  cause,
-                });
-          this.finishOperation(operation, 'failed', mapError);
-        } finally {
-          const elapsed = performance.now() - assemblyStarted;
-          operation.mapAssemblyMs += elapsed;
-          this.mapResultMetrics.assemblyMs += elapsed;
-        }
+        this.assembleMapResult(child, output);
       } else if (operation.outputs) {
         operation.outputs[child.partition.index] = output;
       }
@@ -501,6 +475,43 @@ export class RangeCoordinator implements TaskParentPort {
         'parentCollection',
         performance.now() - profileStarted,
       );
+    }
+  }
+
+  /** Validate before reading the assembly target: getters may settle the parent. */
+  private assembleMapResult(child: PartitionChild, output: unknown): void {
+    const operation = child.operation;
+    const assemblyStarted = performance.now();
+    try {
+      const block = validateMapBlock(
+        operation.id,
+        child.partition,
+        output,
+        operation.mapOutputConstructor,
+      );
+      // A validation getter can abort and clear the coordinator-owned target.
+      const elements = assembleMapBlock(
+        operation.outputs!,
+        operation.plan.start,
+        child.partition,
+        block,
+        operation.mapOutputConstructor,
+      );
+      this.mapResultMetrics.blocks++;
+      this.mapResultMetrics.elements += elements;
+    } catch (cause) {
+      const mapError =
+        cause instanceof PjsMapContractError
+          ? cause
+          : new PjsMapContractError('Map block assembly failed', {
+              ...this.context(child),
+              cause,
+            });
+      this.finishOperation(operation, 'failed', mapError);
+    } finally {
+      const elapsed = performance.now() - assemblyStarted;
+      operation.mapAssemblyMs += elapsed;
+      this.mapResultMetrics.assemblyMs += elapsed;
     }
   }
 
@@ -534,19 +545,7 @@ export class RangeCoordinator implements TaskParentPort {
         this.dispatcher.finishProductionClaim(claim, [continuing]);
         continue;
       }
-      let maximum = Math.min(
-        operation.dispatchBatchSize,
-        operation.plan.chunkCount - operation.generated,
-        this.childWindow(operation) - operation.children.size,
-      );
-      if (operation.stream) {
-        maximum = Math.min(
-          maximum,
-          operation.stream.capacity -
-            operation.stream.buffered -
-            operation.children.size,
-        );
-      }
+      const maximum = this.productionCapacity(operation);
       const claim = this.dispatcher.claimProduction(
         maximum,
         operation.cancellation === 'terminate',
@@ -555,135 +554,7 @@ export class RangeCoordinator implements TaskParentPort {
       if (!claim) {
         break;
       }
-      const staged: PendingTask[] = [];
-      try {
-        for (let index = 0; index < claim.capacity; index++) {
-          if (
-            operation.status !== 'running' ||
-            !this.runtime.dispatchAllowed() ||
-            this.expireOperation(operation)
-          ) {
-            break;
-          }
-          const descriptorStarted = internalProfilingEnabled()
-            ? performance.now()
-            : 0;
-          let partition: RangePartition;
-          let expectedResultBytes: number | undefined;
-          if (operation.resultByteDeclaration !== undefined) {
-            const declaration = this.prepareResultDeclaration(operation);
-            if (!declaration || operation.status !== 'running') {
-              break;
-            }
-            if (!this.resultCredits.canReserve(operation, declaration.bytes)) {
-              if (!declaration.waited) {
-                declaration.waited = true;
-                this.resultCredits.recordWait();
-              }
-              break;
-            }
-            partition = declaration.partition;
-            expectedResultBytes = declaration.bytes;
-            operation.pendingResultDeclaration = undefined;
-            operation.generated++;
-          } else {
-            partition = partitionAt(operation.plan, operation.generated++);
-          }
-          if (descriptorStarted) {
-            recordInternalProfile(
-              'descriptorCreation',
-              performance.now() - descriptorStarted,
-            );
-          }
-          this.partitionMetrics.generated++;
-          const child: PartitionChild = {
-            operation,
-            partition,
-            ...(expectedResultBytes === undefined
-              ? {}
-              : operation.resultByteMode === 'upper-bound'
-                ? {
-                    resultByteContract: {
-                      mode: 'upper-bound',
-                      bytes: expectedResultBytes,
-                    },
-                  }
-                : { expectedResultBytes }),
-          };
-          try {
-            const factoryStarted = internalProfilingEnabled()
-              ? performance.now()
-              : 0;
-            const prepared = operation.runInAsyncScope(
-              operation.createInput!,
-              undefined,
-              partition,
-            );
-            if (factoryStarted) {
-              recordInternalProfile(
-                'factory',
-                performance.now() - factoryStarted,
-              );
-            }
-            if (
-              operation.status !== 'running' ||
-              !this.runtime.dispatchAllowed() ||
-              this.expireOperation(operation)
-            ) {
-              break;
-            }
-            if (
-              prepared === null ||
-              typeof prepared !== 'object' ||
-              !('input' in prepared)
-            ) {
-              throw new TypeError(
-                'createInput must synchronously return { input, transferList? }',
-              );
-            }
-            const input = prepared.input;
-            const transferList = prepared.transferList;
-            if (
-              operation.status !== 'running' ||
-              !this.runtime.dispatchAllowed() ||
-              this.expireOperation(operation)
-            ) {
-              break;
-            }
-            const admissionStarted = internalProfilingEnabled()
-              ? performance.now()
-              : 0;
-            const submitted = this.tasks.submit(
-              operation.task,
-              input,
-              transferList === undefined ? {} : { transferList },
-              child,
-              staged,
-            );
-            if (admissionStarted) {
-              recordInternalProfile(
-                'childAdmission',
-                performance.now() - admissionStarted,
-              );
-            }
-            void submitted.catch(() => {});
-          } catch (cause) {
-            this.finishOperation(
-              operation,
-              'failed',
-              new PjsError(
-                `Partition input factory failed: ${serializeError(cause).message}`,
-                { ...this.context(child), cause },
-              ),
-            );
-            break;
-          }
-        }
-        const live = staged.filter((task) => this.tasks.has(task.id));
-        this.dispatcher.finishProductionClaim(claim, live);
-      } finally {
-        this.dispatcher.releaseProductionClaim(claim);
-      }
+      this.produceBatch(operation, claim);
     }
     if (
       this.runtime.dispatchAllowed() &&
@@ -696,6 +567,162 @@ export class RangeCoordinator implements TaskParentPort {
         this.runtime.requestPump();
       });
     }
+  }
+
+  /** Factory/property callbacks can abort, expire, or begin forced shutdown. */
+  private canProduce(operation: RangeOperation): boolean {
+    return (
+      operation.status === 'running' &&
+      this.runtime.dispatchAllowed() &&
+      !this.expireOperation(operation)
+    );
+  }
+
+  private productionCapacity(operation: RangeOperation): number {
+    let maximum = Math.min(
+      operation.dispatchBatchSize,
+      operation.plan.chunkCount - operation.generated,
+      this.childWindow(operation) - operation.children.size,
+    );
+    if (operation.stream) {
+      maximum = Math.min(
+        maximum,
+        operation.stream.capacity -
+          operation.stream.buffered -
+          operation.children.size,
+      );
+    }
+    return maximum;
+  }
+
+  /** Keep the capacity claim across factories, admission, and post commit/rollback. */
+  private produceBatch(
+    operation: RangeOperation,
+    claim: ProductionClaim,
+  ): void {
+    const staged: PendingTask[] = [];
+    try {
+      for (let index = 0; index < claim.capacity; index++) {
+        if (!this.canProduce(operation)) {
+          break;
+        }
+        const child = this.nextChild(operation);
+        if (!child || !this.submitChild(child, staged)) {
+          break;
+        }
+      }
+      const live = staged.filter((task) => this.tasks.has(task.id));
+      this.dispatcher.finishProductionClaim(claim, live);
+    } finally {
+      this.dispatcher.releaseProductionClaim(claim);
+    }
+  }
+
+  /** Advance the cursor only after the next declaration has result-byte credit. */
+  private nextChild(operation: RangeOperation): PartitionChild | undefined {
+    const descriptorStarted = internalProfilingEnabled()
+      ? performance.now()
+      : 0;
+    let partition: RangePartition;
+    let expectedResultBytes: number | undefined;
+    if (operation.resultByteDeclaration !== undefined) {
+      const declaration = this.prepareResultDeclaration(operation);
+      if (!declaration || operation.status !== 'running') {
+        return undefined;
+      }
+      if (!this.resultCredits.canReserve(operation, declaration.bytes)) {
+        if (!declaration.waited) {
+          declaration.waited = true;
+          this.resultCredits.recordWait();
+        }
+        return undefined;
+      }
+      partition = declaration.partition;
+      expectedResultBytes = declaration.bytes;
+      operation.pendingResultDeclaration = undefined;
+      operation.generated++;
+    } else {
+      partition = partitionAt(operation.plan, operation.generated++);
+    }
+    if (descriptorStarted) {
+      recordInternalProfile(
+        'descriptorCreation',
+        performance.now() - descriptorStarted,
+      );
+    }
+    this.partitionMetrics.generated++;
+    const child: PartitionChild = { operation, partition };
+    if (expectedResultBytes !== undefined) {
+      if (operation.resultByteMode === 'upper-bound') {
+        child.resultByteContract = {
+          mode: 'upper-bound',
+          bytes: expectedResultBytes,
+        };
+      } else {
+        child.expectedResultBytes = expectedResultBytes;
+      }
+    }
+    return child;
+  }
+
+  private submitChild(child: PartitionChild, staged: PendingTask[]): boolean {
+    const { operation, partition } = child;
+    try {
+      const factoryStarted = internalProfilingEnabled() ? performance.now() : 0;
+      const prepared = operation.runInAsyncScope(
+        operation.createInput!,
+        undefined,
+        partition,
+      );
+      if (factoryStarted) {
+        recordInternalProfile('factory', performance.now() - factoryStarted);
+      }
+      if (!this.canProduce(operation)) {
+        return false;
+      }
+      if (
+        prepared === null ||
+        typeof prepared !== 'object' ||
+        !('input' in prepared)
+      ) {
+        throw new TypeError(
+          'createInput must synchronously return { input, transferList? }',
+        );
+      }
+      const input = prepared.input;
+      const transferList = prepared.transferList;
+      if (!this.canProduce(operation)) {
+        return false;
+      }
+      const admissionStarted = internalProfilingEnabled()
+        ? performance.now()
+        : 0;
+      const submitted = this.tasks.submit(
+        operation.task,
+        input,
+        transferList === undefined ? {} : { transferList },
+        child,
+        staged,
+      );
+      if (admissionStarted) {
+        recordInternalProfile(
+          'childAdmission',
+          performance.now() - admissionStarted,
+        );
+      }
+      void submitted.catch(() => {});
+    } catch (cause) {
+      this.finishOperation(
+        operation,
+        'failed',
+        new PjsError(
+          `Partition input factory failed: ${serializeError(cause).message}`,
+          { ...this.context(child), cause },
+        ),
+      );
+      return false;
+    }
+    return true;
   }
 
   finishAll(

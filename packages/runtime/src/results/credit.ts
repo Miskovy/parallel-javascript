@@ -36,6 +36,14 @@ interface OperationCredits {
   readonly taskByPartition: Map<number, string>;
 }
 
+/** Posting and posted work retain credit until completion, even after caller settlement. */
+function hasUnfinishedExecution(reservation: ResultReservation): boolean {
+  return (
+    (reservation.dispatched || reservation.dispatching) &&
+    !reservation.executionDone
+  );
+}
+
 /** Owns binary-result credit, reconciliation, and physical termination/yield. */
 export class ResultCreditManager {
   constructor(
@@ -207,10 +215,7 @@ export class ResultCreditManager {
       return;
     }
     reservation.callerSettled = true;
-    if (
-      (!reservation.dispatched && !reservation.dispatching) ||
-      reservation.executionDone
-    ) {
+    if (!hasUnfinishedExecution(reservation)) {
       this.release(taskId);
     } else {
       this.assertInvariants('settle-running');
@@ -312,10 +317,7 @@ export class ResultCreditManager {
         continue;
       }
       reservation.callerSettled = true;
-      if (
-        (!reservation.dispatched && !reservation.dispatching) ||
-        reservation.executionDone
-      ) {
+      if (!hasUnfinishedExecution(reservation)) {
         this.release(taskId);
       }
     }
@@ -463,10 +465,7 @@ export class ResultCreditManager {
       if (credits?.taskByPartition.get(reservation.partitionIndex) !== taskId) {
         fail(`reservation ${taskId} has no matching partition mapping`);
       }
-      if (
-        (reservation.dispatched || reservation.dispatching) &&
-        !reservation.executionDone
-      ) {
+      if (hasUnfinishedExecution(reservation)) {
         if (!correlated.has(taskId)) {
           fail(`dispatched reservation ${taskId} has no execution correlation`);
         }

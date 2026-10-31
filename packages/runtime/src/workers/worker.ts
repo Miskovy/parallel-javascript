@@ -58,6 +58,21 @@ interface ExecutionLease {
   timer: ReturnType<typeof setTimeout> | undefined;
 }
 
+interface WorkerExecution {
+  phase: 'scheduled' | 'running';
+  posted: boolean;
+  itemIds: string[];
+  cancellation?: Int32Array<SharedArrayBuffer>;
+  exclusive: boolean;
+  progress?: {
+    control: ProgressControl;
+    closeSent: boolean;
+    sequences: Map<string, number>;
+    pending: boolean;
+  };
+}
+
+/** Owns physical correlations independently of logical callers and termination intent. */
 export class PjsWorker {
   readonly ready: Promise<void>;
   private readonly thread: WorkerThread;
@@ -70,22 +85,7 @@ export class PjsWorker {
   private resolveReady!: () => void;
   private rejectReady!: (error: Error) => void;
   private stopPromise: Promise<void> | undefined;
-  private readonly executions = new Map<
-    string,
-    {
-      phase: 'scheduled' | 'running';
-      posted: boolean;
-      itemIds: string[];
-      cancellation?: Int32Array<SharedArrayBuffer>;
-      exclusive: boolean;
-      progress?: {
-        control: ProgressControl;
-        closeSent: boolean;
-        sequences: Map<string, number>;
-        pending: boolean;
-      };
-    }
-  >();
+  private readonly executions = new Map<string, WorkerExecution>();
   private exitObserved = false;
   private lease: ExecutionLease | undefined;
   leaseExpired = false;
@@ -346,56 +346,26 @@ export class PjsWorker {
     try {
       this.services.validateTransferList(transferList);
       const postStarted = profile ? performance.now() : 0;
-      if (profile) {
-        this.thread.postMessage(
-          {
-            type: 'execute',
-            exclusive,
-            ...(progress
-              ? progress.flag
-                ? { progressBuffer: progress.flag.buffer }
-                : { progressMode: 'message' as const }
-              : {}),
-            ...(cancellation
-              ? { cancellationBuffer: cancellation.buffer }
-              : {}),
-            taskId,
-            taskName,
-            input,
-            profile: true,
-            ...(completionOnly ? { completionOnly: true } : {}),
-            ...(expectedResultBytes === undefined
-              ? {}
-              : { expectedResultBytes }),
-            ...(resultByteContract === undefined ? {} : { resultByteContract }),
-          } satisfies HostMessage,
-          transferList,
-        );
-      } else {
-        this.thread.postMessage(
-          {
-            type: 'execute',
-            exclusive,
-            ...(progress
-              ? progress.flag
-                ? { progressBuffer: progress.flag.buffer }
-                : { progressMode: 'message' as const }
-              : {}),
-            ...(cancellation
-              ? { cancellationBuffer: cancellation.buffer }
-              : {}),
-            taskId,
-            taskName,
-            input,
-            ...(completionOnly ? { completionOnly: true } : {}),
-            ...(expectedResultBytes === undefined
-              ? {}
-              : { expectedResultBytes }),
-            ...(resultByteContract === undefined ? {} : { resultByteContract }),
-          } satisfies HostMessage,
-          transferList,
-        );
-      }
+      this.thread.postMessage(
+        {
+          type: 'execute',
+          exclusive,
+          ...(progress
+            ? progress.flag
+              ? { progressBuffer: progress.flag.buffer }
+              : { progressMode: 'message' as const }
+            : {}),
+          ...(cancellation ? { cancellationBuffer: cancellation.buffer } : {}),
+          taskId,
+          taskName,
+          input,
+          ...(profile ? { profile: true as const } : {}),
+          ...(completionOnly ? { completionOnly: true } : {}),
+          ...(expectedResultBytes === undefined ? {} : { expectedResultBytes }),
+          ...(resultByteContract === undefined ? {} : { resultByteContract }),
+        } satisfies HostMessage,
+        transferList,
+      );
       this.markPosted(taskId);
       if (profile) {
         recordInternalProfile(
@@ -757,13 +727,24 @@ export class PjsWorker {
       this.callbacks.started(this, value.taskId);
       return;
     }
+    if (!this.validateResult(value, execution)) {
+      return;
+    }
+    this.completeExecution(correlationId, value);
+  }
+
+  /** Final envelopes must cover the exact posted items and any cancellation must be requested. */
+  private validateResult(
+    value: ExecutionResultMessage,
+    execution: WorkerExecution,
+  ): boolean {
     if (execution.phase !== 'running') {
       this.fail('Task result arrived before start');
-      return;
+      return false;
     }
     if (execution.itemIds.length > 0 !== (value.type === 'batchResult')) {
       this.fail('Unexpected final response kind for physical execution');
-      return;
+      return false;
     }
     if (value.type === 'batchResult') {
       const ids = [
@@ -784,7 +765,7 @@ export class PjsWorker {
         (value.skippedTaskIds.length > 0 && failureIndex < 0)
       ) {
         this.fail('Invalid logical task correlation in batch result');
-        return;
+        return false;
       }
     }
     const hasCancellation =
@@ -796,8 +777,16 @@ export class PjsWorker {
       (!execution.cancellation || Atomics.load(execution.cancellation, 0) === 0)
     ) {
       this.fail('Unrequested cooperative cancellation result');
-      return;
+      return false;
     }
+    return true;
+  }
+
+  /** Publish released occupancy before notifying result owners, which can immediately pump. */
+  private completeExecution(
+    correlationId: string,
+    value: ExecutionResultMessage,
+  ): void {
     if (this.lease?.correlationId === correlationId) {
       this.clearLease();
     }
@@ -868,11 +857,12 @@ export class PjsWorker {
         cause,
       });
     this.rejectReady(error);
-    this.callbacks.failed(
-      this,
-      error,
-      wasStarting,
-      wasStarting ? 'bootstrap' : leaseError ? 'execution-lease' : reason,
-    );
+    let failureReason = reason;
+    if (wasStarting) {
+      failureReason = 'bootstrap';
+    } else if (leaseError) {
+      failureReason = 'execution-lease';
+    }
+    this.callbacks.failed(this, error, wasStarting, failureReason);
   }
 }

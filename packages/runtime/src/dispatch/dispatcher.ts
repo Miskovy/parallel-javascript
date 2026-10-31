@@ -71,7 +71,6 @@ export class ProductionClaim {
   constructor(
     readonly capacity: number,
     readonly worker: PjsWorker | undefined,
-    readonly exclusive = false,
     readonly releaseWorker: () => void = () => {},
   ) {}
 }
@@ -111,7 +110,6 @@ export class ExecutionDispatcher {
       progress?: ProgressControl;
       worker: PjsWorker;
       done?: Promise<void>;
-      finish?: () => void;
     }
   >();
   private readonly metrics = {
@@ -602,7 +600,7 @@ export class ExecutionDispatcher {
     if (!worker) {
       this.admissionReservations += capacity;
     }
-    return new ProductionClaim(capacity, worker, exclusive, release);
+    return new ProductionClaim(capacity, worker, release);
   }
 
   finishProductionClaim(claim: ProductionClaim, staged: PendingTask[]): void {
@@ -742,6 +740,53 @@ export class ExecutionDispatcher {
     });
   }
 
+  /** Revalidate the drain pin against replacement capacity and retained recovery claims. */
+  private reconcileDrain(
+    queued: PendingTask[],
+    ready: PendingTask[],
+  ): PendingTask | undefined {
+    let pinned: PendingTask | undefined;
+    if (this.drain && !this.drain.production) {
+      pinned = [...queued, ...ready].find(
+        (task) => task.id === this.drain!.owner,
+      );
+    }
+    if (this.drain && !this.drain.production && !pinned) {
+      this.clearDrain();
+    }
+    // A replacement can become idle while the pinned worker is still busy.
+    // Reuse ordinary placement/credit checks before retiring that obsolete pin.
+    if (
+      pinned &&
+      !this.placement(pinned, queued.includes(pinned)) &&
+      this.placement(pinned, queued.includes(pinned), true)
+    ) {
+      this.clearDrain();
+      pinned = undefined;
+    }
+    if (this.drain) {
+      // Another hosted invocation may fail while a worker drains. Revalidate
+      // the queue credits needed to exchange *all* newly retained slots.
+      const owners = (
+        this.layout(true).owners.get(this.drain.worker.id) ?? []
+      ).filter((id) => id !== pinned?.id);
+      const credit =
+        pinned && queued.includes(pinned)
+          ? (pinned.admissionWeight ?? 1) +
+            this.scheduler.capacity -
+            this.scheduler.size -
+            this.admissionReservations
+          : 0;
+      if (owners.length > credit) {
+        this.clearDrain();
+        pinned = undefined;
+      } else {
+        this.drain.borrowed = owners;
+      }
+    }
+    return pinned;
+  }
+
   dispatchQueued(dispatchAllowed: () => boolean): void {
     if (this.scheduler.selecting || this.stopped) {
       return;
@@ -753,45 +798,7 @@ export class ExecutionDispatcher {
       const ready = [...this.recoveries.values()]
         .filter((entry) => entry.kind === 'slot' && entry.ready)
         .map((entry) => entry.task);
-      let pinned: PendingTask | undefined;
-      if (this.drain && !this.drain.production) {
-        pinned = [...queued, ...ready].find(
-          (task) => task.id === this.drain!.owner,
-        );
-      }
-      if (this.drain && !this.drain.production && !pinned) {
-        this.clearDrain();
-      }
-      // A replacement can become idle while the pinned worker is still busy.
-      // Reuse ordinary placement/credit checks before retiring that obsolete pin.
-      if (
-        pinned &&
-        !this.placement(pinned, queued.includes(pinned)) &&
-        this.placement(pinned, queued.includes(pinned), true)
-      ) {
-        this.clearDrain();
-        pinned = undefined;
-      }
-      if (this.drain) {
-        // Another hosted invocation may fail while a worker drains. Revalidate
-        // the queue credits needed to exchange *all* newly retained slots.
-        const owners = (
-          this.layout(true).owners.get(this.drain.worker.id) ?? []
-        ).filter((id) => id !== pinned?.id);
-        const credit =
-          pinned && queued.includes(pinned)
-            ? (pinned.admissionWeight ?? 1) +
-              this.scheduler.capacity -
-              this.scheduler.size -
-              this.admissionReservations
-            : 0;
-        if (owners.length > credit) {
-          this.clearDrain();
-          pinned = undefined;
-        } else {
-          this.drain.borrowed = owners;
-        }
-      }
+      const pinned = this.reconcileDrain(queued, ready);
       const candidates = [...queued, ...ready].filter(
         (task) =>
           this.placement(task, queued.includes(task)) ||
@@ -865,13 +872,16 @@ export class ExecutionDispatcher {
     const queued = this.scheduler
       .values()
       .filter((task) => task.id !== this.drain?.owner);
+    const queuedExclusive = queued.filter((task) =>
+      this.exclusive(task),
+    ).length;
     const exclusive =
-      queued.filter((task) => this.exclusive(task)).length +
+      queuedExclusive +
       layout.missingExclusive +
       (productionDemand === 'exclusive' && !this.drain ? 1 : 0);
     const shared =
       queued.length -
-      queued.filter((task) => this.exclusive(task)).length +
+      queuedExclusive +
       layout.missingShared +
       (productionDemand === 'shared' ? 1 : 0);
     const concurrency = snapshots[0]?.concurrency ?? 1;
@@ -905,6 +915,72 @@ export class ExecutionDispatcher {
       this.post(worker, task, release);
     } finally {
       release();
+    }
+  }
+
+  /** Message construction stays inside the posting transaction and before credit commit. */
+  private postExecution(
+    worker: PjsWorker,
+    task: PendingTask,
+    executionId: string,
+    cancellation: Int32Array<SharedArrayBuffer> | undefined,
+    progress: ProgressControl | undefined,
+  ): void {
+    const items = task.batch;
+    if (items && items.length > 1) {
+      worker.executeBatch(
+        executionId,
+        task.snapshot.taskName,
+        items.map((item) => ({
+          taskId: item.executionId ?? item.id,
+          input: item.input,
+          ...(item.expectedResultBytes === undefined
+            ? {}
+            : { expectedResultBytes: item.expectedResultBytes }),
+          ...(item.resultByteContract === undefined
+            ? {}
+            : { resultByteContract: item.resultByteContract }),
+        })),
+        task.child?.operation.resultMode === 'discard',
+        cancellation,
+        this.exclusive(task),
+        progress,
+      );
+    } else {
+      worker.execute(
+        executionId,
+        task.snapshot.implementation ?? task.snapshot.taskName,
+        task.input,
+        task.transferList,
+        Boolean(
+          this.host.profiling && task.child && internalProfilingEnabled(),
+        ),
+        task.child?.operation.resultMode === 'discard',
+        task.expectedResultBytes,
+        task.resultByteContract,
+        cancellation,
+        this.exclusive(task),
+        progress,
+      );
+    }
+  }
+
+  /** Browser revocation must observe input cleanup before the posting barrier resolves. */
+  private finishPosting(
+    executionId: string,
+    task: PendingTask,
+    finish: (() => void) | undefined,
+  ): void {
+    if (this.host.lifecycle === 'endpoint-revocation') {
+      try {
+        this.callbacks.dispatched(task);
+      } finally {
+        this.postings.delete(executionId);
+        finish?.();
+      }
+    } else {
+      this.postings.delete(executionId);
+      this.callbacks.dispatched(task);
     }
   }
 
@@ -962,7 +1038,6 @@ export class ExecutionDispatcher {
       terminate: false,
       worker,
       ...(done ? { done } : {}),
-      ...(finish ? { finish } : {}),
       ...(progress ? { progress } : {}),
       ...(cancellation ? { cancellation } : {}),
     };
@@ -972,42 +1047,7 @@ export class ExecutionDispatcher {
       this.resultCredits.markDispatching(executionId, taskIds);
       // Worker.begin installs physical occupancy synchronously, before cloning can reenter.
       releaseClaim();
-      if (items && items.length > 1) {
-        worker.executeBatch(
-          executionId,
-          task.snapshot.taskName,
-          items.map((item) => ({
-            taskId: item.executionId ?? item.id,
-            input: item.input,
-            ...(item.expectedResultBytes === undefined
-              ? {}
-              : { expectedResultBytes: item.expectedResultBytes }),
-            ...(item.resultByteContract === undefined
-              ? {}
-              : { resultByteContract: item.resultByteContract }),
-          })),
-          task.child?.operation.resultMode === 'discard',
-          cancellation,
-          this.exclusive(task),
-          progress,
-        );
-      } else {
-        worker.execute(
-          executionId,
-          task.snapshot.implementation ?? task.snapshot.taskName,
-          task.input,
-          task.transferList,
-          Boolean(
-            this.host.profiling && task.child && internalProfilingEnabled(),
-          ),
-          task.child?.operation.resultMode === 'discard',
-          task.expectedResultBytes,
-          task.resultByteContract,
-          cancellation,
-          this.exclusive(task),
-          progress,
-        );
-      }
+      this.postExecution(worker, task, executionId, cancellation, progress);
       this.resultCredits.markDispatched(executionId, taskIds);
       if (task.executionLease !== undefined) {
         worker.armExecutionLease(executionId, task.executionLease);
@@ -1031,17 +1071,7 @@ export class ExecutionDispatcher {
       this.resultCredits.rollbackDispatch(executionId);
       this.callbacks.dispatchFailed(task, error as Error);
     } finally {
-      if (this.host.lifecycle === 'endpoint-revocation') {
-        try {
-          this.callbacks.dispatched(task);
-        } finally {
-          this.postings.delete(executionId);
-          finish?.();
-        }
-      } else {
-        this.postings.delete(executionId);
-        this.callbacks.dispatched(task);
-      }
+      this.finishPosting(executionId, task, finish);
     }
   }
 }

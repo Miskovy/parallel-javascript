@@ -6,15 +6,13 @@ import {
 } from './progress.js';
 import type { InvocationProgress } from './progress.js';
 import type { TaskContext } from '../types/index.js';
-import {
-  PjsBinaryResultContractError,
-  PjsSerializationError,
-} from '../errors/index.js';
+import { PjsSerializationError } from '../errors/index.js';
 import type { BinaryResultInspection } from '../partition/binary-core.js';
+import { validateBinaryResult, outputFailure } from './result-preparation.js';
 import { isHostMessage, serializeError } from './protocol.js';
 import type {
   BatchItemResult,
-  BinaryContractFailure,
+  UpperBoundResultByteContract,
   BootstrapData,
   HostMessage,
   InternalWorkerProfile,
@@ -110,49 +108,27 @@ export async function startInvocations(
       : undefined;
   }
 
-  function validateBinaryResult(
+  /** Shared synchronous preparation; single and batch callers retain their own catch scopes. */
+  function prepareOutput(
     output: unknown,
-    declaredBytes: number,
-    mode: 'exact' | 'upper-bound' = 'exact',
-  ): number {
-    const inspected = services.inspectBinaryResult(output);
-    if (
-      inspected.problem ||
-      (mode === 'exact'
-        ? inspected.bytes !== declaredBytes
-        : inspected.bytes! > declaredBytes)
-    ) {
-      const detail = inspected.problem
-        ? inspected.problem === 'shared'
-          ? 'uses SharedArrayBuffer backing'
-          : inspected.problem === 'detached'
-            ? 'is detached'
-            : 'is not a direct binary value'
-        : `contains ${inspected.bytes} visible bytes`;
-      throw new PjsBinaryResultContractError(
-        `Binary result ${detail}; expected ${mode === 'exact' ? 'exactly' : 'at most'} ${declaredBytes} visible bytes`,
-        {
-          declaredBytes,
-          ...(inspected.bytes === undefined
-            ? {}
-            : { actualBytes: inspected.bytes }),
-          actualType: inspected.actualType,
-        },
+    expectedResultBytes: number | undefined,
+    contract: UpperBoundResultByteContract | undefined,
+  ) {
+    const result = services.transferOutput(output);
+    if (expectedResultBytes !== undefined) {
+      validateBinaryResult(
+        services.inspectBinaryResult(result.value),
+        expectedResultBytes,
       );
     }
-    return inspected.bytes!;
-  }
-
-  function binaryFailure(
-    error: PjsBinaryResultContractError,
-  ): BinaryContractFailure {
-    return {
-      declaredBytes: error.declaredBytes!,
-      ...(error.actualBytes === undefined
-        ? {}
-        : { actualBytes: error.actualBytes }),
-      actualType: error.actualType ?? 'unknown',
-    };
+    const actualResultBytes = contract
+      ? validateBinaryResult(
+          services.inspectBinaryResult(result.value),
+          contract.bytes,
+          contract.mode,
+        )
+      : undefined;
+    return { result, actualResultBytes };
   }
 
   // Invocation-local contexts; no ambient task context or shared/reused controller.
@@ -318,68 +294,41 @@ export async function startInvocations(
       }
       try {
         const preparationStarted = value.profile ? performance.now() : 0;
-        const result = services.transferOutput(output);
-        if (value.expectedResultBytes !== undefined) {
-          validateBinaryResult(result.value, value.expectedResultBytes);
-        }
-        const actualResultBytes = value.resultByteContract
-          ? validateBinaryResult(
-              result.value,
-              value.resultByteContract.bytes,
-              value.resultByteContract.mode,
-            )
-          : undefined;
+        const { result, actualResultBytes } = prepareOutput(
+          output,
+          value.expectedResultBytes,
+          value.resultByteContract,
+        );
         const outputPreparationMs = value.profile
           ? performance.now() - preparationStarted
           : 0;
-        if (value.profile) {
-          send(
-            {
-              type: 'success',
-              taskId: value.taskId,
-              output: result.value,
-              ...(actualResultBytes === undefined ? {} : { actualResultBytes }),
-              executionMs,
-              profile: workerProfile(
-                value.profile,
-                workerIngressMs,
-                outputPreparationMs,
-              )!,
-            },
-            result.transferList,
-          );
-        } else {
-          send(
-            {
-              type: 'success',
-              taskId: value.taskId,
-              output: result.value,
-              ...(actualResultBytes === undefined ? {} : { actualResultBytes }),
-              executionMs,
-            },
-            result.transferList,
-          );
-        }
+        send(
+          {
+            type: 'success',
+            taskId: value.taskId,
+            output: result.value,
+            ...(actualResultBytes === undefined ? {} : { actualResultBytes }),
+            executionMs,
+            ...(value.profile
+              ? {
+                  profile: workerProfile(
+                    value.profile,
+                    workerIngressMs,
+                    outputPreparationMs,
+                  )!,
+                }
+              : {}),
+          },
+          result.transferList,
+        );
       } catch (cause) {
         send({
-          type: 'failure',
-          taskId: value.taskId,
-          kind:
-            cause instanceof PjsBinaryResultContractError
-              ? 'binaryContract'
-              : 'serialization',
-          ...(cause instanceof PjsBinaryResultContractError
-            ? {
-                binaryContract: {
-                  ...binaryFailure(cause),
-                  ...(value.resultByteContract
-                    ? { mode: value.resultByteContract.mode }
-                    : {}),
-                },
-              }
-            : {}),
-          error: serializeError(cause),
-          executionMs,
+          ...outputFailure(
+            cause,
+            value.taskId,
+            executionMs,
+            value.resultByteContract,
+          ),
           ...(value.profile
             ? {
                 profile: workerProfile(value.profile, workerIngressMs, 0)!,
@@ -451,17 +400,11 @@ export async function startInvocations(
         }
         try {
           const preparationStarted = performance.now();
-          const result = services.transferOutput(output);
-          if (item.expectedResultBytes !== undefined) {
-            validateBinaryResult(result.value, item.expectedResultBytes);
-          }
-          const actualResultBytes = item.resultByteContract
-            ? validateBinaryResult(
-                result.value,
-                item.resultByteContract.bytes,
-                item.resultByteContract.mode,
-              )
-            : undefined;
+          const { result, actualResultBytes } = prepareOutput(
+            output,
+            item.expectedResultBytes,
+            item.resultByteContract,
+          );
           outputPreparationMs += performance.now() - preparationStarted;
           transferList.push(...result.transferList);
           items.push({
@@ -473,24 +416,12 @@ export async function startInvocations(
           });
         } catch (cause) {
           items.push({
-            type: 'failure',
-            taskId: item.taskId,
-            kind:
-              cause instanceof PjsBinaryResultContractError
-                ? 'binaryContract'
-                : 'serialization',
-            ...(cause instanceof PjsBinaryResultContractError
-              ? {
-                  binaryContract: {
-                    ...binaryFailure(cause),
-                    ...(item.resultByteContract
-                      ? { mode: item.resultByteContract.mode }
-                      : {}),
-                  },
-                }
-              : {}),
-            error: serializeError(cause),
-            executionMs,
+            ...outputFailure(
+              cause,
+              item.taskId,
+              executionMs,
+              item.resultByteContract,
+            ),
           });
           next++;
           break;
