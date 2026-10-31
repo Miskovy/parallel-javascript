@@ -143,13 +143,14 @@ export class RangeCoordinator implements TaskParentPort {
       this.operationTypeMetrics[kind].rejected++;
       return Promise.reject(error);
     };
-    if (!this.host.isHostThread())
+    if (!this.host.isHostThread()) {
       return reject(
         new PjsRuntimeStateError(
           'Partition operations require the main thread; nested worker partitioning is unsupported',
           { operationId: id },
         ),
       );
+    }
     let plan;
     let timeout: number | undefined;
     let signal: AbortSignal | undefined;
@@ -179,43 +180,49 @@ export class RangeCoordinator implements TaskParentPort {
     } catch (error) {
       return reject(error as Error);
     }
-    if (cancellation === 'cooperative' && !this.host.sharedMemory)
+    if (cancellation === 'cooperative' && !this.host.sharedMemory) {
       return reject(
         new TypeError(
           'Cooperative cancellation requires usable shared memory in page and worker',
         ),
       );
+    }
     const state = this.runtime.state();
-    if (state !== 'starting' && state !== 'running')
+    if (state !== 'starting' && state !== 'running') {
       return reject(
         new PjsRuntimeStateError(`Runtime is ${state}`, { operationId: id }),
       );
-    if (!this.registry.has(task))
+    }
+    if (!this.registry.has(task)) {
       return reject(
         new PjsTaskRegistrationError(
           'Task does not belong to this runtime registry snapshot',
           { operationId: id },
         ),
       );
-    if (signal?.aborted)
+    }
+    if (signal?.aborted) {
       return reject(
         new PjsCancelledError('Partition operation was already aborted', {
           operationId: id,
           cause: signal.reason,
         }),
       );
-    if (this.operations.size >= this.operationLimit)
+    }
+    if (this.operations.size >= this.operationLimit) {
       return reject(
         new PjsQueueFullError(
           `Partition operation capacity ${this.operationLimit} exhausted`,
           { operationId: id },
         ),
       );
+    }
 
     try {
       const rebuild = options.rebuildInput;
-      if (rebuild !== undefined && typeof rebuild !== 'function')
+      if (rebuild !== undefined && typeof rebuild !== 'function') {
         throw new TypeError('rebuildInput must be a function');
+      }
       recovery = this.tasks.createRecovery(
         task,
         options.retry,
@@ -224,16 +231,19 @@ export class RangeCoordinator implements TaskParentPort {
         undefined,
         { operationId: id },
       );
-      if (rebuild !== undefined && !recovery)
+      if (rebuild !== undefined && !recovery) {
         throw new TypeError('rebuildInput requires retry or fallback');
+      }
       rebuildInput = rebuild;
-      if (resultMode === 'collect') outputs = [];
-      else if (resultMode === 'map') {
+      if (resultMode === 'collect') {
+        outputs = [];
+      } else if (resultMode === 'map') {
         const length = plan.end - plan.start;
-        if (length > 2 ** 32 - 1)
+        if (length > 2 ** 32 - 1) {
           throw new RangeError(
             'Map output has more elements than a JavaScript array can represent',
           );
+        }
         outputs = mapOutputConstructor
           ? (new mapOutputConstructor(length) as PjsTypedArray)
           : new Array(length);
@@ -243,29 +253,32 @@ export class RangeCoordinator implements TaskParentPort {
     }
 
     // Policy getters may abort, shut down or submit another parent reentrantly.
-    if (signal?.aborted)
+    if (signal?.aborted) {
       return reject(
         new PjsCancelledError(
           'Partition operation was aborted during validation',
           { operationId: id, cause: signal.reason },
         ),
       );
+    }
     if (
       this.runtime.state() !== 'starting' &&
       this.runtime.state() !== 'running'
-    )
+    ) {
       return reject(
         new PjsRuntimeStateError(`Runtime is ${this.runtime.state()}`, {
           operationId: id,
         }),
       );
-    if (this.operations.size >= this.operationLimit)
+    }
+    if (this.operations.size >= this.operationLimit) {
       return reject(
         new PjsQueueFullError(
           `Partition operation capacity ${this.operationLimit} exhausted`,
           { operationId: id },
         ),
       );
+    }
 
     return new Promise<unknown[] | PjsTypedArray | void>((resolve, reject) => {
       const operation = new RangeOperation(
@@ -286,8 +299,12 @@ export class RangeCoordinator implements TaskParentPort {
         reject,
         this.host.createScope(),
       );
-      if (recovery) operation.recovery = recovery;
-      if (rebuildInput) operation.rebuildInput = rebuildInput;
+      if (recovery) {
+        operation.recovery = recovery;
+      }
+      if (rebuildInput) {
+        operation.rebuildInput = rebuildInput;
+      }
       operation.cancellation = cancellation ?? 'settle';
       operation.priority = priority;
       if (onProgress) {
@@ -304,7 +321,9 @@ export class RangeCoordinator implements TaskParentPort {
       this.operationTypeMetrics[kind].accepted++;
       stream?.connect({
         demand: () => {
-          if (operation.status !== 'running') return;
+          if (operation.status !== 'running') {
+            return;
+          }
           this.finishDeliveredStream(operation);
           this.runtime.requestPump();
         },
@@ -337,7 +356,9 @@ export class RangeCoordinator implements TaskParentPort {
       };
       let timer: ReturnType<typeof setTimeout> | undefined;
       operation.cleanup = () => {
-        if (timer) this.host.clearTimer(timer);
+        if (timer) {
+          this.host.clearTimer(timer);
+        }
         signal?.removeEventListener('abort', abort);
       };
       signal?.addEventListener('abort', abort, { once: true });
@@ -346,11 +367,12 @@ export class RangeCoordinator implements TaskParentPort {
           if (
             !this.expireOperation(operation) &&
             operation.status === 'running'
-          )
+          ) {
             timer = this.host.setTimer(
               onDeadline,
               Math.max(1, Math.ceil(operation.deadline! - performance.now())),
             );
+          }
           this.runtime.requestPump();
         };
         timer = this.host.setTimer(
@@ -359,8 +381,11 @@ export class RangeCoordinator implements TaskParentPort {
         );
       }
       if (!this.expireOperation(operation)) {
-        if (plan.chunkCount === 0) this.finishOperation(operation, 'completed');
-        else this.runtime.requestPump();
+        if (plan.chunkCount === 0) {
+          this.finishOperation(operation, 'completed');
+        } else {
+          this.runtime.requestPump();
+        }
       }
     });
   }
@@ -414,7 +439,9 @@ export class RangeCoordinator implements TaskParentPort {
     const counter = status === 'timed_out' ? 'cancelled' : status;
     operation[counter]++;
     this.partitionMetrics[counter]++;
-    if (operation.status !== 'running') return;
+    if (operation.status !== 'running') {
+      return;
+    }
     if (error) {
       this.finishOperation(operation, 'failed', this.childError(error, child));
     } else if (!this.expireOperation(operation)) {
@@ -456,32 +483,42 @@ export class RangeCoordinator implements TaskParentPort {
           operation.mapAssemblyMs += elapsed;
           this.mapResultMetrics.assemblyMs += elapsed;
         }
-      } else if (operation.outputs)
+      } else if (operation.outputs) {
         operation.outputs[child.partition.index] = output;
+      }
       if (
         operation.status === 'running' &&
         operation.completed === operation.plan.chunkCount &&
         operation.resultMode !== 'stream'
-      )
+      ) {
         this.finishOperation(operation, 'completed');
-      else this.finishDeliveredStream(operation);
+      } else {
+        this.finishDeliveredStream(operation);
+      }
     }
-    if (profileStarted)
+    if (profileStarted) {
       recordInternalProfile(
         'parentCollection',
         performance.now() - profileStarted,
       );
+    }
   }
 
   produce(): void {
     // Bound synchronous factory work to worker-count physical batches per turn.
     for (let produced = 0; produced < this.workerCount; produced++) {
-      if (!this.runtime.dispatchAllowed()) break;
+      if (!this.runtime.dispatchAllowed()) {
+        break;
+      }
       const operation = this.nextProducer();
-      if (!operation) break;
+      if (!operation) {
+        break;
+      }
       this.operations.delete(operation.id);
       this.operations.set(operation.id, operation);
-      if (this.expireOperation(operation)) continue;
+      if (this.expireOperation(operation)) {
+        continue;
+      }
       const continuing = this.readyContinuation(operation);
       if (continuing) {
         const claim = this.dispatcher.claimProduction(
@@ -489,7 +526,9 @@ export class RangeCoordinator implements TaskParentPort {
           operation.cancellation === 'terminate',
           operation.id,
         );
-        if (!claim) break;
+        if (!claim) {
+          break;
+        }
         continuing.snapshot.status = 'queued';
         delete continuing.recovery!.ready;
         this.dispatcher.finishProductionClaim(claim, [continuing]);
@@ -500,19 +539,22 @@ export class RangeCoordinator implements TaskParentPort {
         operation.plan.chunkCount - operation.generated,
         this.childWindow(operation) - operation.children.size,
       );
-      if (operation.stream)
+      if (operation.stream) {
         maximum = Math.min(
           maximum,
           operation.stream.capacity -
             operation.stream.buffered -
             operation.children.size,
         );
+      }
       const claim = this.dispatcher.claimProduction(
         maximum,
         operation.cancellation === 'terminate',
         operation.id,
       );
-      if (!claim) break;
+      if (!claim) {
+        break;
+      }
       const staged: PendingTask[] = [];
       try {
         for (let index = 0; index < claim.capacity; index++) {
@@ -520,8 +562,9 @@ export class RangeCoordinator implements TaskParentPort {
             operation.status !== 'running' ||
             !this.runtime.dispatchAllowed() ||
             this.expireOperation(operation)
-          )
+          ) {
             break;
+          }
           const descriptorStarted = internalProfilingEnabled()
             ? performance.now()
             : 0;
@@ -529,7 +572,9 @@ export class RangeCoordinator implements TaskParentPort {
           let expectedResultBytes: number | undefined;
           if (operation.resultByteDeclaration !== undefined) {
             const declaration = this.prepareResultDeclaration(operation);
-            if (!declaration || operation.status !== 'running') break;
+            if (!declaration || operation.status !== 'running') {
+              break;
+            }
             if (!this.resultCredits.canReserve(operation, declaration.bytes)) {
               if (!declaration.waited) {
                 declaration.waited = true;
@@ -544,11 +589,12 @@ export class RangeCoordinator implements TaskParentPort {
           } else {
             partition = partitionAt(operation.plan, operation.generated++);
           }
-          if (descriptorStarted)
+          if (descriptorStarted) {
             recordInternalProfile(
               'descriptorCreation',
               performance.now() - descriptorStarted,
             );
+          }
           this.partitionMetrics.generated++;
           const child: PartitionChild = {
             operation,
@@ -573,33 +619,37 @@ export class RangeCoordinator implements TaskParentPort {
               undefined,
               partition,
             );
-            if (factoryStarted)
+            if (factoryStarted) {
               recordInternalProfile(
                 'factory',
                 performance.now() - factoryStarted,
               );
+            }
             if (
               operation.status !== 'running' ||
               !this.runtime.dispatchAllowed() ||
               this.expireOperation(operation)
-            )
+            ) {
               break;
+            }
             if (
               prepared === null ||
               typeof prepared !== 'object' ||
               !('input' in prepared)
-            )
+            ) {
               throw new TypeError(
                 'createInput must synchronously return { input, transferList? }',
               );
+            }
             const input = prepared.input;
             const transferList = prepared.transferList;
             if (
               operation.status !== 'running' ||
               !this.runtime.dispatchAllowed() ||
               this.expireOperation(operation)
-            )
+            ) {
               break;
+            }
             const admissionStarted = internalProfilingEnabled()
               ? performance.now()
               : 0;
@@ -610,11 +660,12 @@ export class RangeCoordinator implements TaskParentPort {
               child,
               staged,
             );
-            if (admissionStarted)
+            if (admissionStarted) {
               recordInternalProfile(
                 'childAdmission',
                 performance.now() - admissionStarted,
               );
+            }
             void submitted.catch(() => {});
           } catch (cause) {
             this.finishOperation(
@@ -651,12 +702,15 @@ export class RangeCoordinator implements TaskParentPort {
     status: Extract<TerminalOperationStatus, 'failed' | 'cancelled'>,
     errorFor: (operation: RangeOperation) => Error,
   ): void {
-    for (const operation of this.operations.values())
+    for (const operation of this.operations.values()) {
       this.finishOperation(operation, status, errorFor(operation));
+    }
   }
 
   stopProduction(): void {
-    if (this.productionTick) this.productionTick();
+    if (this.productionTick) {
+      this.productionTick();
+    }
     this.productionTick = undefined;
   }
 
@@ -726,12 +780,15 @@ export class RangeCoordinator implements TaskParentPort {
   }
 
   private expireOperation(operation: RangeOperation): boolean {
-    if (operation.status !== 'running') return true;
+    if (operation.status !== 'running') {
+      return true;
+    }
     if (
       operation.deadline === undefined ||
       performance.now() < operation.deadline
-    )
+    ) {
       return false;
+    }
     this.finishOperation(
       operation,
       'timed_out',
@@ -749,10 +806,14 @@ export class RangeCoordinator implements TaskParentPort {
     error?: Error,
   ): void {
     const profileStarted = internalProfilingEnabled() ? performance.now() : 0;
-    if (operation.status !== 'running') return;
+    if (operation.status !== 'running') {
+      return;
+    }
     operation.status = status;
     this.dispatcher.cancelProduction(operation.id);
-    if (operation.progress) operation.progress.active = false;
+    if (operation.progress) {
+      operation.progress.active = false;
+    }
     this.operations.delete(operation.id);
     operation.cleanup();
     operation.cleanup = () => {};
@@ -769,9 +830,14 @@ export class RangeCoordinator implements TaskParentPort {
     const terminations = new Set<string>();
     for (const id of operation.children.keys()) {
       const task = this.tasks.get(id);
-      if (task && operation.cancellation !== 'settle' && status !== 'completed')
+      if (
+        task &&
+        operation.cancellation !== 'settle' &&
+        status !== 'completed'
+      ) {
         terminations.add(task.batchLeaderId ?? task.executionId ?? task.id);
-      if (task)
+      }
+      if (task) {
         this.tasks.settle(
           task,
           'cancelled',
@@ -787,26 +853,36 @@ export class RangeCoordinator implements TaskParentPort {
             },
           ),
         );
+      }
     }
     for (const correlationId of terminations) {
-      if (operation.cancellation === 'cooperative')
+      if (operation.cancellation === 'cooperative') {
         this.dispatcher.cooperateExecution(correlationId);
-      else this.dispatcher.terminateExecution(correlationId);
+      } else {
+        this.dispatcher.terminateExecution(correlationId);
+      }
     }
     operation.pendingResultDeclaration = undefined;
     this.resultCredits.cancelOperation(operation);
     const outputs = operation.outputs;
     operation.outputs = undefined;
-    if (error) operation.stream?.fail(error);
-    else operation.stream?.complete();
-    if (error) operation.runInAsyncScope(operation.reject, undefined, error);
-    else operation.runInAsyncScope(operation.resolve, undefined, outputs);
+    if (error) {
+      operation.stream?.fail(error);
+    } else {
+      operation.stream?.complete();
+    }
+    if (error) {
+      operation.runInAsyncScope(operation.reject, undefined, error);
+    } else {
+      operation.runInAsyncScope(operation.resolve, undefined, outputs);
+    }
     operation.emitDestroy();
-    if (profileStarted)
+    if (profileStarted) {
       recordInternalProfile(
         'parentSettlement',
         performance.now() - profileStarted,
       );
+    }
   }
 
   private finishDeliveredStream(operation: RangeOperation): boolean {
@@ -826,9 +902,12 @@ export class RangeCoordinator implements TaskParentPort {
   private prepareResultDeclaration(
     operation: RangeOperation,
   ): { partition: RangePartition; bytes: number; waited: boolean } | undefined {
-    if (operation.resultByteDeclaration === undefined) return undefined;
-    if (operation.pendingResultDeclaration)
+    if (operation.resultByteDeclaration === undefined) {
+      return undefined;
+    }
+    if (operation.pendingResultDeclaration) {
       return operation.pendingResultDeclaration;
+    }
     const partition = partitionAt(operation.plan, operation.generated);
     let bytes: number;
     try {
@@ -879,7 +958,9 @@ export class RangeCoordinator implements TaskParentPort {
   ): PendingTask | undefined {
     for (const id of operation.children.keys()) {
       const task = this.tasks.get(id);
-      if (task?.recovery?.ready) return task;
+      if (task?.recovery?.ready) {
+        return task;
+      }
     }
     return undefined;
   }
@@ -911,18 +992,24 @@ export class RangeCoordinator implements TaskParentPort {
       (a, b) => Number(b.id === preferred) - Number(a.id === preferred),
     );
     for (const operation of operations) {
-      if (this.readyContinuation(operation)) return operation;
+      if (this.readyContinuation(operation)) {
+        return operation;
+      }
       if (!this.operationHasCountCredit(operation)) {
-        if (operation.id === preferred)
+        if (operation.id === preferred) {
           this.dispatcher.cancelProduction(operation.id);
+        }
         continue;
       }
       if (operation.resultByteDeclaration !== undefined) {
         const declaration = this.prepareResultDeclaration(operation);
-        if (!declaration || operation.status !== 'running') continue;
+        if (!declaration || operation.status !== 'running') {
+          continue;
+        }
         if (!this.resultCredits.canReserve(operation, declaration.bytes)) {
-          if (operation.id === preferred)
+          if (operation.id === preferred) {
             this.dispatcher.cancelProduction(operation.id);
+          }
           if (!declaration.waited) {
             declaration.waited = true;
             this.resultCredits.recordWait();
@@ -967,8 +1054,11 @@ export class RangeCoordinator implements TaskParentPort {
     let running = 0;
     for (const id of operation.children.keys()) {
       const status = this.tasks.get(id)?.snapshot.status;
-      if (status === 'queued') queued++;
-      else if (status === 'scheduled' || status === 'running') running++;
+      if (status === 'queued') {
+        queued++;
+      } else if (status === 'scheduled' || status === 'running') {
+        running++;
+      }
     }
     return {
       id: operation.id,

@@ -157,9 +157,11 @@ export class ExecutionDispatcher {
         ready: () => this.callbacks.ready(),
         started: (worker, taskId) => this.callbacks.started(worker, taskId),
         progress: (worker, message, value, acknowledge) => {
-          if (this.callbacks.progress)
+          if (this.callbacks.progress) {
             this.callbacks.progress(worker, message, value, acknowledge);
-          else acknowledge();
+          } else {
+            acknowledge();
+          }
         },
         result: (worker, message) => {
           this.metrics.resultMessages++;
@@ -186,18 +188,22 @@ export class ExecutionDispatcher {
                   });
             this.callbacks.failed(failure, reason);
           }
-          if (!ids.length) this.callbacks.failed(error, reason);
+          if (!ids.length) {
+            this.callbacks.failed(error, reason);
+          }
         },
         exited: (worker, correlationIds) => {
           this.cancelDrainForWorker(worker);
-          for (const id of correlationIds)
+          for (const id of correlationIds) {
             this.resultCredits.markExecutionEnded(id);
+          }
           this.callbacks.exited(correlationIds);
         },
         postingQuiescent: (worker) => this.postingQuiescent(worker),
         revoked: (_worker, correlations) => {
-          for (const id of correlations)
+          for (const id of correlations) {
             this.resultCredits.abandonExecution(id);
+          }
           this.callbacks.revoked(correlations);
         },
         fatal: (error) => this.callbacks.fatal(error),
@@ -254,24 +260,30 @@ export class ExecutionDispatcher {
   get reservedWorkers(): ReadonlySet<number> {
     return new Set([...this.claims].map((claim) => claim.worker.id));
   }
+
   get activeExecutions(): number {
     return this.pool.activeExecutions;
   }
+
   get policyErrors(): number {
     return this.scheduler.policyErrors;
   }
+
   get productionOwner(): string | undefined {
     return this.drain?.production ? this.drain.owner : undefined;
   }
+
   invalidate(): void {
     this.scheduler.invalidate();
   }
+
   private exclusive(task: PendingTask): boolean {
     return (
       (task.child?.operation.cancellation ?? task.cancellation) ===
         'terminate' || task.executionLease !== undefined
     );
   }
+
   private stamp(task: PendingTask): void {
     this.scheduler.stamp(task, {
       taskId: task.id,
@@ -288,23 +300,31 @@ export class ExecutionDispatcher {
         : {}),
     });
   }
+
   private reserve(worker: PjsWorker, exclusive: boolean): () => void {
     const claim = { worker, exclusive };
     this.claims.add(claim);
     this.invalidate();
     return () => {
-      if (this.claims.delete(claim)) this.invalidate();
+      if (this.claims.delete(claim)) {
+        this.invalidate();
+      }
     };
   }
+
   private rawSlots(worker: PjsWorker): number {
     let slots = worker.availableSlots;
-    for (const claim of this.claims)
+    for (const claim of this.claims) {
       if (claim.worker === worker) {
-        if (claim.exclusive) return 0;
+        if (claim.exclusive) {
+          return 0;
+        }
         slots--;
       }
+    }
     return Math.max(0, slots);
   }
+
   /** Virtual allocation protects accepted ordinary recovery without multiplying claims. */
   private layout(ignoreDrain = false) {
     const workers = this.pool
@@ -322,7 +342,9 @@ export class ExecutionDispatcher {
     let missingShared = 0,
       missingExclusive = 0;
     for (const recovery of this.recoveries.values()) {
-      if (recovery.kind !== 'slot') continue;
+      if (recovery.kind !== 'slot') {
+        continue;
+      }
       const exclusive = this.exclusive(recovery.task);
       const worker = workers.find(
         (entry) =>
@@ -332,8 +354,11 @@ export class ExecutionDispatcher {
               slots.get(entry.id) === entry.concurrency)),
       );
       if (!worker) {
-        if (exclusive) missingExclusive++;
-        else missingShared++;
+        if (exclusive) {
+          missingExclusive++;
+        } else {
+          missingShared++;
+        }
         continue;
       }
       slots.set(worker.id, exclusive ? 0 : slots.get(worker.id)! - 1);
@@ -344,6 +369,7 @@ export class ExecutionDispatcher {
     }
     return { workers, slots, owners, missingShared, missingExclusive };
   }
+
   private admissionWorker(
     exclusive: boolean,
     owner?: string,
@@ -353,8 +379,9 @@ export class ExecutionDispatcher {
       if (
         worker.canExecute(true) &&
         this.rawSlots(worker) === worker.concurrency
-      )
+      ) {
         return worker;
+      }
       return undefined;
     }
     const { workers, slots } = this.layout();
@@ -366,14 +393,19 @@ export class ExecutionDispatcher {
             slots.get(worker.id) === worker.concurrency)),
     );
   }
+
   prepareAdmission(
     deferred: boolean,
     child: boolean,
     dispatchAllowed: boolean,
     exclusive = false,
   ): TaskAdmission | undefined {
-    if (deferred) return { kind: 'deferred' };
-    if (this.scheduler.selecting) this.invalidate();
+    if (deferred) {
+      return { kind: 'deferred' };
+    }
+    if (this.scheduler.selecting) {
+      this.invalidate();
+    }
     const worker =
       dispatchAllowed && !this.scheduler.selecting && this.scheduler.size === 0
         ? this.admissionWorker(exclusive)
@@ -385,76 +417,105 @@ export class ExecutionDispatcher {
       (!child &&
         this.admissionReservations > 0 &&
         this.availableAdmission(dispatchAllowed) <= 0)
-    )
+    ) {
       return undefined;
+    }
     return worker ? { kind: 'direct', worker } : { kind: 'queued' };
   }
+
   admit(
     admission: TaskAdmission,
     task: PendingTask,
     deferred?: PendingTask[],
   ): void {
-    if (admission.kind === 'deferred') deferred!.push(task);
-    else if (admission.kind === 'direct') this.dispatch(admission.worker, task);
-    else {
+    if (admission.kind === 'deferred') {
+      deferred!.push(task);
+    } else if (admission.kind === 'direct') {
+      this.dispatch(admission.worker, task);
+    } else {
       this.stamp(task);
       this.scheduler.enqueue(task);
     }
   }
+
   remove(taskId: string): PendingTask | undefined {
     this.cancelProduction(taskId);
     const recovery = this.recoveries.get(taskId);
     if (recovery) {
       this.recoveries.delete(taskId);
-      if (recovery.kind === 'queue') this.admissionReservations--;
+      if (recovery.kind === 'queue') {
+        this.admissionReservations--;
+      }
       this.invalidate();
     }
     return this.scheduler.remove(taskId);
   }
+
   closeProgress(correlationId: string): void {
     const progress = this.postings.get(correlationId)?.progress;
     if (progress) {
       progress.closed = true;
-      if (progress.flag) Atomics.store(progress.flag, 0, -1);
+      if (progress.flag) {
+        Atomics.store(progress.flag, 0, -1);
+      }
     }
     this.pool.closeProgress(correlationId);
   }
+
   cooperateExecution(correlationId: string): void {
     const posting = this.postings.get(correlationId);
-    if (posting?.cancellation) Atomics.store(posting.cancellation, 0, 1);
-    else this.pool.cooperateExecution(correlationId);
+    if (posting?.cancellation) {
+      Atomics.store(posting.cancellation, 0, 1);
+    } else {
+      this.pool.cooperateExecution(correlationId);
+    }
   }
+
   private async postingQuiescent(worker: PjsWorker): Promise<void> {
-    if (this.host.lifecycle !== 'endpoint-revocation')
+    if (this.host.lifecycle !== 'endpoint-revocation') {
       throw new Error('Node cannot revoke endpoints');
+    }
     await Promise.all(
       [...this.postings.values()]
         .filter((p) => p.worker === worker)
         .map((p) => p.done),
     );
-    if ([...this.postings.values()].some((p) => p.worker === worker))
+    if ([...this.postings.values()].some((p) => p.worker === worker)) {
       throw new Error('Endpoint still owns a posting transaction');
+    }
   }
+
   terminateExecution(correlationId: string): void {
     const posting = this.postings.get(correlationId);
-    if (posting) posting.terminate = true;
-    else this.pool.terminateExecution(correlationId);
+    if (posting) {
+      posting.terminate = true;
+    } else {
+      this.pool.terminateExecution(correlationId);
+    }
   }
+
   retainRecovery(task: PendingTask): void {
-    if (this.recoveries.has(task.id))
+    if (this.recoveries.has(task.id)) {
       throw new Error('Duplicate recovery claim');
+    }
     this.recoveries.set(task.id, { task, kind: 'slot', ready: false });
     this.invalidate();
     this.moveRecoveriesToQueue();
   }
+
   readyRecovery(taskId: string): void {
     const recovery = this.recoveries.get(taskId);
-    if (!recovery) return;
+    if (!recovery) {
+      return;
+    }
     recovery.ready = true;
     this.stamp(recovery.task);
     this.invalidate();
-    if (recovery.kind === 'queue') this.enqueueRecovery(recovery);
+    if (recovery.kind === 'queue') {
+      this.enqueueRecovery(recovery);
+    }
   }
+
   private enqueueRecovery(recovery: {
     task: PendingTask;
     kind: 'slot' | 'queue';
@@ -464,6 +525,7 @@ export class ExecutionDispatcher {
     this.admissionReservations--;
     this.scheduler.enqueue(recovery.task);
   }
+
   private moveRecoveriesToQueue(preferred: readonly string[] = []): void {
     const entries = [...this.recoveries.values()];
     entries.sort(
@@ -475,15 +537,21 @@ export class ExecutionDispatcher {
       if (
         this.scheduler.size + this.admissionReservations >=
         this.scheduler.capacity
-      )
+      ) {
         break;
-      if (recovery.kind !== 'slot') continue;
+      }
+      if (recovery.kind !== 'slot') {
+        continue;
+      }
       recovery.kind = 'queue';
       this.admissionReservations++;
       this.invalidate();
-      if (recovery.ready) this.enqueueRecovery(recovery);
+      if (recovery.ready) {
+        this.enqueueRecovery(recovery);
+      }
     }
   }
+
   availableAdmission(dispatchAllowed: boolean): number {
     const available = dispatchAllowed
       ? [...this.layout().slots.values()].reduce((sum, slots) => sum + slots, 0)
@@ -495,12 +563,15 @@ export class ExecutionDispatcher {
       available
     );
   }
+
   claimProduction(
     maximum: number,
     exclusive = false,
     owner?: string,
   ): ProductionClaim | undefined {
-    if (maximum < 1 || this.stopped) return undefined;
+    if (maximum < 1 || this.stopped) {
+      return undefined;
+    }
     const pinned = owner !== undefined && this.drain?.owner === owner;
     const worker =
       this.scheduler.size === 0 || pinned
@@ -511,28 +582,43 @@ export class ExecutionDispatcher {
       this.scheduler.size -
       this.admissionReservations;
     if (!worker && queueCapacity <= 0) {
-      if (exclusive && owner) this.pin(owner, true);
+      if (exclusive && owner) {
+        this.pin(owner, true);
+      }
       this.updateDemand(exclusive ? 'exclusive' : 'shared');
       return undefined;
     }
-    if (pinned && !worker) this.clearDrain();
+    if (pinned && !worker) {
+      this.clearDrain();
+    }
     const capacity = worker ? maximum : Math.min(maximum, queueCapacity);
-    if (capacity < 1) return undefined;
-    if (worker && pinned) this.clearDrain();
+    if (capacity < 1) {
+      return undefined;
+    }
+    if (worker && pinned) {
+      this.clearDrain();
+    }
     const release = worker ? this.reserve(worker, exclusive) : () => {};
-    if (!worker) this.admissionReservations += capacity;
+    if (!worker) {
+      this.admissionReservations += capacity;
+    }
     return new ProductionClaim(capacity, worker, exclusive, release);
   }
+
   finishProductionClaim(claim: ProductionClaim, staged: PendingTask[]): void {
     try {
-      if (staged.length === 0 || this.stopped) return;
+      if (staged.length === 0 || this.stopped) {
+        return;
+      }
       const leader = staged[0]!;
       leader.batch = staged;
       Object.assign(leader, { admissionWeight: staged.length });
-      for (const task of staged) task.batchLeaderId = leader.id;
-      if (claim.worker)
+      for (const task of staged) {
+        task.batchLeaderId = leader.id;
+      }
+      if (claim.worker) {
         this.dispatch(claim.worker, leader, claim.releaseWorker);
-      else {
+      } else {
         this.admissionReservations -= claim.capacity;
         claim.released = true;
         this.stamp(leader);
@@ -542,25 +628,41 @@ export class ExecutionDispatcher {
       this.releaseProductionClaim(claim);
     }
   }
+
   releaseProductionClaim(claim: ProductionClaim): void {
-    if (claim.released) return;
+    if (claim.released) {
+      return;
+    }
     claim.released = true;
-    if (claim.worker) claim.releaseWorker();
-    else if (!this.stopped) this.admissionReservations -= claim.capacity;
+    if (claim.worker) {
+      claim.releaseWorker();
+    } else if (!this.stopped) {
+      this.admissionReservations -= claim.capacity;
+    }
   }
+
   cancelProduction(owner: string): void {
-    if (this.drain?.owner === owner) this.clearDrain();
+    if (this.drain?.owner === owner) {
+      this.clearDrain();
+    }
     this.invalidate();
   }
+
   private clearDrain(): void {
     this.drain = undefined;
     this.invalidate();
   }
+
   private cancelDrainForWorker(worker: PjsWorker): void {
-    if (this.drain?.worker === worker) this.clearDrain();
+    if (this.drain?.worker === worker) {
+      this.clearDrain();
+    }
   }
+
   private drainCandidate(task?: PendingTask): PjsWorker | undefined {
-    if (this.drain || this.stopped) return undefined;
+    if (this.drain || this.stopped) {
+      return undefined;
+    }
     const layout = this.layout();
     const credit =
       task && this.scheduler.values().includes(task)
@@ -580,6 +682,7 @@ export class ExecutionDispatcher {
         (a, b) => a.activeExecutions - b.activeExecutions || a.id - b.id,
       )[0];
   }
+
   private pin(owner: string, production: boolean, task?: PendingTask): void {
     const worker = this.drainCandidate(task);
     if (worker) {
@@ -592,6 +695,7 @@ export class ExecutionDispatcher {
       this.invalidate();
     }
   }
+
   private placement(
     task: PendingTask,
     queued: boolean,
@@ -600,11 +704,12 @@ export class ExecutionDispatcher {
     const exclusive = this.exclusive(task);
     const ownPin =
       !ignoreDrain && this.drain?.owner === task.id ? this.drain : undefined;
-    if (ownPin)
+    if (ownPin) {
       return ownPin.worker.canExecute(true) &&
         this.rawSlots(ownPin.worker) === ownPin.worker.concurrency
         ? ownPin.worker
         : undefined;
+    }
     const layout = this.layout(ignoreDrain);
     const credit = queued
       ? (task.admissionWeight ?? 1) +
@@ -616,25 +721,31 @@ export class ExecutionDispatcher {
       if (
         (!ignoreDrain && this.drain?.worker === worker) ||
         this.rawSlots(worker) < 1
-      )
+      ) {
         return false;
-      if (!exclusive)
+      }
+      if (!exclusive) {
         return (
           queued ||
           this.recoveries.get(task.id)?.kind === 'slot' ||
           (layout.slots.get(worker.id) ?? 0) > 0
         );
+      }
       if (
         worker.activeExecutions ||
         this.rawSlots(worker) !== worker.concurrency
-      )
+      ) {
         return false;
+      }
       const owners = layout.owners.get(worker.id) ?? [];
       return owners.filter((id) => id !== task.id).length <= credit;
     });
   }
+
   dispatchQueued(dispatchAllowed: () => boolean): void {
-    if (this.scheduler.selecting || this.stopped) return;
+    if (this.scheduler.selecting || this.stopped) {
+      return;
+    }
     this.moveRecoveriesToQueue();
     this.updateDemand();
     while (dispatchAllowed() && !this.stopped) {
@@ -643,11 +754,14 @@ export class ExecutionDispatcher {
         .filter((entry) => entry.kind === 'slot' && entry.ready)
         .map((entry) => entry.task);
       let pinned: PendingTask | undefined;
-      if (this.drain && !this.drain.production)
+      if (this.drain && !this.drain.production) {
         pinned = [...queued, ...ready].find(
           (task) => task.id === this.drain!.owner,
         );
-      if (this.drain && !this.drain.production && !pinned) this.clearDrain();
+      }
+      if (this.drain && !this.drain.production && !pinned) {
+        this.clearDrain();
+      }
       // A replacement can become idle while the pinned worker is still busy.
       // Reuse ordinary placement/credit checks before retiring that obsolete pin.
       if (
@@ -674,7 +788,9 @@ export class ExecutionDispatcher {
         if (owners.length > credit) {
           this.clearDrain();
           pinned = undefined;
-        } else this.drain.borrowed = owners;
+        } else {
+          this.drain.borrowed = owners;
+        }
       }
       const candidates = [...queued, ...ready].filter(
         (task) =>
@@ -687,7 +803,9 @@ export class ExecutionDispatcher {
           ? pinned
           : this.scheduler.select(candidates, dispatchAllowed);
       if (!task) {
-        if (this.scheduler.policyErrors !== errors) continue;
+        if (this.scheduler.policyErrors !== errors) {
+          continue;
+        }
         break;
       }
       let worker = this.placement(task, queued.includes(task));
@@ -696,7 +814,9 @@ export class ExecutionDispatcher {
         worker = this.placement(task, queued.includes(task));
         if (!worker) {
           // The pinned job is now ineligible; other workers may keep dispatching.
-          if (this.drain) continue;
+          if (this.drain) {
+            continue;
+          }
           break;
         }
       }
@@ -704,9 +824,13 @@ export class ExecutionDispatcher {
         this.drain?.owner === task.id
           ? this.drain.borrowed
           : (this.layout().owners.get(worker.id) ?? []);
-      if (this.drain?.owner === task.id) this.clearDrain();
+      if (this.drain?.owner === task.id) {
+        this.clearDrain();
+      }
       if (queued.includes(task)) {
-        if (!this.scheduler.remove(task.id)) continue;
+        if (!this.scheduler.remove(task.id)) {
+          continue;
+        }
         this.moveRecoveriesToQueue(borrowed);
       } else {
         this.recoveries.delete(task.id);
@@ -716,13 +840,18 @@ export class ExecutionDispatcher {
     }
     this.updateDemand();
   }
+
   private updateDemand(productionDemand?: 'shared' | 'exclusive'): void {
     const layout = this.layout();
     const protectedWorkers = new Set<number>(
       [...this.claims].map((claim) => claim.worker.id),
     );
-    for (const id of layout.owners.keys()) protectedWorkers.add(id);
-    if (this.drain) protectedWorkers.add(this.drain.worker.id);
+    for (const id of layout.owners.keys()) {
+      protectedWorkers.add(id);
+    }
+    if (this.drain) {
+      protectedWorkers.add(this.drain.worker.id);
+    }
     const snapshots = this.pool.snapshots();
     const base = snapshots.filter(
       (worker) =>
@@ -753,6 +882,7 @@ export class ExecutionDispatcher {
       protectedWorkers,
     );
   }
+
   snapshot() {
     return {
       ...this.metrics,
@@ -761,6 +891,7 @@ export class ExecutionDispatcher {
         : 0,
     };
   }
+
   private dispatch(
     worker: PjsWorker,
     task: PendingTask,
@@ -768,8 +899,9 @@ export class ExecutionDispatcher {
   ): void {
     const release = releaseClaim ?? this.reserve(worker, this.exclusive(task));
     try {
-      if (this.callbacks.prepareDispatch?.(task) === false || this.stopped)
+      if (this.callbacks.prepareDispatch?.(task) === false || this.stopped) {
         return;
+      }
       this.post(worker, task, release);
     } finally {
       release();
@@ -787,20 +919,22 @@ export class ExecutionDispatcher {
     const scheduledAt = Date.now();
     const monotonicNow = performance.now();
     if (items) {
-      for (const item of items)
+      for (const item of items) {
         this.callbacks.scheduled(
           worker,
           item,
           scheduledAt,
           monotonicNow - (item.attemptQueuedAt ?? item.admittedAt),
         );
-    } else
+      }
+    } else {
       this.callbacks.scheduled(
         worker,
         task,
         scheduledAt,
         monotonicNow - (task.attemptQueuedAt ?? task.admittedAt),
       );
+    }
     const mode = task.child?.operation.cancellation ?? task.cancellation;
     const cancellation =
       mode === 'cooperative'
@@ -814,8 +948,9 @@ export class ExecutionDispatcher {
           closed: !task.progress.active,
         }
       : undefined;
-    if (progress?.flag)
+    if (progress?.flag) {
       Atomics.store(progress.flag, 0, progress.closed ? -1 : 1);
+    }
     let finish: (() => void) | undefined;
     const done =
       this.host.lifecycle === 'endpoint-revocation'
@@ -837,7 +972,7 @@ export class ExecutionDispatcher {
       this.resultCredits.markDispatching(executionId, taskIds);
       // Worker.begin installs physical occupancy synchronously, before cloning can reenter.
       releaseClaim();
-      if (items && items.length > 1)
+      if (items && items.length > 1) {
         worker.executeBatch(
           executionId,
           task.snapshot.taskName,
@@ -856,7 +991,7 @@ export class ExecutionDispatcher {
           this.exclusive(task),
           progress,
         );
-      else
+      } else {
         worker.execute(
           executionId,
           task.snapshot.implementation ?? task.snapshot.taskName,
@@ -872,12 +1007,16 @@ export class ExecutionDispatcher {
           this.exclusive(task),
           progress,
         );
+      }
       this.resultCredits.markDispatched(executionId, taskIds);
-      if (task.executionLease !== undefined)
+      if (task.executionLease !== undefined) {
         worker.armExecutionLease(executionId, task.executionLease);
-      if (posting.terminate) this.pool.terminateExecution(executionId);
-      else if (cancellation && Atomics.load(cancellation, 0) !== 0)
+      }
+      if (posting.terminate) {
+        this.pool.terminateExecution(executionId);
+      } else if (cancellation && Atomics.load(cancellation, 0) !== 0) {
         this.pool.cooperateExecution(executionId);
+      }
       this.metrics.executeMessages++;
       this.metrics.logicalTasks += items?.length ?? 1;
       this.metrics.logicalPartitions += items
@@ -885,7 +1024,9 @@ export class ExecutionDispatcher {
         : task.child
           ? 1
           : 0;
-      if (items && items.length > 1) this.metrics.batchedExecuteMessages++;
+      if (items && items.length > 1) {
+        this.metrics.batchedExecuteMessages++;
+      }
     } catch (error) {
       this.resultCredits.rollbackDispatch(executionId);
       this.callbacks.dispatchFailed(task, error as Error);

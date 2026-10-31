@@ -55,11 +55,13 @@ export async function startInvocations(
   const reporters = new Map<string, InvocationProgress>();
 
   try {
-    if (data.version !== 2 || !Array.isArray(data.tasks))
+    if (data.version !== 2 || !Array.isArray(data.tasks)) {
       throw new Error('Unsupported PJS bootstrap data');
+    }
     concurrency = data.concurrency ?? 1;
-    if (!Number.isSafeInteger(concurrency) || concurrency < 1)
+    if (!Number.isSafeInteger(concurrency) || concurrency < 1) {
       throw new Error('Invalid worker concurrency');
+    }
     for (const task of data.tasks) {
       const exports = (await import(task.module)) as Record<string, unknown>;
       let execute = exports[task.exportName];
@@ -70,19 +72,23 @@ export async function startInvocations(
           defaults !== null &&
           (typeof defaults === 'object' || typeof defaults === 'function') &&
           Object.hasOwn(defaults, task.exportName)
-        )
+        ) {
           execute = Reflect.get(defaults, task.exportName);
+        }
       }
-      if (typeof execute !== 'function')
+      if (typeof execute !== 'function') {
         throw new Error(
           `Task ${task.id}: export ${task.exportName} is not a function in ${task.module}`,
         );
+      }
       tasks.set(task.id, execute as Execute);
     }
     state = 'idle';
     port.listen((message: unknown) => {
       const invocation = handle(message);
-      if (services.fatal) void invocation.catch(services.fatal);
+      if (services.fatal) {
+        void invocation.catch(services.fatal);
+      }
     });
     send({ type: 'ready', version: 2 });
   } catch (cause) {
@@ -156,6 +162,7 @@ export async function startInvocations(
       buffer !== undefined && Atomics.load(new Int32Array(buffer), 0) !== 0
     );
   }
+
   async function invoke(
     execute: Execute,
     input: unknown,
@@ -165,7 +172,9 @@ export async function startInvocations(
   ): Promise<unknown> {
     // Argument count is observable: existing modes must continue passing exactly one.
     const reporter = reporters.get(correlationId);
-    if (!buffer && !reporter) return execute(input);
+    if (!buffer && !reporter) {
+      return execute(input);
+    }
     let open = true;
     let sequence = 0;
     const controller = new AbortController();
@@ -173,9 +182,13 @@ export async function startInvocations(
     const context: TaskContext = Object.freeze({
       signal: controller.signal,
       reportProgress(value: unknown) {
-        if (!open || !reporter || !reporter.isOpen()) return false;
+        if (!open || !reporter || !reporter.isOpen()) {
+          return false;
+        }
         const payload = encodeProgress(value);
-        if (payload === undefined || !open) return false;
+        if (payload === undefined || !open) {
+          return false;
+        }
         return reporter.report({
           type: 'progress',
           correlationId,
@@ -185,8 +198,9 @@ export async function startInvocations(
         });
       },
       throwIfCancelled() {
-        if (cancelled(buffer) && !controller.signal.aborted)
+        if (cancelled(buffer) && !controller.signal.aborted) {
           controller.abort(new DOMException('Task cancelled', 'AbortError'));
+        }
         controller.signal.throwIfAborted();
       },
     });
@@ -200,7 +214,9 @@ export async function startInvocations(
   }
 
   async function handle(value: unknown): Promise<void> {
-    if (!isHostMessage(value)) throw new Error('Invalid PJS host message');
+    if (!isHostMessage(value)) {
+      throw new Error('Invalid PJS host message');
+    }
     if (value.type === 'progressAck') {
       reporters.get(value.correlationId)?.wake(value.taskId, value.sequence);
       return;
@@ -216,14 +232,16 @@ export async function startInvocations(
       return;
     }
     if (value.type === 'shutdown') {
-      if (state !== 'idle' || active.size > 0)
+      if (state !== 'idle' || active.size > 0) {
         throw new Error('Shutdown received while worker is not idle');
+      }
       state = 'stopped';
       port.close();
       return;
     }
-    if (value.profile && !services.profiling)
+    if (value.profile && !services.profiling) {
       throw new Error('Worker profiling is unsupported on this host');
+    }
     const receivedAt = value.profile ? performance.now() : 0;
     const correlationId =
       value.type === 'executeBatch' ? value.batchId : value.taskId;
@@ -233,19 +251,24 @@ export async function startInvocations(
       active.has(correlationId) ||
       [...active.values()].some(Boolean) ||
       (value.exclusive && active.size > 0)
-    )
+    ) {
       throw new Error('Incompatible or overlapping PJS execution');
+    }
     active.set(correlationId, value.exclusive ?? false);
-    if (value.progressMode === 'message')
+    if (value.progressMode === 'message') {
       reporters.set(correlationId, new MessageProgressReporter(send));
-    else if (value.progressBuffer)
+    } else if (value.progressBuffer) {
       reporters.set(
         correlationId,
         new ProgressReporter(new Int32Array(value.progressBuffer), send),
       );
+    }
     try {
-      if (value.type === 'executeBatch') await executeBatch(value, receivedAt);
-      else await executeSingle(value, receivedAt);
+      if (value.type === 'executeBatch') {
+        await executeBatch(value, receivedAt);
+      } else {
+        await executeSingle(value, receivedAt);
+      }
     } finally {
       reporters.get(correlationId)?.close();
       reporters.delete(correlationId);
@@ -262,7 +285,9 @@ export async function startInvocations(
     const workerIngressMs = started - receivedAt;
     try {
       const execute = tasks.get(value.taskName);
-      if (!execute) throw new Error(`Unknown task ${value.taskName}`);
+      if (!execute) {
+        throw new Error(`Unknown task ${value.taskName}`);
+      }
       const output = await invoke(
         execute,
         value.input,
@@ -294,8 +319,9 @@ export async function startInvocations(
       try {
         const preparationStarted = value.profile ? performance.now() : 0;
         const result = services.transferOutput(output);
-        if (value.expectedResultBytes !== undefined)
+        if (value.expectedResultBytes !== undefined) {
           validateBinaryResult(result.value, value.expectedResultBytes);
+        }
         const actualResultBytes = value.resultByteContract
           ? validateBinaryResult(
               result.value,
@@ -306,7 +332,7 @@ export async function startInvocations(
         const outputPreparationMs = value.profile
           ? performance.now() - preparationStarted
           : 0;
-        if (value.profile)
+        if (value.profile) {
           send(
             {
               type: 'success',
@@ -322,7 +348,7 @@ export async function startInvocations(
             },
             result.transferList,
           );
-        else
+        } else {
           send(
             {
               type: 'success',
@@ -333,6 +359,7 @@ export async function startInvocations(
             },
             result.transferList,
           );
+        }
       } catch (cause) {
         send({
           type: 'failure',
@@ -400,7 +427,9 @@ export async function startInvocations(
       const started = performance.now();
       try {
         const execute = tasks.get(value.taskName);
-        if (!execute) throw new Error(`Unknown task ${value.taskName}`);
+        if (!execute) {
+          throw new Error(`Unknown task ${value.taskName}`);
+        }
         const output = await invoke(
           execute,
           item.input,
@@ -408,8 +437,9 @@ export async function startInvocations(
           value.cancellationBuffer,
           item.taskId,
         );
-        if (cancelled(value.cancellationBuffer))
+        if (cancelled(value.cancellationBuffer)) {
           throw new DOMException('Task cancelled', 'AbortError');
+        }
         const executionMs = performance.now() - started;
         if (value.completionOnly) {
           items.push({
@@ -422,8 +452,9 @@ export async function startInvocations(
         try {
           const preparationStarted = performance.now();
           const result = services.transferOutput(output);
-          if (item.expectedResultBytes !== undefined)
+          if (item.expectedResultBytes !== undefined) {
             validateBinaryResult(result.value, item.expectedResultBytes);
+          }
           const actualResultBytes = item.resultByteContract
             ? validateBinaryResult(
                 result.value,

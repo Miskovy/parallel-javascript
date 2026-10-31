@@ -141,12 +141,14 @@ export class PjsWorker {
           'worker-crash',
         ),
     };
-    if (this.connection.lifecycle === 'confirmed-exit')
+    if (this.connection.lifecycle === 'confirmed-exit') {
       this.connection.listen({
         ...messages,
         exit: (code) => this.exited(code),
       });
-    else this.connection.listen(messages);
+    } else {
+      this.connection.listen(messages);
+    }
   }
 
   snapshot(): WorkerSnapshot {
@@ -167,42 +169,54 @@ export class PjsWorker {
   get executionPhase(): 'none' | 'scheduled' | 'running' {
     return this.executions.values().next().value?.phase ?? 'none';
   }
+
   get currentTaskIds(): string[] {
     return [...this.executions.values()].flatMap((entry) => entry.itemIds);
   }
+
   get activeExecutions(): number {
     return this.executions.size;
   }
+
   get exclusive(): boolean {
     return this.state.exclusive;
   }
+
   get availableSlots(): number {
     return (this.status === 'idle' || this.status === 'busy') && !this.exclusive
       ? this.concurrency - this.executions.size
       : 0;
   }
+
   correlations(): string[] {
     return [...this.executions.keys()];
   }
+
   owns(correlationId: string): boolean {
     return this.executions.has(correlationId);
   }
+
   canExecute(exclusive = false): boolean {
     return (
       this.availableSlots > 0 && (!exclusive || this.executions.size === 0)
     );
   }
+
   private refreshOccupancy(): void {
     this.state.currentTaskIds = this.correlations();
-    if (this.executions.size === 1)
+    if (this.executions.size === 1) {
       this.state.currentTaskId = this.state.currentTaskIds[0]!;
-    else delete this.state.currentTaskId;
+    } else {
+      delete this.state.currentTaskId;
+    }
     this.state.exclusive = [...this.executions.values()].some(
       (entry) => entry.exclusive,
     );
-    if (this.status === 'idle' || this.status === 'busy')
+    if (this.status === 'idle' || this.status === 'busy') {
       this.state.status = this.executions.size ? 'busy' : 'idle';
+    }
   }
+
   private begin(
     correlationId: string,
     itemIds: string[],
@@ -210,11 +224,12 @@ export class PjsWorker {
     exclusive: boolean,
     progress?: ProgressControl,
   ): void {
-    if (!this.canExecute(exclusive) || this.executions.has(correlationId))
+    if (!this.canExecute(exclusive) || this.executions.has(correlationId)) {
       throw new PjsWorkerError('Worker has no compatible execution slot', {
         taskId: correlationId,
         workerId: this.id,
       });
+    }
     this.executions.set(correlationId, {
       phase: 'scheduled',
       posted: false,
@@ -237,10 +252,15 @@ export class PjsWorker {
 
   /** Called only after successful posting and the dispatcher credit claim. */
   armExecutionLease(correlationId: string, duration: number): void {
-    if (this.state.status !== 'busy' || !this.executions.has(correlationId))
-      return; // Reentrant shutdown during posting has already initiated containment.
-    if (this.executions.size !== 1 || (!this.exclusive && this.concurrency > 1))
+    if (this.state.status !== 'busy' || !this.executions.has(correlationId)) {
+      return;
+    } // Reentrant shutdown during posting has already initiated containment.
+    if (
+      this.executions.size !== 1 ||
+      (!this.exclusive && this.concurrency > 1)
+    ) {
       throw new PjsWorkerError('Execution leases require exclusive placement');
+    }
     const lease: ExecutionLease = {
       correlationId,
       deadline: this.monotonicNow() + duration,
@@ -271,7 +291,9 @@ export class PjsWorker {
   private clearLease(): void {
     const lease = this.lease;
     this.lease = undefined;
-    if (lease?.timer !== undefined) this.cancelLeaseTimer(lease.timer);
+    if (lease?.timer !== undefined) {
+      this.cancelLeaseTimer(lease.timer);
+    }
   }
 
   private expireLease(lease: ExecutionLease): void {
@@ -279,8 +301,9 @@ export class PjsWorker {
       this.lease !== lease ||
       this.state.status !== 'busy' ||
       !this.executions.has(lease.correlationId)
-    )
+    ) {
       return;
+    }
     const remaining = lease.deadline - this.monotonicNow();
     if (remaining > 0) {
       lease.timer = this.scheduleLeaseTimer(
@@ -313,16 +336,17 @@ export class PjsWorker {
     exclusive = false,
     progress?: ProgressControl,
   ): void {
-    if (!this.canExecute(exclusive))
+    if (!this.canExecute(exclusive)) {
       throw new PjsWorkerError('Worker is not idle', {
         taskId,
         workerId: this.id,
       });
+    }
     this.begin(taskId, [], cancellation, exclusive, progress);
     try {
       this.services.validateTransferList(transferList);
       const postStarted = profile ? performance.now() : 0;
-      if (profile)
+      if (profile) {
         this.thread.postMessage(
           {
             type: 'execute',
@@ -347,7 +371,7 @@ export class PjsWorker {
           } satisfies HostMessage,
           transferList,
         );
-      else
+      } else {
         this.thread.postMessage(
           {
             type: 'execute',
@@ -371,12 +395,14 @@ export class PjsWorker {
           } satisfies HostMessage,
           transferList,
         );
+      }
       this.markPosted(taskId);
-      if (profile)
+      if (profile) {
         recordInternalProfile(
           'hostPostMessage',
           performance.now() - postStarted,
         );
+      }
     } catch (cause) {
       this.closeProgress(taskId);
       this.executions.delete(taskId);
@@ -401,16 +427,18 @@ export class PjsWorker {
     exclusive = false,
     progress?: ProgressControl,
   ): void {
-    if (!this.canExecute(exclusive))
+    if (!this.canExecute(exclusive)) {
       throw new PjsWorkerError('Worker is not idle', {
         taskId: batchId,
         workerId: this.id,
       });
-    if (items.length < 2)
+    }
+    if (items.length < 2) {
       throw new PjsWorkerError('A physical batch requires multiple items', {
         taskId: batchId,
         workerId: this.id,
       });
+    }
     this.begin(
       batchId,
       items.map((item) => item.taskId),
@@ -438,11 +466,12 @@ export class PjsWorker {
         ...(completionOnly ? { completionOnly: true } : {}),
       } satisfies HostMessage);
       this.markPosted(batchId);
-      if (profile)
+      if (profile) {
         recordInternalProfile(
           'hostPostMessage',
           performance.now() - postStarted,
         );
+      }
     } catch (cause) {
       this.closeProgress(batchId);
       this.executions.delete(batchId);
@@ -456,18 +485,25 @@ export class PjsWorker {
 
   private markPosted(correlationId: string): void {
     const execution = this.executions.get(correlationId);
-    if (!execution) return;
+    if (!execution) {
+      return;
+    }
     execution.posted = true;
-    if (execution.progress?.control.closed) this.closeProgress(correlationId);
+    if (execution.progress?.control.closed) {
+      this.closeProgress(correlationId);
+    }
   }
 
   closeProgress(correlationId: string): void {
     const execution = this.executions.get(correlationId);
     const progress = execution?.progress;
-    if (!progress || !execution) return;
+    if (!progress || !execution) {
+      return;
+    }
     progress.control.closed = true;
-    if (progress.control.flag) Atomics.store(progress.control.flag, 0, -1);
-    else if (execution.posted && !progress.closeSent) {
+    if (progress.control.flag) {
+      Atomics.store(progress.control.flag, 0, -1);
+    } else if (execution.posted && !progress.closeSent) {
       progress.closeSent = true;
       try {
         this.thread.postMessage({
@@ -479,8 +515,11 @@ export class PjsWorker {
       }
     }
   }
+
   private receiveProgress(value: unknown): void {
-    if (!value || typeof value !== 'object') return;
+    if (!value || typeof value !== 'object') {
+      return;
+    }
     const raw = value as Partial<ProgressMessage>;
     const execution =
       typeof raw.correlationId === 'string'
@@ -492,8 +531,9 @@ export class PjsWorker {
       !execution ||
       progress.control.closed ||
       (progress.control.flag && Atomics.load(progress.control.flag, 0) < 0)
-    )
+    ) {
       return;
+    }
     try {
       if (
         !isWorkerMessage(value) ||
@@ -508,28 +548,37 @@ export class PjsWorker {
           : value.taskId !== value.correlationId) ||
         value.sequence <= (progress.sequences.get(value.taskId) ?? 0) ||
         utf8Bytes(value.payload) > MAX_PROGRESS_BYTES
-      )
+      ) {
         throw new Error('Invalid progress frame');
+      }
       const decoded: unknown = JSON.parse(value.payload);
-      if (encodeProgress(decoded) === undefined)
+      if (encodeProgress(decoded) === undefined) {
         throw new Error('Invalid progress payload');
+      }
       progress.sequences.set(value.taskId, value.sequence);
       progress.pending = true;
       let acknowledged = false;
       const acknowledge = () => {
-        if (acknowledged) return;
+        if (acknowledged) {
+          return;
+        }
         acknowledged = true;
         progress.pending = false;
         if (
           this.executions.get(value.correlationId) !== execution ||
           progress.control.closed
-        )
+        ) {
           return;
+        }
         const flag = progress.control.flag;
         if (flag) {
-          if (Atomics.compareExchange(flag, 0, 0, 1) !== 0) return;
+          if (Atomics.compareExchange(flag, 0, 0, 1) !== 0) {
+            return;
+          }
           // CPU polling can consume the permit before the control turn; latch wakeups.
-          if (Atomics.compareExchange(flag, 1, 0, 1) !== 0) return;
+          if (Atomics.compareExchange(flag, 1, 0, 1) !== 0) {
+            return;
+          }
         }
         try {
           this.thread.postMessage({
@@ -543,17 +592,23 @@ export class PjsWorker {
           this.closeProgress(value.correlationId);
         }
       };
-      if (this.callbacks.progress)
+      if (this.callbacks.progress) {
         this.callbacks.progress(this, value, decoded, acknowledge);
-      else acknowledge();
+      } else {
+        acknowledge();
+      }
     } catch {
-      if (raw.correlationId) this.closeProgress(raw.correlationId);
+      if (raw.correlationId) {
+        this.closeProgress(raw.correlationId);
+      }
     }
   }
 
   requestCancellation(correlationId: string): void {
     const cancellation = this.executions.get(correlationId)?.cancellation;
-    if (!cancellation) return;
+    if (!cancellation) {
+      return;
+    }
     Atomics.store(cancellation, 0, 1);
     try {
       this.thread.postMessage({
@@ -566,7 +621,9 @@ export class PjsWorker {
   }
 
   stop(): Promise<void> {
-    if (this.stopPromise) return this.stopPromise;
+    if (this.stopPromise) {
+      return this.stopPromise;
+    }
     clearTimeout(this.startupTimer);
     this.clearLease();
     this.rejectReady(
@@ -575,17 +632,23 @@ export class PjsWorker {
     if (
       this.connection.lifecycle === 'confirmed-exit' &&
       this.state.status === 'idle'
-    )
+    ) {
       this.thread.postMessage({ type: 'shutdown' } satisfies HostMessage);
-    for (const id of this.executions.keys()) this.closeProgress(id);
+    }
+    for (const id of this.executions.keys()) {
+      this.closeProgress(id);
+    }
     this.state.status = 'stopped';
-    if (this.leaseExpired) this.callbacks.leaseTerminationRequested?.(this);
+    if (this.leaseExpired) {
+      this.callbacks.leaseTerminationRequested?.(this);
+    }
     const connection = this.connection;
     if (connection.lifecycle === 'endpoint-revocation') {
       // This promise confirms local posting/retirement only, never native exit.
       this.stopPromise = Promise.resolve().then(async () => {
-        if (!this.callbacks.postingQuiescent || !this.callbacks.revoked)
+        if (!this.callbacks.postingQuiescent || !this.callbacks.revoked) {
           throw new Error('Browser retirement requires dispatcher ownership');
+        }
         await this.callbacks.postingQuiescent(this);
         connection.thread.terminate(); // A throwing native terminate leaves claims intact.
         const correlations = this.correlations();
@@ -605,32 +668,37 @@ export class PjsWorker {
 
   /** Internal Node boundary; tests can delay termination on one worker instance. */
   private terminateThread(): Promise<number> {
-    if (this.connection.lifecycle !== 'confirmed-exit')
+    if (this.connection.lifecycle !== 'confirmed-exit') {
       throw new Error('Browser revocation has no termination promise');
+    }
     return this.connection.thread.terminate();
   }
 
   private exited(code: number): void {
-    if (this.exitObserved) return;
+    if (this.exitObserved) {
+      return;
+    }
     this.exitObserved = true;
     this.clearLease();
     const correlationIds = this.correlations();
     // A direct exit reports logical failure before releasing physical ownership.
-    if (this.state.status !== 'stopped' && this.state.status !== 'failed')
+    if (this.state.status !== 'stopped' && this.state.status !== 'failed') {
       this.fail(
         `Worker unexpectedly exited with code ${code}`,
         undefined,
         undefined,
         'worker-crash',
       );
+    }
     this.executions.clear();
     this.refreshOccupancy();
     this.callbacks.exited(this, correlationIds);
   }
 
   private receive(value: unknown): void {
-    if (this.state.status === 'failed' || this.state.status === 'stopped')
+    if (this.state.status === 'failed' || this.state.status === 'stopped') {
       return;
+    }
     if (
       value &&
       typeof value === 'object' &&
@@ -644,7 +712,9 @@ export class PjsWorker {
       this.fail('Invalid worker protocol message');
       return;
     }
-    if (value.type === 'progress') return;
+    if (value.type === 'progress') {
+      return;
+    }
     if (value.type === 'bootstrapFailure') {
       this.fail(`Worker bootstrap failed: ${value.error.message}`, value.error);
       return;
@@ -728,7 +798,9 @@ export class PjsWorker {
       this.fail('Unrequested cooperative cancellation result');
       return;
     }
-    if (this.lease?.correlationId === correlationId) this.clearLease();
+    if (this.lease?.correlationId === correlationId) {
+      this.clearLease();
+    }
     this.closeProgress(correlationId);
     this.executions.delete(correlationId);
     this.refreshOccupancy();
@@ -744,9 +816,11 @@ export class PjsWorker {
         0,
       );
     } else {
-      if (value.type === 'success' || value.type === 'completed')
+      if (value.type === 'success' || value.type === 'completed') {
         this.state.completedTasks++;
-      else if (value.type === 'failure') this.state.failedTasks++;
+      } else if (value.type === 'failure') {
+        this.state.failedTasks++;
+      }
       this.state.totalExecutionTimeMs += value.executionMs;
     }
     const profiling = this.services.profiling;
@@ -774,12 +848,15 @@ export class PjsWorker {
     leaseError?: PjsExecutionLeaseError,
     reason: WorkerFailureReason = 'protocol',
   ): void {
-    if (this.state.status === 'failed' || this.state.status === 'stopped')
+    if (this.state.status === 'failed' || this.state.status === 'stopped') {
       return;
+    }
     const wasStarting = this.state.status === 'starting';
     const taskId = this.state.currentTaskId;
     this.state.failedTasks += this.executions.size;
-    for (const id of this.executions.keys()) this.closeProgress(id);
+    for (const id of this.executions.keys()) {
+      this.closeProgress(id);
+    }
     this.state.status = 'failed';
     this.clearLease();
     clearTimeout(this.startupTimer);

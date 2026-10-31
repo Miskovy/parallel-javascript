@@ -84,7 +84,7 @@ export class ResultCreditManager {
     if (
       operation.resultByteCapacity === undefined ||
       !this.canReserve(operation, bytes)
-    )
+    ) {
       throw new PjsResultCapacityError(
         'Result-byte reservation invariant was violated before admission',
         {
@@ -94,17 +94,20 @@ export class ResultCreditManager {
           resultByteCapacity: operation.resultByteCapacity!,
         },
       );
-    if (this.reservations.has(taskId))
+    }
+    if (this.reservations.has(taskId)) {
       throw new Error(`Duplicate result reservation ${taskId}`);
+    }
     let credits = this.operations.get(operation);
     if (!credits) {
       credits = { bytes: 0, taskByPartition: new Map() };
       this.operations.set(operation, credits);
     }
-    if (credits.taskByPartition.has(partitionIndex))
+    if (credits.taskByPartition.has(partitionIndex)) {
       throw new Error(
         `Duplicate result reservation for operation ${operation.id} partition ${partitionIndex}`,
       );
+    }
     this.reservations.set(taskId, {
       taskId,
       operation,
@@ -132,9 +135,12 @@ export class ResultCreditManager {
   beginAttempt(taskIds: readonly string[]): void {
     for (const id of taskIds) {
       const reservation = this.reservations.get(id);
-      if (!reservation?.executionDone) continue;
-      if (reservation.callerSettled || reservation.reconciled)
+      if (!reservation?.executionDone) {
+        continue;
+      }
+      if (reservation.callerSettled || reservation.reconciled) {
         throw new Error('Cannot replay a terminal result reservation');
+      }
       reservation.dispatched = false;
       reservation.dispatching = false;
       reservation.executionDone = false;
@@ -143,13 +149,18 @@ export class ResultCreditManager {
 
   /** Hold credit before structured clone can reenter caller settlement. */
   markDispatching(correlationId: string, taskIds: readonly string[]): void {
-    if (this.reservations.size === 0) return;
+    if (this.reservations.size === 0) {
+      return;
+    }
     const reservedIds = taskIds.filter((taskId) =>
       this.reservations.has(taskId),
     );
-    if (reservedIds.length === 0) return;
-    for (const taskId of reservedIds)
+    if (reservedIds.length === 0) {
+      return;
+    }
+    for (const taskId of reservedIds) {
       this.reservations.get(taskId)!.dispatching = true;
+    }
     this.executions.set(correlationId, reservedIds);
     this.assertInvariants('posting');
   }
@@ -157,14 +168,19 @@ export class ResultCreditManager {
   /** A failed post never created physical execution; roll back its claim. */
   rollbackDispatch(correlationId: string): void {
     const taskIds = this.executions.get(correlationId);
-    if (!taskIds) return;
+    if (!taskIds) {
+      return;
+    }
     this.executions.delete(correlationId);
     for (const taskId of taskIds) {
       const reservation = this.reservations.get(taskId)!;
-      if (reservation.dispatched)
+      if (reservation.dispatched) {
         throw new Error('Cannot roll back a successful physical dispatch');
+      }
       reservation.dispatching = false;
-      if (reservation.callerSettled) this.release(taskId, false);
+      if (reservation.callerSettled) {
+        this.release(taskId, false);
+      }
     }
     this.assertInvariants('post-failed');
   }
@@ -173,7 +189,9 @@ export class ResultCreditManager {
     const reservedIds = taskIds.filter((taskId) =>
       this.reservations.has(taskId),
     );
-    if (reservedIds.length === 0) return;
+    if (reservedIds.length === 0) {
+      return;
+    }
     for (const taskId of reservedIds) {
       const reservation = this.reservations.get(taskId)!;
       reservation.dispatching = false;
@@ -185,14 +203,18 @@ export class ResultCreditManager {
 
   markCallerSettled(taskId: string): void {
     const reservation = this.reservations.get(taskId);
-    if (!reservation) return;
+    if (!reservation) {
+      return;
+    }
     reservation.callerSettled = true;
     if (
       (!reservation.dispatched && !reservation.dispatching) ||
       reservation.executionDone
-    )
+    ) {
       this.release(taskId);
-    else this.assertInvariants('settle-running');
+    } else {
+      this.assertInvariants('settle-running');
+    }
   }
 
   /** Reconcile deliverable success before stream retention or direct delivery. */
@@ -203,18 +225,20 @@ export class ResultCreditManager {
       reservation.callerSettled ||
       reservation.mode === 'exact' ||
       reservation.reconciled
-    )
+    ) {
       return;
+    }
     if (
       !reservation.dispatched ||
       !Number.isSafeInteger(actualBytes) ||
       actualBytes! < 0 ||
       actualBytes! > reservation.bytes
-    )
+    ) {
       throw new PjsBinaryResultContractError(
         'Invalid upper-bound successful result size',
         { taskId, declaredBytes: reservation.bytes },
       );
+    }
     const refund = reservation.creditedBytes - actualBytes!;
     reservation.creditedBytes = actualBytes!;
     reservation.reconciled = true;
@@ -230,33 +254,45 @@ export class ResultCreditManager {
 
   markExecutionEnded(correlationId: string): void {
     const taskIds = this.executions.get(correlationId);
-    if (!taskIds) return;
+    if (!taskIds) {
+      return;
+    }
     this.executions.delete(correlationId);
     for (const taskId of taskIds) {
       const reservation = this.reservations.get(taskId);
-      if (!reservation) continue;
+      if (!reservation) {
+        continue;
+      }
       reservation.executionDone = true;
-      if (reservation.callerSettled) this.release(taskId, false);
+      if (reservation.callerSettled) {
+        this.release(taskId, false);
+      }
     }
     this.assertInvariants('execution-ended');
   }
 
   /** Browser endpoint retirement is terminal accounting, never physical completion. */
   abandonExecution(correlationId: string): void {
-    if (!this.allowAbandonment)
+    if (!this.allowAbandonment) {
       throw new Error('Node cannot abandon physical ownership');
+    }
     const ids = this.executions.get(correlationId);
-    if (!ids) return;
+    if (!ids) {
+      return;
+    }
     for (const id of ids) {
       const reservation = this.reservations.get(id);
       if (
         reservation &&
         (reservation.dispatching || !reservation.callerSettled)
-      )
+      ) {
         throw new Error('Cannot abandon a posting or nonterminal reservation');
+      }
     }
     this.executions.delete(correlationId);
-    for (const id of ids) this.release(id, false);
+    for (const id of ids) {
+      this.release(id, false);
+    }
     this.assertInvariants('browser-abandonment');
   }
 
@@ -265,26 +301,32 @@ export class ResultCreditManager {
     partitionIndex: number,
   ): void {
     const taskId = this.taskForPartition(operation, partitionIndex);
-    if (taskId) this.release(taskId);
+    if (taskId) {
+      this.release(taskId);
+    }
   }
 
   cancelOperation(operation: ResultCreditOperation): void {
     for (const [taskId, reservation] of this.reservations) {
-      if (reservation.operation !== operation) continue;
+      if (reservation.operation !== operation) {
+        continue;
+      }
       reservation.callerSettled = true;
       if (
         (!reservation.dispatched && !reservation.dispatching) ||
         reservation.executionDone
-      )
+      ) {
         this.release(taskId);
+      }
     }
     this.assertInvariants('cancel-operation');
   }
 
   releaseAll(): void {
     this.executions.clear();
-    for (const taskId of [...this.reservations.keys()])
+    for (const taskId of [...this.reservations.keys()]) {
       this.release(taskId, false);
+    }
     this.assertInvariants('release-all');
   }
 
@@ -298,7 +340,9 @@ export class ResultCreditManager {
 
   recordContractFailure(mode?: ResultByteMode): void {
     this.binaryResultContractFailures++;
-    if (mode === 'upper-bound') this.upperBoundContractFailures++;
+    if (mode === 'upper-bound') {
+      this.upperBoundContractFailures++;
+    }
   }
 
   snapshot() {
@@ -330,47 +374,60 @@ export class ResultCreditManager {
     let unreconciledResultBytes = 0;
     let reconciledResultBytes = 0;
     for (const reservation of this.reservations.values()) {
-      if (reservation.reconciled)
+      if (reservation.reconciled) {
         reconciledResultBytes += reservation.creditedBytes;
-      else unreconciledResultBytes += reservation.creditedBytes;
+      } else {
+        unreconciledResultBytes += reservation.creditedBytes;
+      }
     }
     return { unreconciledResultBytes, reconciledResultBytes };
   }
 
   private release(taskId: string, checkInvariants = true): void {
     const reservation = this.reservations.get(taskId);
-    if (!reservation) return;
+    if (!reservation) {
+      return;
+    }
     this.reservations.delete(taskId);
     const credits = this.operations.get(reservation.operation);
     if (credits) {
-      if (credits.taskByPartition.get(reservation.partitionIndex) === taskId)
+      if (credits.taskByPartition.get(reservation.partitionIndex) === taskId) {
         credits.taskByPartition.delete(reservation.partitionIndex);
+      }
       credits.bytes -= reservation.creditedBytes;
-      if (credits.taskByPartition.size === 0)
+      if (credits.taskByPartition.size === 0) {
         this.operations.delete(reservation.operation);
+      }
     }
     this.currentReservedResultBytes -= reservation.creditedBytes;
-    if (checkInvariants) this.assertInvariants('release');
+    if (checkInvariants) {
+      this.assertInvariants('release');
+    }
   }
 
   private assertInvariants(stage: string): void {
-    if (!this.invariantChecksEnabled) return;
+    if (!this.invariantChecksEnabled) {
+      return;
+    }
     const fail = (detail: string): never => {
       throw new Error(
         `Result reservation invariant failed after ${stage}: ${detail}`,
       );
     };
     const current = this.currentReservedResultBytes;
-    if (!Number.isSafeInteger(current) || current < 0)
+    if (!Number.isSafeInteger(current) || current < 0) {
       fail(`current reserved bytes is ${current}`);
+    }
 
     const correlated = new Set<string>();
     for (const [correlationId, taskIds] of this.executions) {
-      if (taskIds.length === 0)
+      if (taskIds.length === 0) {
         fail(`execution ${correlationId} has no logical reservations`);
+      }
       for (const taskId of taskIds) {
-        if (correlated.has(taskId))
+        if (correlated.has(taskId)) {
           fail(`reservation ${taskId} has multiple execution correlations`);
+        }
         correlated.add(taskId);
         const reservation =
           this.reservations.get(taskId) ??
@@ -378,17 +435,20 @@ export class ResultCreditManager {
         if (
           (!reservation.dispatched && !reservation.dispatching) ||
           reservation.executionDone
-        )
+        ) {
           fail(`execution ${correlationId} references inactive ${taskId}`);
+        }
       }
     }
 
     let reservationBytes = 0;
     for (const [taskId, reservation] of this.reservations) {
-      if (reservation.taskId !== taskId)
+      if (reservation.taskId !== taskId) {
         fail(`reservation key ${taskId} disagrees with record task ID`);
-      if (!Number.isSafeInteger(reservation.bytes) || reservation.bytes < 0)
+      }
+      if (!Number.isSafeInteger(reservation.bytes) || reservation.bytes < 0) {
         fail(`reservation ${taskId} has invalid byte count`);
+      }
       if (
         !Number.isSafeInteger(reservation.creditedBytes) ||
         reservation.creditedBytes < 0 ||
@@ -396,37 +456,45 @@ export class ResultCreditManager {
         ((!reservation.reconciled || reservation.mode === 'exact') &&
           reservation.creditedBytes !== reservation.bytes) ||
         (reservation.reconciled && !reservation.dispatched)
-      )
+      ) {
         fail(`reservation ${taskId} has invalid reconciled credit`);
+      }
       const credits = this.operations.get(reservation.operation);
-      if (credits?.taskByPartition.get(reservation.partitionIndex) !== taskId)
+      if (credits?.taskByPartition.get(reservation.partitionIndex) !== taskId) {
         fail(`reservation ${taskId} has no matching partition mapping`);
+      }
       if (
         (reservation.dispatched || reservation.dispatching) &&
         !reservation.executionDone
       ) {
-        if (!correlated.has(taskId))
+        if (!correlated.has(taskId)) {
           fail(`dispatched reservation ${taskId} has no execution correlation`);
-      } else if (correlated.has(taskId))
+        }
+      } else if (correlated.has(taskId)) {
         fail(`inactive reservation ${taskId} retains execution correlation`);
+      }
       reservationBytes += reservation.creditedBytes;
-      if (!Number.isSafeInteger(reservationBytes))
+      if (!Number.isSafeInteger(reservationBytes)) {
         fail('reservation byte sum exceeds safe integer range');
+      }
     }
-    if (reservationBytes !== current)
+    if (reservationBytes !== current) {
       fail(
         `metric ${current} disagrees with reservation sum ${reservationBytes}`,
       );
+    }
 
     let operationBytes = 0;
     for (const [operation, credits] of this.operations) {
-      if (!Number.isSafeInteger(credits.bytes) || credits.bytes < 0)
+      if (!Number.isSafeInteger(credits.bytes) || credits.bytes < 0) {
         fail(`operation ${operation.id} has invalid reserved bytes`);
+      }
       if (
         operation.resultByteCapacity !== undefined &&
         credits.bytes > operation.resultByteCapacity
-      )
+      ) {
         fail(`operation ${operation.id} exceeds its result byte capacity`);
+      }
       let partitionBytes = 0;
       for (const [partitionIndex, taskId] of credits.taskByPartition) {
         const reservation = this.reservations.get(taskId);
@@ -434,19 +502,23 @@ export class ResultCreditManager {
           !reservation ||
           reservation.operation !== operation ||
           reservation.partitionIndex !== partitionIndex
-        )
+        ) {
           fail(
             `operation ${operation.id} has stale partition ${partitionIndex}`,
           );
+        }
         partitionBytes += reservation!.creditedBytes;
       }
-      if (partitionBytes !== credits.bytes)
+      if (partitionBytes !== credits.bytes) {
         fail(`operation ${operation.id} disagrees with its reservation sum`);
+      }
       operationBytes += credits.bytes;
-      if (!Number.isSafeInteger(operationBytes))
+      if (!Number.isSafeInteger(operationBytes)) {
         fail('operation byte sum exceeds safe integer range');
+      }
     }
-    if (operationBytes !== current)
+    if (operationBytes !== current) {
       fail(`metric ${current} disagrees with operation sum ${operationBytes}`);
+    }
   }
 }
